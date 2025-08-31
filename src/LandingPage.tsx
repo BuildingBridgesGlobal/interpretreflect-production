@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { 
   Shield, 
   Brain, 
@@ -7,6 +7,7 @@ import {
   Users, 
   Sparkles, 
   CheckCircle,
+  AlertTriangle,
   TrendingUp,
   RefreshCw,
   MessageCircle,
@@ -17,12 +18,26 @@ import {
   ArrowRight,
   Star
 } from 'lucide-react';
+import { AuthModal } from './components/AuthModal';
 
 interface LandingPageProps {
   onGetStarted: () => void;
 }
 
 function LandingPage({ onGetStarted }: LandingPageProps) {
+  const [authModalOpen, setAuthModalOpen] = useState(false);
+  const [authMode, setAuthMode] = useState<'login' | 'signup'>('login');
+
+  const handleLogin = () => {
+    setAuthMode('login');
+    setAuthModalOpen(true);
+  };
+
+  const handleSignup = () => {
+    setAuthMode('signup');
+    setAuthModalOpen(true);
+  };
+
   return (
     <div style={{ backgroundColor: '#FAF9F6', minHeight: '100vh' }}>
       {/* Top Navigation Bar */}
@@ -59,7 +74,7 @@ function LandingPage({ onGetStarted }: LandingPageProps) {
             {/* Auth Buttons */}
             <div className="flex items-center space-x-4">
               <button 
-                onClick={onGetStarted}
+                onClick={handleLogin}
                 className="px-5 py-2 rounded-lg font-semibold transition-all focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-sage-600"
                 style={{
                   backgroundColor: 'transparent',
@@ -87,7 +102,7 @@ function LandingPage({ onGetStarted }: LandingPageProps) {
               </button>
               
               <button 
-                onClick={onGetStarted}
+                onClick={handleSignup}
                 className="px-5 py-2 rounded-lg font-semibold transition-all focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-white"
                 style={{
                   background: 'linear-gradient(145deg, #6B8B60 0%, #5F7F55 100%)',
@@ -137,9 +152,9 @@ function LandingPage({ onGetStarted }: LandingPageProps) {
               backgroundColor: 'rgba(107, 139, 96, 0.1)',
               border: '1px solid rgba(107, 139, 96, 0.3)'
             }}>
-              <Sparkles className="h-4 w-4 mr-2" style={{ color: '#6B8B60' }} />
+              <Brain className="h-4 w-4 mr-2" style={{ color: '#6B8B60' }} />
               <span className="text-sm font-semibold" style={{ color: '#6B8B60' }}>
-                Built by Interpreters, for Interpreters
+                Neuroscience-Backed Recovery Platform
               </span>
             </div>
             
@@ -148,16 +163,16 @@ function LandingPage({ onGetStarted }: LandingPageProps) {
               letterSpacing: '-1px',
               lineHeight: '1.1'
             }}>
-              End Interpreter Burnout.<br />
-              <span style={{ color: '#2D5F3F' }}>Build Emotional Resilience.</span>
+              Your brain wasn't designed<br />
+              <span style={{ color: '#2D5F3F' }}>to carry this weight alone.</span>
             </h1>
             
             <p className="text-xl mb-10 max-w-3xl mx-auto" style={{
               color: '#5A5A5A',
               lineHeight: '1.7'
             }}>
-              InterpretReflect is the first wellness platform designed specifically for interpreters. 
-              Master emotional intelligence, prevent burnout, and thrive in your essential work.
+              InterpretReflect helps interpreters process stress, rewire resilience, and recover faster.
+              The only tool built with interpreters' actual nervous systems in mind.
             </p>
             
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
@@ -216,66 +231,98 @@ function LandingPage({ onGetStarted }: LandingPageProps) {
                 Watch Demo
               </button>
             </div>
+            
+            {/* Inclusive Language Cue */}
+            <p className="mt-12 text-base font-medium" style={{
+              color: '#6B8B60',
+              letterSpacing: '0.5px'
+            }}>
+              For interpreters of all backgrounds, all modalities, and all lived experiences.
+            </p>
           </div>
         </div>
       </section>
 
-      {/* Problem Section */}
-      <section className="py-20" style={{ backgroundColor: '#FFFFFF' }} aria-labelledby="problem-heading">
+      {/* Before/After Transformation Section */}
+      <section className="py-20" style={{ backgroundColor: '#FFFFFF' }} aria-labelledby="transformation-heading">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
-            <h2 id="problem-heading" className="text-4xl font-bold mb-4" style={{ color: '#1A1A1A' }}>
-              The Silent Crisis in Interpreting
+            <h2 id="transformation-heading" className="text-4xl font-bold mb-4" style={{ color: '#1A1A1A' }}>
+              The Transformation You Deserve
             </h2>
             <p className="text-lg max-w-3xl mx-auto" style={{ color: '#5A5A5A' }}>
-              Interpreters face unique emotional challenges that traditional wellness apps don't address
+              From survival mode to sustainable practice
             </p>
           </div>
           
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            <div className="text-center">
-              <div className="inline-block p-4 rounded-full mb-4" style={{
-                backgroundColor: 'rgba(168, 192, 154, 0.1)'
-              }}>
-                <Brain className="h-10 w-10" aria-hidden="true" style={{ color: '#2D5F3F' }} />
+          {/* Before/After Grid */}
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
+            {/* Before Column */}
+            <div className="space-y-6">
+              <h3 className="text-2xl font-bold mb-6 flex items-center" style={{ color: '#8B4444' }}>
+                <AlertTriangle className="h-6 w-6 mr-3" />
+                Before InterpretReflect
+              </h3>
+              
+              <div className="space-y-4">
+                <div className="flex items-start space-x-4 p-4 rounded-lg" style={{ backgroundColor: 'rgba(139, 68, 68, 0.05)' }}>
+                  <Brain className="h-6 w-6 mt-1 flex-shrink-0" style={{ color: '#8B4444' }} />
+                  <div>
+                    <p className="font-semibold" style={{ color: '#1A1A1A' }}>Stress biomarkers spike</p>
+                    <p className="text-sm mt-1" style={{ color: '#5A5A5A' }}>Cortisol levels remain elevated throughout the day, affecting sleep and recovery</p>
+                  </div>
+                </div>
+                
+                <div className="flex items-start space-x-4 p-4 rounded-lg" style={{ backgroundColor: 'rgba(139, 68, 68, 0.05)' }}>
+                  <Users className="h-6 w-6 mt-1 flex-shrink-0" style={{ color: '#8B4444' }} />
+                  <div>
+                    <p className="font-semibold" style={{ color: '#1A1A1A' }}>Isolation increases</p>
+                    <p className="text-sm mt-1" style={{ color: '#5A5A5A' }}>Working alone with no outlet to process difficult content</p>
+                  </div>
+                </div>
+                
+                <div className="flex items-start space-x-4 p-4 rounded-lg" style={{ backgroundColor: 'rgba(139, 68, 68, 0.05)' }}>
+                  <Heart className="h-6 w-6 mt-1 flex-shrink-0" style={{ color: '#8B4444' }} />
+                  <div>
+                    <p className="font-semibold" style={{ color: '#1A1A1A' }}>Emotional exhaustion erodes accuracy</p>
+                    <p className="text-sm mt-1" style={{ color: '#5A5A5A' }}>Performance declines as mental fatigue accumulates</p>
+                  </div>
+                </div>
               </div>
-              <h3 className="text-6xl font-bold mb-2" style={{ color: '#2D5F3F' }}>73%</h3>
-              <p className="text-lg font-semibold mb-2" style={{ color: '#1A1A1A' }}>
-                Experience Vicarious Trauma
-              </p>
-              <p className="text-sm" style={{ color: '#5A5A5A' }}>
-                From interpreting traumatic content daily
-              </p>
             </div>
             
-            <div className="text-center">
-              <div className="inline-block p-4 rounded-full mb-4" style={{
-                backgroundColor: 'rgba(168, 192, 154, 0.1)'
-              }}>
-                <Heart className="h-10 w-10" aria-hidden="true" style={{ color: '#2D5F3F' }} />
+            {/* After Column */}
+            <div className="space-y-6">
+              <h3 className="text-2xl font-bold mb-6 flex items-center" style={{ color: '#2D5F3F' }}>
+                <CheckCircle className="h-6 w-6 mr-3" />
+                After InterpretReflect
+              </h3>
+              
+              <div className="space-y-4">
+                <div className="flex items-start space-x-4 p-4 rounded-lg" style={{ backgroundColor: 'rgba(168, 192, 154, 0.1)' }}>
+                  <BookOpen className="h-6 w-6 mt-1 flex-shrink-0" style={{ color: '#2D5F3F' }} />
+                  <div>
+                    <p className="font-semibold" style={{ color: '#1A1A1A' }}>Guided reflection lowers cortisol</p>
+                    <p className="text-sm mt-1" style={{ color: '#5A5A5A' }}>Structured processing helps regulate your nervous system naturally</p>
+                  </div>
+                </div>
+                
+                <div className="flex items-start space-x-4 p-4 rounded-lg" style={{ backgroundColor: 'rgba(168, 192, 154, 0.1)' }}>
+                  <MessageCircle className="h-6 w-6 mt-1 flex-shrink-0" style={{ color: '#2D5F3F' }} />
+                  <div>
+                    <p className="font-semibold" style={{ color: '#1A1A1A' }}>AI companion provides co-regulation</p>
+                    <p className="text-sm mt-1" style={{ color: '#5A5A5A' }}>Elya offers 24/7 support tailored to interpreter challenges</p>
+                  </div>
+                </div>
+                
+                <div className="flex items-start space-x-4 p-4 rounded-lg" style={{ backgroundColor: 'rgba(168, 192, 154, 0.1)' }}>
+                  <TrendingUp className="h-6 w-6 mt-1 flex-shrink-0" style={{ color: '#2D5F3F' }} />
+                  <div>
+                    <p className="font-semibold" style={{ color: '#1A1A1A' }}>Growth insights reinforce neuroplasticity</p>
+                    <p className="text-sm mt-1" style={{ color: '#5A5A5A' }}>Track progress and build long-term resilience patterns</p>
+                  </div>
+                </div>
               </div>
-              <h3 className="text-6xl font-bold mb-2" style={{ color: '#2D5F3F' }}>68%</h3>
-              <p className="text-lg font-semibold mb-2" style={{ color: '#1A1A1A' }}>
-                Report Emotional Exhaustion
-              </p>
-              <p className="text-sm" style={{ color: '#5A5A5A' }}>
-                Leading to decreased performance
-              </p>
-            </div>
-            
-            <div className="text-center">
-              <div className="inline-block p-4 rounded-full mb-4" style={{
-                backgroundColor: 'rgba(168, 192, 154, 0.1)'
-              }}>
-                <Users className="h-10 w-10" aria-hidden="true" style={{ color: '#2D5F3F' }} />
-              </div>
-              <h3 className="text-6xl font-bold mb-2" style={{ color: '#2D5F3F' }}>82%</h3>
-              <p className="text-lg font-semibold mb-2" style={{ color: '#1A1A1A' }}>
-                Feel Professionally Isolated
-              </p>
-              <p className="text-sm" style={{ color: '#5A5A5A' }}>
-                Without adequate support systems
-              </p>
             </div>
           </div>
         </div>

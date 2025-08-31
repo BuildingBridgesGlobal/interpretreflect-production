@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import LandingPage from './LandingPage';
+import { useAuth } from './contexts/AuthContext';
 import { 
   Home, 
   BookOpen, 
@@ -43,7 +44,7 @@ import {
 } from 'lucide-react';
 
 function App() {
-  const [showLanding, setShowLanding] = useState(true);
+  const { user, loading, signOut } = useAuth();
   const [activeTab, setActiveTab] = useState('reflection');
   const [activeCategory, setActiveCategory] = useState('structured');
   const [currentQuestion, setCurrentQuestion] = useState(1);
@@ -2032,8 +2033,21 @@ function App() {
     </main>
   );
 
-  if (showLanding) {
-    return <LandingPage onGetStarted={() => setShowLanding(false)} />;
+  // Show loading state while checking authentication
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center" style={{backgroundColor: '#FAF9F6'}}>
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-4 border-sage-200 border-t-sage-600 mx-auto mb-4" style={{borderTopColor: '#A8C09A', borderColor: 'rgba(168, 192, 154, 0.3)'}}></div>
+          <p className="text-lg" style={{color: '#3A3A3A'}}>Loading...</p>
+        </div>
+      </div>
+    );
+  }
+
+  // Show landing page if user is not authenticated
+  if (!user) {
+    return <LandingPage />;
   }
 
   return (
@@ -2052,10 +2066,10 @@ function App() {
               </div>
               <div className="hidden md:block">
                 <h1 className="text-xl font-semibold" style={{color: '#FFFFFF'}}>
-                  Good morning, dev
+                  Good morning, {user?.email?.split('@')[0] || 'User'}
                 </h1>
                 <p className="text-sm opacity-90" style={{color: '#FFFFFF'}}>
-                  Friday, August 29
+                  {new Date().toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' })}
                 </p>
               </div>
             </div>
@@ -2081,7 +2095,7 @@ function App() {
                   }}
                 >
                   <div className="w-8 h-8 rounded-full flex items-center justify-center shadow-sm" style={{backgroundColor: '#FFFFFF', border: '2px solid rgba(255, 255, 255, 0.5)'}}>
-                    <span className="text-sm font-semibold" style={{color: '#1A1A1A'}}>D</span>
+                    <span className="text-sm font-semibold" style={{color: '#1A1A1A'}}>{user?.email?.charAt(0).toUpperCase() || 'U'}</span>
                   </div>
                   <ChevronDown className={`h-4 w-4 transition-transform ${showUserDropdown ? 'rotate-180' : ''}`} style={{color: '#FFFFFF'}} />
                 </button>
@@ -2110,11 +2124,11 @@ function App() {
                             background: 'linear-gradient(135deg, #A8C09A 0%, #B5CCA8 100%)',
                             boxShadow: '0 4px 12px rgba(168, 192, 154, 0.3)'
                           }}>
-                            <span className="text-lg font-bold" style={{color: '#FFFFFF'}}>D</span>
+                            <span className="text-lg font-bold" style={{color: '#FFFFFF'}}>{user?.email?.charAt(0).toUpperCase() || 'U'}</span>
                           </div>
                           <div>
-                            <div className="font-semibold text-lg" style={{color: '#FFFFFF'}}>dev</div>
-                            <div className="text-sm" style={{color: '#A8C09A'}}>dev@interpretreflect.com</div>
+                            <div className="font-semibold text-lg" style={{color: '#FFFFFF'}}>{user?.email?.split('@')[0] || 'User'}</div>
+                            <div className="text-sm" style={{color: '#A8C09A'}}>{user?.email || 'user@interpretreflect.com'}</div>
                           </div>
                         </div>
                       </div>
@@ -2195,7 +2209,12 @@ function App() {
                       <div className="p-3" style={{
                         borderTop: '1px solid rgba(255, 255, 255, 0.1)'
                       }}>
-                        <button className="w-full flex items-center space-x-3 p-4 rounded-xl transition-all text-left" 
+                        <button 
+                          onClick={async () => {
+                            await signOut();
+                            setShowUserDropdown(false);
+                          }}
+                          className="w-full flex items-center space-x-3 p-4 rounded-xl transition-all text-left" 
                           style={{
                             backgroundColor: 'transparent'
                           }}

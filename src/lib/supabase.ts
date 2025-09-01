@@ -1,43 +1,31 @@
-import { createClient } from '@supabase/supabase-js'
+import { createClient } from '@supabase/supabase-js';
 
-// These will be your Supabase project credentials
-const supabaseUrl = import.meta.env.VITE_SUPABASE_URL
-const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY
+// Supabase project credentials from environment variables
+const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
+const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
 
 if (!supabaseUrl || !supabaseAnonKey) {
-  console.error('Missing Supabase environment variables. Please add VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY to your .env.local file')
+  console.error('Missing Supabase credentials. Please check your .env file.');
 }
 
-export const supabase = createClient(supabaseUrl, supabaseAnonKey)
+export const supabase = createClient(supabaseUrl, supabaseAnonKey);
 
-// Auth helper functions
-export const signUp = async (email: string, password: string) => {
-  const { data, error } = await supabase.auth.signUp({
-    email,
-    password,
-  })
-  return { data, error }
-}
-
-export const signIn = async (email: string, password: string) => {
-  const { data, error } = await supabase.auth.signInWithPassword({
-    email,
-    password,
-  })
-  return { data, error }
-}
-
-export const signOut = async () => {
-  const { error } = await supabase.auth.signOut()
-  return { error }
-}
-
+// Helper function to get current user
 export const getCurrentUser = async () => {
-  const { data: { user }, error } = await supabase.auth.getUser()
-  return { user, error }
-}
+  const {
+    data: { user },
+    error,
+  } = await supabase.auth.getUser();
+  if (error) throw error;
+  return { user };
+};
 
-// Subscribe to auth state changes
-export const onAuthStateChange = (callback: (event: string, session: any) => void) => {
-  return supabase.auth.onAuthStateChange(callback)
+// Types for our database (you can expand these as needed)
+export interface User {
+  id: string;
+  email: string;
+  created_at: string;
+  subscription_status?: 'active' | 'inactive' | 'trial' | 'cancelled';
+  subscription_plan?: 'essential' | 'professional' | 'organization';
+  stripe_customer_id?: string;
 }

@@ -54,13 +54,11 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, mode: ini
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center">
       {/* Backdrop */}
-      <div 
-        className="absolute inset-0 bg-black/50 backdrop-blur-sm"
-        onClick={onClose}
-      />
-      
+      <div className="absolute inset-0 bg-black/50 backdrop-blur-sm" onClick={onClose} />
+
       {/* Modal */}
-      <div className="relative w-full max-w-md mx-4 rounded-2xl shadow-2xl"
+      <div
+        className="relative w-full max-w-md mx-4 rounded-2xl shadow-2xl"
         style={{ backgroundColor: '#FAF9F6' }}
       >
         {/* Header */}
@@ -72,13 +70,13 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, mode: ini
           >
             <X className="h-5 w-5" style={{ color: '#1A1A1A' }} />
           </button>
-          
+
           <h2 className="text-2xl font-bold text-center mb-2" style={{ color: '#1A1A1A' }}>
             {mode === 'login' ? 'Welcome Back' : 'Create Account'}
           </h2>
           <p className="text-center text-sm" style={{ color: '#3A3A3A' }}>
-            {mode === 'login' 
-              ? 'Sign in to continue your journey' 
+            {mode === 'login'
+              ? 'Sign in to continue your journey'
               : 'Start your emotional intelligence journey'}
           </p>
         </div>
@@ -86,11 +84,13 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, mode: ini
         {/* Form */}
         <form onSubmit={handleSubmit} className="p-6">
           {error && (
-            <div className={`mb-4 p-3 rounded-lg text-sm ${
-              error.includes('Check your email') 
-                ? 'bg-green-50 text-green-700' 
-                : 'bg-red-50 text-red-600'
-            }`}>
+            <div
+              className={`mb-4 p-3 rounded-lg text-sm ${
+                error.includes('Check your email')
+                  ? 'bg-green-50 text-green-700'
+                  : 'bg-red-50 text-red-600'
+              }`}
+            >
               {error}
             </div>
           )}
@@ -102,17 +102,18 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, mode: ini
                 Email
               </label>
               <div className="relative">
-                <Mail className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4" 
-                  style={{ color: '#A8C09A' }} 
+                <Mail
+                  className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4"
+                  style={{ color: '#A8C09A' }}
                 />
                 <input
                   type="email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   className="w-full pl-10 pr-4 py-2.5 rounded-lg border focus:outline-none focus:ring-2"
-                  style={{ 
+                  style={{
                     borderColor: '#E8E5E0',
-                    backgroundColor: '#FFFFFF'
+                    backgroundColor: '#FFFFFF',
                   }}
                   placeholder="you@example.com"
                   required
@@ -126,17 +127,18 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, mode: ini
                 Password
               </label>
               <div className="relative">
-                <Lock className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4" 
-                  style={{ color: '#A8C09A' }} 
+                <Lock
+                  className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4"
+                  style={{ color: '#A8C09A' }}
                 />
                 <input
                   type={showPassword ? 'text' : 'password'}
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   className="w-full pl-10 pr-10 py-2.5 rounded-lg border focus:outline-none focus:ring-2"
-                  style={{ 
+                  style={{
                     borderColor: '#E8E5E0',
-                    backgroundColor: '#FFFFFF'
+                    backgroundColor: '#FFFFFF',
                   }}
                   placeholder="••••••••"
                   required
@@ -162,17 +164,18 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, mode: ini
                   Confirm Password
                 </label>
                 <div className="relative">
-                  <Lock className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4" 
-                    style={{ color: '#A8C09A' }} 
+                  <Lock
+                    className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4"
+                    style={{ color: '#A8C09A' }}
                   />
                   <input
                     type={showPassword ? 'text' : 'password'}
                     value={confirmPassword}
                     onChange={(e) => setConfirmPassword(e.target.value)}
                     className="w-full pl-10 pr-4 py-2.5 rounded-lg border focus:outline-none focus:ring-2"
-                    style={{ 
+                    style={{
                       borderColor: '#E8E5E0',
-                      backgroundColor: '#FFFFFF'
+                      backgroundColor: '#FFFFFF',
                     }}
                     placeholder="••••••••"
                     required
@@ -187,11 +190,9 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, mode: ini
             type="submit"
             disabled={loading}
             className="w-full mt-6 py-3 rounded-lg font-semibold text-white transition-all disabled:opacity-50"
-            style={{ 
-              background: loading 
-                ? '#6B7C6B' 
-                : 'linear-gradient(135deg, #A8C09A 0%, #8FA881 100%)',
-              boxShadow: '0 4px 15px rgba(168, 192, 154, 0.3)'
+            style={{
+              background: loading ? '#6B7C6B' : 'linear-gradient(135deg, #A8C09A 0%, #8FA881 100%)',
+              boxShadow: '0 4px 15px rgba(168, 192, 154, 0.3)',
             }}
           >
             {loading ? (
@@ -199,14 +200,16 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, mode: ini
                 <Loader2 className="animate-spin h-4 w-4 mr-2" />
                 {mode === 'login' ? 'Signing in...' : 'Creating account...'}
               </span>
+            ) : mode === 'login' ? (
+              'Sign In'
             ) : (
-              mode === 'login' ? 'Sign In' : 'Create Account'
+              'Create Account'
             )}
           </button>
 
           {/* Toggle Mode */}
           <p className="text-center mt-4 text-sm" style={{ color: '#3A3A3A' }}>
-            {mode === 'login' ? "Don't have an account? " : "Already have an account? "}
+            {mode === 'login' ? "Don't have an account? " : 'Already have an account? '}
             <button
               type="button"
               onClick={() => {

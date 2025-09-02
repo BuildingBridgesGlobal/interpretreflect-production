@@ -1,3 +1,4 @@
+import './utils/suppressExtensionErrors';
 import './utils/preventDuplicateElements';
 import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';

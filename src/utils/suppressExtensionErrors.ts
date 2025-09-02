@@ -8,7 +8,7 @@
   const originalError = window.onerror;
   const originalUnhandledRejection = window.onunhandledrejection;
 
-  // List of error patterns from known browser extensions
+  // List of error patterns from known browser extensions and expected auth states
   const EXTENSION_ERROR_PATTERNS = [
     /mce-autosize-textarea.*already been defined/i,
     /custom element.*already defined/i,
@@ -17,6 +17,8 @@
     /grammarly/i,
     /lastpass/i,
     /1password/i,
+    /AuthSessionMissingError/i,  // Expected when no user is logged in
+    /Auth session missing/i,      // Expected when no user is logged in
   ];
 
   // Override global error handler

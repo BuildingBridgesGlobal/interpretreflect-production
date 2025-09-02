@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useEffect, useState } from 'react';
-import { supabase, getCurrentUser } from '../lib/supabase';
+import { supabase } from '../lib/supabase';
 import { User } from '@supabase/supabase-js';
 
 interface AuthContextType {
@@ -36,13 +36,28 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
           return;
         }
         
-        const { user } = await getCurrentUser();
-        setUser(user);
-      } catch (error) {
-        // Only log error if not an expected auth session missing error
-        if (error && typeof error === 'object' && 'name' in error && error.name !== 'AuthSessionMissingError') {
-          console.error('Error getting current user:', error);
+        // Session-first approach: check for existing session before calling getUser
+        const { data: { session }, error: sessionError } = await supabase.auth.getSession();
+        
+        if (sessionError) {
+          // Only log if it's not an expected error
+          if (sessionError.name !== 'AuthSessionMissingError') {
+            console.error('Error getting session:', sessionError);
+          }
+          setLoading(false);
+          return;
         }
+        
+        // Only try to get user if we have a session
+        if (session?.user) {
+          setUser(session.user);
+        } else {
+          // No session, no user - this is normal for logged out state
+          setUser(null);
+        }
+      } catch (error) {
+        // Unexpected error
+        console.error('Unexpected error during auth initialization:', error);
       } finally {
         setLoading(false);
       }

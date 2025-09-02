@@ -504,7 +504,7 @@ const DailyBurnoutGauge: React.FC<DailyBurnoutGaugeProps> = ({ onComplete, onClo
           if (error) throw error;
         }
         
-        console.log('Assessment saved to Supabase successfully');
+        // Assessment saved to Supabase successfully
       }
       
       // Also save to localStorage for offline access and backwards compatibility
@@ -521,7 +521,7 @@ const DailyBurnoutGauge: React.FC<DailyBurnoutGaugeProps> = ({ onComplete, onClo
       localStorage.setItem('todaysBurnoutAssessment', JSON.stringify(results));
       localStorage.setItem('lastAssessmentDate', new Date().toISOString());
       
-      console.log('Assessment saved successfully:', results);
+      // Assessment saved successfully
       setSaveSuccess(true);
       
       // Show success message for 2 seconds then close

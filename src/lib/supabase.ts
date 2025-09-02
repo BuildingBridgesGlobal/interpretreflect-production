@@ -10,15 +10,6 @@ if (!import.meta.env.VITE_SUPABASE_URL || !import.meta.env.VITE_SUPABASE_ANON_KE
 
 export const supabase = createClient(supabaseUrl, supabaseAnonKey);
 
-// Helper function to get current user
-export const getCurrentUser = async () => {
-  const {
-    data: { user },
-    error,
-  } = await supabase.auth.getUser();
-  if (error) throw error;
-  return { user };
-};
 
 // Types for our database (you can expand these as needed)
 export interface User {

@@ -137,10 +137,10 @@ function App() {
                 }
               }));
               setBurnoutData(formattedData.reverse());
-              console.log('Loaded burnout data from Supabase:', formattedData.length, 'assessments');
+              // Successfully loaded burnout data from Supabase
             }
           } catch (error) {
-            console.error('Error loading from Supabase:', error);
+            // Error loading from Supabase, fallback to localStorage
             // Fallback to localStorage
             const stored = localStorage.getItem('burnoutAssessments');
             if (stored) {

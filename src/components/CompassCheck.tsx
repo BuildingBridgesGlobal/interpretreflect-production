@@ -1101,7 +1101,7 @@ const CompassCheck: React.FC<CompassCheckProps> = ({ onComplete, onClose }) => {
                 <div className="space-y-3 text-gray-700 italic">
                   <p>"You are not responsible for the message, only its accurate delivery."</p>
                   <p>"Your discomfort with content proves your ethics are working."</p>
-                  <p>"Neutrality doesn't mean not caring—it means caring professionally."</p>
+                  <p>"Neutrality doesn't mean not caring - it means caring professionally."</p>
                   <p>"The bridge doesn't apologize for what crosses it."</p>
                 </div>
               </div>

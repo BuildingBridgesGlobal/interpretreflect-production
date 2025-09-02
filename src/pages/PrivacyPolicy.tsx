@@ -118,9 +118,9 @@ export function PrivacyPolicy() {
             <ul className="list-disc pl-6 space-y-2">
               <li>Your reflections and assessments are private and never shared without consent</li>
               <li>Anonymous aggregated data may be used for research with explicit opt-in</li>
-              <li>You can export or delete all your data at any time</li>
+              <li>Data export and deletion capabilities are being developed. Currently, contact info@buildingbridgeslearning.com to request data deletion</li>
               <li>We never sell or share your personal information with third parties</li>
-              <li>Two-factor authentication available for enhanced account security</li>
+              <li>Enhanced security features including two-factor authentication are in development</li>
             </ul>
           </div>
         </section>
@@ -135,15 +135,14 @@ export function PrivacyPolicy() {
           </div>
           <div className="space-y-4" style={{ color: '#5A5A5A' }}>
             <p>
-              We use cookies to enhance your experience:
+              We use essential cookies for authentication and analytics. Full cookie management features are planned for future releases.
             </p>
             <ul className="list-disc pl-6 space-y-2">
               <li><strong>Essential cookies:</strong> Required for authentication and security</li>
-              <li><strong>Preference cookies:</strong> Remember your settings and preferences</li>
               <li><strong>Analytics cookies:</strong> Help us understand usage patterns (anonymized)</li>
             </ul>
             <p>
-              You can manage cookie preferences in your browser settings. Disabling essential cookies may limit functionality.
+              You can manage cookie preferences in your browser settings. Enhanced cookie management tools are in development.
             </p>
           </div>
         </section>
@@ -155,6 +154,10 @@ export function PrivacyPolicy() {
           </h2>
           <p style={{ color: '#5A5A5A' }}>
             If you have questions about our privacy practices or wish to exercise your data rights, please contact us at{' '}
+            <br /><br />
+            <strong>GDPR Compliance:</strong> GDPR compliance features are in development for our full launch.{' '}
+            <br /><br />
+            For current data deletion requests or privacy concerns, please contact us at{' '}
             <a 
               href="mailto:info@buildingbridgeslearning.com" 
               className="font-semibold hover:underline"

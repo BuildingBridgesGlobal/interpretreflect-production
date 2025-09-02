@@ -79,7 +79,7 @@ export function About() {
             }}
           >
             <p className="text-lg leading-relaxed mb-4" style={{ color: '#5A5A5A' }}>
-              InterpretReflect exists to transform interpreter wellness from an afterthought to a professional priority. We believe that interpreters—who bridge communication in humanity's most critical moments—deserve specialized tools to process, recover, and thrive in their essential work.
+              InterpretReflect exists to transform interpreter wellness from an afterthought to a professional priority. We believe that interpreters - who bridge communication in humanity's most critical moments - deserve specialized tools to process, recover, and thrive in their essential work.
             </p>
             <p className="text-lg font-semibold" style={{ color: '#2D5F3F' }}>
               Our mission is to provide every interpreter with accessible, evidence-based wellness tools that prevent burnout, build resilience, and sustain long, fulfilling careers.
@@ -115,10 +115,10 @@ export function About() {
                 </div>
               </div>
               <p className="mb-4" style={{ color: '#5A5A5A' }}>
-                InterpretReflect was born from the lived experiences of interpreters who recognized a critical gap in professional support. After witnessing countless colleagues leave the field due to burnout, vicarious trauma, and lack of recovery resources, our founding team decided to act.
+                InterpretReflect was born from the lived experiences of interpreters who witnessed countless colleagues leave the field due to burnout, vicarious trauma, and lack of recovery resources. Our founding team decided it was time to act.
               </p>
               <p className="mb-4" style={{ color: '#5A5A5A' }}>
-                We partnered with neuroscientists, wellness researchers, and hundreds of working interpreters to understand the unique stressors of language mediation. What emerged was clear: interpreters needed specialized tools designed for their reality—tools that work in courthouse hallways, hospital break rooms, and the moments between assignments.
+                We partnered with neuroscientists, wellness researchers, and hundreds of working interpreters to understand the unique stressors of language mediation. What emerged was clear: interpreters needed specialized tools designed for their reality - tools that work in courthouse hallways, hospital break rooms, and the moments between assignments.
               </p>
               <p style={{ color: '#5A5A5A' }}>
                 Today, InterpretReflect combines cutting-edge research with practical wisdom from the interpreting community to deliver wellness support that actually works for the professionals who need it most.
@@ -218,7 +218,7 @@ export function About() {
                 Grounded in Research
               </h3>
               <p className="text-sm" style={{ color: '#5A5A5A' }}>
-                Every tool and technique is based on peer-reviewed studies in neuroscience, trauma recovery, and occupational wellness, adapted specifically for interpreters.
+                Our tools are grounded in research and informed by evidence-based practices from neuroscience, trauma recovery, and occupational wellness, thoughtfully adapted for interpreters.
               </p>
             </div>
             
@@ -263,7 +263,7 @@ export function About() {
                 Privacy-First Design
               </h3>
               <p className="text-sm" style={{ color: '#5A5A5A' }}>
-                Built with HIPAA-compliant infrastructure and zero-knowledge architecture for your reflections, ensuring complete confidentiality.
+                Built with privacy-first design and HIPAA-compliant infrastructure in development, ensuring your data stays secure and confidential.
               </p>
             </div>
           </div>

@@ -857,7 +857,7 @@ const WellnessCheckIn: React.FC<WellnessCheckInProps> = ({ onComplete, onClose }
               <div>
                 <h3 className="text-xl font-semibold mb-2 flex items-center">
                   <AlertTriangle className="w-5 h-5 mr-2 text-orange-500" />
-                  Step 4: Vicarious Trauma Check
+                  Step 4: Processing Work Experiences
                 </h3>
                 <p className="text-sm text-gray-600 mb-4 italic">
                   60 seconds • Based on Secondary Trauma research (Figley, 1995)
@@ -867,7 +867,7 @@ const WellnessCheckIn: React.FC<WellnessCheckInProps> = ({ onComplete, onClose }
               <div className="space-y-4">
                 <div>
                   <label className="font-medium text-gray-900 mb-2 block">
-                    Intrusion symptoms:
+                    Thoughts about work:
                   </label>
                   <div className="space-y-2">
                     {[
@@ -884,7 +884,7 @@ const WellnessCheckIn: React.FC<WellnessCheckInProps> = ({ onComplete, onClose }
                       },
                       {
                         value: 'constant',
-                        label: "Can't stop thinking about client stories",
+                        label: 'Frequent thoughts about client stories',
                         color: 'bg-red-50',
                       },
                       {

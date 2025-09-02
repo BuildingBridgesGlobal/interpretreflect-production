@@ -39,7 +39,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, mode: ini
         }
         await signUp(email, password);
         // Show success message
-        setError('Check your email to confirm your account!');
+        setError('Great! Please check your email to confirm your account and begin your wellness journey.');
       } else {
         await signIn(email, password);
         onClose();
@@ -76,8 +76,8 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, mode: ini
           </h2>
           <p className="text-center text-sm" style={{ color: '#3A3A3A' }}>
             {mode === 'login'
-              ? 'Sign in to continue your journey'
-              : 'Start your emotional intelligence journey'}
+              ? 'Welcome back to your wellness journey'
+              : 'Join thousands of interpreters prioritizing their wellbeing'}
           </p>
         </div>
 

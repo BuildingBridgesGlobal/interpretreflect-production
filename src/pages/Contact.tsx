@@ -50,120 +50,110 @@ export function Contact() {
           Contact Us
         </h1>
         
-        <p className="text-lg mb-12" style={{ color: '#5A5A5A' }}>
+        <p className="text-lg mb-8" style={{ color: '#5A5A5A' }}>
           We're here to support your wellness journey. Reach out with questions, feedback, or partnership inquiries.
         </p>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12">
-          {/* General Support */}
-          <div 
-            className="rounded-2xl p-8"
-            style={{
-              backgroundColor: '#FFFFFF',
-              boxShadow: '0 4px 15px rgba(0, 0, 0, 0.05)',
-            }}
-          >
-            <div className="flex items-center mb-4">
-              <div
-                className="p-3 rounded-xl mr-4"
-                style={{
-                  background: 'linear-gradient(145deg, #6B8B60 0%, #5F7F55 100%)',
-                }}
-              >
-                <Mail className="h-6 w-6" style={{ color: '#FFFFFF' }} />
-              </div>
-              <h2 className="text-xl font-bold" style={{ color: '#1A1A1A' }}>
-                General Support
-              </h2>
-            </div>
-            
-            <div className="space-y-4">
-              <div>
-                <p className="font-semibold mb-1" style={{ color: '#2D5F3F' }}>
-                  Email
-                </p>
+        {/* Primary Contact Info */}
+        <div 
+          className="rounded-2xl p-8 mb-8"
+          style={{
+            backgroundColor: '#FFFFFF',
+            boxShadow: '0 4px 15px rgba(0, 0, 0, 0.05)',
+          }}
+        >
+          <div className="flex items-start mb-4">
+            <Mail className="h-6 w-6 mr-3 mt-1" style={{ color: '#6B8B60' }} />
+            <div className="flex-1">
+              <p className="font-semibold mb-2" style={{ color: '#1A1A1A' }}>
+                <strong>Email:</strong>{' '}
                 <a 
                   href="mailto:info@buildingbridgeslearning.com"
-                  className="text-lg hover:underline"
+                  className="hover:underline"
                   style={{ color: '#6B8B60' }}
                 >
                   info@buildingbridgeslearning.com
                 </a>
-              </div>
-              
-              <div className="flex items-start">
-                <Clock className="h-5 w-5 mr-2 mt-0.5" style={{ color: '#5C7F4F' }} />
-                <div>
-                  <p className="font-semibold mb-1" style={{ color: '#2D5F3F' }}>
-                    Response Time
-                  </p>
-                  <p style={{ color: '#5A5A5A' }}>
-                    Within 48 hours during business days
-                  </p>
-                </div>
-              </div>
-
-              <div className="pt-4" style={{ borderTop: '1px solid #E8E5E0' }}>
-                <p className="text-sm" style={{ color: '#5A5A5A' }}>
-                  For account issues, billing questions, technical support, or general inquiries about our wellness tools.
-                </p>
-              </div>
-            </div>
-          </div>
-
-          {/* Partnership Inquiries */}
-          <div 
-            className="rounded-2xl p-8"
-            style={{
-              backgroundColor: '#FFFFFF',
-              boxShadow: '0 4px 15px rgba(0, 0, 0, 0.05)',
-            }}
-          >
-            <div className="flex items-center mb-4">
-              <div
-                className="p-3 rounded-xl mr-4"
-                style={{
-                  background: 'linear-gradient(145deg, #6B8B60 0%, #5F7F55 100%)',
-                }}
-              >
-                <Users className="h-6 w-6" style={{ color: '#FFFFFF' }} />
-              </div>
-              <h2 className="text-xl font-bold" style={{ color: '#1A1A1A' }}>
-                Partnerships & Organizations
-              </h2>
-            </div>
-            
-            <div className="space-y-4">
-              <div>
-                <p className="font-semibold mb-1" style={{ color: '#2D5F3F' }}>
-                  Email
-                </p>
-                <a 
-                  href="mailto:info@buildingbridgeslearning.com"
-                  className="text-lg hover:underline"
-                  style={{ color: '#6B8B60' }}
-                >
-                  info@buildingbridgeslearning.com
-                </a>
-              </div>
-              
-              <div className="pt-4" style={{ borderTop: '1px solid #E8E5E0' }}>
-                <p className="text-sm mb-3" style={{ color: '#5A5A5A' }}>
-                  Perfect for:
-                </p>
-                <ul className="space-y-1 text-sm" style={{ color: '#5A5A5A' }}>
-                  <li>• Interpreting agencies</li>
-                  <li>• Educational institutions</li>
-                  <li>• Healthcare organizations</li>
-                  <li>• Professional associations</li>
-                  <li>• Wellness program collaborations</li>
-                </ul>
-              </div>
+              </p>
+              <p style={{ color: '#5A5A5A' }}>
+                <strong>Response Time:</strong> Within 48 hours during business days (Eastern Time)
+              </p>
             </div>
           </div>
         </div>
 
-        {/* Quick Links */}
+        {/* Communication Accessibility */}
+        <div 
+          className="rounded-xl p-6 mb-6"
+          style={{
+            backgroundColor: 'rgba(107, 139, 96, 0.1)',
+            border: '1px solid rgba(107, 139, 96, 0.2)',
+          }}
+        >
+          <h3 className="text-lg font-semibold mb-2" style={{ color: '#2D5F3F' }}>
+            Communication Accessibility
+          </h3>
+          <p style={{ color: '#1A1A1A' }}>
+            We welcome contact from all interpreters and will communicate in your preferred format - just let us know how we can best assist you.
+          </p>
+        </div>
+
+        {/* Emergency Disclaimer */}
+        <div 
+          className="rounded-xl p-6 mb-8"
+          style={{
+            backgroundColor: 'rgba(244, 67, 54, 0.05)',
+            border: '1px solid rgba(244, 67, 54, 0.2)',
+          }}
+        >
+          <h3 className="text-lg font-semibold mb-2" style={{ color: '#8B4444' }}>
+            Important Notice
+          </h3>
+          <p style={{ color: '#1A1A1A' }}>
+            For mental health emergencies, please contact your local crisis hotline or emergency services immediately.
+          </p>
+        </div>
+
+        {/* What We Can Help With */}
+        <div 
+          className="rounded-2xl p-8 mb-8"
+          style={{
+            backgroundColor: '#FFFFFF',
+            boxShadow: '0 4px 15px rgba(0, 0, 0, 0.05)',
+          }}
+        >
+          <h2 className="text-xl font-bold mb-4" style={{ color: '#1A1A1A' }}>
+            What We Can Help With:
+          </h2>
+          <ul className="space-y-2" style={{ color: '#5A5A5A' }}>
+            <li className="flex items-start">
+              <span className="mr-2">•</span>
+              <span>Account issues, billing, and technical support</span>
+            </li>
+            <li className="flex items-start">
+              <span className="mr-2">•</span>
+              <span>Getting started with InterpretReflect tools</span>
+            </li>
+            <li className="flex items-start">
+              <span className="mr-2">•</span>
+              <span>Partnership opportunities (agencies, schools, organizations)</span>
+            </li>
+            <li className="flex items-start">
+              <span className="mr-2">•</span>
+              <span>Privacy concerns and legal inquiries</span>
+            </li>
+            <li className="flex items-start">
+              <span className="mr-2">•</span>
+              <span>Media requests</span>
+            </li>
+            <li className="flex items-start">
+              <span className="mr-2">•</span>
+              <span>General wellness platform questions</span>
+            </li>
+          </ul>
+        </div>
+
+        {/* Helpful Resources */}
         <div 
           className="rounded-2xl p-8 mb-12"
           style={{
@@ -175,75 +165,29 @@ export function Contact() {
             Helpful Resources
           </h2>
           
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div>
-              <h3 className="font-semibold mb-2" style={{ color: '#2D5F3F' }}>
-                Common Topics
-              </h3>
-              <ul className="space-y-2 text-sm" style={{ color: '#5A5A5A' }}>
-                <li>• Getting started with InterpretReflect</li>
-                <li>• Understanding your burnout assessment</li>
-                <li>• Using reflection tools effectively</li>
-                <li>• Managing your subscription</li>
-                <li>• Privacy and data security</li>
-              </ul>
-            </div>
-            
-            <div>
-              <h3 className="font-semibold mb-2" style={{ color: '#2D5F3F' }}>
-                Other Contacts
-              </h3>
-              <ul className="space-y-2 text-sm" style={{ color: '#5A5A5A' }}>
-                <li>
-                  <strong>Privacy concerns:</strong>{' '}
-                  <a 
-                    href="mailto:info@buildingbridgeslearning.com"
-                    className="hover:underline"
-                    style={{ color: '#6B8B60' }}
-                  >
-                    info@buildingbridgeslearning.com
-                  </a>
-                </li>
-                <li>
-                  <strong>Legal inquiries:</strong>{' '}
-                  <a 
-                    href="mailto:info@buildingbridgeslearning.com"
-                    className="hover:underline"
-                    style={{ color: '#6B8B60' }}
-                  >
-                    info@buildingbridgeslearning.com
-                  </a>
-                </li>
-                <li>
-                  <strong>Media requests:</strong>{' '}
-                  <a 
-                    href="mailto:info@buildingbridgeslearning.com"
-                    className="hover:underline"
-                    style={{ color: '#6B8B60' }}
-                  >
-                    info@buildingbridgeslearning.com
-                  </a>
-                </li>
-              </ul>
-            </div>
+          <div>
+            <h3 className="font-semibold mb-3" style={{ color: '#2D5F3F' }}>
+              Common Topics:
+            </h3>
+            <ul className="space-y-2" style={{ color: '#5A5A5A' }}>
+              <li className="flex items-start">
+                <span className="mr-2">•</span>
+                <span>Understanding your burnout assessment</span>
+              </li>
+              <li className="flex items-start">
+                <span className="mr-2">•</span>
+                <span>Using reflection tools effectively</span>
+              </li>
+              <li className="flex items-start">
+                <span className="mr-2">•</span>
+                <span>Managing your subscription</span>
+              </li>
+              <li className="flex items-start">
+                <span className="mr-2">•</span>
+                <span>Privacy and data security</span>
+              </li>
+            </ul>
           </div>
-        </div>
-
-        {/* Contact Form Placeholder */}
-        <div 
-          className="rounded-2xl p-8 text-center"
-          style={{
-            backgroundColor: 'rgba(92, 127, 79, 0.1)',
-            border: '2px dashed #5C7F4F',
-          }}
-        >
-          <Send className="h-12 w-12 mx-auto mb-4" style={{ color: '#6B8B60' }} />
-          <h3 className="text-xl font-bold mb-2" style={{ color: '#1A1A1A' }}>
-            Contact Form Coming Soon
-          </h3>
-          <p style={{ color: '#5A5A5A' }}>
-            In the meantime, please reach out via email. We look forward to hearing from you!
-          </p>
         </div>
 
         {/* Office Location */}
@@ -252,10 +196,7 @@ export function Contact() {
             InterpretReflect
           </h3>
           <p style={{ color: '#5A5A5A' }}>
-            Supporting interpreters worldwide from our base in the United States
-          </p>
-          <p className="text-sm mt-2" style={{ color: '#6B8B60' }}>
-            Remote-first wellness platform designed by interpreters, for interpreters
+            Supporting interpreter wellness worldwide
           </p>
         </div>
 

@@ -11,6 +11,7 @@ import { About } from './pages/About';
 import PreAssignmentPrep from './components/PreAssignmentPrep';
 import PostAssignmentDebrief from './components/PostAssignmentDebrief';
 import TeamingPrep from './components/TeamingPrep';
+import { TeamingPrepReflection } from './components/TeamingPrepReflection';
 import TeamingReflection from './components/TeamingReflection';
 import MentoringPrep from './components/MentoringPrep';
 import MentoringReflection from './components/MentoringReflection';
@@ -63,7 +64,11 @@ import {
 function App() {
   const { user, loading, signOut } = useAuth();
   const [devMode, setDevMode] = useState(false); // DEV MODE - set to true to bypass auth
-  const [activeTab, setActiveTab] = useState('reflection');
+  // Load saved tab preference or default to home
+  const [activeTab, setActiveTab] = useState(() => {
+    const savedTab = localStorage.getItem('preferredTab');
+    return savedTab || 'home'; // Default to home tab for authenticated users
+  });
   const [activeCategory, setActiveCategory] = useState('structured');
   const [currentQuestion, setCurrentQuestion] = useState(1);
   const [selectedRating, setSelectedRating] = useState<number | null>(null);
@@ -99,6 +104,13 @@ function App() {
   const [showSummaryView, setShowSummaryView] = useState<ViewMode>('daily');
   const [selectedAffirmationCategory, setSelectedAffirmationCategory] = useState<number | null>(null);
   const [currentAffirmationIndex, setCurrentAffirmationIndex] = useState(0);
+
+  // Save tab preference when it changes
+  React.useEffect(() => {
+    if (activeTab) {
+      localStorage.setItem('preferredTab', activeTab);
+    }
+  }, [activeTab]);
 
   // Load burnout data on component mount and when tab changes
   React.useEffect(() => {
@@ -1037,7 +1049,7 @@ function App() {
                 Avg Stress Relief
               </div>
               <div className="text-2xl font-bold mb-1" style={{ color: '#1A1A1A' }}>
-                —
+                -
               </div>
               <div className="text-sm" style={{ color: '#8B7AA8' }}>
                 No stress reset data yet
@@ -1150,7 +1162,7 @@ function App() {
                   const avgPostStress = postReflections.reduce((sum, r) => sum + (r.data.stressLevelAfter || 5), 0) / postReflections.length;
                   return (avgPostStress - avgPreStress).toFixed(1);
                 }
-                return '—';
+                return '-';
               })()}
             </div>
             <div className="text-xs" style={{ color: '#3A3A3A', lineHeight: '1.4' }}>
@@ -1324,7 +1336,7 @@ function App() {
                   const avgEnergy = reflectionsWithEnergy.reduce((sum, r) => sum + r.data.energyLevel, 0) / reflectionsWithEnergy.length;
                   return avgEnergy.toFixed(1);
                 }
-                return '—';
+                return '-';
               })()}
             </div>
             <div className="text-xs" style={{ color: '#3A3A3A', lineHeight: '1.4' }}>
@@ -1358,7 +1370,7 @@ function App() {
               </span>
             </div>
             <div className="text-3xl font-bold mb-2" style={{ color: burnoutData.length > 0 ? '#DAA520' : '#A9A9A9' }}>
-              {burnoutData.length > 0 ? burnoutData[burnoutData.length - 1].totalScore.toFixed(1) : '—'}
+              {burnoutData.length > 0 ? burnoutData[burnoutData.length - 1].totalScore.toFixed(1) : '-'}
             </div>
             <div className="text-xs" style={{ color: burnoutData.length > 0 ? '#3A3A3A' : '#A9A9A9', lineHeight: '1.4' }}>
               Daily assessment
@@ -1753,7 +1765,7 @@ function App() {
                       <h3 className="text-lg font-semibold text-purple-400">Zero-Config</h3>
                     </div>
                     <p className="text-gray-300 text-sm leading-relaxed">
-                      You don't need to manage endless privacy settings — these protections are
+                      You don't need to manage endless privacy settings - these protections are
                       built in from the start.
                     </p>
                   </div>
@@ -1852,7 +1864,7 @@ function App() {
                     <div className="flex items-start">
                       <Clock className="h-5 w-5 text-blue-400 mr-3 mt-0.5 flex-shrink-0" />
                       <span className="text-gray-300 text-sm">
-                        No need to revisit toggles — your preferences are stored once and can be
+                        No need to revisit toggles - your preferences are stored once and can be
                         updated if features roll out.
                       </span>
                     </div>
@@ -2192,7 +2204,7 @@ function App() {
       affirmations: [
         "My worth is not measured by how perfectly I interpret, but by the humanity I bring to each interaction.",
         "I am enough, exactly as I am, even on days when words feel heavy and my mind feels tired.",
-        "My value exists beyond my professional role—I am worthy of rest, joy, and peace.",
+        "My value exists beyond my professional role - I am worthy of rest, joy, and peace.",
         "The compassion I show myself ripples out to everyone I serve.",
         "I deserve the same kindness and understanding I facilitate for others every day."
       ]
@@ -2206,7 +2218,7 @@ function App() {
       tag: 'professional competence',
       tagColor: 'bg-orange-500',
       affirmations: [
-        "My skills have been built through dedication and practice—I trust my professional judgment.",
+        "My skills have been built through dedication and practice - I trust my professional judgment.",
         "Every challenging assignment has added to my expertise and resilience.",
         "I bring unique gifts to my work that no one else can offer in quite the same way.",
         "My experience allows me to navigate complexity with grace and wisdom.",
@@ -2223,7 +2235,7 @@ function App() {
       tagColor: 'bg-green-500',
       affirmations: [
         "I have weathered difficult assignments before, and I have the strength to handle what comes today.",
-        "My resilience is not about being unaffected—it's about knowing how to care for myself through challenges.",
+        "My resilience is not about being unaffected - it's about knowing how to care for myself through challenges.",
         "Each time I process and release what I've witnessed, I grow stronger and wiser.",
         "I can hold space for others' pain without letting it become my own.",
         "My ability to bounce back is a skill I've developed, and it serves me well."
@@ -2256,7 +2268,7 @@ function App() {
       affirmations: [
         "My work creates bridges of understanding that change lives every single day.",
         "I am a vital link in chains of communication that matter deeply to those I serve.",
-        "The service I provide goes beyond words—I facilitate human connection and dignity.",
+        "The service I provide goes beyond words - I facilitate human connection and dignity.",
         "My presence in difficult moments brings comfort and clarity to those who need it most.",
         "I am living my purpose by ensuring every voice can be heard and understood."
       ]
@@ -2270,7 +2282,7 @@ function App() {
       tag: 'boundaries',
       tagColor: 'bg-purple-600',
       affirmations: [
-        "Setting boundaries is not selfish—it's how I sustain my ability to serve others well.",
+        "Setting boundaries is not selfish - it's how I sustain my ability to serve others well.",
         "I have the right to protect my energy and choose how I spend my emotional resources.",
         "Saying no to one thing means saying yes to my wellbeing and longevity in this field.",
         "My need for rest and recovery is valid and does not diminish my dedication.",
@@ -5313,10 +5325,10 @@ function App() {
 
       {/* Teaming Prep Modal */}
       {showTeamingPrep && (
-        <TeamingPrep
-          onComplete={(results) => {
-            // Save reflection
-            saveReflection('Teaming Prep', results);
+        <TeamingPrepReflection
+          onComplete={(data) => {
+            console.log('Team Prep Results:', data);
+            // Data is automatically saved to Supabase in the component
             setShowTeamingPrep(false);
           }}
           onClose={() => setShowTeamingPrep(false)}

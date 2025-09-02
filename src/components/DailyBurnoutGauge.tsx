@@ -250,8 +250,8 @@ const DailyBurnoutGauge: React.FC<DailyBurnoutGaugeProps> = ({ onComplete, onClo
         },
         {
           value: 5,
-          label: 'Consuming me',
-          description: "Can't escape it",
+          label: 'Hard to disconnect',
+          description: 'Persistent thoughts',
           color: 'bg-red-100 hover:bg-red-200',
         },
       ],
@@ -288,8 +288,8 @@ const DailyBurnoutGauge: React.FC<DailyBurnoutGaugeProps> = ({ onComplete, onClo
         },
         {
           value: 5,
-          label: 'Compromised',
-          description: "Shouldn't be working",
+          label: 'Need support',
+          description: 'Could use extra help today',
           color: 'bg-red-100 hover:bg-red-200',
         },
       ],

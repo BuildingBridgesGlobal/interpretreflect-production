@@ -20,3 +20,29 @@ export interface User {
   subscription_plan?: 'essential' | 'professional' | 'organization';
   stripe_customer_id?: string;
 }
+
+// Reflection entry types with team analytics support
+export interface ReflectionEntry {
+  id?: string;
+  user_id: string;
+  reflection_id: string;
+  entry_kind: string;
+  team_id?: string; // Optional: for team session tracking
+  session_id?: string; // Optional: for shared team sessions
+  data: TeamingPrepData | Record<string, any>; // Can be teaming prep or other reflection types
+  created_at?: string;
+  updated_at?: string;
+}
+
+// Teaming Prep specific data structure
+export interface TeamingPrepData {
+  self_focus: number;
+  partner_focus: number;
+  one_word_feeling: string;
+  signal_type: string;
+  signal_custom?: string;
+  stressors: string[];
+  plan_if_sideways: string;
+  viz_done: "Done!";
+  micro_intention: string;
+}

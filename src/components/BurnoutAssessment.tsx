@@ -97,7 +97,7 @@ const questions: AssessmentQuestion[] = [
     id: 'q5_trauma_processing',
     category: 'Emotional Processing',
     categoryIcon: <Heart className="h-5 w-5" />,
-    question: 'After interpreting traumatic content, how long does it typically stay with you?',
+    question: 'After interpreting challenging or emotionally demanding content, how long does it typically stay with you?',
     options: [
       { value: 0, label: 'Hours', description: 'Process it same day' },
       { value: 1, label: 'Days', description: '2-3 days to process' },
@@ -134,12 +134,12 @@ const questions: AssessmentQuestion[] = [
     id: 'q8_leaving_thoughts',
     category: 'Professional Impact',
     categoryIcon: <Brain className="h-5 w-5" />,
-    question: 'How often do you think about leaving the interpreting profession?',
+    question: 'How connected do you feel to your interpreting career goals?',
     options: [
-      { value: 0, label: 'Never', description: 'Committed to the field' },
-      { value: 1, label: 'Occasionally', description: 'Fleeting thoughts' },
-      { value: 2, label: 'Frequently', description: 'Serious consideration' },
-      { value: 3, label: 'Constantly', description: 'Actively planning to leave' },
+      { value: 0, label: 'Very connected', description: 'Strong commitment to growth' },
+      { value: 1, label: 'Mostly connected', description: 'Generally satisfied with path' },
+      { value: 2, label: 'Questioning direction', description: 'Uncertain about future' },
+      { value: 3, label: 'Disconnected', description: 'Considering other paths' },
     ],
   },
   {
@@ -302,8 +302,11 @@ export const BurnoutAssessment: React.FC<AssessmentProps> = ({ isOpen, onClose, 
         <div className="px-6 py-4 border-b" style={{ borderColor: '#E8E5E0' }}>
           <div className="flex items-center justify-between">
             <h2 className="text-xl font-bold" style={{ color: '#1A1A1A' }}>
-              2-Minute Burnout Risk Assessment
+              2-Minute Wellness Check-In
             </h2>
+            <p className="text-sm mt-2" style={{ color: '#5A5A5A' }}>
+              Understanding your unique experience as an interpreter - there are no right or wrong answers
+            </p>
             <button
               onClick={onClose}
               className="p-2 rounded-lg hover:bg-gray-100 transition-colors"
@@ -429,7 +432,7 @@ const AssessmentResults: React.FC<{
       case 'strained':
         return "You're under significant strain. You need support to prevent burnout.";
       case 'severe':
-        return "You're experiencing severe stress. Immediate support is critical.";
+        return "You're experiencing high stress. Priority support is recommended to help you thrive again.";
       default:
         return '';
     }

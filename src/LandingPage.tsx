@@ -209,50 +209,40 @@ function LandingPage({ onGetStarted }: LandingPageProps) {
             >
               <Brain className="h-4 w-4 mr-2" style={{ color: '#4A6B3E' }} />
               <span className="text-sm font-semibold" style={{ color: '#4A6B3E' }}>
-                Based on neuroscience research from leading burnout studies
+                The only wellness platform built for interpreters, backed by neuroscience, grounded in community
               </span>
             </div>
 
             <h1
               id="hero-heading"
-              className="text-5xl md:text-6xl font-bold mb-2"
+              className="text-5xl md:text-6xl font-bold mb-6"
               style={{
                 color: '#1A1A1A',
                 letterSpacing: '-1px',
                 lineHeight: '1.1',
               }}
             >
-              Recovery Tools for Interpreters
+              Unwind Your Mind. Recharge Your Practice.
             </h1>
-            <h2
-              className="text-3xl md:text-4xl font-bold mb-6"
-              style={{
-                color: '#2D5F3F',
-                letterSpacing: '-0.5px',
-                lineHeight: '1.2',
-              }}
-            >
-              Process trauma. Prevent burnout. Rewire resilience.
-            </h2>
 
             <p
-              className="text-xl mb-6 max-w-3xl mx-auto"
+              className="text-xl mb-8 max-w-4xl mx-auto"
               style={{
                 color: '#5A5A5A',
                 lineHeight: '1.7',
               }}
             >
-              Every assignment leaves its mark on your mind and body. Without the right tools, those
-              marks stack into burnout.
+              Every session shapes your mind and your career. But the weight you carry isn't yours alone.{' '}
               <span className="font-semibold" style={{ color: '#2D5F3F' }}>
-                {' '}
-                InterpretReflect helps you reset, recover, and grow stronger with every session.
+                InterpretReflect™ gives you instant support, science-based tools, and a sense of belonging, so you can reset, recover, and thrive for the long run.
               </span>
             </p>
 
-            <p className="text-sm mb-8 font-medium" style={{ color: '#8B4444' }}>
-              Now accepting limited beta access
-            </p>
+            <div className="mb-8">
+              <h3 className="text-2xl font-bold mb-4" style={{ color: '#2D5F3F' }}>
+                Start Today. Join the Beta.
+              </h3>
+            </div>
 
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <button
@@ -307,38 +297,38 @@ function LandingPage({ onGetStarted }: LandingPageProps) {
                 onBlur={(e) => {
                   e.currentTarget.style.outline = 'none';
                 }}
-                aria-label="Take the 2-minute burnout risk test"
+                aria-label="Take the 2-minute wellness check-in"
               >
                 <Clock className="h-5 w-5 mr-2" />
-                Take the 2-Minute Burnout Risk Test
+                Take the 2-Minute Wellness Check-In
               </button>
             </div>
 
             <p className="text-sm mt-4 mb-2" style={{ color: '#5A5A5A' }}>
-              $12/month • Cancel anytime
+              Limited early access - $12/month - Cancel anytime
             </p>
             <p className="text-xs" style={{ color: '#4A6B3E', fontStyle: 'italic' }}>
-              Scientifically-grounded assessment • Completely confidential
+              Research-backed • 100% Confidential
             </p>
 
             {/* Inclusive Language Cue */}
             <div className="mt-12 text-center">
-              <p
-                className="text-base font-medium mb-2"
+              <h2
+                className="text-2xl font-bold mb-3"
                 style={{
                   color: '#4A6B3E',
                   letterSpacing: '0.5px',
                 }}
               >
-                For interpreters of all backgrounds, modalities, and lived experiences.
-              </p>
+                For every interpreter, everywhere.
+              </h2>
               <p
-                className="text-sm font-medium"
+                className="text-lg font-medium"
                 style={{
                   color: '#5A5A5A',
                 }}
               >
-                Accessible to Deaf and hearing interpreters, across all settings
+                Spoken, signed, Deaf or hearing, medical to legal, our tools are built for your story.
               </p>
             </div>
           </div>
@@ -358,12 +348,8 @@ function LandingPage({ onGetStarted }: LandingPageProps) {
               className="text-4xl font-bold mb-4"
               style={{ color: '#1A1A1A' }}
             >
-              Your Journey to Sustainable Practice
+              Your Path to Lasting Wellbeing
             </h2>
-            <p className="text-lg max-w-3xl mx-auto" style={{ color: '#5A5A5A' }}>
-              Simple steps, grounded in neuroscience, to transform how you carry the weight of your
-              work.
-            </p>
           </div>
 
           {/* Journey Steps */}
@@ -385,11 +371,10 @@ function LandingPage({ onGetStarted }: LandingPageProps) {
                 Recognize
               </h3>
               <p className="font-semibold mb-2" style={{ color: '#2D5F3F' }}>
-                Understand your stress patterns
+                See your stress - clearly
               </p>
               <p className="text-sm" style={{ color: '#5A5A5A' }}>
-                Take our 2-minute assessment to identify burnout risk factors and triggers specific
-                to interpretation work.
+                Take our 2-minute wellness check-in, inspired by the latest brain science, and discover your unique patterns and hidden strengths. Immediate, personalized insights show you exactly where you stand.
               </p>
             </div>
 
@@ -407,14 +392,13 @@ function LandingPage({ onGetStarted }: LandingPageProps) {
                 </span>
               </div>
               <h3 className="text-xl font-bold mb-2" style={{ color: '#1A1A1A' }}>
-                Recover
+                Reset
               </h3>
               <p className="font-semibold mb-2" style={{ color: '#2D5F3F' }}>
-                Reset your nervous system daily
+                Reset your nervous system, fast
               </p>
               <p className="text-sm" style={{ color: '#5A5A5A' }}>
-                Quick resets between assignments and guided reflections that reduce cortisol, calm
-                your stress response, and release what you've absorbed.
+                Use rapid, on-the-go techniques, grounded in neuroscience, that calm your body and clear your mind, anytime you need it. No hour-long meditations needed.
               </p>
             </div>
 
@@ -435,11 +419,10 @@ function LandingPage({ onGetStarted }: LandingPageProps) {
                 Thrive
               </h3>
               <p className="font-semibold mb-2" style={{ color: '#2D5F3F' }}>
-                Build resilience for the long term
+                Grow your resilience, session by session
               </p>
               <p className="text-sm" style={{ color: '#5A5A5A' }}>
-                Track your growth, strengthen emotional intelligence, and develop sustainable
-                practices that last.
+                Track your emotional progress, unlock your best self, and build sustainable practices proven to rewire your brain for resilience.
               </p>
             </div>
           </div>
@@ -455,11 +438,8 @@ function LandingPage({ onGetStarted }: LandingPageProps) {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
             <h2 id="tools-heading" className="text-4xl font-bold mb-4" style={{ color: '#1A1A1A' }}>
-              Tools Designed for Your Reality
+              Designed for How (and Where) Interpreters Really Work
             </h2>
-            <p className="text-lg max-w-3xl mx-auto" style={{ color: '#5A5A5A' }}>
-              Evidence-based solutions that fit between assignments, in hallways, and during breaks
-            </p>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-5xl mx-auto">
@@ -508,11 +488,10 @@ function LandingPage({ onGetStarted }: LandingPageProps) {
                 Reflection Studio
               </h3>
               <p className="font-semibold mb-3" style={{ color: '#2D5F3F' }}>
-                Process assignments safely
+                Take a breath, process it all, and set boundaries
               </p>
               <p className="mb-4" style={{ color: '#5A5A5A', lineHeight: '1.6' }}>
-                Guided prompts specifically for interpreters to process vicarious trauma, set
-                boundaries, and track professional growth.
+                Research-driven prompts, anytime you need a reset.
               </p>
               <ul className="space-y-2">
                 <li className="flex items-start">
@@ -522,7 +501,7 @@ function LandingPage({ onGetStarted }: LandingPageProps) {
                     style={{ color: '#2D5F3F' }}
                   />
                   <span className="text-sm" style={{ color: '#3A3A3A' }}>
-                    Vicarious trauma processing
+                    Process challenging experiences
                   </span>
                 </li>
                 <li className="flex items-start">
@@ -540,7 +519,7 @@ function LandingPage({ onGetStarted }: LandingPageProps) {
                     style={{ color: '#5C7F4F' }}
                   />
                   <span className="text-sm" style={{ color: '#3A3A3A' }}>
-                    Professional growth tracking
+                    See your professional growth in real time
                   </span>
                 </li>
               </ul>
@@ -584,11 +563,10 @@ function LandingPage({ onGetStarted }: LandingPageProps) {
                 Quick Resets
               </h3>
               <p className="font-semibold mb-3" style={{ color: '#2D5F3F' }}>
-                2-minute nervous system regulation
+                Down-regulate stress instantly
               </p>
               <p className="mb-4" style={{ color: '#5A5A5A', lineHeight: '1.6' }}>
-                Breathing exercises, tension release, and grounding tools scientifically shown to
-                lower stress markers—perfect for courthouse hallways or hospital breaks.
+                2-minute breathing, body tension, and sensory grounding - built for waiting rooms, hallways, and in-between moments.
               </p>
               <ul className="space-y-2">
                 <li className="flex items-start">
@@ -659,11 +637,10 @@ function LandingPage({ onGetStarted }: LandingPageProps) {
                 Elya AI Companion
               </h3>
               <p className="font-semibold mb-3" style={{ color: '#2D5F3F' }}>
-                24/7 support that gets it
+                Your private, always-on wellness buddy
               </p>
               <p className="mb-4" style={{ color: '#5A5A5A', lineHeight: '1.6' }}>
-                Debrief difficult sessions, process emotions, and receive personalized wellness
-                strategies from an AI trained on interpreter challenges.
+                Debrief tough sessions with an AI who 'gets it' - get actionable, science-powered tips made for interpreters.
               </p>
               <ul className="space-y-2">
                 <li className="flex items-start">
@@ -672,7 +649,7 @@ function LandingPage({ onGetStarted }: LandingPageProps) {
                     style={{ color: '#5C7F4F' }}
                   />
                   <span className="text-sm" style={{ color: '#3A3A3A' }}>
-                    Debrief difficult sessions
+                    Debrief tough sessions with an AI who 'gets it'
                   </span>
                 </li>
                 <li className="flex items-start">
@@ -681,7 +658,16 @@ function LandingPage({ onGetStarted }: LandingPageProps) {
                     style={{ color: '#5C7F4F' }}
                   />
                   <span className="text-sm" style={{ color: '#3A3A3A' }}>
-                    Emotional processing support
+                    Get actionable, science-powered tips made for interpreters
+                  </span>
+                </li>
+                <li className="flex items-start">
+                  <CheckCircle
+                    className="h-5 w-5 mr-2 mt-0.5 flex-shrink-0"
+                    style={{ color: '#5C7F4F' }}
+                  />
+                  <span className="text-sm" style={{ color: '#3A3A3A' }}>
+                    Emotional check-ins, tailored just for you
                   </span>
                 </li>
                 <li className="flex items-start">
@@ -727,11 +713,10 @@ function LandingPage({ onGetStarted }: LandingPageProps) {
                 Growth Tracking
               </h3>
               <p className="font-semibold mb-3" style={{ color: '#2D5F3F' }}>
-                See your resilience build
+                See your wins and your progress, not just your setbacks
               </p>
               <p className="mb-4" style={{ color: '#5A5A5A', lineHeight: '1.6' }}>
-                Monitor stress patterns, celebrate wins, and visualize your development over time.
-                Watch how consistent practice reshapes your brain's resilience pathways.
+                Visualize how your brain and resilience adapt. Celebrate every step, no matter how small.
               </p>
               <ul className="space-y-2">
                 <li className="flex items-start">
@@ -740,7 +725,7 @@ function LandingPage({ onGetStarted }: LandingPageProps) {
                     style={{ color: '#5C7F4F' }}
                   />
                   <span className="text-sm" style={{ color: '#3A3A3A' }}>
-                    Stress pattern analysis
+                    Visualize how your brain and resilience adapt
                   </span>
                 </li>
                 <li className="flex items-start">
@@ -749,16 +734,7 @@ function LandingPage({ onGetStarted }: LandingPageProps) {
                     style={{ color: '#5C7F4F' }}
                   />
                   <span className="text-sm" style={{ color: '#3A3A3A' }}>
-                    Resilience metrics
-                  </span>
-                </li>
-                <li className="flex items-start">
-                  <CheckCircle
-                    className="h-5 w-5 mr-2 mt-0.5 flex-shrink-0"
-                    style={{ color: '#5C7F4F' }}
-                  />
-                  <span className="text-sm" style={{ color: '#3A3A3A' }}>
-                    Progress celebrations
+                    Celebrate every step, no matter how small
                   </span>
                 </li>
               </ul>
@@ -907,7 +883,7 @@ function LandingPage({ onGetStarted }: LandingPageProps) {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
             <h2 id="why-heading" className="text-4xl font-bold mb-4" style={{ color: '#1A1A1A' }}>
-              Why InterpretReflect?
+              Why Interpreters Choose InterpretReflect™
             </h2>
           </div>
 
@@ -925,8 +901,7 @@ function LandingPage({ onGetStarted }: LandingPageProps) {
                 Built on Science
               </h3>
               <p className="text-sm" style={{ color: '#5A5A5A' }}>
-                Grounded in neuroscience research and trauma-informed practices, adapted
-                specifically for language professionals.
+                Tools and insights rooted in cutting-edge neuroscience, emotional intelligence, and trauma research, customized for your unique role.
               </p>
             </div>
 
@@ -940,10 +915,10 @@ function LandingPage({ onGetStarted }: LandingPageProps) {
                 <Clock className="h-8 w-8" style={{ color: '#2D5F3F' }} />
               </div>
               <h3 className="text-lg font-bold mb-2" style={{ color: '#1A1A1A' }}>
-                Made for Your Schedule
+                Made for Busy Schedules
               </h3>
               <p className="text-sm" style={{ color: '#5A5A5A' }}>
-                No hour-long commitments. Tools that fit into 2-minute breaks between assignments.
+                All interventions fit into 2-minute breaks, no hidden time commitments, no fluff, maximum impact.
               </p>
             </div>
 
@@ -957,11 +932,10 @@ function LandingPage({ onGetStarted }: LandingPageProps) {
                 <Shield className="h-8 w-8" style={{ color: '#2D5F3F' }} />
               </div>
               <h3 className="text-lg font-bold mb-2" style={{ color: '#1A1A1A' }}>
-                Completely Confidential
+                Radically Confidential
               </h3>
               <p className="text-sm" style={{ color: '#5A5A5A' }}>
-                Your reflections are private and secure. Process freely without professional
-                concerns.
+                Your journey stays private, always. Data is safe, secure, and never shared.
               </p>
             </div>
 
@@ -975,11 +949,10 @@ function LandingPage({ onGetStarted }: LandingPageProps) {
                 <Award className="h-8 w-8" style={{ color: '#2D5F3F' }} />
               </div>
               <h3 className="text-lg font-bold mb-2" style={{ color: '#1A1A1A' }}>
-                Professional Development
+                Real Professional Growth
               </h3>
               <p className="text-sm" style={{ color: '#5A5A5A' }}>
-                Earn continuing education credits while investing in your wellness (Professional
-                Plan).
+                Invest in wellness and your future. Professional Plan unlocks CEU credits for continuous learning.
               </p>
             </div>
           </div>
@@ -999,14 +972,8 @@ function LandingPage({ onGetStarted }: LandingPageProps) {
               className="text-4xl font-bold mb-4"
               style={{ color: '#1A1A1A' }}
             >
-              Choose Your Wellness Journey
+              Plans for Every Step of Your Journey
             </h2>
-            <p className="text-lg" style={{ color: '#5A5A5A' }}>
-              Invest in your wellbeing with plans designed for every interpreter
-            </p>
-            <p className="text-base mt-2 font-medium" style={{ color: '#8B4444' }}>
-              Limited beta access — join before spots fill up
-            </p>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-5xl mx-auto">
@@ -1028,11 +995,8 @@ function LandingPage({ onGetStarted }: LandingPageProps) {
                 BETA ACCESS
               </div>
               <h3 className="text-2xl font-bold mb-2" style={{ color: '#1A1A1A' }}>
-                Essential
+                Essential Plan
               </h3>
-              <p className="mb-6" style={{ color: '#5A5A5A' }}>
-                Build your foundation
-              </p>
               <div className="mb-2">
                 <span className="text-4xl font-bold" style={{ color: '#1A1A1A' }}>
                   $12
@@ -1048,28 +1012,28 @@ function LandingPage({ onGetStarted }: LandingPageProps) {
                     className="h-5 w-5 mr-2 mt-0.5 flex-shrink-0"
                     style={{ color: '#5C7F4F' }}
                   />
-                  <span style={{ color: '#5A5A5A' }}>Unlimited reflections</span>
+                  <span style={{ color: '#5A5A5A' }}>Unlimited guided reflections</span>
                 </li>
                 <li className="flex items-start">
                   <CheckCircle
                     className="h-5 w-5 mr-2 mt-0.5 flex-shrink-0"
                     style={{ color: '#5C7F4F' }}
                   />
-                  <span style={{ color: '#5A5A5A' }}>All quick reset techniques</span>
+                  <span style={{ color: '#5A5A5A' }}>All quick reset tools</span>
                 </li>
                 <li className="flex items-start">
                   <CheckCircle
                     className="h-5 w-5 mr-2 mt-0.5 flex-shrink-0"
                     style={{ color: '#5C7F4F' }}
                   />
-                  <span style={{ color: '#5A5A5A' }}>Growth tracking</span>
+                  <span style={{ color: '#5A5A5A' }}>Elya AI Companion</span>
                 </li>
                 <li className="flex items-start">
                   <CheckCircle
                     className="h-5 w-5 mr-2 mt-0.5 flex-shrink-0"
                     style={{ color: '#5C7F4F' }}
                   />
-                  <span style={{ color: '#5A5A5A' }}>Email support</span>
+                  <span style={{ color: '#5A5A5A' }}>Growth tracking + insights</span>
                 </li>
                 <li className="flex items-start">
                   <X className="h-5 w-5 mr-2 mt-0.5 flex-shrink-0" style={{ color: '#C0C0C0' }} />
@@ -1127,59 +1091,46 @@ function LandingPage({ onGetStarted }: LandingPageProps) {
                     border: '1px solid #5C7F4F',
                   }}
                 >
-                  LAUNCHING Q2 2025
+                  COMING Q2 2025
                 </span>
               </div>
               <h3 className="text-2xl font-bold mb-2 mt-2" style={{ color: '#1A1A1A' }}>
-                Professional
+                Professional (Coming Q2 2025)
               </h3>
-              <p className="mb-6" style={{ color: '#5A5A5A' }}>
-                Advance your practice
-              </p>
               <div className="mb-2">
                 <span className="text-4xl font-bold" style={{ color: '#1A1A1A' }}>
                   $24
                 </span>
                 <span style={{ color: '#5A5A5A' }}>/month</span>
               </div>
-              <p className="text-sm mb-6 font-medium" style={{ color: '#4A6B3E' }}>
-                Professional pricing
-              </p>
               <ul className="space-y-3 mb-8">
                 <li className="flex items-start">
                   <CheckCircle
                     className="h-5 w-5 mr-2 mt-0.5 flex-shrink-0"
                     style={{ color: '#5C7F4F' }}
                   />
-                  <span style={{ color: '#5A5A5A' }}>Everything in Essential</span>
+                  <span style={{ color: '#5A5A5A' }}>Everything in Essential +</span>
                 </li>
                 <li className="flex items-start">
                   <CheckCircle
                     className="h-5 w-5 mr-2 mt-0.5 flex-shrink-0"
                     style={{ color: '#5C7F4F' }}
                   />
-                  <span style={{ color: '#5A5A5A' }}>Elya AI Companion</span>
+                  <span style={{ color: '#5A5A5A' }}>CEUs & email support</span>
                 </li>
                 <li className="flex items-start">
                   <CheckCircle
                     className="h-5 w-5 mr-2 mt-0.5 flex-shrink-0"
                     style={{ color: '#5C7F4F' }}
                   />
-                  <span style={{ color: '#5A5A5A' }}>Advanced analytics</span>
+                  <span style={{ color: '#5A5A5A' }}>Advanced progress analytics</span>
                 </li>
                 <li className="flex items-start">
                   <CheckCircle
                     className="h-5 w-5 mr-2 mt-0.5 flex-shrink-0"
                     style={{ color: '#5C7F4F' }}
                   />
-                  <span style={{ color: '#5A5A5A' }}>CEU credits included</span>
-                </li>
-                <li className="flex items-start">
-                  <CheckCircle
-                    className="h-5 w-5 mr-2 mt-0.5 flex-shrink-0"
-                    style={{ color: '#5C7F4F' }}
-                  />
-                  <span style={{ color: '#5A5A5A' }}>Priority support</span>
+                  <span style={{ color: '#5A5A5A' }}>Priority support & more</span>
                 </li>
               </ul>
               <div className="mt-6" style={{ minHeight: '60px' }}>
@@ -1307,54 +1258,6 @@ function LandingPage({ onGetStarted }: LandingPageProps) {
         </div>
       </section>
 
-      {/* CTA Section */}
-      <section
-        className="py-20"
-        style={{
-          background: 'linear-gradient(135deg, #2D5F3F 0%, #3A704D 100%)',
-        }}
-        aria-labelledby="cta-heading"
-      >
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h2 id="cta-heading" className="text-4xl font-bold mb-4" style={{ color: '#FFFFFF' }}>
-            Your Wellness Journey Starts Today
-          </h2>
-          <p className="text-xl mb-8" style={{ color: 'rgba(255, 255, 255, 0.95)' }}>
-            Join thousands of interpreters who've discovered a sustainable way to thrive
-          </p>
-          <button
-            onClick={onGetStarted}
-            className="px-10 py-4 rounded-xl font-semibold text-lg transition-all inline-flex items-center focus:outline-none focus:ring-4 focus:ring-offset-2 focus:ring-white"
-            style={{
-              backgroundColor: '#FFFFFF',
-              color: '#1A1A1A',
-              boxShadow: '0 4px 15px rgba(0, 0, 0, 0.1)',
-            }}
-            onMouseEnter={(e) => {
-              e.currentTarget.style.transform = 'translateY(-2px) scale(1.02)';
-              e.currentTarget.style.boxShadow = '0 8px 25px rgba(0, 0, 0, 0.15)';
-            }}
-            onMouseLeave={(e) => {
-              e.currentTarget.style.transform = 'translateY(0) scale(1)';
-              e.currentTarget.style.boxShadow = '0 4px 15px rgba(0, 0, 0, 0.1)';
-            }}
-            onFocus={(e) => {
-              e.currentTarget.style.outline = '3px solid #1A1A1A';
-              e.currentTarget.style.outlineOffset = '2px';
-            }}
-            onBlur={(e) => {
-              e.currentTarget.style.outline = 'none';
-            }}
-            aria-label="Get started with InterpretReflect today"
-          >
-            Get Started Today
-            <ArrowRight className="h-5 w-5 ml-2" aria-hidden="true" />
-          </button>
-          <p className="mt-4 text-sm" style={{ color: 'rgba(255, 255, 255, 0.8)' }}>
-            Beta access available now • Cancel anytime
-          </p>
-        </div>
-      </section>
 
       {/* CTA Section */}
       <section
@@ -1364,10 +1267,10 @@ function LandingPage({ onGetStarted }: LandingPageProps) {
       >
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <h2 id="cta-heading" className="text-4xl font-bold mb-4" style={{ color: '#1A1A1A' }}>
-            Ready to Transform Your Practice?
+            Start Your Journey Today
           </h2>
           <p className="text-xl mb-8" style={{ color: '#5A5A5A' }}>
-            You don't have to carry the weight alone anymore.
+            Your wellbeing is non-negotiable, and you don't have to do it alone.
           </p>
 
           <div className="flex flex-col items-center space-y-6">
@@ -1389,10 +1292,10 @@ function LandingPage({ onGetStarted }: LandingPageProps) {
               }}
               aria-label="Get started with InterpretReflect"
             >
-              Get Started Today →
+              Get Started
             </button>
             <p className="text-sm" style={{ color: '#5A5A5A' }}>
-              Cancel anytime • 100% secure
+              Beta access available • Cancel anytime • 100% secure
             </p>
 
             <button
@@ -1409,20 +1312,20 @@ function LandingPage({ onGetStarted }: LandingPageProps) {
               onMouseLeave={(e) => {
                 e.currentTarget.style.backgroundColor = 'transparent';
               }}
-              aria-label="Take the burnout risk test"
+              aria-label="Take the wellness check-in"
             >
-              Or: Take the 2-Minute Burnout Risk Test →
+              Or: Take the 2-Minute Wellness Check-In →
             </button>
             <p className="text-sm mt-2" style={{ color: '#5A5A5A' }}>
               See your stress patterns instantly
             </p>
             <p className="text-xs mt-1" style={{ color: '#4A6B3E', fontStyle: 'italic' }}>
-              Scientifically-grounded assessment • Completely confidential
+              Research-backed • Completely confidential
             </p>
           </div>
 
           <p className="mt-12 text-base" style={{ color: '#5A5A5A' }}>
-            <strong>Questions?</strong> Read our FAQ or email support@interpretreflect.com
+            <strong>Questions?</strong> Email info@buildingbridgeslearning.com
           </p>
         </div>
       </section>

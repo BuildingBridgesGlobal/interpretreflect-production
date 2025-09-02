@@ -1,12 +1,17 @@
 import React, { createContext, useContext, useEffect, useState } from 'react';
 import { supabase } from '../lib/supabase';
-import { User } from '@supabase/supabase-js';
+import { User, AuthResponse, AuthError } from '@supabase/supabase-js';
+
+interface AuthResult {
+  user?: User | null;
+  error?: AuthError | null;
+}
 
 interface AuthContextType {
   user: User | null;
   loading: boolean;
-  signIn: (email: string, password: string) => Promise<any>;
-  signUp: (email: string, password: string) => Promise<any>;
+  signIn: (email: string, password: string) => Promise<AuthResult>;
+  signUp: (email: string, password: string) => Promise<AuthResult>;
   signOut: () => Promise<void>;
 }
 
@@ -80,22 +85,22 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
   }, []);
 
-  const signIn = async (email: string, password: string) => {
+  const signIn = async (email: string, password: string): Promise<AuthResult> => {
     const { data, error } = await supabase.auth.signInWithPassword({
       email,
       password,
     });
     if (error) throw error;
-    return data;
+    return { user: data.user, error: null };
   };
 
-  const signUp = async (email: string, password: string) => {
+  const signUp = async (email: string, password: string): Promise<AuthResult> => {
     const { data, error } = await supabase.auth.signUp({
       email,
       password,
     });
     if (error) throw error;
-    return data;
+    return { user: data.user, error: null };
   };
 
   const signOut = async () => {

@@ -4,20 +4,15 @@ import {
   Shield,
   Brain,
   Heart,
-  Target,
   Users,
-  Sparkles,
   CheckCircle,
-  AlertTriangle,
   TrendingUp,
   RefreshCw,
   MessageCircle,
   BookOpen,
   Clock,
   Award,
-  Zap,
   ArrowRight,
-  Star,
   X,
 } from 'lucide-react';
 import { AuthModal } from './components/AuthModal';
@@ -39,7 +34,7 @@ function LandingPage({ onGetStarted }: LandingPageProps) {
   const [pricingModalOpen, setPricingModalOpen] = useState(false);
   const [assessmentResults, setAssessmentResults] = useState<AssessmentResults | null>(null);
   const [waitlistModalOpen, setWaitlistModalOpen] = useState(false);
-  const [waitlistPlan, setWaitlistPlan] = useState<'professional' | 'organizations'>(
+  const [waitlistPlan] = useState<'professional' | 'organizations'>(
     'professional'
   );
   const [showStripeMessage, setShowStripeMessage] = useState(false);
@@ -73,7 +68,7 @@ function LandingPage({ onGetStarted }: LandingPageProps) {
     setPricingModalOpen(true);
   };
 
-  const handleSelectPlan = (plan: 'essential' | 'professional') => {
+  const handleSelectPlan = () => {
     // Close pricing modal and open signup
     setPricingModalOpen(false);
     setAuthMode('signup');

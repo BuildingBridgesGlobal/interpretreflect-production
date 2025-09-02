@@ -1,11 +1,23 @@
 import React, { useState } from 'react';
 import { 
   X, Users, Check, ChevronRight, ChevronLeft, 
-  Sliders, MessageSquare, CheckSquare, Eye, Heart 
+  Eye, Heart 
 } from 'lucide-react';
 import { TEAMING_PREP } from '../config/teaming_prep.config';
 import { supabase, TeamingPrepData, ReflectionEntry } from '../lib/supabase';
 import { useAuth } from '../contexts/AuthContext';
+
+interface FieldConfig {
+  id: string;
+  type: 'slider' | 'text' | 'select' | 'radio' | 'checkbox';
+  label: string;
+  min?: number;
+  max?: number;
+  step?: number;
+  maxLength?: number;
+  ariaLabel?: string;
+  options?: string[];
+}
 
 interface TeamingPrepReflectionProps {
   onClose: () => void;
@@ -34,7 +46,7 @@ export const TeamingPrepReflection: React.FC<TeamingPrepReflectionProps> = ({
     micro_intention: ''
   });
 
-  const handleFieldChange = (fieldId: string, value: any) => {
+  const handleFieldChange = (fieldId: string, value: string | number | string[] | "Done!") => {
     setFormData(prev => ({
       ...prev,
       [fieldId]: value
@@ -168,7 +180,7 @@ export const TeamingPrepReflection: React.FC<TeamingPrepReflectionProps> = ({
               </p>
             )}
             
-            {section.fields?.map((field: any) => (
+            {section.fields?.map((field: FieldConfig) => (
               <div key={field.id} className="space-y-2">
                 {field.type === 'slider' && (
                   <>
@@ -240,7 +252,7 @@ export const TeamingPrepReflection: React.FC<TeamingPrepReflectionProps> = ({
               </p>
             )}
             
-            {section.fields?.map((field: any) => (
+            {section.fields?.map((field: FieldConfig) => (
               <div key={field.id} className="space-y-2">
                 {field.type === 'select' && (
                   <>

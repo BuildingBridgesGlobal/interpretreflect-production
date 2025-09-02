@@ -14,10 +14,7 @@ import {
   ChevronLeft,
   AlertCircle,
   Target,
-  Sparkles,
   Timer,
-  Award,
-  TrendingUp,
 } from 'lucide-react';
 
 interface PreAssignmentPrepProps {
@@ -40,7 +37,7 @@ const PreAssignmentPrep: React.FC<PreAssignmentPrepProps> = ({ onComplete, onClo
   const [cognitiveLoad, setCognitiveLoad] = useState<string>('');
   const [isButterflying, setIsButterflying] = useState(false);
   const [butterflyTimer, setButterflyTimer] = useState(30);
-  const [groundingStep, setGroundingStep] = useState(0);
+  const [groundingStep] = useState(0);
   const [groundingInputs, setGroundingInputs] = useState({
     see: ['', '', '', '', ''],
     touch: ['', '', '', ''],

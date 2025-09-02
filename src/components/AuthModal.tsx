@@ -44,8 +44,8 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, mode: ini
         await signIn(email, password);
         onClose();
       }
-    } catch (err: any) {
-      setError(err.message || 'An error occurred');
+    } catch (err: unknown) {
+      setError(err instanceof Error ? err.message : 'An error occurred');
     } finally {
       setLoading(false);
     }

@@ -7,7 +7,6 @@ import {
   Scale,
   Lightbulb,
   Target,
-  CheckCircle,
   Check,
   ChevronRight,
   ChevronLeft,
@@ -116,8 +115,8 @@ const CompassCheck: React.FC<CompassCheckProps> = ({ onComplete, onClose }) => {
   const [differentNext, setDifferentNext] = useState('');
   const [supportNeeded, setSupportNeeded] = useState('');
   const [honorAction, setHonorAction] = useState('');
-  const [stressLevel, setStressLevel] = useState(5);
-  const [energyLevel, setEnergyLevel] = useState(5);
+  const [stressLevel] = useState(5);
+  const [energyLevel] = useState(5);
 
   const [showWisdom, setShowWisdom] = useState(false);
 

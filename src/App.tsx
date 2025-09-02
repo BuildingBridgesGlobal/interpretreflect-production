@@ -1,6 +1,6 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useRef } from 'react';
 import { Routes, Route } from 'react-router-dom';
-import type { BurnoutData, ViewMode, ModalResults } from './types';
+import type { BurnoutData, ViewMode } from './types';
 import LandingPage from './LandingPage';
 import { useAuth } from './contexts/AuthContext';
 import { supabase } from './lib/supabase';
@@ -10,9 +10,9 @@ import { Contact } from './pages/Contact';
 import { About } from './pages/About';
 import PreAssignmentPrep from './components/PreAssignmentPrep';
 import PostAssignmentDebrief from './components/PostAssignmentDebrief';
-import TeamingPrep from './components/TeamingPrep';
-import { TeamingPrepReflection } from './components/TeamingPrepReflection';
+import { TeamingPrepEnhanced } from './components/TeamingPrepEnhanced';
 import TeamingReflection from './components/TeamingReflection';
+import { TeamingReflectionEnhanced } from './components/TeamingReflectionEnhanced';
 import MentoringPrep from './components/MentoringPrep';
 import MentoringReflection from './components/MentoringReflection';
 import WellnessCheckIn from './components/WellnessCheckIn';
@@ -42,7 +42,6 @@ import {
   Thermometer,
   Eye,
   Mountain,
-  Brain,
   ArrowLeft,
   Star,
   Activity,
@@ -57,7 +56,6 @@ import {
   Database,
   Settings as SettingsIcon,
   Download,
-  FileSpreadsheet,
   X,
 } from 'lucide-react';
 
@@ -70,9 +68,6 @@ function App() {
     return savedTab || 'home'; // Default to home tab for authenticated users
   });
   const [activeCategory, setActiveCategory] = useState('structured');
-  const [currentQuestion, setCurrentQuestion] = useState(1);
-  const [selectedRating, setSelectedRating] = useState<number | null>(null);
-  const [showElyaModal, setShowElyaModal] = useState(false);
   const [insightsTimePeriod, setInsightsTimePeriod] = useState('month');
   const [showPrivacyPage, setShowPrivacyPage] = useState(false);
   const [showUserDropdown, setShowUserDropdown] = useState(false);
@@ -96,10 +91,10 @@ function App() {
   const [showWellnessCheckIn, setShowWellnessCheckIn] = useState(false);
   const [showCompassCheck, setShowCompassCheck] = useState(false);
   const [showDailyBurnout, setShowDailyBurnout] = useState(false);
-  const [savedReflections, setSavedReflections] = useState<any[]>([]);
-  const [techniqueUsage, setTechniqueUsage] = useState<any[]>([]);
+  const [savedReflections, setSavedReflections] = useState<Record<string, unknown>[]>([]);
+  const [techniqueUsage, setTechniqueUsage] = useState<Record<string, unknown>[]>([]);
   const [currentTechniqueId, setCurrentTechniqueId] = useState<string | null>(null);
-  const [recoveryHabits, setRecoveryHabits] = useState<any[]>([]);
+  const [recoveryHabits, setRecoveryHabits] = useState<Record<string, unknown>[]>([]);
   const [burnoutData, setBurnoutData] = useState<BurnoutData[]>([]);
   const [showSummaryView, setShowSummaryView] = useState<ViewMode>('daily');
   const [selectedAffirmationCategory, setSelectedAffirmationCategory] = useState<number | null>(null);
@@ -151,7 +146,7 @@ function App() {
               setBurnoutData(formattedData.reverse());
               // Successfully loaded burnout data from Supabase
             }
-          } catch (error) {
+          } catch {
             // Error loading from Supabase, fallback to localStorage
             // Fallback to localStorage
             const stored = localStorage.getItem('burnoutAssessments');
@@ -204,7 +199,7 @@ function App() {
   }, []);
   
   // Helper function to save a reflection
-  const saveReflection = (type: string, data: any) => {
+  const saveReflection = (type: string, data: Record<string, unknown>) => {
     const newReflection = {
       id: Date.now().toString(),
       type,
@@ -276,7 +271,7 @@ function App() {
   };
   
   // Helper function to track recovery habits
-  const trackRecoveryHabit = (type: string, value: any, metadata?: any) => {
+  const trackRecoveryHabit = (type: string, value: unknown, metadata?: Record<string, unknown>) => {
     const habit = {
       id: Date.now().toString(),
       type,
@@ -291,7 +286,7 @@ function App() {
   };
   
   // Helper function to get reflection summary
-  const getReflectionSummary = (reflection: any) => {
+  const getReflectionSummary = (reflection: Record<string, unknown>) => {
     const data = reflection.data;
     
     switch (reflection.type) {
@@ -1941,164 +1936,6 @@ function App() {
     </div>
   );
 
-  const renderChatWithElyaOld = () => (
-    <div
-      className="fixed inset-0 flex items-center justify-center z-50"
-      style={{
-        background:
-          'linear-gradient(180deg, rgba(250, 249, 246, 0.95) 0%, rgba(240, 237, 232, 0.95) 100%)',
-        backdropFilter: 'blur(20px)',
-      }}
-    >
-      <div className="relative">
-        {/* Animated background circles */}
-        <div
-          className="absolute -top-20 -left-20 w-40 h-40 rounded-full opacity-20"
-          style={{
-            background: 'radial-gradient(circle, #5C7F4F 0%, transparent 70%)',
-            animation: 'pulse 4s ease-in-out infinite',
-          }}
-        ></div>
-        <div
-          className="absolute -bottom-20 -right-20 w-40 h-40 rounded-full opacity-20"
-          style={{
-            background: 'radial-gradient(circle, #5C7F4F 0%, transparent 70%)',
-            animation: 'pulse 4s ease-in-out infinite 2s',
-          }}
-        ></div>
-
-        <div
-          className="rounded-3xl p-10 max-w-lg mx-4 text-center relative"
-          style={{
-            background: 'linear-gradient(145deg, #FFFFFF 0%, #FAFAF8 100%)',
-            boxShadow: '0 20px 60px rgba(92, 127, 79, 0.25), 0 10px 30px rgba(0, 0, 0, 0.1)',
-            border: '2px solid rgba(92, 127, 79, 0.2)',
-          }}
-        >
-          {/* Icon container with glow effect */}
-          <div className="relative inline-block mb-8">
-            <div
-              className="absolute inset-0 rounded-full blur-xl opacity-30"
-              style={{
-                background: 'radial-gradient(circle, #5C7F4F 0%, transparent 70%)',
-                transform: 'scale(1.5)',
-              }}
-            ></div>
-            <div
-              className="relative rounded-full p-6"
-              style={{
-                background: 'linear-gradient(135deg, #4A6B3E 0%, #5C7F4F 100%)',
-                boxShadow: '0 8px 20px rgba(92, 127, 79, 0.4)',
-              }}
-            >
-              <Brain className="h-14 w-14" style={{ color: '#FFFFFF' }} />
-            </div>
-          </div>
-
-          <h2
-            className="text-3xl font-bold mb-4"
-            style={{
-              color: '#1A1A1A',
-              letterSpacing: '-0.5px',
-            }}
-          >
-            Meet Elya, Your AI Companion
-          </h2>
-
-          <div className="mb-8">
-            <p
-              className="text-lg mb-4"
-              style={{
-                color: '#5A5A5A',
-                lineHeight: '1.7',
-              }}
-            >
-              Your personal wellness AI is preparing something special.
-            </p>
-            <p
-              className="text-base"
-              style={{
-                color: '#6B7C6B',
-                lineHeight: '1.6',
-              }}
-            >
-              While Elya gets ready, explore our reflection tools and stress reset techniques to
-              begin your wellness journey.
-            </p>
-          </div>
-
-          {/* Status indicator */}
-          <div
-            className="mb-8 inline-flex items-center px-4 py-2 rounded-full"
-            style={{
-              backgroundColor: 'rgba(92, 127, 79, 0.1)',
-              border: '1px solid rgba(92, 127, 79, 0.3)',
-            }}
-          >
-            <div
-              className="w-2 h-2 rounded-full mr-3"
-              style={{
-                backgroundColor: '#5C7F4F',
-                animation: 'pulse 2s ease-in-out infinite',
-              }}
-            ></div>
-            <span className="text-sm font-medium" style={{ color: '#2D5F3F' }}>
-              Beta Launch Coming Soon
-            </span>
-          </div>
-
-          <div className="flex flex-col sm:flex-row gap-3 justify-center">
-            <button
-              className="px-8 py-3 rounded-xl font-semibold transition-all flex items-center justify-center"
-              style={{
-                background: 'linear-gradient(145deg, #6B8B60 0%, #5F7F55 100%)',
-                color: '#FFFFFF',
-                boxShadow: '0 4px 15px rgba(107, 139, 96, 0.3)',
-              }}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.transform = 'translateY(-2px) scale(1.02)';
-                e.currentTarget.style.boxShadow = '0 6px 20px rgba(107, 139, 96, 0.4)';
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.transform = 'translateY(0) scale(1)';
-                e.currentTarget.style.boxShadow = '0 4px 15px rgba(107, 139, 96, 0.3)';
-              }}
-            >
-              <Sparkles className="h-5 w-5 mr-2" />
-              Join the Waitlist
-            </button>
-            <button
-              onClick={() => setActiveTab('home')}
-              className="px-8 py-3 rounded-xl font-semibold transition-all flex items-center justify-center"
-              style={{
-                backgroundColor: '#FFFFFF',
-                color: '#1A1A1A',
-                border: '2px solid #E8E5E0',
-              }}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.borderColor = '#5C7F4F';
-                e.currentTarget.style.backgroundColor = '#F8FBF6';
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.borderColor = '#E8E5E0';
-                e.currentTarget.style.backgroundColor = '#FFFFFF';
-              }}
-            >
-              <ArrowLeft className="h-4 w-4 mr-2" />
-              Back to Home
-            </button>
-          </div>
-        </div>
-      </div>
-
-      <style>{`
-        @keyframes pulse {
-          0%, 100% { opacity: 0.2; transform: scale(1); }
-          50% { opacity: 0.3; transform: scale(1.1); }
-        }
-      `}</style>
-    </div>
-  );
 
   const reflectionCards = [
     {
@@ -5325,7 +5162,7 @@ function App() {
 
       {/* Teaming Prep Modal */}
       {showTeamingPrep && (
-        <TeamingPrepReflection
+        <TeamingPrepEnhanced
           onComplete={(data) => {
             console.log('Team Prep Results:', data);
             // Data is automatically saved to Supabase in the component
@@ -5337,13 +5174,14 @@ function App() {
 
       {/* Teaming Reflection Modal */}
       {showTeamingReflection && (
-        <TeamingReflection
-          onComplete={(results) => {
-            // Save reflection
-            saveReflection('Teaming Reflection', results);
+        <TeamingReflectionEnhanced
+          onComplete={(data) => {
+            console.log('Team Reflection Results:', data);
+            // Data is automatically saved to Supabase in the component
             setShowTeamingReflection(false);
           }}
           onClose={() => setShowTeamingReflection(false)}
+          // TODO: Pass prepDataId when we have a way to track which prep session this relates to
         />
       )}
 
@@ -5410,7 +5248,7 @@ function App() {
       {/* Daily Burnout Gauge Modal */}
       {showDailyBurnout && (
         <DailyBurnoutGauge
-          onComplete={(results) => {
+          onComplete={() => {
             // Daily burnout assessment completed
             setShowDailyBurnout(false);
             // Results are automatically saved to localStorage for graph

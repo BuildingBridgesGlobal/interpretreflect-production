@@ -124,8 +124,8 @@ const TeamingReflection: React.FC<TeamingReflectionProps> = ({ onComplete, onClo
   const [improvedSignal, setImprovedSignal] = useState('');
   const [teamPatterns, setTeamPatterns] = useState<string[]>([]);
   const [overallRating, setOverallRating] = useState('');
-  const [stressLevel, setStressLevel] = useState(5);
-  const [energyLevel, setEnergyLevel] = useState(5);
+  const [stressLevel] = useState(5);
+  const [energyLevel] = useState(5);
   const [showWisdomBank, setShowWisdomBank] = useState(false);
 
   const handleNext = () => {

@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import {
   Activity,
   Wind,
-  Edit3,
   Heart,
   Brain,
   BookOpen,
@@ -13,9 +12,7 @@ import {
   ChevronLeft,
   Timer,
   TrendingDown,
-  Zap,
   RefreshCw,
-  User,
   MessageSquare,
   Target,
   Mic,

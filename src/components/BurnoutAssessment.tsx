@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import {
-  ChevronRight,
   ChevronLeft,
   AlertTriangle,
   Activity,
@@ -8,7 +7,6 @@ import {
   Heart,
   RefreshCw,
   Users,
-  CheckCircle,
   X,
 } from 'lucide-react';
 import { supabase } from '../lib/supabase';
@@ -266,13 +264,13 @@ export const BurnoutAssessment: React.FC<AssessmentProps> = ({ isOpen, onClose, 
     // Save to Supabase
     try {
       setLoading(true);
-      const { error } = await supabase.from('assessment_responses').insert({
+      await supabase.from('assessment_responses').insert({
         session_id: sessionId,
         ...answers,
       });
 
       // Handle error silently for production
-    } catch (err) {
+    } catch {
       // Error occurred during save
     } finally {
       setLoading(false);
@@ -406,8 +404,7 @@ export const BurnoutAssessment: React.FC<AssessmentProps> = ({ isOpen, onClose, 
 const AssessmentResults: React.FC<{
   results: AssessmentResults;
   onClose: () => void;
-  loading: boolean;
-}> = ({ results, onClose, loading }) => {
+}> = ({ results, onClose }) => {
   const getCategoryColor = (category: string) => {
     switch (category) {
       case 'resilient':

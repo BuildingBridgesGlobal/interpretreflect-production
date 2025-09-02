@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { X, Mail, Sparkles, CheckCircle } from 'lucide-react';
+import { X, Sparkles, CheckCircle } from 'lucide-react';
 
 interface WaitlistModalProps {
   isOpen: boolean;

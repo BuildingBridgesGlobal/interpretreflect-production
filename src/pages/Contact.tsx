@@ -1,5 +1,5 @@
 import React from 'react';
-import { Mail, Clock, Users, MessageSquare, ArrowLeft, Send } from 'lucide-react';
+import { Mail, MessageSquare, ArrowLeft } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 
 export function Contact() {

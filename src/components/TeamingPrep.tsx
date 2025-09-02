@@ -51,8 +51,8 @@ interface TeamPrepResults {
 const TeamingPrep: React.FC<TeamingPrepProps> = ({ onComplete, onClose }) => {
   const [currentStep, setCurrentStep] = useState(1);
   const [partnerType, setPartnerType] = useState('');
-  const [stressLevel, setStressLevel] = useState(5);
-  const [energyLevel, setEnergyLevel] = useState(5);
+  const [stressLevel] = useState(5);
+  const [energyLevel] = useState(5);
   const [context, setContext] = useState('');
   const [leadTechnical, setLeadTechnical] = useState('');
   const [leadNumbers, setLeadNumbers] = useState('');

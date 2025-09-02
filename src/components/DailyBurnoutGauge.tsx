@@ -2,10 +2,8 @@ import React, { useState, useEffect } from 'react';
 import {
   X,
   Gauge,
-  TrendingUp,
   AlertCircle,
   CheckCircle,
-  ChevronRight,
   Activity,
 } from 'lucide-react';
 import { supabase } from '../lib/supabase';
@@ -59,7 +57,7 @@ const DailyBurnoutGauge: React.FC<DailyBurnoutGaugeProps> = ({ onComplete, onClo
   });
   const [personalizedRecommendations, setPersonalizedRecommendations] = useState<string[]>([]);
   const [alreadyTakenToday, setAlreadyTakenToday] = useState(false);
-  const [previousAssessments, setPreviousAssessments] = useState<any[]>([]);
+  const [previousAssessments, setPreviousAssessments] = useState<AssessmentResult[]>([]);
   const [saveSuccess, setSaveSuccess] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
@@ -370,7 +368,16 @@ const DailyBurnoutGauge: React.FC<DailyBurnoutGaugeProps> = ({ onComplete, onClo
     generatePersonalizedRecommendations(finalAnswers, risk);
   };
 
-  const generatePersonalizedRecommendations = (answers: any, risk: string) => {
+  const generatePersonalizedRecommendations = (
+    answers: {
+      energyTank: number;
+      recoverySpeed: number;
+      emotionalLeakage: number;
+      performanceSignal: number;
+      tomorrowReadiness: number;
+    },
+    risk: string
+  ) => {
     const recommendations: string[] = [];
 
     // Energy Tank-specific recommendations
@@ -514,7 +521,7 @@ const DailyBurnoutGauge: React.FC<DailyBurnoutGaugeProps> = ({ onComplete, onClo
       // Keep only last 30 days
       const thirtyDaysAgo = new Date();
       thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
-      const filtered = assessments.filter((a: any) => new Date(a.timestamp) > thirtyDaysAgo);
+      const filtered = assessments.filter((a: AssessmentResult) => new Date(a.timestamp) > thirtyDaysAgo);
       localStorage.setItem('burnoutAssessments', JSON.stringify(filtered));
       
       // Also store today's assessment separately for quick access
@@ -798,7 +805,7 @@ const DailyBurnoutGauge: React.FC<DailyBurnoutGaugeProps> = ({ onComplete, onClo
                             onClick={() =>
                               setContextFactors((prev) => ({
                                 ...prev,
-                                workloadIntensity: level as any,
+                                workloadIntensity: level as 'light' | 'moderate' | 'heavy',
                               }))
                             }
                             className={`px-3 py-1 rounded-lg text-sm ${
@@ -824,7 +831,7 @@ const DailyBurnoutGauge: React.FC<DailyBurnoutGaugeProps> = ({ onComplete, onClo
                             onClick={() =>
                               setContextFactors((prev) => ({
                                 ...prev,
-                                emotionalDemand: level as any,
+                                emotionalDemand: level as 'low' | 'medium' | 'high',
                               }))
                             }
                             className={`px-3 py-1 rounded-lg text-sm ${

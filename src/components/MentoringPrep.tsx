@@ -10,8 +10,6 @@ import {
   Check,
   ChevronRight,
   ChevronLeft,
-  AlertCircle,
-  Clock,
 } from 'lucide-react';
 
 interface MentoringPrepProps {
@@ -89,8 +87,8 @@ const MentoringPrep: React.FC<MentoringPrepProps> = ({ onComplete, onClose }) =>
   const [menteeLeavesWith, setMenteeLeavesWith] = useState<string[]>([]);
   const [mentorProvides, setMentorProvides] = useState<string[]>([]);
   const [followUp, setFollowUp] = useState('');
-  const [stressLevel, setStressLevel] = useState(5);
-  const [energyLevel, setEnergyLevel] = useState(5);
+  const [stressLevel] = useState(5);
+  const [energyLevel] = useState(5);
   const [showChecklist, setShowChecklist] = useState(false);
 
   const handleNext = () => {

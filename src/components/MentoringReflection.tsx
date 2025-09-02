@@ -166,8 +166,8 @@ const MentoringReflection: React.FC<MentoringReflectionProps> = ({ onComplete, o
   const [storyExample, setStoryExample] = useState('');
   const [mistakeAvoid, setMistakeAvoid] = useState('');
   const [successPattern, setSuccessPattern] = useState('');
-  const [stressLevel, setStressLevel] = useState(5);
-  const [energyLevel, setEnergyLevel] = useState(5);
+  const [stressLevel] = useState(5);
+  const [energyLevel] = useState(5);
   const [showWisdomBank, setShowWisdomBank] = useState(false);
 
   const handleNext = () => {

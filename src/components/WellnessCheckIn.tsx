@@ -88,8 +88,8 @@ interface WellnessCheckInResults {
 
 const WellnessCheckIn: React.FC<WellnessCheckInProps> = ({ onComplete, onClose }) => {
   const [currentStep, setCurrentStep] = useState(1);
-  const [stressLevel, setStressLevel] = useState(5);
-  const [energyLevel, setEnergyLevel] = useState(5);
+  const [stressLevel] = useState(5);
+  const [energyLevel] = useState(5);
 
   // Step 1: Body Scan
   const [headNeck, setHeadNeck] = useState('');

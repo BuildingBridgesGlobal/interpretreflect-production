@@ -62,7 +62,7 @@ import {
 
 function App() {
   const { user, loading, signOut } = useAuth();
-  const [devMode, setDevMode] = useState(true); // TEMPORARY DEV MODE - set to true for development
+  const [devMode, setDevMode] = useState(false); // DEV MODE - set to true to bypass auth
   const [activeTab, setActiveTab] = useState('reflection');
   const [activeCategory, setActiveCategory] = useState('structured');
   const [currentQuestion, setCurrentQuestion] = useState(1);
@@ -5440,6 +5440,44 @@ function App() {
   );
   */
 
+  // Show landing page if not authenticated and not in dev mode
+  if (!devMode && !user && !loading) {
+    return (
+      <Routes>
+        <Route path="/privacy" element={<PrivacyPolicy />} />
+        <Route path="/terms" element={<TermsOfService />} />
+        <Route path="/contact" element={<Contact />} />
+        <Route path="/about" element={<About />} />
+        <Route path="*" element={
+          <>
+            <LandingPage onGetStarted={() => setDevMode(true)} />
+            {/* Dev Mode Toggle for Testing */}
+            <button
+              onClick={() => setDevMode(true)}
+              className="fixed bottom-4 right-4 px-4 py-2 bg-red-600 text-white rounded-lg shadow-lg hover:bg-red-700 transition-colors text-sm font-medium z-50"
+              title="Skip authentication for development"
+            >
+              🛠️ Enable Dev Mode
+            </button>
+          </>
+        } />
+      </Routes>
+    );
+  }
+
+  // Show loading state
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center" style={{ background: 'linear-gradient(180deg, #FAF9F6 0%, #F0EDE8 100%)' }}>
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-green-600 mx-auto mb-4"></div>
+          <p className="text-gray-600">Loading...</p>
+        </div>
+      </div>
+    );
+  }
+
+  // Show main app for authenticated users or dev mode
   return (
     <Routes>
       <Route path="/privacy" element={<PrivacyPolicy />} />
@@ -5699,12 +5737,16 @@ function App() {
                       >
                         <button
                           onClick={async () => {
+                            setShowUserDropdown(false);
                             if (devMode) {
                               setDevMode(false);
+                              // Clear any local storage
+                              localStorage.clear();
                             } else {
                               await signOut();
                             }
-                            setShowUserDropdown(false);
+                            // Force a refresh to show landing page
+                            window.location.href = '/';
                           }}
                           className="w-full flex items-center space-x-3 p-4 rounded-xl transition-all text-left"
                           style={{

@@ -28,9 +28,10 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     // Check active sessions and sets the user
     const initializeAuth = async () => {
       try {
-        // Skip Supabase check if credentials are missing
-        if (!import.meta.env.VITE_SUPABASE_URL || !import.meta.env.VITE_SUPABASE_ANON_KEY) {
-          console.warn('Supabase credentials not configured. Running in demo mode.');
+        // Skip Supabase check if credentials are missing or in dev mode
+        const isDevMode = !import.meta.env.VITE_SUPABASE_URL || !import.meta.env.VITE_SUPABASE_ANON_KEY;
+        if (isDevMode) {
+          // Silently skip auth in dev mode
           setLoading(false);
           return;
         }
@@ -38,7 +39,10 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         const { user } = await getCurrentUser();
         setUser(user);
       } catch (error) {
-        console.error('Error getting current user:', error);
+        // Only log error if not an expected auth session missing error
+        if (error && typeof error === 'object' && 'name' in error && error.name !== 'AuthSessionMissingError') {
+          console.error('Error getting current user:', error);
+        }
       } finally {
         setLoading(false);
       }
@@ -46,15 +50,19 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
     initializeAuth();
 
-    // Listen for changes on auth state (sign in, sign out, etc.)
-    const { data: authListener } = supabase.auth.onAuthStateChange(async (event, session) => {
-      setUser(session?.user ?? null);
-      setLoading(false);
-    });
+    // Only set up auth listener if Supabase is configured
+    const isDevMode = !import.meta.env.VITE_SUPABASE_URL || !import.meta.env.VITE_SUPABASE_ANON_KEY;
+    if (!isDevMode) {
+      // Listen for changes on auth state (sign in, sign out, etc.)
+      const { data: authListener } = supabase.auth.onAuthStateChange(async (event, session) => {
+        setUser(session?.user ?? null);
+        setLoading(false);
+      });
 
-    return () => {
-      authListener.subscription.unsubscribe();
-    };
+      return () => {
+        authListener.subscription.unsubscribe();
+      };
+    }
   }, []);
 
   const signIn = async (email: string, password: string) => {

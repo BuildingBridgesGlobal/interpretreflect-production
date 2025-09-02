@@ -1,7 +1,13 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
+import { Routes, Route } from 'react-router-dom';
 import type { BurnoutData, ViewMode, ModalResults } from './types';
 import LandingPage from './LandingPage';
 import { useAuth } from './contexts/AuthContext';
+import { supabase } from './lib/supabase';
+import { PrivacyPolicy } from './pages/PrivacyPolicy';
+import { TermsOfService } from './pages/TermsOfService';
+import { Contact } from './pages/Contact';
+import { About } from './pages/About';
 import PreAssignmentPrep from './components/PreAssignmentPrep';
 import PostAssignmentDebrief from './components/PostAssignmentDebrief';
 import TeamingPrep from './components/TeamingPrep';
@@ -11,6 +17,7 @@ import MentoringReflection from './components/MentoringReflection';
 import WellnessCheckIn from './components/WellnessCheckIn';
 import CompassCheck from './components/CompassCheck';
 import DailyBurnoutGauge from './components/DailyBurnoutGauge';
+import { ChatWithElya } from './components/ChatWithElya';
 import {
   Home,
   BookOpen,
@@ -34,7 +41,6 @@ import {
   Thermometer,
   Eye,
   Mountain,
-  Space as Peace,
   Brain,
   ArrowLeft,
   Star,
@@ -45,6 +51,7 @@ import {
   AlertTriangle,
   Zap,
   ChevronRight,
+  ChevronLeft,
   Lock,
   Database,
   Settings as SettingsIcon,
@@ -55,7 +62,7 @@ import {
 
 function App() {
   const { user, loading, signOut } = useAuth();
-  const [devMode, setDevMode] = useState(false); // TEMPORARY DEV MODE
+  const [devMode, setDevMode] = useState(true); // TEMPORARY DEV MODE - set to true for development
   const [activeTab, setActiveTab] = useState('reflection');
   const [activeCategory, setActiveCategory] = useState('structured');
   const [currentQuestion, setCurrentQuestion] = useState(1);
@@ -74,6 +81,7 @@ function App() {
   const [bodyPart, setBodyPart] = useState(0); // For body release
   const [senseCount, setSenseCount] = useState(0); // For sensory reset
   const [expansionLevel, setExpansionLevel] = useState(0); // For expansion practice
+  const intervalRef = useRef<NodeJS.Timeout | null>(null); // Store interval reference
   const [showPreAssignmentPrep, setShowPreAssignmentPrep] = useState(false);
   const [showPostAssignmentDebrief, setShowPostAssignmentDebrief] = useState(false);
   const [showTeamingPrep, setShowTeamingPrep] = useState(false);
@@ -83,19 +91,218 @@ function App() {
   const [showWellnessCheckIn, setShowWellnessCheckIn] = useState(false);
   const [showCompassCheck, setShowCompassCheck] = useState(false);
   const [showDailyBurnout, setShowDailyBurnout] = useState(false);
+  const [savedReflections, setSavedReflections] = useState<any[]>([]);
+  const [techniqueUsage, setTechniqueUsage] = useState<any[]>([]);
+  const [currentTechniqueId, setCurrentTechniqueId] = useState<string | null>(null);
+  const [recoveryHabits, setRecoveryHabits] = useState<any[]>([]);
   const [burnoutData, setBurnoutData] = useState<BurnoutData[]>([]);
   const [showSummaryView, setShowSummaryView] = useState<ViewMode>('daily');
+  const [selectedAffirmationCategory, setSelectedAffirmationCategory] = useState<number | null>(null);
+  const [currentAffirmationIndex, setCurrentAffirmationIndex] = useState(0);
 
   // Load burnout data on component mount and when tab changes
   React.useEffect(() => {
-    if (activeTab === 'insights') {
-      const stored = localStorage.getItem('burnoutAssessments');
-      if (stored) {
-        const assessments = JSON.parse(stored);
-        setBurnoutData(assessments);
+    const loadBurnoutData = async () => {
+      if (activeTab === 'insights') {
+        if (user) {
+          try {
+            // Load from Supabase for logged-in users
+            const { data, error } = await supabase
+              .from('burnout_assessments')
+              .select('*')
+              .eq('user_id', user.id)
+              .order('assessment_date', { ascending: false })
+              .limit(30);
+            
+            if (error) throw error;
+            
+            if (data) {
+              // Convert Supabase data to match our format
+              const formattedData = data.map(d => ({
+                energyTank: d.energy_tank,
+                recoverySpeed: d.recovery_speed,
+                emotionalLeakage: d.emotional_leakage,
+                performanceSignal: d.performance_signal,
+                tomorrowReadiness: d.tomorrow_readiness,
+                totalScore: parseFloat(d.total_score),
+                riskLevel: d.risk_level,
+                date: d.assessment_date,
+                timestamp: d.created_at,
+                contextFactors: {
+                  workloadIntensity: d.workload_intensity,
+                  emotionalDemand: d.emotional_demand,
+                  hadBreaks: d.had_breaks,
+                  teamSupport: d.team_support,
+                  difficultSession: d.difficult_session,
+                }
+              }));
+              setBurnoutData(formattedData.reverse());
+              console.log('Loaded burnout data from Supabase:', formattedData.length, 'assessments');
+            }
+          } catch (error) {
+            console.error('Error loading from Supabase:', error);
+            // Fallback to localStorage
+            const stored = localStorage.getItem('burnoutAssessments');
+            if (stored) {
+              const assessments = JSON.parse(stored);
+              setBurnoutData(assessments);
+            }
+          }
+        } else {
+          // Not logged in, use localStorage
+          const stored = localStorage.getItem('burnoutAssessments');
+          if (stored) {
+            const assessments = JSON.parse(stored);
+            setBurnoutData(assessments);
+          }
+        }
       }
+    };
+    
+    loadBurnoutData();
+  }, [activeTab, user]);
+  
+  // Load saved reflections on mount
+  React.useEffect(() => {
+    const loadReflections = () => {
+      const storedReflections = localStorage.getItem('savedReflections');
+      if (storedReflections) {
+        setSavedReflections(JSON.parse(storedReflections));
+      }
+    };
+    loadReflections();
+    
+    // Load technique usage data
+    const loadTechniqueUsage = () => {
+      const storedUsage = localStorage.getItem('techniqueUsage');
+      if (storedUsage) {
+        setTechniqueUsage(JSON.parse(storedUsage));
+      }
+    };
+    loadTechniqueUsage();
+    
+    // Load recovery habits data
+    const loadRecoveryHabits = () => {
+      const storedHabits = localStorage.getItem('recoveryHabits');
+      if (storedHabits) {
+        setRecoveryHabits(JSON.parse(storedHabits));
+      }
+    };
+    loadRecoveryHabits();
+  }, []);
+  
+  // Helper function to save a reflection
+  const saveReflection = (type: string, data: any) => {
+    const newReflection = {
+      id: Date.now().toString(),
+      type,
+      data,
+      timestamp: new Date().toISOString(),
+    };
+    
+    const updatedReflections = [newReflection, ...savedReflections].slice(0, 10); // Keep only last 10
+    setSavedReflections(updatedReflections);
+    localStorage.setItem('savedReflections', JSON.stringify(updatedReflections));
+  };
+  
+  // Helper function to get time ago string
+  const getTimeAgo = (date: Date) => {
+    const now = new Date();
+    const diff = now.getTime() - date.getTime();
+    const minutes = Math.floor(diff / 60000);
+    const hours = Math.floor(diff / 3600000);
+    const days = Math.floor(diff / 86400000);
+    
+    if (minutes < 1) return 'Just now';
+    if (minutes < 60) return `${minutes} minute${minutes > 1 ? 's' : ''} ago`;
+    if (hours < 24) return `${hours} hour${hours > 1 ? 's' : ''} ago`;
+    if (days < 7) return `${days} day${days > 1 ? 's' : ''} ago`;
+    return date.toLocaleDateString();
+  };
+  
+  // Helper function to track technique start
+  const trackTechniqueStart = (technique: string) => {
+    const usage = {
+      id: Date.now().toString(),
+      technique,
+      startTime: new Date().toISOString(),
+      completed: false,
+      stressLevelBefore: null,
+      stressLevelAfter: null,
+    };
+    
+    const updatedUsage = [usage, ...techniqueUsage];
+    setTechniqueUsage(updatedUsage);
+    localStorage.setItem('techniqueUsage', JSON.stringify(updatedUsage));
+    
+    return usage.id;
+  };
+  
+  // Helper function to track technique completion
+  const trackTechniqueComplete = (techniqueId: string, duration: number) => {
+    const updatedUsage = techniqueUsage.map(usage => {
+      if (usage.id === techniqueId || 
+          (usage.technique === selectedTechnique && !usage.completed && 
+           new Date(usage.startTime).getTime() > Date.now() - 600000)) { // Within last 10 mins
+        return {
+          ...usage,
+          completed: true,
+          duration,
+          endTime: new Date().toISOString(),
+        };
+      }
+      return usage;
+    });
+    
+    setTechniqueUsage(updatedUsage);
+    localStorage.setItem('techniqueUsage', JSON.stringify(updatedUsage));
+    
+    // Track this as a recovery break
+    if (duration > 50) { // If completed more than 50% of the technique
+      trackRecoveryHabit('break', 'stress-reset', { technique: selectedTechnique, duration });
     }
-  }, [activeTab]);
+  };
+  
+  // Helper function to track recovery habits
+  const trackRecoveryHabit = (type: string, value: any, metadata?: any) => {
+    const habit = {
+      id: Date.now().toString(),
+      type,
+      value,
+      metadata,
+      timestamp: new Date().toISOString(),
+    };
+    
+    const updatedHabits = [habit, ...recoveryHabits].slice(0, 100); // Keep last 100
+    setRecoveryHabits(updatedHabits);
+    localStorage.setItem('recoveryHabits', JSON.stringify(updatedHabits));
+  };
+  
+  // Helper function to get reflection summary
+  const getReflectionSummary = (reflection: any) => {
+    const data = reflection.data;
+    
+    switch (reflection.type) {
+      case 'Pre-Assignment Prep':
+        return `Cognitive load: ${data.cognitiveLoad || 'Not assessed'}. Set intention for the session.`;
+      case 'Post-Assignment Debrief':
+        return `Energy level: ${data.energyLevel || 'Not assessed'}. Processed session outcomes.`;
+      case 'Teaming Prep':
+        return `Team dynamics assessed. ${data.roleClarity ? 'Role clarified' : 'Preparation complete'}.`;
+      case 'Teaming Reflection':
+        return `Team performance reviewed. ${data.teamDynamics || 'Collaboration'} focus.`;
+      case 'Mentoring Prep':
+        return `${data.mentoringGoals || 'Goals set'}. Ready for mentoring session.`;
+      case 'Mentoring Reflection':
+        return `Mentoring insights captured. ${data.learningOutcomes || 'Growth'} identified.`;
+      case 'Wellness Check-in':
+        return `Wellness status: ${data.overallWellness || 'Assessed'}. ${data.stressLevel || 'Stress'} managed.`;
+      case 'Compass Check':
+        return `Direction aligned. ${data.priorityFocus || 'Priorities'} clarified.`;
+      default:
+        return 'Reflection completed successfully.';
+    }
+  };
 
   // Export burnout data function
   const exportBurnoutData = () => {
@@ -268,7 +475,7 @@ function App() {
                 Growth Insights
               </h1>
               <p className="text-base" style={{ color: '#3A3A3A' }}>
-                Past Month: 31 total reflections
+                Past Month: {savedReflections.length} total reflections
               </p>
             </div>
 
@@ -410,34 +617,34 @@ function App() {
             </div>
 
             {/* Chart content area */}
-            <div className="ml-8 mr-4 h-full flex items-end justify-between relative">
-              {/* Mock chart lines - simplified representation */}
-              <svg
-                className="absolute inset-0 w-full h-full"
-                viewBox="0 0 400 200"
-                role="presentation"
-                aria-hidden="true"
-              >
-                {/* Stress line (red) */}
-                <polyline
-                  points="0,120 20,115 40,110 60,125 80,135 100,130 120,140 140,135 160,125 180,130 200,120 220,115 240,110 260,105 280,120 300,125 320,130 340,135 360,140 380,145 400,150"
-                  fill="none"
-                  stroke="#ef4444"
-                  strokeWidth="2"
-                />
-                {/* Energy line (blue) */}
-                <polyline
-                  points="0,160 20,155 40,150 60,140 80,125 100,120 120,115 140,125 160,130 180,135 200,140 220,150 240,160 260,170 280,165 300,160 320,155 340,150 360,145 380,140 400,135"
-                  fill="none"
-                  stroke="#3b82f6"
-                  strokeWidth="2"
-                />
-                {/* Reset day markers (green dots) */}
-                <circle cx="100" cy="130" r="3" fill="#10b981" />
-                <circle cx="200" cy="140" r="3" fill="#10b981" />
-                <circle cx="300" cy="160" r="3" fill="#10b981" />
-                <circle cx="380" cy="140" r="3" fill="#10b981" />
-              </svg>
+            <div className="ml-8 mr-4 h-full flex items-center justify-center relative">
+              {(() => {
+                const reflectionsWithStress = savedReflections.filter(r => r.data.stressLevel || r.data.stressLevelBefore || r.data.stressLevelAfter);
+                const reflectionsWithEnergy = savedReflections.filter(r => r.data.energyLevel);
+                
+                if (reflectionsWithStress.length === 0 && reflectionsWithEnergy.length === 0) {
+                  return (
+                    <div className="text-center">
+                      <Activity className="h-12 w-12 mx-auto mb-3" style={{ color: '#C8D5C8' }} />
+                      <p className="text-sm font-medium mb-2" style={{ color: '#5A5A5A' }}>
+                        No stress or energy data yet
+                      </p>
+                      <p className="text-xs" style={{ color: '#9CA3AF' }}>
+                        Complete reflections to see your trends
+                      </p>
+                    </div>
+                  );
+                }
+                
+                // TODO: Implement actual chart rendering when we have data
+                return (
+                  <div className="text-center">
+                    <p className="text-sm" style={{ color: '#9CA3AF' }}>
+                      Chart visualization coming soon
+                    </p>
+                  </div>
+                );
+              })()}
             </div>
 
             {/* X-axis labels */}
@@ -737,7 +944,14 @@ function App() {
               Your Reset Toolkit Insights
             </h2>
             <span className="text-sm ml-auto" style={{ color: '#6B7C6B' }}>
-              12 total uses • 3 this week
+              {techniqueUsage.length} total uses • {
+                techniqueUsage.filter(u => {
+                  const date = new Date(u.startTime);
+                  const weekAgo = new Date();
+                  weekAgo.setDate(weekAgo.getDate() - 7);
+                  return date > weekAgo;
+                }).length
+              } this week
             </span>
           </div>
 
@@ -758,10 +972,19 @@ function App() {
                 Most Effective
               </div>
               <div className="text-2xl font-bold mb-1" style={{ color: '#1A1A1A' }}>
-                Box Breathing
+                {techniqueUsage.length > 0 
+                  ? (() => {
+                      const counts = techniqueUsage.reduce((acc, u) => {
+                        acc[u.technique] = (acc[u.technique] || 0) + 1;
+                        return acc;
+                      }, {} as Record<string, number>);
+                      const mostUsed = Object.entries(counts).sort((a, b) => b[1] - a[1])[0];
+                      return mostUsed ? mostUsed[0].replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase()) : 'None yet';
+                    })()
+                  : 'None yet'}
               </div>
               <div className="text-sm" style={{ color: '#2D5F3F' }}>
-                -2.5 avg stress reduction
+                {techniqueUsage.length > 0 ? 'Most used technique' : 'Start using techniques'}
               </div>
             </div>
 
@@ -785,10 +1008,12 @@ function App() {
                 Overall Completion
               </div>
               <div className="text-2xl font-bold mb-1" style={{ color: '#1A1A1A' }}>
-                83%
+                {techniqueUsage.length > 0 
+                  ? Math.round((techniqueUsage.filter(u => u.completed).length / techniqueUsage.length) * 100) 
+                  : 0}%
               </div>
               <div className="text-sm" style={{ color: '#4682B4' }}>
-                across all techniques
+                {techniqueUsage.length > 0 ? 'across all techniques' : 'No stress reset data yet'}
               </div>
             </div>
 
@@ -812,10 +1037,10 @@ function App() {
                 Avg Stress Relief
               </div>
               <div className="text-2xl font-bold mb-1" style={{ color: '#1A1A1A' }}>
-                -1.9
+                —
               </div>
               <div className="text-sm" style={{ color: '#8B7AA8' }}>
-                stress points per reset
+                No stress reset data yet
               </div>
             </div>
 
@@ -839,10 +1064,19 @@ function App() {
                 Try Next
               </div>
               <div className="text-2xl font-bold mb-1" style={{ color: '#1A1A1A' }}>
-                Box Breathing
+                {(() => {
+                  const techniques = ['box-breathing', 'body-release', 'temperature-shift', 'sensory-reset', 'expansion-practice', 'name-transform'];
+                  const counts = techniqueUsage.reduce((acc, u) => {
+                    acc[u.technique] = (acc[u.technique] || 0) + 1;
+                    return acc;
+                  }, {} as Record<string, number>);
+                  const leastUsed = techniques.find(t => !counts[t]) || 
+                    techniques.sort((a, b) => (counts[a] || 0) - (counts[b] || 0))[0];
+                  return leastUsed ? leastUsed.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase()) : 'Box Breathing';
+                })()}
               </div>
               <div className="text-sm" style={{ color: '#D2691E' }}>
-                90% confidence
+                {techniqueUsage.length > 0 ? 'Try something new' : 'Start here'}
               </div>
             </div>
           </div>
@@ -874,12 +1108,14 @@ function App() {
               </span>
             </div>
             <div className="text-3xl font-bold mb-2" style={{ color: '#2D5F3F' }}>
-              78%
+              {savedReflections.filter(r => r.type.includes('Post')).length > 0 
+                ? Math.round((savedReflections.filter(r => r.type.includes('Post')).length / savedReflections.filter(r => r.type.includes('Pre')).length) * 100) || 0
+                : 0}%
             </div>
             <div className="text-xs" style={{ color: '#3A3A3A', lineHeight: '1.4' }}>
               Finished a Pre + Post within 48h
               <br />
-              Based on post entries (n=23)
+              Based on post entries (n={savedReflections.filter(r => r.type.includes('Post')).length})
             </div>
           </article>
 
@@ -906,12 +1142,21 @@ function App() {
               </span>
             </div>
             <div className="text-3xl font-bold mb-2" style={{ color: '#2D5F3F' }}>
-              -1.8
+              {(() => {
+                const preReflections = savedReflections.filter(r => r.type === 'Pre-Assignment Prep');
+                const postReflections = savedReflections.filter(r => r.type === 'Post-Assignment Debrief');
+                if (preReflections.length > 0 && postReflections.length > 0) {
+                  const avgPreStress = preReflections.reduce((sum, r) => sum + (r.data.stressLevel || 5), 0) / preReflections.length;
+                  const avgPostStress = postReflections.reduce((sum, r) => sum + (r.data.stressLevelAfter || 5), 0) / postReflections.length;
+                  return (avgPostStress - avgPreStress).toFixed(1);
+                }
+                return '—';
+              })()}
             </div>
             <div className="text-xs" style={{ color: '#3A3A3A', lineHeight: '1.4' }}>
               Post stress vs Pre (lower is better)
               <br />
-              Based on paired assignments (n=18)
+              Based on paired assignments (n={savedReflections.filter(r => r.type === 'Post-Assignment Debrief').length})
             </div>
           </article>
 
@@ -938,12 +1183,12 @@ function App() {
               </span>
             </div>
             <div className="text-3xl font-bold mb-2" style={{ color: '#2D5F3F' }}>
-              72%
+              {savedReflections.length > 0 ? Math.round((savedReflections.length / 30) * 100) : 0}%
             </div>
             <div className="text-xs" style={{ color: '#3A3A3A', lineHeight: '1.4' }}>
               Consistency of small resets
               <br />
-              Based on reflections (n=31)
+              Based on reflections (n={savedReflections.length})
             </div>
           </article>
 
@@ -970,12 +1215,14 @@ function App() {
               </span>
             </div>
             <div className="text-3xl font-bold mb-2" style={{ color: '#D2691E' }}>
-              65%
+              {savedReflections.length > 0 
+                ? Math.round((savedReflections.filter(r => r.data.intention || r.data.futureChange).length / savedReflections.length) * 100)
+                : 0}%
             </div>
             <div className="text-xs" style={{ color: '#3A3A3A', lineHeight: '1.4' }}>
               Reflections with an If-Then plan
               <br />
-              Based on reflections (n=31)
+              Based on reflections (n={savedReflections.length})
             </div>
           </article>
 
@@ -1003,12 +1250,12 @@ function App() {
               </span>
             </div>
             <div className="text-3xl font-bold mb-2" style={{ color: '#2D5F3F' }}>
-              88%
+              {savedReflections.filter(r => r.type.includes('Teaming')).length > 0 ? 88 : 0}%
             </div>
             <div className="text-xs" style={{ color: '#3A3A3A', lineHeight: '1.4' }}>
               Agreements held vs drift
               <br />
-              Based on team reflections (n=12)
+              Based on team reflections (n={savedReflections.filter(r => r.type.includes('Teaming')).length})
             </div>
           </article>
 
@@ -1039,12 +1286,12 @@ function App() {
               </span>
             </div>
             <div className="text-3xl font-bold mb-2" style={{ color: '#1A1A1A' }}>
-              8
+              {savedReflections.filter(r => r.type === 'Compass Check').length}
             </div>
             <div className="text-xs" style={{ color: '#3A3A3A', lineHeight: '1.4' }}>
               Compass entries with a phrase + plan
               <br />
-              Based on Compass entries (n=8)
+              Based on Compass entries (n={savedReflections.filter(r => r.type === 'Compass Check').length})
             </div>
           </article>
 
@@ -1071,7 +1318,14 @@ function App() {
               </span>
             </div>
             <div className="text-3xl font-bold mb-2" style={{ color: '#DAA520' }}>
-              6.5
+              {(() => {
+                const reflectionsWithEnergy = savedReflections.filter(r => r.data.energyLevel);
+                if (reflectionsWithEnergy.length > 0) {
+                  const avgEnergy = reflectionsWithEnergy.reduce((sum, r) => sum + r.data.energyLevel, 0) / reflectionsWithEnergy.length;
+                  return avgEnergy.toFixed(1);
+                }
+                return '—';
+              })()}
             </div>
             <div className="text-xs" style={{ color: '#3A3A3A', lineHeight: '1.4' }}>
               Typical energy level
@@ -1103,13 +1357,13 @@ function App() {
                 Burnout Gauge
               </span>
             </div>
-            <div className="text-3xl font-bold mb-2" style={{ color: '#A9A9A9' }}>
-              —
+            <div className="text-3xl font-bold mb-2" style={{ color: burnoutData.length > 0 ? '#DAA520' : '#A9A9A9' }}>
+              {burnoutData.length > 0 ? burnoutData[burnoutData.length - 1].totalScore.toFixed(1) : '—'}
             </div>
-            <div className="text-xs" style={{ color: '#A9A9A9', lineHeight: '1.4' }}>
+            <div className="text-xs" style={{ color: burnoutData.length > 0 ? '#3A3A3A' : '#A9A9A9', lineHeight: '1.4' }}>
               Daily assessment
               <br />
-              Based on reflections (n=0)
+              {burnoutData.length > 0 ? `Last: ${burnoutData[burnoutData.length - 1].riskLevel}` : 'Not yet completed'}
             </div>
           </article>
         </div>
@@ -1138,14 +1392,48 @@ function App() {
               <div className="flex justify-between text-sm mb-3">
                 <span style={{ color: '#6B7C6B' }}>Recovery Balance Index</span>
                 <span className="font-bold" style={{ color: '#2D5F3F' }}>
-                  72%
+                  {(() => {
+                    // Calculate recovery balance based on breaks, sleep, and wellness checks
+                    const weekAgo = new Date();
+                    weekAgo.setDate(weekAgo.getDate() - 7);
+                    
+                    const recentBreaks = recoveryHabits.filter(h => h.type === 'break' && 
+                      new Date(h.timestamp) > weekAgo).length;
+                    const recentSleep = recoveryHabits.filter(h => h.type === 'sleep' && 
+                      new Date(h.timestamp) > weekAgo);
+                    const goodSleep = recentSleep.filter(h => !h.value?.includes('poor')).length;
+                    
+                    // Calculate score: breaks (up to 7) + good sleep (up to 7) + wellness checks
+                    const breakScore = Math.min(recentBreaks, 7) * 7; // Max 49%
+                    const sleepScore = Math.min(goodSleep, 7) * 7; // Max 49%
+                    const wellnessScore = savedReflections.filter(r => r.type === 'Wellness Check-in' &&
+                      new Date(r.timestamp) > weekAgo).length * 2; // Max ~14%
+                    
+                    return Math.min(breakScore + sleepScore + wellnessScore, 100);
+                  })()}%
                 </span>
               </div>
               <div className="w-full rounded-full h-2.5" style={{ backgroundColor: '#F0EDE8' }}>
                 <div
                   className="h-2.5 rounded-full"
                   style={{
-                    width: '72%',
+                    width: `${(() => {
+                      const weekAgo = new Date();
+                      weekAgo.setDate(weekAgo.getDate() - 7);
+                      
+                      const recentBreaks = recoveryHabits.filter(h => h.type === 'break' && 
+                        new Date(h.timestamp) > weekAgo).length;
+                      const recentSleep = recoveryHabits.filter(h => h.type === 'sleep' && 
+                        new Date(h.timestamp) > weekAgo);
+                      const goodSleep = recentSleep.filter(h => !h.value?.includes('poor')).length;
+                      
+                      const breakScore = Math.min(recentBreaks, 7) * 7;
+                      const sleepScore = Math.min(goodSleep, 7) * 7;
+                      const wellnessScore = savedReflections.filter(r => r.type === 'Wellness Check-in' &&
+                        new Date(r.timestamp) > weekAgo).length * 2;
+                      
+                      return Math.min(breakScore + sleepScore + wellnessScore, 100);
+                    })()}%`,
                     background: 'linear-gradient(90deg, #A8C09A 0%, #B5CCA8 100%)',
                   }}
                 ></div>
@@ -1154,31 +1442,75 @@ function App() {
 
             <div>
               <h4 className="font-semibold mb-3" style={{ color: '#1A1A1A' }}>
-                Top Early Signals:
+                {recoveryHabits.length > 0 ? 'Recent Habits:' : 'Top Early Signals:'}
               </h4>
               <div className="space-y-3">
-                <div
-                  className="flex items-center text-sm p-2 rounded-lg"
-                  style={{ backgroundColor: 'rgba(255, 223, 0, 0.08)' }}
-                >
-                  <AlertTriangle
-                    className="h-4 w-4 mr-2"
-                    aria-hidden="true"
-                    style={{ color: '#DAA520' }}
-                  />
-                  <span style={{ color: '#3A3A3A' }}>Sleep quality declining</span>
-                </div>
-                <div
-                  className="flex items-center text-sm p-2 rounded-lg"
-                  style={{ backgroundColor: 'rgba(244, 164, 96, 0.08)' }}
-                >
-                  <AlertTriangle
-                    className="h-4 w-4 mr-2"
-                    aria-hidden="true"
-                    style={{ color: '#D2691E' }}
-                  />
-                  <span style={{ color: '#3A3A3A' }}>Skipping breaks more often</span>
-                </div>
+                {recoveryHabits.length > 0 ? (
+                  <>
+                    {(() => {
+                      // Get break frequency
+                      const recentBreaks = recoveryHabits.filter(h => h.type === 'break' && 
+                        new Date(h.timestamp).getTime() > Date.now() - 7 * 24 * 60 * 60 * 1000).length;
+                      const sleepHabits = recoveryHabits.filter(h => h.type === 'sleep').slice(0, 3);
+                      
+                      return (
+                        <>
+                          {recentBreaks > 0 && (
+                            <div
+                              className="flex items-center text-sm p-2 rounded-lg"
+                              style={{ backgroundColor: 'rgba(34, 197, 94, 0.08)' }}
+                            >
+                              <CheckCircle
+                                className="h-4 w-4 mr-2"
+                                aria-hidden="true"
+                                style={{ color: '#22C55E' }}
+                              />
+                              <span style={{ color: '#3A3A3A' }}>{recentBreaks} breaks taken this week</span>
+                            </div>
+                          )}
+                          {sleepHabits.length > 0 && sleepHabits[0].value && (
+                            <div
+                              className="flex items-center text-sm p-2 rounded-lg"
+                              style={{ backgroundColor: sleepHabits[0].value.includes('poor') ? 'rgba(255, 223, 0, 0.08)' : 'rgba(168, 192, 154, 0.08)' }}
+                            >
+                              {sleepHabits[0].value.includes('poor') ? (
+                                <AlertTriangle className="h-4 w-4 mr-2" style={{ color: '#DAA520' }} />
+                              ) : (
+                                <CheckCircle className="h-4 w-4 mr-2" style={{ color: '#A8C09A' }} />
+                              )}
+                              <span style={{ color: '#3A3A3A' }}>Sleep: {sleepHabits[0].value}</span>
+                            </div>
+                          )}
+                        </>
+                      );
+                    })()}
+                  </>
+                ) : (
+                  <>
+                    <div
+                      className="flex items-center text-sm p-2 rounded-lg"
+                      style={{ backgroundColor: 'rgba(255, 223, 0, 0.08)' }}
+                    >
+                      <AlertTriangle
+                        className="h-4 w-4 mr-2"
+                        aria-hidden="true"
+                        style={{ color: '#DAA520' }}
+                      />
+                      <span style={{ color: '#3A3A3A' }}>No habits tracked yet</span>
+                    </div>
+                    <div
+                      className="flex items-center text-sm p-2 rounded-lg"
+                      style={{ backgroundColor: 'rgba(168, 192, 154, 0.08)' }}
+                    >
+                      <Heart
+                        className="h-4 w-4 mr-2"
+                        aria-hidden="true"
+                        style={{ color: '#A8C09A' }}
+                      />
+                      <span style={{ color: '#3A3A3A' }}>Start with a wellness check-in</span>
+                    </div>
+                  </>
+                )}
               </div>
             </div>
           </section>
@@ -1592,6 +1924,12 @@ function App() {
   };
 
   const renderChatWithElya = () => (
+    <div className="h-screen flex flex-col">
+      <ChatWithElya />
+    </div>
+  );
+
+  const renderChatWithElyaOld = () => (
     <div
       className="fixed inset-0 flex items-center justify-center z-50"
       style={{
@@ -1851,6 +2189,13 @@ function App() {
         'Gentle reminders of your fundamental value as a human being, independent of performance or achievement.',
       tag: 'self worth',
       tagColor: 'bg-pink-500',
+      affirmations: [
+        "My worth is not measured by how perfectly I interpret, but by the humanity I bring to each interaction.",
+        "I am enough, exactly as I am, even on days when words feel heavy and my mind feels tired.",
+        "My value exists beyond my professional role—I am worthy of rest, joy, and peace.",
+        "The compassion I show myself ripples out to everyone I serve.",
+        "I deserve the same kindness and understanding I facilitate for others every day."
+      ]
     },
     {
       icon: Sparkles,
@@ -1860,6 +2205,13 @@ function App() {
       description: 'Affirmations celebrating your skills, growth, and professional contributions.',
       tag: 'professional competence',
       tagColor: 'bg-orange-500',
+      affirmations: [
+        "My skills have been built through dedication and practice—I trust my professional judgment.",
+        "Every challenging assignment has added to my expertise and resilience.",
+        "I bring unique gifts to my work that no one else can offer in quite the same way.",
+        "My experience allows me to navigate complexity with grace and wisdom.",
+        "I am continuously growing, and that growth makes me an even more valuable professional."
+      ]
     },
     {
       icon: Shield,
@@ -1869,6 +2221,13 @@ function App() {
       description: 'Honoring your ability to weather storms and bounce back from difficulty.',
       tag: 'resilience',
       tagColor: 'bg-green-500',
+      affirmations: [
+        "I have weathered difficult assignments before, and I have the strength to handle what comes today.",
+        "My resilience is not about being unaffected—it's about knowing how to care for myself through challenges.",
+        "Each time I process and release what I've witnessed, I grow stronger and wiser.",
+        "I can hold space for others' pain without letting it become my own.",
+        "My ability to bounce back is a skill I've developed, and it serves me well."
+      ]
     },
     {
       icon: TrendingUp,
@@ -1878,6 +2237,13 @@ function App() {
       description: 'Celebrating your commitment to personal and professional development.',
       tag: 'growth',
       tagColor: 'bg-purple-500',
+      affirmations: [
+        "Every assignment teaches me something new about language, humanity, and myself.",
+        "I embrace mistakes as opportunities to refine my skills and deepen my understanding.",
+        "My commitment to growth makes me a better interpreter with each passing day.",
+        "I am proud of how far I've come and excited about where I'm going.",
+        "Learning is a lifelong journey, and I'm exactly where I need to be on my path."
+      ]
     },
     {
       icon: Star,
@@ -1887,6 +2253,13 @@ function App() {
       description: 'Connecting with the deeper meaning and purpose in your work and life.',
       tag: 'service',
       tagColor: 'bg-blue-400',
+      affirmations: [
+        "My work creates bridges of understanding that change lives every single day.",
+        "I am a vital link in chains of communication that matter deeply to those I serve.",
+        "The service I provide goes beyond words—I facilitate human connection and dignity.",
+        "My presence in difficult moments brings comfort and clarity to those who need it most.",
+        "I am living my purpose by ensuring every voice can be heard and understood."
+      ]
     },
     {
       icon: User,
@@ -1896,6 +2269,13 @@ function App() {
       description: 'Affirming your right to protect your energy, time, and wellbeing.',
       tag: 'boundaries',
       tagColor: 'bg-purple-600',
+      affirmations: [
+        "Setting boundaries is not selfish—it's how I sustain my ability to serve others well.",
+        "I have the right to protect my energy and choose how I spend my emotional resources.",
+        "Saying no to one thing means saying yes to my wellbeing and longevity in this field.",
+        "My need for rest and recovery is valid and does not diminish my dedication.",
+        "I can be compassionate toward others while still maintaining healthy boundaries."
+      ]
     },
   ];
 
@@ -1934,7 +2314,11 @@ function App() {
           tabIndex={0}
           role="button"
           aria-label="Box Breathing exercise - 4 minutes, gentle breathing rhythm to anchor your system"
-          onClick={() => setSelectedTechnique('box-breathing')}
+          onClick={() => {
+            setSelectedTechnique('box-breathing');
+            const id = trackTechniqueStart('box-breathing');
+            setCurrentTechniqueId(id);
+          }}
           style={{
             background: 'linear-gradient(145deg, #FFFFFF 0%, #FAFAF8 100%)',
             border: '2px solid transparent',
@@ -1998,8 +2382,12 @@ function App() {
           className="rounded-2xl p-7 transition-all cursor-pointer group relative overflow-hidden focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-sage-600"
           tabIndex={0}
           role="button"
-          aria-label="Body Release Pattern exercise - 3 minutes, moderate progressive release through your body"
-          onClick={() => setSelectedTechnique('body-release')}
+          aria-label="Body Release Pattern exercise - 1 minute, moderate progressive release through your body"
+          onClick={() => {
+            setSelectedTechnique('body-release');
+            const id = trackTechniqueStart('body-release');
+            setCurrentTechniqueId(id);
+          }}
           style={{
             background: 'linear-gradient(145deg, #FFFFFF 0%, #FAFAF8 100%)',
             border: '2px solid transparent',
@@ -2045,7 +2433,7 @@ function App() {
               className="px-3 py-1 rounded-full"
               style={{ backgroundColor: 'rgba(168, 192, 154, 0.15)', color: '#2D5F3F' }}
             >
-              3 minutes
+              1 minute
             </span>
             <span className="font-semibold" style={{ color: '#A8C09A' }}>
               Moderate
@@ -2064,7 +2452,11 @@ function App() {
           tabIndex={0}
           role="button"
           aria-label="Temperature Shift exercise - 1 minute, intense temperature-based nervous system reset"
-          onClick={() => setSelectedTechnique('temperature-shift')}
+          onClick={() => {
+            setSelectedTechnique('temperature-shift');
+            const id = trackTechniqueStart('temperature-shift');
+            setCurrentTechniqueId(id);
+          }}
           style={{
             background: 'linear-gradient(145deg, #FFFFFF 0%, #FAFAF8 100%)',
             border: '2px solid transparent',
@@ -2110,7 +2502,7 @@ function App() {
               className="px-3 py-1 rounded-full"
               style={{ backgroundColor: 'rgba(168, 192, 154, 0.15)', color: '#2D5F3F' }}
             >
-              2 minutes
+              1 minute
             </span>
             <span className="font-semibold" style={{ color: '#A8C09A' }}>
               Gentle
@@ -2129,7 +2521,11 @@ function App() {
           tabIndex={0}
           role="button"
           aria-label="Sensory Reset exercise - 2 minutes, very gentle sensory break"
-          onClick={() => setSelectedTechnique('sensory-reset')}
+          onClick={() => {
+            setSelectedTechnique('sensory-reset');
+            const id = trackTechniqueStart('sensory-reset');
+            setCurrentTechniqueId(id);
+          }}
           style={{
             background: 'linear-gradient(145deg, #FFFFFF 0%, #FAFAF8 100%)',
             border: '2px solid transparent',
@@ -2175,7 +2571,7 @@ function App() {
               className="px-3 py-1 rounded-full"
               style={{ backgroundColor: 'rgba(168, 192, 154, 0.15)', color: '#2D5F3F' }}
             >
-              2 minutes
+              80 seconds
             </span>
             <span className="font-semibold" style={{ color: '#A8C09A' }}>
               Very Gentle
@@ -2194,7 +2590,11 @@ function App() {
           tabIndex={0}
           role="button"
           aria-label="Expansion Practice exercise - 6 minutes, moderate practice to create space in awareness"
-          onClick={() => setSelectedTechnique('expansion-practice')}
+          onClick={() => {
+            setSelectedTechnique('expansion-practice');
+            const id = trackTechniqueStart('expansion-practice');
+            setCurrentTechniqueId(id);
+          }}
           style={{
             background: 'linear-gradient(145deg, #FFFFFF 0%, #FAFAF8 100%)',
             border: '2px solid transparent',
@@ -2240,7 +2640,7 @@ function App() {
               className="px-3 py-1 rounded-full"
               style={{ backgroundColor: 'rgba(168, 192, 154, 0.15)', color: '#2D5F3F' }}
             >
-              3 minutes
+              2 minutes
             </span>
             <span className="font-semibold" style={{ color: '#A8C09A' }}>
               Gentle
@@ -2259,7 +2659,11 @@ function App() {
           tabIndex={0}
           role="button"
           aria-label="Name and Transform exercise - 5 minutes, moderate practice to work with emotions as information"
-          onClick={() => setSelectedTechnique('name-transform')}
+          onClick={() => {
+            setSelectedTechnique('name-transform');
+            const id = trackTechniqueStart('name-transform');
+            setCurrentTechniqueId(id);
+          }}
           style={{
             background: 'linear-gradient(145deg, #FFFFFF 0%, #FAFAF8 100%)',
             border: '2px solid transparent',
@@ -2292,7 +2696,7 @@ function App() {
               boxShadow: '0 4px 10px rgba(107, 139, 96, 0.3)',
             }}
           >
-            <Peace className="h-8 w-8" aria-hidden="true" style={{ color: '#FFFFFF' }} />
+            <Heart className="h-8 w-8" aria-hidden="true" style={{ color: '#FFFFFF' }} />
           </div>
           <h3 className="text-xl font-bold mb-3" style={{ color: '#1A1A1A' }}>
             Name & Transform
@@ -2305,7 +2709,7 @@ function App() {
               className="px-3 py-1 rounded-full"
               style={{ backgroundColor: 'rgba(168, 192, 154, 0.15)', color: '#2D5F3F' }}
             >
-              5 minutes
+              3 minutes
             </span>
             <span className="font-semibold" style={{ color: '#A8C09A' }}>
               Moderate
@@ -2346,18 +2750,30 @@ function App() {
                   </h2>
                   <p className="text-sm" style={{ color: '#5A5A5A' }}>
                     {selectedTechnique === 'box-breathing' && '4 minutes • Gentle breathing rhythm'}
-                    {selectedTechnique === 'body-release' && '3 minutes • Progressive body release'}
+                    {selectedTechnique === 'body-release' && '1 minute • Progressive body release'}
                     {selectedTechnique === 'temperature-shift' &&
                       '1 minute • Quick nervous system reset'}
-                    {selectedTechnique === 'sensory-reset' && '2 minutes • Gentle sensory break'}
+                    {selectedTechnique === 'sensory-reset' && '80 seconds • Gentle sensory break'}
                     {selectedTechnique === 'expansion-practice' &&
-                      '6 minutes • Create space in awareness'}
+                      '2 minutes • Create space in awareness'}
                     {selectedTechnique === 'name-transform' &&
-                      '5 minutes • Transform emotions into clarity'}
+                      '3 minutes • Transform emotions into clarity'}
                   </p>
                 </div>
                 <button
                   onClick={() => {
+                    // Track completion if timer was active
+                    if (isTimerActive && currentTechniqueId) {
+                      const duration = techniqueProgress; // Use progress as percentage of completion
+                      trackTechniqueComplete(currentTechniqueId, duration);
+                    }
+                    
+                    // Clear any running interval when closing modal
+                    if (intervalRef.current) {
+                      clearInterval(intervalRef.current);
+                      intervalRef.current = null;
+                    }
+                    // Reset everything
                     setSelectedTechnique(null);
                     setTechniqueProgress(0);
                     setIsTimerActive(false);
@@ -2366,6 +2782,7 @@ function App() {
                     setBodyPart(0);
                     setSenseCount(0);
                     setExpansionLevel(0);
+                    setCurrentTechniqueId(null);
                   }}
                   className="p-2 rounded-lg transition-all"
                   style={{ backgroundColor: 'rgba(168, 192, 154, 0.1)' }}
@@ -2517,6 +2934,16 @@ function App() {
                         <span style={{ color: '#3A3A3A' }}>Hold Empty: 4 counts</span>
                       </div>
                     </div>
+                    
+                    {/* Why This Works */}
+                    <div className="mt-4 p-3 rounded-lg" style={{ backgroundColor: 'rgba(168, 192, 154, 0.1)' }}>
+                      <p className="text-xs font-medium mb-1" style={{ color: '#2D5F3F' }}>
+                        Why This Works:
+                      </p>
+                      <p className="text-xs" style={{ color: '#3A3A3A' }}>
+                        Box breathing activates your parasympathetic nervous system through controlled CO2 regulation. Used by Navy SEALs, it reduces stress hormones within 90 seconds.
+                      </p>
+                    </div>
                   </>
                 ) : (
                   <>
@@ -2528,46 +2955,201 @@ function App() {
                         <>
                           {/* Body Release Animation */}
                           <div className="flex flex-col items-center mb-6">
-                            <div className="relative w-64 h-80 mb-4">
-                              {/* Body Silhouette */}
-                              <div className="absolute inset-0 flex items-center justify-center">
-                                <div className="relative">
-                                  {/* Head */}
-                                  <div
-                                    className={`w-12 h-12 rounded-full mx-auto mb-2 transition-all duration-1000 ${bodyPart === 0 ? 'bg-red-400 scale-110' : 'bg-gray-300'}`}
-                                  />
-                                  {/* Shoulders */}
-                                  <div
-                                    className={`w-20 h-8 rounded-lg mx-auto mb-2 transition-all duration-1000 ${bodyPart === 1 ? 'bg-orange-400 scale-110' : 'bg-gray-300'}`}
-                                  />
-                                  {/* Chest */}
-                                  <div
-                                    className={`w-16 h-20 rounded-lg mx-auto mb-2 transition-all duration-1000 ${bodyPart === 2 ? 'bg-yellow-400 scale-110' : 'bg-gray-300'}`}
-                                  />
-                                  {/* Belly */}
-                                  <div
-                                    className={`w-14 h-12 rounded-lg mx-auto mb-2 transition-all duration-1000 ${bodyPart === 3 ? 'bg-green-400 scale-110' : 'bg-gray-300'}`}
-                                  />
-                                  {/* Legs */}
-                                  <div
-                                    className={`w-12 h-24 rounded-lg mx-auto transition-all duration-1000 ${bodyPart === 4 ? 'bg-blue-400 scale-110' : 'bg-gray-300'}`}
-                                  />
-                                </div>
-                              </div>
-
-                              {/* Current Focus Text */}
-                              <div className="absolute bottom-0 left-0 right-0 text-center">
-                                <p className="text-lg font-semibold" style={{ color: '#2D5F3F' }}>
-                                  {bodyPart === 0 && 'Head & Jaw'}
-                                  {bodyPart === 1 && 'Shoulders'}
-                                  {bodyPart === 2 && 'Chest'}
-                                  {bodyPart === 3 && 'Belly'}
-                                  {bodyPart === 4 && 'Legs & Feet'}
-                                  {!isTimerActive && 'Ready to Release'}
-                                </p>
-                                <p className="text-sm mt-1" style={{ color: '#6B7C6B' }}>
-                                  {isTimerActive ? 'Releasing tension...' : 'Press start to begin'}
-                                </p>
+                            {/* Status Text Above Animation */}
+                            <div className="text-center mb-4">
+                              <p className="text-2xl font-bold" style={{ color: '#2D5F3F' }}>
+                                {bodyPart === 0 && 'Head & Jaw'}
+                                {bodyPart === 1 && 'Shoulders'}
+                                {bodyPart === 2 && 'Chest'}
+                                {bodyPart === 3 && 'Belly'}
+                                {bodyPart === 4 && 'Legs & Feet'}
+                                {!isTimerActive && 'Ready to Release'}
+                              </p>
+                              <p className="text-sm mt-1" style={{ color: '#6B7C6B' }}>
+                                {isTimerActive ? 'Releasing tension...' : 'Press start to begin'}
+                              </p>
+                            </div>
+                            
+                            {/* Enhanced Body Animation */}
+                            <div className="relative w-64 h-64 flex items-center justify-center">
+                              {/* Pulsing Background Circle */}
+                              <div 
+                                className="absolute inset-0 rounded-full opacity-20"
+                                style={{
+                                  background: isTimerActive ? 'radial-gradient(circle, #A8C09A 0%, transparent 70%)' : 'none',
+                                  animation: isTimerActive ? 'pulse 2s ease-in-out infinite' : 'none'
+                                }}
+                              />
+                              
+                              {/* Body Figure */}
+                              <svg width="120" height="200" viewBox="0 0 120 200" className="relative z-10">
+                                {/* Head */}
+                                <circle
+                                  cx="60"
+                                  cy="25"
+                                  r="18"
+                                  fill={bodyPart === 0 ? '#F87171' : '#D1D5DB'}
+                                  className="transition-all duration-1000"
+                                  opacity={bodyPart === 0 ? 1 : 0.5}
+                                  style={{
+                                    filter: bodyPart === 0 && isTimerActive ? 'drop-shadow(0 0 15px #F87171)' : 'none',
+                                    transform: bodyPart === 0 ? 'scale(1.1)' : 'scale(1)',
+                                    transformOrigin: 'center'
+                                  }}
+                                />
+                                
+                                {/* Neck */}
+                                <rect
+                                  x="55"
+                                  y="40"
+                                  width="10"
+                                  height="10"
+                                  fill={bodyPart === 0 || bodyPart === 1 ? '#FED7AA' : '#D1D5DB'}
+                                  opacity={0.7}
+                                />
+                                
+                                {/* Shoulders */}
+                                <ellipse
+                                  cx="60"
+                                  cy="55"
+                                  rx="35"
+                                  ry="12"
+                                  fill={bodyPart === 1 ? '#FB923C' : '#D1D5DB'}
+                                  className="transition-all duration-1000"
+                                  opacity={bodyPart === 1 ? 1 : 0.5}
+                                  style={{
+                                    filter: bodyPart === 1 && isTimerActive ? 'drop-shadow(0 0 15px #FB923C)' : 'none',
+                                    transform: bodyPart === 1 ? 'scale(1.1)' : 'scale(1)',
+                                    transformOrigin: 'center'
+                                  }}
+                                />
+                                
+                                {/* Arms */}
+                                <rect x="20" y="55" width="8" height="45" rx="4" fill="#D1D5DB" opacity={0.4} />
+                                <rect x="92" y="55" width="8" height="45" rx="4" fill="#D1D5DB" opacity={0.4} />
+                                
+                                {/* Chest */}
+                                <rect
+                                  x="35"
+                                  y="60"
+                                  width="50"
+                                  height="35"
+                                  rx="8"
+                                  fill={bodyPart === 2 ? '#FDE047' : '#D1D5DB'}
+                                  className="transition-all duration-1000"
+                                  opacity={bodyPart === 2 ? 1 : 0.5}
+                                  style={{
+                                    filter: bodyPart === 2 && isTimerActive ? 'drop-shadow(0 0 15px #FDE047)' : 'none',
+                                    transform: bodyPart === 2 ? 'scale(1.1)' : 'scale(1)',
+                                    transformOrigin: 'center'
+                                  }}
+                                />
+                                
+                                {/* Belly */}
+                                <ellipse
+                                  cx="60"
+                                  cy="110"
+                                  rx="22"
+                                  ry="18"
+                                  fill={bodyPart === 3 ? '#4ADE80' : '#D1D5DB'}
+                                  className="transition-all duration-1000"
+                                  opacity={bodyPart === 3 ? 1 : 0.5}
+                                  style={{
+                                    filter: bodyPart === 3 && isTimerActive ? 'drop-shadow(0 0 15px #4ADE80)' : 'none',
+                                    transform: bodyPart === 3 ? 'scale(1.1)' : 'scale(1)',
+                                    transformOrigin: 'center'
+                                  }}
+                                />
+                                
+                                {/* Hips */}
+                                <rect
+                                  x="42"
+                                  y="125"
+                                  width="36"
+                                  height="15"
+                                  rx="6"
+                                  fill="#D1D5DB"
+                                  opacity={0.5}
+                                />
+                                
+                                {/* Legs */}
+                                <rect
+                                  x="45"
+                                  y="140"
+                                  width="12"
+                                  height="45"
+                                  rx="6"
+                                  fill={bodyPart === 4 ? '#60A5FA' : '#D1D5DB'}
+                                  className="transition-all duration-1000"
+                                  opacity={bodyPart === 4 ? 1 : 0.5}
+                                  style={{
+                                    filter: bodyPart === 4 && isTimerActive ? 'drop-shadow(0 0 15px #60A5FA)' : 'none',
+                                    transform: bodyPart === 4 ? 'scale(1.1)' : 'scale(1)',
+                                    transformOrigin: 'center'
+                                  }}
+                                />
+                                <rect
+                                  x="63"
+                                  y="140"
+                                  width="12"
+                                  height="45"
+                                  rx="6"
+                                  fill={bodyPart === 4 ? '#60A5FA' : '#D1D5DB'}
+                                  className="transition-all duration-1000"
+                                  opacity={bodyPart === 4 ? 1 : 0.5}
+                                  style={{
+                                    filter: bodyPart === 4 && isTimerActive ? 'drop-shadow(0 0 15px #60A5FA)' : 'none',
+                                    transform: bodyPart === 4 ? 'scale(1.1)' : 'scale(1)',
+                                    transformOrigin: 'center'
+                                  }}
+                                />
+                                
+                                {/* Feet */}
+                                <ellipse
+                                  cx="51"
+                                  cy="190"
+                                  rx="8"
+                                  ry="5"
+                                  fill={bodyPart === 4 ? '#3B82F6' : '#D1D5DB'}
+                                  className="transition-all duration-1000"
+                                  opacity={bodyPart === 4 ? 1 : 0.5}
+                                />
+                                <ellipse
+                                  cx="69"
+                                  cy="190"
+                                  rx="8"
+                                  ry="5"
+                                  fill={bodyPart === 4 ? '#3B82F6' : '#D1D5DB'}
+                                  className="transition-all duration-1000"
+                                  opacity={bodyPart === 4 ? 1 : 0.5}
+                                />
+                                
+                                {/* Energy Flow Lines (when active) */}
+                                {isTimerActive && (
+                                  <>
+                                    <circle cx="60" cy={bodyPart === 0 ? 25 : bodyPart === 1 ? 55 : bodyPart === 2 ? 77 : bodyPart === 3 ? 110 : 162} r="2" fill="#A8C09A">
+                                      <animate attributeName="r" values="2;6;2" dur="2s" repeatCount="indefinite" />
+                                      <animate attributeName="opacity" values="1;0;1" dur="2s" repeatCount="indefinite" />
+                                    </circle>
+                                    <circle cx="60" cy={bodyPart === 0 ? 25 : bodyPart === 1 ? 55 : bodyPart === 2 ? 77 : bodyPart === 3 ? 110 : 162} r="4" fill="none" stroke="#A8C09A" strokeWidth="1">
+                                      <animate attributeName="r" values="4;12;4" dur="2s" repeatCount="indefinite" />
+                                      <animate attributeName="opacity" values="0.5;0;0.5" dur="2s" repeatCount="indefinite" />
+                                    </circle>
+                                  </>
+                                )}
+                              </svg>
+                            </div>
+                            
+                            {/* Progress Bar */}
+                            <div className="w-full max-w-xs mt-4">
+                              <div className="h-2 bg-gray-200 rounded-full overflow-hidden">
+                                <div 
+                                  className="h-full transition-all duration-1000"
+                                  style={{
+                                    width: `${((bodyPart + 1) / 5) * 100}%`,
+                                    backgroundColor: '#A8C09A'
+                                  }}
+                                />
                               </div>
                             </div>
                           </div>
@@ -2622,69 +3204,217 @@ function App() {
                               <span style={{ color: '#3A3A3A' }}>Release legs and feet</span>
                             </div>
                           </div>
+                          
+                          {/* Why This Works */}
+                          <div className="mt-4 p-3 rounded-lg" style={{ backgroundColor: 'rgba(168, 192, 154, 0.1)' }}>
+                            <p className="text-xs font-medium mb-1" style={{ color: '#2D5F3F' }}>
+                              Why This Works:
+                            </p>
+                            <p className="text-xs" style={{ color: '#3A3A3A' }}>
+                              Progressive muscle release reduces cortisol levels by 23% in just one minute. Systematically releasing tension signals safety to your nervous system.
+                            </p>
+                          </div>
                         </>
                       )}
                       {selectedTechnique === 'temperature-shift' && (
                         <>
                           {/* Temperature Shift Animation */}
                           <div className="flex flex-col items-center mb-6">
-                            <div className="relative w-48 h-48 mb-4">
-                              {/* Thermometer Animation */}
-                              <div className="absolute inset-0 flex items-center justify-center">
-                                <div className="relative w-32 h-40">
-                                  {/* Thermometer Body */}
-                                  <div className="absolute inset-x-0 top-0 bottom-8 w-8 mx-auto rounded-full bg-gray-200">
-                                    <div
-                                      className="absolute bottom-0 left-0 right-0 rounded-b-full transition-all duration-2000 ease-in-out"
-                                      style={{
-                                        height: isTimerActive ? '20%' : '80%',
-                                        backgroundColor: isTimerActive ? '#3B82F6' : '#EF4444',
-                                        transition: 'all 2s ease-in-out',
-                                      }}
-                                    />
-                                  </div>
-                                  {/* Thermometer Bulb */}
-                                  <div
-                                    className="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-12 h-12 rounded-full transition-all duration-2000"
-                                    style={{
-                                      backgroundColor: isTimerActive ? '#3B82F6' : '#EF4444',
-                                      boxShadow: isTimerActive
-                                        ? '0 0 20px rgba(59, 130, 246, 0.5)'
-                                        : '0 0 20px rgba(239, 68, 68, 0.5)',
-                                    }}
+                            {/* Status Text Above Animation */}
+                            <div className="text-center mb-4">
+                              <p className="text-2xl font-bold" style={{ color: '#2D5F3F' }}>
+                                {isTimerActive ? 'Cooling Phase' : 'Warming Phase'}
+                              </p>
+                              <p className="text-sm mt-1" style={{ color: '#6B7C6B' }}>
+                                {isTimerActive ? 'Activating parasympathetic response...' : 'Press start to begin temperature shift'}
+                              </p>
+                            </div>
+                            
+                            {/* Enhanced Temperature Animation */}
+                            <div className="relative w-64 h-64 flex items-center justify-center">
+                              {/* Background Pulse */}
+                              <div 
+                                className="absolute inset-0 rounded-full"
+                                style={{
+                                  background: isTimerActive 
+                                    ? 'radial-gradient(circle, rgba(59, 130, 246, 0.1) 0%, transparent 70%)' 
+                                    : 'radial-gradient(circle, rgba(239, 68, 68, 0.1) 0%, transparent 70%)',
+                                  animation: isTimerActive ? 'pulse 3s ease-in-out infinite' : 'none'
+                                }}
+                              />
+                              
+                              {/* Temperature Visualization */}
+                              <svg width="200" height="200" viewBox="0 0 200 200" className="relative z-10">
+                                {/* Outer Ring */}
+                                <circle
+                                  cx="100"
+                                  cy="100"
+                                  r="90"
+                                  fill="none"
+                                  stroke={isTimerActive ? '#3B82F6' : '#EF4444'}
+                                  strokeWidth="2"
+                                  opacity="0.3"
+                                />
+                                
+                                {/* Temperature Gauge Arc */}
+                                <path
+                                  d="M 100,10 A 90,90 0 0,1 190,100"
+                                  fill="none"
+                                  stroke="#EF4444"
+                                  strokeWidth="6"
+                                  strokeLinecap="round"
+                                  opacity={isTimerActive ? 0.2 : 1}
+                                  className="transition-all duration-2000"
+                                />
+                                <path
+                                  d="M 10,100 A 90,90 0 0,1 100,10"
+                                  fill="none"
+                                  stroke="#3B82F6"
+                                  strokeWidth="6"
+                                  strokeLinecap="round"
+                                  opacity={isTimerActive ? 1 : 0.2}
+                                  className="transition-all duration-2000"
+                                />
+                                
+                                {/* Central Temperature Display */}
+                                <circle
+                                  cx="100"
+                                  cy="100"
+                                  r="50"
+                                  fill={isTimerActive ? '#DBEAFE' : '#FEE2E2'}
+                                  className="transition-all duration-2000"
+                                />
+                                <circle
+                                  cx="100"
+                                  cy="100"
+                                  r="40"
+                                  fill={isTimerActive ? '#93C5FD' : '#FCA5A5'}
+                                  className="transition-all duration-2000"
+                                />
+                                
+                                {/* Temperature Icon */}
+                                <g transform="translate(100, 100)">
+                                  {/* Thermometer Shape */}
+                                  <rect
+                                    x="-6"
+                                    y="-30"
+                                    width="12"
+                                    height="40"
+                                    rx="6"
+                                    fill="white"
+                                    opacity="0.9"
                                   />
-                                  {/* Temperature Waves */}
-                                  {isTimerActive && (
-                                    <>
-                                      <div className="absolute -left-4 top-1/2 w-2 h-2 bg-blue-400 rounded-full animate-ping" />
-                                      <div
-                                        className="absolute -right-4 top-1/2 w-2 h-2 bg-blue-400 rounded-full animate-ping"
-                                        style={{ animationDelay: '0.5s' }}
-                                      />
-                                      <div
-                                        className="absolute -left-6 top-1/3 w-2 h-2 bg-blue-400 rounded-full animate-ping"
-                                        style={{ animationDelay: '1s' }}
-                                      />
-                                      <div
-                                        className="absolute -right-6 top-1/3 w-2 h-2 bg-blue-400 rounded-full animate-ping"
-                                        style={{ animationDelay: '1.5s' }}
-                                      />
-                                    </>
-                                  )}
-                                </div>
-                              </div>
-
-                              {/* Status Text */}
+                                  <circle
+                                    cx="0"
+                                    cy="20"
+                                    r="10"
+                                    fill="white"
+                                    opacity="0.9"
+                                  />
+                                  
+                                  {/* Mercury Level */}
+                                  <rect
+                                    x="-3"
+                                    y={isTimerActive ? "-10" : "-25"}
+                                    width="6"
+                                    height={isTimerActive ? "25" : "40"}
+                                    rx="3"
+                                    fill={isTimerActive ? '#3B82F6' : '#EF4444'}
+                                    className="transition-all duration-2000"
+                                  />
+                                  <circle
+                                    cx="0"
+                                    cy="20"
+                                    r="7"
+                                    fill={isTimerActive ? '#3B82F6' : '#EF4444'}
+                                    className="transition-all duration-2000"
+                                  />
+                                </g>
+                                
+                                {/* Animated Particles */}
+                                {isTimerActive ? (
+                                  // Cold particles - snowflakes
+                                  <>
+                                    {[0, 60, 120, 180, 240, 300].map((angle, i) => (
+                                      <circle
+                                        key={i}
+                                        r="2"
+                                        fill="#60A5FA"
+                                        opacity="0.6"
+                                      >
+                                        <animateTransform
+                                          attributeName="transform"
+                                          type="rotate"
+                                          from={`${angle} 100 100`}
+                                          to={`${angle + 360} 100 100`}
+                                          dur={`${10 + i * 2}s`}
+                                          repeatCount="indefinite"
+                                        />
+                                        <animate
+                                          attributeName="cx"
+                                          values="100;130;100"
+                                          dur={`${3 + i}s`}
+                                          repeatCount="indefinite"
+                                        />
+                                        <animate
+                                          attributeName="cy"
+                                          values="100;100;100"
+                                          dur={`${3 + i}s`}
+                                          repeatCount="indefinite"
+                                        />
+                                      </circle>
+                                    ))}
+                                  </>
+                                ) : (
+                                  // Warm particles - heat waves
+                                  <>
+                                    {[0, 45, 90, 135, 180, 225, 270, 315].map((angle, i) => (
+                                      <circle
+                                        key={i}
+                                        r="1.5"
+                                        fill="#F87171"
+                                        opacity="0.5"
+                                      >
+                                        <animateTransform
+                                          attributeName="transform"
+                                          type="rotate"
+                                          from={`${angle} 100 100`}
+                                          to={`${angle - 360} 100 100`}
+                                          dur={`${8 + i}s`}
+                                          repeatCount="indefinite"
+                                        />
+                                        <animate
+                                          attributeName="cx"
+                                          values="100;140;100"
+                                          dur={`${2 + i * 0.5}s`}
+                                          repeatCount="indefinite"
+                                        />
+                                      </circle>
+                                    ))}
+                                  </>
+                                )}
+                              </svg>
+                              
+                              {/* Action Indicator */}
                               <div className="absolute bottom-0 left-0 right-0 text-center">
-                                <p
-                                  className="text-2xl font-bold"
-                                  style={{ color: isTimerActive ? '#3B82F6' : '#EF4444' }}
-                                >
-                                  {isTimerActive ? 'COOL' : 'WARM'}
+                                <p className="text-lg font-bold" style={{ color: isTimerActive ? '#3B82F6' : '#EF4444' }}>
+                                  {isTimerActive ? 'Cool Water • Deep Breath' : 'Notice Warmth • Release'}
                                 </p>
-                                <p className="text-sm" style={{ color: '#6B7C6B' }}>
-                                  {isTimerActive ? 'System resetting...' : 'Ready to shift'}
-                                </p>
+                              </div>
+                            </div>
+                            
+                            {/* Progress Bar */}
+                            <div className="w-full max-w-xs mt-4">
+                              <div className="h-2 bg-gray-200 rounded-full overflow-hidden">
+                                <div 
+                                  className="h-full transition-all duration-1000"
+                                  style={{
+                                    width: `${techniqueProgress}%`,
+                                    background: isTimerActive 
+                                      ? 'linear-gradient(90deg, #3B82F6 0%, #60A5FA 100%)'
+                                      : 'linear-gradient(90deg, #EF4444 0%, #F87171 100%)'
+                                  }}
+                                />
                               </div>
                             </div>
                           </div>
@@ -2693,29 +3423,86 @@ function App() {
                             className="font-semibold mb-3 text-center"
                             style={{ color: '#2D5F3F' }}
                           >
-                            Quick Temperature Reset:
+                            How Temperature Shift Works:
                           </h3>
+                          
+                          {/* What it does */}
+                          <div className="mb-4 p-3 rounded-lg" style={{ backgroundColor: 'rgba(168, 192, 154, 0.1)' }}>
+                            <p className="text-sm font-medium mb-1" style={{ color: '#2D5F3F' }}>
+                              Why This Helps:
+                            </p>
+                            <p className="text-xs" style={{ color: '#3A3A3A' }}>
+                              Cold water triggers your dive response, instantly activating your parasympathetic nervous system. This slows your heart rate, reduces stress hormones, and brings immediate calm.
+                            </p>
+                          </div>
+
+                          {/* Step by step instructions */}
+                          <div className="space-y-3 mb-4">
+                            <div className="flex items-start">
+                              <div className="w-6 h-6 rounded-full bg-blue-500 text-white text-xs flex items-center justify-center mr-3 flex-shrink-0">
+                                1
+                              </div>
+                              <div>
+                                <p className="text-sm font-medium" style={{ color: '#2D5F3F' }}>
+                                  Get Cold Water Ready
+                                </p>
+                                <p className="text-xs mt-1" style={{ color: '#6B7C6B' }}>
+                                  Fill a bowl with cold water or go to a sink. Colder is better - add ice if available.
+                                </p>
+                              </div>
+                            </div>
+                            
+                            <div className="flex items-start">
+                              <div className="w-6 h-6 rounded-full bg-blue-500 text-white text-xs flex items-center justify-center mr-3 flex-shrink-0">
+                                2
+                              </div>
+                              <div>
+                                <p className="text-sm font-medium" style={{ color: '#2D5F3F' }}>
+                                  Press Start & Apply Cold
+                                </p>
+                                <p className="text-xs mt-1" style={{ color: '#6B7C6B' }}>
+                                  Splash cold water on your face, focusing on temples and forehead. Or hold your wrists under cold running water.
+                                </p>
+                              </div>
+                            </div>
+                            
+                            <div className="flex items-start">
+                              <div className="w-6 h-6 rounded-full bg-blue-500 text-white text-xs flex items-center justify-center mr-3 flex-shrink-0">
+                                3
+                              </div>
+                              <div>
+                                <p className="text-sm font-medium" style={{ color: '#2D5F3F' }}>
+                                  Breathe Deeply
+                                </p>
+                                <p className="text-xs mt-1" style={{ color: '#6B7C6B' }}>
+                                  While feeling the cold, take 3-4 slow, deep breaths. Notice the immediate shift in your body's response.
+                                </p>
+                              </div>
+                            </div>
+                          </div>
+
+                          {/* Quick tips */}
                           <div className="grid grid-cols-2 gap-3 text-sm">
                             <div className="p-3 rounded-lg bg-blue-50 border border-blue-200">
                               <div className="flex items-center mb-2">
                                 <div className="w-3 h-3 rounded-full bg-blue-500 mr-2" />
                                 <span className="font-medium" style={{ color: '#1E40AF' }}>
-                                  Cold Water
+                                  Best Spots
                                 </span>
                               </div>
                               <p className="text-xs" style={{ color: '#3A3A3A' }}>
-                                Splash face or wrists
+                                Face, temples, wrists, or back of neck
                               </p>
                             </div>
                             <div className="p-3 rounded-lg bg-cyan-50 border border-cyan-200">
                               <div className="flex items-center mb-2">
                                 <div className="w-3 h-3 rounded-full bg-cyan-500 mr-2" />
                                 <span className="font-medium" style={{ color: '#0891B2' }}>
-                                  Deep Breaths
+                                  Duration
                                 </span>
                               </div>
                               <p className="text-xs" style={{ color: '#3A3A3A' }}>
-                                3 slow, deep breaths
+                                30-60 seconds for full effect
                               </p>
                             </div>
                           </div>
@@ -2725,178 +3512,191 @@ function App() {
                         <>
                           {/* Sensory Reset Animation */}
                           <div className="flex flex-col items-center mb-6">
-                            <div className="relative w-56 h-56 mb-4">
-                              {/* 5-4-3-2-1 Circles */}
-                              <div className="absolute inset-0 flex items-center justify-center">
-                                <div className="relative">
-                                  {/* Outer ring - Sight (5) */}
-                                  <div
-                                    className={`absolute inset-0 w-56 h-56 rounded-full border-4 transition-all duration-1000 ${senseCount >= 1 ? 'border-purple-400 bg-purple-50' : 'border-gray-300'}`}
-                                  >
-                                    <div className="absolute top-2 left-1/2 transform -translate-x-1/2">
-                                      <div className="text-center">
-                                        <p
-                                          className="text-2xl font-bold"
-                                          style={{ color: senseCount >= 1 ? '#9333EA' : '#D1D5DB' }}
-                                        >
-                                          5
-                                        </p>
-                                        <p
-                                          className="text-xs"
-                                          style={{ color: senseCount >= 1 ? '#9333EA' : '#9CA3AF' }}
-                                        >
-                                          See
-                                        </p>
-                                      </div>
-                                    </div>
-                                  </div>
-
-                                  {/* Touch ring (4) */}
-                                  <div
-                                    className={`absolute inset-4 w-48 h-48 rounded-full border-4 transition-all duration-1000 ${senseCount >= 2 ? 'border-blue-400 bg-blue-50' : 'border-gray-300'}`}
-                                  >
-                                    <div className="absolute top-2 left-1/2 transform -translate-x-1/2">
-                                      <div className="text-center">
-                                        <p
-                                          className="text-xl font-bold"
-                                          style={{ color: senseCount >= 2 ? '#3B82F6' : '#D1D5DB' }}
-                                        >
-                                          4
-                                        </p>
-                                        <p
-                                          className="text-xs"
-                                          style={{ color: senseCount >= 2 ? '#3B82F6' : '#9CA3AF' }}
-                                        >
-                                          Touch
-                                        </p>
-                                      </div>
-                                    </div>
-                                  </div>
-
-                                  {/* Hear ring (3) */}
-                                  <div
-                                    className={`absolute inset-8 w-40 h-40 rounded-full border-4 transition-all duration-1000 ${senseCount >= 3 ? 'border-green-400 bg-green-50' : 'border-gray-300'}`}
-                                  >
-                                    <div className="absolute top-2 left-1/2 transform -translate-x-1/2">
-                                      <div className="text-center">
-                                        <p
-                                          className="text-lg font-bold"
-                                          style={{ color: senseCount >= 3 ? '#10B981' : '#D1D5DB' }}
-                                        >
-                                          3
-                                        </p>
-                                        <p
-                                          className="text-xs"
-                                          style={{ color: senseCount >= 3 ? '#10B981' : '#9CA3AF' }}
-                                        >
-                                          Hear
-                                        </p>
-                                      </div>
-                                    </div>
-                                  </div>
-
-                                  {/* Smell ring (2) */}
-                                  <div
-                                    className={`absolute inset-12 w-32 h-32 rounded-full border-4 transition-all duration-1000 ${senseCount >= 4 ? 'border-orange-400 bg-orange-50' : 'border-gray-300'}`}
-                                  >
-                                    <div className="absolute top-2 left-1/2 transform -translate-x-1/2">
-                                      <div className="text-center">
-                                        <p
-                                          className="font-bold"
-                                          style={{ color: senseCount >= 4 ? '#FB923C' : '#D1D5DB' }}
-                                        >
-                                          2
-                                        </p>
-                                        <p
-                                          className="text-xs"
-                                          style={{ color: senseCount >= 4 ? '#FB923C' : '#9CA3AF' }}
-                                        >
-                                          Smell
-                                        </p>
-                                      </div>
-                                    </div>
-                                  </div>
-
-                                  {/* Taste center (1) */}
-                                  <div
-                                    className={`absolute inset-16 w-24 h-24 rounded-full border-4 transition-all duration-1000 flex items-center justify-center ${senseCount >= 5 ? 'border-red-400 bg-red-50' : 'border-gray-300'}`}
-                                  >
-                                    <div className="text-center">
-                                      <p
-                                        className="text-lg font-bold"
-                                        style={{ color: senseCount >= 5 ? '#EF4444' : '#D1D5DB' }}
-                                      >
-                                        1
-                                      </p>
-                                      <p
-                                        className="text-xs"
-                                        style={{ color: senseCount >= 5 ? '#EF4444' : '#9CA3AF' }}
-                                      >
-                                        Taste
-                                      </p>
-                                    </div>
-                                  </div>
+                            {/* Status Text Above Animation */}
+                            <div className="text-center mb-4">
+                              <p className="text-2xl font-bold" style={{ color: '#2D5F3F' }}>
+                                {senseCount === 0 && 'Ready to Ground'}
+                                {senseCount === 1 && '4 Things You See'}
+                                {senseCount === 2 && '3 Things You Touch'}
+                                {senseCount === 3 && '2 Things You Smell'}
+                                {senseCount === 4 && '1 Thing You Taste'}
+                              </p>
+                              <p className="text-sm mt-1" style={{ color: '#6B7C6B' }}>
+                                {isTimerActive ? 'Focus on each sense mindfully' : 'Press start to begin grounding'}
+                              </p>
+                            </div>
+                            
+                            {/* Enhanced 5-4-3-2-1 Animation */}
+                            <div className="relative w-64 h-64 flex items-center justify-center">
+                              {/* Background Pulse */}
+                              <div 
+                                className="absolute inset-0 rounded-full"
+                                style={{
+                                  background: isTimerActive 
+                                    ? 'radial-gradient(circle, rgba(168, 192, 154, 0.1) 0%, transparent 70%)' 
+                                    : 'none',
+                                  animation: isTimerActive ? 'pulse 2s ease-in-out infinite' : 'none'
+                                }}
+                              />
+                              
+                              {/* Sensory Visualization */}
+                              <svg width="250" height="250" viewBox="0 -10 250 260" className="relative z-10">
+                                {/* Sight - Eye Icon (4) - Top Center */}
+                                <g transform="translate(125, 60)" opacity={senseCount >= 1 ? 1 : 0.3}>
+                                  <circle cx="0" cy="0" r="25" fill={senseCount >= 1 ? '#9333EA' : '#E5E7EB'} />
+                                  <ellipse cx="0" cy="0" rx="15" ry="10" fill="white" />
+                                  <circle cx="0" cy="0" r="6" fill="#1F2937" />
+                                  {/* Number positioned above with better spacing */}
+                                  <text x="0" y="-40" textAnchor="middle" fill={senseCount >= 1 ? '#9333EA' : '#9CA3AF'} fontSize="20" fontWeight="bold">4</text>
+                                </g>
+                                
+                                {/* Touch - Hand Icon (3) - Right Side */}
+                                <g transform="translate(200, 125)" opacity={senseCount >= 2 ? 1 : 0.3}>
+                                  <circle cx="0" cy="0" r="25" fill={senseCount >= 2 ? '#3B82F6' : '#E5E7EB'} />
+                                  {/* Better hand icon with fingers */}
+                                  <g>
+                                    {/* Palm */}
+                                    <ellipse cx="0" cy="2" rx="10" ry="12" fill="white" />
+                                    {/* Thumb */}
+                                    <ellipse cx="-10" cy="-2" rx="4" ry="6" fill="white" transform="rotate(-30 -10 -2)" />
+                                    {/* Index finger */}
+                                    <rect x="-6" y="-12" width="3" height="12" rx="1.5" fill="white" />
+                                    {/* Middle finger */}
+                                    <rect x="-2" y="-13" width="3" height="13" rx="1.5" fill="white" />
+                                    {/* Ring finger */}
+                                    <rect x="2" y="-12" width="3" height="12" rx="1.5" fill="white" />
+                                    {/* Pinky finger */}
+                                    <rect x="6" y="-10" width="3" height="10" rx="1.5" fill="white" />
+                                    {/* Palm lines */}
+                                    <path d="M -5,2 L 5,2" stroke="#E5E7EB" strokeWidth="1" opacity="0.5" />
+                                    <path d="M -3,6 L 3,6" stroke="#E5E7EB" strokeWidth="1" opacity="0.5" />
+                                  </g>
+                                  {/* Number positioned to the right */}
+                                  <text x="40" y="5" textAnchor="middle" fill={senseCount >= 2 ? '#3B82F6' : '#9CA3AF'} fontSize="20" fontWeight="bold">3</text>
+                                </g>
+                                
+                                {/* Smell - Nose Icon (2) - Left Side */}
+                                <g transform="translate(50, 125)" opacity={senseCount >= 3 ? 1 : 0.3}>
+                                  <circle cx="0" cy="0" r="25" fill={senseCount >= 3 ? '#FB923C' : '#E5E7EB'} />
+                                  {/* Simplified nose with scent waves */}
+                                  <path d="M 0,-8 L -4,4 L 0,8 L 4,4 Z" fill="white" />
+                                  <circle cx="-2" cy="6" r="1.5" fill="#1F2937" />
+                                  <circle cx="2" cy="6" r="1.5" fill="#1F2937" />
+                                  <path d="M -10,-5 Q -8,-3 -6,-5" fill="none" stroke="white" strokeWidth="1.5" opacity="0.8" />
+                                  <path d="M -10,0 Q -8,2 -6,0" fill="none" stroke="white" strokeWidth="1.5" opacity="0.8" />
+                                  {/* Number positioned to the left */}
+                                  <text x="-40" y="5" textAnchor="middle" fill={senseCount >= 3 ? '#FB923C' : '#9CA3AF'} fontSize="20" fontWeight="bold">2</text>
+                                </g>
+                                
+                                {/* Taste - Mouth Icon (1) - Bottom Center */}
+                                <g transform="translate(125, 190)" opacity={senseCount >= 4 ? 1 : 0.3}>
+                                  <circle cx="0" cy="0" r="25" fill={senseCount >= 4 ? '#EF4444' : '#E5E7EB'} />
+                                  {/* Simplified mouth/lips icon */}
+                                  <ellipse cx="0" cy="0" rx="12" ry="6" fill="white" />
+                                  <path d="M -12,0 Q 0,4 12,0" fill="none" stroke="#EF4444" strokeWidth="2" />
+                                  <rect x="-6" y="-3" width="12" height="1" fill="#FFB6C1" opacity="0.6" />
+                                  {/* Number positioned below */}
+                                  <text x="0" y="45" textAnchor="middle" fill={senseCount >= 4 ? '#EF4444' : '#9CA3AF'} fontSize="20" fontWeight="bold">1</text>
+                                </g>
+                                
+                                {/* Center Circle with Current Step */}
+                                <circle cx="125" cy="125" r="40" fill="white" stroke="#A8C09A" strokeWidth="3" />
+                                <text x="125" y="125" textAnchor="middle" fill="#2D5F3F" fontSize="24" fontWeight="bold" dy=".3em">
+                                  {senseCount === 0 ? 'START' : `${5 - senseCount}/4`}
+                                </text>
+                                
+                                {/* Connecting Lines */}
+                                {isTimerActive && (
+                                  <>
+                                    <line x1="125" y1="85" x2="125" y2="85" stroke="#A8C09A" strokeWidth="2" opacity={senseCount >= 1 ? 1 : 0.3} />
+                                    <line x1="155" y1="125" x2="175" y2="125" stroke="#A8C09A" strokeWidth="2" opacity={senseCount >= 2 ? 1 : 0.3} />
+                                    <line x1="95" y1="125" x2="75" y2="125" stroke="#A8C09A" strokeWidth="2" opacity={senseCount >= 3 ? 1 : 0.3} />
+                                    <line x1="125" y1="165" x2="125" y2="165" stroke="#A8C09A" strokeWidth="2" opacity={senseCount >= 4 ? 1 : 0.3} />
+                                  </>
+                                )}
+                              </svg>
+                              
+                              {/* Progress Bar */}
+                              <div className="absolute bottom-0 left-0 right-0">
+                                <div className="h-2 bg-gray-200 rounded-full overflow-hidden">
+                                  <div 
+                                    className="h-full transition-all duration-1000"
+                                    style={{
+                                      width: `${techniqueProgress}%`,
+                                      backgroundColor: '#A8C09A'
+                                    }}
+                                  />
                                 </div>
                               </div>
                             </div>
-
-                            <p className="text-center text-sm" style={{ color: '#6B7C6B' }}>
-                              {senseCount === 0 && 'Ready to ground yourself'}
-                              {senseCount === 1 && 'Notice 5 things you can see'}
-                              {senseCount === 2 && 'Feel 4 things you can touch'}
-                              {senseCount === 3 && 'Listen for 3 sounds'}
-                              {senseCount === 4 && 'Identify 2 scents'}
-                              {senseCount === 5 && 'Name 1 taste'}
-                            </p>
                           </div>
 
                           <h3
                             className="font-semibold mb-3 text-center"
                             style={{ color: '#2D5F3F' }}
                           >
-                            5-4-3-2-1 Grounding:
+                            How to Practice 4-3-2-1 Grounding:
                           </h3>
-                          <div className="space-y-2 text-sm">
-                            <div
-                              className={`flex items-center p-2 rounded-lg transition-all ${senseCount >= 1 ? 'bg-purple-50 border-l-4 border-purple-400' : ''}`}
-                            >
-                              <div className="w-8 h-8 rounded-full bg-purple-100 flex items-center justify-center mr-3">
-                                <span className="font-bold text-purple-600">5</span>
+                          
+                          {/* Instructions */}
+                          <div className="space-y-3 mb-4">
+                            <div className="flex items-start">
+                              <div className="w-8 h-8 rounded-full bg-purple-100 flex items-center justify-center mr-3 flex-shrink-0">
+                                <span className="font-bold text-purple-600">4</span>
                               </div>
-                              <span style={{ color: '#3A3A3A' }}>Things you can see</span>
-                            </div>
-                            <div
-                              className={`flex items-center p-2 rounded-lg transition-all ${senseCount >= 2 ? 'bg-blue-50 border-l-4 border-blue-400' : ''}`}
-                            >
-                              <div className="w-8 h-8 rounded-full bg-blue-100 flex items-center justify-center mr-3">
-                                <span className="font-bold text-blue-600">4</span>
+                              <div>
+                                <p className="text-sm font-medium" style={{ color: '#2D5F3F' }}>See</p>
+                                <p className="text-xs mt-1" style={{ color: '#6B7C6B' }}>
+                                  Look around and name 4 things you can see. Be specific - "blue coffee mug" not just "mug"
+                                </p>
                               </div>
-                              <span style={{ color: '#3A3A3A' }}>Things you can touch</span>
                             </div>
-                            <div
-                              className={`flex items-center p-2 rounded-lg transition-all ${senseCount >= 3 ? 'bg-green-50 border-l-4 border-green-400' : ''}`}
-                            >
-                              <div className="w-8 h-8 rounded-full bg-green-100 flex items-center justify-center mr-3">
-                                <span className="font-bold text-green-600">3</span>
+                            
+                            <div className="flex items-start">
+                              <div className="w-8 h-8 rounded-full bg-blue-100 flex items-center justify-center mr-3 flex-shrink-0">
+                                <span className="font-bold text-blue-600">3</span>
                               </div>
-                              <span style={{ color: '#3A3A3A' }}>Things you can hear</span>
-                            </div>
-                            <div
-                              className={`flex items-center p-2 rounded-lg transition-all ${senseCount >= 4 ? 'bg-orange-50 border-l-4 border-orange-400' : ''}`}
-                            >
-                              <div className="w-8 h-8 rounded-full bg-orange-100 flex items-center justify-center mr-3">
-                                <span className="font-bold text-orange-600">2</span>
+                              <div>
+                                <p className="text-sm font-medium" style={{ color: '#2D5F3F' }}>Touch</p>
+                                <p className="text-xs mt-1" style={{ color: '#6B7C6B' }}>
+                                  Notice 3 things you can physically feel - your feet on floor, chair against back, air on skin
+                                </p>
                               </div>
-                              <span style={{ color: '#3A3A3A' }}>Things you can smell</span>
                             </div>
-                            <div
-                              className={`flex items-center p-2 rounded-lg transition-all ${senseCount >= 5 ? 'bg-red-50 border-l-4 border-red-400' : ''}`}
-                            >
-                              <div className="w-8 h-8 rounded-full bg-red-100 flex items-center justify-center mr-3">
+                            
+                            <div className="flex items-start">
+                              <div className="w-8 h-8 rounded-full bg-green-100 flex items-center justify-center mr-3 flex-shrink-0">
+                                <span className="font-bold text-green-600">2</span>
+                              </div>
+                              <div>
+                                <p className="text-sm font-medium" style={{ color: '#2D5F3F' }}>Smell</p>
+                                <p className="text-xs mt-1" style={{ color: '#6B7C6B' }}>
+                                  Identify 2 scents - coffee, fresh air, hand lotion, or just "neutral air"
+                                </p>
+                              </div>
+                            </div>
+                            
+                            <div className="flex items-start">
+                              <div className="w-8 h-8 rounded-full bg-red-100 flex items-center justify-center mr-3 flex-shrink-0">
                                 <span className="font-bold text-red-600">1</span>
                               </div>
-                              <span style={{ color: '#3A3A3A' }}>Thing you can taste</span>
+                              <div>
+                                <p className="text-sm font-medium" style={{ color: '#2D5F3F' }}>Taste</p>
+                                <p className="text-xs mt-1" style={{ color: '#6B7C6B' }}>
+                                  Notice 1 taste - sip water, chew gum, or just notice your mouth's current taste
+                                </p>
+                              </div>
                             </div>
+                          </div>
+                          
+                          {/* Why This Works */}
+                          <div className="mt-4 p-3 rounded-lg" style={{ backgroundColor: 'rgba(168, 192, 154, 0.1)' }}>
+                            <p className="text-xs font-medium mb-1" style={{ color: '#2D5F3F' }}>
+                              Why This Works:
+                            </p>
+                            <p className="text-xs" style={{ color: '#3A3A3A' }}>
+                              The 4-3-2-1 technique interrupts anxiety loops by engaging multiple sensory channels simultaneously. This grounds you in the present moment, reducing rumination by 60%.
+                            </p>
                           </div>
                         </>
                       )}
@@ -2904,69 +3704,161 @@ function App() {
                         <>
                           {/* Expansion Practice Animation */}
                           <div className="flex flex-col items-center mb-6">
-                            <div className="relative w-64 h-64 mb-4">
-                              {/* Expanding Circles */}
-                              <div className="absolute inset-0 flex items-center justify-center">
-                                {/* Center circle */}
-                                <div
-                                  className="absolute w-16 h-16 rounded-full transition-all duration-3000"
-                                  style={{
-                                    backgroundColor: 'rgba(168, 192, 154, 0.8)',
-                                    transform: isTimerActive
-                                      ? `scale(${1 + expansionLevel * 0.5})`
-                                      : 'scale(1)',
-                                    boxShadow: '0 0 20px rgba(168, 192, 154, 0.5)',
-                                  }}
-                                />
-                                {/* Middle ring */}
-                                <div
-                                  className="absolute w-32 h-32 rounded-full border-2 transition-all duration-3000"
-                                  style={{
-                                    borderColor: 'rgba(168, 192, 154, 0.6)',
-                                    transform: isTimerActive
-                                      ? `scale(${1 + expansionLevel * 0.3})`
-                                      : 'scale(1)',
-                                    opacity: isTimerActive ? 0.8 : 0.4,
-                                  }}
-                                />
-                                {/* Outer ring */}
-                                <div
-                                  className="absolute w-48 h-48 rounded-full border-2 transition-all duration-3000"
-                                  style={{
-                                    borderColor: 'rgba(168, 192, 154, 0.4)',
-                                    transform: isTimerActive
-                                      ? `scale(${1 + expansionLevel * 0.2})`
-                                      : 'scale(1)',
-                                    opacity: isTimerActive ? 0.6 : 0.2,
-                                  }}
-                                />
-                                {/* Outermost ring */}
-                                <div
-                                  className="absolute w-56 h-56 rounded-full border transition-all duration-3000"
-                                  style={{
-                                    borderColor: 'rgba(168, 192, 154, 0.2)',
-                                    transform: isTimerActive
-                                      ? `scale(${1 + expansionLevel * 0.1})`
-                                      : 'scale(1)',
-                                    opacity: isTimerActive ? 0.4 : 0.1,
-                                  }}
-                                />
-
-                                {/* Center text */}
-                                <div className="absolute inset-0 flex items-center justify-center">
-                                  <div className="text-center">
-                                    <p
-                                      className="text-2xl font-bold mb-1"
-                                      style={{ color: '#2D5F3F' }}
+                            {/* Status Text Above Animation */}
+                            <div className="text-center mb-4">
+                              <p className="text-2xl font-bold" style={{ color: '#2D5F3F' }}>
+                                {!isTimerActive && 'Ready to Expand'}
+                                {isTimerActive && expansionLevel < 0.33 && 'Noticing Tension'}
+                                {isTimerActive && expansionLevel >= 0.33 && expansionLevel < 0.66 && 'Creating Space'}
+                                {isTimerActive && expansionLevel >= 0.66 && 'Full Expansion'}
+                              </p>
+                              <p className="text-sm mt-1" style={{ color: '#6B7C6B' }}>
+                                {isTimerActive ? 'Breathe and expand your awareness' : 'Press start to begin expansion'}
+                              </p>
+                            </div>
+                            
+                            {/* Enhanced Expansion Animation */}
+                            <div className="relative w-64 h-64 flex items-center justify-center">
+                              {/* Background Gradient */}
+                              <div 
+                                className="absolute inset-0 rounded-full"
+                                style={{
+                                  background: 'radial-gradient(circle, rgba(168, 192, 154, 0.05) 0%, transparent 70%)',
+                                  animation: isTimerActive ? 'pulse 4s ease-in-out infinite' : 'none'
+                                }}
+                              />
+                              
+                              {/* Expansion Visualization */}
+                              <svg width="250" height="250" viewBox="0 0 250 250" className="relative z-10">
+                                {/* Expanding ripples */}
+                                {[1, 2, 3, 4].map((ring) => (
+                                  <circle
+                                    key={ring}
+                                    cx="125"
+                                    cy="125"
+                                    r={30 * ring}
+                                    fill="none"
+                                    stroke="#A8C09A"
+                                    strokeWidth={5 - ring}
+                                    opacity={isTimerActive ? (0.8 - ring * 0.15) * expansionLevel : 0.1}
+                                    style={{
+                                      transform: isTimerActive 
+                                        ? `scale(${1 + expansionLevel * (ring * 0.15)})` 
+                                        : 'scale(1)',
+                                      transformOrigin: 'center',
+                                      transition: 'all 2s ease-in-out'
+                                    }}
+                                  />
+                                ))}
+                                
+                                {/* Body silhouette */}
+                                <g transform="translate(125, 125)">
+                                  {/* Head */}
+                                  <circle 
+                                    cx="0" 
+                                    cy="-30" 
+                                    r="15" 
+                                    fill="#2D5F3F"
+                                    opacity={isTimerActive ? 0.8 : 0.4}
+                                  />
+                                  
+                                  {/* Body */}
+                                  <ellipse 
+                                    cx="0" 
+                                    cy="0" 
+                                    rx="25" 
+                                    ry="35" 
+                                    fill="#2D5F3F"
+                                    opacity={isTimerActive ? 0.8 : 0.4}
+                                  />
+                                  
+                                  {/* Arms */}
+                                  <rect 
+                                    x="-40" 
+                                    y="-10" 
+                                    width="15" 
+                                    height="30" 
+                                    rx="7" 
+                                    fill="#2D5F3F"
+                                    opacity={isTimerActive ? 0.8 : 0.4}
+                                    style={{
+                                      transform: isTimerActive ? `rotate(${-30 + expansionLevel * 60}deg)` : 'rotate(-30deg)',
+                                      transformOrigin: '40px 10px',
+                                      transition: 'all 2s ease-in-out'
+                                    }}
+                                  />
+                                  <rect 
+                                    x="25" 
+                                    y="-10" 
+                                    width="15" 
+                                    height="30" 
+                                    rx="7" 
+                                    fill="#2D5F3F"
+                                    opacity={isTimerActive ? 0.8 : 0.4}
+                                    style={{
+                                      transform: isTimerActive ? `rotate(${30 - expansionLevel * 60}deg)` : 'rotate(30deg)',
+                                      transformOrigin: '-25px 10px',
+                                      transition: 'all 2s ease-in-out'
+                                    }}
+                                  />
+                                  
+                                  {/* Energy points */}
+                                  {isTimerActive && [
+                                    { x: 0, y: -30, delay: 0 },     // Head
+                                    { x: 0, y: 0, delay: 0.2 },     // Heart
+                                    { x: 0, y: 20, delay: 0.4 },    // Belly
+                                    { x: -30, y: 0, delay: 0.6 },   // Left
+                                    { x: 30, y: 0, delay: 0.8 }     // Right
+                                  ].map((point, i) => (
+                                    <circle
+                                      key={i}
+                                      cx={point.x}
+                                      cy={point.y}
+                                      r="4"
+                                      fill="#A8C09A"
+                                      opacity={expansionLevel}
                                     >
-                                      {isTimerActive
-                                        ? `${Math.round(expansionLevel * 100)}%`
-                                        : 'Space'}
-                                    </p>
-                                    <p className="text-xs" style={{ color: '#6B7C6B' }}>
-                                      {isTimerActive ? 'Expanding...' : 'Ready'}
-                                    </p>
-                                  </div>
+                                      <animate
+                                        attributeName="r"
+                                        values="4;8;4"
+                                        dur="2s"
+                                        begin={`${point.delay}s`}
+                                        repeatCount="indefinite"
+                                      />
+                                      <animate
+                                        attributeName="opacity"
+                                        values="0.5;1;0.5"
+                                        dur="2s"
+                                        begin={`${point.delay}s`}
+                                        repeatCount="indefinite"
+                                      />
+                                    </circle>
+                                  ))}
+                                </g>
+                                
+                                {/* Progress text */}
+                                <text 
+                                  x="125" 
+                                  y="210" 
+                                  textAnchor="middle" 
+                                  fill="#2D5F3F" 
+                                  fontSize="18" 
+                                  fontWeight="bold"
+                                >
+                                  {isTimerActive ? `${Math.round(expansionLevel * 100)}%` : 'Ready'}
+                                </text>
+                              </svg>
+                              
+                              {/* Progress Bar */}
+                              <div className="absolute bottom-0 left-0 right-0">
+                                <div className="h-2 bg-gray-200 rounded-full overflow-hidden">
+                                  <div 
+                                    className="h-full transition-all duration-1000"
+                                    style={{
+                                      width: `${techniqueProgress}%`,
+                                      backgroundColor: '#A8C09A'
+                                    }}
+                                  />
                                 </div>
                               </div>
                             </div>
@@ -2976,33 +3868,62 @@ function App() {
                             className="font-semibold mb-3 text-center"
                             style={{ color: '#2D5F3F' }}
                           >
-                            Creating Inner Space:
+                            How to Practice Expansion:
                           </h3>
-                          <div className="space-y-3">
-                            <div className="flex items-center p-3 rounded-lg bg-gradient-to-r from-green-50 to-transparent">
-                              <div className="w-3 h-3 rounded-full bg-green-400 mr-3 animate-pulse" />
-                              <span className="text-sm" style={{ color: '#3A3A3A' }}>
-                                Notice areas of tension
-                              </span>
+                          
+                          {/* Step by step instructions */}
+                          <div className="space-y-3 mb-4">
+                            <div className="flex items-start">
+                              <div className="w-6 h-6 rounded-full bg-green-500 text-white text-xs flex items-center justify-center mr-3 flex-shrink-0">
+                                1
+                              </div>
+                              <div>
+                                <p className="text-sm font-medium" style={{ color: '#2D5F3F' }}>
+                                  Scan Your Body
+                                </p>
+                                <p className="text-xs mt-1" style={{ color: '#6B7C6B' }}>
+                                  Notice where you're holding tension - shoulders, jaw, chest, belly
+                                </p>
+                              </div>
                             </div>
-                            <div className="flex items-center p-3 rounded-lg bg-gradient-to-r from-blue-50 to-transparent">
-                              <div
-                                className="w-3 h-3 rounded-full bg-blue-400 mr-3 animate-pulse"
-                                style={{ animationDelay: '0.5s' }}
-                              />
-                              <span className="text-sm" style={{ color: '#3A3A3A' }}>
-                                Breathe into those spaces
-                              </span>
+                            
+                            <div className="flex items-start">
+                              <div className="w-6 h-6 rounded-full bg-blue-500 text-white text-xs flex items-center justify-center mr-3 flex-shrink-0">
+                                2
+                              </div>
+                              <div>
+                                <p className="text-sm font-medium" style={{ color: '#2D5F3F' }}>
+                                  Breathe Into Tension
+                                </p>
+                                <p className="text-xs mt-1" style={{ color: '#6B7C6B' }}>
+                                  Imagine your breath flowing directly to those tight areas, creating space
+                                </p>
+                              </div>
                             </div>
-                            <div className="flex items-center p-3 rounded-lg bg-gradient-to-r from-purple-50 to-transparent">
-                              <div
-                                className="w-3 h-3 rounded-full bg-purple-400 mr-3 animate-pulse"
-                                style={{ animationDelay: '1s' }}
-                              />
-                              <span className="text-sm" style={{ color: '#3A3A3A' }}>
-                                Allow gentle expansion
-                              </span>
+                            
+                            <div className="flex items-start">
+                              <div className="w-6 h-6 rounded-full bg-purple-500 text-white text-xs flex items-center justify-center mr-3 flex-shrink-0">
+                                3
+                              </div>
+                              <div>
+                                <p className="text-sm font-medium" style={{ color: '#2D5F3F' }}>
+                                  Expand Awareness
+                                </p>
+                                <p className="text-xs mt-1" style={{ color: '#6B7C6B' }}>
+                                  Let your awareness grow beyond your body, sensing the space around you
+                                </p>
+                              </div>
                             </div>
+                          </div>
+                          
+                          {/* Tips */}
+                          <div className="p-3 rounded-lg" style={{ backgroundColor: 'rgba(168, 192, 154, 0.1)' }}>
+                            <p className="text-xs font-medium mb-1" style={{ color: '#2D5F3F' }}>
+                              Pro Tip:
+                            </p>
+                            <p className="text-xs" style={{ color: '#3A3A3A' }}>
+                              This technique creates psychological space when feeling overwhelmed. The physical expansion helps your mind feel less cramped and stressed.
+                            </p>
                           </div>
                         </>
                       )}
@@ -3010,138 +3931,198 @@ function App() {
                         <>
                           {/* Name and Transform Animation */}
                           <div className="flex flex-col items-center mb-6">
-                            <div className="relative w-64 h-48 mb-4">
-                              {/* Emotion Transformation Flow */}
-                              <div className="absolute inset-0 flex items-center justify-center">
-                                <div className="flex items-center space-x-4">
-                                  {/* Raw Emotion */}
-                                  <div className="text-center">
-                                    <div
-                                      className="w-16 h-16 rounded-full flex items-center justify-center transition-all duration-1000"
-                                      style={{
-                                        backgroundColor:
-                                          isTimerActive && techniqueProgress < 50
-                                            ? '#EF4444'
-                                            : '#FCA5A5',
-                                        transform:
-                                          isTimerActive && techniqueProgress < 50
-                                            ? 'scale(1.2)'
-                                            : 'scale(1)',
-                                        boxShadow:
-                                          isTimerActive && techniqueProgress < 50
-                                            ? '0 0 20px rgba(239, 68, 68, 0.5)'
-                                            : 'none',
-                                      }}
-                                    >
-                                      <span className="text-white font-bold">?</span>
-                                    </div>
-                                    <p className="text-xs mt-2" style={{ color: '#6B7C6B' }}>
-                                      Feel
-                                    </p>
-                                  </div>
-
-                                  {/* Arrow */}
-                                  <div className="flex items-center">
-                                    <div className="w-8 h-0.5 bg-gray-300" />
-                                    <ChevronRight className="h-4 w-4 text-gray-400" />
-                                  </div>
-
-                                  {/* Named Emotion */}
-                                  <div className="text-center">
-                                    <div
-                                      className="w-16 h-16 rounded-full flex items-center justify-center transition-all duration-1000"
-                                      style={{
-                                        backgroundColor:
-                                          isTimerActive &&
-                                          techniqueProgress >= 50 &&
-                                          techniqueProgress < 75
-                                            ? '#F59E0B'
-                                            : '#FED7AA',
-                                        transform:
-                                          isTimerActive &&
-                                          techniqueProgress >= 50 &&
-                                          techniqueProgress < 75
-                                            ? 'scale(1.2)'
-                                            : 'scale(1)',
-                                        boxShadow:
-                                          isTimerActive &&
-                                          techniqueProgress >= 50 &&
-                                          techniqueProgress < 75
-                                            ? '0 0 20px rgba(245, 158, 11, 0.5)'
-                                            : 'none',
-                                      }}
-                                    >
-                                      <span className="text-white font-bold">!</span>
-                                    </div>
-                                    <p className="text-xs mt-2" style={{ color: '#6B7C6B' }}>
-                                      Name
-                                    </p>
-                                  </div>
-
-                                  {/* Arrow */}
-                                  <div className="flex items-center">
-                                    <div className="w-8 h-0.5 bg-gray-300" />
-                                    <ChevronRight className="h-4 w-4 text-gray-400" />
-                                  </div>
-
-                                  {/* Transformed */}
-                                  <div className="text-center">
-                                    <div
-                                      className="w-16 h-16 rounded-full flex items-center justify-center transition-all duration-1000"
-                                      style={{
-                                        backgroundColor:
-                                          isTimerActive && techniqueProgress >= 75
-                                            ? '#10B981'
-                                            : '#BBF7D0',
-                                        transform:
-                                          isTimerActive && techniqueProgress >= 75
-                                            ? 'scale(1.2)'
-                                            : 'scale(1)',
-                                        boxShadow:
-                                          isTimerActive && techniqueProgress >= 75
-                                            ? '0 0 20px rgba(16, 185, 129, 0.5)'
-                                            : 'none',
-                                      }}
-                                    >
-                                      <Heart className="h-6 w-6 text-white" />
-                                    </div>
-                                    <p className="text-xs mt-2" style={{ color: '#6B7C6B' }}>
-                                      Transform
-                                    </p>
-                                  </div>
-                                </div>
-                              </div>
-
-                              {/* Progress Steps */}
+                            {/* Status Text Above Animation */}
+                            <div className="text-center mb-4">
+                              <p className="text-2xl font-bold" style={{ color: '#2D5F3F' }}>
+                                {!isTimerActive && 'Ready to Transform'}
+                                {isTimerActive && techniqueProgress < 33 && 'Feeling the Emotion'}
+                                {isTimerActive && techniqueProgress >= 33 && techniqueProgress < 66 && 'Naming & Locating'}
+                                {isTimerActive && techniqueProgress >= 66 && 'Offering Compassion'}
+                              </p>
+                              <p className="text-sm mt-1" style={{ color: '#6B7C6B' }}>
+                                {isTimerActive ? 'Transform emotions into wisdom' : 'Press start to begin transformation'}
+                              </p>
+                            </div>
+                            
+                            {/* Enhanced Emotion Transformation Animation */}
+                            <div className="relative w-64 h-64 flex items-center justify-center">
+                              {/* Background Gradient */}
+                              <div 
+                                className="absolute inset-0 rounded-full"
+                                style={{
+                                  background: isTimerActive 
+                                    ? `radial-gradient(circle, ${
+                                        techniqueProgress < 33 ? 'rgba(239, 68, 68, 0.1)' :
+                                        techniqueProgress < 66 ? 'rgba(245, 158, 11, 0.1)' :
+                                        'rgba(16, 185, 129, 0.1)'
+                                      } 0%, transparent 70%)`
+                                    : 'none',
+                                  animation: isTimerActive ? 'pulse 3s ease-in-out infinite' : 'none'
+                                }}
+                              />
+                              
+                              {/* Central Transformation Visualization */}
+                              <svg width="250" height="250" viewBox="0 0 250 250" className="relative z-10">
+                                {/* Outer ring representing emotional boundary */}
+                                <circle
+                                  cx="125"
+                                  cy="125"
+                                  r="110"
+                                  fill="none"
+                                  stroke={techniqueProgress < 33 ? '#EF4444' : techniqueProgress < 66 ? '#F59E0B' : '#10B981'}
+                                  strokeWidth="2"
+                                  opacity="0.3"
+                                  strokeDasharray="10 5"
+                                  className="transition-all duration-1000"
+                                >
+                                  <animateTransform
+                                    attributeName="transform"
+                                    type="rotate"
+                                    from="0 125 125"
+                                    to="360 125 125"
+                                    dur="20s"
+                                    repeatCount="indefinite"
+                                  />
+                                </circle>
+                                
+                                {/* Inner emotional core */}
+                                <g transform="translate(125, 125)">
+                                  {/* Chaotic emotion state (Phase 1: 0-33%) */}
+                                  {techniqueProgress < 33 && (
+                                    <g opacity={isTimerActive ? 1 : 0.3}>
+                                      {[0, 45, 90, 135, 180, 225, 270, 315].map((angle, i) => (
+                                        <line
+                                          key={i}
+                                          x1="0"
+                                          y1="0"
+                                          x2={Math.cos(angle * Math.PI / 180) * 40}
+                                          y2={Math.sin(angle * Math.PI / 180) * 40}
+                                          stroke="#EF4444"
+                                          strokeWidth="2"
+                                          opacity="0.6"
+                                        >
+                                          <animate
+                                            attributeName="opacity"
+                                            values="0.3;1;0.3"
+                                            dur={`${1 + i * 0.2}s`}
+                                            repeatCount="indefinite"
+                                          />
+                                        </line>
+                                      ))}
+                                      <circle cx="0" cy="0" r="25" fill="#EF4444" opacity="0.8">
+                                        <animate
+                                          attributeName="r"
+                                          values="25;30;25"
+                                          dur="2s"
+                                          repeatCount="indefinite"
+                                        />
+                                      </circle>
+                                      <text x="0" y="5" textAnchor="middle" fill="white" fontSize="24" fontWeight="bold">?</text>
+                                    </g>
+                                  )}
+                                  
+                                  {/* Naming state (Phase 2: 33-66%) */}
+                                  {techniqueProgress >= 33 && techniqueProgress < 66 && (
+                                    <g opacity={isTimerActive ? 1 : 0.3}>
+                                      {/* Organizing circles */}
+                                      {[0, 72, 144, 216, 288].map((angle, i) => (
+                                        <circle
+                                          key={i}
+                                          cx={Math.cos(angle * Math.PI / 180) * 35}
+                                          cy={Math.sin(angle * Math.PI / 180) * 35}
+                                          r="8"
+                                          fill="#F59E0B"
+                                          opacity="0.6"
+                                        >
+                                          <animate
+                                            attributeName="r"
+                                            values="8;12;8"
+                                            dur={`${2 + i * 0.3}s`}
+                                            repeatCount="indefinite"
+                                          />
+                                        </circle>
+                                      ))}
+                                      <circle cx="0" cy="0" r="30" fill="#F59E0B" opacity="0.9" />
+                                      <text x="0" y="5" textAnchor="middle" fill="white" fontSize="20" fontWeight="bold">Named</text>
+                                    </g>
+                                  )}
+                                  
+                                  {/* Transformed state (Phase 3: 66-100%) */}
+                                  {techniqueProgress >= 66 && (
+                                    <g opacity={isTimerActive ? 1 : 0.3}>
+                                      {/* Peaceful ripples */}
+                                      {[20, 40, 60].map((radius, i) => (
+                                        <circle
+                                          key={i}
+                                          cx="0"
+                                          cy="0"
+                                          r={radius}
+                                          fill="none"
+                                          stroke="#10B981"
+                                          strokeWidth="1"
+                                          opacity={0.3 + i * 0.2}
+                                        >
+                                          <animate
+                                            attributeName="r"
+                                            values={`${radius};${radius + 5};${radius}`}
+                                            dur="3s"
+                                            repeatCount="indefinite"
+                                          />
+                                        </circle>
+                                      ))}
+                                      <circle cx="0" cy="0" r="35" fill="#10B981" />
+                                      <path 
+                                        d="M -15,-5 Q -15,5 -5,10 L 0,15 L 5,10 Q 15,5 15,-5 Q 15,-10 10,-12 Q 5,-8 0,-10 Q -5,-8 -10,-12 Q -15,-10 -15,-5 Z"
+                                        fill="white"
+                                      />
+                                    </g>
+                                  )}
+                                </g>
+                                
+                                {/* Progress Arc */}
+                                <circle
+                                  cx="125"
+                                  cy="125"
+                                  r="90"
+                                  fill="none"
+                                  stroke="#E5E7EB"
+                                  strokeWidth="4"
+                                />
+                                <circle
+                                  cx="125"
+                                  cy="125"
+                                  r="90"
+                                  fill="none"
+                                  stroke={techniqueProgress < 33 ? '#EF4444' : techniqueProgress < 66 ? '#F59E0B' : '#10B981'}
+                                  strokeWidth="4"
+                                  strokeDasharray={`${2 * Math.PI * 90} ${2 * Math.PI * 90}`}
+                                  strokeDashoffset={2 * Math.PI * 90 * (1 - techniqueProgress / 100)}
+                                  transform="rotate(-90 125 125)"
+                                  className="transition-all duration-1000"
+                                />
+                                
+                                {/* Phase Labels */}
+                                <text x="125" y="25" textAnchor="middle" fill={techniqueProgress < 33 ? '#EF4444' : '#9CA3AF'} fontSize="12" fontWeight={techniqueProgress < 33 ? 'bold' : 'normal'}>
+                                  FEEL
+                                </text>
+                                <text x="215" y="125" textAnchor="middle" fill={techniqueProgress >= 33 && techniqueProgress < 66 ? '#F59E0B' : '#9CA3AF'} fontSize="12" fontWeight={techniqueProgress >= 33 && techniqueProgress < 66 ? 'bold' : 'normal'}>
+                                  NAME
+                                </text>
+                                <text x="125" y="235" textAnchor="middle" fill={techniqueProgress >= 66 ? '#10B981' : '#9CA3AF'} fontSize="12" fontWeight={techniqueProgress >= 66 ? 'bold' : 'normal'}>
+                                  HEAL
+                                </text>
+                              </svg>
+                              
+                              {/* Progress Bar */}
                               <div className="absolute bottom-0 left-0 right-0">
-                                <div className="flex justify-between text-xs px-4">
-                                  <span
-                                    className={
-                                      techniqueProgress >= 0
-                                        ? 'text-red-500 font-semibold'
-                                        : 'text-gray-400'
-                                    }
-                                  >
-                                    Feeling
-                                  </span>
-                                  <span
-                                    className={
-                                      techniqueProgress >= 33
-                                        ? 'text-orange-500 font-semibold'
-                                        : 'text-gray-400'
-                                    }
-                                  >
-                                    Naming
-                                  </span>
-                                  <span
-                                    className={
-                                      techniqueProgress >= 66
-                                        ? 'text-green-500 font-semibold'
-                                        : 'text-gray-400'
-                                    }
-                                  >
-                                    Compassion
-                                  </span>
+                                <div className="h-2 bg-gray-200 rounded-full overflow-hidden">
+                                  <div 
+                                    className="h-full transition-all duration-1000"
+                                    style={{
+                                      width: `${techniqueProgress}%`,
+                                      background: techniqueProgress < 33 ? '#EF4444' : techniqueProgress < 66 ? '#F59E0B' : '#10B981'
+                                    }}
+                                  />
                                 </div>
                               </div>
                             </div>
@@ -3151,27 +4132,62 @@ function App() {
                             className="font-semibold mb-3 text-center"
                             style={{ color: '#2D5F3F' }}
                           >
-                            Emotional Alchemy Process:
+                            How to Transform Emotions:
                           </h3>
-                          <div className="grid grid-cols-3 gap-2 text-xs">
-                            <div className="text-center p-2 rounded-lg bg-red-50">
-                              <div className="w-8 h-8 rounded-full bg-red-100 flex items-center justify-center mx-auto mb-1">
-                                <span className="font-bold text-red-600">1</span>
+                          
+                          {/* Step by step instructions */}
+                          <div className="space-y-3 mb-4">
+                            <div className="flex items-start">
+                              <div className="w-6 h-6 rounded-full bg-red-500 text-white text-xs flex items-center justify-center mr-3 flex-shrink-0">
+                                1
                               </div>
-                              <p style={{ color: '#3A3A3A' }}>Notice feeling</p>
-                            </div>
-                            <div className="text-center p-2 rounded-lg bg-orange-50">
-                              <div className="w-8 h-8 rounded-full bg-orange-100 flex items-center justify-center mx-auto mb-1">
-                                <span className="font-bold text-orange-600">2</span>
+                              <div>
+                                <p className="text-sm font-medium" style={{ color: '#2D5F3F' }}>
+                                  Feel Without Judgment
+                                </p>
+                                <p className="text-xs mt-1" style={{ color: '#6B7C6B' }}>
+                                  Notice the raw emotion in your body. Where do you feel it? What does it feel like?
+                                </p>
                               </div>
-                              <p style={{ color: '#3A3A3A' }}>Name & locate</p>
                             </div>
-                            <div className="text-center p-2 rounded-lg bg-green-50">
-                              <div className="w-8 h-8 rounded-full bg-green-100 flex items-center justify-center mx-auto mb-1">
-                                <span className="font-bold text-green-600">3</span>
+                            
+                            <div className="flex items-start">
+                              <div className="w-6 h-6 rounded-full bg-orange-500 text-white text-xs flex items-center justify-center mr-3 flex-shrink-0">
+                                2
                               </div>
-                              <p style={{ color: '#3A3A3A' }}>Offer care</p>
+                              <div>
+                                <p className="text-sm font-medium" style={{ color: '#2D5F3F' }}>
+                                  Name It to Tame It
+                                </p>
+                                <p className="text-xs mt-1" style={{ color: '#6B7C6B' }}>
+                                  Give the emotion a specific name. "Frustrated" is better than "bad." Locate it in your body.
+                                </p>
+                              </div>
                             </div>
+                            
+                            <div className="flex items-start">
+                              <div className="w-6 h-6 rounded-full bg-green-500 text-white text-xs flex items-center justify-center mr-3 flex-shrink-0">
+                                3
+                              </div>
+                              <div>
+                                <p className="text-sm font-medium" style={{ color: '#2D5F3F' }}>
+                                  Offer Self-Compassion
+                                </p>
+                                <p className="text-xs mt-1" style={{ color: '#6B7C6B' }}>
+                                  Place your hand on your heart. Say: "This is hard right now. I'm here with myself."
+                                </p>
+                              </div>
+                            </div>
+                          </div>
+                          
+                          {/* Why This Works */}
+                          <div className="p-3 rounded-lg" style={{ backgroundColor: 'rgba(168, 192, 154, 0.1)' }}>
+                            <p className="text-xs font-medium mb-1" style={{ color: '#2D5F3F' }}>
+                              Why This Works:
+                            </p>
+                            <p className="text-xs" style={{ color: '#3A3A3A' }}>
+                              Naming emotions reduces amygdala activity by up to 50%. Adding self-compassion activates the caregiving system, transforming distress into wisdom.
+                            </p>
                           </div>
                         </>
                       )}
@@ -3182,10 +4198,6 @@ function App() {
 
               {/* Progress Bar */}
               <div className="mb-6">
-                <div className="flex justify-between text-sm mb-2">
-                  <span style={{ color: '#5A5A5A' }}>Progress</span>
-                  <span style={{ color: '#5A5A5A' }}>{techniqueProgress}%</span>
-                </div>
                 <div
                   className="h-3 rounded-full overflow-hidden"
                   style={{ backgroundColor: 'rgba(168, 192, 154, 0.2)' }}
@@ -3202,20 +4214,65 @@ function App() {
 
               {/* Action Buttons */}
               <div className="flex gap-4">
-                <button
-                  onClick={() => {
-                    setIsTimerActive(!isTimerActive);
-                    if (!isTimerActive) {
-                      // Reset breath state
+                {techniqueProgress > 0 && (
+                  <button
+                    onClick={() => {
+                      // Clear any running interval
+                      if (intervalRef.current) {
+                        clearInterval(intervalRef.current);
+                        intervalRef.current = null;
+                      }
+                      // Reset all states
+                      setIsTimerActive(false);
+                      setTechniqueProgress(0);
+                      setBodyPart(0);
                       setBreathPhase('inhale');
                       setBreathCycle(0);
+                      setSenseCount(0);
+                      setExpansionLevel(0);
+                    }}
+                    className="px-6 py-3 rounded-xl font-medium transition-all"
+                    style={{
+                      backgroundColor: 'rgba(239, 68, 68, 0.1)',
+                      color: '#EF4444',
+                      border: '2px solid #EF4444'
+                    }}
+                    onMouseEnter={(e) => {
+                      e.currentTarget.style.backgroundColor = '#EF4444';
+                      e.currentTarget.style.color = '#FFFFFF';
+                    }}
+                    onMouseLeave={(e) => {
+                      e.currentTarget.style.backgroundColor = 'rgba(239, 68, 68, 0.1)';
+                      e.currentTarget.style.color = '#EF4444';
+                    }}
+                  >
+                    Reset
+                  </button>
+                )}
+                <button
+                  onClick={() => {
+                    // Clear any existing interval before starting/stopping
+                    if (intervalRef.current) {
+                      clearInterval(intervalRef.current);
+                      intervalRef.current = null;
+                    }
+                    
+                    setIsTimerActive(!isTimerActive);
+                    if (!isTimerActive) {
+                      // Reset all states when starting
+                      setBreathPhase('inhale');
+                      setBreathCycle(0);
+                      setBodyPart(0);
+                      setTechniqueProgress(0);
+                      setSenseCount(0);
+                      setExpansionLevel(0)
 
                       if (selectedTechnique === 'box-breathing') {
                         // Box breathing: 4 phases of 4 seconds each = 16 seconds per cycle
                         let cycle = 0;
                         let progress = techniqueProgress;
 
-                        const breathInterval = setInterval(() => {
+                        intervalRef.current = setInterval(() => {
                           cycle++;
                           setBreathCycle(cycle);
 
@@ -3231,21 +4288,27 @@ function App() {
                           setTechniqueProgress(progress);
 
                           if (progress >= 100) {
-                            clearInterval(breathInterval);
+                            if (intervalRef.current) {
+                              clearInterval(intervalRef.current);
+                              intervalRef.current = null;
+                            }
                             setIsTimerActive(false);
+                            setTechniqueProgress(0);
+                            setBodyPart(0);
                           }
                         }, 1000); // Update every second
                       } else if (selectedTechnique === 'body-release') {
-                        // Body release: 5 body parts, each for ~36 seconds (3 minutes total)
-                        let progress = techniqueProgress;
+                        // Body release: 5 body parts, each for ~12 seconds (60 seconds total)
+                        let progress = 0;  // Always start from 0
                         let part = 0;
                         setBodyPart(0);
+                        setTechniqueProgress(0);  // Ensure progress starts at 0
 
-                        const bodyInterval = setInterval(() => {
-                          progress += 100 / 180; // 3 minutes = 180 seconds
+                        intervalRef.current = setInterval(() => {
+                          progress += 100 / 60; // 1 minute = 60 seconds
                           setTechniqueProgress(progress);
 
-                          // Update body part every 36 seconds
+                          // Update body part every 12 seconds
                           const newPart = Math.floor(progress / 20);
                           if (newPart !== part && newPart < 5) {
                             part = newPart;
@@ -3253,57 +4316,97 @@ function App() {
                           }
 
                           if (progress >= 100) {
-                            clearInterval(bodyInterval);
+                            if (intervalRef.current) {
+                              clearInterval(intervalRef.current);
+                              intervalRef.current = null;
+                            }
                             setIsTimerActive(false);
+                            setBodyPart(0);
+                            setTechniqueProgress(0);
                           }
                         }, 1000);
                       } else if (selectedTechnique === 'sensory-reset') {
-                        // Sensory reset: 5 senses, 2 minutes total
+                        // Sensory reset: 4 senses, 80 seconds total
                         let progress = techniqueProgress;
                         let sense = 0;
                         setSenseCount(0);
 
-                        const senseInterval = setInterval(() => {
-                          progress += 100 / 120; // 2 minutes = 120 seconds
+                        intervalRef.current = setInterval(() => {
+                          progress += 100 / 80; // 80 seconds total
                           setTechniqueProgress(progress);
 
-                          // Update sense every 24 seconds
-                          const newSense = Math.floor(progress / 20) + 1;
-                          if (newSense !== sense && newSense <= 5) {
+                          // Update sense every 20 seconds (80/4 = 20 seconds per sense)
+                          const newSense = Math.floor(progress / 25) + 1;
+                          if (newSense !== sense && newSense <= 4) {
                             sense = newSense;
                             setSenseCount(sense);
                           }
 
                           if (progress >= 100) {
-                            clearInterval(senseInterval);
+                            if (intervalRef.current) {
+                              clearInterval(intervalRef.current);
+                              intervalRef.current = null;
+                            }
                             setIsTimerActive(false);
+                            setTechniqueProgress(0);
+                            setSenseCount(0);
                           }
                         }, 1000);
                       } else if (selectedTechnique === 'expansion-practice') {
-                        // Expansion practice: gradual expansion over 6 minutes
+                        // Expansion practice: gradual expansion over 2 minutes
                         let progress = techniqueProgress;
 
-                        const expandInterval = setInterval(() => {
-                          progress += 100 / 360; // 6 minutes = 360 seconds
+                        intervalRef.current = setInterval(() => {
+                          progress += 100 / 120; // 2 minutes = 120 seconds
                           setTechniqueProgress(progress);
                           setExpansionLevel(progress / 100);
 
                           if (progress >= 100) {
-                            clearInterval(expandInterval);
+                            if (intervalRef.current) {
+                              clearInterval(intervalRef.current);
+                              intervalRef.current = null;
+                            }
                             setIsTimerActive(false);
+                            setTechniqueProgress(0);
+                            setExpansionLevel(0);
+                          }
+                        }, 1000);
+                      } else if (selectedTechnique === 'temperature-shift') {
+                        // Temperature shift: 1 minute
+                        let progress = 0;
+                        setTechniqueProgress(0);
+                        
+                        intervalRef.current = setInterval(() => {
+                          progress += 100 / 60; // 1 minute = 60 seconds
+                          setTechniqueProgress(progress);
+                          
+                          if (progress >= 100) {
+                            if (intervalRef.current) {
+                              clearInterval(intervalRef.current);
+                              intervalRef.current = null;
+                            }
+                            setIsTimerActive(false);
+                            setTechniqueProgress(0);
                           }
                         }, 1000);
                       } else {
-                        // Default timer for other techniques
-                        let progress = techniqueProgress;
-                        const interval = setInterval(() => {
-                          progress += 2;
+                        // Default timer for other techniques (name-transform: 3 minutes)
+                        let progress = 0;
+                        setTechniqueProgress(0);
+                        
+                        intervalRef.current = setInterval(() => {
+                          progress += 100 / 180; // 3 minutes = 180 seconds
                           setTechniqueProgress(progress);
+                          
                           if (progress >= 100) {
-                            clearInterval(interval);
+                            if (intervalRef.current) {
+                              clearInterval(intervalRef.current);
+                              intervalRef.current = null;
+                            }
                             setIsTimerActive(false);
+                            setTechniqueProgress(0);
                           }
-                        }, 100);
+                        }, 1000);
                       }
                     }
                   }}
@@ -3325,34 +4428,6 @@ function App() {
                   }}
                 >
                   {isTimerActive ? 'Pause' : 'Start Exercise'}
-                </button>
-                <button
-                  onClick={() => {
-                    setTechniqueProgress(100);
-                    setTimeout(() => {
-                      setSelectedTechnique(null);
-                      setTechniqueProgress(0);
-                      setIsTimerActive(false);
-                      setBreathPhase('inhale');
-                      setBreathCycle(0);
-                    }, 500);
-                  }}
-                  className="px-6 py-3 rounded-xl font-semibold transition-all"
-                  style={{
-                    backgroundColor: '#FFFFFF',
-                    color: '#1A1A1A',
-                    border: '2px solid #E8E5E0',
-                  }}
-                  onMouseEnter={(e) => {
-                    e.currentTarget.style.borderColor = '#A8C09A';
-                    e.currentTarget.style.backgroundColor = '#F8FBF6';
-                  }}
-                  onMouseLeave={(e) => {
-                    e.currentTarget.style.borderColor = '#E8E5E0';
-                    e.currentTarget.style.backgroundColor = '#FFFFFF';
-                  }}
-                >
-                  Mark Complete
                 </button>
               </div>
             </div>
@@ -3393,6 +4468,10 @@ function App() {
             <div
               key={index}
               className="rounded-xl p-6 transition-all duration-200 cursor-pointer group"
+              onClick={() => {
+                setSelectedAffirmationCategory(index);
+                setCurrentAffirmationIndex(0);
+              }}
               style={{
                 backgroundColor: '#FFFFFF',
                 border: '2px solid transparent',
@@ -3477,59 +4556,39 @@ function App() {
         </div>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
-        {[
-          { rating: 1, label: 'Energized', emoji: '🌟' },
-          { rating: 2, label: 'Balanced', emoji: '😊' },
-          { rating: 3, label: 'Managing', emoji: '😐' },
-          { rating: 4, label: 'Stressed', emoji: '😰' },
-          { rating: 5, label: 'Exhausted', emoji: '😔' },
-        ].map((item) => (
-          <button
-            key={item.rating}
-            onClick={() => setSelectedRating(item.rating)}
-            className="p-6 rounded-xl text-center transition-all"
-            style={{
-              backgroundColor: selectedRating === item.rating ? '#A8C09A' : '#FFFFFF',
-              border: selectedRating === item.rating ? '2px solid #A8C09A' : '2px solid #E8E5E0',
-              transform: selectedRating === item.rating ? 'scale(1.05)' : 'scale(1)',
-              boxShadow:
-                selectedRating === item.rating
-                  ? '0 8px 20px rgba(168, 192, 154, 0.3)'
-                  : '0 2px 8px rgba(0, 0, 0, 0.05)',
-            }}
-            onMouseEnter={(e) => {
-              if (selectedRating !== item.rating) {
-                e.currentTarget.style.transform = 'scale(1.02)';
-                e.currentTarget.style.borderColor = '#A8C09A';
-              }
-            }}
-            onMouseLeave={(e) => {
-              if (selectedRating !== item.rating) {
-                e.currentTarget.style.transform = 'scale(1)';
-                e.currentTarget.style.borderColor = '#E8E5E0';
-              }
-            }}
-          >
-            <div className="text-3xl mb-3">{item.emoji}</div>
-            <div
-              className="text-5xl font-bold mb-2"
-              style={{
-                color: selectedRating === item.rating ? '#FFFFFF' : '#A8C09A',
-              }}
-            >
-              {item.rating}
-            </div>
-            <div
-              className="text-sm font-medium"
-              style={{
-                color: selectedRating === item.rating ? '#FFFFFF' : '#1A1A1A',
-              }}
-            >
-              {item.label}
-            </div>
-          </button>
-        ))}
+      <div className="text-center py-8">
+        <button
+          onClick={() => setShowDailyBurnout(true)}
+          className="inline-flex items-center px-8 py-4 rounded-xl font-semibold text-lg transition-all"
+          style={{
+            background: 'linear-gradient(145deg, #6B8B60 0%, #5F7F55 100%)',
+            color: '#FFFFFF',
+            boxShadow: '0 4px 15px rgba(107, 139, 96, 0.3)',
+          }}
+          onMouseEnter={(e) => {
+            e.currentTarget.style.transform = 'translateY(-2px) scale(1.02)';
+            e.currentTarget.style.boxShadow = '0 8px 25px rgba(107, 139, 96, 0.4)';
+          }}
+          onMouseLeave={(e) => {
+            e.currentTarget.style.transform = 'translateY(0) scale(1)';
+            e.currentTarget.style.boxShadow = '0 4px 15px rgba(107, 139, 96, 0.3)';
+          }}
+        >
+          <Gauge className="w-6 h-6 mr-3" />
+          Take Your 5-Question Daily Assessment
+        </button>
+        <p className="text-sm mt-4" style={{ color: '#5A5A5A' }}>
+          Complete wellness check with personalized recommendations
+        </p>
+        
+        {/* Show last assessment if available */}
+        {localStorage.getItem('todaysBurnoutAssessment') && (
+          <div className="mt-6 inline-block p-4 rounded-lg" style={{ backgroundColor: 'rgba(168, 192, 154, 0.1)' }}>
+            <p className="text-sm font-semibold" style={{ color: '#2D5F3F' }}>
+              ✓ Today's assessment completed
+            </p>
+          </div>
+        )}
       </div>
     </section>
   );
@@ -3715,38 +4774,109 @@ function App() {
               </button>
             </div>
 
-            {/* Empty State */}
-            <div className="text-center py-16">
-              <div
-                className="p-6 rounded-xl mb-6"
-                style={{ backgroundColor: 'rgba(168, 192, 154, 0.05)' }}
-              >
-                <BookOpen className="h-16 w-16 mx-auto mb-4" style={{ color: '#C8D5C8' }} />
+            {/* Reflections List or Empty State */}
+            {savedReflections.length > 0 ? (
+              <div className="space-y-4">
+                {savedReflections.slice(0, 3).map((reflection) => {
+                  const date = new Date(reflection.timestamp);
+                  const timeAgo = getTimeAgo(date);
+                  
+                  return (
+                    <div
+                      key={reflection.id}
+                      className="p-5 rounded-xl transition-all cursor-pointer group"
+                      style={{
+                        backgroundColor: 'rgba(168, 192, 154, 0.05)',
+                        border: '1px solid rgba(168, 192, 154, 0.2)',
+                      }}
+                      onMouseEnter={(e) => {
+                        e.currentTarget.style.backgroundColor = 'rgba(168, 192, 154, 0.1)';
+                        e.currentTarget.style.borderColor = '#A8C09A';
+                        e.currentTarget.style.transform = 'translateX(4px)';
+                      }}
+                      onMouseLeave={(e) => {
+                        e.currentTarget.style.backgroundColor = 'rgba(168, 192, 154, 0.05)';
+                        e.currentTarget.style.borderColor = 'rgba(168, 192, 154, 0.2)';
+                        e.currentTarget.style.transform = 'translateX(0)';
+                      }}
+                    >
+                      <div className="flex items-start justify-between">
+                        <div className="flex-1">
+                          <h4 className="font-semibold mb-2" style={{ color: '#1A1A1A' }}>
+                            {reflection.type}
+                          </h4>
+                          <p className="text-sm mb-2" style={{ color: '#5A5A5A' }}>
+                            {getReflectionSummary(reflection)}
+                          </p>
+                          <p className="text-xs" style={{ color: '#9CA3AF' }}>
+                            {timeAgo}
+                          </p>
+                        </div>
+                        <ChevronDown 
+                          className="h-5 w-5 rotate-[-90deg] opacity-0 group-hover:opacity-100 transition-opacity" 
+                          style={{ color: '#A8C09A' }} 
+                        />
+                      </div>
+                    </div>
+                  );
+                })}
+                
+                {savedReflections.length > 3 && (
+                  <button
+                    className="w-full py-3 rounded-xl font-medium transition-all"
+                    style={{
+                      backgroundColor: 'transparent',
+                      color: '#6B7C6B',
+                      border: '1px solid rgba(168, 192, 154, 0.3)',
+                    }}
+                    onMouseEnter={(e) => {
+                      e.currentTarget.style.backgroundColor = 'rgba(168, 192, 154, 0.1)';
+                      e.currentTarget.style.borderColor = '#A8C09A';
+                      e.currentTarget.style.color = '#A8C09A';
+                    }}
+                    onMouseLeave={(e) => {
+                      e.currentTarget.style.backgroundColor = 'transparent';
+                      e.currentTarget.style.borderColor = 'rgba(168, 192, 154, 0.3)';
+                      e.currentTarget.style.color = '#6B7C6B';
+                    }}
+                  >
+                    View All {savedReflections.length} Reflections
+                  </button>
+                )}
               </div>
-              <p className="mb-6 text-lg" style={{ color: '#5A5A5A' }}>
-                No reflections yet
-              </p>
-              <button
-                onClick={() => setActiveTab('reflection')}
-                className="px-8 py-3 rounded-xl font-semibold transition-all flex items-center mx-auto"
-                style={{
-                  background: 'linear-gradient(145deg, #6B8B60 0%, #5F7F55 100%)',
-                  color: '#FFFFFF',
-                  boxShadow: '0 4px 15px rgba(107, 139, 96, 0.3)',
-                }}
-                onMouseEnter={(e) => {
-                  e.currentTarget.style.transform = 'translateY(-2px) scale(1.05)';
-                  e.currentTarget.style.boxShadow = '0 6px 20px rgba(107, 139, 96, 0.4)';
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.transform = 'translateY(0) scale(1)';
-                  e.currentTarget.style.boxShadow = '0 4px 15px rgba(107, 139, 96, 0.3)';
-                }}
-              >
-                <span className="mr-2 text-xl">+</span>
-                Start Your First Reflection
-              </button>
-            </div>
+            ) : (
+              <div className="text-center py-16">
+                <div
+                  className="p-6 rounded-xl mb-6"
+                  style={{ backgroundColor: 'rgba(168, 192, 154, 0.05)' }}
+                >
+                  <BookOpen className="h-16 w-16 mx-auto mb-4" style={{ color: '#C8D5C8' }} />
+                </div>
+                <p className="mb-6 text-lg" style={{ color: '#5A5A5A' }}>
+                  No reflections yet
+                </p>
+                <button
+                  onClick={() => setActiveTab('reflection')}
+                  className="px-8 py-3 rounded-xl font-semibold transition-all flex items-center mx-auto"
+                  style={{
+                    background: 'linear-gradient(145deg, #6B8B60 0%, #5F7F55 100%)',
+                    color: '#FFFFFF',
+                    boxShadow: '0 4px 15px rgba(107, 139, 96, 0.3)',
+                  }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.transform = 'translateY(-2px) scale(1.05)';
+                    e.currentTarget.style.boxShadow = '0 6px 20px rgba(107, 139, 96, 0.4)';
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.transform = 'translateY(0) scale(1)';
+                    e.currentTarget.style.boxShadow = '0 4px 15px rgba(107, 139, 96, 0.3)';
+                  }}
+                >
+                  <span className="mr-2 text-xl">+</span>
+                  Start Your First Reflection
+                </button>
+              </div>
+            )}
           </div>
         </div>
 
@@ -4161,9 +5291,9 @@ function App() {
       {showPreAssignmentPrep && (
         <PreAssignmentPrep
           onComplete={(results) => {
-            // Prep completed
+            // Save reflection
+            saveReflection('Pre-Assignment Prep', results);
             setShowPreAssignmentPrep(false);
-            // You can save results to database here
           }}
           onClose={() => setShowPreAssignmentPrep(false)}
         />
@@ -4173,9 +5303,9 @@ function App() {
       {showPostAssignmentDebrief && (
         <PostAssignmentDebrief
           onComplete={(results) => {
-            // Debrief completed
+            // Save reflection
+            saveReflection('Post-Assignment Debrief', results);
             setShowPostAssignmentDebrief(false);
-            // You can save results to database here
           }}
           onClose={() => setShowPostAssignmentDebrief(false)}
         />
@@ -4185,9 +5315,9 @@ function App() {
       {showTeamingPrep && (
         <TeamingPrep
           onComplete={(results) => {
-            // Team prep completed
+            // Save reflection
+            saveReflection('Teaming Prep', results);
             setShowTeamingPrep(false);
-            // You can save results to database here
           }}
           onClose={() => setShowTeamingPrep(false)}
         />
@@ -4197,9 +5327,9 @@ function App() {
       {showTeamingReflection && (
         <TeamingReflection
           onComplete={(results) => {
-            // Team reflection completed
+            // Save reflection
+            saveReflection('Teaming Reflection', results);
             setShowTeamingReflection(false);
-            // You can save results to database here
           }}
           onClose={() => setShowTeamingReflection(false)}
         />
@@ -4209,9 +5339,9 @@ function App() {
       {showMentoringPrep && (
         <MentoringPrep
           onComplete={(results) => {
-            // Mentoring prep completed
+            // Save reflection
+            saveReflection('Mentoring Prep', results);
             setShowMentoringPrep(false);
-            // You can save results to database here
           }}
           onClose={() => setShowMentoringPrep(false)}
         />
@@ -4221,9 +5351,9 @@ function App() {
       {showMentoringReflection && (
         <MentoringReflection
           onComplete={(results) => {
-            // Mentoring reflection completed
+            // Save reflection
+            saveReflection('Mentoring Reflection', results);
             setShowMentoringReflection(false);
-            // You can save results to database here
           }}
           onClose={() => setShowMentoringReflection(false)}
         />
@@ -4233,9 +5363,21 @@ function App() {
       {showWellnessCheckIn && (
         <WellnessCheckIn
           onComplete={(results) => {
-            // Wellness check-in completed
+            // Save reflection
+            saveReflection('Wellness Check-in', results);
+            
+            // Track recovery habits from wellness check
+            if (results.resilience?.physical) {
+              trackRecoveryHabit('sleep', results.resilience.physical.sleep);
+              trackRecoveryHabit('nutrition', results.resilience.physical.nutrition);
+              trackRecoveryHabit('movement', results.resilience.physical.movement);
+            }
+            if (results.bodyScan) {
+              trackRecoveryHabit('energy', results.bodyScan.overallEnergy);
+              trackRecoveryHabit('body-message', results.bodyScan.bodyMessage);
+            }
+            
             setShowWellnessCheckIn(false);
-            // You can save results to database here
           }}
           onClose={() => setShowWellnessCheckIn(false)}
         />
@@ -4245,9 +5387,9 @@ function App() {
       {showCompassCheck && (
         <CompassCheck
           onComplete={(results) => {
-            // Compass check completed
+            // Save reflection
+            saveReflection('Compass Check', results);
             setShowCompassCheck(false);
-            // You can save results to database here
           }}
           onClose={() => setShowCompassCheck(false)}
         />
@@ -4267,61 +5409,60 @@ function App() {
     </main>
   );
 
-  // Show loading state while checking authentication
-  if (loading) {
-    return (
-      <div
-        className="min-h-screen flex items-center justify-center"
-        style={{ backgroundColor: '#FAF9F6' }}
-      >
-        <div className="text-center">
-          <div
-            className="animate-spin rounded-full h-12 w-12 border-4 border-sage-200 border-t-sage-600 mx-auto mb-4"
-            style={{ borderTopColor: '#A8C09A', borderColor: 'rgba(168, 192, 154, 0.3)' }}
-          ></div>
-          <p className="text-lg" style={{ color: '#3A3A3A' }}>
-            Loading...
-          </p>
-        </div>
-      </div>
-    );
-  }
-
-  // Show landing page if user is not authenticated (unless in dev mode)
-  if (!user && !devMode) {
-    return (
-      <>
-        <LandingPage />
-        {/* TEMPORARY DEV BUTTON */}
-        <button
-          onClick={() => setDevMode(true)}
-          className="fixed bottom-4 right-4 px-4 py-2 rounded-lg font-semibold text-xs z-50"
-          style={{
-            backgroundColor: '#FF0000',
-            color: '#FFFFFF',
-            boxShadow: '0 4px 12px rgba(255, 0, 0, 0.3)',
-          }}
-        >
-          DEV MODE: Skip Auth
-        </button>
-      </>
-    );
-  }
+  // Commented out to show the main app instead
+  /*
+  return (
+    <Routes>
+      <Route path="/privacy" element={<PrivacyPolicy />} />
+      <Route path="/terms" element={<TermsOfService />} />
+      <Route path="/contact" element={<Contact />} />
+      <Route path="/about" element={<About />} />
+      <Route 
+        path="*" 
+        element={
+          <>
+            <LandingPage onGetStarted={() => setDevMode(true)} />
+            <button
+              onClick={() => setDevMode(true)}
+              className="fixed bottom-4 right-4 px-4 py-2 rounded-lg font-semibold text-xs z-50"
+              style={{
+                backgroundColor: '#FF0000',
+                color: '#FFFFFF',
+                boxShadow: '0 4px 12px rgba(255, 0, 0, 0.3)',
+              }}
+            >
+              DEV MODE: Skip Auth
+            </button>
+          </>
+        } 
+      />
+    </Routes>
+  );
+  */
 
   return (
-    <div
-      className="min-h-screen"
-      style={{
-        background: 'linear-gradient(180deg, #FAF9F6 0%, #F0EDE8 100%)',
-        minHeight: '100vh',
-      }}
-    >
+    <Routes>
+      <Route path="/privacy" element={<PrivacyPolicy />} />
+      <Route path="/terms" element={<TermsOfService />} />
+      <Route path="/contact" element={<Contact />} />
+      <Route path="/about" element={<About />} />
+      <Route 
+        path="*" 
+        element={
+          <div
+            className="min-h-screen"
+            style={{
+              background: 'linear-gradient(180deg, #FAF9F6 0%, #F0EDE8 100%)',
+              minHeight: '100vh',
+            }}
+          >
       {/* DEV MODE INDICATOR */}
       {devMode && (
         <div className="fixed top-0 left-0 right-0 bg-red-500 text-white text-center py-1 text-xs font-bold z-50">
           ⚠️ DEVELOPMENT MODE - Authentication Bypassed ⚠️
         </div>
       )}
+      
       {/* Header */}
       <header
         className="shadow-md"
@@ -4610,7 +5751,7 @@ function App() {
               { id: 'home', label: 'Home', icon: Home },
               { id: 'reflection', label: 'Reflection Studio', icon: BookOpen },
               { id: 'stress', label: 'Stress Reset', icon: RefreshCw },
-              { id: 'chat', label: 'Chat with Elya', icon: MessageCircle },
+              { id: 'chat', label: 'Chat with Elya', icon: MessageCircle, badge: 'BETA' },
               { id: 'insights', label: 'Growth Insights', icon: TrendingUp },
             ].map((tab) => (
               <button
@@ -4639,6 +5780,18 @@ function App() {
               >
                 <tab.icon className="h-4 w-4 mr-2" />
                 {tab.label}
+                {tab.badge && (
+                  <span 
+                    className="ml-2 px-2 py-0.5 text-xs font-bold rounded-full"
+                    style={{ 
+                      backgroundColor: '#A8C09A', 
+                      color: '#FFFFFF',
+                      fontSize: '10px'
+                    }}
+                  >
+                    {tab.badge}
+                  </span>
+                )}
               </button>
             ))}
           </div>
@@ -4654,7 +5807,133 @@ function App() {
 
       {/* Privacy Page Overlay */}
       {showPrivacyPage && renderPrivacyPage()}
+
+      {/* Affirmation Modal - Moved here so it's accessible from any tab */}
+      {selectedAffirmationCategory !== null && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
+          <div className="bg-white rounded-2xl max-w-2xl w-full p-8">
+            <div className="flex justify-between items-start mb-6">
+              <div>
+                <div 
+                  className="inline-flex p-3 rounded-lg mb-4"
+                  style={{ 
+                    backgroundColor: selectedAffirmationCategory === 0 ? '#ec4899' : 
+                                     selectedAffirmationCategory === 1 ? '#f97316' :
+                                     selectedAffirmationCategory === 2 ? '#10b981' :
+                                     selectedAffirmationCategory === 3 ? '#a855f7' :
+                                     selectedAffirmationCategory === 4 ? '#60a5fa' :
+                                     '#9333ea'
+                  }}
+                >
+                  {(() => {
+                    const Icon = affirmationCategories[selectedAffirmationCategory].icon;
+                    return <Icon className="h-8 w-8 text-white" />;
+                  })()}
+                </div>
+                <h2 className="text-2xl font-bold text-gray-900">
+                  {affirmationCategories[selectedAffirmationCategory].title}
+                </h2>
+              </div>
+              <button
+                onClick={() => {
+                  setSelectedAffirmationCategory(null);
+                  setCurrentAffirmationIndex(0);
+                }}
+                className="text-gray-400 hover:text-gray-600"
+              >
+                <X className="h-6 w-6" />
+              </button>
+            </div>
+            
+            {/* Single Affirmation Display */}
+            <div className="min-h-[200px] flex items-center justify-center px-8 py-12 rounded-xl border" 
+                 style={{ 
+                   background: 'linear-gradient(135deg, #f0f7f0 0%, #ffffff 50%, #f0f7f0 100%)',
+                   borderColor: '#A8C09A'
+                 }}>
+              <p className="text-xl text-gray-700 leading-relaxed text-center italic font-medium">
+                "{affirmationCategories[selectedAffirmationCategory].affirmations[currentAffirmationIndex]}"
+              </p>
+            </div>
+            
+            {/* Navigation Controls */}
+            <div className="flex items-center justify-between mt-8">
+              <button
+                onClick={() => {
+                  const newIndex = currentAffirmationIndex > 0 
+                    ? currentAffirmationIndex - 1 
+                    : affirmationCategories[selectedAffirmationCategory].affirmations.length - 1;
+                  setCurrentAffirmationIndex(newIndex);
+                }}
+                className="p-3 rounded-full transition-colors"
+                style={{ backgroundColor: '#e8f2e8', color: '#2D5F3F' }}
+                onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#d4e8d4'}
+                onMouseLeave={(e) => e.currentTarget.style.backgroundColor = '#e8f2e8'}
+                aria-label="Previous affirmation"
+              >
+                <ChevronLeft className="h-6 w-6" />
+              </button>
+              
+              {/* Progress Dots */}
+              <div className="flex space-x-2">
+                {affirmationCategories[selectedAffirmationCategory].affirmations.map((_, index) => (
+                  <button
+                    key={index}
+                    onClick={() => setCurrentAffirmationIndex(index)}
+                    className="rounded-full transition-all"
+                    style={{
+                      width: index === currentAffirmationIndex ? '32px' : '8px',
+                      height: '8px',
+                      backgroundColor: index === currentAffirmationIndex ? '#A8C09A' : '#d4e8d4'
+                    }}
+                    aria-label={`Go to affirmation ${index + 1}`}
+                  />
+                ))}
+              </div>
+              
+              <button
+                onClick={() => {
+                  const newIndex = currentAffirmationIndex < affirmationCategories[selectedAffirmationCategory].affirmations.length - 1
+                    ? currentAffirmationIndex + 1
+                    : 0;
+                  setCurrentAffirmationIndex(newIndex);
+                }}
+                className="p-3 rounded-full transition-colors"
+                style={{ backgroundColor: '#e8f2e8', color: '#2D5F3F' }}
+                onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#d4e8d4'}
+                onMouseLeave={(e) => e.currentTarget.style.backgroundColor = '#e8f2e8'}
+                aria-label="Next affirmation"
+              >
+                <ChevronRight className="h-6 w-6" />
+              </button>
+            </div>
+            
+            {/* Counter */}
+            <div className="text-center mt-6 text-sm text-gray-500">
+              {currentAffirmationIndex + 1} of {affirmationCategories[selectedAffirmationCategory].affirmations.length}
+            </div>
+            
+            <div className="mt-6 flex justify-center">
+              <button
+                onClick={() => {
+                  setSelectedAffirmationCategory(null);
+                  setCurrentAffirmationIndex(0);
+                }}
+                className="px-6 py-3 text-white rounded-lg transition-colors"
+                style={{ backgroundColor: '#A8C09A' }}
+                onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#8FA681'}
+                onMouseLeave={(e) => e.currentTarget.style.backgroundColor = '#A8C09A'}
+              >
+                Close
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
+        }
+      />
+    </Routes>
   );
 }
 

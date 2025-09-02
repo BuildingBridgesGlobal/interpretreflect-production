@@ -28,6 +28,13 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     // Check active sessions and sets the user
     const initializeAuth = async () => {
       try {
+        // Skip Supabase check if credentials are missing
+        if (!import.meta.env.VITE_SUPABASE_URL || !import.meta.env.VITE_SUPABASE_ANON_KEY) {
+          console.warn('Supabase credentials not configured. Running in demo mode.');
+          setLoading(false);
+          return;
+        }
+        
         const { user } = await getCurrentUser();
         setUser(user);
       } catch (error) {

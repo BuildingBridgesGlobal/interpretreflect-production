@@ -27,6 +27,7 @@ interface MentoringReflectionResults {
     surprisingAdvice: string;
     challengedThinking: string;
     neededValidation: string;
+    insightsCaptured: number; // Count of valuable insights
   };
   wisdomDistillation: {
     learnedWork: string;
@@ -34,6 +35,8 @@ interface MentoringReflectionResults {
     learnedGrowth: string;
     patternSeen: string;
     assumptionQuestion: string;
+    wisdomScore: number; // 1-10 scale for wisdom gained
+    patternsIdentified: number; // Count of patterns recognized
   };
   emotionalIntegration: {
     sessionFeeling: string;
@@ -42,6 +45,8 @@ interface MentoringReflectionResults {
     difficultProcess?: string;
     positiveCreated?: string;
     positiveCultivate?: string;
+    emotionalClarity: number; // 1-10 scale
+    resistanceLevel: number; // 1-10 scale (lower is better)
   };
   actionPlan: {
     immediate: {
@@ -57,6 +62,9 @@ interface MentoringReflectionResults {
     thisMonth: string;
     resources: string[];
     personToTalk: string;
+    actionItemsCount: number; // Total number of action items
+    planSpecificity: number; // 1-10 scale for how specific the plan is
+    commitmentLevel: number; // 1-10 scale for commitment to plan
   };
   growthEdge: {
     nowClear: string;
@@ -64,11 +72,16 @@ interface MentoringReflectionResults {
     mysterious: string;
     nextEdge: string;
     needsFor: string[];
+    clarityGained: number; // 1-10 scale
+    growthAreasIdentified: number; // Count of growth areas
   };
   relationship: {
     workedWell: string[];
     couldImprove: string[];
     followUp: string;
+    mentorEffectiveness: number; // 1-10 scale
+    relationshipQuality: number; // 1-10 scale
+    followUpPlanned: boolean; // Was a follow-up scheduled?
   };
   commitment: {
     stopDoing: string;
@@ -76,13 +89,20 @@ interface MentoringReflectionResults {
     continueDoing: string;
     growthIndicator: string;
     checkInDate: string;
+    commitmentsMade: number; // Count of specific commitments
+    accountabilitySet: boolean; // Was accountability established?
   };
   wisdomBank: {
     quotableInsight: string;
     storyExample: string;
     mistakeAvoid: string;
     successPattern: string;
+    wisdomItems: number; // Count of wisdom items captured
   };
+  sessionValue: number; // 1-10 overall session value
+  applicabilityScore: number; // 1-10 how applicable to current situation
+  stressLevel: number;
+  energyLevel: number;
   timestamp: Date;
 }
 
@@ -146,6 +166,8 @@ const MentoringReflection: React.FC<MentoringReflectionProps> = ({ onComplete, o
   const [storyExample, setStoryExample] = useState('');
   const [mistakeAvoid, setMistakeAvoid] = useState('');
   const [successPattern, setSuccessPattern] = useState('');
+  const [stressLevel, setStressLevel] = useState(5);
+  const [energyLevel, setEnergyLevel] = useState(5);
   const [showWisdomBank, setShowWisdomBank] = useState(false);
 
   const handleNext = () => {
@@ -161,12 +183,93 @@ const MentoringReflection: React.FC<MentoringReflectionProps> = ({ onComplete, o
   };
 
   const handleComplete = () => {
+    // Calculate insights captured count
+    const insightsCaptured = [valuableHeard, surprisingAdvice, challengedThinking, neededValidation].filter(Boolean).length;
+
+    // Calculate wisdom score based on learning completeness
+    const wisdomScore = [learnedWork, learnedSelf, learnedGrowth, patternSeen, assumptionQuestion].filter(Boolean).length * 2;
+
+    // Count patterns identified
+    const patternsIdentified = patternSeen ? 1 + (patternSeen.includes('and') ? 1 : 0) : 0;
+
+    // Calculate emotional clarity based on feeling specificity
+    const emotionalClarity = 
+      sessionFeeling.includes('supported') || sessionFeeling.includes('inspired') ? 8 :
+      sessionFeeling.includes('neutral') ? 5 :
+      sessionFeeling.includes('uncomfortable') || sessionFeeling.includes('defensive') ? 6 : 7;
+
+    // Calculate resistance level
+    const resistanceLevel = 
+      sessionFeeling.includes('defensive') ? 7 :
+      sessionFeeling.includes('uncomfortable') ? 5 :
+      sessionFeeling.includes('neutral') ? 3 :
+      sessionFeeling.includes('supported') || sessionFeeling.includes('inspired') ? 1 : 4;
+
+    // Count action items
+    const actionItemsCount = 
+      (immediateAction ? 1 : 0) + 
+      (weekAction ? 1 : 0) + 
+      (monthAction ? 1 : 0) + 
+      [resource1, resource2].filter(Boolean).length +
+      (personToTalk ? 1 : 0);
+
+    // Calculate plan specificity
+    const planSpecificity = 
+      (immediateWhen && immediateBecause ? 3 : 1) +
+      (weekDay && weekPractice ? 3 : 1) +
+      (monthAction ? 2 : 0) +
+      (checkInDate ? 2 : 0);
+
+    // Calculate commitment level
+    const commitmentLevel = Math.min(10, 
+      (stopDoing ? 3 : 0) + 
+      (startDoing ? 3 : 0) + 
+      (continueDoing ? 2 : 0) + 
+      (growthIndicator ? 2 : 0));
+
+    // Calculate clarity gained
+    const clarityGained = 
+      (nowClear ? 4 : 0) + 
+      (stillFuzzy ? 2 : 0) + 
+      (mysterious ? 1 : 0) + 
+      (nextEdge ? 3 : 0);
+
+    // Count growth areas identified
+    const growthAreasIdentified = needsFor.length + (nextEdge ? 1 : 0);
+
+    // Calculate mentor effectiveness
+    const mentorEffectiveness = Math.min(10, workedWell.length * 2 + (followUp ? 2 : 0));
+
+    // Calculate relationship quality
+    const relationshipQuality = Math.max(1, 10 - couldImprove.length * 2);
+
+    // Check if follow-up was planned
+    const followUpPlanned = !!followUp && followUp.length > 10;
+
+    // Count commitments made
+    const commitmentsMade = [stopDoing, startDoing, continueDoing].filter(Boolean).length;
+
+    // Check if accountability was set
+    const accountabilitySet = !!(checkInDate && growthIndicator);
+
+    // Count wisdom items
+    const wisdomItems = [quotableInsight, storyExample, mistakeAvoid, successPattern].filter(Boolean).length;
+
+    // Calculate overall session value (average of key metrics)
+    const sessionValue = Math.round(
+      (wisdomScore + emotionalClarity + planSpecificity + commitmentLevel + clarityGained) / 5
+    );
+
+    // Calculate applicability score
+    const applicabilityScore = Math.min(10, actionItemsCount + commitmentsMade);
+
     const results: MentoringReflectionResults = {
       immediateCapture: {
         valuableHeard,
         surprisingAdvice,
         challengedThinking,
         neededValidation,
+        insightsCaptured,
       },
       wisdomDistillation: {
         learnedWork,
@@ -174,6 +277,8 @@ const MentoringReflection: React.FC<MentoringReflectionProps> = ({ onComplete, o
         learnedGrowth,
         patternSeen,
         assumptionQuestion,
+        wisdomScore,
+        patternsIdentified,
       },
       emotionalIntegration: {
         sessionFeeling,
@@ -197,6 +302,8 @@ const MentoringReflection: React.FC<MentoringReflectionProps> = ({ onComplete, o
           sessionFeeling.includes('supported') || sessionFeeling.includes('inspired')
             ? positiveCultivate
             : undefined,
+        emotionalClarity,
+        resistanceLevel,
       },
       actionPlan: {
         immediate: {
@@ -212,6 +319,9 @@ const MentoringReflection: React.FC<MentoringReflectionProps> = ({ onComplete, o
         thisMonth: monthAction,
         resources: [resource1, resource2].filter(Boolean),
         personToTalk,
+        actionItemsCount,
+        planSpecificity,
+        commitmentLevel,
       },
       growthEdge: {
         nowClear,
@@ -219,11 +329,16 @@ const MentoringReflection: React.FC<MentoringReflectionProps> = ({ onComplete, o
         mysterious,
         nextEdge,
         needsFor,
+        clarityGained,
+        growthAreasIdentified,
       },
       relationship: {
         workedWell,
         couldImprove,
         followUp,
+        mentorEffectiveness,
+        relationshipQuality,
+        followUpPlanned,
       },
       commitment: {
         stopDoing,
@@ -231,13 +346,20 @@ const MentoringReflection: React.FC<MentoringReflectionProps> = ({ onComplete, o
         continueDoing,
         growthIndicator,
         checkInDate,
+        commitmentsMade,
+        accountabilitySet,
       },
       wisdomBank: {
         quotableInsight,
         storyExample,
         mistakeAvoid,
         successPattern,
+        wisdomItems,
       },
+      sessionValue,
+      applicabilityScore,
+      stressLevel,
+      energyLevel,
       timestamp: new Date(),
     };
 

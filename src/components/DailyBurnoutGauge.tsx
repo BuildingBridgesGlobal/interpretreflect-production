@@ -8,6 +8,8 @@ import {
   ChevronRight,
   Activity,
 } from 'lucide-react';
+import { supabase } from '../lib/supabase';
+import { useAuth } from '../contexts/AuthContext';
 
 interface DailyBurnoutGaugeProps {
   onComplete: (results: BurnoutAssessmentResults) => void;
@@ -35,6 +37,7 @@ interface BurnoutAssessmentResults {
 }
 
 const DailyBurnoutGauge: React.FC<DailyBurnoutGaugeProps> = ({ onComplete, onClose }) => {
+  const { user } = useAuth();
   const [currentQuestion, setCurrentQuestion] = useState(1);
   const [answers, setAnswers] = useState({
     energyTank: 0,
@@ -55,6 +58,88 @@ const DailyBurnoutGauge: React.FC<DailyBurnoutGaugeProps> = ({ onComplete, onClo
     difficultSession: null as boolean | null,
   });
   const [personalizedRecommendations, setPersonalizedRecommendations] = useState<string[]>([]);
+  const [alreadyTakenToday, setAlreadyTakenToday] = useState(false);
+  const [previousAssessments, setPreviousAssessments] = useState<any[]>([]);
+  const [saveSuccess, setSaveSuccess] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+
+  // Check if assessment was already taken today and load previous assessments
+  useEffect(() => {
+    const loadAssessments = async () => {
+      if (user) {
+        try {
+          // Check if already taken today
+          const today = new Date().toISOString().split('T')[0];
+          const { data: todayData } = await supabase
+            .from('burnout_assessments')
+            .select('*')
+            .eq('user_id', user.id)
+            .eq('assessment_date', today)
+            .single();
+          
+          if (todayData) {
+            setAlreadyTakenToday(true);
+          }
+          
+          // Load previous assessments (last 7)
+          const { data: previousData, error } = await supabase
+            .from('burnout_assessments')
+            .select('*')
+            .eq('user_id', user.id)
+            .order('assessment_date', { ascending: false })
+            .limit(7);
+          
+          if (error) throw error;
+          
+          if (previousData) {
+            // Convert Supabase data to match our format
+            const formattedData = previousData.map(d => ({
+              ...d,
+              date: d.assessment_date,
+              timestamp: d.created_at,
+              totalScore: parseFloat(d.total_score),
+              riskLevel: d.risk_level
+            }));
+            setPreviousAssessments(formattedData.reverse());
+          }
+        } catch (error) {
+          console.error('Error loading assessments from Supabase:', error);
+          // Fallback to localStorage
+          const stored = localStorage.getItem('burnoutAssessments');
+          if (stored) {
+            try {
+              const assessments = JSON.parse(stored);
+              setPreviousAssessments(assessments.slice(-7));
+            } catch (err) {
+              console.error('Error loading from localStorage:', err);
+            }
+          }
+        }
+      } else {
+        // Not logged in, use localStorage
+        const lastDate = localStorage.getItem('lastAssessmentDate');
+        if (lastDate) {
+          const today = new Date().toISOString().split('T')[0];
+          const lastAssessmentDate = new Date(lastDate).toISOString().split('T')[0];
+          if (today === lastAssessmentDate) {
+            setAlreadyTakenToday(true);
+          }
+        }
+        
+        const stored = localStorage.getItem('burnoutAssessments');
+        if (stored) {
+          try {
+            const assessments = JSON.parse(stored);
+            setPreviousAssessments(assessments.slice(-7));
+          } catch (error) {
+            console.error('Error loading previous assessments:', error);
+          }
+        }
+      }
+    };
+    
+    loadAssessments();
+  }, [user]);
 
   const questions = [
     {
@@ -346,11 +431,13 @@ const DailyBurnoutGauge: React.FC<DailyBurnoutGaugeProps> = ({ onComplete, onClo
     setPersonalizedRecommendations(recommendations);
   };
 
-  const handleComplete = () => {
+  const handleComplete = async () => {
     if (!showContextFactors && (riskLevel === 'high' || riskLevel === 'severe')) {
       setShowContextFactors(true);
       return;
     }
+
+    setIsLoading(true);
 
     const results: BurnoutAssessmentResults = {
       ...answers,
@@ -370,17 +457,83 @@ const DailyBurnoutGauge: React.FC<DailyBurnoutGaugeProps> = ({ onComplete, onClo
       recommendations: personalizedRecommendations,
     };
 
-    // Store in localStorage for graph tracking
-    const stored = localStorage.getItem('burnoutAssessments');
-    const assessments = stored ? JSON.parse(stored) : [];
-    assessments.push(results);
-    // Keep only last 30 days
-    const thirtyDaysAgo = new Date();
-    thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
-    const filtered = assessments.filter((a: any) => new Date(a.timestamp) > thirtyDaysAgo);
-    localStorage.setItem('burnoutAssessments', JSON.stringify(filtered));
+    try {
+      // Save to Supabase if user is logged in
+      if (user) {
+        const today = new Date().toISOString().split('T')[0];
+        
+        // Check if an assessment already exists for today
+        const { data: existingData } = await supabase
+          .from('burnout_assessments')
+          .select('id')
+          .eq('user_id', user.id)
+          .eq('assessment_date', today)
+          .single();
 
-    onComplete(results);
+        const assessmentData = {
+          user_id: user.id,
+          energy_tank: answers.energyTank,
+          recovery_speed: answers.recoverySpeed,
+          emotional_leakage: answers.emotionalLeakage,
+          performance_signal: answers.performanceSignal,
+          tomorrow_readiness: answers.tomorrowReadiness,
+          total_score: totalScore,
+          risk_level: riskLevel,
+          assessment_date: today,
+          workload_intensity: contextFactors.workloadIntensity || null,
+          emotional_demand: contextFactors.emotionalDemand || null,
+          had_breaks: contextFactors.hadBreaks,
+          team_support: contextFactors.teamSupport,
+          difficult_session: contextFactors.difficultSession,
+        };
+
+        if (existingData) {
+          // Update existing assessment
+          const { error } = await supabase
+            .from('burnout_assessments')
+            .update(assessmentData)
+            .eq('id', existingData.id);
+          
+          if (error) throw error;
+        } else {
+          // Insert new assessment
+          const { error } = await supabase
+            .from('burnout_assessments')
+            .insert(assessmentData);
+          
+          if (error) throw error;
+        }
+        
+        console.log('Assessment saved to Supabase successfully');
+      }
+      
+      // Also save to localStorage for offline access and backwards compatibility
+      const stored = localStorage.getItem('burnoutAssessments');
+      const assessments = stored ? JSON.parse(stored) : [];
+      assessments.push(results);
+      // Keep only last 30 days
+      const thirtyDaysAgo = new Date();
+      thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
+      const filtered = assessments.filter((a: any) => new Date(a.timestamp) > thirtyDaysAgo);
+      localStorage.setItem('burnoutAssessments', JSON.stringify(filtered));
+      
+      // Also store today's assessment separately for quick access
+      localStorage.setItem('todaysBurnoutAssessment', JSON.stringify(results));
+      localStorage.setItem('lastAssessmentDate', new Date().toISOString());
+      
+      console.log('Assessment saved successfully:', results);
+      setSaveSuccess(true);
+      
+      // Show success message for 2 seconds then close
+      setTimeout(() => {
+        onComplete(results);
+      }, 2000);
+    } catch (error) {
+      console.error('Error saving assessment:', error);
+      alert('Error saving assessment. Please try again.');
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   const getRiskColor = () => {
@@ -812,13 +965,77 @@ const DailyBurnoutGauge: React.FC<DailyBurnoutGaugeProps> = ({ onComplete, onClo
                 </p>
               </div>
 
-              <button
-                onClick={handleComplete}
-                className="w-full py-3 bg-gradient-to-r from-sage-500 to-green-500 text-white rounded-lg font-semibold hover:from-sage-600 hover:to-green-600 transition-all flex items-center justify-center"
-              >
-                {showContextFactors ? 'Save with Context' : 'Complete & Track Progress'}
-                <ChevronRight className="w-5 h-5 ml-2" />
-              </button>
+              {alreadyTakenToday && (
+                <div className="mb-4 p-3 bg-amber-50 border border-amber-200 rounded-lg">
+                  <p className="text-sm text-amber-800">
+                    <AlertCircle className="inline w-4 h-4 mr-1" />
+                    You've already completed today's assessment. Taking another will overwrite today's data.
+                  </p>
+                </div>
+              )}
+              
+              {previousAssessments.length > 0 && (
+                <div className="mb-4 p-4 bg-blue-50 rounded-lg">
+                  <h4 className="font-semibold text-blue-900 mb-2">Your Recent Progress:</h4>
+                  <div className="flex items-center space-x-2 overflow-x-auto">
+                    {previousAssessments.map((assessment, index) => (
+                      <div
+                        key={index}
+                        className="flex flex-col items-center min-w-[60px]"
+                        title={`${new Date(assessment.date).toLocaleDateString()}: ${assessment.riskLevel}`}
+                      >
+                        <div
+                          className={`w-10 h-10 rounded-full flex items-center justify-center text-white font-bold text-xs ${
+                            assessment.riskLevel === 'low'
+                              ? 'bg-green-500'
+                              : assessment.riskLevel === 'moderate'
+                              ? 'bg-yellow-500'
+                              : assessment.riskLevel === 'high'
+                              ? 'bg-orange-500'
+                              : 'bg-red-500'
+                          }`}
+                        >
+                          {assessment.totalScore.toFixed(1)}
+                        </div>
+                        <span className="text-xs text-gray-600 mt-1">
+                          {new Date(assessment.date).toLocaleDateString('en-US', { 
+                            month: 'short', 
+                            day: 'numeric' 
+                          })}
+                        </span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {saveSuccess ? (
+                <div className="p-4 bg-green-50 border-2 border-green-200 rounded-lg text-center">
+                  <CheckCircle className="w-8 h-8 text-green-500 mx-auto mb-2" />
+                  <p className="text-green-800 font-semibold">Assessment Saved Successfully!</p>
+                  <p className="text-green-600 text-sm mt-1">
+                    {user ? 'Your progress has been saved to your account.' : 'Your progress has been tracked locally.'}
+                  </p>
+                </div>
+              ) : (
+                <button
+                  onClick={handleComplete}
+                  disabled={isLoading}
+                  className="w-full py-3 bg-gradient-to-r from-sage-500 to-green-500 text-white rounded-lg font-semibold hover:from-sage-600 hover:to-green-600 transition-all flex items-center justify-center disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                  {isLoading ? (
+                    <>
+                      <div className="animate-spin rounded-full h-5 w-5 border-2 border-white border-t-transparent mr-2"></div>
+                      Saving...
+                    </>
+                  ) : (
+                    <>
+                      {showContextFactors ? 'Save with Context' : 'Save Assessment & Track Progress'}
+                      <CheckCircle className="w-5 h-5 ml-2" />
+                    </>
+                  )}
+                </button>
+              )}
             </div>
           </>
         )}

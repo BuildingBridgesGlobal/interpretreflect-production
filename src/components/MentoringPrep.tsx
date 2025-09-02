@@ -28,28 +28,42 @@ interface MentoringPrepResults {
     needMost?: string;
     menteeSeems?: string;
     menteeNeeds?: string;
+    readinessScore?: number; // 1-10 scale for mentor readiness
+    preparednessLevel?: number; // 1-10 scale for mentee preparedness
   };
   request: {
     situation: string;
     challenge: string;
     alreadyTried: string;
     helpType: string;
+    problemClarity: number; // 1-10 scale for how clear the problem is
+    previousAttempts: number; // Count of things already tried
   };
   boundaries: {
     time: string;
     emotional: string[];
     confidentiality: string;
+    boundariesSet: number; // Count of boundaries established
+    timeCommitment: number; // Minutes available
   };
   learningStyle: {
     myStyle: string[];
     theirStyle: string;
     approach: string;
+    styleAlignment: number; // 1-10 scale for style compatibility
   };
   success: {
     menteeLeavesWith: string[];
     mentorProvides: string[];
     followUp: string;
+    goalsSet: number; // Count of specific goals
+    successMetricsDefined: boolean; // Were success metrics defined?
+    followUpScheduled: boolean; // Was follow-up scheduled?
   };
+  overallPreparedness: number; // 1-10 overall prep score
+  sessionFocus: number; // 1-10 how focused the session plan is
+  stressLevel: number;
+  energyLevel: number;
   timestamp: Date;
 }
 
@@ -75,6 +89,8 @@ const MentoringPrep: React.FC<MentoringPrepProps> = ({ onComplete, onClose }) =>
   const [menteeLeavesWith, setMenteeLeavesWith] = useState<string[]>([]);
   const [mentorProvides, setMentorProvides] = useState<string[]>([]);
   const [followUp, setFollowUp] = useState('');
+  const [stressLevel, setStressLevel] = useState(5);
+  const [energyLevel, setEnergyLevel] = useState(5);
   const [showChecklist, setShowChecklist] = useState(false);
 
   const handleNext = () => {
@@ -90,6 +106,66 @@ const MentoringPrep: React.FC<MentoringPrepProps> = ({ onComplete, onClose }) =>
   };
 
   const handleComplete = () => {
+    // Calculate readiness scores
+    const readinessScore = role === 'mentor' ? 
+      (menteeSeems && menteeNeeds ? 8 : 5) :
+      (challengeLevel && emotionalReadiness && needMost ? 8 : 5);
+    
+    const preparednessLevel = 
+      (situation ? 3 : 0) + 
+      (challenge ? 3 : 0) + 
+      (alreadyTried ? 2 : 0) + 
+      (helpType ? 2 : 0);
+
+    // Calculate problem clarity
+    const problemClarity = 
+      (situation && challenge ? 8 : 4) + 
+      (alreadyTried ? 2 : 0);
+
+    // Count previous attempts
+    const previousAttempts = alreadyTried ? 
+      (alreadyTried.split(',').length || alreadyTried.split('and').length || 1) : 0;
+
+    // Count boundaries set
+    const boundariesSet = 
+      (timeLimit ? 1 : 0) + 
+      emotionalBoundaries.length + 
+      (confidentiality ? 1 : 0);
+
+    // Extract time commitment in minutes
+    const timeCommitment = 
+      timeLimit === '15-minutes' ? 15 :
+      timeLimit === '30-minutes' ? 30 :
+      timeLimit === '45-minutes' ? 45 :
+      timeLimit === '60-minutes' ? 60 :
+      timeLimit === 'open-ended' ? 90 : 30;
+
+    // Calculate style alignment
+    const styleAlignment = 
+      myLearningStyles.includes(theirLearningStyle) ? 10 :
+      (myLearningStyles.length > 0 && theirLearningStyle ? 7 : 5);
+
+    // Count goals set
+    const goalsSet = menteeLeavesWith.length + mentorProvides.length;
+
+    // Check if success metrics were defined
+    const successMetricsDefined = menteeLeavesWith.length > 0 && mentorProvides.length > 0;
+
+    // Check if follow-up was scheduled
+    const followUpScheduled = !!followUp && followUp.length > 10;
+
+    // Calculate overall preparedness
+    const overallPreparedness = Math.round(
+      (readinessScore + preparednessLevel + problemClarity + boundariesSet + styleAlignment) / 5
+    );
+
+    // Calculate session focus
+    const sessionFocus = Math.min(10, 
+      (situation ? 2 : 0) + 
+      (challenge ? 2 : 0) + 
+      (helpType ? 2 : 0) + 
+      (goalsSet ? 4 : 0));
+
     const results: MentoringPrepResults = {
       role,
       context,
@@ -99,28 +175,42 @@ const MentoringPrep: React.FC<MentoringPrepProps> = ({ onComplete, onClose }) =>
         needMost: role === 'mentee' ? needMost : undefined,
         menteeSeems: role === 'mentor' ? menteeSeems : undefined,
         menteeNeeds: role === 'mentor' ? menteeNeeds : undefined,
+        readinessScore,
+        preparednessLevel,
       },
       request: {
         situation,
         challenge,
         alreadyTried,
         helpType,
+        problemClarity,
+        previousAttempts,
       },
       boundaries: {
         time: timeLimit,
         emotional: emotionalBoundaries,
         confidentiality,
+        boundariesSet,
+        timeCommitment,
       },
       learningStyle: {
         myStyle: myLearningStyles,
         theirStyle: theirLearningStyle,
         approach: approachToday,
+        styleAlignment,
       },
       success: {
         menteeLeavesWith,
         mentorProvides,
         followUp,
+        goalsSet,
+        successMetricsDefined,
+        followUpScheduled,
       },
+      overallPreparedness,
+      sessionFocus,
+      stressLevel,
+      energyLevel,
       timestamp: new Date(),
     };
 

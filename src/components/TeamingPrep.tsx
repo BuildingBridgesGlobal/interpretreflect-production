@@ -43,12 +43,16 @@ interface TeamPrepResults {
     lostThread: string;
   };
   energyStrategy: string;
+  stressLevel: number;
+  energyLevel: number;
   timestamp: Date;
 }
 
 const TeamingPrep: React.FC<TeamingPrepProps> = ({ onComplete, onClose }) => {
   const [currentStep, setCurrentStep] = useState(1);
   const [partnerType, setPartnerType] = useState('');
+  const [stressLevel, setStressLevel] = useState(5);
+  const [energyLevel, setEnergyLevel] = useState(5);
   const [context, setContext] = useState('');
   const [leadTechnical, setLeadTechnical] = useState('');
   const [leadNumbers, setLeadNumbers] = useState('');
@@ -107,6 +111,8 @@ const TeamingPrep: React.FC<TeamingPrepProps> = ({ onComplete, onClose }) => {
         lostThread,
       },
       energyStrategy,
+      stressLevel,
+      energyLevel,
       timestamp: new Date(),
     };
 

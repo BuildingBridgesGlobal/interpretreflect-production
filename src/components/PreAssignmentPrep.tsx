@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import {
+  Activity,
   Brain,
   Heart,
   Eye,
@@ -17,7 +18,6 @@ import {
   Timer,
   Award,
   TrendingUp,
-  Activity,
 } from 'lucide-react';
 
 interface PreAssignmentPrepProps {
@@ -30,6 +30,8 @@ interface PrepResults {
   completedSteps: string[];
   intention: string;
   successMemory: string;
+  stressLevel: number;
+  energyLevel: number;
   timestamp: Date;
 }
 
@@ -51,8 +53,11 @@ const PreAssignmentPrep: React.FC<PreAssignmentPrepProps> = ({ onComplete, onClo
   const [shieldActive, setShieldActive] = useState(false);
   const [completedSteps, setCompletedSteps] = useState<string[]>([]);
   const [tapSide, setTapSide] = useState<'left' | 'right'>('left');
+  const [stressLevel, setStressLevel] = useState(5);
+  const [energyLevel, setEnergyLevel] = useState(5);
 
   const steps = [
+    { title: 'Stress & Energy Check', duration: '15 seconds', icon: Activity },
     { title: 'Cognitive Load Check', duration: '30 seconds', icon: Brain },
     { title: 'Bilateral Stimulation Reset', duration: '45 seconds', icon: Heart },
     { title: 'Attention Anchoring', duration: '45 seconds', icon: Eye },
@@ -94,6 +99,8 @@ const PreAssignmentPrep: React.FC<PreAssignmentPrepProps> = ({ onComplete, onClo
       completedSteps,
       intention,
       successMemory,
+      stressLevel,
+      energyLevel,
       timestamp: new Date(),
     };
     onComplete?.(results);
@@ -102,6 +109,106 @@ const PreAssignmentPrep: React.FC<PreAssignmentPrepProps> = ({ onComplete, onClo
   const renderStep = () => {
     switch (currentStep) {
       case 0:
+        // Stress & Energy Check
+        return (
+          <div className="space-y-6">
+            <div className="text-center mb-8">
+              <div
+                className="inline-flex items-center justify-center w-20 h-20 rounded-full mb-4"
+                style={{ backgroundColor: 'rgba(168, 192, 154, 0.2)' }}
+              >
+                <Activity className="h-10 w-10" style={{ color: '#A8C09A' }} />
+              </div>
+              <h2 className="text-2xl font-bold mb-2" style={{ color: '#1A1A1A' }}>
+                Quick Check-In
+              </h2>
+              <p className="text-sm" style={{ color: '#6B7C6B' }}>
+                Let's assess your current state
+              </p>
+            </div>
+
+            <div className="space-y-6">
+              <div>
+                <p className="font-medium mb-3" style={{ color: '#1A1A1A' }}>
+                  Current Stress Level:
+                </p>
+                <div className="flex items-center justify-between mb-2">
+                  <span className="text-sm" style={{ color: '#10B981' }}>Low</span>
+                  <span className="text-sm" style={{ color: '#EF4444' }}>High</span>
+                </div>
+                <div className="flex space-x-2">
+                  {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((level) => (
+                    <button
+                      key={level}
+                      onClick={() => setStressLevel(level)}
+                      className={`flex-1 h-12 rounded-lg transition-all ${
+                        stressLevel === level ? 'scale-110' : ''
+                      }`}
+                      style={{
+                        backgroundColor: stressLevel === level 
+                          ? level <= 3 ? '#10B981' : level <= 7 ? '#F59E0B' : '#EF4444'
+                          : '#E8E5E0',
+                        border: stressLevel === level ? '2px solid #1A1A1A' : 'none',
+                      }}
+                    >
+                      <span className="font-bold" style={{ color: stressLevel === level ? '#FFFFFF' : '#9CA3AF' }}>
+                        {level}
+                      </span>
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              <div>
+                <p className="font-medium mb-3" style={{ color: '#1A1A1A' }}>
+                  Current Energy Level:
+                </p>
+                <div className="flex items-center justify-between mb-2">
+                  <span className="text-sm" style={{ color: '#EF4444' }}>Low</span>
+                  <span className="text-sm" style={{ color: '#10B981' }}>High</span>
+                </div>
+                <div className="flex space-x-2">
+                  {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((level) => (
+                    <button
+                      key={level}
+                      onClick={() => setEnergyLevel(level)}
+                      className={`flex-1 h-12 rounded-lg transition-all ${
+                        energyLevel === level ? 'scale-110' : ''
+                      }`}
+                      style={{
+                        backgroundColor: energyLevel === level 
+                          ? level <= 3 ? '#EF4444' : level <= 7 ? '#F59E0B' : '#10B981'
+                          : '#E8E5E0',
+                        border: energyLevel === level ? '2px solid #1A1A1A' : 'none',
+                      }}
+                    >
+                      <span className="font-bold" style={{ color: energyLevel === level ? '#FFFFFF' : '#9CA3AF' }}>
+                        {level}
+                      </span>
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              <button
+                onClick={() => {
+                  markStepComplete('stress-energy');
+                  setCurrentStep(1);
+                }}
+                className="w-full py-3 rounded-xl font-semibold transition-all"
+                style={{
+                  backgroundColor: '#A8C09A',
+                  color: '#FFFFFF',
+                }}
+              >
+                Continue
+              </button>
+            </div>
+          </div>
+        );
+
+      case 1:
+        // Cognitive Load Check  
         return (
           <div className="space-y-6">
             <div className="text-center mb-8">
@@ -180,7 +287,7 @@ const PreAssignmentPrep: React.FC<PreAssignmentPrepProps> = ({ onComplete, onClo
           </div>
         );
 
-      case 1:
+      case 2:
         return (
           <div className="space-y-6">
             <div className="text-center mb-8">
@@ -302,7 +409,7 @@ const PreAssignmentPrep: React.FC<PreAssignmentPrepProps> = ({ onComplete, onClo
           </div>
         );
 
-      case 2:
+      case 3:
         return (
           <div className="space-y-6">
             <div className="text-center mb-8">
@@ -474,7 +581,7 @@ const PreAssignmentPrep: React.FC<PreAssignmentPrepProps> = ({ onComplete, onClo
           </div>
         );
 
-      case 3:
+      case 4:
         return (
           <div className="space-y-6">
             <div className="text-center mb-8">
@@ -580,7 +687,7 @@ const PreAssignmentPrep: React.FC<PreAssignmentPrepProps> = ({ onComplete, onClo
           </div>
         );
 
-      case 4:
+      case 5:
         return (
           <div className="space-y-6">
             <div className="text-center mb-8">

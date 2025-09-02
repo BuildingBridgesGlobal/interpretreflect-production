@@ -32,12 +32,14 @@ interface TeamReflectionResults {
     bestMoment: string;
     whyItWorked: string;
     supportBehaviors: string;
+    coordinationScore: number; // 1-10 scale
   };
   cognitiveLoad: {
     planned: string;
     actual: string;
     reason: string;
     nextTime: string;
+    loadBalanceEffective: boolean; // Was the load balance effective?
   };
   errorRecovery: {
     errorsCaught: string;
@@ -45,12 +47,16 @@ interface TeamReflectionResults {
     bestRecovery: string;
     improvement: string;
     nextTime: string;
+    errorCount: number; // Numeric count of errors
+    recoveryRate: number; // Percentage of successful recoveries
   };
   trust: {
     comfortable: string[];
     partnerSeemed: string;
     trustBuilders: string;
     trustStrains: string;
+    trustScore: number; // 1-10 scale
+    psychologicalSafety: number; // 1-10 scale
   };
   feedback: {
     forPartner: {
@@ -63,15 +69,22 @@ interface TeamReflectionResults {
       workOn: string;
       practice: string;
     };
+    feedbackGiven: boolean; // Did they exchange feedback?
+    actionableItems: number; // Count of specific action items
   };
   forward: {
     keepDoing: string[];
     tryDifferently: string;
     prepareBetter: string;
     improvedSignal: string;
+    planMade: boolean; // Was a specific plan created?
+    improvementGoals: number; // Number of goals set
   };
   patterns: string[];
   overallRating: string;
+  teamEffectivenessScore: number; // 1-10 overall team score
+  stressLevel: number;
+  energyLevel: number;
   timestamp: Date;
 }
 
@@ -111,6 +124,8 @@ const TeamingReflection: React.FC<TeamingReflectionProps> = ({ onComplete, onClo
   const [improvedSignal, setImprovedSignal] = useState('');
   const [teamPatterns, setTeamPatterns] = useState<string[]>([]);
   const [overallRating, setOverallRating] = useState('');
+  const [stressLevel, setStressLevel] = useState(5);
+  const [energyLevel, setEnergyLevel] = useState(5);
   const [showWisdomBank, setShowWisdomBank] = useState(false);
 
   const handleNext = () => {
@@ -126,6 +141,62 @@ const TeamingReflection: React.FC<TeamingReflectionProps> = ({ onComplete, onClo
   };
 
   const handleComplete = () => {
+    // Calculate coordination score based on handoffs quality
+    const coordinationScore = 
+      handoffs === 'seamless' ? 10 :
+      handoffs === 'smooth' ? 8 :
+      handoffs === 'choppy' ? 5 :
+      handoffs === 'rough' ? 3 : 7;
+
+    // Check if load balance was effective
+    const loadBalanceEffective = plannedLoad === actualLoad || actualLoad === '50-50';
+
+    // Calculate error count from errorsCaught string
+    const errorCount = 
+      errorsCaught === 'none' ? 0 :
+      errorsCaught === '1-2-minor' ? 2 :
+      errorsCaught === '3-5-minor' ? 4 :
+      errorsCaught === '1-2-major' ? 2 :
+      errorsCaught === 'several-major' ? 5 : 0;
+
+    // Calculate recovery rate based on recovery success
+    const recoveryRate = 
+      recoverySuccess === 'smooth' ? 100 :
+      recoverySuccess === 'adequate' ? 75 :
+      recoverySuccess === 'struggled' ? 40 :
+      recoverySuccess === 'failed' ? 0 : 50;
+
+    // Calculate trust score based on partner seemed and comfortable items
+    const trustScore = 
+      partnerSeemed === 'supportive' ? 10 :
+      partnerSeemed === 'professional' ? 8 :
+      partnerSeemed === 'critical' ? 5 :
+      partnerSeemed === 'judgmental' ? 3 :
+      partnerSeemed === 'unavailable' ? 1 : 7;
+
+    // Calculate psychological safety based on comfortable items checked
+    const psychologicalSafety = Math.min(10, comfortableWith.length * 2);
+
+    // Check if feedback was given
+    const feedbackGiven = !!(partnerHelped && partnerStrength && selfProud);
+
+    // Count actionable items from feedback
+    const actionableItems = [partnerIdea, selfWorkOn, selfPractice].filter(Boolean).length;
+
+    // Check if a plan was made
+    const planMade = !!(keepDoing1 && tryDifferently && prepareBetter);
+
+    // Count improvement goals
+    const improvementGoals = [tryDifferently, prepareBetter, improvedSignal, selfWorkOn, selfPractice].filter(Boolean).length;
+
+    // Calculate overall team effectiveness score
+    const teamEffectivenessScore = 
+      overallRating === 'exceptional' ? 10 :
+      overallRating === 'strong' ? 8 :
+      overallRating === 'good' ? 6 :
+      overallRating === 'adequate' ? 4 :
+      overallRating === 'struggled' ? 2 : 5;
+
     const results: TeamReflectionResults = {
       teamVictory: {
         nailed,
@@ -138,12 +209,14 @@ const TeamingReflection: React.FC<TeamingReflectionProps> = ({ onComplete, onClo
         bestMoment,
         whyItWorked,
         supportBehaviors,
+        coordinationScore,
       },
       cognitiveLoad: {
         planned: plannedLoad,
         actual: actualLoad,
         reason: loadReason,
         nextTime: loadNextTime,
+        loadBalanceEffective,
       },
       errorRecovery: {
         errorsCaught,
@@ -151,12 +224,16 @@ const TeamingReflection: React.FC<TeamingReflectionProps> = ({ onComplete, onClo
         bestRecovery,
         improvement: recoveryImprovement,
         nextTime: recoveryNextTime,
+        errorCount,
+        recoveryRate,
       },
       trust: {
         comfortable: comfortableWith,
         partnerSeemed,
         trustBuilders,
         trustStrains,
+        trustScore,
+        psychologicalSafety,
       },
       feedback: {
         forPartner: {
@@ -169,15 +246,22 @@ const TeamingReflection: React.FC<TeamingReflectionProps> = ({ onComplete, onClo
           workOn: selfWorkOn,
           practice: selfPractice,
         },
+        feedbackGiven,
+        actionableItems,
       },
       forward: {
         keepDoing: [keepDoing1, keepDoing2].filter(Boolean),
         tryDifferently,
         prepareBetter,
         improvedSignal,
+        planMade,
+        improvementGoals,
       },
       patterns: teamPatterns,
       overallRating,
+      teamEffectivenessScore,
+      stressLevel,
+      energyLevel,
       timestamp: new Date(),
     };
 

@@ -25,14 +25,20 @@ interface CompassCheckResults {
     unsettledReason: string;
     weightLevel: string;
     affecting: string;
+    moralDistressLevel: number; // 1-10 scale
+    residueIntensity: number; // 1-10 scale
   };
   values: {
     challengedValues: string[];
     topValue: string;
     whyMatters: string;
+    valuesConflictCount: number; // Number of conflicting values
+    valuesAlignmentScore: number; // 1-10 scale
   };
   roleClarity: {
     challengeReason: string;
+    roleConfusionLevel: number; // 1-10 scale (lower is better)
+    clarityGained: number; // 1-10 scale
   };
   ethicalComplexity: {
     professionalObligation: string;
@@ -40,21 +46,36 @@ interface CompassCheckResults {
     legitimatelyHard: string;
     choice: string;
     alternativeCost: string;
+    complexityScore: number; // 1-10 scale
+    decisionDifficulty: number; // 1-10 scale
+    alternativesConsidered: number; // Count of alternatives
   };
   compassion: {
     selfForgiveness: string;
+    selfCompassionLevel: number; // 1-10 scale
+    forgivenessPracticed: boolean; // Was self-forgiveness practiced?
   };
   valuesRealignment: {
     biggerPicture: string;
     harmWithoutInterpreters: string;
     valuesIntact: string[];
+    realignmentSuccess: number; // 1-10 scale
+    intactValuesCount: number; // Number of values still intact
+    perspectiveShift: boolean; // Did perspective shift occur?
   };
   forwardWisdom: {
     taught: string;
     differentNext: string;
     supportNeeded: string;
     honorAction: string;
+    actionItemsIdentified: number; // Count of action items
+    supportSystemIdentified: boolean; // Was support identified?
+    planSpecificity: number; // 1-10 scale for plan clarity
   };
+  overallResolution: number; // 1-10 overall resolution score
+  moralClarity: number; // 1-10 moral clarity achieved
+  stressLevel: number;
+  energyLevel: number;
   timestamp: Date;
 }
 
@@ -95,6 +116,8 @@ const CompassCheck: React.FC<CompassCheckProps> = ({ onComplete, onClose }) => {
   const [differentNext, setDifferentNext] = useState('');
   const [supportNeeded, setSupportNeeded] = useState('');
   const [honorAction, setHonorAction] = useState('');
+  const [stressLevel, setStressLevel] = useState(5);
+  const [energyLevel, setEnergyLevel] = useState(5);
 
   const [showWisdom, setShowWisdom] = useState(false);
 
@@ -111,20 +134,117 @@ const CompassCheck: React.FC<CompassCheckProps> = ({ onComplete, onClose }) => {
   };
 
   const handleComplete = () => {
+    // Calculate moral distress level based on weight
+    const moralDistressLevel = 
+      weightLevel === 'light' ? 3 :
+      weightLevel === 'heavy' ? 7 :
+      weightLevel === 'crushing' ? 10 : 5;
+
+    // Calculate residue intensity based on affecting
+    const residueIntensity = 
+      affecting === 'sleep' ? 8 :
+      affecting === 'relationships' ? 7 :
+      affecting === 'decision-making' ? 6 :
+      affecting === 'self-perception' ? 9 :
+      affecting === 'all-of-above' ? 10 : 5;
+
+    // Count values conflicts
+    const valuesConflictCount = challengedValues.length;
+
+    // Calculate values alignment score
+    const valuesAlignmentScore = Math.max(1, 10 - valuesConflictCount);
+
+    // Calculate role confusion level
+    const roleConfusionLevel = 
+      challengeReason === 'legal-standards' ? 3 :
+      challengeReason === 'institutional-policies' ? 5 :
+      challengeReason === 'professional-guidelines' ? 4 :
+      challengeReason === 'lack-resources' ? 7 :
+      challengeReason === 'interpreter-shortage' ? 8 :
+      challengeReason === 'all-above' ? 9 : 6;
+
+    // Calculate clarity gained
+    const clarityGained = challengeReason ? 7 : 3;
+
+    // Calculate complexity score
+    const complexityScore = 
+      (professionalObligation && personalValues && legitimatelyHard === 'yes') ? 9 :
+      (professionalObligation && personalValues) ? 7 : 5;
+
+    // Calculate decision difficulty
+    const decisionDifficulty = 
+      legitimatelyHard === 'yes' ? 8 :
+      legitimatelyHard === 'maybe' ? 6 :
+      legitimatelyHard === 'no' ? 3 : 5;
+
+    // Count alternatives considered
+    const alternativesConsidered = alternativeCost ? 2 : 1;
+
+    // Calculate self-compassion level
+    const selfCompassionLevel = selfForgiveness ? 
+      (selfForgiveness.length > 50 ? 8 : 6) : 3;
+
+    // Check if forgiveness was practiced
+    const forgivenessPracticed = !!selfForgiveness && selfForgiveness.length > 20;
+
+    // Calculate realignment success
+    const realignmentSuccess = 
+      (biggerPicture ? 3 : 0) + 
+      (harmWithoutInterpreters ? 3 : 0) + 
+      (valuesIntact.length * 2);
+
+    // Count intact values
+    const intactValuesCount = valuesIntact.length;
+
+    // Check if perspective shift occurred
+    const perspectiveShift = !!(biggerPicture && harmWithoutInterpreters);
+
+    // Count action items identified
+    const actionItemsIdentified = 
+      (taught ? 1 : 0) + 
+      (differentNext ? 1 : 0) + 
+      (supportNeeded ? 1 : 0) + 
+      (honorAction ? 1 : 0);
+
+    // Check if support system was identified
+    const supportSystemIdentified = !!supportNeeded && supportNeeded.length > 10;
+
+    // Calculate plan specificity
+    const planSpecificity = 
+      (differentNext ? 4 : 0) + 
+      (supportNeeded ? 3 : 0) + 
+      (honorAction ? 3 : 0);
+
+    // Calculate overall resolution
+    const overallResolution = Math.round(
+      (10 - moralDistressLevel + clarityGained + realignmentSuccess + planSpecificity) / 4
+    );
+
+    // Calculate moral clarity achieved
+    const moralClarity = Math.round(
+      (clarityGained + valuesAlignmentScore + (10 - roleConfusionLevel) + realignmentSuccess) / 4
+    );
+
     const results: CompassCheckResults = {
       moralResidue: {
         situation,
         unsettledReason,
         weightLevel,
         affecting,
+        moralDistressLevel,
+        residueIntensity,
       },
       values: {
         challengedValues,
         topValue,
         whyMatters,
+        valuesConflictCount,
+        valuesAlignmentScore,
       },
       roleClarity: {
         challengeReason,
+        roleConfusionLevel,
+        clarityGained,
       },
       ethicalComplexity: {
         professionalObligation,
@@ -132,21 +252,36 @@ const CompassCheck: React.FC<CompassCheckProps> = ({ onComplete, onClose }) => {
         legitimatelyHard,
         choice,
         alternativeCost,
+        complexityScore,
+        decisionDifficulty,
+        alternativesConsidered,
       },
       compassion: {
         selfForgiveness,
+        selfCompassionLevel,
+        forgivenessPracticed,
       },
       valuesRealignment: {
         biggerPicture,
         harmWithoutInterpreters,
         valuesIntact,
+        realignmentSuccess,
+        intactValuesCount,
+        perspectiveShift,
       },
       forwardWisdom: {
         taught,
         differentNext,
         supportNeeded,
         honorAction,
+        actionItemsIdentified,
+        supportSystemIdentified,
+        planSpecificity,
       },
+      overallResolution,
+      moralClarity,
+      stressLevel,
+      energyLevel,
       timestamp: new Date(),
     };
 

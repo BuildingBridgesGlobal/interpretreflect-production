@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
 import {
   Shield,
   Brain,
@@ -1080,22 +1081,23 @@ function LandingPage({ onGetStarted }: LandingPageProps) {
                   onClick={handleSignup}
                   className="w-full py-3 rounded-xl font-semibold transition-all"
                   style={{
-                    backgroundColor: '#2D5F3F !important',
-                    color: '#FFFFFF !important',
-                    border: '2px solid #2D5F3F !important',
+                    background: 'linear-gradient(145deg, #6B8B60 0%, #5F7F55 100%)',
+                    color: '#FFFFFF',
+                    border: 'none',
                     display: 'block !important',
                     visibility: 'visible !important',
                     opacity: '1 !important',
                     minHeight: '48px',
                     cursor: 'pointer',
+                    boxShadow: '0 4px 15px rgba(107, 139, 96, 0.3)',
                   }}
                   onMouseEnter={(e) => {
-                    e.currentTarget.style.backgroundColor = '#1A4A2A';
-                    e.currentTarget.style.borderColor = '#1A4A2A';
+                    e.currentTarget.style.transform = 'translateY(-2px) scale(1.02)';
+                    e.currentTarget.style.boxShadow = '0 8px 25px rgba(107, 139, 96, 0.4)';
                   }}
                   onMouseLeave={(e) => {
-                    e.currentTarget.style.backgroundColor = '#2D5F3F';
-                    e.currentTarget.style.borderColor = '#2D5F3F';
+                    e.currentTarget.style.transform = 'translateY(0) scale(1)';
+                    e.currentTarget.style.boxShadow = '0 4px 15px rgba(107, 139, 96, 0.3)';
                   }}
                   aria-label="Sign up for Essential plan for $12 per month"
                 >
@@ -1109,70 +1111,75 @@ function LandingPage({ onGetStarted }: LandingPageProps) {
 
             {/* Professional Plan */}
             <div
-              className="rounded-2xl p-8 relative transform scale-105"
+              className="rounded-2xl p-8 relative"
               style={{
-                background: 'linear-gradient(145deg, #6B8B60 0%, #5F7F55 100%)',
-                boxShadow: '0 10px 30px rgba(107, 139, 96, 0.3)',
+                backgroundColor: '#FFFFFF',
+                border: '2px solid #A8C09A',
+                boxShadow: '0 4px 15px rgba(0, 0, 0, 0.05)',
               }}
             >
-              <div className="absolute -top-4 left-1/2 transform -translate-x-1/2">
+              <div className="absolute -top-3 left-1/2 transform -translate-x-1/2">
                 <span
-                  className="px-4 py-1 rounded-full text-sm font-semibold"
+                  className="px-4 py-1 rounded-full text-xs font-semibold"
                   style={{
                     backgroundColor: '#FAF9F6',
                     color: '#6B8B60',
+                    border: '1px solid #A8C09A',
                   }}
                 >
                   LAUNCHING Q2 2025
                 </span>
               </div>
-              <h3 className="text-2xl font-bold mb-2" style={{ color: '#FFFFFF' }}>
+              <h3 className="text-2xl font-bold mb-2 mt-2" style={{ color: '#1A1A1A' }}>
                 Professional
               </h3>
-              <p className="mb-6" style={{ color: 'rgba(255, 255, 255, 0.9)' }}>
+              <p className="mb-6" style={{ color: '#5A5A5A' }}>
                 Advance your practice
               </p>
-              <div className="mb-6">
-                <span className="text-4xl font-bold" style={{ color: '#FFFFFF' }}>
+              <div className="mb-2">
+                <span className="text-4xl font-bold" style={{ color: '#1A1A1A' }}>
                   $24
                 </span>
-                <span style={{ color: 'rgba(255, 255, 255, 0.9)' }}>/month</span>
+                <span style={{ color: '#5A5A5A' }}>/month</span>
               </div>
+              <p className="text-sm mb-6 font-medium" style={{ color: '#6B8B60' }}>
+                Professional pricing
+              </p>
               <ul className="space-y-3 mb-8">
                 <li className="flex items-start">
                   <CheckCircle
                     className="h-5 w-5 mr-2 mt-0.5 flex-shrink-0"
-                    style={{ color: '#FFFFFF' }}
+                    style={{ color: '#A8C09A' }}
                   />
-                  <span style={{ color: '#FFFFFF' }}>Everything in Essential</span>
+                  <span style={{ color: '#5A5A5A' }}>Everything in Essential</span>
                 </li>
                 <li className="flex items-start">
                   <CheckCircle
                     className="h-5 w-5 mr-2 mt-0.5 flex-shrink-0"
-                    style={{ color: '#FFFFFF' }}
+                    style={{ color: '#A8C09A' }}
                   />
-                  <span style={{ color: '#FFFFFF' }}>Elya AI Companion</span>
+                  <span style={{ color: '#5A5A5A' }}>Elya AI Companion</span>
                 </li>
                 <li className="flex items-start">
                   <CheckCircle
                     className="h-5 w-5 mr-2 mt-0.5 flex-shrink-0"
-                    style={{ color: '#FFFFFF' }}
+                    style={{ color: '#A8C09A' }}
                   />
-                  <span style={{ color: '#FFFFFF' }}>Advanced analytics</span>
+                  <span style={{ color: '#5A5A5A' }}>Advanced analytics</span>
                 </li>
                 <li className="flex items-start">
                   <CheckCircle
                     className="h-5 w-5 mr-2 mt-0.5 flex-shrink-0"
-                    style={{ color: '#FFFFFF' }}
+                    style={{ color: '#A8C09A' }}
                   />
-                  <span style={{ color: '#FFFFFF' }}>CEU credits included</span>
+                  <span style={{ color: '#5A5A5A' }}>CEU credits included</span>
                 </li>
                 <li className="flex items-start">
                   <CheckCircle
                     className="h-5 w-5 mr-2 mt-0.5 flex-shrink-0"
-                    style={{ color: '#FFFFFF' }}
+                    style={{ color: '#A8C09A' }}
                   />
-                  <span style={{ color: '#FFFFFF' }}>Priority support</span>
+                  <span style={{ color: '#5A5A5A' }}>Priority support</span>
                 </li>
               </ul>
               <div className="mt-6" style={{ minHeight: '60px' }}>
@@ -1180,8 +1187,9 @@ function LandingPage({ onGetStarted }: LandingPageProps) {
                   disabled
                   className="w-full py-3 rounded-xl font-semibold"
                   style={{
-                    backgroundColor: 'rgba(255, 255, 255, 0.5) !important',
-                    color: '#6B8B60 !important',
+                    backgroundColor: '#FFFFFF !important',
+                    color: '#1A1A1A !important',
+                    border: '2px solid #D0D0D0 !important',
                     display: 'block !important',
                     visibility: 'visible !important',
                     opacity: '0.5 !important',
@@ -1192,7 +1200,7 @@ function LandingPage({ onGetStarted }: LandingPageProps) {
                   Coming Soon
                 </button>
               </div>
-              <p className="text-xs text-center mt-3" style={{ color: 'rgba(255, 255, 255, 0.7)' }}>
+              <p className="text-xs text-center mt-3" style={{ color: '#5A5A5A' }}>
                 Available Q2 2025
               </p>
             </div>
@@ -1202,7 +1210,7 @@ function LandingPage({ onGetStarted }: LandingPageProps) {
               className="rounded-2xl p-8 relative"
               style={{
                 backgroundColor: '#FFFFFF',
-                border: '2px solid #E8E5E0',
+                border: '2px solid #A8C09A',
               }}
             >
               <div className="absolute -top-3 left-1/2 transform -translate-x-1/2">
@@ -1211,7 +1219,7 @@ function LandingPage({ onGetStarted }: LandingPageProps) {
                   style={{
                     backgroundColor: '#FAF9F6',
                     color: '#6B8B60',
-                    border: '1px solid #E8E5E0',
+                    border: '1px solid #A8C09A',
                   }}
                 >
                   COMING SOON
@@ -1425,34 +1433,34 @@ function LandingPage({ onGetStarted }: LandingPageProps) {
           <div className="border-b border-gray-700 pb-8 mb-8">
             <div className="flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">
               <div className="flex items-center space-x-8">
-                <a
-                  href="#"
+                <Link
+                  to="/privacy"
                   className="text-sm hover:text-white transition-colors"
                   style={{ color: 'rgba(255, 255, 255, 0.7)' }}
                 >
                   Privacy Policy
-                </a>
-                <a
-                  href="#"
+                </Link>
+                <Link
+                  to="/terms"
                   className="text-sm hover:text-white transition-colors"
                   style={{ color: 'rgba(255, 255, 255, 0.7)' }}
                 >
                   Terms of Service
-                </a>
-                <a
-                  href="#"
+                </Link>
+                <Link
+                  to="/contact"
                   className="text-sm hover:text-white transition-colors"
                   style={{ color: 'rgba(255, 255, 255, 0.7)' }}
                 >
                   Contact
-                </a>
-                <a
-                  href="#"
+                </Link>
+                <Link
+                  to="/about"
                   className="text-sm hover:text-white transition-colors"
                   style={{ color: 'rgba(255, 255, 255, 0.7)' }}
                 >
                   About
-                </a>
+                </Link>
               </div>
             </div>
           </div>

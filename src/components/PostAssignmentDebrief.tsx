@@ -548,7 +548,7 @@ const PostAssignmentDebrief: React.FC<PostAssignmentDebriefProps> = ({ onComplet
 
               <div
                 className="mt-6 p-4 rounded-xl"
-                style={{ backgroundColor: 'rgba(168, 192, 154, 0.1)' }}
+                style={{ backgroundColor: 'rgba(92, 127, 79, 0.1)' }}
               >
                 <p className="text-sm" style={{ color: '#2D5F3F' }}>
                   <strong>Impact:</strong> 90 seconds of expressive writing reduces cortisol by 23%
@@ -695,7 +695,7 @@ const PostAssignmentDebrief: React.FC<PostAssignmentDebriefProps> = ({ onComplet
 
               <div
                 className="p-4 rounded-xl"
-                style={{ backgroundColor: 'rgba(168, 192, 154, 0.1)' }}
+                style={{ backgroundColor: 'rgba(92, 127, 79, 0.1)' }}
               >
                 <p className="text-sm" style={{ color: '#2D5F3F' }}>
                   <strong>Science:</strong> Naming emotions with precision reduces their intensity
@@ -812,9 +812,9 @@ const PostAssignmentDebrief: React.FC<PostAssignmentDebriefProps> = ({ onComplet
             <div className="text-center mb-8">
               <div
                 className="inline-flex items-center justify-center w-20 h-20 rounded-full mb-4"
-                style={{ backgroundColor: 'rgba(168, 192, 154, 0.2)' }}
+                style={{ backgroundColor: 'rgba(92, 127, 79, 0.2)' }}
               >
-                <Shield className="h-10 w-10" style={{ color: '#A8C09A' }} />
+                <Shield className="h-10 w-10" style={{ color: '#5C7F4F' }} />
               </div>
               <h2 className="text-2xl font-bold mb-2" style={{ color: '#1A1A1A' }}>
                 Boundary Restoration
@@ -878,7 +878,7 @@ const PostAssignmentDebrief: React.FC<PostAssignmentDebriefProps> = ({ onComplet
                       </h4>
                       <div
                         className="p-4 rounded-lg"
-                        style={{ backgroundColor: 'rgba(168, 192, 154, 0.1)' }}
+                        style={{ backgroundColor: 'rgba(92, 127, 79, 0.1)' }}
                       >
                         <p className="italic" style={{ color: '#2D5F3F' }}>
                           "I provided professional service with skill and integrity. This assignment
@@ -901,7 +901,7 @@ const PostAssignmentDebrief: React.FC<PostAssignmentDebriefProps> = ({ onComplet
                       </h4>
                       <div
                         className="p-4 rounded-lg"
-                        style={{ backgroundColor: 'rgba(168, 192, 154, 0.1)' }}
+                        style={{ backgroundColor: 'rgba(92, 127, 79, 0.1)' }}
                       >
                         <p className="italic" style={{ color: '#2D5F3F' }}>
                           "I am [your name], not the stories I interpret."
@@ -916,7 +916,7 @@ const PostAssignmentDebrief: React.FC<PostAssignmentDebriefProps> = ({ onComplet
                     onClick={() => setBoundaryComplete(true)}
                     className="w-full px-6 py-3 rounded-xl font-semibold transition-all"
                     style={{
-                      background: 'linear-gradient(145deg, #A8C09A 0%, #8FA080 100%)',
+                      background: 'linear-gradient(145deg, #5C7F4F 0%, #8FA080 100%)',
                       color: '#FFFFFF',
                     }}
                   >
@@ -1175,7 +1175,7 @@ const PostAssignmentDebrief: React.FC<PostAssignmentDebriefProps> = ({ onComplet
                   ? 'bg-gray-100 text-gray-400 cursor-not-allowed'
                   : 'bg-white border-2 hover:bg-gray-50'
               }`}
-              style={{ borderColor: currentStep === 0 ? '#E8E5E0' : '#A8C09A' }}
+              style={{ borderColor: currentStep === 0 ? '#E8E5E0' : '#5C7F4F' }}
             >
               <ChevronLeft className="h-4 w-4 mr-2" />
               Previous
@@ -1186,7 +1186,7 @@ const PostAssignmentDebrief: React.FC<PostAssignmentDebriefProps> = ({ onComplet
                 onClick={() => setCurrentStep(currentStep + 1)}
                 className="px-6 py-3 rounded-xl font-semibold transition-all flex items-center"
                 style={{
-                  background: 'linear-gradient(145deg, #A8C09A 0%, #8FA080 100%)',
+                  background: 'linear-gradient(145deg, #5C7F4F 0%, #8FA080 100%)',
                   color: '#FFFFFF',
                 }}
               >

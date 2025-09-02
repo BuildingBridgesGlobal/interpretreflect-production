@@ -321,7 +321,7 @@ export const BurnoutAssessment: React.FC<AssessmentProps> = ({ isOpen, onClose, 
               className="h-full transition-all duration-500 ease-out rounded-full"
               style={{
                 width: `${progress}%`,
-                background: 'linear-gradient(90deg, #A8C09A 0%, #6B8B60 100%)',
+                background: 'linear-gradient(90deg, #5C7F4F 0%, #6B8B60 100%)',
               }}
             />
           </div>
@@ -356,8 +356,8 @@ export const BurnoutAssessment: React.FC<AssessmentProps> = ({ isOpen, onClose, 
                     border: '2px solid #E8E5E0',
                   }}
                   onMouseEnter={(e) => {
-                    e.currentTarget.style.borderColor = '#A8C09A';
-                    e.currentTarget.style.boxShadow = '0 4px 12px rgba(168, 192, 154, 0.2)';
+                    e.currentTarget.style.borderColor = '#5C7F4F';
+                    e.currentTarget.style.boxShadow = '0 4px 12px rgba(92, 127, 79, 0.2)';
                   }}
                   onMouseLeave={(e) => {
                     e.currentTarget.style.borderColor = '#E8E5E0';
@@ -468,7 +468,7 @@ const AssessmentResults: React.FC<{
               <div
                 key={index}
                 className="flex items-start p-4 rounded-lg"
-                style={{ backgroundColor: 'rgba(168, 192, 154, 0.1)' }}
+                style={{ backgroundColor: 'rgba(92, 127, 79, 0.1)' }}
               >
                 <AlertTriangle
                   className="h-5 w-5 mt-0.5 mr-3 flex-shrink-0"

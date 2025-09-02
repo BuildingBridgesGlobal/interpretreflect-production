@@ -90,7 +90,7 @@ function LandingPage({ onGetStarted }: LandingPageProps) {
         style={{
           backgroundColor: 'rgba(250, 249, 246, 0.95)',
           backdropFilter: 'blur(10px)',
-          borderBottom: '1px solid rgba(168, 192, 154, 0.2)',
+          borderBottom: '1px solid rgba(92, 127, 79, 0.2)',
         }}
       >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -128,8 +128,8 @@ function LandingPage({ onGetStarted }: LandingPageProps) {
                   border: '2px solid transparent',
                 }}
                 onMouseEnter={(e) => {
-                  e.currentTarget.style.backgroundColor = 'rgba(168, 192, 154, 0.1)';
-                  e.currentTarget.style.color = '#6B8B60';
+                  e.currentTarget.style.backgroundColor = 'rgba(92, 127, 79, 0.1)';
+                  e.currentTarget.style.color = '#4A6B3E';
                 }}
                 onMouseLeave={(e) => {
                   e.currentTarget.style.backgroundColor = 'transparent';
@@ -185,7 +185,7 @@ function LandingPage({ onGetStarted }: LandingPageProps) {
           <div
             className="absolute top-20 left-20 w-96 h-96 rounded-full"
             style={{
-              background: 'radial-gradient(circle, #A8C09A 0%, transparent 70%)',
+              background: 'radial-gradient(circle, #5C7F4F 0%, transparent 70%)',
               animation: 'pulse 8s ease-in-out infinite',
             }}
           ></div>
@@ -207,8 +207,8 @@ function LandingPage({ onGetStarted }: LandingPageProps) {
                 border: '1px solid rgba(107, 139, 96, 0.3)',
               }}
             >
-              <Brain className="h-4 w-4 mr-2" style={{ color: '#6B8B60' }} />
-              <span className="text-sm font-semibold" style={{ color: '#6B8B60' }}>
+              <Brain className="h-4 w-4 mr-2" style={{ color: '#4A6B3E' }} />
+              <span className="text-sm font-semibold" style={{ color: '#4A6B3E' }}>
                 Based on neuroscience research from leading burnout studies
               </span>
             </div>
@@ -297,7 +297,7 @@ function LandingPage({ onGetStarted }: LandingPageProps) {
                   e.currentTarget.style.backgroundColor = '#F8FBF6';
                 }}
                 onMouseLeave={(e) => {
-                  e.currentTarget.style.borderColor = '#6B8B60';
+                  e.currentTarget.style.borderColor = '#4A6B3E';
                   e.currentTarget.style.backgroundColor = '#FFFFFF';
                 }}
                 onFocus={(e) => {
@@ -317,7 +317,7 @@ function LandingPage({ onGetStarted }: LandingPageProps) {
             <p className="text-sm mt-4 mb-2" style={{ color: '#5A5A5A' }}>
               $12/month • Cancel anytime
             </p>
-            <p className="text-xs" style={{ color: '#6B8B60', fontStyle: 'italic' }}>
+            <p className="text-xs" style={{ color: '#4A6B3E', fontStyle: 'italic' }}>
               Scientifically-grounded assessment • Completely confidential
             </p>
 
@@ -326,7 +326,7 @@ function LandingPage({ onGetStarted }: LandingPageProps) {
               <p
                 className="text-base font-medium mb-2"
                 style={{
-                  color: '#6B8B60',
+                  color: '#4A6B3E',
                   letterSpacing: '0.5px',
                 }}
               >
@@ -475,9 +475,9 @@ function LandingPage({ onGetStarted }: LandingPageProps) {
                 border: '2px solid transparent',
               }}
               onMouseEnter={(e) => {
-                e.currentTarget.style.borderColor = '#A8C09A';
+                e.currentTarget.style.borderColor = '#5C7F4F';
                 e.currentTarget.style.transform = 'translateY(-4px)';
-                e.currentTarget.style.boxShadow = '0 12px 30px rgba(168, 192, 154, 0.25)';
+                e.currentTarget.style.boxShadow = '0 12px 30px rgba(92, 127, 79, 0.25)';
               }}
               onMouseLeave={(e) => {
                 e.currentTarget.style.borderColor = 'transparent';
@@ -528,7 +528,7 @@ function LandingPage({ onGetStarted }: LandingPageProps) {
                 <li className="flex items-start">
                   <CheckCircle
                     className="h-5 w-5 mr-2 mt-0.5 flex-shrink-0"
-                    style={{ color: '#A8C09A' }}
+                    style={{ color: '#5C7F4F' }}
                   />
                   <span className="text-sm" style={{ color: '#3A3A3A' }}>
                     Boundary setting exercises
@@ -537,7 +537,7 @@ function LandingPage({ onGetStarted }: LandingPageProps) {
                 <li className="flex items-start">
                   <CheckCircle
                     className="h-5 w-5 mr-2 mt-0.5 flex-shrink-0"
-                    style={{ color: '#A8C09A' }}
+                    style={{ color: '#5C7F4F' }}
                   />
                   <span className="text-sm" style={{ color: '#3A3A3A' }}>
                     Professional growth tracking
@@ -558,9 +558,9 @@ function LandingPage({ onGetStarted }: LandingPageProps) {
                 border: '2px solid transparent',
               }}
               onMouseEnter={(e) => {
-                e.currentTarget.style.borderColor = '#A8C09A';
+                e.currentTarget.style.borderColor = '#5C7F4F';
                 e.currentTarget.style.transform = 'translateY(-4px)';
-                e.currentTarget.style.boxShadow = '0 12px 30px rgba(168, 192, 154, 0.25)';
+                e.currentTarget.style.boxShadow = '0 12px 30px rgba(92, 127, 79, 0.25)';
               }}
               onMouseLeave={(e) => {
                 e.currentTarget.style.borderColor = 'transparent';
@@ -594,7 +594,7 @@ function LandingPage({ onGetStarted }: LandingPageProps) {
                 <li className="flex items-start">
                   <CheckCircle
                     className="h-5 w-5 mr-2 mt-0.5 flex-shrink-0"
-                    style={{ color: '#A8C09A' }}
+                    style={{ color: '#5C7F4F' }}
                   />
                   <span className="text-sm" style={{ color: '#3A3A3A' }}>
                     2-minute breathing exercises
@@ -603,7 +603,7 @@ function LandingPage({ onGetStarted }: LandingPageProps) {
                 <li className="flex items-start">
                   <CheckCircle
                     className="h-5 w-5 mr-2 mt-0.5 flex-shrink-0"
-                    style={{ color: '#A8C09A' }}
+                    style={{ color: '#5C7F4F' }}
                   />
                   <span className="text-sm" style={{ color: '#3A3A3A' }}>
                     Body tension release
@@ -612,7 +612,7 @@ function LandingPage({ onGetStarted }: LandingPageProps) {
                 <li className="flex items-start">
                   <CheckCircle
                     className="h-5 w-5 mr-2 mt-0.5 flex-shrink-0"
-                    style={{ color: '#A8C09A' }}
+                    style={{ color: '#5C7F4F' }}
                   />
                   <span className="text-sm" style={{ color: '#3A3A3A' }}>
                     Sensory grounding tools
@@ -633,9 +633,9 @@ function LandingPage({ onGetStarted }: LandingPageProps) {
                 border: '2px solid transparent',
               }}
               onMouseEnter={(e) => {
-                e.currentTarget.style.borderColor = '#A8C09A';
+                e.currentTarget.style.borderColor = '#5C7F4F';
                 e.currentTarget.style.transform = 'translateY(-4px)';
-                e.currentTarget.style.boxShadow = '0 12px 30px rgba(168, 192, 154, 0.25)';
+                e.currentTarget.style.boxShadow = '0 12px 30px rgba(92, 127, 79, 0.25)';
               }}
               onMouseLeave={(e) => {
                 e.currentTarget.style.borderColor = 'transparent';
@@ -669,7 +669,7 @@ function LandingPage({ onGetStarted }: LandingPageProps) {
                 <li className="flex items-start">
                   <CheckCircle
                     className="h-5 w-5 mr-2 mt-0.5 flex-shrink-0"
-                    style={{ color: '#A8C09A' }}
+                    style={{ color: '#5C7F4F' }}
                   />
                   <span className="text-sm" style={{ color: '#3A3A3A' }}>
                     Debrief difficult sessions
@@ -678,7 +678,7 @@ function LandingPage({ onGetStarted }: LandingPageProps) {
                 <li className="flex items-start">
                   <CheckCircle
                     className="h-5 w-5 mr-2 mt-0.5 flex-shrink-0"
-                    style={{ color: '#A8C09A' }}
+                    style={{ color: '#5C7F4F' }}
                   />
                   <span className="text-sm" style={{ color: '#3A3A3A' }}>
                     Emotional processing support
@@ -687,7 +687,7 @@ function LandingPage({ onGetStarted }: LandingPageProps) {
                 <li className="flex items-start">
                   <CheckCircle
                     className="h-5 w-5 mr-2 mt-0.5 flex-shrink-0"
-                    style={{ color: '#A8C09A' }}
+                    style={{ color: '#5C7F4F' }}
                   />
                   <span className="text-sm" style={{ color: '#3A3A3A' }}>
                     Personalized wellness tips
@@ -705,9 +705,9 @@ function LandingPage({ onGetStarted }: LandingPageProps) {
                 border: '2px solid transparent',
               }}
               onMouseEnter={(e) => {
-                e.currentTarget.style.borderColor = '#A8C09A';
+                e.currentTarget.style.borderColor = '#5C7F4F';
                 e.currentTarget.style.transform = 'translateY(-4px)';
-                e.currentTarget.style.boxShadow = '0 12px 30px rgba(168, 192, 154, 0.25)';
+                e.currentTarget.style.boxShadow = '0 12px 30px rgba(92, 127, 79, 0.25)';
               }}
               onMouseLeave={(e) => {
                 e.currentTarget.style.borderColor = 'transparent';
@@ -737,7 +737,7 @@ function LandingPage({ onGetStarted }: LandingPageProps) {
                 <li className="flex items-start">
                   <CheckCircle
                     className="h-5 w-5 mr-2 mt-0.5 flex-shrink-0"
-                    style={{ color: '#A8C09A' }}
+                    style={{ color: '#5C7F4F' }}
                   />
                   <span className="text-sm" style={{ color: '#3A3A3A' }}>
                     Stress pattern analysis
@@ -746,7 +746,7 @@ function LandingPage({ onGetStarted }: LandingPageProps) {
                 <li className="flex items-start">
                   <CheckCircle
                     className="h-5 w-5 mr-2 mt-0.5 flex-shrink-0"
-                    style={{ color: '#A8C09A' }}
+                    style={{ color: '#5C7F4F' }}
                   />
                   <span className="text-sm" style={{ color: '#3A3A3A' }}>
                     Resilience metrics
@@ -755,7 +755,7 @@ function LandingPage({ onGetStarted }: LandingPageProps) {
                 <li className="flex items-start">
                   <CheckCircle
                     className="h-5 w-5 mr-2 mt-0.5 flex-shrink-0"
-                    style={{ color: '#A8C09A' }}
+                    style={{ color: '#5C7F4F' }}
                   />
                   <span className="text-sm" style={{ color: '#3A3A3A' }}>
                     Progress celebrations
@@ -774,9 +774,9 @@ function LandingPage({ onGetStarted }: LandingPageProps) {
                   border: '2px solid transparent',
                 }}
                 onMouseEnter={(e) => {
-                  e.currentTarget.style.borderColor = '#A8C09A';
+                  e.currentTarget.style.borderColor = '#5C7F4F';
                   e.currentTarget.style.transform = 'translateY(-4px)';
-                  e.currentTarget.style.boxShadow = '0 12px 30px rgba(168, 192, 154, 0.25)';
+                  e.currentTarget.style.boxShadow = '0 12px 30px rgba(92, 127, 79, 0.25)';
                 }}
                 onMouseLeave={(e) => {
                   e.currentTarget.style.borderColor = 'transparent';
@@ -802,7 +802,7 @@ function LandingPage({ onGetStarted }: LandingPageProps) {
                   <li className="flex items-start">
                     <CheckCircle
                       className="h-5 w-5 mr-2 mt-0.5 flex-shrink-0"
-                      style={{ color: '#A8C09A' }}
+                      style={{ color: '#5C7F4F' }}
                     />
                     <span className="text-sm" style={{ color: '#3A3A3A' }}>
                       Self-awareness exercises
@@ -811,7 +811,7 @@ function LandingPage({ onGetStarted }: LandingPageProps) {
                   <li className="flex items-start">
                     <CheckCircle
                       className="h-5 w-5 mr-2 mt-0.5 flex-shrink-0"
-                      style={{ color: '#A8C09A' }}
+                      style={{ color: '#5C7F4F' }}
                     />
                     <span className="text-sm" style={{ color: '#3A3A3A' }}>
                       Empathy regulation tools
@@ -820,7 +820,7 @@ function LandingPage({ onGetStarted }: LandingPageProps) {
                   <li className="flex items-start">
                     <CheckCircle
                       className="h-5 w-5 mr-2 mt-0.5 flex-shrink-0"
-                      style={{ color: '#A8C09A' }}
+                      style={{ color: '#5C7F4F' }}
                     />
                     <span className="text-sm" style={{ color: '#3A3A3A' }}>
                       Cultural sensitivity training
@@ -838,9 +838,9 @@ function LandingPage({ onGetStarted }: LandingPageProps) {
                   border: '2px solid transparent',
                 }}
                 onMouseEnter={(e) => {
-                  e.currentTarget.style.borderColor = '#A8C09A';
+                  e.currentTarget.style.borderColor = '#5C7F4F';
                   e.currentTarget.style.transform = 'translateY(-4px)';
-                  e.currentTarget.style.boxShadow = '0 12px 30px rgba(168, 192, 154, 0.25)';
+                  e.currentTarget.style.boxShadow = '0 12px 30px rgba(92, 127, 79, 0.25)';
                 }}
                 onMouseLeave={(e) => {
                   e.currentTarget.style.borderColor = 'transparent';
@@ -866,7 +866,7 @@ function LandingPage({ onGetStarted }: LandingPageProps) {
                   <li className="flex items-start">
                     <CheckCircle
                       className="h-5 w-5 mr-2 mt-0.5 flex-shrink-0"
-                      style={{ color: '#A8C09A' }}
+                      style={{ color: '#5C7F4F' }}
                     />
                     <span className="text-sm" style={{ color: '#3A3A3A' }}>
                       Anonymous peer forums
@@ -875,7 +875,7 @@ function LandingPage({ onGetStarted }: LandingPageProps) {
                   <li className="flex items-start">
                     <CheckCircle
                       className="h-5 w-5 mr-2 mt-0.5 flex-shrink-0"
-                      style={{ color: '#A8C09A' }}
+                      style={{ color: '#5C7F4F' }}
                     />
                     <span className="text-sm" style={{ color: '#3A3A3A' }}>
                       Monthly wellness circles
@@ -884,7 +884,7 @@ function LandingPage({ onGetStarted }: LandingPageProps) {
                   <li className="flex items-start">
                     <CheckCircle
                       className="h-5 w-5 mr-2 mt-0.5 flex-shrink-0"
-                      style={{ color: '#A8C09A' }}
+                      style={{ color: '#5C7F4F' }}
                     />
                     <span className="text-sm" style={{ color: '#3A3A3A' }}>
                       Mentor matching program
@@ -916,7 +916,7 @@ function LandingPage({ onGetStarted }: LandingPageProps) {
               <div
                 className="inline-block p-4 rounded-full mb-4"
                 style={{
-                  backgroundColor: 'rgba(168, 192, 154, 0.1)',
+                  backgroundColor: 'rgba(92, 127, 79, 0.1)',
                 }}
               >
                 <Brain className="h-8 w-8" style={{ color: '#2D5F3F' }} />
@@ -934,7 +934,7 @@ function LandingPage({ onGetStarted }: LandingPageProps) {
               <div
                 className="inline-block p-4 rounded-full mb-4"
                 style={{
-                  backgroundColor: 'rgba(168, 192, 154, 0.1)',
+                  backgroundColor: 'rgba(92, 127, 79, 0.1)',
                 }}
               >
                 <Clock className="h-8 w-8" style={{ color: '#2D5F3F' }} />
@@ -951,7 +951,7 @@ function LandingPage({ onGetStarted }: LandingPageProps) {
               <div
                 className="inline-block p-4 rounded-full mb-4"
                 style={{
-                  backgroundColor: 'rgba(168, 192, 154, 0.1)',
+                  backgroundColor: 'rgba(92, 127, 79, 0.1)',
                 }}
               >
                 <Shield className="h-8 w-8" style={{ color: '#2D5F3F' }} />
@@ -969,7 +969,7 @@ function LandingPage({ onGetStarted }: LandingPageProps) {
               <div
                 className="inline-block p-4 rounded-full mb-4"
                 style={{
-                  backgroundColor: 'rgba(168, 192, 154, 0.1)',
+                  backgroundColor: 'rgba(92, 127, 79, 0.1)',
                 }}
               >
                 <Award className="h-8 w-8" style={{ color: '#2D5F3F' }} />
@@ -1015,14 +1015,14 @@ function LandingPage({ onGetStarted }: LandingPageProps) {
               className="rounded-2xl p-8"
               style={{
                 backgroundColor: '#FFFFFF',
-                border: '2px solid #A8C09A',
+                border: '2px solid #5C7F4F',
               }}
             >
               <div
                 className="inline-block px-3 py-1 rounded-full text-xs font-semibold mb-4"
                 style={{
-                  backgroundColor: 'rgba(168, 192, 154, 0.1)',
-                  color: '#6B8B60',
+                  backgroundColor: 'rgba(92, 127, 79, 0.1)',
+                  color: '#4A6B3E',
                 }}
               >
                 BETA ACCESS
@@ -1039,35 +1039,35 @@ function LandingPage({ onGetStarted }: LandingPageProps) {
                 </span>
                 <span style={{ color: '#5A5A5A' }}>/month</span>
               </div>
-              <p className="text-sm mb-6 font-medium" style={{ color: '#6B8B60' }}>
+              <p className="text-sm mb-6 font-medium" style={{ color: '#4A6B3E' }}>
                 Early adopter pricing
               </p>
               <ul className="space-y-3 mb-8">
                 <li className="flex items-start">
                   <CheckCircle
                     className="h-5 w-5 mr-2 mt-0.5 flex-shrink-0"
-                    style={{ color: '#A8C09A' }}
+                    style={{ color: '#5C7F4F' }}
                   />
                   <span style={{ color: '#5A5A5A' }}>Unlimited reflections</span>
                 </li>
                 <li className="flex items-start">
                   <CheckCircle
                     className="h-5 w-5 mr-2 mt-0.5 flex-shrink-0"
-                    style={{ color: '#A8C09A' }}
+                    style={{ color: '#5C7F4F' }}
                   />
                   <span style={{ color: '#5A5A5A' }}>All quick reset techniques</span>
                 </li>
                 <li className="flex items-start">
                   <CheckCircle
                     className="h-5 w-5 mr-2 mt-0.5 flex-shrink-0"
-                    style={{ color: '#A8C09A' }}
+                    style={{ color: '#5C7F4F' }}
                   />
                   <span style={{ color: '#5A5A5A' }}>Growth tracking</span>
                 </li>
                 <li className="flex items-start">
                   <CheckCircle
                     className="h-5 w-5 mr-2 mt-0.5 flex-shrink-0"
-                    style={{ color: '#A8C09A' }}
+                    style={{ color: '#5C7F4F' }}
                   />
                   <span style={{ color: '#5A5A5A' }}>Email support</span>
                 </li>
@@ -1114,7 +1114,7 @@ function LandingPage({ onGetStarted }: LandingPageProps) {
               className="rounded-2xl p-8 relative"
               style={{
                 backgroundColor: '#FFFFFF',
-                border: '2px solid #A8C09A',
+                border: '2px solid #5C7F4F',
                 boxShadow: '0 4px 15px rgba(0, 0, 0, 0.05)',
               }}
             >
@@ -1123,8 +1123,8 @@ function LandingPage({ onGetStarted }: LandingPageProps) {
                   className="px-4 py-1 rounded-full text-xs font-semibold"
                   style={{
                     backgroundColor: '#FAF9F6',
-                    color: '#6B8B60',
-                    border: '1px solid #A8C09A',
+                    color: '#4A6B3E',
+                    border: '1px solid #5C7F4F',
                   }}
                 >
                   LAUNCHING Q2 2025
@@ -1142,42 +1142,42 @@ function LandingPage({ onGetStarted }: LandingPageProps) {
                 </span>
                 <span style={{ color: '#5A5A5A' }}>/month</span>
               </div>
-              <p className="text-sm mb-6 font-medium" style={{ color: '#6B8B60' }}>
+              <p className="text-sm mb-6 font-medium" style={{ color: '#4A6B3E' }}>
                 Professional pricing
               </p>
               <ul className="space-y-3 mb-8">
                 <li className="flex items-start">
                   <CheckCircle
                     className="h-5 w-5 mr-2 mt-0.5 flex-shrink-0"
-                    style={{ color: '#A8C09A' }}
+                    style={{ color: '#5C7F4F' }}
                   />
                   <span style={{ color: '#5A5A5A' }}>Everything in Essential</span>
                 </li>
                 <li className="flex items-start">
                   <CheckCircle
                     className="h-5 w-5 mr-2 mt-0.5 flex-shrink-0"
-                    style={{ color: '#A8C09A' }}
+                    style={{ color: '#5C7F4F' }}
                   />
                   <span style={{ color: '#5A5A5A' }}>Elya AI Companion</span>
                 </li>
                 <li className="flex items-start">
                   <CheckCircle
                     className="h-5 w-5 mr-2 mt-0.5 flex-shrink-0"
-                    style={{ color: '#A8C09A' }}
+                    style={{ color: '#5C7F4F' }}
                   />
                   <span style={{ color: '#5A5A5A' }}>Advanced analytics</span>
                 </li>
                 <li className="flex items-start">
                   <CheckCircle
                     className="h-5 w-5 mr-2 mt-0.5 flex-shrink-0"
-                    style={{ color: '#A8C09A' }}
+                    style={{ color: '#5C7F4F' }}
                   />
                   <span style={{ color: '#5A5A5A' }}>CEU credits included</span>
                 </li>
                 <li className="flex items-start">
                   <CheckCircle
                     className="h-5 w-5 mr-2 mt-0.5 flex-shrink-0"
-                    style={{ color: '#A8C09A' }}
+                    style={{ color: '#5C7F4F' }}
                   />
                   <span style={{ color: '#5A5A5A' }}>Priority support</span>
                 </li>
@@ -1210,7 +1210,7 @@ function LandingPage({ onGetStarted }: LandingPageProps) {
               className="rounded-2xl p-8 relative"
               style={{
                 backgroundColor: '#FFFFFF',
-                border: '2px solid #A8C09A',
+                border: '2px solid #5C7F4F',
               }}
             >
               <div className="absolute -top-3 left-1/2 transform -translate-x-1/2">
@@ -1218,8 +1218,8 @@ function LandingPage({ onGetStarted }: LandingPageProps) {
                   className="px-4 py-1 rounded-full text-xs font-semibold"
                   style={{
                     backgroundColor: '#FAF9F6',
-                    color: '#6B8B60',
-                    border: '1px solid #A8C09A',
+                    color: '#4A6B3E',
+                    border: '1px solid #5C7F4F',
                   }}
                 >
                   COMING SOON
@@ -1251,35 +1251,35 @@ function LandingPage({ onGetStarted }: LandingPageProps) {
                 <li className="flex items-start">
                   <CheckCircle
                     className="h-5 w-5 mr-2 mt-0.5 flex-shrink-0"
-                    style={{ color: '#A8C09A' }}
+                    style={{ color: '#5C7F4F' }}
                   />
                   <span style={{ color: '#5A5A5A' }}>Volume discounts</span>
                 </li>
                 <li className="flex items-start">
                   <CheckCircle
                     className="h-5 w-5 mr-2 mt-0.5 flex-shrink-0"
-                    style={{ color: '#A8C09A' }}
+                    style={{ color: '#5C7F4F' }}
                   />
                   <span style={{ color: '#5A5A5A' }}>Team wellness dashboard</span>
                 </li>
                 <li className="flex items-start">
                   <CheckCircle
                     className="h-5 w-5 mr-2 mt-0.5 flex-shrink-0"
-                    style={{ color: '#A8C09A' }}
+                    style={{ color: '#5C7F4F' }}
                   />
                   <span style={{ color: '#5A5A5A' }}>Usage analytics</span>
                 </li>
                 <li className="flex items-start">
                   <CheckCircle
                     className="h-5 w-5 mr-2 mt-0.5 flex-shrink-0"
-                    style={{ color: '#A8C09A' }}
+                    style={{ color: '#5C7F4F' }}
                   />
                   <span style={{ color: '#5A5A5A' }}>Custom integrations</span>
                 </li>
                 <li className="flex items-start">
                   <CheckCircle
                     className="h-5 w-5 mr-2 mt-0.5 flex-shrink-0"
-                    style={{ color: '#A8C09A' }}
+                    style={{ color: '#5C7F4F' }}
                   />
                   <span style={{ color: '#5A5A5A' }}>Dedicated support</span>
                 </li>
@@ -1416,7 +1416,7 @@ function LandingPage({ onGetStarted }: LandingPageProps) {
             <p className="text-sm mt-2" style={{ color: '#5A5A5A' }}>
               See your stress patterns instantly
             </p>
-            <p className="text-xs mt-1" style={{ color: '#6B8B60', fontStyle: 'italic' }}>
+            <p className="text-xs mt-1" style={{ color: '#4A6B3E', fontStyle: 'italic' }}>
               Scientifically-grounded assessment • Completely confidential
             </p>
           </div>

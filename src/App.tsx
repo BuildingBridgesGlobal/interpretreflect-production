@@ -493,12 +493,12 @@ function App() {
                 aria-controls="insights-panel"
                 aria-label="View past week insights"
                 style={{
-                  backgroundColor: insightsTimePeriod === 'week' ? '#A8C09A' : 'transparent',
+                  backgroundColor: insightsTimePeriod === 'week' ? '#5C7F4F' : 'transparent',
                   color: insightsTimePeriod === 'week' ? '#FFFFFF' : '#1A1A1A',
                 }}
                 onMouseEnter={(e) => {
                   if (insightsTimePeriod !== 'week') {
-                    e.currentTarget.style.backgroundColor = 'rgba(168, 192, 154, 0.1)';
+                    e.currentTarget.style.backgroundColor = 'rgba(92, 127, 79, 0.1)';
                   }
                 }}
                 onMouseLeave={(e) => {
@@ -517,12 +517,12 @@ function App() {
                 aria-controls="insights-panel"
                 aria-label="View past month insights"
                 style={{
-                  backgroundColor: insightsTimePeriod === 'month' ? '#A8C09A' : 'transparent',
+                  backgroundColor: insightsTimePeriod === 'month' ? '#5C7F4F' : 'transparent',
                   color: insightsTimePeriod === 'month' ? '#FFFFFF' : '#1A1A1A',
                 }}
                 onMouseEnter={(e) => {
                   if (insightsTimePeriod !== 'month') {
-                    e.currentTarget.style.backgroundColor = 'rgba(168, 192, 154, 0.1)';
+                    e.currentTarget.style.backgroundColor = 'rgba(92, 127, 79, 0.1)';
                   }
                 }}
                 onMouseLeave={(e) => {
@@ -541,12 +541,12 @@ function App() {
                 aria-controls="insights-panel"
                 aria-label="View past 90 days insights"
                 style={{
-                  backgroundColor: insightsTimePeriod === '90days' ? '#A8C09A' : 'transparent',
+                  backgroundColor: insightsTimePeriod === '90days' ? '#5C7F4F' : 'transparent',
                   color: insightsTimePeriod === '90days' ? '#FFFFFF' : '#1A1A1A',
                 }}
                 onMouseEnter={(e) => {
                   if (insightsTimePeriod !== '90days') {
-                    e.currentTarget.style.backgroundColor = 'rgba(168, 192, 154, 0.1)';
+                    e.currentTarget.style.backgroundColor = 'rgba(92, 127, 79, 0.1)';
                   }
                 }}
                 onMouseLeave={(e) => {
@@ -567,8 +567,8 @@ function App() {
           aria-labelledby="stress-energy-chart-heading"
           style={{
             backgroundColor: '#FFFFFF',
-            boxShadow: '0 10px 30px rgba(168, 192, 154, 0.15), 0 2px 8px rgba(0, 0, 0, 0.05)',
-            border: '1px solid rgba(168, 192, 154, 0.2)',
+            boxShadow: '0 10px 30px rgba(92, 127, 79, 0.15), 0 2px 8px rgba(0, 0, 0, 0.05)',
+            border: '1px solid rgba(92, 127, 79, 0.2)',
           }}
         >
           <div className="flex items-center justify-between mb-6">
@@ -583,16 +583,16 @@ function App() {
               className="text-sm font-medium flex items-center px-4 py-2 rounded-lg transition-all focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-sage-600"
               aria-label="View stress and energy data by assignment"
               style={{
-                color: '#A8C09A',
-                backgroundColor: 'rgba(168, 192, 154, 0.1)',
+                color: '#5C7F4F',
+                backgroundColor: 'rgba(92, 127, 79, 0.1)',
               }}
               onMouseEnter={(e) => {
-                e.currentTarget.style.backgroundColor = 'rgba(168, 192, 154, 0.2)';
+                e.currentTarget.style.backgroundColor = 'rgba(92, 127, 79, 0.2)';
                 e.currentTarget.style.color = '#2D5F3F';
               }}
               onMouseLeave={(e) => {
-                e.currentTarget.style.backgroundColor = 'rgba(168, 192, 154, 0.1)';
-                e.currentTarget.style.color = '#A8C09A';
+                e.currentTarget.style.backgroundColor = 'rgba(92, 127, 79, 0.1)';
+                e.currentTarget.style.color = '#5C7F4F';
               }}
             >
               View by assignment →
@@ -625,7 +625,7 @@ function App() {
                 if (reflectionsWithStress.length === 0 && reflectionsWithEnergy.length === 0) {
                   return (
                     <div className="text-center">
-                      <Activity className="h-12 w-12 mx-auto mb-3" style={{ color: '#C8D5C8' }} />
+                      <Activity className="h-12 w-12 mx-auto mb-3" style={{ color: '#7A9B6E' }} />
                       <p className="text-sm font-medium mb-2" style={{ color: '#5A5A5A' }}>
                         No stress or energy data yet
                       </p>
@@ -705,8 +705,8 @@ function App() {
           aria-labelledby="burnout-trend-heading"
           style={{
             backgroundColor: '#FFFFFF',
-            boxShadow: '0 10px 30px rgba(168, 192, 154, 0.15), 0 2px 8px rgba(0, 0, 0, 0.05)',
-            border: '1px solid rgba(168, 192, 154, 0.2)',
+            boxShadow: '0 10px 30px rgba(92, 127, 79, 0.15), 0 2px 8px rgba(0, 0, 0, 0.05)',
+            border: '1px solid rgba(92, 127, 79, 0.2)',
           }}
         >
           <div className="flex items-center justify-between mb-6">
@@ -803,7 +803,7 @@ function App() {
                         )
                         .join(' ')}
                       fill="none"
-                      stroke="#A8C09A"
+                      stroke="#5C7F4F"
                       strokeWidth="3"
                       strokeLinecap="round"
                       strokeLinejoin="round"
@@ -821,7 +821,7 @@ function App() {
                             }
                             cy={200 - d.totalScore * 40}
                             r={showSummaryView === 'daily' ? '4' : '6'}
-                            fill="#A8C09A"
+                            fill="#5C7F4F"
                           />
                           {showSummaryView !== 'daily' && (
                             <text
@@ -831,7 +831,7 @@ function App() {
                               }
                               y={200 - d.totalScore * 40 - 10}
                               textAnchor="middle"
-                              fill="#A8C09A"
+                              fill="#5C7F4F"
                               fontSize="10"
                               fontWeight="bold"
                             >
@@ -936,9 +936,9 @@ function App() {
           <div className="flex items-center mb-6">
             <div
               className="p-2 rounded-lg mr-3"
-              style={{ backgroundColor: 'rgba(168, 192, 154, 0.15)' }}
+              style={{ backgroundColor: 'rgba(92, 127, 79, 0.15)' }}
             >
-              <Lightbulb className="h-5 w-5" aria-hidden="true" style={{ color: '#A8C09A' }} />
+              <Lightbulb className="h-5 w-5" aria-hidden="true" style={{ color: '#5C7F4F' }} />
             </div>
             <h2 className="text-2xl font-bold" style={{ color: '#1A1A1A' }}>
               Your Reset Toolkit Insights
@@ -960,15 +960,15 @@ function App() {
               className="rounded-xl p-5 transition-all"
               style={{
                 backgroundColor: '#FFFFFF',
-                border: '2px solid #A8C09A',
-                boxShadow: '0 4px 12px rgba(168, 192, 154, 0.2)',
+                border: '2px solid #5C7F4F',
+                boxShadow: '0 4px 12px rgba(92, 127, 79, 0.2)',
               }}
             >
               <div
                 className="flex items-center text-sm font-semibold mb-2"
                 style={{ color: '#2D5F3F' }}
               >
-                <Star className="h-4 w-4 mr-2" aria-hidden="true" style={{ color: '#A8C09A' }} />
+                <Star className="h-4 w-4 mr-2" aria-hidden="true" style={{ color: '#5C7F4F' }} />
                 Most Effective
               </div>
               <div className="text-2xl font-bold mb-1" style={{ color: '#1A1A1A' }}>
@@ -1133,9 +1133,9 @@ function App() {
             <div className="flex items-center mb-2">
               <div
                 className="p-2 rounded-lg mr-2"
-                style={{ backgroundColor: 'rgba(168, 192, 154, 0.15)' }}
+                style={{ backgroundColor: 'rgba(92, 127, 79, 0.15)' }}
               >
-                <TrendingUp className="h-4 w-4" aria-hidden="true" style={{ color: '#A8C09A' }} />
+                <TrendingUp className="h-4 w-4" aria-hidden="true" style={{ color: '#5C7F4F' }} />
               </div>
               <span className="text-sm font-semibold" style={{ color: '#2D5F3F' }}>
                 Stress Change
@@ -1241,9 +1241,9 @@ function App() {
             <div className="flex items-center mb-2">
               <div
                 className="p-2 rounded-lg mr-2"
-                style={{ backgroundColor: 'rgba(168, 192, 154, 0.15)' }}
+                style={{ backgroundColor: 'rgba(92, 127, 79, 0.15)' }}
               >
-                <Users className="h-4 w-4" aria-hidden="true" style={{ color: '#A8C09A' }} />
+                <Users className="h-4 w-4" aria-hidden="true" style={{ color: '#5C7F4F' }} />
               </div>
               <span className="text-sm font-semibold" style={{ color: '#2D5F3F' }}>
                 Team Plan Kept
@@ -1434,7 +1434,7 @@ function App() {
                       
                       return Math.min(breakScore + sleepScore + wellnessScore, 100);
                     })()}%`,
-                    background: 'linear-gradient(90deg, #A8C09A 0%, #B5CCA8 100%)',
+                    background: 'linear-gradient(90deg, #5C7F4F 0%, #6B8B60 100%)',
                   }}
                 ></div>
               </div>
@@ -1471,12 +1471,12 @@ function App() {
                           {sleepHabits.length > 0 && sleepHabits[0].value && (
                             <div
                               className="flex items-center text-sm p-2 rounded-lg"
-                              style={{ backgroundColor: sleepHabits[0].value.includes('poor') ? 'rgba(255, 223, 0, 0.08)' : 'rgba(168, 192, 154, 0.08)' }}
+                              style={{ backgroundColor: sleepHabits[0].value.includes('poor') ? 'rgba(255, 223, 0, 0.08)' : 'rgba(92, 127, 79, 0.08)' }}
                             >
                               {sleepHabits[0].value.includes('poor') ? (
                                 <AlertTriangle className="h-4 w-4 mr-2" style={{ color: '#DAA520' }} />
                               ) : (
-                                <CheckCircle className="h-4 w-4 mr-2" style={{ color: '#A8C09A' }} />
+                                <CheckCircle className="h-4 w-4 mr-2" style={{ color: '#5C7F4F' }} />
                               )}
                               <span style={{ color: '#3A3A3A' }}>Sleep: {sleepHabits[0].value}</span>
                             </div>
@@ -1500,12 +1500,12 @@ function App() {
                     </div>
                     <div
                       className="flex items-center text-sm p-2 rounded-lg"
-                      style={{ backgroundColor: 'rgba(168, 192, 154, 0.08)' }}
+                      style={{ backgroundColor: 'rgba(92, 127, 79, 0.08)' }}
                     >
                       <Heart
                         className="h-4 w-4 mr-2"
                         aria-hidden="true"
-                        style={{ color: '#A8C09A' }}
+                        style={{ color: '#5C7F4F' }}
                       />
                       <span style={{ color: '#3A3A3A' }}>Start with a wellness check-in</span>
                     </div>
@@ -1621,8 +1621,8 @@ function App() {
             className="rounded-2xl p-6 transition-all hover:scale-105"
             style={{
               background: 'linear-gradient(145deg, #FFFFFF 0%, #FAFAF8 100%)',
-              boxShadow: '0 8px 20px rgba(168, 192, 154, 0.15)',
-              border: '2px solid #A8C09A',
+              boxShadow: '0 8px 20px rgba(92, 127, 79, 0.15)',
+              border: '2px solid #5C7F4F',
             }}
           >
             <h3 className="font-bold text-lg mb-4" style={{ color: '#2D5F3F' }}>
@@ -1679,7 +1679,7 @@ function App() {
             <div
               className="rounded-xl p-4 mr-5"
               style={{
-                backgroundColor: 'rgba(168, 192, 154, 0.25)',
+                backgroundColor: 'rgba(92, 127, 79, 0.25)',
                 backdropFilter: 'blur(10px)',
               }}
             >
@@ -1943,14 +1943,14 @@ function App() {
         <div
           className="absolute -top-20 -left-20 w-40 h-40 rounded-full opacity-20"
           style={{
-            background: 'radial-gradient(circle, #A8C09A 0%, transparent 70%)',
+            background: 'radial-gradient(circle, #5C7F4F 0%, transparent 70%)',
             animation: 'pulse 4s ease-in-out infinite',
           }}
         ></div>
         <div
           className="absolute -bottom-20 -right-20 w-40 h-40 rounded-full opacity-20"
           style={{
-            background: 'radial-gradient(circle, #A8C09A 0%, transparent 70%)',
+            background: 'radial-gradient(circle, #5C7F4F 0%, transparent 70%)',
             animation: 'pulse 4s ease-in-out infinite 2s',
           }}
         ></div>
@@ -1959,8 +1959,8 @@ function App() {
           className="rounded-3xl p-10 max-w-lg mx-4 text-center relative"
           style={{
             background: 'linear-gradient(145deg, #FFFFFF 0%, #FAFAF8 100%)',
-            boxShadow: '0 20px 60px rgba(168, 192, 154, 0.25), 0 10px 30px rgba(0, 0, 0, 0.1)',
-            border: '2px solid rgba(168, 192, 154, 0.2)',
+            boxShadow: '0 20px 60px rgba(92, 127, 79, 0.25), 0 10px 30px rgba(0, 0, 0, 0.1)',
+            border: '2px solid rgba(92, 127, 79, 0.2)',
           }}
         >
           {/* Icon container with glow effect */}
@@ -1968,15 +1968,15 @@ function App() {
             <div
               className="absolute inset-0 rounded-full blur-xl opacity-30"
               style={{
-                background: 'radial-gradient(circle, #A8C09A 0%, transparent 70%)',
+                background: 'radial-gradient(circle, #5C7F4F 0%, transparent 70%)',
                 transform: 'scale(1.5)',
               }}
             ></div>
             <div
               className="relative rounded-full p-6"
               style={{
-                background: 'linear-gradient(135deg, #A8C09A 0%, #B5CCA8 100%)',
-                boxShadow: '0 8px 20px rgba(168, 192, 154, 0.4)',
+                background: 'linear-gradient(135deg, #4A6B3E 0%, #5C7F4F 100%)',
+                boxShadow: '0 8px 20px rgba(92, 127, 79, 0.4)',
               }}
             >
               <Brain className="h-14 w-14" style={{ color: '#FFFFFF' }} />
@@ -2019,14 +2019,14 @@ function App() {
           <div
             className="mb-8 inline-flex items-center px-4 py-2 rounded-full"
             style={{
-              backgroundColor: 'rgba(168, 192, 154, 0.1)',
-              border: '1px solid rgba(168, 192, 154, 0.3)',
+              backgroundColor: 'rgba(92, 127, 79, 0.1)',
+              border: '1px solid rgba(92, 127, 79, 0.3)',
             }}
           >
             <div
               className="w-2 h-2 rounded-full mr-3"
               style={{
-                backgroundColor: '#A8C09A',
+                backgroundColor: '#5C7F4F',
                 animation: 'pulse 2s ease-in-out infinite',
               }}
             ></div>
@@ -2064,7 +2064,7 @@ function App() {
                 border: '2px solid #E8E5E0',
               }}
               onMouseEnter={(e) => {
-                e.currentTarget.style.borderColor = '#A8C09A';
+                e.currentTarget.style.borderColor = '#5C7F4F';
                 e.currentTarget.style.backgroundColor = '#F8FBF6';
               }}
               onMouseLeave={(e) => {
@@ -2326,9 +2326,9 @@ function App() {
             transform: 'translateY(0)',
           }}
           onMouseEnter={(e) => {
-            e.currentTarget.style.borderColor = '#A8C09A';
+            e.currentTarget.style.borderColor = '#5C7F4F';
             e.currentTarget.style.transform = 'translateY(-6px) scale(1.02)';
-            e.currentTarget.style.boxShadow = '0 12px 30px rgba(168, 192, 154, 0.25)';
+            e.currentTarget.style.boxShadow = '0 12px 30px rgba(92, 127, 79, 0.25)';
           }}
           onMouseLeave={(e) => {
             e.currentTarget.style.borderColor = 'transparent';
@@ -2339,7 +2339,7 @@ function App() {
           <div
             className="absolute top-0 right-0 w-32 h-32 opacity-10"
             style={{
-              background: 'radial-gradient(circle, #A8C09A 0%, transparent 70%)',
+              background: 'radial-gradient(circle, #5C7F4F 0%, transparent 70%)',
               transform: 'translate(50%, -50%)',
             }}
           ></div>
@@ -2362,15 +2362,15 @@ function App() {
           <div className="flex items-center space-x-4 text-sm mb-4">
             <span
               className="px-3 py-1 rounded-full"
-              style={{ backgroundColor: 'rgba(168, 192, 154, 0.15)', color: '#2D5F3F' }}
+              style={{ backgroundColor: 'rgba(92, 127, 79, 0.15)', color: '#2D5F3F' }}
             >
               4 minutes
             </span>
-            <span className="font-semibold" style={{ color: '#A8C09A' }}>
+            <span className="font-semibold" style={{ color: '#5C7F4F' }}>
               Gentle
             </span>
           </div>
-          <div className="pt-4 border-t" style={{ borderColor: 'rgba(168, 192, 154, 0.2)' }}>
+          <div className="pt-4 border-t" style={{ borderColor: 'rgba(92, 127, 79, 0.2)' }}>
             <p className="text-sm italic" style={{ color: '#6B7C6B' }}>
               Balances your autonomic nervous system
             </p>
@@ -2395,9 +2395,9 @@ function App() {
             transform: 'translateY(0)',
           }}
           onMouseEnter={(e) => {
-            e.currentTarget.style.borderColor = '#A8C09A';
+            e.currentTarget.style.borderColor = '#5C7F4F';
             e.currentTarget.style.transform = 'translateY(-6px) scale(1.02)';
-            e.currentTarget.style.boxShadow = '0 12px 30px rgba(168, 192, 154, 0.25)';
+            e.currentTarget.style.boxShadow = '0 12px 30px rgba(92, 127, 79, 0.25)';
           }}
           onMouseLeave={(e) => {
             e.currentTarget.style.borderColor = 'transparent';
@@ -2408,7 +2408,7 @@ function App() {
           <div
             className="absolute top-0 right-0 w-32 h-32 opacity-10"
             style={{
-              background: 'radial-gradient(circle, #A8C09A 0%, transparent 70%)',
+              background: 'radial-gradient(circle, #5C7F4F 0%, transparent 70%)',
               transform: 'translate(50%, -50%)',
             }}
           ></div>
@@ -2431,15 +2431,15 @@ function App() {
           <div className="flex items-center space-x-4 text-sm mb-4">
             <span
               className="px-3 py-1 rounded-full"
-              style={{ backgroundColor: 'rgba(168, 192, 154, 0.15)', color: '#2D5F3F' }}
+              style={{ backgroundColor: 'rgba(92, 127, 79, 0.15)', color: '#2D5F3F' }}
             >
               1 minute
             </span>
-            <span className="font-semibold" style={{ color: '#A8C09A' }}>
+            <span className="font-semibold" style={{ color: '#5C7F4F' }}>
               Moderate
             </span>
           </div>
-          <div className="pt-4 border-t" style={{ borderColor: 'rgba(168, 192, 154, 0.2)' }}>
+          <div className="pt-4 border-t" style={{ borderColor: 'rgba(92, 127, 79, 0.2)' }}>
             <p className="text-sm italic" style={{ color: '#6B7C6B' }}>
               Releases physical holding patterns
             </p>
@@ -2464,9 +2464,9 @@ function App() {
             transform: 'translateY(0)',
           }}
           onMouseEnter={(e) => {
-            e.currentTarget.style.borderColor = '#A8C09A';
+            e.currentTarget.style.borderColor = '#5C7F4F';
             e.currentTarget.style.transform = 'translateY(-6px) scale(1.02)';
-            e.currentTarget.style.boxShadow = '0 12px 30px rgba(168, 192, 154, 0.25)';
+            e.currentTarget.style.boxShadow = '0 12px 30px rgba(92, 127, 79, 0.25)';
           }}
           onMouseLeave={(e) => {
             e.currentTarget.style.borderColor = 'transparent';
@@ -2477,7 +2477,7 @@ function App() {
           <div
             className="absolute top-0 right-0 w-32 h-32 opacity-10"
             style={{
-              background: 'radial-gradient(circle, #A8C09A 0%, transparent 70%)',
+              background: 'radial-gradient(circle, #5C7F4F 0%, transparent 70%)',
               transform: 'translate(50%, -50%)',
             }}
           ></div>
@@ -2500,15 +2500,15 @@ function App() {
           <div className="flex items-center space-x-4 text-sm mb-4">
             <span
               className="px-3 py-1 rounded-full"
-              style={{ backgroundColor: 'rgba(168, 192, 154, 0.15)', color: '#2D5F3F' }}
+              style={{ backgroundColor: 'rgba(92, 127, 79, 0.15)', color: '#2D5F3F' }}
             >
               1 minute
             </span>
-            <span className="font-semibold" style={{ color: '#A8C09A' }}>
+            <span className="font-semibold" style={{ color: '#5C7F4F' }}>
               Gentle
             </span>
           </div>
-          <div className="pt-4 border-t" style={{ borderColor: 'rgba(168, 192, 154, 0.2)' }}>
+          <div className="pt-4 border-t" style={{ borderColor: 'rgba(92, 127, 79, 0.2)' }}>
             <p className="text-sm italic" style={{ color: '#6B7C6B' }}>
               Activates your natural calming response
             </p>
@@ -2533,9 +2533,9 @@ function App() {
             transform: 'translateY(0)',
           }}
           onMouseEnter={(e) => {
-            e.currentTarget.style.borderColor = '#A8C09A';
+            e.currentTarget.style.borderColor = '#5C7F4F';
             e.currentTarget.style.transform = 'translateY(-6px) scale(1.02)';
-            e.currentTarget.style.boxShadow = '0 12px 30px rgba(168, 192, 154, 0.25)';
+            e.currentTarget.style.boxShadow = '0 12px 30px rgba(92, 127, 79, 0.25)';
           }}
           onMouseLeave={(e) => {
             e.currentTarget.style.borderColor = 'transparent';
@@ -2546,7 +2546,7 @@ function App() {
           <div
             className="absolute top-0 right-0 w-32 h-32 opacity-10"
             style={{
-              background: 'radial-gradient(circle, #A8C09A 0%, transparent 70%)',
+              background: 'radial-gradient(circle, #5C7F4F 0%, transparent 70%)',
               transform: 'translate(50%, -50%)',
             }}
           ></div>
@@ -2569,15 +2569,15 @@ function App() {
           <div className="flex items-center space-x-4 text-sm mb-4">
             <span
               className="px-3 py-1 rounded-full"
-              style={{ backgroundColor: 'rgba(168, 192, 154, 0.15)', color: '#2D5F3F' }}
+              style={{ backgroundColor: 'rgba(92, 127, 79, 0.15)', color: '#2D5F3F' }}
             >
               80 seconds
             </span>
-            <span className="font-semibold" style={{ color: '#A8C09A' }}>
+            <span className="font-semibold" style={{ color: '#5C7F4F' }}>
               Very Gentle
             </span>
           </div>
-          <div className="pt-4 border-t" style={{ borderColor: 'rgba(168, 192, 154, 0.2)' }}>
+          <div className="pt-4 border-t" style={{ borderColor: 'rgba(92, 127, 79, 0.2)' }}>
             <p className="text-sm italic" style={{ color: '#6B7C6B' }}>
               Refreshes your sensory channels
             </p>
@@ -2602,9 +2602,9 @@ function App() {
             transform: 'translateY(0)',
           }}
           onMouseEnter={(e) => {
-            e.currentTarget.style.borderColor = '#A8C09A';
+            e.currentTarget.style.borderColor = '#5C7F4F';
             e.currentTarget.style.transform = 'translateY(-6px) scale(1.02)';
-            e.currentTarget.style.boxShadow = '0 12px 30px rgba(168, 192, 154, 0.25)';
+            e.currentTarget.style.boxShadow = '0 12px 30px rgba(92, 127, 79, 0.25)';
           }}
           onMouseLeave={(e) => {
             e.currentTarget.style.borderColor = 'transparent';
@@ -2615,7 +2615,7 @@ function App() {
           <div
             className="absolute top-0 right-0 w-32 h-32 opacity-10"
             style={{
-              background: 'radial-gradient(circle, #A8C09A 0%, transparent 70%)',
+              background: 'radial-gradient(circle, #5C7F4F 0%, transparent 70%)',
               transform: 'translate(50%, -50%)',
             }}
           ></div>
@@ -2638,15 +2638,15 @@ function App() {
           <div className="flex items-center space-x-4 text-sm mb-4">
             <span
               className="px-3 py-1 rounded-full"
-              style={{ backgroundColor: 'rgba(168, 192, 154, 0.15)', color: '#2D5F3F' }}
+              style={{ backgroundColor: 'rgba(92, 127, 79, 0.15)', color: '#2D5F3F' }}
             >
               2 minutes
             </span>
-            <span className="font-semibold" style={{ color: '#A8C09A' }}>
+            <span className="font-semibold" style={{ color: '#5C7F4F' }}>
               Gentle
             </span>
           </div>
-          <div className="pt-4 border-t" style={{ borderColor: 'rgba(168, 192, 154, 0.2)' }}>
+          <div className="pt-4 border-t" style={{ borderColor: 'rgba(92, 127, 79, 0.2)' }}>
             <p className="text-sm italic" style={{ color: '#6B7C6B' }}>
               Shifts from focused to spacious awareness
             </p>
@@ -2671,9 +2671,9 @@ function App() {
             transform: 'translateY(0)',
           }}
           onMouseEnter={(e) => {
-            e.currentTarget.style.borderColor = '#A8C09A';
+            e.currentTarget.style.borderColor = '#5C7F4F';
             e.currentTarget.style.transform = 'translateY(-6px) scale(1.02)';
-            e.currentTarget.style.boxShadow = '0 12px 30px rgba(168, 192, 154, 0.25)';
+            e.currentTarget.style.boxShadow = '0 12px 30px rgba(92, 127, 79, 0.25)';
           }}
           onMouseLeave={(e) => {
             e.currentTarget.style.borderColor = 'transparent';
@@ -2684,7 +2684,7 @@ function App() {
           <div
             className="absolute top-0 right-0 w-32 h-32 opacity-10"
             style={{
-              background: 'radial-gradient(circle, #A8C09A 0%, transparent 70%)',
+              background: 'radial-gradient(circle, #5C7F4F 0%, transparent 70%)',
               transform: 'translate(50%, -50%)',
             }}
           ></div>
@@ -2707,15 +2707,15 @@ function App() {
           <div className="flex items-center space-x-4 text-sm mb-4">
             <span
               className="px-3 py-1 rounded-full"
-              style={{ backgroundColor: 'rgba(168, 192, 154, 0.15)', color: '#2D5F3F' }}
+              style={{ backgroundColor: 'rgba(92, 127, 79, 0.15)', color: '#2D5F3F' }}
             >
               3 minutes
             </span>
-            <span className="font-semibold" style={{ color: '#A8C09A' }}>
+            <span className="font-semibold" style={{ color: '#5C7F4F' }}>
               Moderate
             </span>
           </div>
-          <div className="pt-4 border-t" style={{ borderColor: 'rgba(168, 192, 154, 0.2)' }}>
+          <div className="pt-4 border-t" style={{ borderColor: 'rgba(92, 127, 79, 0.2)' }}>
             <p className="text-sm italic" style={{ color: '#6B7C6B' }}>
               Transforms emotional overwhelm into clarity
             </p>
@@ -2785,12 +2785,12 @@ function App() {
                     setCurrentTechniqueId(null);
                   }}
                   className="p-2 rounded-lg transition-all"
-                  style={{ backgroundColor: 'rgba(168, 192, 154, 0.1)' }}
+                  style={{ backgroundColor: 'rgba(92, 127, 79, 0.1)' }}
                   onMouseEnter={(e) =>
-                    (e.currentTarget.style.backgroundColor = 'rgba(168, 192, 154, 0.2)')
+                    (e.currentTarget.style.backgroundColor = 'rgba(92, 127, 79, 0.2)')
                   }
                   onMouseLeave={(e) =>
-                    (e.currentTarget.style.backgroundColor = 'rgba(168, 192, 154, 0.1)')
+                    (e.currentTarget.style.backgroundColor = 'rgba(92, 127, 79, 0.1)')
                   }
                 >
                   <X className="h-5 w-5" style={{ color: '#1A1A1A' }} />
@@ -2800,7 +2800,7 @@ function App() {
               {/* Instructions */}
               <div
                 className="mb-8 p-6 rounded-xl"
-                style={{ backgroundColor: 'rgba(168, 192, 154, 0.05)' }}
+                style={{ backgroundColor: 'rgba(92, 127, 79, 0.05)' }}
               >
                 {selectedTechnique === 'box-breathing' ? (
                   <>
@@ -2811,8 +2811,8 @@ function App() {
                         <div
                           className="absolute inset-0 rounded-full transition-all duration-[4000ms] ease-in-out"
                           style={{
-                            backgroundColor: 'rgba(168, 192, 154, 0.2)',
-                            border: '3px solid #A8C09A',
+                            backgroundColor: 'rgba(92, 127, 79, 0.2)',
+                            border: '3px solid #5C7F4F',
                             transform: isTimerActive
                               ? breathPhase === 'inhale'
                                 ? 'scale(1.2)'
@@ -2824,8 +2824,8 @@ function App() {
                               : 'scale(1)',
                             boxShadow: isTimerActive
                               ? breathPhase === 'inhale' || breathPhase === 'hold-in'
-                                ? '0 0 30px rgba(168, 192, 154, 0.5)'
-                                : '0 0 10px rgba(168, 192, 154, 0.2)'
+                                ? '0 0 30px rgba(92, 127, 79, 0.5)'
+                                : '0 0 10px rgba(92, 127, 79, 0.2)'
                               : 'none',
                           }}
                         />
@@ -2838,7 +2838,7 @@ function App() {
                             {breathPhase === 'exhale' && 'Exhale'}
                             {breathPhase === 'hold-out' && 'Hold'}
                           </p>
-                          <p className="text-4xl font-bold" style={{ color: '#A8C09A' }}>
+                          <p className="text-4xl font-bold" style={{ color: '#5C7F4F' }}>
                             {isTimerActive ? 4 - (breathCycle % 4) || 4 : '4'}
                           </p>
                           <p className="text-sm mt-2" style={{ color: '#6B7C6B' }}>
@@ -2894,7 +2894,7 @@ function App() {
                             className="h-full transition-all duration-1000 ease-linear"
                             style={{
                               width: isTimerActive ? `${((breathCycle % 16) / 16) * 100}%` : '0%',
-                              backgroundColor: '#A8C09A',
+                              backgroundColor: '#5C7F4F',
                             }}
                           />
                         </div>
@@ -2907,28 +2907,28 @@ function App() {
                     <div className="grid grid-cols-2 gap-3 text-sm">
                       <div
                         className="flex items-center p-2 rounded-lg"
-                        style={{ backgroundColor: 'rgba(168, 192, 154, 0.1)' }}
+                        style={{ backgroundColor: 'rgba(92, 127, 79, 0.1)' }}
                       >
                         <div className="w-3 h-3 rounded-full bg-green-500 mr-2" />
                         <span style={{ color: '#3A3A3A' }}>Inhale: 4 counts</span>
                       </div>
                       <div
                         className="flex items-center p-2 rounded-lg"
-                        style={{ backgroundColor: 'rgba(168, 192, 154, 0.1)' }}
+                        style={{ backgroundColor: 'rgba(92, 127, 79, 0.1)' }}
                       >
                         <div className="w-3 h-3 rounded-full bg-yellow-500 mr-2" />
                         <span style={{ color: '#3A3A3A' }}>Hold: 4 counts</span>
                       </div>
                       <div
                         className="flex items-center p-2 rounded-lg"
-                        style={{ backgroundColor: 'rgba(168, 192, 154, 0.1)' }}
+                        style={{ backgroundColor: 'rgba(92, 127, 79, 0.1)' }}
                       >
                         <div className="w-3 h-3 rounded-full bg-blue-500 mr-2" />
                         <span style={{ color: '#3A3A3A' }}>Exhale: 4 counts</span>
                       </div>
                       <div
                         className="flex items-center p-2 rounded-lg"
-                        style={{ backgroundColor: 'rgba(168, 192, 154, 0.1)' }}
+                        style={{ backgroundColor: 'rgba(92, 127, 79, 0.1)' }}
                       >
                         <div className="w-3 h-3 rounded-full bg-purple-500 mr-2" />
                         <span style={{ color: '#3A3A3A' }}>Hold Empty: 4 counts</span>
@@ -2936,7 +2936,7 @@ function App() {
                     </div>
                     
                     {/* Why This Works */}
-                    <div className="mt-4 p-3 rounded-lg" style={{ backgroundColor: 'rgba(168, 192, 154, 0.1)' }}>
+                    <div className="mt-4 p-3 rounded-lg" style={{ backgroundColor: 'rgba(92, 127, 79, 0.1)' }}>
                       <p className="text-xs font-medium mb-1" style={{ color: '#2D5F3F' }}>
                         Why This Works:
                       </p>
@@ -2976,7 +2976,7 @@ function App() {
                               <div 
                                 className="absolute inset-0 rounded-full opacity-20"
                                 style={{
-                                  background: isTimerActive ? 'radial-gradient(circle, #A8C09A 0%, transparent 70%)' : 'none',
+                                  background: isTimerActive ? 'radial-gradient(circle, #5C7F4F 0%, transparent 70%)' : 'none',
                                   animation: isTimerActive ? 'pulse 2s ease-in-out infinite' : 'none'
                                 }}
                               />
@@ -3127,11 +3127,11 @@ function App() {
                                 {/* Energy Flow Lines (when active) */}
                                 {isTimerActive && (
                                   <>
-                                    <circle cx="60" cy={bodyPart === 0 ? 25 : bodyPart === 1 ? 55 : bodyPart === 2 ? 77 : bodyPart === 3 ? 110 : 162} r="2" fill="#A8C09A">
+                                    <circle cx="60" cy={bodyPart === 0 ? 25 : bodyPart === 1 ? 55 : bodyPart === 2 ? 77 : bodyPart === 3 ? 110 : 162} r="2" fill="#5C7F4F">
                                       <animate attributeName="r" values="2;6;2" dur="2s" repeatCount="indefinite" />
                                       <animate attributeName="opacity" values="1;0;1" dur="2s" repeatCount="indefinite" />
                                     </circle>
-                                    <circle cx="60" cy={bodyPart === 0 ? 25 : bodyPart === 1 ? 55 : bodyPart === 2 ? 77 : bodyPart === 3 ? 110 : 162} r="4" fill="none" stroke="#A8C09A" strokeWidth="1">
+                                    <circle cx="60" cy={bodyPart === 0 ? 25 : bodyPart === 1 ? 55 : bodyPart === 2 ? 77 : bodyPart === 3 ? 110 : 162} r="4" fill="none" stroke="#5C7F4F" strokeWidth="1">
                                       <animate attributeName="r" values="4;12;4" dur="2s" repeatCount="indefinite" />
                                       <animate attributeName="opacity" values="0.5;0;0.5" dur="2s" repeatCount="indefinite" />
                                     </circle>
@@ -3147,7 +3147,7 @@ function App() {
                                   className="h-full transition-all duration-1000"
                                   style={{
                                     width: `${((bodyPart + 1) / 5) * 100}%`,
-                                    backgroundColor: '#A8C09A'
+                                    backgroundColor: '#5C7F4F'
                                   }}
                                 />
                               </div>
@@ -3206,7 +3206,7 @@ function App() {
                           </div>
                           
                           {/* Why This Works */}
-                          <div className="mt-4 p-3 rounded-lg" style={{ backgroundColor: 'rgba(168, 192, 154, 0.1)' }}>
+                          <div className="mt-4 p-3 rounded-lg" style={{ backgroundColor: 'rgba(92, 127, 79, 0.1)' }}>
                             <p className="text-xs font-medium mb-1" style={{ color: '#2D5F3F' }}>
                               Why This Works:
                             </p>
@@ -3427,7 +3427,7 @@ function App() {
                           </h3>
                           
                           {/* What it does */}
-                          <div className="mb-4 p-3 rounded-lg" style={{ backgroundColor: 'rgba(168, 192, 154, 0.1)' }}>
+                          <div className="mb-4 p-3 rounded-lg" style={{ backgroundColor: 'rgba(92, 127, 79, 0.1)' }}>
                             <p className="text-sm font-medium mb-1" style={{ color: '#2D5F3F' }}>
                               Why This Helps:
                             </p>
@@ -3533,7 +3533,7 @@ function App() {
                                 className="absolute inset-0 rounded-full"
                                 style={{
                                   background: isTimerActive 
-                                    ? 'radial-gradient(circle, rgba(168, 192, 154, 0.1) 0%, transparent 70%)' 
+                                    ? 'radial-gradient(circle, rgba(92, 127, 79, 0.1) 0%, transparent 70%)' 
                                     : 'none',
                                   animation: isTimerActive ? 'pulse 2s ease-in-out infinite' : 'none'
                                 }}
@@ -3600,7 +3600,7 @@ function App() {
                                 </g>
                                 
                                 {/* Center Circle with Current Step */}
-                                <circle cx="125" cy="125" r="40" fill="white" stroke="#A8C09A" strokeWidth="3" />
+                                <circle cx="125" cy="125" r="40" fill="white" stroke="#5C7F4F" strokeWidth="3" />
                                 <text x="125" y="125" textAnchor="middle" fill="#2D5F3F" fontSize="24" fontWeight="bold" dy=".3em">
                                   {senseCount === 0 ? 'START' : `${5 - senseCount}/4`}
                                 </text>
@@ -3608,10 +3608,10 @@ function App() {
                                 {/* Connecting Lines */}
                                 {isTimerActive && (
                                   <>
-                                    <line x1="125" y1="85" x2="125" y2="85" stroke="#A8C09A" strokeWidth="2" opacity={senseCount >= 1 ? 1 : 0.3} />
-                                    <line x1="155" y1="125" x2="175" y2="125" stroke="#A8C09A" strokeWidth="2" opacity={senseCount >= 2 ? 1 : 0.3} />
-                                    <line x1="95" y1="125" x2="75" y2="125" stroke="#A8C09A" strokeWidth="2" opacity={senseCount >= 3 ? 1 : 0.3} />
-                                    <line x1="125" y1="165" x2="125" y2="165" stroke="#A8C09A" strokeWidth="2" opacity={senseCount >= 4 ? 1 : 0.3} />
+                                    <line x1="125" y1="85" x2="125" y2="85" stroke="#5C7F4F" strokeWidth="2" opacity={senseCount >= 1 ? 1 : 0.3} />
+                                    <line x1="155" y1="125" x2="175" y2="125" stroke="#5C7F4F" strokeWidth="2" opacity={senseCount >= 2 ? 1 : 0.3} />
+                                    <line x1="95" y1="125" x2="75" y2="125" stroke="#5C7F4F" strokeWidth="2" opacity={senseCount >= 3 ? 1 : 0.3} />
+                                    <line x1="125" y1="165" x2="125" y2="165" stroke="#5C7F4F" strokeWidth="2" opacity={senseCount >= 4 ? 1 : 0.3} />
                                   </>
                                 )}
                               </svg>
@@ -3623,7 +3623,7 @@ function App() {
                                     className="h-full transition-all duration-1000"
                                     style={{
                                       width: `${techniqueProgress}%`,
-                                      backgroundColor: '#A8C09A'
+                                      backgroundColor: '#5C7F4F'
                                     }}
                                   />
                                 </div>
@@ -3690,7 +3690,7 @@ function App() {
                           </div>
                           
                           {/* Why This Works */}
-                          <div className="mt-4 p-3 rounded-lg" style={{ backgroundColor: 'rgba(168, 192, 154, 0.1)' }}>
+                          <div className="mt-4 p-3 rounded-lg" style={{ backgroundColor: 'rgba(92, 127, 79, 0.1)' }}>
                             <p className="text-xs font-medium mb-1" style={{ color: '#2D5F3F' }}>
                               Why This Works:
                             </p>
@@ -3723,7 +3723,7 @@ function App() {
                               <div 
                                 className="absolute inset-0 rounded-full"
                                 style={{
-                                  background: 'radial-gradient(circle, rgba(168, 192, 154, 0.05) 0%, transparent 70%)',
+                                  background: 'radial-gradient(circle, rgba(92, 127, 79, 0.05) 0%, transparent 70%)',
                                   animation: isTimerActive ? 'pulse 4s ease-in-out infinite' : 'none'
                                 }}
                               />
@@ -3738,7 +3738,7 @@ function App() {
                                     cy="125"
                                     r={30 * ring}
                                     fill="none"
-                                    stroke="#A8C09A"
+                                    stroke="#5C7F4F"
                                     strokeWidth={5 - ring}
                                     opacity={isTimerActive ? (0.8 - ring * 0.15) * expansionLevel : 0.1}
                                     style={{
@@ -3815,7 +3815,7 @@ function App() {
                                       cx={point.x}
                                       cy={point.y}
                                       r="4"
-                                      fill="#A8C09A"
+                                      fill="#5C7F4F"
                                       opacity={expansionLevel}
                                     >
                                       <animate
@@ -3856,7 +3856,7 @@ function App() {
                                     className="h-full transition-all duration-1000"
                                     style={{
                                       width: `${techniqueProgress}%`,
-                                      backgroundColor: '#A8C09A'
+                                      backgroundColor: '#5C7F4F'
                                     }}
                                   />
                                 </div>
@@ -3917,7 +3917,7 @@ function App() {
                           </div>
                           
                           {/* Tips */}
-                          <div className="p-3 rounded-lg" style={{ backgroundColor: 'rgba(168, 192, 154, 0.1)' }}>
+                          <div className="p-3 rounded-lg" style={{ backgroundColor: 'rgba(92, 127, 79, 0.1)' }}>
                             <p className="text-xs font-medium mb-1" style={{ color: '#2D5F3F' }}>
                               Pro Tip:
                             </p>
@@ -4181,7 +4181,7 @@ function App() {
                           </div>
                           
                           {/* Why This Works */}
-                          <div className="p-3 rounded-lg" style={{ backgroundColor: 'rgba(168, 192, 154, 0.1)' }}>
+                          <div className="p-3 rounded-lg" style={{ backgroundColor: 'rgba(92, 127, 79, 0.1)' }}>
                             <p className="text-xs font-medium mb-1" style={{ color: '#2D5F3F' }}>
                               Why This Works:
                             </p>
@@ -4200,13 +4200,13 @@ function App() {
               <div className="mb-6">
                 <div
                   className="h-3 rounded-full overflow-hidden"
-                  style={{ backgroundColor: 'rgba(168, 192, 154, 0.2)' }}
+                  style={{ backgroundColor: 'rgba(92, 127, 79, 0.2)' }}
                 >
                   <div
                     className="h-full rounded-full transition-all duration-1000"
                     style={{
                       width: `${techniqueProgress}%`,
-                      backgroundColor: '#A8C09A',
+                      backgroundColor: '#5C7F4F',
                     }}
                   />
                 </div>
@@ -4445,9 +4445,9 @@ function App() {
           <div className="flex items-center justify-center mb-4">
             <div
               className="p-3 rounded-full mr-4"
-              style={{ backgroundColor: 'rgba(168, 192, 154, 0.15)' }}
+              style={{ backgroundColor: 'rgba(92, 127, 79, 0.15)' }}
             >
-              <Heart className="h-8 w-8" style={{ color: '#A8C09A' }} />
+              <Heart className="h-8 w-8" style={{ color: '#5C7F4F' }} />
             </div>
             <h1
               className="text-4xl font-bold"
@@ -4479,9 +4479,9 @@ function App() {
                 transform: 'translateY(0)',
               }}
               onMouseEnter={(e) => {
-                e.currentTarget.style.borderColor = '#A8C09A';
+                e.currentTarget.style.borderColor = '#5C7F4F';
                 e.currentTarget.style.transform = 'translateY(-4px) scale(1.02)';
-                e.currentTarget.style.boxShadow = '0 8px 25px rgba(168, 192, 154, 0.25)';
+                e.currentTarget.style.boxShadow = '0 8px 25px rgba(92, 127, 79, 0.25)';
               }}
               onMouseLeave={(e) => {
                 e.currentTarget.style.borderColor = 'transparent';
@@ -4492,9 +4492,9 @@ function App() {
               <div className="flex items-start justify-between mb-4">
                 <div
                   className="rounded-lg p-3 w-fit"
-                  style={{ backgroundColor: 'rgba(168, 192, 154, 0.15)' }}
+                  style={{ backgroundColor: 'rgba(92, 127, 79, 0.15)' }}
                 >
-                  <category.icon className="h-6 w-6" style={{ color: '#A8C09A' }} />
+                  <category.icon className="h-6 w-6" style={{ color: '#5C7F4F' }} />
                 </div>
                 <div className="text-right">
                   <span className="text-sm font-medium" style={{ color: '#6B7C6B' }}>
@@ -4518,7 +4518,7 @@ function App() {
                 <div
                   className="text-xs px-3 py-1.5 rounded-full font-semibold"
                   style={{
-                    backgroundColor: 'rgba(168, 192, 154, 0.2)',
+                    backgroundColor: 'rgba(92, 127, 79, 0.2)',
                     color: '#2D5F3F',
                   }}
                 >
@@ -4526,7 +4526,7 @@ function App() {
                 </div>
                 <ChevronDown
                   className="h-4 w-4 rotate-[-90deg] group-hover:translate-x-1 transition-transform"
-                  style={{ color: '#A8C09A' }}
+                  style={{ color: '#5C7F4F' }}
                 />
               </div>
             </div>
@@ -4583,7 +4583,7 @@ function App() {
         
         {/* Show last assessment if available */}
         {localStorage.getItem('todaysBurnoutAssessment') && (
-          <div className="mt-6 inline-block p-4 rounded-lg" style={{ backgroundColor: 'rgba(168, 192, 154, 0.1)' }}>
+          <div className="mt-6 inline-block p-4 rounded-lg" style={{ backgroundColor: 'rgba(92, 127, 79, 0.1)' }}>
             <p className="text-sm font-semibold" style={{ color: '#2D5F3F' }}>
               ✓ Today's assessment completed
             </p>
@@ -4616,8 +4616,8 @@ function App() {
             className="rounded-2xl p-8"
             style={{
               background: 'linear-gradient(135deg, #FFFFFF 0%, #FAFAF8 100%)',
-              boxShadow: '0 10px 30px rgba(168, 192, 154, 0.15), 0 2px 8px rgba(0, 0, 0, 0.05)',
-              border: '1px solid rgba(168, 192, 154, 0.2)',
+              boxShadow: '0 10px 30px rgba(92, 127, 79, 0.15), 0 2px 8px rgba(0, 0, 0, 0.05)',
+              border: '1px solid rgba(92, 127, 79, 0.2)',
             }}
           >
             <div className="flex items-center justify-between mb-6">
@@ -4631,9 +4631,9 @@ function App() {
               </div>
               <div
                 className="p-4 rounded-full"
-                style={{ backgroundColor: 'rgba(168, 192, 154, 0.15)' }}
+                style={{ backgroundColor: 'rgba(92, 127, 79, 0.15)' }}
               >
-                <BookOpen className="h-10 w-10" style={{ color: '#A8C09A' }} />
+                <BookOpen className="h-10 w-10" style={{ color: '#5C7F4F' }} />
               </div>
             </div>
 
@@ -4679,13 +4679,13 @@ function App() {
                 className="rounded-xl p-6 text-left transition-all group"
                 style={{
                   backgroundColor: '#FFFFFF',
-                  border: '2px solid #A8C09A',
+                  border: '2px solid #5C7F4F',
                   boxShadow: '0 4px 15px rgba(0, 0, 0, 0.05)',
                   transform: 'translateY(0)',
                 }}
                 onMouseEnter={(e) => {
                   e.currentTarget.style.transform = 'translateY(-3px) scale(1.02)';
-                  e.currentTarget.style.boxShadow = '0 8px 25px rgba(168, 192, 154, 0.3)';
+                  e.currentTarget.style.boxShadow = '0 8px 25px rgba(92, 127, 79, 0.3)';
                   e.currentTarget.style.backgroundColor = '#F8FBF6';
                 }}
                 onMouseLeave={(e) => {
@@ -4696,9 +4696,9 @@ function App() {
               >
                 <div
                   className="p-3 rounded-lg inline-block mb-4"
-                  style={{ backgroundColor: 'rgba(168, 192, 154, 0.15)' }}
+                  style={{ backgroundColor: 'rgba(92, 127, 79, 0.15)' }}
                 >
-                  <Shield className="h-6 w-6" style={{ color: '#A8C09A' }} />
+                  <Shield className="h-6 w-6" style={{ color: '#5C7F4F' }} />
                 </div>
                 <h3 className="font-bold mb-2 text-lg" style={{ color: '#1A1A1A' }}>
                   Daily Burnout Gauge
@@ -4746,8 +4746,8 @@ function App() {
             className="rounded-2xl p-8"
             style={{
               backgroundColor: '#FFFFFF',
-              boxShadow: '0 10px 30px rgba(168, 192, 154, 0.15), 0 2px 8px rgba(0, 0, 0, 0.05)',
-              border: '1px solid rgba(168, 192, 154, 0.2)',
+              boxShadow: '0 10px 30px rgba(92, 127, 79, 0.15), 0 2px 8px rgba(0, 0, 0, 0.05)',
+              border: '1px solid rgba(92, 127, 79, 0.2)',
             }}
           >
             <div className="flex items-center justify-between mb-6">
@@ -4761,8 +4761,8 @@ function App() {
                   backgroundColor: 'transparent',
                 }}
                 onMouseEnter={(e) => {
-                  e.currentTarget.style.backgroundColor = 'rgba(168, 192, 154, 0.1)';
-                  e.currentTarget.style.color = '#A8C09A';
+                  e.currentTarget.style.backgroundColor = 'rgba(92, 127, 79, 0.1)';
+                  e.currentTarget.style.color = '#5C7F4F';
                 }}
                 onMouseLeave={(e) => {
                   e.currentTarget.style.backgroundColor = 'transparent';
@@ -4786,17 +4786,17 @@ function App() {
                       key={reflection.id}
                       className="p-5 rounded-xl transition-all cursor-pointer group"
                       style={{
-                        backgroundColor: 'rgba(168, 192, 154, 0.05)',
-                        border: '1px solid rgba(168, 192, 154, 0.2)',
+                        backgroundColor: 'rgba(92, 127, 79, 0.05)',
+                        border: '1px solid rgba(92, 127, 79, 0.2)',
                       }}
                       onMouseEnter={(e) => {
-                        e.currentTarget.style.backgroundColor = 'rgba(168, 192, 154, 0.1)';
-                        e.currentTarget.style.borderColor = '#A8C09A';
+                        e.currentTarget.style.backgroundColor = 'rgba(92, 127, 79, 0.1)';
+                        e.currentTarget.style.borderColor = '#5C7F4F';
                         e.currentTarget.style.transform = 'translateX(4px)';
                       }}
                       onMouseLeave={(e) => {
-                        e.currentTarget.style.backgroundColor = 'rgba(168, 192, 154, 0.05)';
-                        e.currentTarget.style.borderColor = 'rgba(168, 192, 154, 0.2)';
+                        e.currentTarget.style.backgroundColor = 'rgba(92, 127, 79, 0.05)';
+                        e.currentTarget.style.borderColor = 'rgba(92, 127, 79, 0.2)';
                         e.currentTarget.style.transform = 'translateX(0)';
                       }}
                     >
@@ -4814,7 +4814,7 @@ function App() {
                         </div>
                         <ChevronDown 
                           className="h-5 w-5 rotate-[-90deg] opacity-0 group-hover:opacity-100 transition-opacity" 
-                          style={{ color: '#A8C09A' }} 
+                          style={{ color: '#5C7F4F' }} 
                         />
                       </div>
                     </div>
@@ -4827,16 +4827,16 @@ function App() {
                     style={{
                       backgroundColor: 'transparent',
                       color: '#6B7C6B',
-                      border: '1px solid rgba(168, 192, 154, 0.3)',
+                      border: '1px solid rgba(92, 127, 79, 0.3)',
                     }}
                     onMouseEnter={(e) => {
-                      e.currentTarget.style.backgroundColor = 'rgba(168, 192, 154, 0.1)';
-                      e.currentTarget.style.borderColor = '#A8C09A';
-                      e.currentTarget.style.color = '#A8C09A';
+                      e.currentTarget.style.backgroundColor = 'rgba(92, 127, 79, 0.1)';
+                      e.currentTarget.style.borderColor = '#5C7F4F';
+                      e.currentTarget.style.color = '#5C7F4F';
                     }}
                     onMouseLeave={(e) => {
                       e.currentTarget.style.backgroundColor = 'transparent';
-                      e.currentTarget.style.borderColor = 'rgba(168, 192, 154, 0.3)';
+                      e.currentTarget.style.borderColor = 'rgba(92, 127, 79, 0.3)';
                       e.currentTarget.style.color = '#6B7C6B';
                     }}
                   >
@@ -4848,9 +4848,9 @@ function App() {
               <div className="text-center py-16">
                 <div
                   className="p-6 rounded-xl mb-6"
-                  style={{ backgroundColor: 'rgba(168, 192, 154, 0.05)' }}
+                  style={{ backgroundColor: 'rgba(92, 127, 79, 0.05)' }}
                 >
-                  <BookOpen className="h-16 w-16 mx-auto mb-4" style={{ color: '#C8D5C8' }} />
+                  <BookOpen className="h-16 w-16 mx-auto mb-4" style={{ color: '#7A9B6E' }} />
                 </div>
                 <p className="mb-6 text-lg" style={{ color: '#5A5A5A' }}>
                   No reflections yet
@@ -4887,8 +4887,8 @@ function App() {
             className="rounded-2xl p-6"
             style={{
               backgroundColor: '#FFFFFF',
-              boxShadow: '0 8px 20px rgba(168, 192, 154, 0.12), 0 2px 6px rgba(0, 0, 0, 0.04)',
-              border: '1px solid rgba(168, 192, 154, 0.2)',
+              boxShadow: '0 8px 20px rgba(92, 127, 79, 0.12), 0 2px 6px rgba(0, 0, 0, 0.04)',
+              border: '1px solid rgba(92, 127, 79, 0.2)',
             }}
           >
             <h3 className="text-lg font-bold mb-5" style={{ color: '#1A1A1A' }}>
@@ -4899,25 +4899,25 @@ function App() {
                 onClick={() => setActiveTab('chat')}
                 className="w-full flex items-center p-4 rounded-xl transition-all text-left group"
                 style={{
-                  backgroundColor: 'rgba(168, 192, 154, 0.08)',
+                  backgroundColor: 'rgba(92, 127, 79, 0.08)',
                   border: '1px solid transparent',
                 }}
                 onMouseEnter={(e) => {
-                  e.currentTarget.style.backgroundColor = 'rgba(168, 192, 154, 0.15)';
-                  e.currentTarget.style.borderColor = '#A8C09A';
+                  e.currentTarget.style.backgroundColor = 'rgba(92, 127, 79, 0.15)';
+                  e.currentTarget.style.borderColor = '#5C7F4F';
                   e.currentTarget.style.transform = 'translateX(2px)';
                 }}
                 onMouseLeave={(e) => {
-                  e.currentTarget.style.backgroundColor = 'rgba(168, 192, 154, 0.08)';
+                  e.currentTarget.style.backgroundColor = 'rgba(92, 127, 79, 0.08)';
                   e.currentTarget.style.borderColor = 'transparent';
                   e.currentTarget.style.transform = 'translateX(0)';
                 }}
               >
                 <div
                   className="p-2 rounded-lg mr-3"
-                  style={{ backgroundColor: 'rgba(168, 192, 154, 0.2)' }}
+                  style={{ backgroundColor: 'rgba(92, 127, 79, 0.2)' }}
                 >
-                  <MessageCircle className="h-5 w-5" style={{ color: '#A8C09A' }} />
+                  <MessageCircle className="h-5 w-5" style={{ color: '#5C7F4F' }} />
                 </div>
                 <span className="font-medium" style={{ color: '#1A1A1A' }}>
                   Chat with Elya
@@ -4927,25 +4927,25 @@ function App() {
                 onClick={() => setActiveTab('insights')}
                 className="w-full flex items-center p-4 rounded-xl transition-all text-left group"
                 style={{
-                  backgroundColor: 'rgba(168, 192, 154, 0.08)',
+                  backgroundColor: 'rgba(92, 127, 79, 0.08)',
                   border: '1px solid transparent',
                 }}
                 onMouseEnter={(e) => {
-                  e.currentTarget.style.backgroundColor = 'rgba(168, 192, 154, 0.15)';
-                  e.currentTarget.style.borderColor = '#A8C09A';
+                  e.currentTarget.style.backgroundColor = 'rgba(92, 127, 79, 0.15)';
+                  e.currentTarget.style.borderColor = '#5C7F4F';
                   e.currentTarget.style.transform = 'translateX(2px)';
                 }}
                 onMouseLeave={(e) => {
-                  e.currentTarget.style.backgroundColor = 'rgba(168, 192, 154, 0.08)';
+                  e.currentTarget.style.backgroundColor = 'rgba(92, 127, 79, 0.08)';
                   e.currentTarget.style.borderColor = 'transparent';
                   e.currentTarget.style.transform = 'translateX(0)';
                 }}
               >
                 <div
                   className="p-2 rounded-lg mr-3"
-                  style={{ backgroundColor: 'rgba(168, 192, 154, 0.2)' }}
+                  style={{ backgroundColor: 'rgba(92, 127, 79, 0.2)' }}
                 >
-                  <TrendingUp className="h-5 w-5" style={{ color: '#A8C09A' }} />
+                  <TrendingUp className="h-5 w-5" style={{ color: '#5C7F4F' }} />
                 </div>
                 <span className="font-medium" style={{ color: '#1A1A1A' }}>
                   Growth Insights
@@ -4966,7 +4966,7 @@ function App() {
             <div className="flex items-center mb-4">
               <div
                 className="p-2 rounded-lg mr-3"
-                style={{ backgroundColor: 'rgba(168, 192, 154, 0.25)' }}
+                style={{ backgroundColor: 'rgba(92, 127, 79, 0.25)' }}
               >
                 <Lightbulb className="h-5 w-5" style={{ color: '#FFFFFF' }} />
               </div>
@@ -5031,11 +5031,11 @@ function App() {
               color: activeCategory === 'structured' ? '#FFFFFF' : '#1A1A1A',
               transform: activeCategory === 'structured' ? 'scale(1.02)' : 'scale(1)',
               boxShadow:
-                activeCategory === 'structured' ? '0 4px 15px rgba(168, 192, 154, 0.3)' : 'none',
+                activeCategory === 'structured' ? '0 4px 15px rgba(92, 127, 79, 0.3)' : 'none',
             }}
             onMouseEnter={(e) => {
               if (activeCategory !== 'structured') {
-                e.currentTarget.style.backgroundColor = 'rgba(168, 192, 154, 0.1)';
+                e.currentTarget.style.backgroundColor = 'rgba(92, 127, 79, 0.1)';
               }
             }}
             onMouseLeave={(e) => {
@@ -5066,11 +5066,11 @@ function App() {
               color: activeCategory === 'burnout' ? '#FFFFFF' : '#1A1A1A',
               transform: activeCategory === 'burnout' ? 'scale(1.02)' : 'scale(1)',
               boxShadow:
-                activeCategory === 'burnout' ? '0 4px 15px rgba(168, 192, 154, 0.3)' : 'none',
+                activeCategory === 'burnout' ? '0 4px 15px rgba(92, 127, 79, 0.3)' : 'none',
             }}
             onMouseEnter={(e) => {
               if (activeCategory !== 'burnout') {
-                e.currentTarget.style.backgroundColor = 'rgba(168, 192, 154, 0.1)';
+                e.currentTarget.style.backgroundColor = 'rgba(92, 127, 79, 0.1)';
               }
             }}
             onMouseLeave={(e) => {
@@ -5101,11 +5101,11 @@ function App() {
               color: activeCategory === 'affirmations' ? '#FFFFFF' : '#1A1A1A',
               transform: activeCategory === 'affirmations' ? 'scale(1.02)' : 'scale(1)',
               boxShadow:
-                activeCategory === 'affirmations' ? '0 4px 15px rgba(168, 192, 154, 0.3)' : 'none',
+                activeCategory === 'affirmations' ? '0 4px 15px rgba(92, 127, 79, 0.3)' : 'none',
             }}
             onMouseEnter={(e) => {
               if (activeCategory !== 'affirmations') {
-                e.currentTarget.style.backgroundColor = 'rgba(168, 192, 154, 0.1)';
+                e.currentTarget.style.backgroundColor = 'rgba(92, 127, 79, 0.1)';
               }
             }}
             onMouseLeave={(e) => {
@@ -5140,9 +5140,9 @@ function App() {
               </div>
               <div
                 className="p-4 rounded-full"
-                style={{ backgroundColor: 'rgba(168, 192, 154, 0.15)' }}
+                style={{ backgroundColor: 'rgba(92, 127, 79, 0.15)' }}
               >
-                <BookOpen className="h-10 w-10" style={{ color: '#A8C09A' }} />
+                <BookOpen className="h-10 w-10" style={{ color: '#5C7F4F' }} />
               </div>
             </div>
 
@@ -5162,9 +5162,9 @@ function App() {
                     transform: 'translateY(0)',
                   }}
                   onMouseEnter={(e) => {
-                    e.currentTarget.style.borderColor = '#A8C09A';
+                    e.currentTarget.style.borderColor = '#5C7F4F';
                     e.currentTarget.style.transform = 'translateY(-4px) scale(1.02)';
-                    e.currentTarget.style.boxShadow = '0 8px 25px rgba(168, 192, 154, 0.25)';
+                    e.currentTarget.style.boxShadow = '0 8px 25px rgba(92, 127, 79, 0.25)';
                   }}
                   onMouseLeave={(e) => {
                     e.currentTarget.style.borderColor = 'transparent';
@@ -5467,8 +5467,8 @@ function App() {
       <header
         className="shadow-md"
         style={{
-          background: 'linear-gradient(135deg, #A8C09A 0%, #B5CCA8 100%)',
-          boxShadow: '0 2px 10px rgba(168, 192, 154, 0.3)',
+          background: 'linear-gradient(135deg, #4A6B3E 0%, #5C7F4F 100%)',
+          boxShadow: '0 2px 10px rgba(92, 127, 79, 0.3)',
         }}
       >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -5548,7 +5548,7 @@ function App() {
                       className="absolute right-0 top-full mt-3 w-80 rounded-2xl shadow-2xl z-20"
                       style={{
                         backgroundColor: '#1A1A1A',
-                        border: '1px solid rgba(168, 192, 154, 0.2)',
+                        border: '1px solid rgba(92, 127, 79, 0.2)',
                         boxShadow: '0 20px 40px rgba(0, 0, 0, 0.3), 0 10px 20px rgba(0, 0, 0, 0.2)',
                       }}
                     >
@@ -5557,15 +5557,15 @@ function App() {
                         className="p-5"
                         style={{
                           borderBottom: '1px solid rgba(255, 255, 255, 0.1)',
-                          backgroundColor: 'rgba(168, 192, 154, 0.08)',
+                          backgroundColor: 'rgba(92, 127, 79, 0.08)',
                         }}
                       >
                         <div className="flex items-center space-x-3">
                           <div
                             className="w-12 h-12 rounded-full flex items-center justify-center shadow-md"
                             style={{
-                              background: 'linear-gradient(135deg, #A8C09A 0%, #B5CCA8 100%)',
-                              boxShadow: '0 4px 12px rgba(168, 192, 154, 0.3)',
+                              background: 'linear-gradient(135deg, #4A6B3E 0%, #5C7F4F 100%)',
+                              boxShadow: '0 4px 12px rgba(92, 127, 79, 0.3)',
                             }}
                           >
                             <span className="text-lg font-bold" style={{ color: '#FFFFFF' }}>
@@ -5576,7 +5576,7 @@ function App() {
                             <div className="font-semibold text-lg" style={{ color: '#FFFFFF' }}>
                               {devMode ? 'Dev Mode' : user?.email?.split('@')[0] || 'User'}
                             </div>
-                            <div className="text-sm" style={{ color: '#A8C09A' }}>
+                            <div className="text-sm" style={{ color: '#5C7F4F' }}>
                               {devMode
                                 ? 'Development Environment'
                                 : user?.email || 'user@interpretreflect.com'}
@@ -5603,9 +5603,9 @@ function App() {
                         >
                           <div
                             className="p-2 rounded-lg"
-                            style={{ backgroundColor: 'rgba(168, 192, 154, 0.15)' }}
+                            style={{ backgroundColor: 'rgba(92, 127, 79, 0.15)' }}
                           >
-                            <User className="h-5 w-5" style={{ color: '#A8C09A' }} />
+                            <User className="h-5 w-5" style={{ color: '#5C7F4F' }} />
                           </div>
                           <div className="flex-grow">
                             <div className="font-medium" style={{ color: '#FFFFFF' }}>
@@ -5637,9 +5637,9 @@ function App() {
                         >
                           <div
                             className="p-2 rounded-lg"
-                            style={{ backgroundColor: 'rgba(168, 192, 154, 0.15)' }}
+                            style={{ backgroundColor: 'rgba(92, 127, 79, 0.15)' }}
                           >
-                            <Settings className="h-5 w-5" style={{ color: '#A8C09A' }} />
+                            <Settings className="h-5 w-5" style={{ color: '#5C7F4F' }} />
                           </div>
                           <div className="flex-grow">
                             <div className="font-medium" style={{ color: '#FFFFFF' }}>
@@ -5671,9 +5671,9 @@ function App() {
                         >
                           <div
                             className="p-2 rounded-lg"
-                            style={{ backgroundColor: 'rgba(168, 192, 154, 0.15)' }}
+                            style={{ backgroundColor: 'rgba(92, 127, 79, 0.15)' }}
                           >
-                            <Shield className="h-5 w-5" style={{ color: '#A8C09A' }} />
+                            <Shield className="h-5 w-5" style={{ color: '#5C7F4F' }} />
                           </div>
                           <div className="flex-grow">
                             <div className="font-medium" style={{ color: '#FFFFFF' }}>
@@ -5759,16 +5759,16 @@ function App() {
                 onClick={() => setActiveTab(tab.id)}
                 className="flex items-center px-3 py-4 text-sm font-medium transition-all"
                 style={{
-                  color: activeTab === tab.id ? '#A8C09A' : '#1A1A1A',
+                  color: activeTab === tab.id ? '#5C7F4F' : '#1A1A1A',
                   borderBottom:
-                    activeTab === tab.id ? '3px solid #A8C09A' : '3px solid transparent',
+                    activeTab === tab.id ? '3px solid #5C7F4F' : '3px solid transparent',
                   fontWeight: activeTab === tab.id ? '600' : '500',
                   paddingBottom: '13px',
                 }}
                 onMouseEnter={(e) => {
                   if (activeTab !== tab.id) {
                     e.currentTarget.style.color = '#6B7C6B';
-                    e.currentTarget.style.background = 'rgba(168, 192, 154, 0.08)';
+                    e.currentTarget.style.background = 'rgba(92, 127, 79, 0.08)';
                   }
                 }}
                 onMouseLeave={(e) => {
@@ -5784,7 +5784,7 @@ function App() {
                   <span 
                     className="ml-2 px-2 py-0.5 text-xs font-bold rounded-full"
                     style={{ 
-                      backgroundColor: '#A8C09A', 
+                      backgroundColor: '#5C7F4F', 
                       color: '#FFFFFF',
                       fontSize: '10px'
                     }}
@@ -5849,7 +5849,7 @@ function App() {
             <div className="min-h-[200px] flex items-center justify-center px-8 py-12 rounded-xl border" 
                  style={{ 
                    background: 'linear-gradient(135deg, #f0f7f0 0%, #ffffff 50%, #f0f7f0 100%)',
-                   borderColor: '#A8C09A'
+                   borderColor: '#5C7F4F'
                  }}>
               <p className="text-xl text-gray-700 leading-relaxed text-center italic font-medium">
                 "{affirmationCategories[selectedAffirmationCategory].affirmations[currentAffirmationIndex]}"
@@ -5884,7 +5884,7 @@ function App() {
                     style={{
                       width: index === currentAffirmationIndex ? '32px' : '8px',
                       height: '8px',
-                      backgroundColor: index === currentAffirmationIndex ? '#A8C09A' : '#d4e8d4'
+                      backgroundColor: index === currentAffirmationIndex ? '#5C7F4F' : '#d4e8d4'
                     }}
                     aria-label={`Go to affirmation ${index + 1}`}
                   />
@@ -5920,9 +5920,9 @@ function App() {
                   setCurrentAffirmationIndex(0);
                 }}
                 className="px-6 py-3 text-white rounded-lg transition-colors"
-                style={{ backgroundColor: '#A8C09A' }}
+                style={{ backgroundColor: '#5C7F4F' }}
                 onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#8FA681'}
-                onMouseLeave={(e) => e.currentTarget.style.backgroundColor = '#A8C09A'}
+                onMouseLeave={(e) => e.currentTarget.style.backgroundColor = '#5C7F4F'}
               >
                 Close
               </button>

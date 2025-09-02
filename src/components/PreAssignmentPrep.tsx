@@ -115,9 +115,9 @@ const PreAssignmentPrep: React.FC<PreAssignmentPrepProps> = ({ onComplete, onClo
             <div className="text-center mb-8">
               <div
                 className="inline-flex items-center justify-center w-20 h-20 rounded-full mb-4"
-                style={{ backgroundColor: 'rgba(168, 192, 154, 0.2)' }}
+                style={{ backgroundColor: 'rgba(92, 127, 79, 0.2)' }}
               >
-                <Activity className="h-10 w-10" style={{ color: '#A8C09A' }} />
+                <Activity className="h-10 w-10" style={{ color: '#5C7F4F' }} />
               </div>
               <h2 className="text-2xl font-bold mb-2" style={{ color: '#1A1A1A' }}>
                 Quick Check-In
@@ -197,7 +197,7 @@ const PreAssignmentPrep: React.FC<PreAssignmentPrepProps> = ({ onComplete, onClo
                 }}
                 className="w-full py-3 rounded-xl font-semibold transition-all"
                 style={{
-                  backgroundColor: '#A8C09A',
+                  backgroundColor: '#5C7F4F',
                   color: '#FFFFFF',
                 }}
               >
@@ -214,9 +214,9 @@ const PreAssignmentPrep: React.FC<PreAssignmentPrepProps> = ({ onComplete, onClo
             <div className="text-center mb-8">
               <div
                 className="inline-flex items-center justify-center w-20 h-20 rounded-full mb-4"
-                style={{ backgroundColor: 'rgba(168, 192, 154, 0.2)' }}
+                style={{ backgroundColor: 'rgba(92, 127, 79, 0.2)' }}
               >
-                <Brain className="h-10 w-10" style={{ color: '#A8C09A' }} />
+                <Brain className="h-10 w-10" style={{ color: '#5C7F4F' }} />
               </div>
               <h2 className="text-2xl font-bold mb-2" style={{ color: '#1A1A1A' }}>
                 Cognitive Load Check
@@ -573,7 +573,7 @@ const PreAssignmentPrep: React.FC<PreAssignmentPrepProps> = ({ onComplete, onClo
               </div>
             </div>
 
-            <div className="p-4 rounded-xl" style={{ backgroundColor: 'rgba(168, 192, 154, 0.1)' }}>
+            <div className="p-4 rounded-xl" style={{ backgroundColor: 'rgba(92, 127, 79, 0.1)' }}>
               <p className="text-sm" style={{ color: '#2D5F3F' }}>
                 <strong>Impact:</strong> Reduces anticipatory stress by 35% (Norris et al., 2018)
               </p>
@@ -693,9 +693,9 @@ const PreAssignmentPrep: React.FC<PreAssignmentPrepProps> = ({ onComplete, onClo
             <div className="text-center mb-8">
               <div
                 className="inline-flex items-center justify-center w-20 h-20 rounded-full mb-4"
-                style={{ backgroundColor: 'rgba(168, 192, 154, 0.2)' }}
+                style={{ backgroundColor: 'rgba(92, 127, 79, 0.2)' }}
               >
-                <Shield className="h-10 w-10" style={{ color: '#A8C09A' }} />
+                <Shield className="h-10 w-10" style={{ color: '#5C7F4F' }} />
               </div>
               <h2 className="text-2xl font-bold mb-2" style={{ color: '#1A1A1A' }}>
                 Boundary Shield
@@ -716,11 +716,11 @@ const PreAssignmentPrep: React.FC<PreAssignmentPrepProps> = ({ onComplete, onClo
                     }`}
                     style={{
                       background: shieldActive
-                        ? 'radial-gradient(circle, rgba(168, 192, 154, 0.3) 0%, rgba(168, 192, 154, 0.1) 50%, transparent 100%)'
-                        : 'radial-gradient(circle, rgba(168, 192, 154, 0.1) 0%, transparent 100%)',
+                        ? 'radial-gradient(circle, rgba(92, 127, 79, 0.3) 0%, rgba(92, 127, 79, 0.1) 50%, transparent 100%)'
+                        : 'radial-gradient(circle, rgba(92, 127, 79, 0.1) 0%, transparent 100%)',
                       border: shieldActive
-                        ? '2px solid rgba(168, 192, 154, 0.5)'
-                        : '2px dashed rgba(168, 192, 154, 0.3)',
+                        ? '2px solid rgba(92, 127, 79, 0.5)'
+                        : '2px dashed rgba(92, 127, 79, 0.3)',
                     }}
                   />
 
@@ -732,7 +732,7 @@ const PreAssignmentPrep: React.FC<PreAssignmentPrepProps> = ({ onComplete, onClo
                       boxShadow: '0 4px 12px rgba(0, 0, 0, 0.1)',
                     }}
                   >
-                    <Activity className="h-8 w-8" style={{ color: '#A8C09A' }} />
+                    <Activity className="h-8 w-8" style={{ color: '#5C7F4F' }} />
                   </div>
 
                   {/* Floating elements */}
@@ -760,7 +760,7 @@ const PreAssignmentPrep: React.FC<PreAssignmentPrepProps> = ({ onComplete, onClo
               <div className="text-center space-y-4">
                 <div
                   className="p-4 rounded-xl"
-                  style={{ backgroundColor: 'rgba(168, 192, 154, 0.1)' }}
+                  style={{ backgroundColor: 'rgba(92, 127, 79, 0.1)' }}
                 >
                   <h3 className="font-semibold mb-3" style={{ color: '#2D5F3F' }}>
                     Visualize Your Protective Bubble:
@@ -778,7 +778,7 @@ const PreAssignmentPrep: React.FC<PreAssignmentPrepProps> = ({ onComplete, onClo
                       <span style={{ color: '#3A3A3A' }}>Emotions bounce off</span>
                     </li>
                     <li className="flex items-center">
-                      <Heart className="h-4 w-4 mr-2 flex-shrink-0" style={{ color: '#A8C09A' }} />
+                      <Heart className="h-4 w-4 mr-2 flex-shrink-0" style={{ color: '#5C7F4F' }} />
                       <span style={{ color: '#3A3A3A' }}>You remain centered</span>
                     </li>
                   </ul>
@@ -789,7 +789,7 @@ const PreAssignmentPrep: React.FC<PreAssignmentPrepProps> = ({ onComplete, onClo
                     onClick={() => setShieldActive(true)}
                     className="px-8 py-3 rounded-xl font-semibold transition-all mx-auto"
                     style={{
-                      background: 'linear-gradient(145deg, #A8C09A 0%, #8FA080 100%)',
+                      background: 'linear-gradient(145deg, #5C7F4F 0%, #8FA080 100%)',
                       color: '#FFFFFF',
                     }}
                   >
@@ -802,7 +802,7 @@ const PreAssignmentPrep: React.FC<PreAssignmentPrepProps> = ({ onComplete, onClo
                     className="p-6 rounded-xl"
                     style={{
                       background: 'linear-gradient(145deg, #F0F9FF 0%, #E0F2FE 100%)',
-                      border: '2px solid #A8C09A',
+                      border: '2px solid #5C7F4F',
                     }}
                   >
                     <p className="text-lg font-semibold mb-2" style={{ color: '#2D5F3F' }}>
@@ -902,7 +902,7 @@ const PreAssignmentPrep: React.FC<PreAssignmentPrepProps> = ({ onComplete, onClo
                   ? 'bg-gray-100 text-gray-400 cursor-not-allowed'
                   : 'bg-white border-2 hover:bg-gray-50'
               }`}
-              style={{ borderColor: currentStep === 0 ? '#E8E5E0' : '#A8C09A' }}
+              style={{ borderColor: currentStep === 0 ? '#E8E5E0' : '#5C7F4F' }}
             >
               <ChevronLeft className="h-4 w-4 mr-2" />
               Previous
@@ -913,7 +913,7 @@ const PreAssignmentPrep: React.FC<PreAssignmentPrepProps> = ({ onComplete, onClo
                 onClick={() => setCurrentStep(currentStep + 1)}
                 className="px-6 py-3 rounded-xl font-semibold transition-all flex items-center"
                 style={{
-                  background: 'linear-gradient(145deg, #A8C09A 0%, #8FA080 100%)',
+                  background: 'linear-gradient(145deg, #5C7F4F 0%, #8FA080 100%)',
                   color: '#FFFFFF',
                 }}
               >

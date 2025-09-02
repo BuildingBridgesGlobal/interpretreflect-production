@@ -104,13 +104,13 @@ export function ChatWithElya() {
         className="px-6 py-4 border-b"
         style={{
           backgroundColor: '#FFFFFF',
-          borderColor: 'rgba(168, 192, 154, 0.2)',
+          borderColor: 'rgba(92, 127, 79, 0.2)',
         }}
       >
         <div className="flex items-center space-x-3">
           <div
             className="w-10 h-10 rounded-full flex items-center justify-center"
-            style={{ backgroundColor: 'rgba(168, 192, 154, 0.2)' }}
+            style={{ backgroundColor: 'rgba(92, 127, 79, 0.2)' }}
           >
             <Bot className="h-6 w-6" style={{ color: '#2D5F3F' }} />
           </div>
@@ -153,7 +153,7 @@ export function ChatWithElya() {
                     : ''
                 }`}
                 style={{
-                  backgroundColor: message.sender === 'elya' ? 'rgba(168, 192, 154, 0.2)' : undefined,
+                  backgroundColor: message.sender === 'elya' ? 'rgba(92, 127, 79, 0.2)' : undefined,
                 }}
               >
                 {message.sender === 'user' ? (
@@ -172,7 +172,7 @@ export function ChatWithElya() {
                 }`}
                 style={{
                   backgroundColor: message.sender === 'elya' ? '#FFFFFF' : undefined,
-                  border: message.sender === 'elya' ? '1px solid rgba(168, 192, 154, 0.2)' : undefined,
+                  border: message.sender === 'elya' ? '1px solid rgba(92, 127, 79, 0.2)' : undefined,
                   color: message.sender === 'elya' ? '#3A3A3A' : undefined,
                 }}
               >
@@ -201,7 +201,7 @@ export function ChatWithElya() {
             <div className="flex space-x-2 max-w-[70%]">
               <div
                 className="w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0"
-                style={{ backgroundColor: 'rgba(168, 192, 154, 0.2)' }}
+                style={{ backgroundColor: 'rgba(92, 127, 79, 0.2)' }}
               >
                 <Bot className="h-5 w-5" style={{ color: '#2D5F3F' }} />
               </div>
@@ -209,28 +209,28 @@ export function ChatWithElya() {
                 className="px-4 py-3 rounded-2xl"
                 style={{
                   backgroundColor: '#FFFFFF',
-                  border: '1px solid rgba(168, 192, 154, 0.2)',
+                  border: '1px solid rgba(92, 127, 79, 0.2)',
                 }}
               >
                 <div className="flex space-x-1">
                   <div
                     className="w-2 h-2 rounded-full animate-bounce"
                     style={{
-                      backgroundColor: '#A8C09A',
+                      backgroundColor: '#5C7F4F',
                       animationDelay: '0ms',
                     }}
                   />
                   <div
                     className="w-2 h-2 rounded-full animate-bounce"
                     style={{
-                      backgroundColor: '#A8C09A',
+                      backgroundColor: '#5C7F4F',
                       animationDelay: '150ms',
                     }}
                   />
                   <div
                     className="w-2 h-2 rounded-full animate-bounce"
                     style={{
-                      backgroundColor: '#A8C09A',
+                      backgroundColor: '#5C7F4F',
                       animationDelay: '300ms',
                     }}
                   />
@@ -248,7 +248,7 @@ export function ChatWithElya() {
         className="px-6 py-4 border-t"
         style={{
           backgroundColor: '#FFFFFF',
-          borderColor: 'rgba(168, 192, 154, 0.2)',
+          borderColor: 'rgba(92, 127, 79, 0.2)',
         }}
       >
         <div className="flex space-x-3">
@@ -261,15 +261,15 @@ export function ChatWithElya() {
             placeholder="Type your message..."
             className="flex-1 px-4 py-3 rounded-xl outline-none transition-all"
             style={{
-              backgroundColor: 'rgba(168, 192, 154, 0.05)',
-              border: '1px solid rgba(168, 192, 154, 0.2)',
+              backgroundColor: 'rgba(92, 127, 79, 0.05)',
+              border: '1px solid rgba(92, 127, 79, 0.2)',
               color: '#3A3A3A',
             }}
             onFocus={(e) => {
-              e.currentTarget.style.borderColor = '#A8C09A';
+              e.currentTarget.style.borderColor = '#5C7F4F';
             }}
             onBlur={(e) => {
-              e.currentTarget.style.borderColor = 'rgba(168, 192, 154, 0.2)';
+              e.currentTarget.style.borderColor = 'rgba(92, 127, 79, 0.2)';
             }}
           />
           <button
@@ -278,8 +278,8 @@ export function ChatWithElya() {
             className="px-4 py-3 rounded-xl transition-all flex items-center justify-center"
             style={{
               backgroundColor: inputMessage.trim() === '' || isTyping 
-                ? 'rgba(168, 192, 154, 0.2)' 
-                : '#A8C09A',
+                ? 'rgba(92, 127, 79, 0.2)' 
+                : '#5C7F4F',
               color: inputMessage.trim() === '' || isTyping 
                 ? '#9CA3AF' 
                 : '#FFFFFF',
@@ -294,7 +294,7 @@ export function ChatWithElya() {
             }}
             onMouseLeave={(e) => {
               if (inputMessage.trim() !== '' && !isTyping) {
-                e.currentTarget.style.backgroundColor = '#A8C09A';
+                e.currentTarget.style.backgroundColor = '#5C7F4F';
               }
             }}
           >

@@ -13,7 +13,7 @@ export function TermsOfService() {
         style={{
           backgroundColor: 'rgba(250, 249, 246, 0.95)',
           backdropFilter: 'blur(10px)',
-          borderBottom: '1px solid rgba(168, 192, 154, 0.2)',
+          borderBottom: '1px solid rgba(92, 127, 79, 0.2)',
         }}
       >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">

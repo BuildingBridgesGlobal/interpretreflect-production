@@ -13,7 +13,7 @@ export function About() {
         style={{
           backgroundColor: 'rgba(250, 249, 246, 0.95)',
           backdropFilter: 'blur(10px)',
-          borderBottom: '1px solid rgba(168, 192, 154, 0.2)',
+          borderBottom: '1px solid rgba(92, 127, 79, 0.2)',
         }}
       >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -48,7 +48,7 @@ export function About() {
       <div 
         className="relative overflow-hidden py-16"
         style={{
-          background: 'linear-gradient(135deg, rgba(107, 139, 96, 0.05) 0%, rgba(168, 192, 154, 0.05) 100%)',
+          background: 'linear-gradient(135deg, rgba(107, 139, 96, 0.05) 0%, rgba(92, 127, 79, 0.05) 100%)',
         }}
       >
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
@@ -107,7 +107,7 @@ export function About() {
                 <div
                   className="px-3 py-1 rounded-full text-sm font-semibold"
                   style={{
-                    backgroundColor: 'rgba(168, 192, 154, 0.1)',
+                    backgroundColor: 'rgba(92, 127, 79, 0.1)',
                     color: '#6B8B60',
                   }}
                 >
@@ -153,19 +153,19 @@ export function About() {
                 </h3>
                 <ul className="space-y-2 text-sm" style={{ color: '#5A5A5A' }}>
                   <li className="flex items-start">
-                    <Sparkles className="h-4 w-4 mr-2 mt-0.5 flex-shrink-0" style={{ color: '#A8C09A' }} />
+                    <Sparkles className="h-4 w-4 mr-2 mt-0.5 flex-shrink-0" style={{ color: '#5C7F4F' }} />
                     Professional interpreters with 50+ years combined experience
                   </li>
                   <li className="flex items-start">
-                    <Sparkles className="h-4 w-4 mr-2 mt-0.5 flex-shrink-0" style={{ color: '#A8C09A' }} />
+                    <Sparkles className="h-4 w-4 mr-2 mt-0.5 flex-shrink-0" style={{ color: '#5C7F4F' }} />
                     Neuroscience researchers specializing in stress and trauma
                   </li>
                   <li className="flex items-start">
-                    <Sparkles className="h-4 w-4 mr-2 mt-0.5 flex-shrink-0" style={{ color: '#A8C09A' }} />
+                    <Sparkles className="h-4 w-4 mr-2 mt-0.5 flex-shrink-0" style={{ color: '#5C7F4F' }} />
                     Clinical wellness practitioners
                   </li>
                   <li className="flex items-start">
-                    <Sparkles className="h-4 w-4 mr-2 mt-0.5 flex-shrink-0" style={{ color: '#A8C09A' }} />
+                    <Sparkles className="h-4 w-4 mr-2 mt-0.5 flex-shrink-0" style={{ color: '#5C7F4F' }} />
                     Technology experts in privacy and security
                   </li>
                 </ul>
@@ -177,19 +177,19 @@ export function About() {
                 </h3>
                 <ul className="space-y-2 text-sm" style={{ color: '#5A5A5A' }}>
                   <li className="flex items-start">
-                    <Shield className="h-4 w-4 mr-2 mt-0.5 flex-shrink-0" style={{ color: '#A8C09A' }} />
+                    <Shield className="h-4 w-4 mr-2 mt-0.5 flex-shrink-0" style={{ color: '#5C7F4F' }} />
                     Inclusive design for all interpreters
                   </li>
                   <li className="flex items-start">
-                    <Shield className="h-4 w-4 mr-2 mt-0.5 flex-shrink-0" style={{ color: '#A8C09A' }} />
+                    <Shield className="h-4 w-4 mr-2 mt-0.5 flex-shrink-0" style={{ color: '#5C7F4F' }} />
                     Evidence-based approaches only
                   </li>
                   <li className="flex items-start">
-                    <Shield className="h-4 w-4 mr-2 mt-0.5 flex-shrink-0" style={{ color: '#A8C09A' }} />
+                    <Shield className="h-4 w-4 mr-2 mt-0.5 flex-shrink-0" style={{ color: '#5C7F4F' }} />
                     Absolute privacy and confidentiality
                   </li>
                   <li className="flex items-start">
-                    <Shield className="h-4 w-4 mr-2 mt-0.5 flex-shrink-0" style={{ color: '#A8C09A' }} />
+                    <Shield className="h-4 w-4 mr-2 mt-0.5 flex-shrink-0" style={{ color: '#5C7F4F' }} />
                     Continuous improvement based on user feedback
                   </li>
                 </ul>
@@ -277,8 +277,8 @@ export function About() {
           <div 
             className="rounded-2xl p-8"
             style={{
-              background: 'linear-gradient(145deg, rgba(107, 139, 96, 0.05) 0%, rgba(168, 192, 154, 0.05) 100%)',
-              border: '2px solid rgba(168, 192, 154, 0.2)',
+              background: 'linear-gradient(145deg, rgba(107, 139, 96, 0.05) 0%, rgba(92, 127, 79, 0.05) 100%)',
+              border: '2px solid rgba(92, 127, 79, 0.2)',
             }}
           >
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">

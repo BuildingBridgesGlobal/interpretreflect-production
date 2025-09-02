@@ -13,7 +13,7 @@ export function Contact() {
         style={{
           backgroundColor: 'rgba(250, 249, 246, 0.95)',
           backdropFilter: 'blur(10px)',
-          borderBottom: '1px solid rgba(168, 192, 154, 0.2)',
+          borderBottom: '1px solid rgba(92, 127, 79, 0.2)',
         }}
       >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -92,7 +92,7 @@ export function Contact() {
               </div>
               
               <div className="flex items-start">
-                <Clock className="h-5 w-5 mr-2 mt-0.5" style={{ color: '#A8C09A' }} />
+                <Clock className="h-5 w-5 mr-2 mt-0.5" style={{ color: '#5C7F4F' }} />
                 <div>
                   <p className="font-semibold mb-1" style={{ color: '#2D5F3F' }}>
                     Response Time
@@ -233,8 +233,8 @@ export function Contact() {
         <div 
           className="rounded-2xl p-8 text-center"
           style={{
-            backgroundColor: 'rgba(168, 192, 154, 0.1)',
-            border: '2px dashed #A8C09A',
+            backgroundColor: 'rgba(92, 127, 79, 0.1)',
+            border: '2px dashed #5C7F4F',
           }}
         >
           <Send className="h-12 w-12 mx-auto mb-4" style={{ color: '#6B8B60' }} />

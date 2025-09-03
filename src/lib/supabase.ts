@@ -181,8 +181,68 @@ export interface PostAssignmentDebriefData {
   effective_strategies?: string[];
 }
 
+// Mentoring Prep data structure
+export interface MentoringPrepData {
+  // Quick Insight Capture
+  mentoring_type: 'career_guidance' | 'skill_development' | 'problem_solving' | 'emotional_support' | 'other';
+  mentoring_type_other?: string;
+  meeting_format: 'virtual' | 'in-person';
+  seeking_reason: string;
+  
+  // Section 1: Clarifying Your Ask
+  specific_situation: string;
+  context_needed: string;
+  already_tried: string;
+  whats_at_stake: string;
+  urgency_level: string;
+  
+  // Section 2: Defining Success
+  success_definition: string;
+  hoped_outcomes: string;
+  success_indicators: string;
+  support_type_needed: string;
+  what_not_wanted: string;
+  
+  // Section 3: Preparation & Questions
+  top_questions: string[];
+  materials_to_share: string;
+  difficult_topics: string;
+  patterns_to_explore: string;
+  assumptions_to_check: string;
+  
+  // Section 4: Openness & Boundaries
+  feedback_openness: number; // 1-10
+  valuable_feedback_type: string;
+  conversation_boundaries: string;
+  off_limits_topics: string;
+  directness_preference: string;
+  
+  // Section 5: Action Readiness
+  ready_to_commit: string;
+  implementation_resources: string;
+  potential_blockers: string;
+  progress_tracking_plan: string;
+  followup_timeline: string;
+  
+  // Pre-Mentoring State Check
+  needs_articulation_confidence: number; // 1-10
+  openness_to_perspectives: number; // 1-10
+  emotional_readiness: number; // 1-10
+  current_stress_level: number; // 1-10
+  current_state_word: string;
+  
+  // Closing Intention
+  clear_request: string;
+  offering_in_return: string;
+  
+  // Metadata
+  session_id?: string;
+  timestamp: string;
+  completion_time?: number;
+}
+
 // Union type for all possible reflection data types
-export type ReflectionData = TeamingPrepData | TeamingPrepEnhancedData | TeamingReflectionData | PreAssignmentPrepData | PostAssignmentDebriefData | BaseReflectionData;
+export type ReflectionData = TeamingPrepData | TeamingPrepEnhancedData | TeamingReflectionData | PreAssignmentPrepData | PostAssignmentDebriefData | MentoringPrepData | BaseReflectionData;
 
 // Reflection entry types with team analytics support
 export interface ReflectionEntry {

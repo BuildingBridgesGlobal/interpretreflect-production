@@ -13,7 +13,7 @@ import { PostAssignmentDebriefEnhanced } from './components/PostAssignmentDebrie
 import { TeamingPrepEnhanced } from './components/TeamingPrepEnhanced';
 import TeamingReflection from './components/TeamingReflection';
 import { TeamingReflectionEnhanced } from './components/TeamingReflectionEnhanced';
-import MentoringPrep from './components/MentoringPrep';
+import { MentoringPrepEnhanced } from './components/MentoringPrepEnhanced';
 import MentoringReflection from './components/MentoringReflection';
 import WellnessCheckIn from './components/WellnessCheckIn';
 import CompassCheck from './components/CompassCheck';
@@ -5187,10 +5187,10 @@ function App() {
 
       {/* Mentoring Prep Modal */}
       {showMentoringPrep && (
-        <MentoringPrep
-          onComplete={(results) => {
-            // Save reflection
-            saveReflection('Mentoring Prep', results);
+        <MentoringPrepEnhanced
+          onComplete={(data) => {
+            console.log('Mentoring Prep Results:', data);
+            // Data is automatically saved to Supabase in the component
             setShowMentoringPrep(false);
           }}
           onClose={() => setShowMentoringPrep(false)}

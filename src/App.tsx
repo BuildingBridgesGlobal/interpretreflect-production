@@ -14,9 +14,10 @@ import { TeamingPrepEnhanced } from './components/TeamingPrepEnhanced';
 import TeamingReflection from './components/TeamingReflection';
 import { TeamingReflectionEnhanced } from './components/TeamingReflectionEnhanced';
 import { MentoringPrepEnhanced } from './components/MentoringPrepEnhanced';
-import MentoringReflection from './components/MentoringReflection';
-import WellnessCheckIn from './components/WellnessCheckIn';
-import CompassCheck from './components/CompassCheck';
+import { MentoringReflectionEnhanced } from './components/MentoringReflectionEnhanced';
+import { WellnessCheckInEnhanced } from './components/WellnessCheckInEnhanced';
+import { CompassCheckEnhanced } from './components/CompassCheckEnhanced';
+import { BreathingRhythmPractice } from './components/BreathingRhythmPractice';
 import DailyBurnoutGauge from './components/DailyBurnoutGauge';
 import { ChatWithElya } from './components/ChatWithElya';
 import {
@@ -90,6 +91,7 @@ function App() {
   const [showMentoringReflection, setShowMentoringReflection] = useState(false);
   const [showWellnessCheckIn, setShowWellnessCheckIn] = useState(false);
   const [showCompassCheck, setShowCompassCheck] = useState(false);
+  const [showBreathingPractice, setShowBreathingPractice] = useState(false);
   const [showDailyBurnout, setShowDailyBurnout] = useState(false);
   const [savedReflections, setSavedReflections] = useState<Record<string, unknown>[]>([]);
   const [techniqueUsage, setTechniqueUsage] = useState<Record<string, unknown>[]>([]);
@@ -2162,9 +2164,9 @@ function App() {
           className="rounded-2xl p-7 transition-all cursor-pointer group relative overflow-hidden focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-sage-600"
           tabIndex={0}
           role="button"
-          aria-label="Box Breathing exercise - 4 minutes, gentle breathing rhythm to anchor your system"
+          aria-label="Breathing Rhythm Practice - 4 minutes, find your comfortable pattern"
           onClick={() => {
-            setSelectedTechnique('box-breathing');
+            setShowBreathingPractice(true);
             const id = trackTechniqueStart('box-breathing');
             setCurrentTechniqueId(id);
           }}
@@ -2203,10 +2205,10 @@ function App() {
             <Square className="h-8 w-8" style={{ color: '#FFFFFF' }} />
           </div>
           <h3 className="text-xl font-bold mb-3" style={{ color: '#1A1A1A' }}>
-            Box Breathing
+            Breathing Rhythm
           </h3>
           <p className="text-sm mb-5" style={{ color: '#3A3A3A', lineHeight: '1.6' }}>
-            A steady rhythm to anchor your system
+            Find your comfortable pattern to anchor your system
           </p>
           <div className="flex items-center space-x-4 text-sm mb-4">
             <span
@@ -5046,7 +5048,7 @@ function App() {
                       setShowMentoringPrep(true);
                     } else if (card.title === 'Mentoring Reflection') {
                       setShowMentoringReflection(true);
-                    } else if (card.title === 'Wellness Check-In') {
+                    } else if (card.title === 'Wellness Check-in') {
                       setShowWellnessCheckIn(true);
                     } else if (card.title === 'Compass Check') {
                       setShowCompassCheck(true);
@@ -5070,7 +5072,7 @@ function App() {
                         setShowMentoringPrep(true);
                       } else if (card.title === 'Mentoring Reflection') {
                         setShowMentoringReflection(true);
-                      } else if (card.title === 'Wellness Check-In') {
+                      } else if (card.title === 'Wellness Check-in') {
                         setShowWellnessCheckIn(true);
                       } else if (card.title === 'Compass Check') {
                         setShowCompassCheck(true);
@@ -5199,7 +5201,7 @@ function App() {
 
       {/* Mentoring Reflection Modal */}
       {showMentoringReflection && (
-        <MentoringReflection
+        <MentoringReflectionEnhanced
           onComplete={(results) => {
             // Save reflection
             saveReflection('Mentoring Reflection', results);
@@ -5211,22 +5213,10 @@ function App() {
 
       {/* Wellness Check-In Modal */}
       {showWellnessCheckIn && (
-        <WellnessCheckIn
+        <WellnessCheckInEnhanced
           onComplete={(results) => {
             // Save reflection
             saveReflection('Wellness Check-in', results);
-            
-            // Track recovery habits from wellness check
-            if (results.resilience?.physical) {
-              trackRecoveryHabit('sleep', results.resilience.physical.sleep);
-              trackRecoveryHabit('nutrition', results.resilience.physical.nutrition);
-              trackRecoveryHabit('movement', results.resilience.physical.movement);
-            }
-            if (results.bodyScan) {
-              trackRecoveryHabit('energy', results.bodyScan.overallEnergy);
-              trackRecoveryHabit('body-message', results.bodyScan.bodyMessage);
-            }
-            
             setShowWellnessCheckIn(false);
           }}
           onClose={() => setShowWellnessCheckIn(false)}
@@ -5235,7 +5225,7 @@ function App() {
 
       {/* Compass Check Modal */}
       {showCompassCheck && (
-        <CompassCheck
+        <CompassCheckEnhanced
           onComplete={(results) => {
             // Save reflection
             saveReflection('Compass Check', results);
@@ -5254,6 +5244,26 @@ function App() {
             // Results are automatically saved to localStorage for graph
           }}
           onClose={() => setShowDailyBurnout(false)}
+        />
+      )}
+
+      {/* Breathing Rhythm Practice Modal */}
+      {showBreathingPractice && (
+        <BreathingRhythmPractice
+          onClose={() => {
+            setShowBreathingPractice(false);
+            if (currentTechniqueId) {
+              trackTechniqueEnd(currentTechniqueId, 'completed');
+              setCurrentTechniqueId(null);
+            }
+          }}
+          onComplete={(data) => {
+            if (currentTechniqueId) {
+              trackTechniqueEnd(currentTechniqueId, 'completed');
+              setCurrentTechniqueId(null);
+            }
+            setShowBreathingPractice(false);
+          }}
         />
       )}
     </main>

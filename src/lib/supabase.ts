@@ -241,8 +241,76 @@ export interface MentoringPrepData {
   completion_time?: number;
 }
 
+// Mentoring Reflection data structure
+export interface MentoringReflectionData {
+  // Link to prep data
+  linked_prep_id?: string;
+  prep_data_referenced?: MentoringPrepData;
+  
+  // Quick Insight Capture
+  session_word: string;
+  most_surprising: string;
+  satisfaction_rating: number; // 1-10
+  
+  // Section 1: Revisiting Intentions
+  ask_addressed: string;
+  success_criteria_met: string;
+  questions_answered: string;
+  boundaries_respected: string;
+  
+  // Section 2: Key Insights & Feedback
+  three_important_things: string[];
+  hard_but_valuable: string;
+  new_perspectives: string;
+  patterns_spotted: string;
+  validation_received: string;
+  
+  // Section 3: Emotional Processing
+  emotional_journey: string;
+  current_emotions: string;
+  strongest_reaction: string;
+  needs_processing: string;
+  confidence_change: string;
+  
+  // Section 4: Action Planning
+  specific_next_steps: string;
+  next_48_hours: string;
+  next_week: string;
+  longer_term: string;
+  support_needed: string;
+  
+  // Section 5: Application Strategy
+  application_plan: string;
+  potential_obstacles: string;
+  accountability_plan: string;
+  mentor_checkin: string;
+  progress_measurement: string;
+  
+  // Post-Mentoring State Check
+  clarity_level: number; // 1-10
+  confidence_forward: number; // 1-10
+  motivation_level: number; // 1-10
+  gratitude_level: number; // 1-10
+  current_state_word: string;
+  
+  // Comparative Reflection
+  confidence_comparison: string;
+  stress_comparison: string;
+  feedback_reception: string;
+  
+  // Closing Commitment
+  action_commitment: string;
+  mindset_commitment: string;
+  payforward_commitment: string;
+  
+  // Metadata
+  session_id?: string;
+  timestamp: string;
+  completion_time?: number;
+}
+
 // Union type for all possible reflection data types
-export type ReflectionData = TeamingPrepData | TeamingPrepEnhancedData | TeamingReflectionData | PreAssignmentPrepData | PostAssignmentDebriefData | MentoringPrepData | BaseReflectionData;
+export type ReflectionData = TeamingPrepData | TeamingPrepEnhancedData | TeamingReflectionData | PreAssignmentPrepData | PostAssignmentDebriefData | MentoringPrepData | MentoringReflectionData | WellnessCheckInData | CompassCheckData | BaseReflectionData;
 
 // Reflection entry types with team analytics support
 export interface ReflectionEntry {
@@ -390,4 +458,244 @@ export interface TeamingReflectionData {
   // AI Insights placeholders
   ai_insights?: string;
   ai_summary?: string;
+}
+
+// Wellness Check-In data structure
+export interface WellnessCheckInData {
+  // Quick Insight Capture
+  check_in_reason: string;
+  overall_feeling: number; // 1-10
+  last_break_taken: string;
+  
+  // Section 1: Emotional Landscape
+  current_emotions: string[];
+  custom_emotions?: string;
+  strongest_emotion: string;
+  emotion_message: string;
+  emotional_patterns: string;
+  avoided_feelings: string;
+  emotional_needs: string;
+  
+  // Section 2: Physical Awareness
+  body_scan: string;
+  tension_areas: string;
+  relaxation_areas: string;
+  energy_level: string;
+  physical_symptoms: string;
+  
+  // Section 3: Professional Wellbeing
+  workload_sustainability: number; // 1-10
+  energizing_aspects: string;
+  draining_aspects: string;
+  purpose_connection: string;
+  boundaries_needing_attention: string;
+  
+  // Section 4: Support & Resources
+  available_support_systems: string;
+  people_to_reach_out: string;
+  recent_self_care: string;
+  needed_resources: string;
+  help_comfort_level: number; // 1-10
+  
+  // Section 5: Needs & Intentions
+  immediate_needs: string;
+  balance_helpers: string;
+  today_wellness_step: string;
+  longer_term_changes: string;
+  week_wellness_priority: string;
+  
+  // Wellness Metrics
+  physical_energy: number; // 1-10
+  emotional_balance: number; // 1-10
+  mental_clarity: number; // 1-10
+  social_connection: number; // 1-10
+  professional_satisfaction: number; // 1-10
+  overall_wellbeing: number; // 1-10
+  
+  // Closing
+  self_care_commitment: string;
+  gratitude_reflection: string;
+  
+  // Metadata
+  timestamp: string;
+  completion_time?: number;
+  
+  // Emotion RAG Integration
+  emotion_patterns_rag?: string[];
+  rag_insights?: string;
+  
+  // Flags
+  concerning_patterns?: boolean;
+  needs_followup?: boolean;
+}
+
+// Compass Check data structure
+export interface CompassCheckData {
+  // Quick Insight Capture
+  situation_prompt: string;
+  values_alignment: number; // 1-10
+  uneasy_feeling: string;
+  
+  // Section 1: The Situation
+  situation_description: string;
+  difficulty_factors: string;
+  competing_demands: string;
+  people_impacted: string;
+  personal_stakes: string;
+  
+  // Section 2: Values Exploration
+  challenged_values: string;
+  honored_values: string;
+  values_conflict: string;
+  others_values: string;
+  systemic_factors: string;
+  
+  // Section 3: Decision Process
+  navigation_approach: string;
+  guiding_factors: string;
+  compromises_made: string;
+  hindsight_changes: string;
+  peace_and_troubles: string;
+  
+  // Section 4: Impact & Consequences
+  decision_impact: string;
+  integrity_effect: string;
+  relationships_affected: string;
+  boundaries_learned: string;
+  role_understanding_change: string;
+  
+  // Section 5: Realignment & Integration
+  alignment_helpers: string;
+  boundaries_to_set: string;
+  future_handling: string;
+  support_needed: string;
+  growth_insights: string;
+  
+  // Values Assessment
+  integrity_alignment: number; // 1-10
+  authenticity_in_role: number; // 1-10
+  ethical_clarity: number; // 1-10
+  professional_boundaries: number; // 1-10
+  personal_peace: number; // 1-10
+  
+  // Closing
+  wisdom_gained: string;
+  self_compassion_note: string;
+  priority_value: string;
+  
+  // Metadata
+  timestamp: string;
+  completion_time?: number;
+  linked_assignment_id?: string;
+  
+  // Analytics flags
+  ethical_challenge?: boolean;
+  values_conflict_present?: boolean;
+  resolution_achieved?: boolean;
+}
+
+// Breathing Practice data structure
+export interface BreathingPracticeData {
+  // Session settings
+  practice_type: 'rhythm' | 'counting' | 'color' | 'sound' | 'touch';
+  inhale_count: number;
+  pause_count: number;
+  exhale_count: number;
+  rest_count: number;
+  skip_holds: boolean;
+  breathing_path: 'nose' | 'mouth' | 'combination';
+  
+  // Post-practice feedback
+  feeling_response: 'calming' | 'energizing' | 'neutral' | 'uncomfortable' | 'other';
+  feeling_other?: string;
+  adjustment_preference?: 'shorter' | 'longer' | 'skip_pauses' | 'change_pace' | 'add_sound' | 'just_right' | 'other';
+  adjustment_other?: string;
+  one_word_description?: string;
+  
+  // User preferences
+  save_adjustments: boolean;
+  reminder_schedule?: '2_hours' | '4_hours' | 'tomorrow' | '2_days';
+  try_different_next: boolean;
+  
+  // Session metadata
+  session_id: string;
+  timestamp: string;
+  duration: number; // in seconds
+  completion_status: 'completed' | 'partial' | 'stopped';
+  modifications_made: string[];
+  
+  // Analytics
+  pre_practice_state?: string;
+  post_practice_state?: string;
+  effectiveness_rating?: number; // 1-10
+  time_of_day: string;
+  
+  // Accessibility
+  visual_timer_used: boolean;
+  audio_cues_used: boolean;
+  haptic_feedback_used: boolean;
+  high_contrast_mode: boolean;
+}
+
+// Body Awareness Journey data structure
+export interface BodyAwarenessData {
+  // Session settings
+  journey_type: 'physical' | 'visualization' | 'breath' | 'touch' | 'sound' | 'stillness' | 'whole_body';
+  duration: number; // in seconds
+  focus_areas: string[];
+  approach_used: string;
+  
+  // Post-practice feedback
+  body_feeling: 'relaxed' | 'aware' | 'same' | 'discomfort' | 'other';
+  feeling_other?: string;
+  
+  // What noticed
+  noticed_items: string[];
+  noticed_other?: string;
+  specific_discoveries?: string;
+  
+  // Areas tracking
+  tension_areas: string[];
+  ease_areas: string[];
+  needs_attention_areas: string[];
+  skipped_areas: string[];
+  
+  // Adjustments
+  adjustment_preference?: string;
+  focus_areas_next?: string;
+  preferred_approach?: string;
+  duration_preference?: 'shorter' | 'longer' | 'same';
+  add_music?: boolean;
+  
+  // Current state
+  ease_location?: string;
+  
+  // User preferences
+  save_insights: boolean;
+  track_patterns: boolean;
+  reminder_schedule?: 'later_today' | 'tomorrow' | '2_days';
+  
+  // Session metadata
+  session_id: string;
+  timestamp: string;
+  completion_status: 'completed' | 'partial' | 'stopped';
+  modifications_made: string[];
+  
+  // Analytics
+  pre_practice_state?: string;
+  post_practice_state?: string;
+  effectiveness_rating?: number; // 1-10
+  time_of_day: string;
+  linked_assignment?: string;
+  
+  // Accessibility
+  visual_guide_used: boolean;
+  audio_guide_used: boolean;
+  haptic_cues_used: boolean;
+  text_only_mode: boolean;
+  
+  // Body-emotion correlations
+  emotional_state_before?: string;
+  emotional_state_after?: string;
+  body_emotion_connections?: Record<string, string>;
 }

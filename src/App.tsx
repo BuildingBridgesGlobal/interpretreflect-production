@@ -9,7 +9,7 @@ import { TermsOfService } from './pages/TermsOfService';
 import { Contact } from './pages/Contact';
 import { About } from './pages/About';
 import { PreAssignmentPrepEnhanced } from './components/PreAssignmentPrepEnhanced';
-import PostAssignmentDebrief from './components/PostAssignmentDebrief';
+import { PostAssignmentDebriefEnhanced } from './components/PostAssignmentDebriefEnhanced';
 import { TeamingPrepEnhanced } from './components/TeamingPrepEnhanced';
 import TeamingReflection from './components/TeamingReflection';
 import { TeamingReflectionEnhanced } from './components/TeamingReflectionEnhanced';
@@ -5150,10 +5150,10 @@ function App() {
 
       {/* Post-Assignment Debrief Modal */}
       {showPostAssignmentDebrief && (
-        <PostAssignmentDebrief
-          onComplete={(results) => {
-            // Save reflection
-            saveReflection('Post-Assignment Debrief', results);
+        <PostAssignmentDebriefEnhanced
+          onComplete={(data) => {
+            console.log('Post-Assignment Debrief Results:', data);
+            // Data is automatically saved to Supabase in the component
             setShowPostAssignmentDebrief(false);
           }}
           onClose={() => setShowPostAssignmentDebrief(false)}

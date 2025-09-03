@@ -101,12 +101,84 @@ export interface PostAssignmentDebriefData {
   linked_prep_id?: string;
   prep_data_referenced?: PreAssignmentPrepData;
   
-  // Quick Debrief
-  overall_experience: string;
-  immediate_feelings: string[];
+  // Quick Insight Capture
+  experience_word: string;
+  most_unexpected: string;
+  performance_satisfaction: number; // 1-10
   
-  // Sections to be defined...
-  [key: string]: unknown;
+  // Section 1: Revisiting Predictions
+  confidence_accuracy: string;
+  challenges_reflection: string;
+  preparation_effectiveness: string;
+  emotional_evolution: string;
+  intention_maintenance: string;
+  
+  // Section 2: Assignment Execution
+  assignment_unfolded: string;
+  strategies_used: string;
+  cognitive_load_management: string;
+  technical_aspects?: string; // For virtual/hybrid
+  environmental_factors?: string; // For in-person/hybrid
+  technical_accuracy: number; // 1-10
+  communication_effectiveness: number; // 1-10
+  
+  // Section 3: Emotional & Physical Experience
+  emotions_during: string[];
+  custom_emotions?: string;
+  body_experience: string;
+  flow_struggle_moments: string;
+  stress_management: string;
+  self_regulation: string;
+  current_emotional_state: string;
+  
+  // Section 4: Challenges & Adaptations
+  unexpected_challenges: string;
+  real_time_adaptations: string;
+  problem_solving_moment: string;
+  support_needed: string;
+  unfamiliar_content_handling: string;
+  would_do_differently: string;
+  
+  // Section 5: Growth & Learning
+  skills_strengthened: string;
+  new_capabilities: string;
+  approach_changes: string;
+  feedback_received: string;
+  pattern_recognition: string;
+  
+  // Section 6: Recovery & Integration
+  recovery_practices: string;
+  completion_needs: string;
+  unresolved_concerns: string;
+  future_boundaries: string;
+  celebration_acknowledgment: string;
+  
+  // Post-Assignment Wellness Check
+  energy_level_post: number; // 1-10
+  stress_level_post: number; // 1-10
+  accomplishment_sense: number; // 1-10
+  future_confidence: number; // 1-10
+  current_state_word: string;
+  
+  // Comparative Reflection
+  confidence_comparison: string;
+  challenges_comparison: string;
+  preparedness_comparison: string;
+  emotional_comparison: string;
+  
+  // Closing Synthesis
+  three_insights: string[];
+  proudest_moment: string;
+  
+  // Metadata
+  assignment_id?: string; // Links to prep assignment_id
+  timestamp: string;
+  completion_time?: number;
+  
+  // Analytics flags
+  high_stress_success?: boolean;
+  flow_state_achieved?: boolean;
+  effective_strategies?: string[];
 }
 
 // Union type for all possible reflection data types

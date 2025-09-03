@@ -8,7 +8,7 @@ import { PrivacyPolicy } from './pages/PrivacyPolicy';
 import { TermsOfService } from './pages/TermsOfService';
 import { Contact } from './pages/Contact';
 import { About } from './pages/About';
-import PreAssignmentPrep from './components/PreAssignmentPrep';
+import { PreAssignmentPrepEnhanced } from './components/PreAssignmentPrepEnhanced';
 import PostAssignmentDebrief from './components/PostAssignmentDebrief';
 import { TeamingPrepEnhanced } from './components/TeamingPrepEnhanced';
 import TeamingReflection from './components/TeamingReflection';
@@ -5138,10 +5138,10 @@ function App() {
 
       {/* Pre-Assignment Prep Modal */}
       {showPreAssignmentPrep && (
-        <PreAssignmentPrep
-          onComplete={(results) => {
-            // Save reflection
-            saveReflection('Pre-Assignment Prep', results);
+        <PreAssignmentPrepEnhanced
+          onComplete={(data) => {
+            console.log('Pre-Assignment Prep Results:', data);
+            // Data is automatically saved to Supabase in the component
             setShowPreAssignmentPrep(false);
           }}
           onClose={() => setShowPreAssignmentPrep(false)}

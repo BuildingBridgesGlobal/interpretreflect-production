@@ -26,8 +26,91 @@ export interface BaseReflectionData {
   [key: string]: unknown;
 }
 
+// Pre-Assignment Prep data structure
+export interface PreAssignmentPrepData {
+  // Quick Insight Capture
+  assignment_type: 'medical' | 'legal' | 'educational' | 'conference' | 'community' | 'other';
+  assignment_type_other?: string;
+  assignment_format: 'virtual' | 'in-person' | 'hybrid';
+  current_feeling: string;
+  most_challenging_aspect: string;
+  
+  // Section 1: Assignment Understanding & Preparation
+  assignment_description: string;
+  preparation_completed: string;
+  preparation_needed: string;
+  terminology_review: string;
+  remaining_questions: string;
+  subject_familiarity: number; // 1-10 scale
+  
+  // Section 2: Emotional & Physical Readiness
+  current_emotions: string[];
+  custom_emotions?: string;
+  body_sensations: string;
+  past_influence: string;
+  self_care_practices: string;
+  energy_level: number; // 1-10
+  mental_clarity: number; // 1-10
+  
+  // Section 3: Strategic Planning & Approach
+  key_strategies: string;
+  cognitive_load_management: string;
+  environmental_factors: string;
+  technical_setup?: string; // For virtual/hybrid
+  positioning_plan?: string; // For in-person/hybrid
+  boundaries_to_maintain: string;
+  
+  // Section 4: Anticipated Challenges & Solutions
+  anticipated_challenges: string;
+  potential_triggers: string;
+  coping_strategies: string;
+  support_resources: string;
+  unfamiliar_terminology_plan: string;
+  
+  // Section 5: Success Vision & Intentions
+  success_vision: string;
+  skills_to_demonstrate: string;
+  desired_feelings: string;
+  quality_goals: string;
+  recovery_plan: string;
+  
+  // Pre-Assignment Wellness Check
+  confidence_level: number; // 1-10
+  stress_anxiety_level: number; // 1-10
+  preparedness_rating: number; // 1-10
+  current_state_word: string;
+  concerns_to_address?: string;
+  
+  // Closing Commitment
+  assignment_intention: string;
+  self_care_commitment: string;
+  
+  // Metadata
+  assignment_id?: string; // For linking to post-debrief
+  timestamp: string;
+  completion_time?: number;
+  
+  // Emotion RAG Integration
+  emotion_patterns?: string[];
+  rag_insights?: string;
+}
+
+// Post-Assignment Debrief data structure
+export interface PostAssignmentDebriefData {
+  // Link to prep data
+  linked_prep_id?: string;
+  prep_data_referenced?: PreAssignmentPrepData;
+  
+  // Quick Debrief
+  overall_experience: string;
+  immediate_feelings: string[];
+  
+  // Sections to be defined...
+  [key: string]: unknown;
+}
+
 // Union type for all possible reflection data types
-export type ReflectionData = TeamingPrepData | TeamingPrepEnhancedData | TeamingReflectionData | BaseReflectionData;
+export type ReflectionData = TeamingPrepData | TeamingPrepEnhancedData | TeamingReflectionData | PreAssignmentPrepData | PostAssignmentDebriefData | BaseReflectionData;
 
 // Reflection entry types with team analytics support
 export interface ReflectionEntry {

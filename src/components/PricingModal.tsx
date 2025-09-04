@@ -223,7 +223,7 @@ export const PricingModal: React.FC<PricingModalProps> = ({
             {/* Professional Plan - Coming Soon */}
             <div className="rounded-xl border-2 border-gray-300 relative opacity-75">
               <div className="absolute top-0 left-0 right-0 bg-gray-400 text-white text-center py-1 text-sm font-bold">
-                COMING Q2 2025
+                COMING Q2 2026
               </div>
 
               <div className="p-6 mt-8">

@@ -1086,11 +1086,11 @@ function LandingPage({ onGetStarted }: LandingPageProps) {
                     border: '1px solid #5C7F4F',
                   }}
                 >
-                  COMING Q2 2025
+                  COMING Q2 2026
                 </span>
               </div>
               <h3 className="text-2xl font-bold mb-2 mt-2" style={{ color: '#1A1A1A' }}>
-                Professional (Coming Q2 2025)
+                Professional (Coming Q2 2026)
               </h3>
               <div className="mb-2">
                 <span className="text-4xl font-bold" style={{ color: '#1A1A1A' }}>
@@ -1147,7 +1147,7 @@ function LandingPage({ onGetStarted }: LandingPageProps) {
                 </button>
               </div>
               <p className="text-xs text-center mt-3" style={{ color: '#5A5A5A' }}>
-                Available Q2 2025
+                Available Q2 2026
               </p>
             </div>
 

@@ -69,7 +69,7 @@ export const WaitlistModal: React.FC<WaitlistModalProps> = ({ isOpen, onClose, p
               </h2>
               <p className="text-sm text-gray-600 mt-1">
                 {plan === 'professional'
-                  ? 'Be first to access advanced features in Q2 2025'
+                  ? 'Be first to access advanced features in Q2 2026'
                   : "Let's discuss your organization's needs"}
               </p>
             </div>

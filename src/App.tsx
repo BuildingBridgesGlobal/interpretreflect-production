@@ -8,17 +8,30 @@ import { PrivacyPolicy } from './pages/PrivacyPolicy';
 import { TermsOfService } from './pages/TermsOfService';
 import { Contact } from './pages/Contact';
 import { About } from './pages/About';
-import { PreAssignmentPrepEnhanced } from './components/PreAssignmentPrepEnhanced';
-import { PostAssignmentDebriefEnhanced } from './components/PostAssignmentDebriefEnhanced';
+import { PricingNew } from './pages/PricingNew';
+import { PricingTest } from './pages/PricingTest';
+import { SubscriptionManager } from './components/SubscriptionManager';
+import { PaymentSuccess } from './pages/PaymentSuccess';
+import { PreAssignmentPrepAccessible as PreAssignmentPrepEnhanced } from './components/PreAssignmentPrepAccessible';
+import { PostAssignmentDebriefAccessible as PostAssignmentDebriefEnhanced } from './components/PostAssignmentDebriefAccessible';
 import { TeamingPrepEnhanced } from './components/TeamingPrepEnhanced';
-import TeamingReflection from './components/TeamingReflection';
 import { TeamingReflectionEnhanced } from './components/TeamingReflectionEnhanced';
-import { MentoringPrepEnhanced } from './components/MentoringPrepEnhanced';
-import { MentoringReflectionEnhanced } from './components/MentoringReflectionEnhanced';
-import { WellnessCheckInEnhanced } from './components/WellnessCheckInEnhanced';
-import { CompassCheckEnhanced } from './components/CompassCheckEnhanced';
-import { BreathingRhythmPractice } from './components/BreathingRhythmPractice';
-import DailyBurnoutGauge from './components/DailyBurnoutGauge';
+import { WellnessCheckInAccessible } from './components/WellnessCheckInAccessible';
+import { EthicsMeaningCheckAccessible } from './components/EthicsMeaningCheckAccessible';
+import { BreathingPractice } from './components/BreathingPracticeFriend';
+import { BodyCheckInAccessible as BodyCheckIn } from './components/BodyCheckInAccessible';
+import { TechnologyFatigueResetAccessible as TechnologyFatigueReset } from './components/TechnologyFatigueResetAccessible';
+import { EmotionMappingAccessible as EmotionMapping } from './components/EmotionMappingAccessible';
+import { ProfessionalBoundariesResetAccessible as ProfessionalBoundariesReset } from './components/ProfessionalBoundariesResetAccessible';
+import { TemperatureExploration } from './components/TemperatureExploration';
+import { AssignmentResetAccessible as AssignmentReset } from './components/AssignmentResetAccessible';
+import { DailyBurnoutGaugeAccessible as DailyBurnoutGauge } from './components/DailyBurnoutGaugeAccessible';
+import { AffirmationStudioAccessible } from './components/AffirmationStudioAccessible';
+import { AffirmationReflectionStudio } from './components/AffirmationReflectionStudio';
+import { TeamReflectionJourneyAccessible } from './components/TeamReflectionJourneyAccessible';
+import { BurnoutGauge } from './components/BurnoutGauge';
+import { MentoringPrepAccessible } from './components/MentoringPrepAccessible';
+import { MentoringReflectionAccessible } from './components/MentoringReflectionAccessible';
 import { ChatWithElya } from './components/ChatWithElya';
 import {
   Home,
@@ -40,9 +53,8 @@ import {
   Sparkles,
   Square,
   Waves,
-  Thermometer,
   Eye,
-  Mountain,
+  Languages,
   ArrowLeft,
   Star,
   Activity,
@@ -62,7 +74,12 @@ import {
 
 function App() {
   const { user, loading, signOut } = useAuth();
-  const [devMode, setDevMode] = useState(false); // DEV MODE - set to true to bypass auth
+  // Automatically enable dev mode in development environment
+  const [devMode, setDevMode] = useState(
+    import.meta.env.DEV || // Vite development mode
+    window.location.hostname === 'localhost' || 
+    window.location.hostname === '127.0.0.1'
+  );
   // Load saved tab preference or default to home
   const [activeTab, setActiveTab] = useState(() => {
     const savedTab = localStorage.getItem('preferredTab');
@@ -80,6 +97,8 @@ function App() {
   );
   const [breathCycle, setBreathCycle] = useState(0);
   const [bodyPart, setBodyPart] = useState(0); // For body release
+  const [bodyAwarenessTime, setBodyAwarenessTime] = useState(60); // Default 1 minute in seconds
+  const [bodyAwarenessMethod, setBodyAwarenessMethod] = useState<'move' | 'picture' | 'breathe' | 'touch' | 'still'>('still');
   const [senseCount, setSenseCount] = useState(0); // For sensory reset
   const [expansionLevel, setExpansionLevel] = useState(0); // For expansion practice
   const intervalRef = useRef<NodeJS.Timeout | null>(null); // Store interval reference
@@ -90,17 +109,22 @@ function App() {
   const [showMentoringPrep, setShowMentoringPrep] = useState(false);
   const [showMentoringReflection, setShowMentoringReflection] = useState(false);
   const [showWellnessCheckIn, setShowWellnessCheckIn] = useState(false);
-  const [showCompassCheck, setShowCompassCheck] = useState(false);
+  const [showEthicsMeaningCheck, setShowEthicsMeaningCheck] = useState(false);
   const [showBreathingPractice, setShowBreathingPractice] = useState(false);
+  const [showBodyCheckIn, setShowBodyCheckIn] = useState(false);
+  const [showProfessionalBoundariesReset, setShowProfessionalBoundariesReset] = useState(false);
+  const [showTemperatureExploration, setShowTemperatureExploration] = useState(false);
+  const [showAssignmentReset, setShowAssignmentReset] = useState(false);
+  const [showTechnologyFatigueReset, setShowTechnologyFatigueReset] = useState(false);
+  const [showEmotionMapping, setShowEmotionMapping] = useState(false);
   const [showDailyBurnout, setShowDailyBurnout] = useState(false);
+  const [showAffirmationStudio, setShowAffirmationStudio] = useState(false);
   const [savedReflections, setSavedReflections] = useState<Record<string, unknown>[]>([]);
   const [techniqueUsage, setTechniqueUsage] = useState<Record<string, unknown>[]>([]);
   const [currentTechniqueId, setCurrentTechniqueId] = useState<string | null>(null);
   const [recoveryHabits, setRecoveryHabits] = useState<Record<string, unknown>[]>([]);
   const [burnoutData, setBurnoutData] = useState<BurnoutData[]>([]);
   const [showSummaryView, setShowSummaryView] = useState<ViewMode>('daily');
-  const [selectedAffirmationCategory, setSelectedAffirmationCategory] = useState<number | null>(null);
-  const [currentAffirmationIndex, setCurrentAffirmationIndex] = useState(0);
 
   // Save tab preference when it changes
   React.useEffect(() => {
@@ -476,13 +500,13 @@ function App() {
         <div className="mb-8">
           <div className="flex items-center justify-between mb-6">
             <div>
-              <h1
+              <h2
                 id="growth-insights-heading"
                 className="text-4xl font-bold mb-2"
                 style={{ color: '#1A1A1A', letterSpacing: '-0.5px' }}
               >
                 Growth Insights
-              </h1>
+              </h2>
               <p className="text-base" style={{ color: '#3A3A3A' }}>
                 Past Month: {savedReflections.length} total reflections
               </p>
@@ -1074,7 +1098,7 @@ function App() {
               </div>
               <div className="text-2xl font-bold mb-1" style={{ color: '#1A1A1A' }}>
                 {(() => {
-                  const techniques = ['box-breathing', 'body-release', 'temperature-shift', 'sensory-reset', 'expansion-practice', 'name-transform'];
+                  const techniques = ['box-breathing', 'body-release', 'temperature-shift', 'sensory-reset', 'expansion-practice', 'tech-fatigue-reset'];
                   const counts = techniqueUsage.reduce((acc, u) => {
                     acc[u.technique] = (acc[u.technique] || 0) + 1;
                     return acc;
@@ -1716,7 +1740,7 @@ function App() {
           <div className="bg-gray-800/90 backdrop-blur-sm border-b border-gray-700/50 sticky top-0 z-10">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
               <div className="flex items-center justify-between">
-                <h1 className="text-2xl font-bold text-white">Privacy & Data</h1>
+                <h2 className="text-2xl font-bold text-white">Privacy & Data</h2>
                 <button
                   onClick={() => setShowPrivacyPage(false)}
                   className="p-2 text-gray-400 hover:text-white rounded-lg hover:bg-gray-700 transition-colors"
@@ -2030,105 +2054,6 @@ function App() {
     },
   ];
 
-  const affirmationCategories = [
-    {
-      icon: Heart,
-      iconColor: 'text-white',
-      iconBg: 'bg-pink-500',
-      title: 'Inherent Worth & Value',
-      description:
-        'Gentle reminders of your fundamental value as a human being, independent of performance or achievement.',
-      tag: 'self worth',
-      tagColor: 'bg-pink-500',
-      affirmations: [
-        "My worth is not measured by how perfectly I interpret, but by the humanity I bring to each interaction.",
-        "I am enough, exactly as I am, even on days when words feel heavy and my mind feels tired.",
-        "My value exists beyond my professional role - I am worthy of rest, joy, and peace.",
-        "The compassion I show myself ripples out to everyone I serve.",
-        "I deserve the same kindness and understanding I facilitate for others every day."
-      ]
-    },
-    {
-      icon: Sparkles,
-      iconColor: 'text-white',
-      iconBg: 'bg-orange-500',
-      title: 'Professional Wisdom & Competence',
-      description: 'Affirmations celebrating your skills, growth, and professional contributions.',
-      tag: 'professional competence',
-      tagColor: 'bg-orange-500',
-      affirmations: [
-        "My skills have been built through dedication and practice - I trust my professional judgment.",
-        "Every challenging assignment has added to my expertise and resilience.",
-        "I bring unique gifts to my work that no one else can offer in quite the same way.",
-        "My experience allows me to navigate complexity with grace and wisdom.",
-        "I am continuously growing, and that growth makes me an even more valuable professional."
-      ]
-    },
-    {
-      icon: Shield,
-      iconColor: 'text-white',
-      iconBg: 'bg-green-500',
-      title: 'Inner Strength & Resilience',
-      description: 'Honoring your ability to weather storms and bounce back from difficulty.',
-      tag: 'resilience',
-      tagColor: 'bg-green-500',
-      affirmations: [
-        "I have weathered difficult assignments before, and I have the strength to handle what comes today.",
-        "My resilience is not about being unaffected - it's about knowing how to care for myself through challenges.",
-        "Each time I process and release what I've witnessed, I grow stronger and wiser.",
-        "I can hold space for others' pain without letting it become my own.",
-        "My ability to bounce back is a skill I've developed, and it serves me well."
-      ]
-    },
-    {
-      icon: TrendingUp,
-      iconColor: 'text-white',
-      iconBg: 'bg-purple-500',
-      title: 'Continuous Growth & Learning',
-      description: 'Celebrating your commitment to personal and professional development.',
-      tag: 'growth',
-      tagColor: 'bg-purple-500',
-      affirmations: [
-        "Every assignment teaches me something new about language, humanity, and myself.",
-        "I embrace mistakes as opportunities to refine my skills and deepen my understanding.",
-        "My commitment to growth makes me a better interpreter with each passing day.",
-        "I am proud of how far I've come and excited about where I'm going.",
-        "Learning is a lifelong journey, and I'm exactly where I need to be on my path."
-      ]
-    },
-    {
-      icon: Star,
-      iconColor: 'text-white',
-      iconBg: 'bg-blue-400',
-      title: 'Purpose & Service',
-      description: 'Connecting with the deeper meaning and purpose in your work and life.',
-      tag: 'service',
-      tagColor: 'bg-blue-400',
-      affirmations: [
-        "My work creates bridges of understanding that change lives every single day.",
-        "I am a vital link in chains of communication that matter deeply to those I serve.",
-        "The service I provide goes beyond words - I facilitate human connection and dignity.",
-        "My presence in difficult moments brings comfort and clarity to those who need it most.",
-        "I am living my purpose by ensuring every voice can be heard and understood."
-      ]
-    },
-    {
-      icon: User,
-      iconColor: 'text-white',
-      iconBg: 'bg-purple-600',
-      title: 'Healthy Boundaries & Self-Care',
-      description: 'Affirming your right to protect your energy, time, and wellbeing.',
-      tag: 'boundaries',
-      tagColor: 'bg-purple-600',
-      affirmations: [
-        "Setting boundaries is not selfish - it's how I sustain my ability to serve others well.",
-        "I have the right to protect my energy and choose how I spend my emotional resources.",
-        "Saying no to one thing means saying yes to my wellbeing and longevity in this field.",
-        "My need for rest and recovery is valid and does not diminish my dedication.",
-        "I can be compassionate toward others while still maintaining healthy boundaries."
-      ]
-    },
-  ];
 
   const renderStressReset = () => (
     <main
@@ -2143,13 +2068,13 @@ function App() {
         >
           <RefreshCw className="h-12 w-12" aria-hidden="true" style={{ color: '#2D5F3F' }} />
         </div>
-        <h1
+        <h2
           id="stress-reset-heading"
           className="text-4xl font-bold mb-4"
           style={{ color: '#1A1A1A', letterSpacing: '-0.5px' }}
         >
           Your Personal Reset Space
-        </h1>
+        </h2>
         <p className="text-xl mb-2" style={{ color: '#3A3A3A', fontWeight: '500' }}>
           Choose what your body-mind needs right now
         </p>
@@ -2164,7 +2089,7 @@ function App() {
           className="rounded-2xl p-7 transition-all cursor-pointer group relative overflow-hidden focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-sage-600"
           tabIndex={0}
           role="button"
-          aria-label="Breathing Rhythm Practice - 4 minutes, find your comfortable pattern"
+          aria-label="Breathing Practice - 4 minutes, find your comfortable pattern"
           onClick={() => {
             setShowBreathingPractice(true);
             const id = trackTechniqueStart('box-breathing');
@@ -2205,7 +2130,7 @@ function App() {
             <Square className="h-8 w-8" style={{ color: '#FFFFFF' }} />
           </div>
           <h3 className="text-xl font-bold mb-3" style={{ color: '#1A1A1A' }}>
-            Breathing Rhythm
+            Breathing Practice
           </h3>
           <p className="text-sm mb-5" style={{ color: '#3A3A3A', lineHeight: '1.6' }}>
             Find your comfortable pattern to anchor your system
@@ -2228,14 +2153,14 @@ function App() {
           </div>
         </article>
 
-        {/* Body Release Pattern */}
+        {/* Body Check-In */}
         <article
           className="rounded-2xl p-7 transition-all cursor-pointer group relative overflow-hidden focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-sage-600"
           tabIndex={0}
           role="button"
-          aria-label="Body Release Pattern exercise - 1 minute, moderate progressive release through your body"
+          aria-label="Body Check-In - Notice how your body feels"
           onClick={() => {
-            setSelectedTechnique('body-release');
+            setShowBodyCheckIn(true);
             const id = trackTechniqueStart('body-release');
             setCurrentTechniqueId(id);
           }}
@@ -2274,10 +2199,10 @@ function App() {
             <Waves className="h-8 w-8" aria-hidden="true" style={{ color: '#FFFFFF' }} />
           </div>
           <h3 className="text-xl font-bold mb-3" style={{ color: '#1A1A1A' }}>
-            Body Release Pattern
+            Body Check-In
           </h3>
           <p className="text-sm mb-5" style={{ color: '#3A3A3A', lineHeight: '1.6' }}>
-            Progressive release through your body
+            Notice and release in your own way
           </p>
           <div className="flex items-center space-x-4 text-sm mb-4">
             <span
@@ -2297,21 +2222,21 @@ function App() {
           </div>
         </article>
 
-        {/* Temperature Shift */}
+        {/* Emotion Mapping for Interpreters */}
         <article
           className="rounded-2xl p-7 transition-all cursor-pointer group relative overflow-hidden focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-sage-600"
           tabIndex={0}
           role="button"
-          aria-label="Temperature Shift exercise - 1 minute, intense temperature-based nervous system reset"
+          aria-label="Emotion Mapping for Interpreters - Understand your neurological response to interpreted content"
           onClick={() => {
-            setSelectedTechnique('temperature-shift');
-            const id = trackTechniqueStart('temperature-shift');
+            setShowEmotionMapping(true);
+            const id = trackTechniqueStart('emotion-mapping');
             setCurrentTechniqueId(id);
           }}
           style={{
-            background: 'linear-gradient(145deg, #FFFFFF 0%, #FAFAF8 100%)',
-            border: '2px solid transparent',
-            boxShadow: '0 4px 15px rgba(0, 0, 0, 0.05)',
+            background: selectedTechnique === 'emotion-mapping' ? 'linear-gradient(145deg, #F3E8FF 0%, #E9D5FF 100%)' : 'linear-gradient(145deg, #FFFFFF 0%, #FAFAF8 100%)',
+            border: selectedTechnique === 'emotion-mapping' ? '2px solid #9333EA' : '2px solid transparent',
+            boxShadow: selectedTechnique === 'emotion-mapping' ? '0 8px 25px rgba(147, 51, 234, 0.2)' : '0 4px 15px rgba(0, 0, 0, 0.05)',
             transform: 'translateY(0)',
           }}
           onMouseEnter={(e) => {
@@ -2340,41 +2265,41 @@ function App() {
               boxShadow: '0 4px 10px rgba(107, 139, 96, 0.3)',
             }}
           >
-            <Thermometer className="h-8 w-8" aria-hidden="true" style={{ color: '#FFFFFF' }} />
+            <Activity className="h-8 w-8" aria-hidden="true" style={{ color: '#FFFFFF' }} />
           </div>
           <h3 className="text-xl font-bold mb-3" style={{ color: '#1A1A1A' }}>
-            Temperature Shift
+            Emotion Mapping
           </h3>
           <p className="text-sm mb-5" style={{ color: '#3A3A3A', lineHeight: '1.6' }}>
-            Use temperature to reset your nervous system
+            Understand your brain's response to interpreted content
           </p>
           <div className="flex items-center space-x-4 text-sm mb-4">
             <span
               className="px-3 py-1 rounded-full"
               style={{ backgroundColor: 'rgba(92, 127, 79, 0.15)', color: '#2D5F3F' }}
             >
-              1 minute
+              3 minutes
             </span>
             <span className="font-semibold" style={{ color: '#5C7F4F' }}>
-              Gentle
+              Moderate
             </span>
           </div>
           <div className="pt-4 border-t" style={{ borderColor: 'rgba(92, 127, 79, 0.2)' }}>
             <p className="text-sm italic" style={{ color: '#6B7C6B' }}>
-              Activates your natural calming response
+              Map your neurological response patterns
             </p>
           </div>
         </article>
 
-        {/* Sensory Reset */}
+        {/* Professional Boundaries Reset */}
         <article
           className="rounded-2xl p-7 transition-all cursor-pointer group relative overflow-hidden focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-sage-600"
           tabIndex={0}
           role="button"
-          aria-label="Sensory Reset exercise - 2 minutes, very gentle sensory break"
+          aria-label="Professional Boundaries Reset - Return to your center after difficult content"
           onClick={() => {
-            setSelectedTechnique('sensory-reset');
-            const id = trackTechniqueStart('sensory-reset');
+            setShowProfessionalBoundariesReset(true);
+            const id = trackTechniqueStart('emotional-proximity-reset');
             setCurrentTechniqueId(id);
           }}
           style={{
@@ -2412,17 +2337,17 @@ function App() {
             <Eye className="h-8 w-8" aria-hidden="true" style={{ color: '#FFFFFF' }} />
           </div>
           <h3 className="text-xl font-bold mb-3" style={{ color: '#1A1A1A' }}>
-            Sensory Reset
+            Professional Boundaries Reset
           </h3>
           <p className="text-sm mb-5" style={{ color: '#3A3A3A', lineHeight: '1.6' }}>
-            Give your senses a gentle break
+            Restore professional boundaries after intense interpreting
           </p>
           <div className="flex items-center space-x-4 text-sm mb-4">
             <span
               className="px-3 py-1 rounded-full"
               style={{ backgroundColor: 'rgba(92, 127, 79, 0.15)', color: '#2D5F3F' }}
             >
-              80 seconds
+              Flexible
             </span>
             <span className="font-semibold" style={{ color: '#5C7F4F' }}>
               Very Gentle
@@ -2435,15 +2360,15 @@ function App() {
           </div>
         </article>
 
-        {/* Expansion Practice */}
+        {/* Between Languages Reset */}
         <article
           className="rounded-2xl p-7 transition-all cursor-pointer group relative overflow-hidden focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-sage-600"
           tabIndex={0}
           role="button"
-          aria-label="Expansion Practice exercise - 6 minutes, moderate practice to create space in awareness"
+          aria-label="Assignment Reset - Clear between interpretations"
           onClick={() => {
-            setSelectedTechnique('expansion-practice');
-            const id = trackTechniqueStart('expansion-practice');
+            setShowAssignmentReset(true);
+            const id = trackTechniqueStart('assignment-reset');
             setCurrentTechniqueId(id);
           }}
           style={{
@@ -2478,82 +2403,13 @@ function App() {
               boxShadow: '0 4px 10px rgba(107, 139, 96, 0.3)',
             }}
           >
-            <Mountain className="h-8 w-8" aria-hidden="true" style={{ color: '#FFFFFF' }} />
+            <Languages className="h-8 w-8" aria-hidden="true" style={{ color: '#FFFFFF' }} />
           </div>
           <h3 className="text-xl font-bold mb-3" style={{ color: '#1A1A1A' }}>
-            Expansion Practice
+            Assignment Reset
           </h3>
           <p className="text-sm mb-5" style={{ color: '#3A3A3A', lineHeight: '1.6' }}>
-            Create space in your awareness
-          </p>
-          <div className="flex items-center space-x-4 text-sm mb-4">
-            <span
-              className="px-3 py-1 rounded-full"
-              style={{ backgroundColor: 'rgba(92, 127, 79, 0.15)', color: '#2D5F3F' }}
-            >
-              2 minutes
-            </span>
-            <span className="font-semibold" style={{ color: '#5C7F4F' }}>
-              Gentle
-            </span>
-          </div>
-          <div className="pt-4 border-t" style={{ borderColor: 'rgba(92, 127, 79, 0.2)' }}>
-            <p className="text-sm italic" style={{ color: '#6B7C6B' }}>
-              Shifts from focused to spacious awareness
-            </p>
-          </div>
-        </article>
-
-        {/* Name & Transform */}
-        <article
-          className="rounded-2xl p-7 transition-all cursor-pointer group relative overflow-hidden focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-sage-600"
-          tabIndex={0}
-          role="button"
-          aria-label="Name and Transform exercise - 5 minutes, moderate practice to work with emotions as information"
-          onClick={() => {
-            setSelectedTechnique('name-transform');
-            const id = trackTechniqueStart('name-transform');
-            setCurrentTechniqueId(id);
-          }}
-          style={{
-            background: 'linear-gradient(145deg, #FFFFFF 0%, #FAFAF8 100%)',
-            border: '2px solid transparent',
-            boxShadow: '0 4px 15px rgba(0, 0, 0, 0.05)',
-            transform: 'translateY(0)',
-          }}
-          onMouseEnter={(e) => {
-            e.currentTarget.style.borderColor = '#5C7F4F';
-            e.currentTarget.style.transform = 'translateY(-6px) scale(1.02)';
-            e.currentTarget.style.boxShadow = '0 12px 30px rgba(92, 127, 79, 0.25)';
-          }}
-          onMouseLeave={(e) => {
-            e.currentTarget.style.borderColor = 'transparent';
-            e.currentTarget.style.transform = 'translateY(0) scale(1)';
-            e.currentTarget.style.boxShadow = '0 4px 15px rgba(0, 0, 0, 0.05)';
-          }}
-        >
-          <div
-            className="absolute top-0 right-0 w-32 h-32 opacity-10"
-            style={{
-              background: 'radial-gradient(circle, #5C7F4F 0%, transparent 70%)',
-              transform: 'translate(50%, -50%)',
-            }}
-          ></div>
-
-          <div
-            className="rounded-xl p-4 w-fit mb-5"
-            style={{
-              background: 'linear-gradient(145deg, #6B8B60 0%, #5F7F55 100%)',
-              boxShadow: '0 4px 10px rgba(107, 139, 96, 0.3)',
-            }}
-          >
-            <Heart className="h-8 w-8" aria-hidden="true" style={{ color: '#FFFFFF' }} />
-          </div>
-          <h3 className="text-xl font-bold mb-3" style={{ color: '#1A1A1A' }}>
-            Name & Transform
-          </h3>
-          <p className="text-sm mb-5" style={{ color: '#3A3A3A', lineHeight: '1.6' }}>
-            Work with emotions as information
+            Clear between interpretations
           </p>
           <div className="flex items-center space-x-4 text-sm mb-4">
             <span
@@ -2563,12 +2419,81 @@ function App() {
               3 minutes
             </span>
             <span className="font-semibold" style={{ color: '#5C7F4F' }}>
-              Moderate
+              Gentle
             </span>
           </div>
           <div className="pt-4 border-t" style={{ borderColor: 'rgba(92, 127, 79, 0.2)' }}>
             <p className="text-sm italic" style={{ color: '#6B7C6B' }}>
-              Transforms emotional overwhelm into clarity
+              Professional reset for interpreters
+            </p>
+          </div>
+        </article>
+
+        {/* Technology Fatigue Reset */}
+        <article
+          className="rounded-2xl p-7 transition-all cursor-pointer group relative overflow-hidden focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-sage-600"
+          tabIndex={0}
+          role="button"
+          aria-label="Technology Fatigue Reset exercise - 2 minutes, restore from screen and audio strain"
+          onClick={() => {
+            setShowTechnologyFatigueReset(true);
+            const id = trackTechniqueStart('tech-fatigue-reset');
+            setCurrentTechniqueId(id);
+          }}
+          style={{
+            background: 'linear-gradient(145deg, #FFFFFF 0%, #FAFAF8 100%)',
+            border: '2px solid transparent',
+            boxShadow: '0 4px 15px rgba(0, 0, 0, 0.05)',
+            transform: 'translateY(0)',
+          }}
+          onMouseEnter={(e) => {
+            e.currentTarget.style.borderColor = '#5C7F4F';
+            e.currentTarget.style.transform = 'translateY(-6px) scale(1.02)';
+            e.currentTarget.style.boxShadow = '0 12px 30px rgba(92, 127, 79, 0.25)';
+          }}
+          onMouseLeave={(e) => {
+            e.currentTarget.style.borderColor = 'transparent';
+            e.currentTarget.style.transform = 'translateY(0) scale(1)';
+            e.currentTarget.style.boxShadow = '0 4px 15px rgba(0, 0, 0, 0.05)';
+          }}
+        >
+          <div
+            className="absolute top-0 right-0 w-32 h-32 opacity-10"
+            style={{
+              background: 'radial-gradient(circle, #5C7F4F 0%, transparent 70%)',
+              transform: 'translate(50%, -50%)',
+            }}
+          ></div>
+
+          <div
+            className="rounded-xl p-4 w-fit mb-5"
+            style={{
+              background: 'linear-gradient(145deg, #6B8B60 0%, #5F7F55 100%)',
+              boxShadow: '0 4px 10px rgba(107, 139, 96, 0.3)',
+            }}
+          >
+            <Eye className="h-8 w-8" aria-hidden="true" style={{ color: '#FFFFFF' }} />
+          </div>
+          <h3 className="text-xl font-bold mb-3" style={{ color: '#1A1A1A' }}>
+            Technology Fatigue Reset
+          </h3>
+          <p className="text-sm mb-5" style={{ color: '#3A3A3A', lineHeight: '1.6' }}>
+            Restore from screen and audio strain
+          </p>
+          <div className="flex items-center space-x-4 text-sm mb-4">
+            <span
+              className="px-3 py-1 rounded-full"
+              style={{ backgroundColor: 'rgba(92, 127, 79, 0.15)', color: '#2D5F3F' }}
+            >
+              2 minutes
+            </span>
+            <span className="font-semibold" style={{ color: '#5C7F4F' }}>
+              Easy
+            </span>
+          </div>
+          <div className="pt-4 border-t" style={{ borderColor: 'rgba(92, 127, 79, 0.2)' }}>
+            <p className="text-sm italic" style={{ color: '#6B7C6B' }}>
+              Five-zone recovery for VRI/remote interpreting strain
             </p>
           </div>
         </article>
@@ -2592,23 +2517,26 @@ function App() {
               <div className="flex justify-between items-start mb-6">
                 <div>
                   <h2 className="text-2xl font-bold mb-2" style={{ color: '#1A1A1A' }}>
-                    {selectedTechnique === 'box-breathing' && 'Box Breathing Exercise'}
-                    {selectedTechnique === 'body-release' && 'Body Release Pattern'}
+                    {selectedTechnique === 'box-breathing' && 'Breathing Practice'}
+                    {selectedTechnique === 'body-release' && 'Body Awareness Journey'}
                     {selectedTechnique === 'temperature-shift' && 'Temperature Shift'}
                     {selectedTechnique === 'sensory-reset' && 'Sensory Reset'}
                     {selectedTechnique === 'expansion-practice' && 'Expansion Practice'}
-                    {selectedTechnique === 'name-transform' && 'Name and Transform'}
+                    {selectedTechnique === 'tech-fatigue-reset' && 'Technology Fatigue Reset'}
+                    {selectedTechnique === 'emotion-mapping' && 'Emotion Mapping'}
                   </h2>
                   <p className="text-sm" style={{ color: '#5A5A5A' }}>
-                    {selectedTechnique === 'box-breathing' && '4 minutes • Gentle breathing rhythm'}
-                    {selectedTechnique === 'body-release' && '1 minute • Progressive body release'}
+                    {selectedTechnique === 'box-breathing' && '4 minutes • Find your calming pattern'}
+                    {selectedTechnique === 'body-release' && '1 minute • Connect with your physical self'}
                     {selectedTechnique === 'temperature-shift' &&
                       '1 minute • Quick nervous system reset'}
                     {selectedTechnique === 'sensory-reset' && '80 seconds • Gentle sensory break'}
                     {selectedTechnique === 'expansion-practice' &&
                       '2 minutes • Create space in awareness'}
-                    {selectedTechnique === 'name-transform' &&
-                      '3 minutes • Transform emotions into clarity'}
+                    {selectedTechnique === 'tech-fatigue-reset' &&
+                      '2 minutes • Restore from digital strain'}
+                    {selectedTechnique === 'emotion-mapping' &&
+                      '3 minutes • Understand your internal landscape'}
                   </p>
                 </div>
                 <button
@@ -2648,7 +2576,74 @@ function App() {
                 </button>
               </div>
 
-              {/* Instructions */}
+              {/* Current Focus Section */}
+              <div className="mb-6">
+                <div className="text-center mb-4">
+                  <p className="text-sm font-medium mb-1" style={{ color: '#5C7F4F' }}>Current Focus:</p>
+                  <h3 className="text-xl font-bold" style={{ color: '#2D5F3F' }}>
+                    {selectedTechnique === 'box-breathing' && (
+                      !isTimerActive ? 'Ready to Begin' :
+                      breathPhase === 'inhale' ? 'Expanding Phase' :
+                      breathPhase === 'hold-in' ? 'Holding Gently' :
+                      breathPhase === 'exhale' ? 'Releasing Phase' :
+                      'Resting Pause'
+                    )}
+                    {selectedTechnique === 'body-release' && (
+                      !isTimerActive ? 'Check in with your body' :
+                      'Moving through your body'
+                    )}
+                    {selectedTechnique === 'tech-fatigue-reset' && (
+                      !isTimerActive ? 'Digital Overload Check' :
+                      techniqueProgress < 20 ? 'Visual Rest' :
+                      techniqueProgress < 40 ? 'Audio Rest' :
+                      techniqueProgress < 60 ? 'Posture Reset' :
+                      techniqueProgress < 80 ? 'Distance Check' :
+                      'Facial Release'
+                    )}
+                    {selectedTechnique === 'emotion-mapping' && (
+                      !isTimerActive ? 'Neural Check-In' :
+                      techniqueProgress < 17 ? 'Internal Scanning' :
+                      techniqueProgress < 33 ? 'Naming the State' :
+                      techniqueProgress < 50 ? 'Finding Specificity' :
+                      techniqueProgress < 67 ? 'Understanding Patterns' :
+                      techniqueProgress < 83 ? 'Choosing Support' :
+                      'Integration'
+                    )}
+                  </h3>
+                  <p className="text-sm mt-1" style={{ color: '#6B7C6B' }}>
+                    {selectedTechnique === 'box-breathing' && (
+                      !isTimerActive ? 'Press start when ready' :
+                      breathPhase === 'inhale' ? 'Let your breath fill you' :
+                      breathPhase === 'hold-in' ? 'Rest in fullness' :
+                      breathPhase === 'exhale' ? 'Let everything soften' :
+                      'Rest in emptiness'
+                    )}
+                    {selectedTechnique === 'body-release' && (
+                      !isTimerActive ? 'Choose your time and begin when ready' :
+                      'Notice without needing to change anything'
+                    )}
+                    {selectedTechnique === 'tech-fatigue-reset' && (
+                      !isTimerActive ? 'You are here, in this moment' :
+                      techniqueProgress < 20 ? 'Let your eyes soften' :
+                      techniqueProgress < 40 ? 'Let sound settle' :
+                      techniqueProgress < 60 ? 'Release held patterns' :
+                      techniqueProgress < 80 ? 'Find your comfortable distance' :
+                      'Let your face soften'
+                    )}
+                    {selectedTechnique === 'emotion-mapping' && (
+                      !isTimerActive ? 'Press start when ready' :
+                      techniqueProgress < 17 ? "What's present in your body?" :
+                      techniqueProgress < 33 ? 'Name without judgment' :
+                      techniqueProgress < 50 ? 'Be precise with your words' :
+                      techniqueProgress < 67 ? 'Notice your patterns' :
+                      techniqueProgress < 83 ? 'Match strategy to state' :
+                      'Document your discovery'
+                    )}
+                  </p>
+                </div>
+              </div>
+
+              {/* Practice Content */}
               <div
                 className="mb-8 p-6 rounded-xl"
                 style={{ backgroundColor: 'rgba(92, 127, 79, 0.05)' }}
@@ -2752,48 +2747,71 @@ function App() {
                       </div>
                     </div>
 
-                    <h3 className="font-semibold mb-3 text-center" style={{ color: '#2D5F3F' }}>
-                      Box Breathing Pattern:
-                    </h3>
-                    <div className="grid grid-cols-2 gap-3 text-sm">
-                      <div
-                        className="flex items-center p-2 rounded-lg"
-                        style={{ backgroundColor: 'rgba(92, 127, 79, 0.1)' }}
-                      >
-                        <div className="w-3 h-3 rounded-full bg-green-500 mr-2" />
-                        <span style={{ color: '#3A3A3A' }}>Inhale: 4 counts</span>
-                      </div>
-                      <div
-                        className="flex items-center p-2 rounded-lg"
-                        style={{ backgroundColor: 'rgba(92, 127, 79, 0.1)' }}
-                      >
-                        <div className="w-3 h-3 rounded-full bg-yellow-500 mr-2" />
-                        <span style={{ color: '#3A3A3A' }}>Hold: 4 counts</span>
-                      </div>
-                      <div
-                        className="flex items-center p-2 rounded-lg"
-                        style={{ backgroundColor: 'rgba(92, 127, 79, 0.1)' }}
-                      >
-                        <div className="w-3 h-3 rounded-full bg-blue-500 mr-2" />
-                        <span style={{ color: '#3A3A3A' }}>Exhale: 4 counts</span>
-                      </div>
-                      <div
-                        className="flex items-center p-2 rounded-lg"
-                        style={{ backgroundColor: 'rgba(92, 127, 79, 0.1)' }}
-                      >
-                        <div className="w-3 h-3 rounded-full bg-purple-500 mr-2" />
-                        <span style={{ color: '#3A3A3A' }}>Hold Empty: 4 counts</span>
+                    {/* Your Options Section */}
+                    <div className="mb-6">
+                      <h3 className="font-semibold mb-3" style={{ color: '#2D5F3F' }}>
+                        Your Options:
+                      </h3>
+                      <p className="text-sm mb-4" style={{ color: '#6B7C6B', fontStyle: 'italic' }}>
+                        Find what feels supportive right now
+                      </p>
+                      <div className="space-y-3">
+                        <div className="p-3 rounded-lg" style={{ backgroundColor: 'rgba(92, 127, 79, 0.08)' }}>
+                          <p className="font-medium text-sm mb-1" style={{ color: '#2D5F3F' }}>
+                            Counted pace
+                          </p>
+                          <p className="text-xs" style={{ color: '#6B7C6B' }}>
+                            Follow a steady 4-count pattern
+                          </p>
+                        </div>
+                        <div className="p-3 rounded-lg" style={{ backgroundColor: 'rgba(92, 127, 79, 0.08)' }}>
+                          <p className="font-medium text-sm mb-1" style={{ color: '#2D5F3F' }}>
+                            Natural flow
+                          </p>
+                          <p className="text-xs" style={{ color: '#6B7C6B' }}>
+                            Let your breath find its way
+                          </p>
+                        </div>
+                        <div className="p-3 rounded-lg" style={{ backgroundColor: 'rgba(92, 127, 79, 0.08)' }}>
+                          <p className="font-medium text-sm mb-1" style={{ color: '#2D5F3F' }}>
+                            Gentle waves
+                          </p>
+                          <p className="text-xs" style={{ color: '#6B7C6B' }}>
+                            Like ocean waves, in and out
+                          </p>
+                        </div>
+                        <div className="p-3 rounded-lg" style={{ backgroundColor: 'rgba(92, 127, 79, 0.08)' }}>
+                          <p className="font-medium text-sm mb-1" style={{ color: '#2D5F3F' }}>
+                            Belly softening
+                          </p>
+                          <p className="text-xs" style={{ color: '#6B7C6B' }}>
+                            Focus on your center expanding
+                          </p>
+                        </div>
                       </div>
                     </div>
                     
-                    {/* Why This Works */}
-                    <div className="mt-4 p-3 rounded-lg" style={{ backgroundColor: 'rgba(92, 127, 79, 0.1)' }}>
+                    {/* Why This Supports You */}
+                    <div className="p-3 rounded-lg" style={{ backgroundColor: 'rgba(92, 127, 79, 0.1)' }}>
                       <p className="text-xs font-medium mb-1" style={{ color: '#2D5F3F' }}>
-                        Why This Works:
+                        Why This Supports You:
                       </p>
                       <p className="text-xs" style={{ color: '#3A3A3A' }}>
-                        Box breathing activates your parasympathetic nervous system through controlled CO2 regulation. Used by Navy SEALs, it reduces stress hormones within 90 seconds.
+                        Steady breathing activates your vagus nerve, creating a neurological shift from stress activation to restoration.
                       </p>
+                    </div>
+                    
+                    {/* Adapt As Needed */}
+                    <div className="mt-4 p-3 rounded-lg border" style={{ borderColor: 'rgba(92, 127, 79, 0.2)' }}>
+                      <p className="text-xs font-medium mb-2" style={{ color: '#2D5F3F' }}>
+                        Adapt As Needed:
+                      </p>
+                      <ul className="text-xs space-y-1" style={{ color: '#6B7C6B' }}>
+                        <li>• Let pauses happen naturally or skip them</li>
+                        <li>• Find your comfortable depth</li>
+                        <li>• Allow your body to move with breath</li>
+                        <li>• Rest in whatever pattern emerges</li>
+                      </ul>
                     </div>
                   </>
                 ) : (
@@ -2804,269 +2822,179 @@ function App() {
                     <div className="space-y-2">
                       {selectedTechnique === 'body-release' && (
                         <>
-                          {/* Body Release Animation */}
-                          <div className="flex flex-col items-center mb-6">
-                            {/* Status Text Above Animation */}
-                            <div className="text-center mb-4">
-                              <p className="text-2xl font-bold" style={{ color: '#2D5F3F' }}>
-                                {bodyPart === 0 && 'Head & Jaw'}
-                                {bodyPart === 1 && 'Shoulders'}
-                                {bodyPart === 2 && 'Chest'}
-                                {bodyPart === 3 && 'Belly'}
-                                {bodyPart === 4 && 'Legs & Feet'}
-                                {!isTimerActive && 'Ready to Release'}
-                              </p>
-                              <p className="text-sm mt-1" style={{ color: '#6B7C6B' }}>
-                                {isTimerActive ? 'Releasing tension...' : 'Press start to begin'}
-                              </p>
-                            </div>
-                            
-                            {/* Enhanced Body Animation */}
-                            <div className="relative w-64 h-64 flex items-center justify-center">
-                              {/* Pulsing Background Circle */}
-                              <div 
-                                className="absolute inset-0 rounded-full opacity-20"
-                                style={{
-                                  background: isTimerActive ? 'radial-gradient(circle, #5C7F4F 0%, transparent 70%)' : 'none',
-                                  animation: isTimerActive ? 'pulse 2s ease-in-out infinite' : 'none'
-                                }}
-                              />
-                              
-                              {/* Body Figure */}
-                              <svg width="120" height="200" viewBox="0 0 120 200" className="relative z-10">
-                                {/* Head */}
-                                <circle
-                                  cx="60"
-                                  cy="25"
-                                  r="18"
-                                  fill={bodyPart === 0 ? '#F87171' : '#D1D5DB'}
-                                  className="transition-all duration-1000"
-                                  opacity={bodyPart === 0 ? 1 : 0.5}
-                                  style={{
-                                    filter: bodyPart === 0 && isTimerActive ? 'drop-shadow(0 0 15px #F87171)' : 'none',
-                                    transform: bodyPart === 0 ? 'scale(1.1)' : 'scale(1)',
-                                    transformOrigin: 'center'
-                                  }}
-                                />
-                                
-                                {/* Neck */}
-                                <rect
-                                  x="55"
-                                  y="40"
-                                  width="10"
-                                  height="10"
-                                  fill={bodyPart === 0 || bodyPart === 1 ? '#FED7AA' : '#D1D5DB'}
-                                  opacity={0.7}
-                                />
-                                
-                                {/* Shoulders */}
-                                <ellipse
-                                  cx="60"
-                                  cy="55"
-                                  rx="35"
-                                  ry="12"
-                                  fill={bodyPart === 1 ? '#FB923C' : '#D1D5DB'}
-                                  className="transition-all duration-1000"
-                                  opacity={bodyPart === 1 ? 1 : 0.5}
-                                  style={{
-                                    filter: bodyPart === 1 && isTimerActive ? 'drop-shadow(0 0 15px #FB923C)' : 'none',
-                                    transform: bodyPart === 1 ? 'scale(1.1)' : 'scale(1)',
-                                    transformOrigin: 'center'
-                                  }}
-                                />
-                                
-                                {/* Arms */}
-                                <rect x="20" y="55" width="8" height="45" rx="4" fill="#D1D5DB" opacity={0.4} />
-                                <rect x="92" y="55" width="8" height="45" rx="4" fill="#D1D5DB" opacity={0.4} />
-                                
-                                {/* Chest */}
-                                <rect
-                                  x="35"
-                                  y="60"
-                                  width="50"
-                                  height="35"
-                                  rx="8"
-                                  fill={bodyPart === 2 ? '#FDE047' : '#D1D5DB'}
-                                  className="transition-all duration-1000"
-                                  opacity={bodyPart === 2 ? 1 : 0.5}
-                                  style={{
-                                    filter: bodyPart === 2 && isTimerActive ? 'drop-shadow(0 0 15px #FDE047)' : 'none',
-                                    transform: bodyPart === 2 ? 'scale(1.1)' : 'scale(1)',
-                                    transformOrigin: 'center'
-                                  }}
-                                />
-                                
-                                {/* Belly */}
-                                <ellipse
-                                  cx="60"
-                                  cy="110"
-                                  rx="22"
-                                  ry="18"
-                                  fill={bodyPart === 3 ? '#4ADE80' : '#D1D5DB'}
-                                  className="transition-all duration-1000"
-                                  opacity={bodyPart === 3 ? 1 : 0.5}
-                                  style={{
-                                    filter: bodyPart === 3 && isTimerActive ? 'drop-shadow(0 0 15px #4ADE80)' : 'none',
-                                    transform: bodyPart === 3 ? 'scale(1.1)' : 'scale(1)',
-                                    transformOrigin: 'center'
-                                  }}
-                                />
-                                
-                                {/* Hips */}
-                                <rect
-                                  x="42"
-                                  y="125"
-                                  width="36"
-                                  height="15"
-                                  rx="6"
-                                  fill="#D1D5DB"
-                                  opacity={0.5}
-                                />
-                                
-                                {/* Legs */}
-                                <rect
-                                  x="45"
-                                  y="140"
-                                  width="12"
-                                  height="45"
-                                  rx="6"
-                                  fill={bodyPart === 4 ? '#60A5FA' : '#D1D5DB'}
-                                  className="transition-all duration-1000"
-                                  opacity={bodyPart === 4 ? 1 : 0.5}
-                                  style={{
-                                    filter: bodyPart === 4 && isTimerActive ? 'drop-shadow(0 0 15px #60A5FA)' : 'none',
-                                    transform: bodyPart === 4 ? 'scale(1.1)' : 'scale(1)',
-                                    transformOrigin: 'center'
-                                  }}
-                                />
-                                <rect
-                                  x="63"
-                                  y="140"
-                                  width="12"
-                                  height="45"
-                                  rx="6"
-                                  fill={bodyPart === 4 ? '#60A5FA' : '#D1D5DB'}
-                                  className="transition-all duration-1000"
-                                  opacity={bodyPart === 4 ? 1 : 0.5}
-                                  style={{
-                                    filter: bodyPart === 4 && isTimerActive ? 'drop-shadow(0 0 15px #60A5FA)' : 'none',
-                                    transform: bodyPart === 4 ? 'scale(1.1)' : 'scale(1)',
-                                    transformOrigin: 'center'
-                                  }}
-                                />
-                                
-                                {/* Feet */}
-                                <ellipse
-                                  cx="51"
-                                  cy="190"
-                                  rx="8"
-                                  ry="5"
-                                  fill={bodyPart === 4 ? '#3B82F6' : '#D1D5DB'}
-                                  className="transition-all duration-1000"
-                                  opacity={bodyPart === 4 ? 1 : 0.5}
-                                />
-                                <ellipse
-                                  cx="69"
-                                  cy="190"
-                                  rx="8"
-                                  ry="5"
-                                  fill={bodyPart === 4 ? '#3B82F6' : '#D1D5DB'}
-                                  className="transition-all duration-1000"
-                                  opacity={bodyPart === 4 ? 1 : 0.5}
-                                />
-                                
-                                {/* Energy Flow Lines (when active) */}
-                                {isTimerActive && (
-                                  <>
-                                    <circle cx="60" cy={bodyPart === 0 ? 25 : bodyPart === 1 ? 55 : bodyPart === 2 ? 77 : bodyPart === 3 ? 110 : 162} r="2" fill="#5C7F4F">
-                                      <animate attributeName="r" values="2;6;2" dur="2s" repeatCount="indefinite" />
-                                      <animate attributeName="opacity" values="1;0;1" dur="2s" repeatCount="indefinite" />
-                                    </circle>
-                                    <circle cx="60" cy={bodyPart === 0 ? 25 : bodyPart === 1 ? 55 : bodyPart === 2 ? 77 : bodyPart === 3 ? 110 : 162} r="4" fill="none" stroke="#5C7F4F" strokeWidth="1">
-                                      <animate attributeName="r" values="4;12;4" dur="2s" repeatCount="indefinite" />
-                                      <animate attributeName="opacity" values="0.5;0;0.5" dur="2s" repeatCount="indefinite" />
-                                    </circle>
-                                  </>
-                                )}
-                              </svg>
-                            </div>
-                            
-                            {/* Progress Bar */}
-                            <div className="w-full max-w-xs mt-4">
-                              <div className="h-2 bg-gray-200 rounded-full overflow-hidden">
-                                <div 
-                                  className="h-full transition-all duration-1000"
-                                  style={{
-                                    width: `${((bodyPart + 1) / 5) * 100}%`,
-                                    backgroundColor: '#5C7F4F'
-                                  }}
-                                />
+                          {/* Body Awareness Journey - New Accessible Design */}
+                          {!isTimerActive ? (
+                            // Initial Setup Screen
+                            <div className="space-y-6">
+                              {/* Time Selection */}
+                              <div>
+                                <h3 className="font-semibold mb-3" style={{ color: '#2D5F3F' }}>
+                                  How long:
+                                </h3>
+                                <div className="grid grid-cols-2 gap-2">
+                                  {[30, 60, 120, 180].map((seconds) => (
+                                    <button
+                                      key={seconds}
+                                      onClick={() => setBodyAwarenessTime(seconds)}
+                                      className="px-3 py-3 rounded-lg text-sm font-medium transition-all"
+                                      style={{
+                                        backgroundColor: bodyAwarenessTime === seconds ? '#5C7F4F' : 'rgba(92, 127, 79, 0.1)',
+                                        color: bodyAwarenessTime === seconds ? '#FFFFFF' : '#2D5F3F',
+                                        border: bodyAwarenessTime === seconds ? '2px solid #5C7F4F' : '2px solid transparent'
+                                      }}
+                                    >
+                                      {seconds === 30 ? '30 seconds' : 
+                                       seconds === 60 ? '1 minute' :
+                                       seconds === 120 ? '2 minutes' : '3 minutes'}
+                                    </button>
+                                  ))}
+                                </div>
+                              </div>
+
+                              {/* Practice Method Selection */}
+                              <div>
+                                <h3 className="font-semibold mb-3" style={{ color: '#2D5F3F' }}>
+                                  Choose how to practice:
+                                </h3>
+                                <div className="space-y-2">
+                                  {[
+                                    { id: 'move', label: 'Move', desc: 'Adjust, rock, or stretch parts of your body' },
+                                    { id: 'picture', label: 'Picture', desc: 'Imagine warmth or light in each area' },
+                                    { id: 'breathe', label: 'Breathe', desc: 'Send your breath to different areas' },
+                                    { id: 'touch', label: 'Touch', desc: 'Press or tap on your body if you want' },
+                                    { id: 'still', label: 'Stay still', desc: 'Just notice without moving' }
+                                  ].map(method => (
+                                    <button
+                                      key={method.id}
+                                      onClick={() => setBodyAwarenessMethod(method.id as any)}
+                                      className="w-full text-left p-3 rounded-lg transition-all"
+                                      style={{
+                                        backgroundColor: bodyAwarenessMethod === method.id ? 'rgba(92, 127, 79, 0.15)' : 'rgba(92, 127, 79, 0.05)',
+                                        border: bodyAwarenessMethod === method.id ? '2px solid #5C7F4F' : '2px solid transparent'
+                                      }}
+                                    >
+                                      <div className="font-medium text-sm" style={{ color: '#2D5F3F' }}>
+                                        {method.label}
+                                      </div>
+                                      <div className="text-xs mt-1" style={{ color: '#6B7C6B' }}>
+                                        {method.desc}
+                                      </div>
+                                    </button>
+                                  ))}
+                                </div>
+                              </div>
+
+                              {/* Why This Helps */}
+                              <div className="p-4 rounded-lg" style={{ backgroundColor: 'rgba(92, 127, 79, 0.1)' }}>
+                                <h4 className="font-semibold mb-2 text-sm" style={{ color: '#2D5F3F' }}>
+                                  Why this helps:
+                                </h4>
+                                <p className="text-xs" style={{ color: '#3A3A3A', lineHeight: '1.6' }}>
+                                  Paying attention to your body helps your brain get better at noticing feelings and managing stress.
+                                </p>
                               </div>
                             </div>
-                          </div>
+                          ) : (
+                            // Practice Screen
+                            <div className="space-y-6">
+                              {/* Body Check-in Instructions */}
+                              <div className="p-4 rounded-lg" style={{ backgroundColor: 'rgba(92, 127, 79, 0.05)' }}>
+                                <h3 className="font-semibold mb-3" style={{ color: '#2D5F3F' }}>
+                                  Check each part of your body:
+                                </h3>
+                                <ul className="space-y-2 text-sm" style={{ color: '#3A3A3A' }}>
+                                  <li className="flex items-start">
+                                    <span className="mr-2">•</span>
+                                    <span>Notice your head and face - relax them if it feels good</span>
+                                  </li>
+                                  <li className="flex items-start">
+                                    <span className="mr-2">•</span>
+                                    <span>Check your shoulders - move or adjust them if you want</span>
+                                  </li>
+                                  <li className="flex items-start">
+                                    <span className="mr-2">•</span>
+                                    <span>Feel your chest area - breathe in a comfortable way</span>
+                                  </li>
+                                  <li className="flex items-start">
+                                    <span className="mr-2">•</span>
+                                    <span>Notice your belly - let it be soft if that's okay</span>
+                                  </li>
+                                  <li className="flex items-start">
+                                    <span className="mr-2">•</span>
+                                    <span>Feel your legs and feet - relax them or keep them as they are</span>
+                                  </li>
+                                </ul>
+                              </div>
 
-                          <h3
-                            className="font-semibold mb-3 text-center"
-                            style={{ color: '#2D5F3F' }}
-                          >
-                            Progressive Body Release:
-                          </h3>
-                          <div className="space-y-2 text-sm">
-                            <div
-                              className={`flex items-center p-2 rounded-lg transition-all ${bodyPart === 0 ? 'bg-red-50 border-l-4 border-red-400' : ''}`}
-                            >
-                              <div
-                                className={`w-3 h-3 rounded-full mr-2 ${bodyPart === 0 ? 'bg-red-400' : 'bg-gray-300'}`}
-                              />
-                              <span style={{ color: '#3A3A3A' }}>
-                                Release jaw and facial tension
-                              </span>
+                              {/* Current Practice Method Reminder */}
+                              <div className="p-3 rounded-lg text-center" style={{ backgroundColor: 'rgba(92, 127, 79, 0.1)' }}>
+                                <p className="text-sm font-medium" style={{ color: '#2D5F3F' }}>
+                                  {bodyAwarenessMethod === 'move' && 'Moving & Adjusting'}
+                                  {bodyAwarenessMethod === 'picture' && 'Imagining Warmth'}
+                                  {bodyAwarenessMethod === 'breathe' && 'Breathing Into Areas'}
+                                  {bodyAwarenessMethod === 'touch' && 'Using Touch'}
+                                  {bodyAwarenessMethod === 'still' && 'Staying Still & Noticing'}
+                                </p>
+                                <p className="text-xs mt-1" style={{ color: '#6B7C6B' }}>
+                                  {bodyAwarenessMethod === 'move' && 'Adjust, rock, or stretch as feels good'}
+                                  {bodyAwarenessMethod === 'picture' && 'Imagine warmth or light in each area'}
+                                  {bodyAwarenessMethod === 'breathe' && 'Send breath to different body parts'}
+                                  {bodyAwarenessMethod === 'touch' && 'Press or tap gently on your body'}
+                                  {bodyAwarenessMethod === 'still' && 'Just notice without needing to change'}
+                                </p>
+                              </div>
+
+                              {/* Progress Indicator */}
+                              <div className="w-full">
+                                <div className="flex justify-between text-xs mb-2" style={{ color: '#6B7C6B' }}>
+                                  <span>Progress</span>
+                                  <span>{Math.round((techniqueProgress / 100) * bodyAwarenessTime)} / {bodyAwarenessTime} seconds</span>
+                                </div>
+                                <div className="h-2 bg-gray-200 rounded-full overflow-hidden">
+                                  <div
+                                    className="h-full transition-all duration-1000"
+                                    style={{
+                                      width: `${techniqueProgress}%`,
+                                      backgroundColor: '#5C7F4F'
+                                    }}
+                                  />
+                                </div>
+                              </div>
+
+                              {/* Adaptation Reminders */}
+                              <div className="space-y-3">
+                                <div className="p-3 rounded-lg border" style={{ borderColor: 'rgba(92, 127, 79, 0.2)' }}>
+                                  <h4 className="text-xs font-semibold mb-2" style={{ color: '#2D5F3F' }}>
+                                    If you need to change something:
+                                  </h4>
+                                  <ul className="text-xs space-y-1" style={{ color: '#6B7C6B' }}>
+                                    <li>• Can't move some areas? Just think about them</li>
+                                    <li>• Have pain? Don't try to change it - just notice</li>
+                                    <li>• Need to move around? That's okay</li>
+                                    <li>• Want to skip parts? Go ahead</li>
+                                    <li>• Like to rock or fidget? That can be part of this</li>
+                                  </ul>
+                                </div>
+
+                                <div className="p-3 rounded-lg" style={{ backgroundColor: 'rgba(92, 127, 79, 0.05)' }}>
+                                  <h4 className="text-xs font-semibold mb-2" style={{ color: '#2D5F3F' }}>
+                                    Good to know:
+                                  </h4>
+                                  <ul className="text-xs space-y-1" style={{ color: '#6B7C6B' }}>
+                                    <li>• Keep any tension that helps you feel safe</li>
+                                    <li>• Skip any body part you don't want to think about</li>
+                                    <li>• Sometimes being tense is helpful - that's okay</li>
+                                    <li>• Your body knows what it needs</li>
+                                    <li>• Stop anytime you want</li>
+                                  </ul>
+                                </div>
+                              </div>
                             </div>
-                            <div
-                              className={`flex items-center p-2 rounded-lg transition-all ${bodyPart === 1 ? 'bg-orange-50 border-l-4 border-orange-400' : ''}`}
-                            >
-                              <div
-                                className={`w-3 h-3 rounded-full mr-2 ${bodyPart === 1 ? 'bg-orange-400' : 'bg-gray-300'}`}
-                              />
-                              <span style={{ color: '#3A3A3A' }}>Roll shoulders back and down</span>
-                            </div>
-                            <div
-                              className={`flex items-center p-2 rounded-lg transition-all ${bodyPart === 2 ? 'bg-yellow-50 border-l-4 border-yellow-400' : ''}`}
-                            >
-                              <div
-                                className={`w-3 h-3 rounded-full mr-2 ${bodyPart === 2 ? 'bg-yellow-400' : 'bg-gray-300'}`}
-                              />
-                              <span style={{ color: '#3A3A3A' }}>Open and soften chest</span>
-                            </div>
-                            <div
-                              className={`flex items-center p-2 rounded-lg transition-all ${bodyPart === 3 ? 'bg-green-50 border-l-4 border-green-400' : ''}`}
-                            >
-                              <div
-                                className={`w-3 h-3 rounded-full mr-2 ${bodyPart === 3 ? 'bg-green-400' : 'bg-gray-300'}`}
-                              />
-                              <span style={{ color: '#3A3A3A' }}>Let belly soften and expand</span>
-                            </div>
-                            <div
-                              className={`flex items-center p-2 rounded-lg transition-all ${bodyPart === 4 ? 'bg-blue-50 border-l-4 border-blue-400' : ''}`}
-                            >
-                              <div
-                                className={`w-3 h-3 rounded-full mr-2 ${bodyPart === 4 ? 'bg-blue-400' : 'bg-gray-300'}`}
-                              />
-                              <span style={{ color: '#3A3A3A' }}>Release legs and feet</span>
-                            </div>
-                          </div>
-                          
-                          {/* Why This Works */}
-                          <div className="mt-4 p-3 rounded-lg" style={{ backgroundColor: 'rgba(92, 127, 79, 0.1)' }}>
-                            <p className="text-xs font-medium mb-1" style={{ color: '#2D5F3F' }}>
-                              Why This Works:
-                            </p>
-                            <p className="text-xs" style={{ color: '#3A3A3A' }}>
-                              Progressive muscle release reduces cortisol levels by 23% in just one minute. Systematically releasing tension signals safety to your nervous system.
-                            </p>
-                          </div>
+                          )}
                         </>
                       )}
+                    </div>
+                    <div className="space-y-2">
                       {selectedTechnique === 'temperature-shift' && (
                         <>
                           {/* Temperature Shift Animation */}
@@ -3359,6 +3287,8 @@ function App() {
                           </div>
                         </>
                       )}
+                    </div>
+                    <div className="space-y-2">
                       {selectedTechnique === 'sensory-reset' && (
                         <>
                           {/* Sensory Reset Animation */}
@@ -3551,6 +3481,8 @@ function App() {
                           </div>
                         </>
                       )}
+                    </div>
+                    <div className="space-y-2">
                       {selectedTechnique === 'expansion-practice' && (
                         <>
                           {/* Expansion Practice Animation */}
@@ -3778,154 +3710,131 @@ function App() {
                           </div>
                         </>
                       )}
-                      {selectedTechnique === 'name-transform' && (
+                    </div>
+                    <div className="space-y-2">
+                      {selectedTechnique === 'tech-fatigue-reset' && (
                         <>
-                          {/* Name and Transform Animation */}
+                          {/* Technology Fatigue Reset Animation */}
                           <div className="flex flex-col items-center mb-6">
                             {/* Status Text Above Animation */}
                             <div className="text-center mb-4">
                               <p className="text-2xl font-bold" style={{ color: '#2D5F3F' }}>
-                                {!isTimerActive && 'Ready to Transform'}
-                                {isTimerActive && techniqueProgress < 33 && 'Feeling the Emotion'}
-                                {isTimerActive && techniqueProgress >= 33 && techniqueProgress < 66 && 'Naming & Locating'}
-                                {isTimerActive && techniqueProgress >= 66 && 'Offering Compassion'}
+                                {!isTimerActive && 'Digital Overload Check'}
+                                {isTimerActive && techniqueProgress < 20 && 'Zone 1: Eye Relief'}
+                                {isTimerActive && techniqueProgress >= 20 && techniqueProgress < 40 && 'Zone 2: Audio Recovery'}
+                                {isTimerActive && techniqueProgress >= 40 && techniqueProgress < 60 && 'Zone 3: Posture Restoration'}
+                                {isTimerActive && techniqueProgress >= 60 && techniqueProgress < 80 && 'Zone 4: Screen Distance'}
+                                {isTimerActive && techniqueProgress >= 80 && 'Zone 5: Facial Tension Release'}
                               </p>
                               <p className="text-sm mt-1" style={{ color: '#6B7C6B' }}>
-                                {isTimerActive ? 'Transform emotions into wisdom' : 'Press start to begin transformation'}
+                                {isTimerActive ? 'Your eyes, ears, and body need relief' : 'Press start for tech recovery'}
                               </p>
                             </div>
                             
-                            {/* Enhanced Emotion Transformation Animation */}
+                            {/* Tech Fatigue Recovery Visualization */}
                             <div className="relative w-64 h-64 flex items-center justify-center">
                               {/* Background Gradient */}
                               <div 
                                 className="absolute inset-0 rounded-full"
                                 style={{
                                   background: isTimerActive 
-                                    ? `radial-gradient(circle, ${
-                                        techniqueProgress < 33 ? 'rgba(239, 68, 68, 0.1)' :
-                                        techniqueProgress < 66 ? 'rgba(245, 158, 11, 0.1)' :
-                                        'rgba(16, 185, 129, 0.1)'
-                                      } 0%, transparent 70%)`
+                                    ? `radial-gradient(circle, rgba(92, 127, 79, ${0.05 + techniqueProgress * 0.002}) 0%, transparent 70%)`
                                     : 'none',
-                                  animation: isTimerActive ? 'pulse 3s ease-in-out infinite' : 'none'
+                                  animation: isTimerActive ? 'pulse 4s ease-in-out infinite' : 'none'
                                 }}
                               />
                               
-                              {/* Central Transformation Visualization */}
+                              {/* Tech Fatigue Recovery Visualization */}
                               <svg width="250" height="250" viewBox="0 0 250 250" className="relative z-10">
-                                {/* Outer ring representing emotional boundary */}
-                                <circle
-                                  cx="125"
-                                  cy="125"
-                                  r="110"
-                                  fill="none"
-                                  stroke={techniqueProgress < 33 ? '#EF4444' : techniqueProgress < 66 ? '#F59E0B' : '#10B981'}
-                                  strokeWidth="2"
-                                  opacity="0.3"
-                                  strokeDasharray="10 5"
-                                  className="transition-all duration-1000"
-                                >
-                                  <animateTransform
-                                    attributeName="transform"
-                                    type="rotate"
-                                    from="0 125 125"
-                                    to="360 125 125"
-                                    dur="20s"
-                                    repeatCount="indefinite"
-                                  />
-                                </circle>
-                                
-                                {/* Inner emotional core */}
+                                {/* Five Recovery Zones */}
                                 <g transform="translate(125, 125)">
-                                  {/* Chaotic emotion state (Phase 1: 0-33%) */}
-                                  {techniqueProgress < 33 && (
-                                    <g opacity={isTimerActive ? 1 : 0.3}>
-                                      {[0, 45, 90, 135, 180, 225, 270, 315].map((angle, i) => (
-                                        <line
-                                          key={i}
-                                          x1="0"
-                                          y1="0"
-                                          x2={Math.cos(angle * Math.PI / 180) * 40}
-                                          y2={Math.sin(angle * Math.PI / 180) * 40}
-                                          stroke="#EF4444"
-                                          strokeWidth="2"
-                                          opacity="0.6"
-                                        >
-                                          <animate
-                                            attributeName="opacity"
-                                            values="0.3;1;0.3"
-                                            dur={`${1 + i * 0.2}s`}
-                                            repeatCount="indefinite"
-                                          />
-                                        </line>
-                                      ))}
-                                      <circle cx="0" cy="0" r="25" fill="#EF4444" opacity="0.8">
-                                        <animate
-                                          attributeName="r"
-                                          values="25;30;25"
-                                          dur="2s"
-                                          repeatCount="indefinite"
+                                  {/* Zone indicators - 5 segments */}
+                                  {[0, 72, 144, 216, 288].map((angle, i) => {
+                                    const zones = ['Eyes', 'Ears', 'Body', 'Screen', 'Face'];
+                                    const isActive = techniqueProgress >= i * 20 && techniqueProgress < (i + 1) * 20;
+                                    const isComplete = techniqueProgress >= (i + 1) * 20;
+                                    
+                                    return (
+                                      <g key={i} transform={`rotate(${angle})`}>
+                                        {/* Zone segment */}
+                                        <path
+                                          d={`M 0,0 L 0,-80 A 80,80 0 0,1 ${80 * Math.sin(72 * Math.PI / 180)},${-80 * Math.cos(72 * Math.PI / 180)} Z`}
+                                          fill={isComplete ? '#5C7F4F' : isActive ? '#8FA681' : '#E5E7EB'}
+                                          opacity={isActive ? 0.8 : isComplete ? 0.6 : 0.3}
+                                          className="transition-all duration-500"
                                         />
-                                      </circle>
-                                      <text x="0" y="5" textAnchor="middle" fill="white" fontSize="24" fontWeight="bold">?</text>
+                                        
+                                        {/* Zone icon */}
+                                        <g transform={`rotate(${-angle + 36}) translate(0, -50)`}>
+                                          <circle 
+                                            r="18" 
+                                            fill="white" 
+                                            opacity={isActive || isComplete ? 1 : 0.7}
+                                          />
+                                          <text 
+                                            y="5" 
+                                            textAnchor="middle" 
+                                            fontSize="10" 
+                                            fontWeight="bold"
+                                            fill={isActive || isComplete ? '#2D5F3F' : '#9CA3AF'}
+                                          >
+                                            {zones[i]}
+                                          </text>
+                                        </g>
+                                        
+                                        {/* Pulse effect for active zone */}
+                                        {isActive && (
+                                          <circle r="25" fill="none" stroke="#5C7F4F" strokeWidth="2" opacity="0.5">
+                                            <animate
+                                              attributeName="r"
+                                              values="25;35;25"
+                                              dur="2s"
+                                              repeatCount="indefinite"
+                                            />
+                                            <animate
+                                              attributeName="opacity"
+                                              values="0.5;0.2;0.5"
+                                              dur="2s"
+                                              repeatCount="indefinite"
+                                            />
+                                          </circle>
+                                        )}
+                                      </g>
+                                    );
+                                  })}
+                                  
+                                  {/* Center status */}
+                                  <circle r="35" fill="#FFFFFF" stroke="#5C7F4F" strokeWidth="2" />
+                                  
+                                  {/* Zone-specific icons in center */}
+                                  {techniqueProgress < 20 && (
+                                    <g>
+                                      <text y="-5" textAnchor="middle" fontSize="24">👁️</text>
+                                      <text y="15" textAnchor="middle" fontSize="10" fill="#2D5F3F">Eye Relief</text>
                                     </g>
                                   )}
-                                  
-                                  {/* Naming state (Phase 2: 33-66%) */}
-                                  {techniqueProgress >= 33 && techniqueProgress < 66 && (
-                                    <g opacity={isTimerActive ? 1 : 0.3}>
-                                      {/* Organizing circles */}
-                                      {[0, 72, 144, 216, 288].map((angle, i) => (
-                                        <circle
-                                          key={i}
-                                          cx={Math.cos(angle * Math.PI / 180) * 35}
-                                          cy={Math.sin(angle * Math.PI / 180) * 35}
-                                          r="8"
-                                          fill="#F59E0B"
-                                          opacity="0.6"
-                                        >
-                                          <animate
-                                            attributeName="r"
-                                            values="8;12;8"
-                                            dur={`${2 + i * 0.3}s`}
-                                            repeatCount="indefinite"
-                                          />
-                                        </circle>
-                                      ))}
-                                      <circle cx="0" cy="0" r="30" fill="#F59E0B" opacity="0.9" />
-                                      <text x="0" y="5" textAnchor="middle" fill="white" fontSize="20" fontWeight="bold">Named</text>
+                                  {techniqueProgress >= 20 && techniqueProgress < 40 && (
+                                    <g>
+                                      <text y="-5" textAnchor="middle" fontSize="24">🎧</text>
+                                      <text y="15" textAnchor="middle" fontSize="10" fill="#2D5F3F">Audio Rest</text>
                                     </g>
                                   )}
-                                  
-                                  {/* Transformed state (Phase 3: 66-100%) */}
-                                  {techniqueProgress >= 66 && (
-                                    <g opacity={isTimerActive ? 1 : 0.3}>
-                                      {/* Peaceful ripples */}
-                                      {[20, 40, 60].map((radius, i) => (
-                                        <circle
-                                          key={i}
-                                          cx="0"
-                                          cy="0"
-                                          r={radius}
-                                          fill="none"
-                                          stroke="#10B981"
-                                          strokeWidth="1"
-                                          opacity={0.3 + i * 0.2}
-                                        >
-                                          <animate
-                                            attributeName="r"
-                                            values={`${radius};${radius + 5};${radius}`}
-                                            dur="3s"
-                                            repeatCount="indefinite"
-                                          />
-                                        </circle>
-                                      ))}
-                                      <circle cx="0" cy="0" r="35" fill="#10B981" />
-                                      <path 
-                                        d="M -15,-5 Q -15,5 -5,10 L 0,15 L 5,10 Q 15,5 15,-5 Q 15,-10 10,-12 Q 5,-8 0,-10 Q -5,-8 -10,-12 Q -15,-10 -15,-5 Z"
-                                        fill="white"
-                                      />
+                                  {techniqueProgress >= 40 && techniqueProgress < 60 && (
+                                    <g>
+                                      <text y="-5" textAnchor="middle" fontSize="24">🧘</text>
+                                      <text y="15" textAnchor="middle" fontSize="10" fill="#2D5F3F">Posture</text>
+                                    </g>
+                                  )}
+                                  {techniqueProgress >= 60 && techniqueProgress < 80 && (
+                                    <g>
+                                      <text y="-5" textAnchor="middle" fontSize="24">💻</text>
+                                      <text y="15" textAnchor="middle" fontSize="10" fill="#2D5F3F">Distance</text>
+                                    </g>
+                                  )}
+                                  {techniqueProgress >= 80 && (
+                                    <g>
+                                      <text y="-5" textAnchor="middle" fontSize="24">😌</text>
+                                      <text y="15" textAnchor="middle" fontSize="10" fill="#2D5F3F">Face Relax</text>
                                     </g>
                                   )}
                                 </g>
@@ -3934,34 +3843,24 @@ function App() {
                                 <circle
                                   cx="125"
                                   cy="125"
-                                  r="90"
+                                  r="100"
                                   fill="none"
                                   stroke="#E5E7EB"
-                                  strokeWidth="4"
+                                  strokeWidth="3"
                                 />
                                 <circle
                                   cx="125"
                                   cy="125"
-                                  r="90"
+                                  r="100"
                                   fill="none"
-                                  stroke={techniqueProgress < 33 ? '#EF4444' : techniqueProgress < 66 ? '#F59E0B' : '#10B981'}
-                                  strokeWidth="4"
-                                  strokeDasharray={`${2 * Math.PI * 90} ${2 * Math.PI * 90}`}
-                                  strokeDashoffset={2 * Math.PI * 90 * (1 - techniqueProgress / 100)}
+                                  stroke="#5C7F4F"
+                                  strokeWidth="3"
+                                  strokeDasharray={`${2 * Math.PI * 100} ${2 * Math.PI * 100}`}
+                                  strokeDashoffset={2 * Math.PI * 100 * (1 - techniqueProgress / 100)}
                                   transform="rotate(-90 125 125)"
+                                  strokeLinecap="round"
                                   className="transition-all duration-1000"
                                 />
-                                
-                                {/* Phase Labels */}
-                                <text x="125" y="25" textAnchor="middle" fill={techniqueProgress < 33 ? '#EF4444' : '#9CA3AF'} fontSize="12" fontWeight={techniqueProgress < 33 ? 'bold' : 'normal'}>
-                                  FEEL
-                                </text>
-                                <text x="215" y="125" textAnchor="middle" fill={techniqueProgress >= 33 && techniqueProgress < 66 ? '#F59E0B' : '#9CA3AF'} fontSize="12" fontWeight={techniqueProgress >= 33 && techniqueProgress < 66 ? 'bold' : 'normal'}>
-                                  NAME
-                                </text>
-                                <text x="125" y="235" textAnchor="middle" fill={techniqueProgress >= 66 ? '#10B981' : '#9CA3AF'} fontSize="12" fontWeight={techniqueProgress >= 66 ? 'bold' : 'normal'}>
-                                  HEAL
-                                </text>
                               </svg>
                               
                               {/* Progress Bar */}
@@ -3983,49 +3882,77 @@ function App() {
                             className="font-semibold mb-3 text-center"
                             style={{ color: '#2D5F3F' }}
                           >
-                            How to Transform Emotions:
+                            Five-Zone Recovery System:
                           </h3>
                           
                           {/* Step by step instructions */}
                           <div className="space-y-3 mb-4">
                             <div className="flex items-start">
-                              <div className="w-6 h-6 rounded-full bg-red-500 text-white text-xs flex items-center justify-center mr-3 flex-shrink-0">
-                                1
+                              <div className="w-8 h-8 rounded-full bg-blue-500 text-white text-xs flex items-center justify-center mr-3 flex-shrink-0">
+                                👁️
                               </div>
                               <div>
                                 <p className="text-sm font-medium" style={{ color: '#2D5F3F' }}>
-                                  Feel Without Judgment
+                                  Zone 1: Eye Relief (30s)
                                 </p>
                                 <p className="text-xs mt-1" style={{ color: '#6B7C6B' }}>
-                                  Notice the raw emotion in your body. Where do you feel it? What does it feel like?
+                                  20-20-20 rule: Look 20+ feet away for 20 seconds. Blink 10 times. Palm press over closed eyes.
                                 </p>
                               </div>
                             </div>
                             
                             <div className="flex items-start">
-                              <div className="w-6 h-6 rounded-full bg-orange-500 text-white text-xs flex items-center justify-center mr-3 flex-shrink-0">
-                                2
+                              <div className="w-8 h-8 rounded-full bg-purple-500 text-white text-xs flex items-center justify-center mr-3 flex-shrink-0">
+                                🎧
                               </div>
                               <div>
                                 <p className="text-sm font-medium" style={{ color: '#2D5F3F' }}>
-                                  Name It to Tame It
+                                  Zone 2: Audio Recovery (30s)
                                 </p>
                                 <p className="text-xs mt-1" style={{ color: '#6B7C6B' }}>
-                                  Give the emotion a specific name. "Frustrated" is better than "bad." Locate it in your body.
+                                  Remove headphones. Massage ear cartilage. Pull earlobes gently. 15 seconds of silence.
                                 </p>
                               </div>
                             </div>
                             
                             <div className="flex items-start">
-                              <div className="w-6 h-6 rounded-full bg-green-500 text-white text-xs flex items-center justify-center mr-3 flex-shrink-0">
-                                3
+                              <div className="w-8 h-8 rounded-full bg-green-500 text-white text-xs flex items-center justify-center mr-3 flex-shrink-0">
+                                🧘
                               </div>
                               <div>
                                 <p className="text-sm font-medium" style={{ color: '#2D5F3F' }}>
-                                  Offer Self-Compassion
+                                  Zone 3: Posture Reset (30s)
                                 </p>
                                 <p className="text-xs mt-1" style={{ color: '#6B7C6B' }}>
-                                  Place your hand on your heart. Say: "This is hard right now. I'm here with myself."
+                                  Stand up if possible. Shoulder rolls back 3x. Neck stretches. Squeeze shoulder blades.
+                                </p>
+                              </div>
+                            </div>
+                            
+                            <div className="flex items-start">
+                              <div className="w-8 h-8 rounded-full bg-orange-500 text-white text-xs flex items-center justify-center mr-3 flex-shrink-0">
+                                💻
+                              </div>
+                              <div>
+                                <p className="text-sm font-medium" style={{ color: '#2D5F3F' }}>
+                                  Zone 4: Screen Distance (20s)
+                                </p>
+                                <p className="text-xs mt-1" style={{ color: '#6B7C6B' }}>
+                                  Arm's length test. Screen top at eye level. Reduce glare. Lean back to increase distance.
+                                </p>
+                              </div>
+                            </div>
+                            
+                            <div className="flex items-start">
+                              <div className="w-8 h-8 rounded-full bg-red-500 text-white text-xs flex items-center justify-center mr-3 flex-shrink-0">
+                                😌
+                              </div>
+                              <div>
+                                <p className="text-sm font-medium" style={{ color: '#2D5F3F' }}>
+                                  Zone 5: Facial Tension (40s)
+                                </p>
+                                <p className="text-xs mt-1" style={{ color: '#6B7C6B' }}>
+                                  Temple massage. Jaw release. Forehead smooth. Eye squeeze then wide. Reset facial muscles.
                                 </p>
                               </div>
                             </div>
@@ -4037,7 +3964,408 @@ function App() {
                               Why This Works:
                             </p>
                             <p className="text-xs" style={{ color: '#3A3A3A' }}>
-                              Naming emotions reduces amygdala activity by up to 50%. Adding self-compassion activates the caregiving system, transforming distress into wisdom.
+                              VRI/remote interpreting creates unique physical strain. This systematic approach addresses all five zones of tech fatigue, preventing occupational injuries and maintaining interpretation accuracy.
+                            </p>
+                          </div>
+                        </>
+                      )}
+                    </div>
+                    <div className="space-y-2">
+                      {selectedTechnique === 'emotion-mapping' && (
+                        <>
+                          {/* Modern Emotion Mapping Interface */}
+                          <div className="flex flex-col items-center mb-6">
+                            {/* Clean Header with Progress */}
+                            <div className="w-full max-w-md mb-6">
+                              <div className="flex items-center justify-between mb-2">
+                                <h3 className="text-lg font-semibold" style={{ color: '#2D5F3F' }}>
+                                  Emotion Mapping Journey
+                                </h3>
+                                <span className="text-sm px-3 py-1 rounded-full" style={{ 
+                                  backgroundColor: isTimerActive ? 'rgba(147, 51, 234, 0.1)' : 'rgba(92, 127, 79, 0.1)',
+                                  color: isTimerActive ? '#9333EA' : '#5C7F4F'
+                                }}>
+                                  {Math.floor(techniqueProgress)}% Complete
+                                </span>
+                              </div>
+                              
+                              {/* Sleek Progress Bar */}
+                              <div className="h-1 bg-gray-200 rounded-full overflow-hidden">
+                                <div 
+                                  className="h-full transition-all duration-500 ease-out rounded-full"
+                                  style={{
+                                    width: `${techniqueProgress}%`,
+                                    background: 'linear-gradient(90deg, #9333EA 0%, #7C3AED 100%)'
+                                  }}
+                                />
+                              </div>
+                            </div>
+                            
+                            {/* Modern Card-Based Visualization */}
+                            <div className="w-full max-w-md">
+                              {/* Active Step Card */}
+                              <div className="bg-white rounded-xl shadow-lg p-6 mb-6" style={{ 
+                                borderLeft: '4px solid #9333EA',
+                                background: 'linear-gradient(to right, rgba(147, 51, 234, 0.03) 0%, white 100%)'
+                              }}>
+                                <div className="flex items-center mb-4">
+                                  <div className="w-12 h-12 rounded-full flex items-center justify-center mr-4" style={{ 
+                                    backgroundColor: 'rgba(147, 51, 234, 0.1)' 
+                                  }}>
+                                    <span className="text-lg font-bold" style={{ color: '#9333EA' }}>
+                                      {!isTimerActive ? '?' :
+                                       techniqueProgress < 17 ? '1' :
+                                       techniqueProgress < 33 ? '2' :
+                                       techniqueProgress < 50 ? '3' :
+                                       techniqueProgress < 67 ? '4' :
+                                       techniqueProgress < 83 ? '5' : '6'}
+                                    </span>
+                                  </div>
+                                  <div className="flex-1">
+                                    <h4 className="text-lg font-bold" style={{ color: '#1F2937' }}>
+                                      {!isTimerActive ? 'Ready to Map Your Emotions' :
+                                       techniqueProgress < 17 ? 'Body Scanning' :
+                                       techniqueProgress < 33 ? 'Naming Neural State' :
+                                       techniqueProgress < 50 ? 'Emotional Granularity' :
+                                       techniqueProgress < 67 ? 'Understanding Triggers' :
+                                       techniqueProgress < 83 ? 'Regulation Strategy' : 'Integration'}
+                                    </h4>
+                                    <p className="text-sm mt-1" style={{ color: '#6B7280' }}>
+                                      {!isTimerActive ? 'Begin your post-interpretation check-in' :
+                                       techniqueProgress < 17 ? 'Notice: chest, stomach, jaw, shoulders' :
+                                       techniqueProgress < 33 ? 'High alert? Empathy overload? Dissociation?' :
+                                       techniqueProgress < 50 ? 'Be specific about what you\'re feeling' :
+                                       techniqueProgress < 67 ? 'What activated you during interpretation?' :
+                                       techniqueProgress < 83 ? 'Choose your regulation technique' : 
+                                       'Document and integrate your insights'}
+                                    </p>
+                                  </div>
+                                </div>
+                                
+                                {/* Quick Tips for Current Step */}
+                                {isTimerActive && (
+                                  <div className="mt-4 p-3 rounded-lg" style={{ backgroundColor: 'rgba(147, 51, 234, 0.05)' }}>
+                                    <p className="text-xs font-medium mb-1" style={{ color: '#7C3AED' }}>Quick Tip:</p>
+                                    <p className="text-xs" style={{ color: '#6B7280' }}>
+                                      {techniqueProgress < 17 ? 'Your body holds the emotional residue of what you just interpreted.' :
+                                       techniqueProgress < 33 ? 'Naming reduces amygdala activation by up to 50%.' :
+                                       techniqueProgress < 50 ? 'Precision in naming emotions calms your limbic system.' :
+                                       techniqueProgress < 67 ? 'Mirror neurons make you experience content as if it\'s yours.' :
+                                       techniqueProgress < 83 ? 'Match your strategy to your current state for best results.' : 
+                                       'Regular mapping builds professional resilience over time.'}
+                                    </p>
+                                  </div>
+                                )}
+                              </div>
+                              
+                              {/* Brain and Emotion Visualization */}
+                              <svg width="250" height="250" viewBox="0 0 250 250" className="relative z-10">
+                                {/* Brain Outline */}
+                                <g transform="translate(125, 125)">
+                                  {/* Brain shape */}
+                                  <ellipse 
+                                    cx="0" 
+                                    cy="-10" 
+                                    rx="60" 
+                                    ry="50" 
+                                    fill="none" 
+                                    stroke="#9333EA" 
+                                    strokeWidth="2"
+                                    opacity="0.3"
+                                  />
+                                  
+                                  {/* Neural activity zones */}
+                                  {techniqueProgress < 17 && isTimerActive && (
+                                    <g opacity="0.8">
+                                      {/* Body scan indicators */}
+                                      {[
+                                        { x: 0, y: -30, label: 'Head' },
+                                        { x: -20, y: 0, label: 'Chest' },
+                                        { x: 20, y: 0, label: 'Stomach' },
+                                        { x: 0, y: 30, label: 'Hands' }
+                                      ].map((pos, i) => (
+                                        <g key={i}>
+                                          <circle 
+                                            cx={pos.x} 
+                                            cy={pos.y} 
+                                            r="15" 
+                                            fill="#F59E0B" 
+                                            opacity="0.5"
+                                          >
+                                            <animate
+                                              attributeName="r"
+                                              values="15;20;15"
+                                              dur={`${2 + i * 0.3}s`}
+                                              repeatCount="indefinite"
+                                            />
+                                          </circle>
+                                        </g>
+                                      ))}
+                                    </g>
+                                  )}
+                                  
+                                  {techniqueProgress >= 17 && techniqueProgress < 33 && isTimerActive && (
+                                    <g opacity="0.8">
+                                      {/* Neural state naming */}
+                                      <circle cx="0" cy="-10" r="40" fill="#3B82F6" opacity="0.4">
+                                        <animate
+                                          attributeName="r"
+                                          values="40;45;40"
+                                          dur="3s"
+                                          repeatCount="indefinite"
+                                        />
+                                      </circle>
+                                      <text y="-5" textAnchor="middle" fontSize="12" fill="#1E40AF">
+                                        Naming
+                                      </text>
+                                    </g>
+                                  )}
+                                  
+                                  {techniqueProgress >= 33 && techniqueProgress < 50 && isTimerActive && (
+                                    <g opacity="0.8">
+                                      {/* Emotional granularity */}
+                                      {[0, 60, 120, 180, 240, 300].map((angle, i) => (
+                                        <circle
+                                          key={i}
+                                          cx={Math.cos(angle * Math.PI / 180) * 35}
+                                          cy={Math.sin(angle * Math.PI / 180) * 35 - 10}
+                                          r="8"
+                                          fill="#8B5CF6"
+                                          opacity="0.6"
+                                        >
+                                          <animate
+                                            attributeName="r"
+                                            values="8;12;8"
+                                            dur={`${2 + i * 0.2}s`}
+                                            repeatCount="indefinite"
+                                          />
+                                        </circle>
+                                      ))}
+                                    </g>
+                                  )}
+                                  
+                                  {techniqueProgress >= 50 && techniqueProgress < 67 && isTimerActive && (
+                                    <g opacity="0.8">
+                                      {/* Trigger identification */}
+                                      <rect x="-40" y="-30" width="80" height="40" rx="20" fill="#DC2626" opacity="0.3" />
+                                      <text y="-5" textAnchor="middle" fontSize="12" fill="#991B1B">
+                                        Triggers
+                                      </text>
+                                    </g>
+                                  )}
+                                  
+                                  {techniqueProgress >= 67 && techniqueProgress < 83 && isTimerActive && (
+                                    <g opacity="0.8">
+                                      {/* Regulation strategy */}
+                                      <circle cx="0" cy="-10" r="45" fill="#10B981" opacity="0.4">
+                                        <animate
+                                          attributeName="r"
+                                          values="45;50;45"
+                                          dur="3s"
+                                          repeatCount="indefinite"
+                                        />
+                                      </circle>
+                                      <text y="-5" textAnchor="middle" fontSize="12" fill="#047857">
+                                        Regulate
+                                      </text>
+                                    </g>
+                                  )}
+                                  
+                                  {techniqueProgress >= 83 && isTimerActive && (
+                                    <g opacity="0.8">
+                                      {/* Integration */}
+                                      <circle cx="0" cy="-10" r="50" fill="#5C7F4F" opacity="0.5" />
+                                      <path 
+                                        d="M -20,-20 Q -20,0 0,5 Q 20,0 20,-20 Q 0,-15 -20,-20 Z"
+                                        fill="#2D5F3F"
+                                        opacity="0.7"
+                                      />
+                                      <text y="-5" textAnchor="middle" fontSize="12" fill="white">
+                                        Integrated
+                                      </text>
+                                    </g>
+                                  )}
+                                </g>
+                                
+                                {/* Progress Arc */}
+                                <circle
+                                  cx="125"
+                                  cy="125"
+                                  r="100"
+                                  fill="none"
+                                  stroke="#E5E7EB"
+                                  strokeWidth="3"
+                                />
+                                <circle
+                                  cx="125"
+                                  cy="125"
+                                  r="100"
+                                  fill="none"
+                                  stroke="#9333EA"
+                                  strokeWidth="3"
+                                  strokeDasharray={`${2 * Math.PI * 100} ${2 * Math.PI * 100}`}
+                                  strokeDashoffset={2 * Math.PI * 100 * (1 - techniqueProgress / 100)}
+                                  transform="rotate(-90 125 125)"
+                                  strokeLinecap="round"
+                                  className="transition-all duration-1000"
+                                />
+                                
+                                {/* Step indicators */}
+                                <text x="125" y="20" textAnchor="middle" fontSize="10" fill={techniqueProgress < 17 ? '#9333EA' : '#9CA3AF'}>
+                                  Body Scan
+                                </text>
+                                <text x="220" y="75" textAnchor="middle" fontSize="10" fill={techniqueProgress >= 17 && techniqueProgress < 33 ? '#9333EA' : '#9CA3AF'}>
+                                  Name
+                                </text>
+                                <text x="220" y="175" textAnchor="middle" fontSize="10" fill={techniqueProgress >= 33 && techniqueProgress < 50 ? '#9333EA' : '#9CA3AF'}>
+                                  Specify
+                                </text>
+                                <text x="125" y="230" textAnchor="middle" fontSize="10" fill={techniqueProgress >= 50 && techniqueProgress < 67 ? '#9333EA' : '#9CA3AF'}>
+                                  Triggers
+                                </text>
+                                <text x="30" y="175" textAnchor="middle" fontSize="10" fill={techniqueProgress >= 67 && techniqueProgress < 83 ? '#9333EA' : '#9CA3AF'}>
+                                  Regulate
+                                </text>
+                                <text x="30" y="75" textAnchor="middle" fontSize="10" fill={techniqueProgress >= 83 ? '#9333EA' : '#9CA3AF'}>
+                                  Integrate
+                                </text>
+                              </svg>
+                              
+                              {/* Progress Bar */}
+                              <div className="absolute bottom-0 left-0 right-0">
+                                <div className="h-2 bg-gray-200 rounded-full overflow-hidden">
+                                  <div 
+                                    className="h-full transition-all duration-1000"
+                                    style={{
+                                      width: `${techniqueProgress}%`,
+                                      backgroundColor: '#9333EA'
+                                    }}
+                                  />
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+
+                          <h3
+                            className="font-semibold mb-3 text-center"
+                            style={{ color: '#2D5F3F' }}
+                          >
+                            Interpreter's Emotion Map:
+                          </h3>
+                          
+                          {/* Friendly Step-by-Step Guide Card */}
+                          <div className="bg-white rounded-xl shadow-md p-5 mb-4" style={{
+                            background: 'linear-gradient(135deg, rgba(147, 51, 234, 0.03) 0%, rgba(124, 58, 237, 0.01) 100%)',
+                            border: '1px solid rgba(147, 51, 234, 0.1)'
+                          }}>
+                            {!isTimerActive ? (
+                              // Welcome message when not started
+                              <div className="text-center py-4">
+                                <div className="w-16 h-16 rounded-full mx-auto mb-4 flex items-center justify-center" style={{ 
+                                  backgroundColor: 'rgba(147, 51, 234, 0.1)' 
+                                }}>
+                                  <span className="text-2xl">💜</span>
+                                </div>
+                                <h3 className="text-lg font-semibold mb-2" style={{ color: '#2D5F3F' }}>
+                                  Ready for Your Emotional Check-In?
+                                </h3>
+                                <p className="text-sm mb-3" style={{ color: '#6B7280' }}>
+                                  Hey there! Let's take a moment to understand what you're feeling after that interpretation session. 
+                                  This is your time to process and reset.
+                                </p>
+                                <p className="text-xs italic" style={{ color: '#9333EA' }}>
+                                  Remember: You just did important work. Your emotions are valid data.
+                                </p>
+                              </div>
+                            ) : (
+                              // Step-specific content
+                              <div>
+                                <div className="flex items-start mb-3">
+                                  <div className="w-10 h-10 rounded-full flex items-center justify-center mr-3 flex-shrink-0" style={{ 
+                                    backgroundColor: techniqueProgress < 17 ? '#F97316' :
+                                                     techniqueProgress < 33 ? '#3B82F6' :
+                                                     techniqueProgress < 50 ? '#8B5CF6' :
+                                                     techniqueProgress < 67 ? '#EF4444' :
+                                                     techniqueProgress < 83 ? '#10B981' : '#6366F1',
+                                    color: 'white'
+                                  }}>
+                                    <span className="text-sm font-bold">
+                                      {techniqueProgress < 17 ? '1' :
+                                       techniqueProgress < 33 ? '2' :
+                                       techniqueProgress < 50 ? '3' :
+                                       techniqueProgress < 67 ? '4' :
+                                       techniqueProgress < 83 ? '5' : '6'}
+                                    </span>
+                                  </div>
+                                  <div className="flex-1">
+                                    <h4 className="text-base font-semibold mb-1" style={{ color: '#1F2937' }}>
+                                      {techniqueProgress < 17 ? 'Let\'s Check In With Your Body' :
+                                       techniqueProgress < 33 ? 'Now, Name What You\'re Experiencing' :
+                                       techniqueProgress < 50 ? 'Get Specific About Your Emotions' :
+                                       techniqueProgress < 67 ? 'What Triggered This Response?' :
+                                       techniqueProgress < 83 ? 'Choose Your Recovery Strategy' : 
+                                       'Integrate and Document'}
+                                    </h4>
+                                    <p className="text-xs text-gray-500">
+                                      {techniqueProgress < 17 ? '30 seconds' :
+                                       techniqueProgress < 33 ? '30 seconds' :
+                                       techniqueProgress < 50 ? '40 seconds' :
+                                       techniqueProgress < 67 ? '40 seconds' :
+                                       techniqueProgress < 83 ? '30 seconds' : '30 seconds'}
+                                    </p>
+                                  </div>
+                                </div>
+                                
+                                <div className="pl-13">
+                                  <p className="text-sm mb-3" style={{ color: '#4B5563', lineHeight: '1.6' }}>
+                                    {techniqueProgress < 17 ? 
+                                      'Take a gentle moment to scan your body. Start with your chest - is it tight or relaxed? How about your stomach - any butterflies or tension? Check your jaw and shoulders too. These physical sensations are telling you something important about what you just experienced.' :
+                                     techniqueProgress < 33 ? 
+                                      'Okay, based on what you\'re feeling in your body, let\'s put a name to it. Are you in high alert mode? Feeling overwhelmed by empathy? Maybe a bit disconnected or containing some anger? Just naming it helps - it actually reduces your amygdala activation by up to 50%!' :
+                                     techniqueProgress < 50 ? 
+                                      'Let\'s get more precise here. Instead of just "upset," can you say "frustrated by the injustice I interpreted"? Or instead of "sad," maybe it\'s "grieving for the family\'s loss"? The more specific you are, the more your limbic system calms down. It\'s like your brain goes "Oh, we understand this now!"' :
+                                     techniqueProgress < 67 ? 
+                                      'Think about what specifically activated you during that session. Was it personal resonance - did it remind you of your own experiences? Was it a clash with your values? Or maybe the power dynamics in the situation? Understanding your triggers helps you prepare for next time.' :
+                                     techniqueProgress < 83 ? 
+                                      'Based on what you\'re feeling, let\'s pick the right tool. If you\'re in high alert, try some long, slow exhales - they activate your parasympathetic nervous system. Feeling dissociated? Ground yourself by naming 5 things you can see right now. Match your strategy to your state for best results.' : 
+                                      'Great work! Now let\'s capture this insight. Try completing this: "When I interpret [medical/legal/emotional] content, my [chest/jaw/shoulders] activates, signaling [specific emotion], and I need [grounding/breathing/movement]." This becomes your personal roadmap for resilience.'}
+                                  </p>
+                                  
+                                  {/* Helpful prompts for each step */}
+                                  <div className="bg-purple-50 rounded-lg p-3 mb-3">
+                                    <p className="text-xs font-medium mb-2" style={{ color: '#7C3AED' }}>
+                                      {techniqueProgress < 17 ? '💭 Try this:' :
+                                       techniqueProgress < 33 ? '💭 Ask yourself:' :
+                                       techniqueProgress < 50 ? '💭 Consider:' :
+                                       techniqueProgress < 67 ? '💭 Reflect:' :
+                                       techniqueProgress < 83 ? '💭 Options:' : '💭 Remember:'}
+                                    </p>
+                                    <p className="text-xs" style={{ color: '#6B7280' }}>
+                                      {techniqueProgress < 17 ? 
+                                        'Place one hand on your chest and one on your stomach. Which moves more when you breathe? That\'s where you\'re holding tension.' :
+                                       techniqueProgress < 33 ? 
+                                        '"If I had to describe this feeling to a friend, what would I say?" Sometimes the first word that comes is the right one.' :
+                                       techniqueProgress < 50 ? 
+                                        'What would a therapist call this feeling? Being precise isn\'t about being fancy - it\'s about being accurate to YOUR experience.' :
+                                       techniqueProgress < 67 ? 
+                                        'No judgment here - triggers are information, not weaknesses. They show where you care deeply or where you need support.' :
+                                       techniqueProgress < 83 ? 
+                                        'You know yourself best. What has worked before? What does your body need right now? Trust your instincts.' : 
+                                        'This pattern recognition makes you a stronger interpreter. You\'re building emotional intelligence that protects both you and your work quality.'}
+                                    </p>
+                                  </div>
+                                </div>
+                              </div>
+                            )}
+                          </div>
+                          
+                          {/* Why This Works */}
+                          <div className="p-3 rounded-lg" style={{ backgroundColor: 'rgba(92, 127, 79, 0.1)' }}>
+                            <p className="text-xs font-medium mb-1" style={{ color: '#2D5F3F' }}>
+                              The Neuroscience:
+                            </p>
+                            <p className="text-xs" style={{ color: '#3A3A3A' }}>
+                              Your mirror neurons fire as if experiencing the content yourself. Your brain can't distinguish between interpreting trauma and experiencing it. Understanding your patterns builds professional resilience.
                             </p>
                           </div>
                         </>
@@ -4100,186 +4428,157 @@ function App() {
                     Reset
                   </button>
                 )}
-                <button
-                  onClick={() => {
-                    // Clear any existing interval before starting/stopping
-                    if (intervalRef.current) {
-                      clearInterval(intervalRef.current);
-                      intervalRef.current = null;
-                    }
-                    
-                    setIsTimerActive(!isTimerActive);
-                    if (!isTimerActive) {
-                      // Reset all states when starting
+                {/* Manual Navigation Controls */}
+                {!isTimerActive ? (
+                  <button
+                    onClick={() => {
+                      // Start the practice in manual mode
+                      setIsTimerActive(true);
+                      setTechniqueProgress(0);
                       setBreathPhase('inhale');
                       setBreathCycle(0);
                       setBodyPart(0);
-                      setTechniqueProgress(0);
                       setSenseCount(0);
-                      setExpansionLevel(0)
-
-                      if (selectedTechnique === 'box-breathing') {
-                        // Box breathing: 4 phases of 4 seconds each = 16 seconds per cycle
-                        let cycle = 0;
-                        let progress = techniqueProgress;
-
-                        intervalRef.current = setInterval(() => {
-                          cycle++;
-                          setBreathCycle(cycle);
-
-                          // Update breath phase every 4 seconds
-                          const phase = Math.floor((cycle % 16) / 4);
-                          if (phase === 0) setBreathPhase('inhale');
-                          else if (phase === 1) setBreathPhase('hold-in');
-                          else if (phase === 2) setBreathPhase('exhale');
-                          else setBreathPhase('hold-out');
-
-                          // Update progress (4 minutes = 240 seconds total)
-                          progress = Math.min(100, (cycle / 240) * 100);
-                          setTechniqueProgress(progress);
-
-                          if (progress >= 100) {
-                            if (intervalRef.current) {
-                              clearInterval(intervalRef.current);
-                              intervalRef.current = null;
-                            }
-                            setIsTimerActive(false);
-                            setTechniqueProgress(0);
-                            setBodyPart(0);
+                      setExpansionLevel(0);
+                    }}
+                    className="flex-1 px-6 py-3 rounded-xl font-semibold transition-all"
+                    style={{
+                      background: 'linear-gradient(145deg, #6B8B60 0%, #5F7F55 100%)',
+                      color: '#FFFFFF',
+                      boxShadow: '0 4px 15px rgba(107, 139, 96, 0.3)',
+                    }}
+                    onMouseEnter={(e) => {
+                      e.currentTarget.style.transform = 'translateY(-2px)';
+                      e.currentTarget.style.boxShadow = '0 6px 20px rgba(107, 139, 96, 0.4)';
+                    }}
+                    onMouseLeave={(e) => {
+                      e.currentTarget.style.transform = 'translateY(0)';
+                      e.currentTarget.style.boxShadow = '0 4px 15px rgba(107, 139, 96, 0.3)';
+                    }}
+                  >
+                    Begin Practice
+                  </button>
+                ) : (
+                  <div className="flex gap-3 w-full">
+                    {techniqueProgress > 0 && (
+                      <button
+                        onClick={() => {
+                          // Go to previous step
+                          if (selectedTechnique === 'emotion-mapping') {
+                            const currentStep = Math.floor(techniqueProgress / 16.67);
+                            setTechniqueProgress(Math.max(0, (currentStep - 1) * 16.67));
+                          } else if (selectedTechnique === 'body-release') {
+                            setBodyPart(Math.max(0, bodyPart - 1));
+                            setTechniqueProgress(bodyPart * 20);
+                          } else if (selectedTechnique === 'box-breathing') {
+                            const phases = ['inhale', 'hold-in', 'exhale', 'hold-out'];
+                            const currentIndex = phases.indexOf(breathPhase);
+                            const prevIndex = currentIndex > 0 ? currentIndex - 1 : 3;
+                            setBreathPhase(phases[prevIndex] as any);
+                          } else if (selectedTechnique === 'tech-fatigue-reset') {
+                            setTechniqueProgress(Math.max(0, techniqueProgress - 20));
+                          } else {
+                            setTechniqueProgress(Math.max(0, techniqueProgress - 25));
                           }
-                        }, 1000); // Update every second
-                      } else if (selectedTechnique === 'body-release') {
-                        // Body release: 5 body parts, each for ~12 seconds (60 seconds total)
-                        let progress = 0;  // Always start from 0
-                        let part = 0;
+                        }}
+                        className="px-4 py-3 rounded-xl font-medium transition-all"
+                        style={{
+                          backgroundColor: 'rgba(107, 114, 128, 0.1)',
+                          color: '#4B5563',
+                          border: '2px solid #E5E7EB'
+                        }}
+                      >
+                        ← Previous
+                      </button>
+                    )}
+                    
+                    <button
+                      onClick={() => {
+                        // Go to next step or complete
+                        if (selectedTechnique === 'emotion-mapping') {
+                          const nextProgress = Math.min(100, techniqueProgress + 16.67);
+                          setTechniqueProgress(nextProgress);
+                          if (nextProgress >= 100) {
+                            setIsTimerActive(false);
+                          }
+                        } else if (selectedTechnique === 'body-release') {
+                          if (bodyPart < 4) {
+                            setBodyPart(bodyPart + 1);
+                            setTechniqueProgress((bodyPart + 1) * 20);
+                          } else {
+                            setTechniqueProgress(100);
+                            setIsTimerActive(false);
+                          }
+                        } else if (selectedTechnique === 'box-breathing') {
+                          const phases = ['inhale', 'hold-in', 'exhale', 'hold-out'];
+                          const currentIndex = phases.indexOf(breathPhase);
+                          const nextIndex = (currentIndex + 1) % 4;
+                          setBreathPhase(phases[nextIndex] as any);
+                          setBreathCycle(breathCycle + 1);
+                        } else if (selectedTechnique === 'tech-fatigue-reset') {
+                          const nextProgress = Math.min(100, techniqueProgress + 20);
+                          setTechniqueProgress(nextProgress);
+                          if (nextProgress >= 100) {
+                            setIsTimerActive(false);
+                          }
+                        } else if (selectedTechnique === 'sensory-reset') {
+                          if (senseCount < 4) {
+                            setSenseCount(senseCount + 1);
+                            setTechniqueProgress((senseCount + 1) * 25);
+                          } else {
+                            setTechniqueProgress(100);
+                            setIsTimerActive(false);
+                          }
+                        } else {
+                          const nextProgress = Math.min(100, techniqueProgress + 25);
+                          setTechniqueProgress(nextProgress);
+                          if (nextProgress >= 100) {
+                            setIsTimerActive(false);
+                          }
+                        }
+                      }}
+                      className="flex-1 px-6 py-3 rounded-xl font-semibold transition-all"
+                      style={{
+                        background: techniqueProgress >= 83 
+                          ? 'linear-gradient(145deg, #10B981 0%, #059669 100%)' 
+                          : 'linear-gradient(145deg, #6B8B60 0%, #5F7F55 100%)',
+                        color: '#FFFFFF',
+                        boxShadow: '0 4px 15px rgba(107, 139, 96, 0.3)',
+                      }}
+                      onMouseEnter={(e) => {
+                        e.currentTarget.style.transform = 'translateY(-2px)';
+                        e.currentTarget.style.boxShadow = '0 6px 20px rgba(107, 139, 96, 0.4)';
+                      }}
+                      onMouseLeave={(e) => {
+                        e.currentTarget.style.transform = 'translateY(0)';
+                        e.currentTarget.style.boxShadow = '0 4px 15px rgba(107, 139, 96, 0.3)';
+                      }}
+                    >
+                      {techniqueProgress >= 83 ? 'Complete' : 'Next Step →'}
+                    </button>
+                    
+                    <button
+                      onClick={() => {
+                        // End practice
+                        setIsTimerActive(false);
+                        setTechniqueProgress(0);
+                        setBreathPhase('inhale');
+                        setBreathCycle(0);
                         setBodyPart(0);
-                        setTechniqueProgress(0);  // Ensure progress starts at 0
-
-                        intervalRef.current = setInterval(() => {
-                          progress += 100 / 60; // 1 minute = 60 seconds
-                          setTechniqueProgress(progress);
-
-                          // Update body part every 12 seconds
-                          const newPart = Math.floor(progress / 20);
-                          if (newPart !== part && newPart < 5) {
-                            part = newPart;
-                            setBodyPart(part);
-                          }
-
-                          if (progress >= 100) {
-                            if (intervalRef.current) {
-                              clearInterval(intervalRef.current);
-                              intervalRef.current = null;
-                            }
-                            setIsTimerActive(false);
-                            setBodyPart(0);
-                            setTechniqueProgress(0);
-                          }
-                        }, 1000);
-                      } else if (selectedTechnique === 'sensory-reset') {
-                        // Sensory reset: 4 senses, 80 seconds total
-                        let progress = techniqueProgress;
-                        let sense = 0;
                         setSenseCount(0);
-
-                        intervalRef.current = setInterval(() => {
-                          progress += 100 / 80; // 80 seconds total
-                          setTechniqueProgress(progress);
-
-                          // Update sense every 20 seconds (80/4 = 20 seconds per sense)
-                          const newSense = Math.floor(progress / 25) + 1;
-                          if (newSense !== sense && newSense <= 4) {
-                            sense = newSense;
-                            setSenseCount(sense);
-                          }
-
-                          if (progress >= 100) {
-                            if (intervalRef.current) {
-                              clearInterval(intervalRef.current);
-                              intervalRef.current = null;
-                            }
-                            setIsTimerActive(false);
-                            setTechniqueProgress(0);
-                            setSenseCount(0);
-                          }
-                        }, 1000);
-                      } else if (selectedTechnique === 'expansion-practice') {
-                        // Expansion practice: gradual expansion over 2 minutes
-                        let progress = techniqueProgress;
-
-                        intervalRef.current = setInterval(() => {
-                          progress += 100 / 120; // 2 minutes = 120 seconds
-                          setTechniqueProgress(progress);
-                          setExpansionLevel(progress / 100);
-
-                          if (progress >= 100) {
-                            if (intervalRef.current) {
-                              clearInterval(intervalRef.current);
-                              intervalRef.current = null;
-                            }
-                            setIsTimerActive(false);
-                            setTechniqueProgress(0);
-                            setExpansionLevel(0);
-                          }
-                        }, 1000);
-                      } else if (selectedTechnique === 'temperature-shift') {
-                        // Temperature shift: 1 minute
-                        let progress = 0;
-                        setTechniqueProgress(0);
-                        
-                        intervalRef.current = setInterval(() => {
-                          progress += 100 / 60; // 1 minute = 60 seconds
-                          setTechniqueProgress(progress);
-                          
-                          if (progress >= 100) {
-                            if (intervalRef.current) {
-                              clearInterval(intervalRef.current);
-                              intervalRef.current = null;
-                            }
-                            setIsTimerActive(false);
-                            setTechniqueProgress(0);
-                          }
-                        }, 1000);
-                      } else {
-                        // Default timer for other techniques (name-transform: 3 minutes)
-                        let progress = 0;
-                        setTechniqueProgress(0);
-                        
-                        intervalRef.current = setInterval(() => {
-                          progress += 100 / 180; // 3 minutes = 180 seconds
-                          setTechniqueProgress(progress);
-                          
-                          if (progress >= 100) {
-                            if (intervalRef.current) {
-                              clearInterval(intervalRef.current);
-                              intervalRef.current = null;
-                            }
-                            setIsTimerActive(false);
-                            setTechniqueProgress(0);
-                          }
-                        }, 1000);
-                      }
-                    }
-                  }}
-                  className="flex-1 px-6 py-3 rounded-xl font-semibold transition-all"
-                  style={{
-                    background: isTimerActive
-                      ? '#FF6B6B'
-                      : 'linear-gradient(145deg, #6B8B60 0%, #5F7F55 100%)',
-                    color: '#FFFFFF',
-                    boxShadow: '0 4px 15px rgba(107, 139, 96, 0.3)',
-                  }}
-                  onMouseEnter={(e) => {
-                    e.currentTarget.style.transform = 'translateY(-2px)';
-                    e.currentTarget.style.boxShadow = '0 6px 20px rgba(107, 139, 96, 0.4)';
-                  }}
-                  onMouseLeave={(e) => {
-                    e.currentTarget.style.transform = 'translateY(0)';
-                    e.currentTarget.style.boxShadow = '0 4px 15px rgba(107, 139, 96, 0.3)';
-                  }}
-                >
-                  {isTimerActive ? 'Pause' : 'Start Exercise'}
-                </button>
+                        setExpansionLevel(0);
+                      }}
+                      className="px-4 py-3 rounded-xl font-medium transition-all"
+                      style={{
+                        backgroundColor: 'rgba(239, 68, 68, 0.1)',
+                        color: '#EF4444',
+                        border: '2px solid #EF4444'
+                      }}
+                    >
+                      End
+                    </button>
+                  </div>
+                )}
               </div>
             </div>
           </div>
@@ -4288,104 +4587,6 @@ function App() {
     </main>
   );
 
-  const renderAffirmations = () => (
-    <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-      <div className="space-y-8">
-        {/* Header */}
-        <div className="text-center mb-10">
-          <div className="flex items-center justify-center mb-4">
-            <div
-              className="p-3 rounded-full mr-4"
-              style={{ backgroundColor: 'rgba(92, 127, 79, 0.15)' }}
-            >
-              <Heart className="h-8 w-8" style={{ color: '#5C7F4F' }} />
-            </div>
-            <h1
-              className="text-4xl font-bold"
-              style={{ color: '#1A1A1A', letterSpacing: '-0.5px' }}
-            >
-              Affirmation & Reflection Studio
-            </h1>
-          </div>
-          <p className="text-lg max-w-3xl mx-auto" style={{ color: '#5A5A5A', lineHeight: '1.7' }}>
-            Gentle, conversational affirmations paired with thoughtful reflection to nurture your
-            relationship with yourself
-          </p>
-        </div>
-
-        {/* Affirmation Categories Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-12">
-          {affirmationCategories.map((category, index) => (
-            <div
-              key={index}
-              className="rounded-xl p-6 transition-all duration-200 cursor-pointer group"
-              onClick={() => {
-                setSelectedAffirmationCategory(index);
-                setCurrentAffirmationIndex(0);
-              }}
-              style={{
-                backgroundColor: '#FFFFFF',
-                border: '2px solid transparent',
-                boxShadow: '0 4px 15px rgba(0, 0, 0, 0.05)',
-                transform: 'translateY(0)',
-              }}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.borderColor = '#5C7F4F';
-                e.currentTarget.style.transform = 'translateY(-4px) scale(1.02)';
-                e.currentTarget.style.boxShadow = '0 8px 25px rgba(92, 127, 79, 0.25)';
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.borderColor = 'transparent';
-                e.currentTarget.style.transform = 'translateY(0) scale(1)';
-                e.currentTarget.style.boxShadow = '0 4px 15px rgba(0, 0, 0, 0.05)';
-              }}
-            >
-              <div className="flex items-start justify-between mb-4">
-                <div
-                  className="rounded-lg p-3 w-fit"
-                  style={{ backgroundColor: 'rgba(92, 127, 79, 0.15)' }}
-                >
-                  <category.icon className="h-6 w-6" style={{ color: '#5C7F4F' }} />
-                </div>
-                <div className="text-right">
-                  <span className="text-sm font-medium" style={{ color: '#6B7C6B' }}>
-                    5 affirmations
-                  </span>
-                </div>
-              </div>
-
-              <h3 className="text-lg font-bold mb-3" style={{ color: '#1A1A1A' }}>
-                {category.title}
-              </h3>
-
-              <p
-                className="text-sm mb-6 leading-relaxed"
-                style={{ color: '#5A5A5A', lineHeight: '1.6' }}
-              >
-                {category.description}
-              </p>
-
-              <div className="flex items-center justify-between">
-                <div
-                  className="text-xs px-3 py-1.5 rounded-full font-semibold"
-                  style={{
-                    backgroundColor: 'rgba(92, 127, 79, 0.2)',
-                    color: '#2D5F3F',
-                  }}
-                >
-                  {category.tag}
-                </div>
-                <ChevronDown
-                  className="h-4 w-4 rotate-[-90deg] group-hover:translate-x-1 transition-transform"
-                  style={{ color: '#5C7F4F' }}
-                />
-              </div>
-            </div>
-          ))}
-        </div>
-      </div>
-    </main>
-  );
 
   const renderBurnoutGauge = () => (
     <section aria-labelledby="burnout-gauge-heading">
@@ -4445,26 +4646,71 @@ function App() {
   );
 
   const renderDashboardHome = () => (
-    <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-        {/* Left Column - Main Content */}
-        <div className="lg:col-span-2 space-y-8">
-          {/* Welcome Section */}
-          <div className="mb-8">
-            <h1
-              className="text-4xl font-bold mb-3"
-              style={{ color: '#1A1A1A', letterSpacing: '-0.5px' }}
-            >
-              Good morning, dev
-            </h1>
-            <p className="text-lg" style={{ color: '#5A5A5A', fontWeight: '400' }}>
-              Ready to reflect and grow today?
-            </p>
-          </div>
+    <main id="dashboard-main" aria-labelledby="reflection-dashboard-heading" className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <div className="mb-8">
+        <h1 id="reflection-dashboard-heading" className="text-4xl font-bold mb-2" style={{ color: '#1A1A1A', letterSpacing: '-0.5px' }}>
+          Interpreter Wellbeing & Growth Hub
+        </h1>
+        <p className="text-lg" style={{ color: '#5A5A5A', fontWeight: '400' }}>
+          Your daily companion for professional wellness and reflection
+        </p>
+      </div>
 
-          {/* Continue Your Journey Card */}
-          <div
+      <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
+        {/* Left Column - Burnout Gauge (Sticky) */}
+        <div className="lg:col-span-1">
+          <div className="lg:sticky lg:top-4">
+            <BurnoutGauge 
+              onTakeGauge={() => {
+                setShowDailyBurnout(true);
+              }}
+              lastScore={savedReflections.find(r => r.type === 'Daily Burnout Gauge')?.data?.overall_wellbeing || null}
+              lastDate={savedReflections.find(r => r.type === 'Daily Burnout Gauge')?.timestamp || null}
+            />
+
+            {/* Quick Tools Bar - Desktop Only */}
+            <aside id="quick-tools-bar" aria-label="Quick Tools" className="hidden lg:block mt-6 space-y-3">
+              <h3 className="text-sm font-semibold text-gray-700 uppercase tracking-wider mb-3">Quick Tools</h3>
+              <button
+                onClick={() => setShowWellnessCheckIn(true)}
+                className="w-full text-left px-4 py-3 bg-white rounded-lg border border-gray-200 hover:border-blue-400 hover:bg-blue-50 transition-all text-sm font-medium"
+                style={{ minHeight: '44px' }}
+              >
+                Wellness Check-In
+              </button>
+              <button
+                onClick={() => setShowAffirmationStudio(true)}
+                className="w-full text-left px-4 py-3 bg-white rounded-lg border border-gray-200 hover:border-purple-400 hover:bg-purple-50 transition-all text-sm font-medium"
+                style={{ minHeight: '44px' }}
+              >
+                Affirmation Studio
+              </button>
+              <button
+                onClick={() => setShowBreathingPractice(true)}
+                className="w-full text-left px-4 py-3 bg-white rounded-lg border border-gray-200 hover:border-green-400 hover:bg-green-50 transition-all text-sm font-medium"
+                style={{ minHeight: '44px' }}
+              >
+                Breathing Practice
+              </button>
+              <button
+                onClick={() => setShowBodyCheckIn(true)}
+                className="w-full text-left px-4 py-3 bg-white rounded-lg border border-gray-200 hover:border-orange-400 hover:bg-orange-50 transition-all text-sm font-medium"
+                style={{ minHeight: '44px' }}
+              >
+                Body Check-In
+              </button>
+            </aside>
+          </div>
+        </div>
+
+        {/* Main Content - Reflections Area */}
+        <div className="lg:col-span-2 space-y-8">
+
+          {/* Structured Reflections Area */}
+          <section
+            id="structured-reflections-area"
             className="rounded-2xl p-8"
+            aria-labelledby="structured-reflections-heading"
             style={{
               background: 'linear-gradient(135deg, #FFFFFF 0%, #FAFAF8 100%)',
               boxShadow: '0 10px 30px rgba(92, 127, 79, 0.15), 0 2px 8px rgba(0, 0, 0, 0.05)',
@@ -4473,11 +4719,11 @@ function App() {
           >
             <div className="flex items-center justify-between mb-6">
               <div>
-                <h2 className="text-2xl font-bold mb-3" style={{ color: '#1A1A1A' }}>
-                  Continue Your Journey
+                <h2 id="structured-reflections-heading" className="text-2xl font-bold mb-3" style={{ color: '#1A1A1A' }}>
+                  Structured Reflections & Journals
                 </h2>
                 <p className="text-base" style={{ color: '#5A5A5A', lineHeight: '1.6' }}>
-                  Choose your reflection type and dive deeper into your professional growth
+                  Tactical, emotional, and ethical tools for every stage of your interpreting work
                 </p>
               </div>
               <div
@@ -4488,112 +4734,197 @@ function App() {
               </div>
             </div>
 
-            {/* Action Cards */}
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-              <button
-                onClick={() => setActiveTab('reflection')}
-                className="rounded-xl p-6 text-left transition-all group"
-                style={{
-                  backgroundColor: '#6B8B60',
-                  background: 'linear-gradient(145deg, #6B8B60 0%, #5F7F55 100%)',
-                  boxShadow: '0 4px 15px rgba(107, 139, 96, 0.3)',
-                  transform: 'translateY(0)',
-                }}
-                onMouseEnter={(e) => {
-                  e.currentTarget.style.transform = 'translateY(-3px) scale(1.02)';
-                  e.currentTarget.style.boxShadow = '0 8px 25px rgba(107, 139, 96, 0.4)';
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.transform = 'translateY(0) scale(1)';
-                  e.currentTarget.style.boxShadow = '0 4px 15px rgba(107, 139, 96, 0.3)';
-                }}
-              >
-                <div
-                  className="p-3 rounded-lg inline-block mb-4"
-                  style={{ backgroundColor: 'rgba(255, 255, 255, 0.2)' }}
+            {/* Reflection Navigation */}
+            <nav aria-label="Structured Reflections">
+              <ul className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <li>
+                  <button
+                    onClick={() => setShowPreAssignmentPrep(true)}
+                    className="w-full card reflection-link rounded-xl p-5 text-left transition-all hover:shadow-lg"
+                    style={{
+                      backgroundColor: '#FFFFFF',
+                      border: '1px solid rgba(92, 127, 79, 0.3)',
+                      transform: 'translateY(0)',
+                    }}
+                    onMouseEnter={(e) => {
+                      e.currentTarget.style.transform = 'translateY(-2px)';
+                      e.currentTarget.style.borderColor = '#5C7F4F';
+                      e.currentTarget.style.backgroundColor = '#F8FBF6';
+                    }}
+                    onMouseLeave={(e) => {
+                      e.currentTarget.style.transform = 'translateY(0)';
+                      e.currentTarget.style.borderColor = 'rgba(92, 127, 79, 0.3)';
+                      e.currentTarget.style.backgroundColor = '#FFFFFF';
+                    }}
+                  >
+                    <h3 className="font-bold mb-2 text-base" style={{ color: '#1A1A1A' }}>
+                      Pre-Assignment Prep
+                    </h3>
+                    <p className="text-sm" style={{ color: '#5A5A5A' }}>
+                      Tactical, emotional, and ethical readiness
+                    </p>
+                  </button>
+                </li>
+                
+                <li>
+                  <button
+                    onClick={() => setShowPostAssignmentDebrief(true)}
+                    className="w-full card reflection-link rounded-xl p-5 text-left transition-all hover:shadow-lg"
+                    style={{
+                      backgroundColor: '#FFFFFF',
+                      border: '1px solid rgba(92, 127, 79, 0.3)',
+                      transform: 'translateY(0)',
+                    }}
+                    onMouseEnter={(e) => {
+                      e.currentTarget.style.transform = 'translateY(-2px)';
+                      e.currentTarget.style.borderColor = '#5C7F4F';
+                      e.currentTarget.style.backgroundColor = '#F8FBF6';
+                    }}
+                    onMouseLeave={(e) => {
+                      e.currentTarget.style.transform = 'translateY(0)';
+                      e.currentTarget.style.borderColor = 'rgba(92, 127, 79, 0.3)';
+                      e.currentTarget.style.backgroundColor = '#FFFFFF';
+                    }}
+                  >
+                    <h3 className="font-bold mb-2 text-base" style={{ color: '#1A1A1A' }}>
+                      Post-Assignment Debrief
+                    </h3>
+                    <p className="text-sm" style={{ color: '#5A5A5A' }}>
+                      Consolidate growth and reset after interpreting
+                    </p>
+                  </button>
+                </li>
+                
+                <li>
+                  <button
+                    onClick={() => setShowTeamingPrep(true)}
+                    className="w-full card reflection-link rounded-xl p-5 text-left transition-all hover:shadow-lg"
+                    style={{
+                      backgroundColor: '#FFFFFF',
+                      border: '1px solid rgba(92, 127, 79, 0.3)',
+                      transform: 'translateY(0)',
+                    }}
+                    onMouseEnter={(e) => {
+                      e.currentTarget.style.transform = 'translateY(-2px)';
+                      e.currentTarget.style.borderColor = '#5C7F4F';
+                      e.currentTarget.style.backgroundColor = '#F8FBF6';
+                    }}
+                    onMouseLeave={(e) => {
+                      e.currentTarget.style.transform = 'translateY(0)';
+                      e.currentTarget.style.borderColor = 'rgba(92, 127, 79, 0.3)';
+                      e.currentTarget.style.backgroundColor = '#FFFFFF';
+                    }}
+                  >
+                    <h3 className="font-bold mb-2 text-base" style={{ color: '#1A1A1A' }}>
+                      Teaming Prep
+                    </h3>
+                    <p className="text-sm" style={{ color: '#5A5A5A' }}>
+                      Prepare for smooth collaboration and handoffs
+                    </p>
+                  </button>
+                </li>
+                
+                <li>
+                  <button
+                    onClick={() => setShowTeamingReflection(true)}
+                    className="w-full card reflection-link rounded-xl p-5 text-left transition-all hover:shadow-lg"
+                    style={{
+                      backgroundColor: '#FFFFFF',
+                      border: '1px solid rgba(92, 127, 79, 0.3)',
+                      transform: 'translateY(0)',
+                    }}
+                    onMouseEnter={(e) => {
+                      e.currentTarget.style.transform = 'translateY(-2px)';
+                      e.currentTarget.style.borderColor = '#5C7F4F';
+                      e.currentTarget.style.backgroundColor = '#F8FBF6';
+                    }}
+                    onMouseLeave={(e) => {
+                      e.currentTarget.style.transform = 'translateY(0)';
+                      e.currentTarget.style.borderColor = 'rgba(92, 127, 79, 0.3)';
+                      e.currentTarget.style.backgroundColor = '#FFFFFF';
+                    }}
+                  >
+                    <h3 className="font-bold mb-2 text-base" style={{ color: '#1A1A1A' }}>
+                      Team Reflection
+                    </h3>
+                    <p className="text-sm" style={{ color: '#5A5A5A' }}>
+                      Process team dynamics and collaboration
+                    </p>
+                  </button>
+                </li>
+                
+                <li>
+                  <button
+                    onClick={() => setShowMentoringPrep(true)}
+                    className="w-full card reflection-link rounded-xl p-5 text-left transition-all hover:shadow-lg"
+                    style={{
+                      backgroundColor: '#FFFFFF',
+                      border: '1px solid rgba(92, 127, 79, 0.3)',
+                      transform: 'translateY(0)',
+                    }}
+                    onMouseEnter={(e) => {
+                      e.currentTarget.style.transform = 'translateY(-2px)';
+                      e.currentTarget.style.borderColor = '#5C7F4F';
+                      e.currentTarget.style.backgroundColor = '#F8FBF6';
+                    }}
+                    onMouseLeave={(e) => {
+                      e.currentTarget.style.transform = 'translateY(0)';
+                      e.currentTarget.style.borderColor = 'rgba(92, 127, 79, 0.3)';
+                      e.currentTarget.style.backgroundColor = '#FFFFFF';
+                    }}
+                  >
+                    <h3 className="font-bold mb-2 text-base" style={{ color: '#1A1A1A' }}>
+                      Mentoring Prep
+                    </h3>
+                    <p className="text-sm" style={{ color: '#5A5A5A' }}>
+                      Structure your mentoring approach
+                    </p>
+                  </button>
+                </li>
+                
+                <li>
+                  <button
+                    onClick={() => setShowEthicsMeaningCheck(true)}
+                    className="w-full card reflection-link rounded-xl p-5 text-left transition-all hover:shadow-lg"
+                    style={{
+                      backgroundColor: '#FFFFFF',
+                      border: '1px solid rgba(92, 127, 79, 0.3)',
+                      transform: 'translateY(0)',
+                    }}
+                    onMouseEnter={(e) => {
+                      e.currentTarget.style.transform = 'translateY(-2px)';
+                      e.currentTarget.style.borderColor = '#5C7F4F';
+                      e.currentTarget.style.backgroundColor = '#F8FBF6';
+                    }}
+                    onMouseLeave={(e) => {
+                      e.currentTarget.style.transform = 'translateY(0)';
+                      e.currentTarget.style.borderColor = 'rgba(92, 127, 79, 0.3)';
+                      e.currentTarget.style.backgroundColor = '#FFFFFF';
+                    }}
+                  >
+                    <h3 className="font-bold mb-2 text-base" style={{ color: '#1A1A1A' }}>
+                      Ethics & Meaning Check
+                    </h3>
+                    <p className="text-sm" style={{ color: '#5A5A5A' }}>
+                      Reflect on boundaries and professional purpose
+                    </p>
+                  </button>
+                </li>
+              </ul>
+              
+              <div className="mt-6 text-center">
+                <button
+                  onClick={() => setActiveTab('reflection')}
+                  className="inline-flex items-center px-4 py-2 text-sm font-medium text-blue-600 hover:text-blue-800 hover:underline"
                 >
-                  <Target className="h-6 w-6" style={{ color: '#FFFFFF' }} />
-                </div>
-                <h3 className="font-bold mb-2 text-lg" style={{ color: '#FFFFFF' }}>
-                  New Reflection
-                </h3>
-                <p className="text-sm" style={{ color: 'rgba(255, 255, 255, 0.9)' }}>
-                  Start a fresh reflection session
-                </p>
-              </button>
-
-              <button
-                onClick={() => {
-                  setActiveTab('reflection');
-                  setActiveCategory('burnout');
-                }}
-                className="rounded-xl p-6 text-left transition-all group"
-                style={{
-                  backgroundColor: '#FFFFFF',
-                  border: '2px solid #5C7F4F',
-                  boxShadow: '0 4px 15px rgba(0, 0, 0, 0.05)',
-                  transform: 'translateY(0)',
-                }}
-                onMouseEnter={(e) => {
-                  e.currentTarget.style.transform = 'translateY(-3px) scale(1.02)';
-                  e.currentTarget.style.boxShadow = '0 8px 25px rgba(92, 127, 79, 0.3)';
-                  e.currentTarget.style.backgroundColor = '#F8FBF6';
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.transform = 'translateY(0) scale(1)';
-                  e.currentTarget.style.boxShadow = '0 4px 15px rgba(0, 0, 0, 0.05)';
-                  e.currentTarget.style.backgroundColor = '#FFFFFF';
-                }}
-              >
-                <div
-                  className="p-3 rounded-lg inline-block mb-4"
-                  style={{ backgroundColor: 'rgba(92, 127, 79, 0.15)' }}
-                >
-                  <Shield className="h-6 w-6" style={{ color: '#5C7F4F' }} />
-                </div>
-                <h3 className="font-bold mb-2 text-lg" style={{ color: '#1A1A1A' }}>
-                  Daily Burnout Gauge
-                </h3>
-                <p className="text-sm" style={{ color: '#5A5A5A' }}>
-                  5-question wellness assessment
-                </p>
-              </button>
-
-              <button
-                onClick={() => setActiveTab('stress')}
-                className="rounded-xl p-6 text-left transition-all group"
-                style={{
-                  background: 'linear-gradient(145deg, #6B8B60 0%, #5F7F55 100%)',
-                  boxShadow: '0 4px 15px rgba(107, 139, 96, 0.3)',
-                  transform: 'translateY(0)',
-                }}
-                onMouseEnter={(e) => {
-                  e.currentTarget.style.transform = 'translateY(-3px) scale(1.02)';
-                  e.currentTarget.style.boxShadow = '0 8px 25px rgba(107, 139, 96, 0.4)';
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.transform = 'translateY(0) scale(1)';
-                  e.currentTarget.style.boxShadow = '0 4px 15px rgba(107, 139, 96, 0.3)';
-                }}
-              >
-                <div
-                  className="p-3 rounded-lg inline-block mb-4"
-                  style={{ backgroundColor: 'rgba(255, 255, 255, 0.2)' }}
-                >
-                  <Heart className="h-6 w-6" style={{ color: '#FFFFFF' }} />
-                </div>
-                <h3 className="font-bold mb-2 text-lg" style={{ color: '#FFFFFF' }}>
-                  Quick Reset
-                </h3>
-                <p className="text-sm" style={{ color: 'rgba(255, 255, 255, 0.9)' }}>
-                  5-minute wellness break
-                </p>
-              </button>
-            </div>
-          </div>
+                  View All Reflection Tools →
+                </button>
+              </div>
+            </nav>
+          </section>
 
           {/* Recent Reflections */}
-          <div
+          <section
             className="rounded-2xl p-8"
             style={{
               backgroundColor: '#FFFFFF',
@@ -4602,7 +4933,7 @@ function App() {
             }}
           >
             <div className="flex items-center justify-between mb-6">
-              <h2 className="text-2xl font-bold" style={{ color: '#1A1A1A' }}>
+              <h2 id="recent-reflections-heading" className="text-2xl font-bold" style={{ color: '#1A1A1A' }}>
                 Recent Reflections
               </h2>
               <button
@@ -4728,21 +5059,22 @@ function App() {
                 </button>
               </div>
             )}
-          </div>
+          </section>
         </div>
 
         {/* Right Column - Sidebar */}
         <div className="space-y-6">
           {/* Quick Tools */}
-          <div
+          <section
             className="rounded-2xl p-6"
+            aria-labelledby="quick-tools-heading"
             style={{
               backgroundColor: '#FFFFFF',
               boxShadow: '0 8px 20px rgba(92, 127, 79, 0.12), 0 2px 6px rgba(0, 0, 0, 0.04)',
               border: '1px solid rgba(92, 127, 79, 0.2)',
             }}
           >
-            <h3 className="text-lg font-bold mb-5" style={{ color: '#1A1A1A' }}>
+            <h3 id="quick-tools-heading" className="text-lg font-bold mb-5" style={{ color: '#1A1A1A' }}>
               Quick Tools
             </h3>
             <div className="space-y-3">
@@ -4803,11 +5135,13 @@ function App() {
                 </span>
               </button>
             </div>
-          </div>
+          </section>
 
           {/* Today's Insight */}
-          <div
+          <section
             className="rounded-2xl p-6"
+            aria-labelledby="insight-heading"
+            aria-live="polite"
             style={{
               background: 'linear-gradient(145deg, #6B8B60 0%, #5F7F55 100%)',
               boxShadow: '0 10px 25px rgba(107, 139, 96, 0.35)',
@@ -4821,7 +5155,7 @@ function App() {
               >
                 <Lightbulb className="h-5 w-5" style={{ color: '#FFFFFF' }} />
               </div>
-              <h3 className="text-lg font-bold" style={{ color: '#FFFFFF' }}>
+              <h3 id="insight-heading" className="text-lg font-bold" style={{ color: '#FFFFFF' }}>
                 Today's Insight
               </h3>
             </div>
@@ -4835,7 +5169,10 @@ function App() {
             <p className="text-sm" style={{ color: 'rgba(255, 255, 255, 0.75)' }}>
               Based on your reflection patterns
             </p>
-          </div>
+          </section>
+
+          {/* Subscription Manager */}
+          <SubscriptionManager />
         </div>
       </div>
     </main>
@@ -4851,13 +5188,13 @@ function App() {
       <div className="space-y-8">
         {/* Welcome Section */}
         <div className="mb-8">
-          <h1
+          <h2
             id="reflection-studio-heading"
             className="text-4xl font-bold mb-3"
             style={{ color: '#1A1A1A', letterSpacing: '-0.5px' }}
           >
             Good morning, dev
-          </h1>
+          </h2>
           <p className="text-lg" style={{ color: '#5A5A5A', fontWeight: '400' }}>
             Ready to reflect and grow today?
           </p>
@@ -5051,7 +5388,7 @@ function App() {
                     } else if (card.title === 'Wellness Check-in') {
                       setShowWellnessCheckIn(true);
                     } else if (card.title === 'Compass Check') {
-                      setShowCompassCheck(true);
+                      setShowEthicsMeaningCheck(true);
                     } else if (card.title === 'Daily Burnout Gauge') {
                       setShowDailyBurnout(true);
                     }
@@ -5075,7 +5412,7 @@ function App() {
                       } else if (card.title === 'Wellness Check-in') {
                         setShowWellnessCheckIn(true);
                       } else if (card.title === 'Compass Check') {
-                        setShowCompassCheck(true);
+                        setShowEthicsMeaningCheck(true);
                       } else if (card.title === 'Daily Burnout Gauge') {
                         setShowDailyBurnout(true);
                       }
@@ -5133,7 +5470,7 @@ function App() {
 
         {activeCategory === 'affirmations' && (
           <div role="tabpanel" id="affirmations-panel" aria-labelledby="affirmations-tab">
-            {renderAffirmations()}
+            <AffirmationStudioAccessible />
           </div>
         )}
       </div>
@@ -5176,23 +5513,23 @@ function App() {
 
       {/* Teaming Reflection Modal */}
       {showTeamingReflection && (
-        <TeamingReflectionEnhanced
+        <TeamReflectionJourneyAccessible
           onComplete={(data) => {
             console.log('Team Reflection Results:', data);
-            // Data is automatically saved to Supabase in the component
+            // Data is automatically saved to local storage in the component
             setShowTeamingReflection(false);
           }}
           onClose={() => setShowTeamingReflection(false)}
-          // TODO: Pass prepDataId when we have a way to track which prep session this relates to
+          // TODO: Pass preAssignmentData when we have teaming prep data available
         />
       )}
 
       {/* Mentoring Prep Modal */}
       {showMentoringPrep && (
-        <MentoringPrepEnhanced
+        <MentoringPrepAccessible
           onComplete={(data) => {
             console.log('Mentoring Prep Results:', data);
-            // Data is automatically saved to Supabase in the component
+            // Data is automatically saved to local storage in the component
             setShowMentoringPrep(false);
           }}
           onClose={() => setShowMentoringPrep(false)}
@@ -5201,19 +5538,20 @@ function App() {
 
       {/* Mentoring Reflection Modal */}
       {showMentoringReflection && (
-        <MentoringReflectionEnhanced
+        <MentoringReflectionAccessible
           onComplete={(results) => {
-            // Save reflection
-            saveReflection('Mentoring Reflection', results);
+            console.log('Mentoring Reflection Results:', results);
+            // Data is automatically saved to local storage in the component
             setShowMentoringReflection(false);
           }}
           onClose={() => setShowMentoringReflection(false)}
+          // TODO: Pass prepData when we have mentoring prep data available for comparison
         />
       )}
 
       {/* Wellness Check-In Modal */}
       {showWellnessCheckIn && (
-        <WellnessCheckInEnhanced
+        <WellnessCheckInAccessible
           onComplete={(results) => {
             // Save reflection
             saveReflection('Wellness Check-in', results);
@@ -5223,15 +5561,15 @@ function App() {
         />
       )}
 
-      {/* Compass Check Modal */}
-      {showCompassCheck && (
-        <CompassCheckEnhanced
+      {/* Ethics & Meaning Check Modal */}
+      {showEthicsMeaningCheck && (
+        <EthicsMeaningCheckAccessible
           onComplete={(results) => {
             // Save reflection
-            saveReflection('Compass Check', results);
-            setShowCompassCheck(false);
+            saveReflection('Ethics & Meaning Check-In', results);
+            setShowEthicsMeaningCheck(false);
           }}
-          onClose={() => setShowCompassCheck(false)}
+          onClose={() => setShowEthicsMeaningCheck(false)}
         />
       )}
 
@@ -5247,25 +5585,6 @@ function App() {
         />
       )}
 
-      {/* Breathing Rhythm Practice Modal */}
-      {showBreathingPractice && (
-        <BreathingRhythmPractice
-          onClose={() => {
-            setShowBreathingPractice(false);
-            if (currentTechniqueId) {
-              trackTechniqueEnd(currentTechniqueId, 'completed');
-              setCurrentTechniqueId(null);
-            }
-          }}
-          onComplete={(data) => {
-            if (currentTechniqueId) {
-              trackTechniqueEnd(currentTechniqueId, 'completed');
-              setCurrentTechniqueId(null);
-            }
-            setShowBreathingPractice(false);
-          }}
-        />
-      )}
     </main>
   );
 
@@ -5277,6 +5596,9 @@ function App() {
       <Route path="/terms" element={<TermsOfService />} />
       <Route path="/contact" element={<Contact />} />
       <Route path="/about" element={<About />} />
+      <Route path="/pricing" element={<PricingNew />} />
+      <Route path="/pricing-test" element={<PricingTest />} />
+      <Route path="/payment-success" element={<PaymentSuccess />} />
       <Route 
         path="*" 
         element={
@@ -5344,6 +5666,9 @@ function App() {
       <Route path="/terms" element={<TermsOfService />} />
       <Route path="/contact" element={<Contact />} />
       <Route path="/about" element={<About />} />
+      <Route path="/pricing" element={<PricingNew />} />
+      <Route path="/pricing-test" element={<PricingTest />} />
+      <Route path="/payment-success" element={<PaymentSuccess />} />
       <Route 
         path="*" 
         element={
@@ -5354,6 +5679,14 @@ function App() {
               minHeight: '100vh',
             }}
           >
+      {/* Skip to main content link for screen readers */}
+      <a
+        href="#main-content"
+        className="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 focus:z-50 focus:px-4 focus:py-2 focus:bg-white focus:text-black focus:rounded-lg focus:outline-none focus:ring-2 focus:ring-offset-2"
+        style={{ focusRingColor: '#5C7F4F' }}
+      >
+        Skip to main content
+      </a>
       {/* DEV MODE INDICATOR */}
       {devMode && (
         <div className="fixed top-0 left-0 right-0 bg-red-500 text-white text-center py-1 text-xs font-bold z-50">
@@ -5361,13 +5694,14 @@ function App() {
         </div>
       )}
       
-      {/* Header */}
+      {/* Header with proper semantic structure */}
       <header
         className="shadow-md"
         style={{
           background: 'linear-gradient(135deg, #4A6B3E 0%, #5C7F4F 100%)',
           boxShadow: '0 2px 10px rgba(92, 127, 79, 0.3)',
         }}
+        role="banner"
       >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16">
@@ -5383,9 +5717,9 @@ function App() {
                 </span>
               </div>
               <div className="hidden md:block">
-                <h1 className="text-xl font-semibold" style={{ color: '#FFFFFF' }}>
+                <p className="text-xl font-semibold" style={{ color: '#FFFFFF' }}>
                   Good morning, {devMode ? 'Dev Mode' : user?.email?.split('@')[0] || 'User'}
-                </h1>
+                </p>
                 <p className="text-sm opacity-90" style={{ color: '#FFFFFF' }}>
                   {new Date().toLocaleDateString('en-US', {
                     weekday: 'long',
@@ -5407,6 +5741,9 @@ function App() {
                     backdropFilter: 'blur(10px)',
                     border: '1px solid rgba(255, 255, 255, 0.3)',
                   }}
+                  aria-label="User menu"
+                  aria-expanded={showUserDropdown}
+                  aria-haspopup="true"
                   onMouseEnter={(e) => {
                     e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.3)';
                     e.currentTarget.style.transform = 'scale(1.02)';
@@ -5554,6 +5891,44 @@ function App() {
                         </button>
 
                         <button
+                          onClick={() => {
+                            setShowUserDropdown(false);
+                            window.location.href = '/pricing';
+                          }}
+                          className="w-full flex items-center space-x-3 p-4 rounded-xl transition-all text-left group"
+                          style={{
+                            backgroundColor: 'transparent',
+                          }}
+                          onMouseEnter={(e) => {
+                            e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.05)';
+                            e.currentTarget.style.transform = 'translateX(2px)';
+                          }}
+                          onMouseLeave={(e) => {
+                            e.currentTarget.style.backgroundColor = 'transparent';
+                            e.currentTarget.style.transform = 'translateX(0)';
+                          }}
+                        >
+                          <div
+                            className="p-2 rounded-lg"
+                            style={{ backgroundColor: 'rgba(147, 51, 234, 0.15)' }}
+                          >
+                            <Zap className="h-5 w-5" style={{ color: '#9333ea' }} />
+                          </div>
+                          <div className="flex-grow">
+                            <div className="font-medium" style={{ color: '#FFFFFF' }}>
+                              Upgrade Plan
+                            </div>
+                            <div className="text-xs" style={{ color: '#8A8A8A' }}>
+                              View pricing & features
+                            </div>
+                          </div>
+                          <ChevronRight
+                            className="h-4 w-4 opacity-60"
+                            style={{ color: '#6A6A6A' }}
+                          />
+                        </button>
+
+                        <button
                           className="w-full flex items-center space-x-3 p-4 rounded-xl transition-all text-left group"
                           style={{
                             backgroundColor: 'transparent',
@@ -5639,8 +6014,9 @@ function App() {
         </div>
       </header>
 
-      {/* Navigation Tabs */}
+      {/* Navigation Tabs with proper semantic structure */}
       <nav
+        aria-label="Main navigation"
         style={{
           backgroundColor: '#FFFFFF',
           borderBottom: '1px solid #E8E5E0',
@@ -5648,7 +6024,7 @@ function App() {
         }}
       >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex space-x-8">
+          <ul className="flex space-x-8 list-none m-0 p-0" role="tablist">
             {[
               { id: 'home', label: 'Home', icon: Home },
               { id: 'reflection', label: 'Reflection Studio', icon: BookOpen },
@@ -5656,10 +6032,14 @@ function App() {
               { id: 'chat', label: 'Chat with Elya', icon: MessageCircle, badge: 'BETA' },
               { id: 'insights', label: 'Growth Insights', icon: TrendingUp },
             ].map((tab) => (
-              <button
-                key={tab.id}
-                onClick={() => setActiveTab(tab.id)}
-                className="flex items-center px-3 py-4 text-sm font-medium transition-all"
+              <li key={tab.id} role="presentation">
+                <button
+                  onClick={() => setActiveTab(tab.id)}
+                  className="flex items-center px-3 py-4 text-sm font-medium transition-all"
+                  role="tab"
+                  aria-selected={activeTab === tab.id}
+                  aria-controls={`${tab.id}-panel`}
+                  aria-current={activeTab === tab.id ? 'page' : undefined}
                 style={{
                   color: activeTab === tab.id ? '#5C7F4F' : '#1A1A1A',
                   borderBottom:
@@ -5694,144 +6074,223 @@ function App() {
                     {tab.badge}
                   </span>
                 )}
-              </button>
+                </button>
+              </li>
             ))}
-          </div>
+          </ul>
         </div>
       </nav>
 
-      {/* Render different content based on active tab */}
-      {activeTab === 'reflection' && renderReflectionStudio()}
-      {activeTab === 'home' && renderDashboardHome()}
-      {activeTab === 'stress' && renderStressReset()}
-      {activeTab === 'chat' && renderChatWithElya()}
-      {activeTab === 'insights' && renderGrowthInsights()}
+      {/* Main content area with proper semantic structure */}
+      <main id="main-content" role="main" className="flex-1">
+        <div role="tabpanel" id={`${activeTab}-panel`} aria-labelledby={activeTab}>
+          {activeTab === 'reflection' && renderReflectionStudio()}
+          {activeTab === 'home' && renderDashboardHome()}
+          {activeTab === 'stress' && renderStressReset()}
+          {activeTab === 'chat' && renderChatWithElya()}
+          {activeTab === 'insights' && renderGrowthInsights()}
+        </div>
+      </main>
 
       {/* Privacy Page Overlay */}
       {showPrivacyPage && renderPrivacyPage()}
 
-      {/* Affirmation Modal - Moved here so it's accessible from any tab */}
-      {selectedAffirmationCategory !== null && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
-          <div className="bg-white rounded-2xl max-w-2xl w-full p-8">
-            <div className="flex justify-between items-start mb-6">
-              <div>
-                <div 
-                  className="inline-flex p-3 rounded-lg mb-4"
-                  style={{ 
-                    backgroundColor: selectedAffirmationCategory === 0 ? '#ec4899' : 
-                                     selectedAffirmationCategory === 1 ? '#f97316' :
-                                     selectedAffirmationCategory === 2 ? '#10b981' :
-                                     selectedAffirmationCategory === 3 ? '#a855f7' :
-                                     selectedAffirmationCategory === 4 ? '#60a5fa' :
-                                     '#9333ea'
-                  }}
-                >
-                  {(() => {
-                    const Icon = affirmationCategories[selectedAffirmationCategory].icon;
-                    return <Icon className="h-8 w-8 text-white" />;
-                  })()}
-                </div>
-                <h2 className="text-2xl font-bold text-gray-900">
-                  {affirmationCategories[selectedAffirmationCategory].title}
-                </h2>
-              </div>
-              <button
-                onClick={() => {
-                  setSelectedAffirmationCategory(null);
-                  setCurrentAffirmationIndex(0);
-                }}
-                className="text-gray-400 hover:text-gray-600"
-              >
-                <X className="h-6 w-6" />
-              </button>
-            </div>
-            
-            {/* Single Affirmation Display */}
-            <div className="min-h-[200px] flex items-center justify-center px-8 py-12 rounded-xl border" 
-                 style={{ 
-                   background: 'linear-gradient(135deg, #f0f7f0 0%, #ffffff 50%, #f0f7f0 100%)',
-                   borderColor: '#5C7F4F'
-                 }}>
-              <p className="text-xl text-gray-700 leading-relaxed text-center italic font-medium">
-                "{affirmationCategories[selectedAffirmationCategory].affirmations[currentAffirmationIndex]}"
-              </p>
-            </div>
-            
-            {/* Navigation Controls */}
-            <div className="flex items-center justify-between mt-8">
-              <button
-                onClick={() => {
-                  const newIndex = currentAffirmationIndex > 0 
-                    ? currentAffirmationIndex - 1 
-                    : affirmationCategories[selectedAffirmationCategory].affirmations.length - 1;
-                  setCurrentAffirmationIndex(newIndex);
-                }}
-                className="p-3 rounded-full transition-colors"
-                style={{ backgroundColor: '#e8f2e8', color: '#2D5F3F' }}
-                onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#d4e8d4'}
-                onMouseLeave={(e) => e.currentTarget.style.backgroundColor = '#e8f2e8'}
-                aria-label="Previous affirmation"
-              >
-                <ChevronLeft className="h-6 w-6" />
-              </button>
-              
-              {/* Progress Dots */}
-              <div className="flex space-x-2">
-                {affirmationCategories[selectedAffirmationCategory].affirmations.map((_, index) => (
-                  <button
-                    key={index}
-                    onClick={() => setCurrentAffirmationIndex(index)}
-                    className="rounded-full transition-all"
-                    style={{
-                      width: index === currentAffirmationIndex ? '32px' : '8px',
-                      height: '8px',
-                      backgroundColor: index === currentAffirmationIndex ? '#5C7F4F' : '#d4e8d4'
-                    }}
-                    aria-label={`Go to affirmation ${index + 1}`}
-                  />
-                ))}
-              </div>
-              
-              <button
-                onClick={() => {
-                  const newIndex = currentAffirmationIndex < affirmationCategories[selectedAffirmationCategory].affirmations.length - 1
-                    ? currentAffirmationIndex + 1
-                    : 0;
-                  setCurrentAffirmationIndex(newIndex);
-                }}
-                className="p-3 rounded-full transition-colors"
-                style={{ backgroundColor: '#e8f2e8', color: '#2D5F3F' }}
-                onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#d4e8d4'}
-                onMouseLeave={(e) => e.currentTarget.style.backgroundColor = '#e8f2e8'}
-                aria-label="Next affirmation"
-              >
-                <ChevronRight className="h-6 w-6" />
-              </button>
-            </div>
-            
-            {/* Counter */}
-            <div className="text-center mt-6 text-sm text-gray-500">
-              {currentAffirmationIndex + 1} of {affirmationCategories[selectedAffirmationCategory].affirmations.length}
-            </div>
-            
-            <div className="mt-6 flex justify-center">
-              <button
-                onClick={() => {
-                  setSelectedAffirmationCategory(null);
-                  setCurrentAffirmationIndex(0);
-                }}
-                className="px-6 py-3 text-white rounded-lg transition-colors"
-                style={{ backgroundColor: '#5C7F4F' }}
-                onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#8FA681'}
-                onMouseLeave={(e) => e.currentTarget.style.backgroundColor = '#5C7F4F'}
-              >
-                Close
-              </button>
-            </div>
-          </div>
-        </div>
+
+      {/* Breathing Practice Modal */}
+      {showBreathingPractice && (
+        <BreathingPractice
+          onClose={() => {
+            setShowBreathingPractice(false);
+            if (currentTechniqueId) {
+              trackTechniqueEnd(currentTechniqueId, 'completed');
+              setCurrentTechniqueId(null);
+            }
+          }}
+          onComplete={(data) => {
+            if (currentTechniqueId) {
+              trackTechniqueEnd(currentTechniqueId, 'completed');
+              setCurrentTechniqueId(null);
+            }
+            setShowBreathingPractice(false);
+          }}
+        />
       )}
+
+      {/* Affirmation & Reflection Studio Modal */}
+      {showAffirmationStudio && (
+        <AffirmationReflectionStudio
+          onClose={() => setShowAffirmationStudio(false)}
+        />
+      )}
+
+      {/* Body Check-In Modal */}
+      {showBodyCheckIn && (
+        <BodyCheckIn
+          onClose={() => {
+            setShowBodyCheckIn(false);
+            if (currentTechniqueId) {
+              trackTechniqueEnd(currentTechniqueId, 'completed');
+              setCurrentTechniqueId(null);
+            }
+          }}
+          onComplete={(data) => {
+            if (currentTechniqueId) {
+              trackTechniqueEnd(currentTechniqueId, 'completed');
+              setCurrentTechniqueId(null);
+            }
+            setShowBodyCheckIn(false);
+            console.log('Body Check-In completed:', data);
+          }}
+        />
+      )}
+
+      {/* Professional Boundaries Reset Modal */}
+      {showProfessionalBoundariesReset && (
+        <ProfessionalBoundariesReset
+          onClose={() => {
+            setShowProfessionalBoundariesReset(false);
+            if (currentTechniqueId) {
+              trackTechniqueEnd(currentTechniqueId, 'completed');
+              setCurrentTechniqueId(null);
+            }
+          }}
+          onComplete={(data) => {
+            if (currentTechniqueId) {
+              trackTechniqueEnd(currentTechniqueId, 'completed');
+              setCurrentTechniqueId(null);
+            }
+            setShowProfessionalBoundariesReset(false);
+            console.log('Professional Boundaries Reset completed:', data);
+          }}
+        />
+      )}
+      {/* Temperature Exploration Modal */}
+      {showTemperatureExploration && (
+        <TemperatureExploration
+          onClose={() => {
+            setShowTemperatureExploration(false);
+            if (currentTechniqueId) {
+              trackTechniqueEnd(currentTechniqueId, 'completed');
+              setCurrentTechniqueId(null);
+            }
+          }}
+          onComplete={(data) => {
+            if (currentTechniqueId) {
+              trackTechniqueEnd(currentTechniqueId, 'completed');
+              setCurrentTechniqueId(null);
+            }
+            setShowTemperatureExploration(false);
+            console.log('Temperature Exploration completed:', data);
+          }}
+        />
+      )}
+      {/* Assignment Reset Modal */}
+      {showAssignmentReset && (
+        <AssignmentReset
+          onClose={() => {
+            setShowAssignmentReset(false);
+            if (currentTechniqueId) {
+              trackTechniqueEnd(currentTechniqueId, 'completed');
+              setCurrentTechniqueId(null);
+            }
+          }}
+          onComplete={(data) => {
+            if (currentTechniqueId) {
+              trackTechniqueEnd(currentTechniqueId, 'completed');
+              setCurrentTechniqueId(null);
+            }
+            setShowAssignmentReset(false);
+            console.log('Assignment Reset completed:', data);
+          }}
+        />
+      )}
+      {/* Technology Fatigue Reset Modal */}
+      {showTechnologyFatigueReset && (
+        <TechnologyFatigueReset
+          onClose={() => {
+            setShowTechnologyFatigueReset(false);
+            if (currentTechniqueId) {
+              trackTechniqueEnd(currentTechniqueId, 'completed');
+              setCurrentTechniqueId(null);
+            }
+          }}
+          onComplete={(data) => {
+            if (currentTechniqueId) {
+              trackTechniqueEnd(currentTechniqueId, 'completed');
+              setCurrentTechniqueId(null);
+            }
+            setShowTechnologyFatigueReset(false);
+            console.log('Technology Fatigue Reset completed:', data);
+          }}
+        />
+      )}
+      {/* Emotion Mapping Modal */}
+      {showEmotionMapping && (
+        <EmotionMapping
+          onClose={() => {
+            setShowEmotionMapping(false);
+            if (currentTechniqueId) {
+              trackTechniqueEnd(currentTechniqueId, 'completed');
+              setCurrentTechniqueId(null);
+            }
+          }}
+          onComplete={(data) => {
+            if (currentTechniqueId) {
+              trackTechniqueEnd(currentTechniqueId, 'completed');
+              setCurrentTechniqueId(null);
+            }
+            setShowEmotionMapping(false);
+            console.log('Emotion Mapping completed:', data);
+          }}
+        />
+      )}
+      
+      {/* Footer with proper semantic structure */}
+      <footer 
+        role="contentinfo" 
+        className="mt-auto py-6 px-4 border-t"
+        style={{ 
+          backgroundColor: '#FFFFFF',
+          borderColor: '#E8E5E0'
+        }}
+      >
+        <div className="max-w-7xl mx-auto text-center">
+          <p className="text-sm" style={{ color: '#4A5568' }}>
+            © 2025 InterpretReflect™. All rights reserved.
+          </p>
+          <nav aria-label="Footer navigation" className="mt-3">
+            <ul className="flex justify-center space-x-6 list-none">
+              <li>
+                <a 
+                  href="/privacy" 
+                  className="text-sm hover:underline"
+                  style={{ color: '#5C7F4F' }}
+                >
+                  Privacy Policy
+                </a>
+              </li>
+              <li>
+                <a 
+                  href="/terms" 
+                  className="text-sm hover:underline"
+                  style={{ color: '#5C7F4F' }}
+                >
+                  Terms of Service
+                </a>
+              </li>
+              <li>
+                <a 
+                  href="/contact" 
+                  className="text-sm hover:underline"
+                  style={{ color: '#5C7F4F' }}
+                >
+                  Contact
+                </a>
+              </li>
+            </ul>
+          </nav>
+        </div>
+      </footer>
     </div>
         }
       />

@@ -1,9 +1,9 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { X, Play, Pause, RotateCcw, Settings, Volume2, VolumeX, Eye, EyeOff } from 'lucide-react';
+import { X, Play, Pause, RotateCcw, Settings, Volume2, VolumeX, Eye, EyeOff, Contrast, Vibrate, Timer, Gauge, Heart, Sparkles, Circle, Square, Triangle } from 'lucide-react';
 import { supabase, BreathingPracticeData } from '../lib/supabase';
 import { useAuth } from '../contexts/AuthContext';
 
-interface BreathingRhythmPracticeProps {
+interface BreathingPracticeProps {
   onClose: () => void;
   onComplete?: (data: BreathingPracticeData) => void;
 }
@@ -11,7 +11,7 @@ interface BreathingRhythmPracticeProps {
 type BreathingPhase = 'inhale' | 'pause' | 'exhale' | 'rest' | 'stopped';
 type PracticeType = 'rhythm' | 'counting' | 'color' | 'sound' | 'touch';
 
-export const BreathingRhythmPractice: React.FC<BreathingRhythmPracticeProps> = ({ 
+export const BreathingPractice: React.FC<BreathingPracticeProps> = ({ 
   onClose, 
   onComplete 
 }) => {
@@ -27,6 +27,16 @@ export const BreathingRhythmPractice: React.FC<BreathingRhythmPracticeProps> = (
   const [sessionStartTime, setSessionStartTime] = useState<number>(0);
   const [sessionDuration, setSessionDuration] = useState(0);
   const [modifications, setModifications] = useState<string[]>([]);
+  
+  // Accessibility states
+  const [highContrastMode, setHighContrastMode] = useState(false);
+  const [vibrationEnabled, setVibrationEnabled] = useState(false);
+  const [visualMode, setVisualMode] = useState<'circle' | 'bar' | 'colors' | 'shapes'>('circle');
+  const [speedPreference, setSpeedPreference] = useState<'slower' | 'normal' | 'faster'>('normal');
+  const [simplifiedMode, setSimplifiedMode] = useState(false);
+  const [neurodivergentMode, setNeurodivergentMode] = useState(false);
+  const [stimPattern, setStimPattern] = useState<'none' | 'tapping' | 'rocking' | 'fidget'>('none');
+  const [predictableMode, setPredictableMode] = useState(false);
   
   // Practice settings
   const [practiceType, setPracticeType] = useState<PracticeType>('rhythm');
@@ -53,6 +63,20 @@ export const BreathingRhythmPractice: React.FC<BreathingRhythmPracticeProps> = (
   useEffect(() => {
     if (user) {
       loadUserPreferences();
+    }
+    
+    // Load accessibility preferences from localStorage
+    const savedPrefs = localStorage.getItem('breathingAccessibilityPrefs');
+    if (savedPrefs) {
+      const prefs = JSON.parse(savedPrefs);
+      setHighContrastMode(prefs.highContrast || false);
+      setVibrationEnabled(prefs.vibration || false);
+      setVisualMode(prefs.visualMode || 'circle');
+      setSpeedPreference(prefs.speed || 'normal');
+      setSimplifiedMode(prefs.simplified || false);
+      setNeurodivergentMode(prefs.neurodivergent || false);
+      setStimPattern(prefs.stimPattern || 'none');
+      setPredictableMode(prefs.predictable || false);
     }
   }, [user]);
 
@@ -83,6 +107,32 @@ export const BreathingRhythmPractice: React.FC<BreathingRhythmPracticeProps> = (
   };
 
   const getPhaseInstruction = () => {
+    if (simplifiedMode) {
+      switch (currentPhase) {
+        case 'inhale': return 'In';
+        case 'pause': return 'Hold';
+        case 'exhale': return 'Out';
+        case 'rest': return 'Rest';
+        default: return 'Ready';
+      }
+    }
+    
+    if (neurodivergentMode && stimPattern !== 'none') {
+      const stimAction = {
+        'tapping': 'tap along',
+        'rocking': 'rock gently',
+        'fidget': 'use your fidget'
+      }[stimPattern];
+      
+      switch (currentPhase) {
+        case 'inhale': return `Breathe in (${stimAction})`;
+        case 'pause': return `Hold (keep ${stimAction === 'tap along' ? 'tapping' : stimAction === 'rock gently' ? 'rocking' : 'fidgeting'})`;
+        case 'exhale': return `Breathe out (${stimAction})`;
+        case 'rest': return `Rest (${stimAction})`;
+        default: return 'Press play when ready';
+      }
+    }
+    
     switch (currentPhase) {
       case 'inhale':
         return `Breathe in ${breathingPath === 'nose' ? 'through your nose' : breathingPath === 'mouth' ? 'through your mouth' : 'your way'}`;
@@ -100,10 +150,20 @@ export const BreathingRhythmPractice: React.FC<BreathingRhythmPracticeProps> = (
   const startPractice = () => {
     setIsPlaying(true);
     setCurrentPhase('inhale');
-    setCurrentCount(inhaleCount);
+    
+    // Adjust counts based on speed preference
+    const speedMultiplier = speedPreference === 'slower' ? 1.5 : speedPreference === 'faster' ? 0.75 : 1;
+    const adjustedInhale = Math.round(inhaleCount * speedMultiplier);
+    
+    setCurrentCount(adjustedInhale);
     setCycleCount(0);
     setSessionStartTime(Date.now());
     setModifications([]);
+    
+    // Trigger vibration if enabled
+    if (vibrationEnabled && 'vibrate' in navigator) {
+      navigator.vibrate(200);
+    }
     
     runBreathingCycle();
   };
@@ -126,7 +186,8 @@ export const BreathingRhythmPractice: React.FC<BreathingRhythmPracticeProps> = (
 
   const runBreathingCycle = () => {
     let phase: BreathingPhase = 'inhale';
-    let count = inhaleCount;
+    const speedMultiplier = speedPreference === 'slower' ? 1.5 : speedPreference === 'faster' ? 0.75 : 1;
+    let count = Math.round(inhaleCount * speedMultiplier);
     
     intervalRef.current = setInterval(() => {
       count--;
@@ -136,31 +197,44 @@ export const BreathingRhythmPractice: React.FC<BreathingRhythmPracticeProps> = (
         // Move to next phase
         switch (phase) {
           case 'inhale':
+            // Vibrate on phase change if enabled
+            if (vibrationEnabled && 'vibrate' in navigator) {
+              navigator.vibrate(100);
+            }
             if (skipHolds) {
               phase = 'exhale';
-              count = exhaleCount;
+              count = Math.round(exhaleCount * speedMultiplier);
             } else {
               phase = 'pause';
-              count = pauseCount;
+              count = Math.round(pauseCount * speedMultiplier);
             }
             break;
           case 'pause':
+            if (vibrationEnabled && 'vibrate' in navigator) {
+              navigator.vibrate(100);
+            }
             phase = 'exhale';
-            count = exhaleCount;
+            count = Math.round(exhaleCount * speedMultiplier);
             break;
           case 'exhale':
+            if (vibrationEnabled && 'vibrate' in navigator) {
+              navigator.vibrate(100);
+            }
             if (skipHolds) {
               phase = 'inhale';
-              count = inhaleCount;
+              count = Math.round(inhaleCount * speedMultiplier);
               setCycleCount(prev => prev + 1);
             } else {
               phase = 'rest';
-              count = restCount;
+              count = Math.round(restCount * speedMultiplier);
             }
             break;
           case 'rest':
+            if (vibrationEnabled && 'vibrate' in navigator) {
+              navigator.vibrate(100);
+            }
             phase = 'inhale';
-            count = inhaleCount;
+            count = Math.round(inhaleCount * speedMultiplier);
             setCycleCount(prev => prev + 1);
             break;
         }
@@ -231,8 +305,8 @@ export const BreathingRhythmPractice: React.FC<BreathingRhythmPracticeProps> = (
       time_of_day: new Date().getHours() < 12 ? 'morning' : new Date().getHours() < 17 ? 'afternoon' : 'evening',
       visual_timer_used: showVisualGuide,
       audio_cues_used: audioEnabled,
-      haptic_feedback_used: false,
-      high_contrast_mode: false
+      haptic_feedback_used: vibrationEnabled,
+      high_contrast_mode: highContrastMode
     };
     
     // Save to database
@@ -295,28 +369,91 @@ export const BreathingRhythmPractice: React.FC<BreathingRhythmPracticeProps> = (
           </p>
         </div>
 
-        {/* Visual guide */}
+        {/* Visual guide with multiple modes */}
         {showVisualGuide && (
-          <div className="relative w-48 h-48 mb-8">
-            <div 
-              className={`absolute inset-0 rounded-full transition-all duration-1000 ${
-                currentPhase === 'inhale' ? 'scale-110 bg-sage-200' :
-                currentPhase === 'pause' ? 'scale-110 bg-sage-300' :
-                currentPhase === 'exhale' ? 'scale-75 bg-sage-100' :
-                currentPhase === 'rest' ? 'scale-75 bg-gray-100' :
-                'scale-100 bg-gray-50'
-              }`}
-            />
-            <div className="absolute inset-0 flex items-center justify-center">
-              <div className="text-center">
-                <p className="text-sm text-gray-600">Cycle</p>
-                <p className="text-2xl font-bold text-sage-700">{cycleCount}</p>
+          <div className="mb-8">
+            {visualMode === 'circle' && (
+              <div className="relative w-48 h-48 mx-auto">
+                <div 
+                  className={`absolute inset-0 rounded-full transition-all duration-1000 ${
+                    highContrastMode ? (
+                      currentPhase === 'inhale' ? 'scale-110 bg-black' :
+                      currentPhase === 'pause' ? 'scale-110 bg-gray-800' :
+                      currentPhase === 'exhale' ? 'scale-75 bg-gray-600' :
+                      currentPhase === 'rest' ? 'scale-75 bg-gray-400' :
+                      'scale-100 bg-white border-4 border-black'
+                    ) : (
+                      currentPhase === 'inhale' ? 'scale-110 bg-sage-200' :
+                      currentPhase === 'pause' ? 'scale-110 bg-sage-300' :
+                      currentPhase === 'exhale' ? 'scale-75 bg-sage-100' :
+                      currentPhase === 'rest' ? 'scale-75 bg-gray-100' :
+                      'scale-100 bg-gray-50'
+                    )
+                  }`}
+                />
+                <div className="absolute inset-0 flex items-center justify-center">
+                  <div className="text-center">
+                    <p className={`text-sm ${highContrastMode ? 'text-white' : 'text-gray-600'}`}>Cycle</p>
+                    <p className={`text-2xl font-bold ${highContrastMode ? 'text-white' : 'text-sage-700'}`}>{cycleCount}</p>
+                  </div>
+                </div>
               </div>
-            </div>
+            )}
+            
+            {visualMode === 'bar' && (
+              <div className="w-full max-w-md mx-auto">
+                <div className="h-20 bg-gray-200 rounded-lg overflow-hidden relative">
+                  <div 
+                    className={`h-full transition-all duration-1000 ${
+                      highContrastMode ? 'bg-black' : 'bg-sage-600'
+                    }`}
+                    style={{
+                      width: `${(currentCount / (currentPhase === 'inhale' ? inhaleCount : 
+                              currentPhase === 'pause' ? pauseCount :
+                              currentPhase === 'exhale' ? exhaleCount : restCount)) * 100}%`
+                    }}
+                  />
+                  <div className="absolute inset-0 flex items-center justify-center">
+                    <p className={`font-bold text-lg ${highContrastMode ? 'text-white mix-blend-difference' : 'text-white'}`}>
+                      {currentCount}
+                    </p>
+                  </div>
+                </div>
+              </div>
+            )}
+            
+            {visualMode === 'shapes' && (
+              <div className="flex justify-center gap-4">
+                {currentPhase === 'inhale' && <Circle className={`w-24 h-24 ${highContrastMode ? 'text-black fill-black' : 'text-sage-600 fill-sage-200'}`} />}
+                {currentPhase === 'pause' && <Square className={`w-24 h-24 ${highContrastMode ? 'text-black fill-gray-800' : 'text-sage-600 fill-sage-300'}`} />}
+                {currentPhase === 'exhale' && <Triangle className={`w-24 h-24 ${highContrastMode ? 'text-black fill-gray-600' : 'text-sage-600 fill-sage-100'}`} />}
+                {currentPhase === 'rest' && <Circle className={`w-24 h-24 ${highContrastMode ? 'text-black' : 'text-gray-400 fill-gray-100'}`} />}
+              </div>
+            )}
+            
+            {visualMode === 'colors' && (
+              <div className="grid grid-cols-4 gap-2 max-w-md mx-auto">
+                {Array.from({length: 20}).map((_, i) => (
+                  <div 
+                    key={i} 
+                    className={`h-8 rounded transition-all duration-300 ${
+                      i < (20 - Math.round((currentCount / (currentPhase === 'inhale' ? inhaleCount : 
+                            currentPhase === 'pause' ? pauseCount :
+                            currentPhase === 'exhale' ? exhaleCount : restCount)) * 20)) ?
+                        (highContrastMode ? 'bg-black' : 
+                         currentPhase === 'inhale' ? 'bg-blue-500' :
+                         currentPhase === 'pause' ? 'bg-yellow-500' :
+                         currentPhase === 'exhale' ? 'bg-green-500' : 'bg-gray-400') :
+                        (highContrastMode ? 'bg-white border-2 border-black' : 'bg-gray-200')
+                    }`}
+                  />
+                ))}
+              </div>
+            )}
           </div>
         )}
 
-        {/* Rhythm cycle indicator */}
+        {/* Breathing cycle indicator */}
         <div className="flex space-x-4 mb-8">
           <div className={`px-3 py-1 rounded-lg ${currentPhase === 'inhale' ? 'bg-sage-600 text-white' : 'bg-gray-200 text-gray-600'}`}>
             Inhale
@@ -337,40 +474,130 @@ export const BreathingRhythmPractice: React.FC<BreathingRhythmPracticeProps> = (
         </div>
 
         {/* Adaptation options */}
-        <div className="bg-gray-50 rounded-lg p-4 mb-8 max-w-md">
-          <h3 className="font-semibold text-gray-700 mb-2">Quick Adjustments:</h3>
+        <div className={`rounded-lg p-4 mb-8 max-w-md ${
+          highContrastMode ? 'bg-black text-white border-2 border-white' : 'bg-gray-50'
+        }`}>
+          <h3 className={`font-semibold mb-2 ${highContrastMode ? 'text-white' : 'text-gray-700'}`}>Quick Adjustments:</h3>
           <div className="flex flex-wrap gap-2">
             <button
               onClick={() => handleModification('shorter_counts')}
-              className="px-3 py-1 bg-white rounded-lg text-sm hover:bg-gray-100"
+              className={`px-3 py-1 rounded-lg text-sm ${
+                highContrastMode ? 'bg-white text-black hover:bg-gray-200' : 'bg-white hover:bg-gray-100'
+              }`}
             >
               Shorter counts
             </button>
             <button
               onClick={() => handleModification('longer_counts')}
-              className="px-3 py-1 bg-white rounded-lg text-sm hover:bg-gray-100"
+              className={`px-3 py-1 rounded-lg text-sm ${
+                highContrastMode ? 'bg-white text-black hover:bg-gray-200' : 'bg-white hover:bg-gray-100'
+              }`}
             >
               Longer counts
             </button>
             <button
               onClick={() => handleModification('skip_pauses')}
-              className="px-3 py-1 bg-white rounded-lg text-sm hover:bg-gray-100"
+              className={`px-3 py-1 rounded-lg text-sm ${
+                highContrastMode ? 'bg-white text-black hover:bg-gray-200' : 'bg-white hover:bg-gray-100'
+              }`}
             >
               {skipHolds ? 'Add pauses' : 'Skip pauses'}
             </button>
             <button
               onClick={() => handleModification('toggle_visual')}
-              className="px-3 py-1 bg-white rounded-lg text-sm hover:bg-gray-100"
+              className={`px-3 py-1 rounded-lg text-sm ${
+                highContrastMode ? 'bg-white text-black hover:bg-gray-200' : 'bg-white hover:bg-gray-100'
+              }`}
             >
               {showVisualGuide ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
             </button>
             <button
               onClick={() => handleModification('toggle_audio')}
-              className="px-3 py-1 bg-white rounded-lg text-sm hover:bg-gray-100"
+              className={`px-3 py-1 rounded-lg text-sm ${
+                highContrastMode ? 'bg-white text-black hover:bg-gray-200' : 'bg-white hover:bg-gray-100'
+              }`}
             >
               {audioEnabled ? <VolumeX className="w-4 h-4" /> : <Volume2 className="w-4 h-4" />}
             </button>
           </div>
+        </div>
+        
+        {/* Accessibility Quick Controls */}
+        <div className="flex justify-center gap-2 mb-4">
+          <button
+            onClick={() => {
+              setHighContrastMode(!highContrastMode);
+              localStorage.setItem('breathingAccessibilityPrefs', JSON.stringify({
+                ...JSON.parse(localStorage.getItem('breathingAccessibilityPrefs') || '{}'),
+                highContrast: !highContrastMode
+              }));
+            }}
+            className={`p-2 rounded-lg ${highContrastMode ? 'bg-black text-white border-2 border-white' : 'bg-gray-100'}`}
+            title="Toggle high contrast"
+          >
+            <Contrast className="w-5 h-5" />
+          </button>
+          <button
+            onClick={() => {
+              setVibrationEnabled(!vibrationEnabled);
+              if (!vibrationEnabled && 'vibrate' in navigator) {
+                navigator.vibrate(200);
+              }
+              localStorage.setItem('breathingAccessibilityPrefs', JSON.stringify({
+                ...JSON.parse(localStorage.getItem('breathingAccessibilityPrefs') || '{}'),
+                vibration: !vibrationEnabled
+              }));
+            }}
+            className={`p-2 rounded-lg ${vibrationEnabled ? 'bg-sage-600 text-white' : 'bg-gray-100'}`}
+            title="Toggle vibration feedback"
+          >
+            <Vibrate className="w-5 h-5" />
+          </button>
+          <button
+            onClick={() => {
+              const modes: Array<'circle' | 'bar' | 'colors' | 'shapes'> = ['circle', 'bar', 'colors', 'shapes'];
+              const currentIndex = modes.indexOf(visualMode);
+              const nextMode = modes[(currentIndex + 1) % modes.length];
+              setVisualMode(nextMode);
+              localStorage.setItem('breathingAccessibilityPrefs', JSON.stringify({
+                ...JSON.parse(localStorage.getItem('breathingAccessibilityPrefs') || '{}'),
+                visualMode: nextMode
+              }));
+            }}
+            className="p-2 rounded-lg bg-gray-100"
+            title="Change visual mode"
+          >
+            <Eye className="w-5 h-5" />
+          </button>
+          <button
+            onClick={() => {
+              const speeds: Array<'slower' | 'normal' | 'faster'> = ['slower', 'normal', 'faster'];
+              const currentIndex = speeds.indexOf(speedPreference);
+              const nextSpeed = speeds[(currentIndex + 1) % speeds.length];
+              setSpeedPreference(nextSpeed);
+              localStorage.setItem('breathingAccessibilityPrefs', JSON.stringify({
+                ...JSON.parse(localStorage.getItem('breathingAccessibilityPrefs') || '{}'),
+                speed: nextSpeed
+              }));
+            }}
+            className="p-2 rounded-lg bg-gray-100"
+            title={`Speed: ${speedPreference}`}
+          >
+            <Gauge className="w-5 h-5" />
+          </button>
+          <button
+            onClick={() => {
+              setSimplifiedMode(!simplifiedMode);
+              localStorage.setItem('breathingAccessibilityPrefs', JSON.stringify({
+                ...JSON.parse(localStorage.getItem('breathingAccessibilityPrefs') || '{}'),
+                simplified: !simplifiedMode
+              }));
+            }}
+            className={`p-2 rounded-lg ${simplifiedMode ? 'bg-sage-600 text-white' : 'bg-gray-100'}`}
+            title="Toggle simplified mode"
+          >
+            <Circle className="w-5 h-5" />
+          </button>
         </div>
 
         {/* Comfort reminder */}
@@ -423,7 +650,9 @@ export const BreathingRhythmPractice: React.FC<BreathingRhythmPracticeProps> = (
 
       {/* Settings panel */}
       {showSettings && (
-        <div className="absolute bottom-20 left-1/2 transform -translate-x-1/2 bg-white rounded-lg shadow-lg p-6 w-96">
+        <div className={`absolute bottom-20 left-1/2 transform -translate-x-1/2 rounded-lg shadow-lg p-6 w-96 max-h-[60vh] overflow-y-auto ${
+          highContrastMode ? 'bg-black text-white border-2 border-white' : 'bg-white'
+        }`}>
           <h3 className="font-semibold mb-4">Customize Your Practice</h3>
           
           <div className="space-y-4">
@@ -436,7 +665,7 @@ export const BreathingRhythmPractice: React.FC<BreathingRhythmPracticeProps> = (
                 onChange={(e) => setPracticeType(e.target.value as PracticeType)}
                 className="w-full px-3 py-2 border border-gray-300 rounded-lg"
               >
-                <option value="rhythm">Rhythm Breathing</option>
+                <option value="rhythm">Simple Breathing</option>
                 <option value="counting">Counting Breaths</option>
                 <option value="color">Color Breathing</option>
                 <option value="sound">Sound Focus</option>
@@ -539,9 +768,74 @@ export const BreathingRhythmPractice: React.FC<BreathingRhythmPracticeProps> = (
             </div>
           </div>
 
+          {/* Neurodivergent Options */}
+          <div className="border-t pt-4 mt-4">
+            <h4 className="font-semibold mb-3">Neurodivergent Support:</h4>
+            
+            <label className="flex items-center mb-3">
+              <input
+                type="checkbox"
+                checked={neurodivergentMode}
+                onChange={(e) => {
+                  setNeurodivergentMode(e.target.checked);
+                  localStorage.setItem('breathingAccessibilityPrefs', JSON.stringify({
+                    ...JSON.parse(localStorage.getItem('breathingAccessibilityPrefs') || '{}'),
+                    neurodivergent: e.target.checked
+                  }));
+                }}
+                className="mr-2"
+              />
+              <span className="text-sm">Enable neurodivergent-friendly mode</span>
+            </label>
+            
+            {neurodivergentMode && (
+              <div className="ml-4 space-y-2">
+                <label className="block text-sm">
+                  Stim while breathing:
+                  <select
+                    value={stimPattern}
+                    onChange={(e) => {
+                      setStimPattern(e.target.value as any);
+                      localStorage.setItem('breathingAccessibilityPrefs', JSON.stringify({
+                        ...JSON.parse(localStorage.getItem('breathingAccessibilityPrefs') || '{}'),
+                        stimPattern: e.target.value
+                      }));
+                    }}
+                    className={`w-full px-2 py-1 rounded border ${
+                      highContrastMode ? 'bg-black text-white border-white' : 'border-gray-300'
+                    }`}
+                  >
+                    <option value="none">No stimming</option>
+                    <option value="tapping">Tapping/drumming</option>
+                    <option value="rocking">Gentle rocking</option>
+                    <option value="fidget">Use fidget tool</option>
+                  </select>
+                </label>
+                
+                <label className="flex items-center">
+                  <input
+                    type="checkbox"
+                    checked={predictableMode}
+                    onChange={(e) => {
+                      setPredictableMode(e.target.checked);
+                      localStorage.setItem('breathingAccessibilityPrefs', JSON.stringify({
+                        ...JSON.parse(localStorage.getItem('breathingAccessibilityPrefs') || '{}'),
+                        predictable: e.target.checked
+                      }));
+                    }}
+                    className="mr-2"
+                  />
+                  <span className="text-sm">Predictable pattern (no variations)</span>
+                </label>
+              </div>
+            )}
+          </div>
+          
           <button
             onClick={() => setShowSettings(false)}
-            className="mt-4 w-full px-4 py-2 bg-sage-600 text-white rounded-lg hover:bg-sage-700"
+            className={`mt-4 w-full px-4 py-2 rounded-lg ${
+              highContrastMode ? 'bg-white text-black hover:bg-gray-200' : 'bg-sage-600 text-white hover:bg-sage-700'
+            }`}
           >
             Save Settings
           </button>
@@ -729,7 +1023,7 @@ export const BreathingRhythmPractice: React.FC<BreathingRhythmPracticeProps> = (
       <div className="bg-white rounded-xl shadow-xl max-w-4xl w-full h-[90vh] overflow-hidden flex flex-col">
         <div className="p-6 border-b border-gray-200 flex justify-between items-center">
           <div>
-            <h2 className="text-2xl font-bold text-gray-900">Breathing Rhythm Practice</h2>
+            <h2 className="text-2xl font-bold text-gray-900">Breathing Practice</h2>
             <p className="text-gray-600">4 minutes • Find your comfortable pattern</p>
           </div>
           <button

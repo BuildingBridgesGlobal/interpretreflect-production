@@ -32,6 +32,9 @@ import { BurnoutGauge } from './components/BurnoutGauge';
 import { MentoringPrepAccessible } from './components/MentoringPrepAccessible';
 import { MentoringReflectionAccessible } from './components/MentoringReflectionAccessible';
 import { ChatWithElya } from './components/ChatWithElya';
+import { GrowthInsights } from './components/GrowthInsights';
+import { GrowthInsightsDashboard } from './components/GrowthInsightsDashboard';
+import { ProfileSettings } from './components/ProfileSettings';
 import {
   Home,
   BookOpen,
@@ -5670,6 +5673,9 @@ function App() {
       <Route path="/pricing-test" element={<PricingTest />} />
       <Route path="/payment-success" element={<PaymentSuccess />} />
       <Route path="/landing" element={<LandingPageAccessible onGetStarted={() => setDevMode(true)} />} />
+      <Route path="/growth-insights" element={<GrowthInsights />} />
+      <Route path="/growth-dashboard" element={<GrowthInsightsDashboard />} />
+      <Route path="/profile-settings" element={<ProfileSettings />} />
       <Route 
         path="*" 
         element={

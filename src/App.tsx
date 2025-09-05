@@ -1,7 +1,7 @@
 import React, { useState, useRef } from 'react';
 import { Routes, Route } from 'react-router-dom';
 import type { BurnoutData, ViewMode } from './types';
-import LandingPage from './LandingPage';
+import LandingPageAccessible from './LandingPageAccessible';
 import { useAuth } from './contexts/AuthContext';
 import { supabase } from './lib/supabase';
 import { PrivacyPolicy } from './pages/PrivacyPolicy';
@@ -15,7 +15,6 @@ import { PaymentSuccess } from './pages/PaymentSuccess';
 import { PreAssignmentPrepAccessible as PreAssignmentPrepEnhanced } from './components/PreAssignmentPrepAccessible';
 import { PostAssignmentDebriefAccessible as PostAssignmentDebriefEnhanced } from './components/PostAssignmentDebriefAccessible';
 import { TeamingPrepEnhanced } from './components/TeamingPrepEnhanced';
-import { TeamingReflectionEnhanced } from './components/TeamingReflectionEnhanced';
 import { WellnessCheckInAccessible } from './components/WellnessCheckInAccessible';
 import { EthicsMeaningCheckAccessible } from './components/EthicsMeaningCheckAccessible';
 import { BreathingPractice } from './components/BreathingPracticeFriend';
@@ -64,7 +63,6 @@ import {
   AlertTriangle,
   Zap,
   ChevronRight,
-  ChevronLeft,
   Lock,
   Database,
   Settings as SettingsIcon,
@@ -2866,7 +2864,7 @@ function App() {
                                   ].map(method => (
                                     <button
                                       key={method.id}
-                                      onClick={() => setBodyAwarenessMethod(method.id as any)}
+                                      onClick={() => setBodyAwarenessMethod(method.id as ('move' | 'picture' | 'breathe' | 'touch' | 'still'))}
                                       className="w-full text-left p-3 rounded-lg transition-all"
                                       style={{
                                         backgroundColor: bodyAwarenessMethod === method.id ? 'rgba(92, 127, 79, 0.15)' : 'rgba(92, 127, 79, 0.05)',
@@ -4474,7 +4472,7 @@ function App() {
                             const phases = ['inhale', 'hold-in', 'exhale', 'hold-out'];
                             const currentIndex = phases.indexOf(breathPhase);
                             const prevIndex = currentIndex > 0 ? currentIndex - 1 : 3;
-                            setBreathPhase(phases[prevIndex] as any);
+                            setBreathPhase(phases[prevIndex] as ('inhale' | 'hold-in' | 'exhale' | 'hold-out'));
                           } else if (selectedTechnique === 'tech-fatigue-reset') {
                             setTechniqueProgress(Math.max(0, techniqueProgress - 20));
                           } else {
@@ -4513,7 +4511,7 @@ function App() {
                           const phases = ['inhale', 'hold-in', 'exhale', 'hold-out'];
                           const currentIndex = phases.indexOf(breathPhase);
                           const nextIndex = (currentIndex + 1) % 4;
-                          setBreathPhase(phases[nextIndex] as any);
+                          setBreathPhase(phases[nextIndex] as ('inhale' | 'hold-in' | 'exhale' | 'hold-out'));
                           setBreathCycle(breathCycle + 1);
                         } else if (selectedTechnique === 'tech-fatigue-reset') {
                           const nextProgress = Math.min(100, techniqueProgress + 20);
@@ -5603,7 +5601,7 @@ function App() {
         path="*" 
         element={
           <>
-            <LandingPage onGetStarted={() => setDevMode(true)} />
+            <LandingPageAccessible onGetStarted={() => setDevMode(true)} />
             <button
               onClick={() => setDevMode(true)}
               className="fixed bottom-4 right-4 px-4 py-2 rounded-lg font-semibold text-xs z-50"
@@ -5630,9 +5628,11 @@ function App() {
         <Route path="/terms" element={<TermsOfService />} />
         <Route path="/contact" element={<Contact />} />
         <Route path="/about" element={<About />} />
+        <Route path="/pricing" element={<PricingNew />} />
+        <Route path="/landing" element={<LandingPageAccessible onGetStarted={() => setDevMode(true)} />} />
         <Route path="*" element={
           <>
-            <LandingPage onGetStarted={() => setDevMode(true)} />
+            <LandingPageAccessible onGetStarted={() => setDevMode(true)} />
             {/* Dev Mode Toggle for Testing */}
             <button
               onClick={() => setDevMode(true)}
@@ -5669,6 +5669,7 @@ function App() {
       <Route path="/pricing" element={<PricingNew />} />
       <Route path="/pricing-test" element={<PricingTest />} />
       <Route path="/payment-success" element={<PaymentSuccess />} />
+      <Route path="/landing" element={<LandingPageAccessible onGetStarted={() => setDevMode(true)} />} />
       <Route 
         path="*" 
         element={
@@ -6106,7 +6107,7 @@ function App() {
               setCurrentTechniqueId(null);
             }
           }}
-          onComplete={(data) => {
+          onComplete={() => {
             if (currentTechniqueId) {
               trackTechniqueEnd(currentTechniqueId, 'completed');
               setCurrentTechniqueId(null);

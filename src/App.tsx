@@ -1,9 +1,13 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { Routes, Route } from 'react-router-dom';
 import type { BurnoutData, ViewMode } from './types';
-import LandingPageAccessible from './LandingPageAccessible';
+import LandingPageEnhanced from './LandingPageEnhanced';
+import { Logo } from './components/Logo';
 import { useAuth } from './contexts/AuthContext';
 import { supabase } from './lib/supabase';
+import { PrivacyConsent } from './components/PrivacyConsent';
+import { SecurityBanner, SessionTimeoutModal } from './components/SecurityBanner';
+import { SessionManager } from './utils/security';
 import { PrivacyPolicy } from './pages/PrivacyPolicy';
 import { TermsOfService } from './pages/TermsOfService';
 import { Contact } from './pages/Contact';
@@ -77,7 +81,7 @@ import {
 } from 'lucide-react';
 
 function App() {
-  const { user, loading, signOut } = useAuth();
+  const { user, loading, signOut, extendSession } = useAuth();
   // Automatically enable dev mode in development environment
   const [devMode, setDevMode] = useState(
     import.meta.env.DEV || // Vite development mode
@@ -129,6 +133,12 @@ function App() {
   const [recoveryHabits, setRecoveryHabits] = useState<Record<string, unknown>[]>([]);
   const [burnoutData, setBurnoutData] = useState<BurnoutData[]>([]);
   const [showSummaryView, setShowSummaryView] = useState<ViewMode>('daily');
+  
+  // Security state
+  const [showPrivacyConsent, setShowPrivacyConsent] = useState(false);
+  const [showSessionWarning, setShowSessionWarning] = useState(false);
+  const [sessionTimeRemaining, setSessionTimeRemaining] = useState(0);
+  const sessionManager = SessionManager.getInstance();
 
   // Save tab preference when it changes
   React.useEffect(() => {
@@ -226,6 +236,30 @@ function App() {
       }
     };
     loadRecoveryHabits();
+  }, []);
+  
+  // Check for privacy consent on mount
+  useEffect(() => {
+    const checkPrivacyConsent = () => {
+      const consent = localStorage.getItem('privacyConsent');
+      if (!consent && user) {
+        setShowPrivacyConsent(true);
+      }
+    };
+    checkPrivacyConsent();
+  }, [user]);
+  
+  // Listen for session warning events
+  useEffect(() => {
+    const handleSessionWarning = (event: CustomEvent) => {
+      setSessionTimeRemaining(event.detail.timeRemaining);
+      setShowSessionWarning(true);
+    };
+
+    window.addEventListener('sessionWarning', handleSessionWarning as EventListener);
+    return () => {
+      window.removeEventListener('sessionWarning', handleSessionWarning as EventListener);
+    };
   }, []);
   
   // Helper function to save a reflection
@@ -5592,40 +5626,6 @@ function App() {
     </main>
   );
 
-  // Commented out to show the main app instead
-  /*
-  return (
-    <Routes>
-      <Route path="/privacy" element={<PrivacyPolicy />} />
-      <Route path="/terms" element={<TermsOfService />} />
-      <Route path="/contact" element={<Contact />} />
-      <Route path="/about" element={<About />} />
-      <Route path="/pricing" element={<PricingNew />} />
-      <Route path="/pricing-test" element={<PricingTest />} />
-      <Route path="/payment-success" element={<PaymentSuccess />} />
-      <Route 
-        path="*" 
-        element={
-          <>
-            <LandingPageAccessible onGetStarted={() => setDevMode(true)} />
-            <button
-              onClick={() => setDevMode(true)}
-              className="fixed bottom-4 right-4 px-4 py-2 rounded-lg font-semibold text-xs z-50"
-              style={{
-                backgroundColor: '#FF0000',
-                color: '#FFFFFF',
-                boxShadow: '0 4px 12px rgba(255, 0, 0, 0.3)',
-              }}
-            >
-              DEV MODE: Skip Auth
-            </button>
-          </>
-        } 
-      />
-    </Routes>
-  );
-  */
-
   // Show landing page if not authenticated and not in dev mode
   if (!devMode && !user && !loading) {
     return (
@@ -5635,10 +5635,10 @@ function App() {
         <Route path="/contact" element={<Contact />} />
         <Route path="/about" element={<About />} />
         <Route path="/pricing" element={<PricingNew />} />
-        <Route path="/landing" element={<LandingPageAccessible onGetStarted={() => setDevMode(true)} />} />
+        <Route path="/landing" element={<LandingPageEnhanced onGetStarted={() => setDevMode(true)} />} />
         <Route path="*" element={
           <>
-            <LandingPageAccessible onGetStarted={() => setDevMode(true)} />
+            <LandingPageEnhanced onGetStarted={() => setDevMode(true)} />
             {/* Dev Mode Toggle for Testing */}
             <button
               onClick={() => setDevMode(true)}
@@ -5667,7 +5667,31 @@ function App() {
 
   // Show main app for authenticated users or dev mode
   return (
-    <Routes>
+    <>
+      {/* Security Components */}
+      <PrivacyConsent 
+        isOpen={showPrivacyConsent} 
+        onAccept={() => setShowPrivacyConsent(false)}
+        onDecline={() => setShowPrivacyConsent(false)}
+      />
+      
+      <SessionTimeoutModal 
+        isOpen={showSessionWarning}
+        timeRemaining={sessionTimeRemaining}
+        onExtend={() => {
+          extendSession();
+          setShowSessionWarning(false);
+        }}
+        onLogout={async () => {
+          await signOut();
+          setShowSessionWarning(false);
+        }}
+      />
+      
+      {/* Security Banner for authenticated users */}
+      {user && <SecurityBanner type="info" />}
+      
+      <Routes>
       <Route path="/privacy" element={<PrivacyPolicy />} />
       <Route path="/terms" element={<TermsOfService />} />
       <Route path="/contact" element={<Contact />} />
@@ -5675,7 +5699,7 @@ function App() {
       <Route path="/pricing" element={<PricingNew />} />
       <Route path="/pricing-test" element={<PricingTest />} />
       <Route path="/payment-success" element={<PaymentSuccess />} />
-      <Route path="/landing" element={<LandingPageAccessible onGetStarted={() => setDevMode(true)} />} />
+      <Route path="/landing" element={<LandingPageEnhanced onGetStarted={() => setDevMode(true)} />} />
       <Route path="/growth-insights" element={<GrowthInsights />} />
       <Route path="/growth-dashboard" element={<GrowthInsightsDashboard />} />
       <Route path="/profile-settings" element={<ProfileSettings />} />
@@ -5720,15 +5744,11 @@ function App() {
           <div className="flex justify-between items-center h-16">
             {/* Logo and Greeting */}
             <div className="flex items-center space-x-8">
-              <div className="flex items-center">
-                <Globe className="h-7 w-7 mr-3" style={{ color: '#FFFFFF' }} />
-                <span
-                  className="text-xl font-bold tracking-wide"
-                  style={{ color: '#FFFFFF', letterSpacing: '0.5px' }}
-                >
-                  InterpretReflect™
-                </span>
-              </div>
+              <Logo 
+                size="md" 
+                variant="light"
+                linkToHome={false}
+              />
               <div className="hidden md:block">
                 <p className="text-xl font-semibold" style={{ color: '#FFFFFF' }}>
                   Good morning, {devMode ? 'Dev Mode' : user?.email?.split('@')[0] || 'User'}
@@ -6308,6 +6328,7 @@ function App() {
         }
       />
     </Routes>
+    </>
   );
 }
 

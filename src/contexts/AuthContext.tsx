@@ -1,6 +1,8 @@
 import React, { createContext, useContext, useEffect, useState } from 'react';
 import { supabase } from '../lib/supabase';
 import { User, AuthResponse, AuthError } from '@supabase/supabase-js';
+import { SessionManager, RoleManager, AuditLogger, enforceHttps } from '../utils/security';
+import { SECURITY_CONFIG } from '../config/security';
 
 interface AuthResult {
   user?: User | null;
@@ -10,9 +12,12 @@ interface AuthResult {
 interface AuthContextType {
   user: User | null;
   loading: boolean;
+  userRole: string;
   signIn: (email: string, password: string) => Promise<AuthResult>;
   signUp: (email: string, password: string) => Promise<AuthResult>;
   signOut: () => Promise<void>;
+  hasPermission: (permission: string) => boolean;
+  extendSession: () => void;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -28,6 +33,13 @@ export const useAuth = () => {
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
+  const [userRole, setUserRole] = useState<string>(SECURITY_CONFIG.rbac.defaultRole);
+  const sessionManager = SessionManager.getInstance();
+
+  // Enforce HTTPS on mount
+  useEffect(() => {
+    enforceHttps();
+  }, []);
 
   useEffect(() => {
     // Check active sessions and sets the user
@@ -56,9 +68,16 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         // Only try to get user if we have a session
         if (session?.user) {
           setUser(session.user);
+          // Start session manager
+          sessionManager.startSession();
+          // Set user role (in production, fetch from database)
+          const role = session.user.email?.includes('admin') ? 'admin' : 'user';
+          RoleManager.setUserRole(session.user.id, role);
+          setUserRole(role);
         } else {
           // No session, no user - this is normal for logged out state
           setUser(null);
+          setUserRole(SECURITY_CONFIG.rbac.defaultRole);
         }
       } catch (error) {
         // Unexpected error
@@ -77,6 +96,16 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       const { data: authListener } = supabase.auth.onAuthStateChange(async (event, session) => {
         setUser(session?.user ?? null);
         setLoading(false);
+        
+        if (event === 'SIGNED_IN' && session?.user) {
+          sessionManager.startSession();
+          const role = session.user.email?.includes('admin') ? 'admin' : 'user';
+          RoleManager.setUserRole(session.user.id, role);
+          setUserRole(role);
+        } else if (event === 'SIGNED_OUT') {
+          sessionManager.endSession('LOGOUT');
+          setUserRole(SECURITY_CONFIG.rbac.defaultRole);
+        }
       });
 
       return () => {
@@ -86,31 +115,139 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   }, []);
 
   const signIn = async (email: string, password: string): Promise<AuthResult> => {
-    const { data, error } = await supabase.auth.signInWithPassword({
-      email,
-      password,
-    });
-    if (error) throw error;
-    return { user: data.user, error: null };
+    try {
+      const { data, error } = await supabase.auth.signInWithPassword({
+        email,
+        password,
+      });
+      
+      if (error) {
+        // Log failed sign in attempt
+        AuditLogger.log({
+          action: 'SIGN_IN_FAILED',
+          category: 'AUTH',
+          severity: 'WARN',
+          details: { email, error: error.message },
+        });
+        throw error;
+      }
+      
+      // Log successful sign in
+      if (data.user) {
+        AuditLogger.log({
+          action: 'SIGN_IN_SUCCESS',
+          category: 'AUTH',
+          severity: 'INFO',
+          userId: data.user.id,
+          userEmail: data.user.email || undefined,
+        });
+        
+        // Start session management
+        sessionManager.startSession();
+        
+        // Set user role
+        const role = data.user.email?.includes('admin') ? 'admin' : 'user';
+        RoleManager.setUserRole(data.user.id, role);
+        setUserRole(role);
+      }
+      
+      return { user: data.user, error: null };
+    } catch (error) {
+      return { user: null, error: error as AuthError };
+    }
   };
 
   const signUp = async (email: string, password: string): Promise<AuthResult> => {
-    const { data, error } = await supabase.auth.signUp({
-      email,
-      password,
-    });
-    if (error) throw error;
-    return { user: data.user, error: null };
+    try {
+      const { data, error } = await supabase.auth.signUp({
+        email,
+        password,
+      });
+      
+      if (error) {
+        // Log failed sign up attempt
+        AuditLogger.log({
+          action: 'SIGN_UP_FAILED',
+          category: 'AUTH',
+          severity: 'WARN',
+          details: { email, error: error.message },
+        });
+        throw error;
+      }
+      
+      // Log successful sign up
+      if (data.user) {
+        AuditLogger.log({
+          action: 'SIGN_UP_SUCCESS',
+          category: 'AUTH',
+          severity: 'INFO',
+          userId: data.user.id,
+          userEmail: data.user.email || undefined,
+        });
+        
+        // Set default user role
+        RoleManager.setUserRole(data.user.id, 'user');
+        setUserRole('user');
+      }
+      
+      return { user: data.user, error: null };
+    } catch (error) {
+      return { user: null, error: error as AuthError };
+    }
   };
 
   const signOut = async () => {
-    const { error } = await supabase.auth.signOut();
-    if (error) throw error;
-    setUser(null);
+    try {
+      // Log sign out
+      if (user) {
+        AuditLogger.log({
+          action: 'SIGN_OUT',
+          category: 'AUTH',
+          severity: 'INFO',
+          userId: user.id,
+          userEmail: user.email || undefined,
+        });
+      }
+      
+      const { error } = await supabase.auth.signOut();
+      if (error) throw error;
+      
+      // End session
+      sessionManager.endSession('LOGOUT');
+      setUser(null);
+      setUserRole(SECURITY_CONFIG.rbac.defaultRole);
+    } catch (error) {
+      console.error('Sign out error:', error);
+      throw error;
+    }
   };
 
+  const hasPermission = (permission: string): boolean => {
+    if (!user) return false;
+    return RoleManager.hasPermission(user.id, permission);
+  };
+
+  const extendSession = () => {
+    sessionManager.extendSession();
+  };
+
+  // Listen for session timeout events
+  useEffect(() => {
+    const handleSessionEnd = async (event: CustomEvent) => {
+      if (event.detail.reason === 'TIMEOUT') {
+        // Auto logout on timeout
+        await signOut();
+      }
+    };
+
+    window.addEventListener('sessionEnd', handleSessionEnd as EventListener);
+    return () => {
+      window.removeEventListener('sessionEnd', handleSessionEnd as EventListener);
+    };
+  }, []);
+
   return (
-    <AuthContext.Provider value={{ user, loading, signIn, signUp, signOut }}>
+    <AuthContext.Provider value={{ user, loading, userRole, signIn, signUp, signOut, hasPermission, extendSession }}>
       {children}
     </AuthContext.Provider>
   );

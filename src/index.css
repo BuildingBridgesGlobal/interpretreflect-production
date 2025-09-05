@@ -2,6 +2,9 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Import preferences styles */
+@import './styles/preferences.css';
+
 /* Ensure body has proper background */
 body {
   margin: 0;

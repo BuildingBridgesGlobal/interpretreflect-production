@@ -35,6 +35,8 @@ import { ChatWithElya } from './components/ChatWithElya';
 import { GrowthInsights } from './components/GrowthInsights';
 import { GrowthInsightsDashboard } from './components/GrowthInsightsDashboard';
 import { ProfileSettings } from './components/ProfileSettings';
+import { CustomizePreferences } from './components/CustomizePreferences';
+import { ManageSubscription } from './components/ManageSubscription';
 import {
   Home,
   BookOpen,
@@ -5676,6 +5678,8 @@ function App() {
       <Route path="/growth-insights" element={<GrowthInsights />} />
       <Route path="/growth-dashboard" element={<GrowthInsightsDashboard />} />
       <Route path="/profile-settings" element={<ProfileSettings />} />
+      <Route path="/customize-preferences" element={<CustomizePreferences />} />
+      <Route path="/manage-subscription" element={<ManageSubscription />} />
       <Route 
         path="*" 
         element={

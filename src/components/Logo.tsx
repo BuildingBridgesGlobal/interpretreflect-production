@@ -55,7 +55,7 @@ export const Logo: React.FC<LogoProps> = ({
       <div>
         {/* Main Logo Text */}
         <h1 className={`${sizeClasses[size]} ${variantClasses[variant]} font-bold tracking-tight leading-none`}>
-          interpreter<span className="text-sage-500">Rx</span>
+          Interpret<span className="text-sage-500">Reflect</span>
         </h1>
         
         {/* Tagline */}
@@ -75,7 +75,7 @@ export const Logo: React.FC<LogoProps> = ({
       <Link 
         to="/" 
         className="inline-block hover:opacity-90 transition-opacity focus:outline-none focus:ring-2 focus:ring-sage-500 focus:ring-offset-2 rounded-lg"
-        aria-label="interpreterRx - Home"
+        aria-label="InterpretReflect - Home"
       >
         {logoContent}
       </Link>

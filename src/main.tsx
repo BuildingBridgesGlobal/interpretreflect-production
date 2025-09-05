@@ -10,6 +10,7 @@ import { ErrorBoundary } from './components/ErrorBoundary';
 import './index.css';
 import './styles/accessibility.css';
 import './styles/typography.css';
+import './styles/header.css';
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>

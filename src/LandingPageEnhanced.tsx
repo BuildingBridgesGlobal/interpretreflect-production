@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Logo } from './components/Logo';
+import { BrandVideo } from './components/BrandVideo';
 import {
   Shield,
   Brain,
@@ -321,6 +322,18 @@ function LandingPageEnhanced({ onGetStarted }: LandingPageProps) {
       </nav>
 
       <main id="main" role="main" aria-label="Main content">
+        {/* Brand Video Section */}
+        <section className="relative w-full mb-16">
+          <div className="max-w-7xl mx-auto px-4">
+            <BrandVideo 
+              className="w-full h-[500px] rounded-2xl shadow-2xl"
+              autoPlay={true}
+              muted={true}
+              loop={true}
+            />
+          </div>
+        </section>
+
         {/* Enhanced Hero Section with better visual hierarchy */}
         <section className="relative py-20 px-4" aria-labelledby="hero-heading">
           <div className="container mx-auto max-w-6xl">
@@ -784,7 +797,7 @@ function LandingPageEnhanced({ onGetStarted }: LandingPageProps) {
 
       {/* Footer for accessibility */}
       <footer id="footer" role="contentinfo" className="sr-only">
-        <p>interpreterRx - Wellness Platform for Interpreters</p>
+        <p>InterpretReflect - Wellness Platform for Interpreters</p>
       </footer>
 
       {/* Modals */}

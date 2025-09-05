@@ -14,6 +14,7 @@ import { Contact } from './pages/Contact';
 import { About } from './pages/About';
 import { PricingNew } from './pages/PricingNew';
 import { PricingTest } from './pages/PricingTest';
+import { HeaderDemo } from './pages/HeaderDemo';
 import { SubscriptionManager } from './components/SubscriptionManager';
 import { PaymentSuccess } from './pages/PaymentSuccess';
 import { PreAssignmentPrepAccessible as PreAssignmentPrepEnhanced } from './components/PreAssignmentPrepAccessible';
@@ -5698,6 +5699,7 @@ function App() {
       <Route path="/about" element={<About />} />
       <Route path="/pricing" element={<PricingNew />} />
       <Route path="/pricing-test" element={<PricingTest />} />
+      <Route path="/header-demo" element={<HeaderDemo />} />
       <Route path="/payment-success" element={<PaymentSuccess />} />
       <Route path="/landing" element={<LandingPageEnhanced onGetStarted={() => setDevMode(true)} />} />
       <Route path="/growth-insights" element={<GrowthInsights />} />
@@ -5726,17 +5728,19 @@ function App() {
       </a>
       {/* DEV MODE INDICATOR */}
       {devMode && (
-        <div className="fixed top-0 left-0 right-0 bg-red-500 text-white text-center py-1 text-xs font-bold z-50">
-          ⚠️ DEVELOPMENT MODE - Authentication Bypassed ⚠️
+        <div className="fixed top-0 left-0 right-0 text-center py-1 text-xs font-medium z-50" 
+             style={{ backgroundColor: '#FEF3C7', color: '#92400E', borderBottom: '1px solid #FDE68A' }}>
+          Development Mode - Authentication Bypassed
         </div>
       )}
       
       {/* Header with proper semantic structure */}
       <header
-        className="shadow-md"
+        className="border-b"
         style={{
-          background: 'linear-gradient(135deg, #4A6B3E 0%, #5C7F4F 100%)',
-          boxShadow: '0 2px 10px rgba(92, 127, 79, 0.3)',
+          backgroundColor: '#FFFFFF',
+          borderBottomColor: 'rgba(92, 127, 79, 0.15)',
+          boxShadow: '0 1px 3px rgba(0, 0, 0, 0.05)',
         }}
         role="banner"
       >
@@ -5746,14 +5750,14 @@ function App() {
             <div className="flex items-center space-x-8">
               <Logo 
                 size="md" 
-                variant="light"
+                variant="default"
                 linkToHome={false}
               />
               <div className="hidden md:block">
-                <p className="text-xl font-semibold" style={{ color: '#FFFFFF' }}>
-                  Good morning, {devMode ? 'Dev Mode' : user?.email?.split('@')[0] || 'User'}
+                <p className="text-lg font-medium" style={{ color: '#2D3A31' }}>
+                  Welcome back, {devMode ? 'Dev Mode' : user?.email?.split('@')[0] || 'User'}
                 </p>
-                <p className="text-sm opacity-90" style={{ color: '#FFFFFF' }}>
+                <p className="text-sm" style={{ color: '#5C6A60' }}>
                   {new Date().toLocaleDateString('en-US', {
                     weekday: 'long',
                     month: 'long',
@@ -5768,38 +5772,37 @@ function App() {
               <div className="relative">
                 <button
                   onClick={() => setShowUserDropdown(!showUserDropdown)}
-                  className="flex items-center space-x-2 rounded-lg p-2 transition-all"
+                  className="flex items-center space-x-2 rounded-lg px-3 py-2 transition-all"
                   style={{
-                    backgroundColor: 'rgba(255, 255, 255, 0.2)',
-                    backdropFilter: 'blur(10px)',
-                    border: '1px solid rgba(255, 255, 255, 0.3)',
+                    backgroundColor: 'transparent',
+                    border: '1px solid rgba(92, 127, 79, 0.3)',
                   }}
                   aria-label="User menu"
                   aria-expanded={showUserDropdown}
                   aria-haspopup="true"
                   onMouseEnter={(e) => {
-                    e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.3)';
-                    e.currentTarget.style.transform = 'scale(1.02)';
+                    e.currentTarget.style.backgroundColor = 'rgba(92, 127, 79, 0.05)';
+                    e.currentTarget.style.borderColor = 'rgba(92, 127, 79, 0.5)';
                   }}
                   onMouseLeave={(e) => {
-                    e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.2)';
-                    e.currentTarget.style.transform = 'scale(1)';
+                    e.currentTarget.style.backgroundColor = 'transparent';
+                    e.currentTarget.style.borderColor = 'rgba(92, 127, 79, 0.3)';
                   }}
                 >
                   <div
-                    className="w-8 h-8 rounded-full flex items-center justify-center shadow-sm"
+                    className="w-8 h-8 rounded-full flex items-center justify-center"
                     style={{
-                      backgroundColor: '#FFFFFF',
-                      border: '2px solid rgba(255, 255, 255, 0.5)',
+                      backgroundColor: '#5C7F4F',
+                      color: '#FFFFFF',
                     }}
                   >
-                    <span className="text-sm font-semibold" style={{ color: '#1A1A1A' }}>
+                    <span className="text-sm font-medium">
                       {user?.email?.charAt(0).toUpperCase() || 'U'}
                     </span>
                   </div>
                   <ChevronDown
                     className={`h-4 w-4 transition-transform ${showUserDropdown ? 'rotate-180' : ''}`}
-                    style={{ color: '#FFFFFF' }}
+                    style={{ color: '#5C6A60' }}
                   />
                 </button>
 
@@ -5813,38 +5816,37 @@ function App() {
                     />
 
                     <div
-                      className="absolute right-0 top-full mt-3 w-80 rounded-2xl shadow-2xl z-20"
+                      className="absolute right-0 top-full mt-2 w-72 rounded-lg shadow-lg z-20"
                       style={{
-                        backgroundColor: '#1A1A1A',
-                        border: '1px solid rgba(92, 127, 79, 0.2)',
-                        boxShadow: '0 20px 40px rgba(0, 0, 0, 0.3), 0 10px 20px rgba(0, 0, 0, 0.2)',
+                        backgroundColor: '#FFFFFF',
+                        border: '1px solid rgba(92, 127, 79, 0.15)',
+                        boxShadow: '0 4px 6px rgba(0, 0, 0, 0.07), 0 2px 4px rgba(0, 0, 0, 0.05)',
                       }}
                     >
                       {/* User Info */}
                       <div
-                        className="p-5"
+                        className="p-4"
                         style={{
-                          borderBottom: '1px solid rgba(255, 255, 255, 0.1)',
-                          backgroundColor: 'rgba(92, 127, 79, 0.08)',
+                          borderBottom: '1px solid rgba(92, 127, 79, 0.1)',
+                          backgroundColor: 'rgba(92, 127, 79, 0.03)',
                         }}
                       >
                         <div className="flex items-center space-x-3">
                           <div
-                            className="w-12 h-12 rounded-full flex items-center justify-center shadow-md"
+                            className="w-10 h-10 rounded-full flex items-center justify-center"
                             style={{
-                              background: 'linear-gradient(135deg, #4A6B3E 0%, #5C7F4F 100%)',
-                              boxShadow: '0 4px 12px rgba(92, 127, 79, 0.3)',
+                              backgroundColor: '#5C7F4F',
                             }}
                           >
-                            <span className="text-lg font-bold" style={{ color: '#FFFFFF' }}>
+                            <span className="text-base font-medium" style={{ color: '#FFFFFF' }}>
                               {user?.email?.charAt(0).toUpperCase() || 'U'}
                             </span>
                           </div>
                           <div>
-                            <div className="font-semibold text-lg" style={{ color: '#FFFFFF' }}>
+                            <div className="font-medium text-base" style={{ color: '#1A1F1C' }}>
                               {devMode ? 'Dev Mode' : user?.email?.split('@')[0] || 'User'}
                             </div>
-                            <div className="text-sm" style={{ color: '#5C7F4F' }}>
+                            <div className="text-sm" style={{ color: '#5C6A60' }}>
                               {devMode
                                 ? 'Development Environment'
                                 : user?.email || 'user@interpretreflect.com'}
@@ -5856,51 +5858,39 @@ function App() {
                       {/* Menu Items */}
                       <div className="p-3">
                         <button
-                          className="w-full flex items-center space-x-3 p-4 rounded-xl transition-all text-left group"
+                          className="w-full flex items-center space-x-3 px-3 py-2 rounded-lg transition-all text-left"
                           style={{
                             backgroundColor: 'transparent',
                           }}
                           onMouseEnter={(e) => {
-                            e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.05)';
-                            e.currentTarget.style.transform = 'translateX(2px)';
+                            e.currentTarget.style.backgroundColor = 'rgba(92, 127, 79, 0.05)';
                           }}
                           onMouseLeave={(e) => {
                             e.currentTarget.style.backgroundColor = 'transparent';
-                            e.currentTarget.style.transform = 'translateX(0)';
                           }}
                         >
-                          <div
-                            className="p-2 rounded-lg"
-                            style={{ backgroundColor: 'rgba(92, 127, 79, 0.15)' }}
-                          >
-                            <User className="h-5 w-5" style={{ color: '#5C7F4F' }} />
-                          </div>
+                          <User className="h-5 w-5" style={{ color: '#5C7F4F' }} />
                           <div className="flex-grow">
-                            <div className="font-medium" style={{ color: '#FFFFFF' }}>
+                            <div className="font-medium text-sm" style={{ color: '#1A1F1C' }}>
                               Profile Settings
-                            </div>
-                            <div className="text-xs" style={{ color: '#8A8A8A' }}>
-                              Customize your preferences
                             </div>
                           </div>
                           <ChevronRight
-                            className="h-4 w-4 opacity-60"
-                            style={{ color: '#6A6A6A' }}
+                            className="h-4 w-4"
+                            style={{ color: '#748278' }}
                           />
                         </button>
 
                         <button
-                          className="w-full flex items-center space-x-3 p-4 rounded-xl transition-all text-left group"
+                          className="w-full flex items-center space-x-3 px-3 py-2 rounded-lg transition-all text-left"
                           style={{
                             backgroundColor: 'transparent',
                           }}
                           onMouseEnter={(e) => {
-                            e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.05)';
-                            e.currentTarget.style.transform = 'translateX(2px)';
+                            e.currentTarget.style.backgroundColor = 'rgba(92, 127, 79, 0.05)';
                           }}
                           onMouseLeave={(e) => {
                             e.currentTarget.style.backgroundColor = 'transparent';
-                            e.currentTarget.style.transform = 'translateX(0)';
                           }}
                         >
                           <div
@@ -5933,12 +5923,10 @@ function App() {
                             backgroundColor: 'transparent',
                           }}
                           onMouseEnter={(e) => {
-                            e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.05)';
-                            e.currentTarget.style.transform = 'translateX(2px)';
+                            e.currentTarget.style.backgroundColor = 'rgba(92, 127, 79, 0.05)';
                           }}
                           onMouseLeave={(e) => {
                             e.currentTarget.style.backgroundColor = 'transparent';
-                            e.currentTarget.style.transform = 'translateX(0)';
                           }}
                         >
                           <div
@@ -5962,17 +5950,15 @@ function App() {
                         </button>
 
                         <button
-                          className="w-full flex items-center space-x-3 p-4 rounded-xl transition-all text-left group"
+                          className="w-full flex items-center space-x-3 px-3 py-2 rounded-lg transition-all text-left"
                           style={{
                             backgroundColor: 'transparent',
                           }}
                           onMouseEnter={(e) => {
-                            e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.05)';
-                            e.currentTarget.style.transform = 'translateX(2px)';
+                            e.currentTarget.style.backgroundColor = 'rgba(92, 127, 79, 0.05)';
                           }}
                           onMouseLeave={(e) => {
                             e.currentTarget.style.backgroundColor = 'transparent';
-                            e.currentTarget.style.transform = 'translateX(0)';
                           }}
                         >
                           <div

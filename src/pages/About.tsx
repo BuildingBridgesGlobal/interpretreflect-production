@@ -56,19 +56,19 @@ export function About() {
             About InterpretReflect
           </h1>
           <p className="text-xl" style={{ color: '#5A5A5A' }}>
-            Supporting interpreter wellness through evidence-based tools and compassionate technology
+            Wellness tools made for interpreters, by interpreters
           </p>
         </div>
       </div>
 
       {/* Content */}
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        {/* Mission */}
+        {/* Why We Exist */}
         <section className="mb-16">
           <div className="flex items-center mb-6">
             <Target className="h-8 w-8 mr-3" style={{ color: '#6B8B60' }} />
             <h2 className="text-3xl font-bold" style={{ color: '#1A1A1A' }}>
-              Our Mission
+              Why We Exist
             </h2>
           </div>
           <div 
@@ -79,60 +79,20 @@ export function About() {
             }}
           >
             <p className="text-lg leading-relaxed mb-4" style={{ color: '#5A5A5A' }}>
-              InterpretReflect exists to transform interpreter wellness from an afterthought to a professional priority. We believe that interpreters - who bridge communication in humanity's most critical moments - deserve specialized tools to process, recover, and thrive in their essential work.
+              Interpreters show up in life's most important moments. Hospital rooms. Courtrooms. Classrooms. We carry the weight of people's stories, and too often, we carry it alone.
             </p>
-            <p className="text-lg font-semibold" style={{ color: '#2D5F3F' }}>
-              Our mission is to provide every interpreter with accessible, evidence-based wellness tools that prevent burnout, build resilience, and sustain long, fulfilling careers.
+            <p className="text-lg leading-relaxed" style={{ color: '#5A5A5A' }}>
+              InterpretReflect was created to change that. Our goal is simple: give interpreters the space, tools, and support to recover, reflect, and keep doing the work we love without burning out.
             </p>
           </div>
         </section>
 
-        {/* Story */}
+        {/* What We Do */}
         <section className="mb-16">
           <div className="flex items-center mb-6">
             <BookOpen className="h-8 w-8 mr-3" style={{ color: '#6B8B60' }} />
             <h2 className="text-3xl font-bold" style={{ color: '#1A1A1A' }}>
-              Our Story
-            </h2>
-          </div>
-          <div className="space-y-6">
-            <div 
-              className="rounded-2xl p-8"
-              style={{
-                backgroundColor: '#FFFFFF',
-                boxShadow: '0 4px 15px rgba(0, 0, 0, 0.05)',
-              }}
-            >
-              <div className="flex items-center mb-4">
-                <div
-                  className="px-3 py-1 rounded-full text-sm font-semibold"
-                  style={{
-                    backgroundColor: 'rgba(92, 127, 79, 0.1)',
-                    color: '#6B8B60',
-                  }}
-                >
-                  Founded 2024
-                </div>
-              </div>
-              <p className="mb-4" style={{ color: '#5A5A5A' }}>
-                InterpretReflect was born from the lived experiences of interpreters who witnessed countless colleagues leave the field due to burnout, vicarious trauma, and lack of recovery resources. Our founding team decided it was time to act.
-              </p>
-              <p className="mb-4" style={{ color: '#5A5A5A' }}>
-                We partnered with neuroscientists, wellness researchers, and hundreds of working interpreters to understand the unique stressors of language mediation. What emerged was clear: interpreters needed specialized tools designed for their reality - tools that work in courthouse hallways, hospital break rooms, and the moments between assignments.
-              </p>
-              <p style={{ color: '#5A5A5A' }}>
-                Today, InterpretReflect combines cutting-edge research with practical wisdom from the interpreting community to deliver wellness support that actually works for the professionals who need it most.
-              </p>
-            </div>
-          </div>
-        </section>
-
-        {/* Team */}
-        <section className="mb-16">
-          <div className="flex items-center mb-6">
-            <Users className="h-8 w-8 mr-3" style={{ color: '#6B8B60' }} />
-            <h2 className="text-3xl font-bold" style={{ color: '#1A1A1A' }}>
-              Our Team
+              What We Do
             </h2>
           </div>
           <div 
@@ -142,138 +102,50 @@ export function About() {
               boxShadow: '0 4px 15px rgba(0, 0, 0, 0.05)',
             }}
           >
-            <p className="text-lg mb-6" style={{ color: '#5A5A5A' }}>
-              InterpretReflect is built by a diverse team of interpreters, wellness experts, and technologists who share a common vision for interpreter wellbeing.
+            <p className="text-lg leading-relaxed mb-4" style={{ color: '#5A5A5A' }}>
+              We bring together three things that matter:
             </p>
-            
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div className="space-y-4">
-                <h3 className="font-semibold" style={{ color: '#2D5F3F' }}>
-                  Our Expertise Includes:
-                </h3>
-                <ul className="space-y-2 text-sm" style={{ color: '#5A5A5A' }}>
-                  <li className="flex items-start">
-                    <Sparkles className="h-4 w-4 mr-2 mt-0.5 flex-shrink-0" style={{ color: '#5C7F4F' }} />
-                    Professional interpreters with 50+ years combined experience
-                  </li>
-                  <li className="flex items-start">
-                    <Sparkles className="h-4 w-4 mr-2 mt-0.5 flex-shrink-0" style={{ color: '#5C7F4F' }} />
-                    Neuroscience researchers specializing in stress and trauma
-                  </li>
-                  <li className="flex items-start">
-                    <Sparkles className="h-4 w-4 mr-2 mt-0.5 flex-shrink-0" style={{ color: '#5C7F4F' }} />
-                    Clinical wellness practitioners
-                  </li>
-                  <li className="flex items-start">
-                    <Sparkles className="h-4 w-4 mr-2 mt-0.5 flex-shrink-0" style={{ color: '#5C7F4F' }} />
-                    Technology experts in privacy and security
-                  </li>
-                </ul>
-              </div>
-              
-              <div className="space-y-4">
-                <h3 className="font-semibold" style={{ color: '#2D5F3F' }}>
-                  Our Commitment:
-                </h3>
-                <ul className="space-y-2 text-sm" style={{ color: '#5A5A5A' }}>
-                  <li className="flex items-start">
-                    <Shield className="h-4 w-4 mr-2 mt-0.5 flex-shrink-0" style={{ color: '#5C7F4F' }} />
-                    Inclusive design for all interpreters
-                  </li>
-                  <li className="flex items-start">
-                    <Shield className="h-4 w-4 mr-2 mt-0.5 flex-shrink-0" style={{ color: '#5C7F4F' }} />
-                    Evidence-based approaches only
-                  </li>
-                  <li className="flex items-start">
-                    <Shield className="h-4 w-4 mr-2 mt-0.5 flex-shrink-0" style={{ color: '#5C7F4F' }} />
-                    Absolute privacy and confidentiality
-                  </li>
-                  <li className="flex items-start">
-                    <Shield className="h-4 w-4 mr-2 mt-0.5 flex-shrink-0" style={{ color: '#5C7F4F' }} />
-                    Continuous improvement based on user feedback
-                  </li>
-                </ul>
-              </div>
+            <div className="space-y-3 mb-6 ml-4">
+              <p className="text-lg" style={{ color: '#5A5A5A' }}>• Neuroscience that explains stress and resilience</p>
+              <p className="text-lg" style={{ color: '#5A5A5A' }}>• Real interpreter experience across all settings</p>
+              <p className="text-lg" style={{ color: '#5A5A5A' }}>• Technology that is private, secure, and easy to use</p>
             </div>
+            <p className="text-lg font-semibold" style={{ color: '#2D5F3F' }}>
+              The result: practical tools you can use anywhere — in the break room, in your car after an assignment, or at home when you're trying to reset.
+            </p>
           </div>
         </section>
 
-        {/* Approach */}
+        {/* Who We Are */}
+        <section className="mb-16">
+          <div className="flex items-center mb-6">
+            <Users className="h-8 w-8 mr-3" style={{ color: '#6B8B60' }} />
+            <h2 className="text-3xl font-bold" style={{ color: '#1A1A1A' }}>
+              Who We Are
+            </h2>
+          </div>
+          <div 
+            className="rounded-2xl p-8"
+            style={{
+              backgroundColor: '#FFFFFF',
+              boxShadow: '0 4px 15px rgba(0, 0, 0, 0.05)',
+            }}
+          >
+            <p className="text-lg leading-relaxed" style={{ color: '#5A5A5A' }}>
+              We are interpreters, researchers, and wellness experts who believe interpreters deserve the same care we give to others. Everything we build is tested with working interpreters to make sure it fits the real world, not just theory.
+            </p>
+          </div>
+        </section>
+
+
+        {/* Values */}
         <section className="mb-16">
           <div className="flex items-center mb-6">
             <Award className="h-8 w-8 mr-3" style={{ color: '#6B8B60' }} />
             <h2 className="text-3xl font-bold" style={{ color: '#1A1A1A' }}>
-              Our Evidence-Based Approach
+              What We Value
             </h2>
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div 
-              className="rounded-xl p-6"
-              style={{
-                backgroundColor: '#FFFFFF',
-                boxShadow: '0 4px 15px rgba(0, 0, 0, 0.05)',
-              }}
-            >
-              <h3 className="font-bold mb-3" style={{ color: '#1A1A1A' }}>
-                Grounded in Research
-              </h3>
-              <p className="text-sm" style={{ color: '#5A5A5A' }}>
-                Our tools are grounded in research and informed by evidence-based practices from neuroscience, trauma recovery, and occupational wellness, thoughtfully adapted for interpreters.
-              </p>
-            </div>
-            
-            <div 
-              className="rounded-xl p-6"
-              style={{
-                backgroundColor: '#FFFFFF',
-                boxShadow: '0 4px 15px rgba(0, 0, 0, 0.05)',
-              }}
-            >
-              <h3 className="font-bold mb-3" style={{ color: '#1A1A1A' }}>
-                Community-Validated
-              </h3>
-              <p className="text-sm" style={{ color: '#5A5A5A' }}>
-                Features are developed and tested with working interpreters across all modalities and settings to ensure real-world effectiveness.
-              </p>
-            </div>
-            
-            <div 
-              className="rounded-xl p-6"
-              style={{
-                backgroundColor: '#FFFFFF',
-                boxShadow: '0 4px 15px rgba(0, 0, 0, 0.05)',
-              }}
-            >
-              <h3 className="font-bold mb-3" style={{ color: '#1A1A1A' }}>
-                Continuously Evolving
-              </h3>
-              <p className="text-sm" style={{ color: '#5A5A5A' }}>
-                We regularly update our tools based on the latest research and user feedback, ensuring you always have access to the most effective wellness strategies.
-              </p>
-            </div>
-            
-            <div 
-              className="rounded-xl p-6"
-              style={{
-                backgroundColor: '#FFFFFF',
-                boxShadow: '0 4px 15px rgba(0, 0, 0, 0.05)',
-              }}
-            >
-              <h3 className="font-bold mb-3" style={{ color: '#1A1A1A' }}>
-                Privacy-First Design
-              </h3>
-              <p className="text-sm" style={{ color: '#5A5A5A' }}>
-                Built with privacy-first design and HIPAA-compliant infrastructure in development, ensuring your data stays secure and confidential.
-              </p>
-            </div>
-          </div>
-        </section>
-
-        {/* Values */}
-        <section className="mb-16">
-          <h2 className="text-3xl font-bold mb-6" style={{ color: '#1A1A1A' }}>
-            Our Values
-          </h2>
           <div 
             className="rounded-2xl p-8"
             style={{
@@ -287,7 +159,7 @@ export function About() {
                   Accessibility
                 </h3>
                 <p className="text-sm" style={{ color: '#5A5A5A' }}>
-                  Wellness support should be available to every interpreter, regardless of setting, modality, or background.
+                  Support that works for every interpreter, no matter the setting.
                 </p>
               </div>
               
@@ -296,7 +168,7 @@ export function About() {
                   Authenticity
                 </h3>
                 <p className="text-sm" style={{ color: '#5A5A5A' }}>
-                  Built by interpreters who understand the real challenges you face every day.
+                  Built by people who understand this work.
                 </p>
               </div>
               
@@ -305,7 +177,7 @@ export function About() {
                   Sustainability
                 </h3>
                 <p className="text-sm" style={{ color: '#5A5A5A' }}>
-                  Supporting long, healthy careers through proactive wellness practices.
+                  Helping interpreters build long, healthy careers.
                 </p>
               </div>
               
@@ -314,7 +186,7 @@ export function About() {
                   Innovation
                 </h3>
                 <p className="text-sm" style={{ color: '#5A5A5A' }}>
-                  Leveraging technology to deliver personalized, effective wellness support.
+                  Smarter tools for reflection, recovery, and growth.
                 </p>
               </div>
             </div>
@@ -324,10 +196,13 @@ export function About() {
         {/* Call to Action */}
         <section className="text-center mb-16">
           <h2 className="text-2xl font-bold mb-4" style={{ color: '#1A1A1A' }}>
-            Join Our Mission
+            Join Us
           </h2>
-          <p className="text-lg mb-8" style={{ color: '#5A5A5A' }}>
-            Together, we're building a future where interpreter wellness is a professional standard, not an afterthought.
+          <p className="text-lg mb-4" style={{ color: '#5A5A5A' }}>
+            We are building a future where interpreter wellness is just as important as professional skill.
+          </p>
+          <p className="text-lg mb-8 font-semibold" style={{ color: '#2D5F3F' }}>
+            Because when interpreters are supported, everyone benefits.
           </p>
           <button
             onClick={() => navigate('/')}

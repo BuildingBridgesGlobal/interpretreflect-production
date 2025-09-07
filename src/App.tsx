@@ -43,7 +43,6 @@ import { ProfileSettings } from './components/ProfileSettings';
 import { CustomizePreferences } from './components/CustomizePreferences';
 import { ManageSubscription } from './components/ManageSubscription';
 import { BillingPlanDetails } from './components/BillingPlanDetails';
-import { Dashboard } from './components/Dashboard';
 import { LuxuryWellnessDashboard } from './components/LuxuryWellnessDashboard';
 import { Footer } from './components/Footer';
 import {
@@ -99,7 +98,6 @@ function App() {
   });
   const [activeCategory, setActiveCategory] = useState('structured');
   const [insightsTimePeriod, setInsightsTimePeriod] = useState('month');
-  const [showPrivacyPage, setShowPrivacyPage] = useState(false);
   const [showUserDropdown, setShowUserDropdown] = useState(false);
   const [selectedTechnique, setSelectedTechnique] = useState<string | null>(null);
   const [techniqueProgress, setTechniqueProgress] = useState(0);
@@ -1773,230 +1771,6 @@ function App() {
       </div>
     </main>
   );
-
-  const renderPrivacyPage = () => {
-    return (
-      <>
-        <div className="fixed inset-0 bg-gray-900 z-50 overflow-y-auto">
-          {/* Header */}
-          <div className="bg-gray-800/90 backdrop-blur-sm border-b border-gray-700/50 sticky top-0 z-10">
-            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
-              <div className="flex items-center justify-between">
-                <h2 className="text-2xl font-bold text-white">Privacy & Data</h2>
-                <button
-                  onClick={() => setShowPrivacyPage(false)}
-                  className="p-2 text-gray-400 hover:text-white rounded-lg hover:bg-gray-700 transition-colors"
-                >
-                  <X className="h-6 w-6" />
-                </button>
-              </div>
-            </div>
-          </div>
-
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-            {/* Main Content */}
-            <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
-              {/* Left Content - 3 columns */}
-              <main className="lg:col-span-3 space-y-8">
-                {/* Privacy Features */}
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                  <div className="bg-slate-800/50 backdrop-blur-sm rounded-xl p-6">
-                    <div className="flex items-center mb-4">
-                      <Lock className="h-6 w-6 text-blue-400 mr-3" />
-                      <h3 className="text-lg font-semibold text-blue-400">Secure by Design</h3>
-                    </div>
-                    <p className="text-gray-300 text-sm leading-relaxed">
-                      All journal entries, reflections, and wellness data are encrypted in storage
-                      and in transit.
-                    </p>
-                  </div>
-
-                  <div className="bg-slate-800/50 backdrop-blur-sm rounded-xl p-6">
-                    <div className="flex items-center mb-4">
-                      <CheckCircle className="h-6 w-6 text-green-400 mr-3" />
-                      <h3 className="text-lg font-semibold text-green-400">Privacy-First</h3>
-                    </div>
-                    <p className="text-gray-300 text-sm leading-relaxed">
-                      Your data belongs to you. We never sell it, and it's never shared without your
-                      explicit consent.
-                    </p>
-                  </div>
-
-                  <div className="bg-slate-800/50 backdrop-blur-sm rounded-xl p-6">
-                    <div className="flex items-center mb-4">
-                      <SettingsIcon className="h-6 w-6 text-purple-400 mr-3" />
-                      <h3 className="text-lg font-semibold text-purple-400">Zero-Config</h3>
-                    </div>
-                    <p className="text-gray-300 text-sm leading-relaxed">
-                      You don't need to manage endless privacy settings - these protections are
-                      built in from the start.
-                    </p>
-                  </div>
-                </div>
-
-                {/* Data Use in Beta */}
-                <div className="bg-slate-800/50 backdrop-blur-sm rounded-xl p-6">
-                  <h2 className="text-xl font-semibold text-white mb-6">Data Use in Beta</h2>
-                  <p className="text-gray-300 mb-6">We're in beta, so here's what's true today:</p>
-
-                  <div className="space-y-4">
-                    <div className="flex items-start">
-                      <CheckCircle className="h-5 w-5 text-green-400 mr-3 mt-0.5 flex-shrink-0" />
-                      <div>
-                        <span className="text-white font-medium">Encryption:</span>
-                        <span className="text-gray-300 ml-2">
-                          All reflections and mood logs are encrypted.
-                        </span>
-                      </div>
-                    </div>
-
-                    <div className="flex items-start">
-                      <CheckCircle className="h-5 w-5 text-green-400 mr-3 mt-0.5 flex-shrink-0" />
-                      <div>
-                        <span className="text-white font-medium">Export & Delete:</span>
-                        <span className="text-gray-300 ml-2">
-                          You can download your data or permanently delete your account at any time.
-                        </span>
-                      </div>
-                    </div>
-
-                    <div className="flex items-start">
-                      <AlertTriangle className="h-5 w-5 text-yellow-400 mr-3 mt-0.5 flex-shrink-0" />
-                      <div>
-                        <span className="text-white font-medium">HIPAA:</span>
-                        <span className="text-gray-300 ml-2">
-                          Not yet fully HIPAA-compliant, but we are designing with healthcare-level
-                          privacy standards in mind.
-                        </span>
-                      </div>
-                    </div>
-
-                    <div className="flex items-start">
-                      <AlertTriangle className="h-5 w-5 text-yellow-400 mr-3 mt-0.5 flex-shrink-0" />
-                      <div>
-                        <span className="text-white font-medium">Integrations:</span>
-                        <span className="text-gray-300 ml-2">
-                          No third-party integrations in beta (coming later).
-                        </span>
-                      </div>
-                    </div>
-
-                    <div className="flex items-start">
-                      <AlertTriangle className="h-5 w-5 text-yellow-400 mr-3 mt-0.5 flex-shrink-0" />
-                      <div>
-                        <span className="text-white font-medium">Two-Factor Auth:</span>
-                        <span className="text-gray-300 ml-2">Planned feature, not active yet.</span>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-
-                {/* Consent at Signup */}
-                <div className="bg-slate-800/50 backdrop-blur-sm rounded-xl p-6">
-                  <h2 className="text-xl font-semibold text-white mb-6">Consent at Signup</h2>
-                  <p className="text-gray-300 mb-6">
-                    When you first create your account, you'll accept:
-                  </p>
-
-                  <div className="space-y-4">
-                    <div className="flex items-start">
-                      <CheckCircle className="h-5 w-5 text-blue-400 mr-3 mt-0.5 flex-shrink-0" />
-                      <span className="text-gray-300">
-                        That your reflections and data are stored securely.
-                      </span>
-                    </div>
-
-                    <div className="flex items-start">
-                      <CheckCircle className="h-5 w-5 text-blue-400 mr-3 mt-0.5 flex-shrink-0" />
-                      <span className="text-gray-300">
-                        That optional insights (AI feedback, growth analytics) are processed only
-                        for your account.
-                      </span>
-                    </div>
-
-                    <div className="flex items-start">
-                      <CheckCircle className="h-5 w-5 text-blue-400 mr-3 mt-0.5 flex-shrink-0" />
-                      <span className="text-gray-300">
-                        That you may opt in later to research participation or integrations (once
-                        available).
-                      </span>
-                    </div>
-                  </div>
-
-                  <div className="mt-6 p-4 bg-slate-700/50 rounded-lg">
-                    <div className="flex items-start">
-                      <Clock className="h-5 w-5 text-blue-400 mr-3 mt-0.5 flex-shrink-0" />
-                      <span className="text-gray-300 text-sm">
-                        No need to revisit toggles - your preferences are stored once and can be
-                        updated if features roll out.
-                      </span>
-                    </div>
-                  </div>
-                </div>
-              </main>
-
-              {/* Right Sidebar */}
-              <div className="lg:col-span-1">
-                <div className="bg-slate-800/50 backdrop-blur-sm rounded-xl p-6 sticky top-8">
-                  <div className="flex items-center mb-4">
-                    <div className="w-12 h-12 bg-white rounded-full flex items-center justify-center mr-3">
-                      <User className="h-6 w-6 text-slate-900" />
-                    </div>
-                    <div>
-                      <div className="text-white font-semibold">dev</div>
-                      <div className="text-gray-400 text-sm">dev@interpretreflect.com</div>
-                    </div>
-                  </div>
-
-                  <div className="space-y-3">
-                    <button className="w-full flex items-center justify-between text-left text-gray-300 hover:text-white p-3 rounded-lg hover:bg-slate-700/50 transition-colors">
-                      <div className="flex items-center">
-                        <User className="h-4 w-4 mr-3" />
-                        <div>
-                          <div className="font-medium">Profile Settings</div>
-                          <div className="text-xs text-gray-400">Customize your preferences</div>
-                        </div>
-                      </div>
-                      <ChevronRight className="h-4 w-4" />
-                    </button>
-
-                    <button className="w-full flex items-center justify-between text-left text-gray-300 hover:text-white p-3 rounded-lg hover:bg-slate-700/50 transition-colors">
-                      <div className="flex items-center">
-                        <Database className="h-4 w-4 mr-3" />
-                        <div>
-                          <div className="font-medium">Manage Subscription</div>
-                          <div className="text-xs text-gray-400">Billing and plan details</div>
-                        </div>
-                      </div>
-                      <ChevronRight className="h-4 w-4" />
-                    </button>
-
-                    <button className="w-full flex items-center justify-between text-left text-purple-400 hover:text-purple-300 p-3 rounded-lg bg-purple-600/20 border border-purple-600/30">
-                      <div className="flex items-center">
-                        <Shield className="h-4 w-4 mr-3" />
-                        <div>
-                          <div className="font-medium">Privacy & Data</div>
-                          <div className="text-xs text-purple-300">Control your data sharing</div>
-                        </div>
-                      </div>
-                      <ChevronRight className="h-4 w-4" />
-                    </button>
-
-                    <div className="pt-3 border-t border-slate-700">
-                      <button className="w-full flex items-center text-left text-red-400 hover:text-red-300 p-3 rounded-lg hover:bg-red-600/10 transition-colors">
-                        <ArrowLeft className="h-4 w-4 mr-3" />
-                        <div className="font-medium">Sign Out</div>
-                      </button>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </>
-    );
-  };
 
   const renderChatWithElya = () => (
     <div className="h-full flex flex-col overflow-hidden">
@@ -6127,8 +5901,6 @@ function App() {
         </div>
       </main>
 
-      {/* Privacy Page Overlay */}
-      {showPrivacyPage && renderPrivacyPage()}
 
 
       {/* Breathing Practice Modal */}

@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import {
   Heart,
   Shield,
@@ -89,47 +90,47 @@ export const Footer: React.FC = () => {
               Resources
             </h4>
             <ul className="space-y-2">
-              <li>
-                <a href="#" className="text-sm hover:underline transition-colors" 
-                  style={{ color: '#6B7280' }}
-                  onMouseEnter={(e) => e.currentTarget.style.color = '#5B8FE3'}
-                  onMouseLeave={(e) => e.currentTarget.style.color = '#6B7280'}>
-                  About Us
-                </a>
-              </li>
-              <li>
-                <a href="#" className="text-sm hover:underline transition-colors" 
-                  style={{ color: '#6B7280' }}
-                  onMouseEnter={(e) => e.currentTarget.style.color = '#5B8FE3'}
-                  onMouseLeave={(e) => e.currentTarget.style.color = '#6B7280'}>
-                  Privacy Policy
-                </a>
-              </li>
-              <li>
-                <a href="#" className="text-sm hover:underline transition-colors" 
-                  style={{ color: '#6B7280' }}
-                  onMouseEnter={(e) => e.currentTarget.style.color = '#5B8FE3'}
-                  onMouseLeave={(e) => e.currentTarget.style.color = '#6B7280'}>
-                  Terms of Service
-                </a>
-              </li>
-              <li>
-                <a href="#" className="text-sm hover:underline transition-colors" 
-                  style={{ color: '#6B7280' }}
-                  onMouseEnter={(e) => e.currentTarget.style.color = '#5B8FE3'}
-                  onMouseLeave={(e) => e.currentTarget.style.color = '#6B7280'}>
-                  Support Center
-                </a>
-              </li>
-              <li>
-                <a href="#" className="text-sm hover:underline transition-colors" 
-                  style={{ color: '#6B7280' }}
-                  onMouseEnter={(e) => e.currentTarget.style.color = '#5B8FE3'}
-                  onMouseLeave={(e) => e.currentTarget.style.color = '#6B7280'}>
-                  Research & Evidence
-                </a>
-              </li>
-            </ul>
+               <li>
+                 <Link to="/about" className="text-sm hover:underline transition-colors"
+                   style={{ color: '#6B7280' }}
+                   onMouseEnter={(e) => e.currentTarget.style.color = '#5B8FE3'}
+                   onMouseLeave={(e) => e.currentTarget.style.color = '#6B7280'}>
+                   About Us
+                 </Link>
+               </li>
+               <li>
+                 <Link to="/privacy" className="text-sm hover:underline transition-colors"
+                   style={{ color: '#6B7280' }}
+                   onMouseEnter={(e) => e.currentTarget.style.color = '#5B8FE3'}
+                   onMouseLeave={(e) => e.currentTarget.style.color = '#6B7280'}>
+                   Privacy Policy
+                 </Link>
+               </li>
+               <li>
+                 <Link to="/terms" className="text-sm hover:underline transition-colors"
+                   style={{ color: '#6B7280' }}
+                   onMouseEnter={(e) => e.currentTarget.style.color = '#5B8FE3'}
+                   onMouseLeave={(e) => e.currentTarget.style.color = '#6B7280'}>
+                   Terms of Service
+                 </Link>
+               </li>
+               <li>
+                 <Link to="/support" className="text-sm hover:underline transition-colors"
+                   style={{ color: '#6B7280' }}
+                   onMouseEnter={(e) => e.currentTarget.style.color = '#5B8FE3'}
+                   onMouseLeave={(e) => e.currentTarget.style.color = '#6B7280'}>
+                   Support Center
+                 </Link>
+               </li>
+               <li>
+                 <Link to="/research-evidence" className="text-sm hover:underline transition-colors"
+                   style={{ color: '#6B7280' }}
+                   onMouseEnter={(e) => e.currentTarget.style.color = '#5B8FE3'}
+                   onMouseLeave={(e) => e.currentTarget.style.color = '#6B7280'}>
+                   Research & Evidence
+                 </Link>
+               </li>
+             </ul>
           </div>
 
           {/* Connect */}

@@ -57,8 +57,6 @@ export const LuxuryWellnessDashboard: React.FC<LuxuryWellnessDashboardProps> = (
   const [profileExpanded, setProfileExpanded] = useState(false);
   const [leaderboard, setLeaderboard] = useState<LeaderboardEntry[]>([]);
 
-
-
   useEffect(() => {
     const updateGreeting = () => {
       const hour = new Date().getHours();

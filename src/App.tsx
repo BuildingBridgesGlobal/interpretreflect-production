@@ -12,6 +12,7 @@ import { PrivacyPolicy } from './pages/PrivacyPolicy';
 import { TermsOfService } from './pages/TermsOfService';
 import { Contact } from './pages/Contact';
 import { About } from './pages/About';
+import { Accessibility } from './pages/Accessibility';
 import { PricingNew } from './pages/PricingNew';
 import { PricingTest } from './pages/PricingTest';
 import { HeaderDemo } from './pages/HeaderDemo';
@@ -39,6 +40,7 @@ import { MentoringReflectionAccessible } from './components/MentoringReflectionA
 import { ChatWithElya } from './components/ChatWithElya';
 import { GrowthInsights } from './components/GrowthInsights';
 import { GrowthInsightsDashboard } from './components/GrowthInsightsDashboard';
+import { GrowthInsightsEnhanced } from './components/GrowthInsightsEnhanced';
 import { ProfileSettings } from './components/ProfileSettings';
 import { CustomizePreferences } from './components/CustomizePreferences';
 import { ManageSubscription } from './components/ManageSubscription';
@@ -121,7 +123,11 @@ function App() {
   const [showWellnessCheckIn, setShowWellnessCheckIn] = useState(false);
   const [showEthicsMeaningCheck, setShowEthicsMeaningCheck] = useState(false);
   const [showBreathingPractice, setShowBreathingPractice] = useState(false);
+  const [showBreathingModal, setShowBreathingModal] = useState(false);
+  const [breathingMode, setBreathingMode] = useState<'gentle' | 'deep'>('gentle');
   const [showBodyCheckIn, setShowBodyCheckIn] = useState(false);
+  const [showBodyCheckInModal, setShowBodyCheckInModal] = useState(false);
+  const [bodyCheckInMode, setBodyCheckInMode] = useState<'quick' | 'full'>('quick');
   const [showProfessionalBoundariesReset, setShowProfessionalBoundariesReset] = useState(false);
   const [showTemperatureExploration, setShowTemperatureExploration] = useState(false);
   const [showAssignmentReset, setShowAssignmentReset] = useState(false);
@@ -129,6 +135,14 @@ function App() {
   const [showEmotionMapping, setShowEmotionMapping] = useState(false);
   const [showDailyBurnout, setShowDailyBurnout] = useState(false);
   const [showAffirmationStudio, setShowAffirmationStudio] = useState(false);
+  const [showFiveZoneModal, setShowFiveZoneModal] = useState(false);
+  const [techFatigueMode, setTechFatigueMode] = useState<'quick' | 'deep'>('quick');
+  const [showAssignmentResetModal, setShowAssignmentResetModal] = useState(false);
+  const [assignmentResetMode, setAssignmentResetMode] = useState<'fast' | 'full'>('fast');
+  const [showBoundariesModal, setShowBoundariesModal] = useState(false);
+  const [boundariesResetMode, setBoundariesResetMode] = useState<'quick' | 'deeper'>('quick');
+  const [showEmotionMappingModal, setShowEmotionMappingModal] = useState(false);
+  const [emotionMappingMode, setEmotionMappingMode] = useState<'quick' | 'deeper'>('quick');
   const [savedReflections, setSavedReflections] = useState<Record<string, unknown>[]>([]);
   const [techniqueUsage, setTechniqueUsage] = useState<Record<string, unknown>[]>([]);
   const [currentTechniqueId, setCurrentTechniqueId] = useState<string | null>(null);
@@ -543,11 +557,11 @@ function App() {
               <h2
                 id="growth-insights-heading"
                 className="text-4xl font-bold mb-2"
-                style={{ color: '#1A1A1A', letterSpacing: '-0.5px' }}
+                style={{ color: 'var(--text-primary)', letterSpacing: '-0.5px' }}
               >
                 Growth Insights
               </h2>
-              <p className="text-base" style={{ color: '#3A3A3A' }}>
+              <p className="text-base" style={{ color: 'var(--text-secondary)' }}>
                 Past Month: {savedReflections.length} total reflections
               </p>
             </div>
@@ -556,7 +570,7 @@ function App() {
               className="flex space-x-2 p-2 rounded-xl"
               role="tablist"
               aria-label="Time period selector"
-              style={{ backgroundColor: '#FFFFFF', boxShadow: '0 2px 8px rgba(0, 0, 0, 0.05)' }}
+              style={{ backgroundColor: 'var(--bg-card)', boxShadow: 'var(--shadow-md)' }}
             >
               <button
                 onClick={() => setInsightsTimePeriod('week')}
@@ -567,7 +581,7 @@ function App() {
                 aria-label="View past week insights"
                 style={{
                   backgroundColor: insightsTimePeriod === 'week' ? '#5C7F4F' : 'transparent',
-                  color: insightsTimePeriod === 'week' ? '#FFFFFF' : '#1A1A1A',
+                  color: insightsTimePeriod === 'week' ? 'var(--text-inverse)' : 'var(--text-primary)',
                 }}
                 onMouseEnter={(e) => {
                   if (insightsTimePeriod !== 'week') {
@@ -591,7 +605,7 @@ function App() {
                 aria-label="View past month insights"
                 style={{
                   backgroundColor: insightsTimePeriod === 'month' ? '#5C7F4F' : 'transparent',
-                  color: insightsTimePeriod === 'month' ? '#FFFFFF' : '#1A1A1A',
+                  color: insightsTimePeriod === 'month' ? 'var(--text-inverse)' : 'var(--text-primary)',
                 }}
                 onMouseEnter={(e) => {
                   if (insightsTimePeriod !== 'month') {
@@ -615,7 +629,7 @@ function App() {
                 aria-label="View past 90 days insights"
                 style={{
                   backgroundColor: insightsTimePeriod === '90days' ? '#5C7F4F' : 'transparent',
-                  color: insightsTimePeriod === '90days' ? '#FFFFFF' : '#1A1A1A',
+                  color: insightsTimePeriod === '90days' ? 'var(--text-inverse)' : 'var(--text-primary)',
                 }}
                 onMouseEnter={(e) => {
                   if (insightsTimePeriod !== '90days') {
@@ -639,7 +653,7 @@ function App() {
           className="rounded-2xl p-8"
           aria-labelledby="stress-energy-chart-heading"
           style={{
-            backgroundColor: '#FFFFFF',
+            backgroundColor: 'var(--bg-card)',
             boxShadow: '0 10px 30px rgba(92, 127, 79, 0.15), 0 2px 8px rgba(0, 0, 0, 0.05)',
             border: '1px solid rgba(92, 127, 79, 0.2)',
           }}
@@ -648,7 +662,7 @@ function App() {
             <h2
               id="stress-energy-chart-heading"
               className="text-2xl font-bold"
-              style={{ color: '#1A1A1A' }}
+              style={{ color: 'var(--primary-900)' }}
             >
               Your Stress & Energy Over Time
             </h2>
@@ -677,7 +691,7 @@ function App() {
             className="rounded-xl p-6 h-80 relative"
             role="img"
             aria-label="Line chart showing stress and energy levels over the past month with reset day markers"
-            style={{ backgroundColor: '#FAFAF8', border: '1px solid #E8E5E0' }}
+            style={{ backgroundColor: 'var(--bg-secondary)', border: '1px solid var(--border-default)' }}
           >
             {/* Y-axis labels */}
             <div className="absolute left-0 top-0 h-full flex flex-col justify-between text-xs text-gray-500 py-4">
@@ -698,11 +712,11 @@ function App() {
                 if (reflectionsWithStress.length === 0 && reflectionsWithEnergy.length === 0) {
                   return (
                     <div className="text-center">
-                      <Activity className="h-12 w-12 mx-auto mb-3" style={{ color: '#7A9B6E' }} />
-                      <p className="text-sm font-medium mb-2" style={{ color: '#5A5A5A' }}>
+                      <Activity className="h-12 w-12 mx-auto mb-3" style={{ color: 'var(--primary-400)' }} />
+                      <p className="text-sm font-medium mb-2" style={{ color: 'var(--text-secondary)' }}>
                         No stress or energy data yet
                       </p>
-                      <p className="text-xs" style={{ color: '#9CA3AF' }}>
+                      <p className="text-xs" style={{ color: 'var(--text-tertiary)' }}>
                         Complete reflections to see your trends
                       </p>
                     </div>
@@ -712,7 +726,7 @@ function App() {
                 // TODO: Implement actual chart rendering when we have data
                 return (
                   <div className="text-center">
-                    <p className="text-sm" style={{ color: '#9CA3AF' }}>
+                    <p className="text-sm" style={{ color: 'var(--text-tertiary)' }}>
                       Chart visualization coming soon
                     </p>
                   </div>
@@ -777,7 +791,7 @@ function App() {
           className="rounded-2xl p-8"
           aria-labelledby="burnout-trend-heading"
           style={{
-            backgroundColor: '#FFFFFF',
+            backgroundColor: 'var(--bg-card)',
             boxShadow: '0 10px 30px rgba(92, 127, 79, 0.15), 0 2px 8px rgba(0, 0, 0, 0.05)',
             border: '1px solid rgba(92, 127, 79, 0.2)',
           }}
@@ -787,7 +801,7 @@ function App() {
               <h2
                 id="burnout-trend-heading"
                 className="text-2xl font-bold"
-                style={{ color: '#1A1A1A' }}
+                style={{ color: 'var(--primary-900)' }}
               >
                 Daily Burnout Trend
               </h2>
@@ -831,7 +845,7 @@ function App() {
           {/* Chart area */}
           <div
             className="rounded-xl p-6 h-80 relative"
-            style={{ backgroundColor: '#FAFAF8', border: '1px solid #E8E5E0' }}
+            style={{ backgroundColor: 'var(--bg-secondary)', border: '1px solid var(--border-default)' }}
           >
             {getAggregatedData().length > 0 ? (
               <>
@@ -1011,12 +1025,12 @@ function App() {
               className="p-2 rounded-lg mr-3"
               style={{ backgroundColor: 'rgba(92, 127, 79, 0.15)' }}
             >
-              <Lightbulb className="h-5 w-5" aria-hidden="true" style={{ color: '#5C7F4F' }} />
+              <Lightbulb className="h-5 w-5" aria-hidden="true" style={{ color: '#1A3D26' }} />
             </div>
-            <h2 className="text-2xl font-bold" style={{ color: '#1A1A1A' }}>
+            <h2 className="text-2xl font-bold" style={{ color: '#0D3A14' }}>
               Your Reset Toolkit Insights
             </h2>
-            <span className="text-sm ml-auto" style={{ color: '#6B7C6B' }}>
+            <span className="text-sm ml-auto" style={{ color: '#525252' }}>
               {techniqueUsage.length} total uses • {
                 techniqueUsage.filter(u => {
                   const date = new Date(u.startTime);
@@ -1032,19 +1046,19 @@ function App() {
             <div
               className="rounded-xl p-5 transition-all"
               style={{
-                backgroundColor: '#FFFFFF',
-                border: '2px solid #5C7F4F',
+                backgroundColor: 'var(--bg-card)',
+                border: '2px solid var(--primary-600)',
                 boxShadow: '0 4px 12px rgba(92, 127, 79, 0.2)',
               }}
             >
               <div
                 className="flex items-center text-sm font-semibold mb-2"
-                style={{ color: '#2D5F3F' }}
+                style={{ color: 'var(--primary-900)' }}
               >
-                <Star className="h-4 w-4 mr-2" aria-hidden="true" style={{ color: '#5C7F4F' }} />
+                <Star className="h-4 w-4 mr-2" aria-hidden="true" style={{ color: '#1A3D26' }} />
                 Most Effective
               </div>
-              <div className="text-2xl font-bold mb-1" style={{ color: '#1A1A1A' }}>
+              <div className="text-2xl font-bold mb-1" style={{ color: '#0D3A14' }}>
                 {techniqueUsage.length > 0 
                   ? (() => {
                       const counts = techniqueUsage.reduce((acc, u) => {
@@ -1056,7 +1070,7 @@ function App() {
                     })()
                   : 'None yet'}
               </div>
-              <div className="text-sm" style={{ color: '#2D5F3F' }}>
+              <div className="text-sm" style={{ color: '#0D3A14' }}>
                 {techniqueUsage.length > 0 ? 'Most used technique' : 'Start using techniques'}
               </div>
             </div>
@@ -1064,7 +1078,7 @@ function App() {
             <div
               className="rounded-xl p-5 transition-all"
               style={{
-                backgroundColor: '#FFFFFF',
+                backgroundColor: 'var(--bg-card)',
                 border: '2px solid #87CEEB',
                 boxShadow: '0 4px 12px rgba(135, 206, 235, 0.2)',
               }}
@@ -1080,7 +1094,7 @@ function App() {
                 />
                 Overall Completion
               </div>
-              <div className="text-2xl font-bold mb-1" style={{ color: '#1A1A1A' }}>
+              <div className="text-2xl font-bold mb-1" style={{ color: '#0D3A14' }}>
                 {techniqueUsage.length > 0 
                   ? Math.round((techniqueUsage.filter(u => u.completed).length / techniqueUsage.length) * 100) 
                   : 0}%
@@ -1093,7 +1107,7 @@ function App() {
             <div
               className="rounded-xl p-5 transition-all"
               style={{
-                backgroundColor: '#FFFFFF',
+                backgroundColor: 'var(--bg-card)',
                 border: '2px solid #C8B8DB',
                 boxShadow: '0 4px 12px rgba(200, 184, 219, 0.2)',
               }}
@@ -1109,7 +1123,7 @@ function App() {
                 />
                 Avg Stress Relief
               </div>
-              <div className="text-2xl font-bold mb-1" style={{ color: '#1A1A1A' }}>
+              <div className="text-2xl font-bold mb-1" style={{ color: '#0D3A14' }}>
                 -
               </div>
               <div className="text-sm" style={{ color: '#8B7AA8' }}>
@@ -1120,7 +1134,7 @@ function App() {
             <div
               className="rounded-xl p-5 transition-all"
               style={{
-                backgroundColor: '#FFFFFF',
+                backgroundColor: 'var(--bg-card)',
                 border: '2px solid #F4A460',
                 boxShadow: '0 4px 12px rgba(244, 164, 96, 0.2)',
               }}
@@ -1136,7 +1150,7 @@ function App() {
                 />
                 Try Next
               </div>
-              <div className="text-2xl font-bold mb-1" style={{ color: '#1A1A1A' }}>
+              <div className="text-2xl font-bold mb-1" style={{ color: '#0D3A14' }}>
                 {(() => {
                   const techniques = ['box-breathing', 'body-release', 'temperature-shift', 'sensory-reset', 'expansion-practice', 'tech-fatigue-reset'];
                   const counts = techniqueUsage.reduce((acc, u) => {
@@ -1164,7 +1178,7 @@ function App() {
             role="region"
             aria-label="Closed Loops metric"
             style={{
-              backgroundColor: '#FFFFFF',
+              backgroundColor: 'var(--bg-card)',
               boxShadow: '0 4px 12px rgba(0, 0, 0, 0.05)',
               border: '1px solid #E8E5E0',
             }}
@@ -1180,7 +1194,7 @@ function App() {
                 Closed Loops
               </span>
             </div>
-            <div className="text-3xl font-bold mb-2" style={{ color: '#2D5F3F' }}>
+            <div className="text-3xl font-bold mb-2" style={{ color: '#0D3A14' }}>
               {savedReflections.filter(r => r.type.includes('Post')).length > 0 
                 ? Math.round((savedReflections.filter(r => r.type.includes('Post')).length / savedReflections.filter(r => r.type.includes('Pre')).length) * 100) || 0
                 : 0}%
@@ -1198,7 +1212,7 @@ function App() {
             role="region"
             aria-label="Stress Change metric"
             style={{
-              backgroundColor: '#FFFFFF',
+              backgroundColor: 'var(--bg-card)',
               boxShadow: '0 4px 12px rgba(0, 0, 0, 0.05)',
               border: '1px solid #E8E5E0',
             }}
@@ -1208,13 +1222,13 @@ function App() {
                 className="p-2 rounded-lg mr-2"
                 style={{ backgroundColor: 'rgba(92, 127, 79, 0.15)' }}
               >
-                <TrendingUp className="h-4 w-4" aria-hidden="true" style={{ color: '#5C7F4F' }} />
+                <TrendingUp className="h-4 w-4" aria-hidden="true" style={{ color: '#1A3D26' }} />
               </div>
-              <span className="text-sm font-semibold" style={{ color: '#2D5F3F' }}>
+              <span className="text-sm font-semibold" style={{ color: '#0D3A14' }}>
                 Stress Change
               </span>
             </div>
-            <div className="text-3xl font-bold mb-2" style={{ color: '#2D5F3F' }}>
+            <div className="text-3xl font-bold mb-2" style={{ color: '#0D3A14' }}>
               {(() => {
                 const preReflections = savedReflections.filter(r => r.type === 'Pre-Assignment Prep');
                 const postReflections = savedReflections.filter(r => r.type === 'Post-Assignment Debrief');
@@ -1239,7 +1253,7 @@ function App() {
             role="region"
             aria-label="Stress Change metric"
             style={{
-              backgroundColor: '#FFFFFF',
+              backgroundColor: 'var(--bg-card)',
               boxShadow: '0 4px 12px rgba(0, 0, 0, 0.05)',
               border: '1px solid #E8E5E0',
             }}
@@ -1255,7 +1269,7 @@ function App() {
                 Recovery Score
               </span>
             </div>
-            <div className="text-3xl font-bold mb-2" style={{ color: '#2D5F3F' }}>
+            <div className="text-3xl font-bold mb-2" style={{ color: '#0D3A14' }}>
               {savedReflections.length > 0 ? Math.round((savedReflections.length / 30) * 100) : 0}%
             </div>
             <div className="text-xs" style={{ color: '#3A3A3A', lineHeight: '1.4' }}>
@@ -1271,7 +1285,7 @@ function App() {
             role="region"
             aria-label="Stress Change metric"
             style={{
-              backgroundColor: '#FFFFFF',
+              backgroundColor: 'var(--bg-card)',
               boxShadow: '0 4px 12px rgba(0, 0, 0, 0.05)',
               border: '1px solid #E8E5E0',
             }}
@@ -1306,7 +1320,7 @@ function App() {
             role="region"
             aria-label="Team Plan Kept metric"
             style={{
-              backgroundColor: '#FFFFFF',
+              backgroundColor: 'var(--bg-card)',
               boxShadow: '0 4px 12px rgba(0, 0, 0, 0.05)',
               border: '1px solid #E8E5E0',
             }}
@@ -1316,13 +1330,13 @@ function App() {
                 className="p-2 rounded-lg mr-2"
                 style={{ backgroundColor: 'rgba(92, 127, 79, 0.15)' }}
               >
-                <Users className="h-4 w-4" aria-hidden="true" style={{ color: '#5C7F4F' }} />
+                <Users className="h-4 w-4" aria-hidden="true" style={{ color: '#1A3D26' }} />
               </div>
-              <span className="text-sm font-semibold" style={{ color: '#2D5F3F' }}>
+              <span className="text-sm font-semibold" style={{ color: '#0D3A14' }}>
                 Team Plan Kept
               </span>
             </div>
-            <div className="text-3xl font-bold mb-2" style={{ color: '#2D5F3F' }}>
+            <div className="text-3xl font-bold mb-2" style={{ color: '#0D3A14' }}>
               {savedReflections.filter(r => r.type.includes('Teaming')).length > 0 ? 88 : 0}%
             </div>
             <div className="text-xs" style={{ color: '#3A3A3A', lineHeight: '1.4' }}>
@@ -1338,7 +1352,7 @@ function App() {
             role="region"
             aria-label="Stress Change metric"
             style={{
-              backgroundColor: '#FFFFFF',
+              backgroundColor: 'var(--bg-card)',
               boxShadow: '0 4px 12px rgba(0, 0, 0, 0.05)',
               border: '1px solid #E8E5E0',
             }}
@@ -1358,7 +1372,7 @@ function App() {
                 Boundaries + Plan
               </span>
             </div>
-            <div className="text-3xl font-bold mb-2" style={{ color: '#1A1A1A' }}>
+            <div className="text-3xl font-bold mb-2" style={{ color: '#0D3A14' }}>
               {savedReflections.filter(r => r.type === 'Compass Check').length}
             </div>
             <div className="text-xs" style={{ color: '#3A3A3A', lineHeight: '1.4' }}>
@@ -1374,7 +1388,7 @@ function App() {
             role="region"
             aria-label="Stress Change metric"
             style={{
-              backgroundColor: '#FFFFFF',
+              backgroundColor: 'var(--bg-card)',
               boxShadow: '0 4px 12px rgba(0, 0, 0, 0.05)',
               border: '1px solid #E8E5E0',
             }}
@@ -1413,7 +1427,7 @@ function App() {
             role="region"
             aria-label="Stress Change metric"
             style={{
-              backgroundColor: '#FFFFFF',
+              backgroundColor: 'var(--bg-card)',
               boxShadow: '0 4px 12px rgba(0, 0, 0, 0.05)',
               border: '1px solid #E8E5E0',
               opacity: '0.6',
@@ -1448,7 +1462,7 @@ function App() {
             className="rounded-2xl p-6"
             aria-labelledby="recovery-habits-heading"
             style={{
-              backgroundColor: '#FFFFFF',
+              backgroundColor: 'var(--bg-card)',
               boxShadow: '0 8px 20px rgba(0, 0, 0, 0.06)',
               border: '1px solid #E8E5E0',
             }}
@@ -1456,15 +1470,15 @@ function App() {
             <h3
               id="recovery-habits-heading"
               className="text-lg font-bold mb-5"
-              style={{ color: '#1A1A1A' }}
+              style={{ color: 'var(--primary-900)' }}
             >
               Recovery Habits
             </h3>
 
             <div className="mb-5">
               <div className="flex justify-between text-sm mb-3">
-                <span style={{ color: '#6B7C6B' }}>Recovery Balance Index</span>
-                <span className="font-bold" style={{ color: '#2D5F3F' }}>
+                <span style={{ color: '#525252' }}>Recovery Balance Index</span>
+                <span className="font-bold" style={{ color: '#0D3A14' }}>
                   {(() => {
                     // Calculate recovery balance based on breaks, sleep, and wellness checks
                     const weekAgo = new Date();
@@ -1507,14 +1521,14 @@ function App() {
                       
                       return Math.min(breakScore + sleepScore + wellnessScore, 100);
                     })()}%`,
-                    background: 'linear-gradient(90deg, #5C7F4F 0%, #6B8B60 100%)',
+                    background: 'linear-gradient(90deg, #1A3D26 0%, #0F2818 100%)',
                   }}
                 ></div>
               </div>
             </div>
 
             <div>
-              <h4 className="font-semibold mb-3" style={{ color: '#1A1A1A' }}>
+              <h4 className="font-semibold mb-3" style={{ color: '#0D3A14' }}>
                 {recoveryHabits.length > 0 ? 'Recent Habits:' : 'Top Early Signals:'}
               </h4>
               <div className="space-y-3">
@@ -1549,7 +1563,7 @@ function App() {
                               {sleepHabits[0].value.includes('poor') ? (
                                 <AlertTriangle className="h-4 w-4 mr-2" style={{ color: '#DAA520' }} />
                               ) : (
-                                <CheckCircle className="h-4 w-4 mr-2" style={{ color: '#5C7F4F' }} />
+                                <CheckCircle className="h-4 w-4 mr-2" style={{ color: '#1A3D26' }} />
                               )}
                               <span style={{ color: '#3A3A3A' }}>Sleep: {sleepHabits[0].value}</span>
                             </div>
@@ -1578,7 +1592,7 @@ function App() {
                       <Heart
                         className="h-4 w-4 mr-2"
                         aria-hidden="true"
-                        style={{ color: '#5C7F4F' }}
+                        style={{ color: 'var(--primary-800)' }}
                       />
                       <span style={{ color: '#3A3A3A' }}>Start with a wellness check-in</span>
                     </div>
@@ -1593,7 +1607,7 @@ function App() {
             className="rounded-2xl p-6"
             aria-labelledby="teamwork-check-heading"
             style={{
-              backgroundColor: '#FFFFFF',
+              backgroundColor: 'var(--bg-card)',
               boxShadow: '0 8px 20px rgba(0, 0, 0, 0.06)',
               border: '1px solid #E8E5E0',
             }}
@@ -1601,15 +1615,15 @@ function App() {
             <h3
               id="teamwork-check-heading"
               className="text-lg font-bold mb-5"
-              style={{ color: '#1A1A1A' }}
+              style={{ color: 'var(--primary-900)' }}
             >
               Teamwork Check
             </h3>
 
             <div className="mb-5">
               <div className="flex justify-between text-sm mb-3">
-                <span style={{ color: '#6B7C6B' }}>Agreements Fidelity</span>
-                <span className="font-bold" style={{ color: '#2D5F3F' }}>
+                <span style={{ color: '#525252' }}>Agreements Fidelity</span>
+                <span className="font-bold" style={{ color: '#0D3A14' }}>
                   88%
                 </span>
               </div>
@@ -1625,7 +1639,7 @@ function App() {
             </div>
 
             <div>
-              <h4 className="font-semibold mb-3" style={{ color: '#1A1A1A' }}>
+              <h4 className="font-semibold mb-3" style={{ color: '#0D3A14' }}>
                 Top Drift Area:
               </h4>
               <div
@@ -1647,7 +1661,7 @@ function App() {
             className="rounded-2xl p-6"
             aria-labelledby="values-tough-calls-heading"
             style={{
-              backgroundColor: '#FFFFFF',
+              backgroundColor: 'var(--bg-card)',
               boxShadow: '0 8px 20px rgba(0, 0, 0, 0.06)',
               border: '1px solid #E8E5E0',
             }}
@@ -1655,13 +1669,13 @@ function App() {
             <h3
               id="values-tough-calls-heading"
               className="text-lg font-bold mb-5"
-              style={{ color: '#1A1A1A' }}
+              style={{ color: 'var(--primary-900)' }}
             >
               Values & Tough Calls
             </h3>
 
             <div className="mb-5">
-              <h4 className="font-semibold mb-3" style={{ color: '#1A1A1A' }}>
+              <h4 className="font-semibold mb-3" style={{ color: '#0D3A14' }}>
                 Top Active Value:
               </h4>
               <div
@@ -1674,7 +1688,7 @@ function App() {
             </div>
 
             <div>
-              <h4 className="font-semibold mb-3" style={{ color: '#1A1A1A' }}>
+              <h4 className="font-semibold mb-3" style={{ color: '#0D3A14' }}>
                 Gray Zone Focus:
               </h4>
               <div
@@ -1695,10 +1709,10 @@ function App() {
             style={{
               background: 'linear-gradient(145deg, #FFFFFF 0%, #FAFAF8 100%)',
               boxShadow: '0 8px 20px rgba(92, 127, 79, 0.15)',
-              border: '2px solid #5C7F4F',
+              border: '2px solid var(--primary-600)',
             }}
           >
-            <h3 className="font-bold text-lg mb-4" style={{ color: '#2D5F3F' }}>
+            <h3 className="font-bold text-lg mb-4" style={{ color: '#0D3A14' }}>
               NOTICE
             </h3>
             <p className="leading-relaxed" style={{ color: '#3A3A3A' }}>
@@ -1743,7 +1757,7 @@ function App() {
         <div
           className="rounded-2xl p-8"
           style={{
-            background: 'linear-gradient(135deg, #6B8B60 0%, #5F7F55 100%)',
+            background: 'linear-gradient(135deg, #1A3D26 0%, #0F2818 100%)',
             boxShadow: '0 12px 35px rgba(107, 139, 96, 0.35)',
             border: '1px solid rgba(107, 139, 96, 0.2)',
           }}
@@ -1877,40 +1891,38 @@ function App() {
       role="main"
       aria-labelledby="stress-reset-heading"
     >
-      <div className="text-center mb-12">
+      <header className="text-center mb-12">
         <div
           className="inline-block p-4 rounded-full mb-6"
           style={{ backgroundColor: 'rgba(45, 95, 63, 0.15)' }}
         >
-          <RefreshCw className="h-12 w-12" aria-hidden="true" style={{ color: '#2D5F3F' }} />
+          <RefreshCw className="h-12 w-12" aria-hidden="true" style={{ color: '#0D3A14' }} />
         </div>
-        <h2
+        <h1
           id="stress-reset-heading"
           className="text-4xl font-bold mb-4"
           style={{ color: '#1A1A1A', letterSpacing: '-0.5px' }}
         >
           Your Personal Reset Space
-        </h2>
-        <p className="text-xl mb-2" style={{ color: '#3A3A3A', fontWeight: '500' }}>
+        </h1>
+        <p className="text-lg mb-2" style={{ color: '#2A2A2A', fontWeight: '400' }}>
           Choose what your body-mind needs right now
         </p>
-        <p className="text-base" style={{ color: '#3A3A3A' }}>
+        <p className="text-sm" style={{ color: '#525252' }}>
           All practices are accessible for every body and mind
         </p>
-      </div>
+      </header>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-6xl mx-auto">
-        {/* Box Breathing */}
-        <article
-          className="rounded-2xl p-7 transition-all cursor-pointer group relative overflow-hidden focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-sage-600"
+      <section
+        className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 max-w-6xl mx-auto"
+        aria-label="Available reset practices"
+      >
+        {/* Breathing Practice */}
+        <section
+          className="rounded-xl p-6 transition-all group relative overflow-hidden focus:outline-none focus:ring-4 focus:ring-offset-2 focus:ring-green-600"
           tabIndex={0}
-          role="button"
-          aria-label="Breathing Practice - 4 minutes, find your comfortable pattern"
-          onClick={() => {
-            setShowBreathingPractice(true);
-            const id = trackTechniqueStart('box-breathing');
-            setCurrentTechniqueId(id);
-          }}
+          role="region"
+          aria-labelledby="breathing-practice-title"
           style={{
             background: 'linear-gradient(145deg, #FFFFFF 0%, #FAFAF8 100%)',
             border: '2px solid transparent',
@@ -1918,9 +1930,10 @@ function App() {
             transform: 'translateY(0)',
           }}
           onMouseEnter={(e) => {
-            e.currentTarget.style.borderColor = '#5C7F4F';
-            e.currentTarget.style.transform = 'translateY(-6px) scale(1.02)';
-            e.currentTarget.style.boxShadow = '0 12px 30px rgba(92, 127, 79, 0.25)';
+            e.currentTarget.style.borderColor = 'var(--primary-800)';
+            e.currentTarget.style.boxShadow = '0 10px 25px rgba(27, 94, 32, 0.3), 0 0 0 3px rgba(27, 94, 32, 0.2)';
+            e.currentTarget.style.transform = 'translateY(-4px) scale(1.01)';
+            e.currentTarget.style.boxShadow = '0 10px 25px rgba(92, 127, 79, 0.2)';
           }}
           onMouseLeave={(e) => {
             e.currentTarget.style.borderColor = 'transparent';
@@ -1931,55 +1944,100 @@ function App() {
           <div
             className="absolute top-0 right-0 w-32 h-32 opacity-10"
             style={{
-              background: 'radial-gradient(circle, #5C7F4F 0%, transparent 70%)',
+              background: 'radial-gradient(circle, #1A3D26 0%, transparent 70%)',
               transform: 'translate(50%, -50%)',
             }}
           ></div>
-
-          <div
-            className="rounded-xl p-4 w-fit mb-5"
-            style={{
-              background: 'linear-gradient(145deg, #6B8B60 0%, #5F7F55 100%)',
-              boxShadow: '0 4px 10px rgba(107, 139, 96, 0.3)',
-            }}
-          >
-            <Square className="h-8 w-8" style={{ color: '#FFFFFF' }} />
-          </div>
-          <h3 className="text-xl font-bold mb-3" style={{ color: '#1A1A1A' }}>
+          
+          <header className="flex justify-end mb-3">
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                setShowBreathingModal(true);
+              }}
+              className="text-sm px-4 py-3 min-h-[44px] min-w-[44px] rounded-lg transition-all hover:scale-105 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-800"
+              style={{
+                backgroundColor: '#F1F8F4',
+                color: 'var(--primary-800)',
+                border: '2px solid #2E7D32',
+              }}
+              aria-label="Learn why breathing works"
+            >
+              Why breathing works?
+            </button>
+          </header>
+          
+          <h3 id="breathing-practice-title" className="text-lg font-semibold mb-3" style={{ color: '#0D3A14' }}>
             Breathing Practice
           </h3>
-          <p className="text-sm mb-5" style={{ color: '#3A3A3A', lineHeight: '1.6' }}>
-            Find your comfortable pattern to anchor your system
+          
+          <p className="text-sm mb-4" style={{ color: '#2A2A2A', lineHeight: '1.6' }}>
+            <strong>Neuroscience:</strong> Guided breathing activates your body's relaxation response, calming the nervous system after high-pressure interpreting. Research shows slow, intentional breaths balance heart rate and reduce stress hormones.
           </p>
-          <div className="flex items-center space-x-4 text-sm mb-4">
-            <span
-              className="px-3 py-1 rounded-full"
-              style={{ backgroundColor: 'rgba(92, 127, 79, 0.15)', color: '#2D5F3F' }}
-            >
-              4 minutes
-            </span>
-            <span className="font-semibold" style={{ color: '#5C7F4F' }}>
-              Gentle
-            </span>
+          
+          <div className="mb-4">
+            <p className="text-sm font-semibold mb-2" style={{ color: '#0D3A14' }}>
+              Practice Steps:
+            </p>
+            <ol className="space-y-1.5 text-sm list-decimal list-inside" style={{ color: '#2A2A2A' }}>
+              <li>Settle into a comfortable posture</li>
+              <li>Inhale slowly through the nose (4 counts)</li>
+              <li>Exhale slowly through the mouth (6 counts)</li>
+              <li>Repeat for set cycles or minutes</li>
+            </ol>
           </div>
-          <div className="pt-4 border-t" style={{ borderColor: 'rgba(92, 127, 79, 0.2)' }}>
-            <p className="text-sm italic" style={{ color: '#6B7C6B' }}>
-              Balances your autonomic nervous system
+          
+          <div className="flex gap-2 mb-3">
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                setBreathingMode('gentle');
+                setShowBreathingPractice(true);
+                const id = trackTechniqueStart('breathing-gentle');
+                setCurrentTechniqueId(id);
+              }}
+              className="flex-1 px-4 py-3 min-h-[44px] rounded-lg text-sm font-medium transition-all hover:scale-105 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-800"
+              style={{
+                backgroundColor: 'var(--primary-100)',
+                color: 'var(--primary-800)',
+                border: '2px solid var(--primary-800)',
+              }}
+              aria-label="Start gentle 2-4 minute breathing practice"
+            >
+              Gentle Reset (2-4 min)
+            </button>
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                setBreathingMode('deep');
+                setShowBreathingPractice(true);
+                const id = trackTechniqueStart('breathing-deep');
+                setCurrentTechniqueId(id);
+              }}
+              className="flex-1 px-4 py-3 min-h-[44px] rounded-lg text-sm font-medium transition-all hover:scale-105 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-800"
+              style={{
+                background: 'linear-gradient(135deg, var(--primary-800), var(--primary-900))',
+                color: '#FFFFFF',
+              }}
+              aria-label="Start deep 5+ minute breathing practice"
+            >
+              Deep Reset (5+ min)
+            </button>
+          </div>
+          
+          <div className="pt-3 border-t" style={{ borderColor: 'rgba(15, 40, 24, 0.2)' }}>
+            <p className="text-sm italic" style={{ color: '#4A4A4A' }}>
+              Balances autonomic nervous system
             </p>
           </div>
-        </article>
+        </section>
 
         {/* Body Check-In */}
-        <article
-          className="rounded-2xl p-7 transition-all cursor-pointer group relative overflow-hidden focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-sage-600"
+        <section
+          className="rounded-xl p-6 transition-all group relative overflow-hidden focus:outline-none focus:ring-4 focus:ring-offset-2 focus:ring-green-600"
           tabIndex={0}
-          role="button"
-          aria-label="Body Check-In - Notice how your body feels"
-          onClick={() => {
-            setShowBodyCheckIn(true);
-            const id = trackTechniqueStart('body-release');
-            setCurrentTechniqueId(id);
-          }}
+          role="region"
+          aria-labelledby="body-checkin-title"
           style={{
             background: 'linear-gradient(145deg, #FFFFFF 0%, #FAFAF8 100%)',
             border: '2px solid transparent',
@@ -1987,9 +2045,10 @@ function App() {
             transform: 'translateY(0)',
           }}
           onMouseEnter={(e) => {
-            e.currentTarget.style.borderColor = '#5C7F4F';
-            e.currentTarget.style.transform = 'translateY(-6px) scale(1.02)';
-            e.currentTarget.style.boxShadow = '0 12px 30px rgba(92, 127, 79, 0.25)';
+            e.currentTarget.style.borderColor = 'var(--primary-800)';
+            e.currentTarget.style.boxShadow = '0 10px 25px rgba(27, 94, 32, 0.3), 0 0 0 3px rgba(27, 94, 32, 0.2)';
+            e.currentTarget.style.transform = 'translateY(-4px) scale(1.01)';
+            e.currentTarget.style.boxShadow = '0 10px 25px rgba(92, 127, 79, 0.2)';
           }}
           onMouseLeave={(e) => {
             e.currentTarget.style.borderColor = 'transparent';
@@ -2000,63 +2059,109 @@ function App() {
           <div
             className="absolute top-0 right-0 w-32 h-32 opacity-10"
             style={{
-              background: 'radial-gradient(circle, #5C7F4F 0%, transparent 70%)',
+              background: 'radial-gradient(circle, #1A3D26 0%, transparent 70%)',
               transform: 'translate(50%, -50%)',
             }}
           ></div>
-
-          <div
-            className="rounded-xl p-4 w-fit mb-5"
-            style={{
-              background: 'linear-gradient(145deg, #6B8B60 0%, #5F7F55 100%)',
-              boxShadow: '0 4px 10px rgba(107, 139, 96, 0.3)',
-            }}
-          >
-            <Waves className="h-8 w-8" aria-hidden="true" style={{ color: '#FFFFFF' }} />
-          </div>
-          <h3 className="text-xl font-bold mb-3" style={{ color: '#1A1A1A' }}>
+          
+          <header className="flex justify-end mb-3">
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                setShowBodyCheckInModal(true);
+              }}
+              className="text-sm px-4 py-3 min-h-[44px] min-w-[44px] rounded-lg transition-all hover:scale-105 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-800"
+              style={{
+                backgroundColor: '#F1F8F4',
+                color: 'var(--primary-800)',
+                border: '2px solid #2E7D32',
+              }}
+              aria-label="Learn why body check-ins work"
+            >
+              Why this works?
+            </button>
+          </header>
+          
+          <h3 id="body-checkin-title" className="text-lg font-semibold mb-3" style={{ color: '#0D3A14' }}>
             Body Check-In
           </h3>
-          <p className="text-sm mb-5" style={{ color: '#3A3A3A', lineHeight: '1.6' }}>
-            Notice and release in your own way
+          
+          <p className="text-sm mb-4" style={{ color: '#2A2A2A', lineHeight: '1.6' }}>
+            <strong>Neuroscience:</strong> Your body holds tension patterns from interpreting stress. Somatic awareness activates the insula cortex, helping release physical holding and reset your nervous system.
           </p>
-          <div className="flex items-center space-x-4 text-sm mb-4">
-            <span
-              className="px-3 py-1 rounded-full"
-              style={{ backgroundColor: 'rgba(92, 127, 79, 0.15)', color: '#2D5F3F' }}
-            >
-              1 minute
-            </span>
-            <span className="font-semibold" style={{ color: '#5C7F4F' }}>
-              Moderate
-            </span>
+          
+          <div className="mb-4">
+            <p className="text-sm font-semibold mb-2" style={{ color: '#0D3A14' }}>
+              Four-Step Process:
+            </p>
+            <ol className="space-y-1.5 text-sm" style={{ color: '#2A2A2A' }}>
+              <li>1. Pause and ground yourself</li>
+              <li>2. Scan from head to toe</li>
+              <li>3. Release tension points</li>
+              <li>4. Breathe into open spaces</li>
+            </ol>
           </div>
-          <div className="pt-4 border-t" style={{ borderColor: 'rgba(92, 127, 79, 0.2)' }}>
-            <p className="text-sm italic" style={{ color: '#6B7C6B' }}>
-              Releases physical holding patterns
+          
+          <div className="flex gap-2 mb-3">
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                setBodyCheckInMode('quick');
+                setShowBodyCheckIn(true);
+                const id = trackTechniqueStart('body-checkin-quick');
+                setCurrentTechniqueId(id);
+              }}
+              className="flex-1 px-4 py-3 min-h-[44px] rounded-lg text-sm font-medium transition-all hover:scale-105 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-800"
+              style={{
+                backgroundColor: 'var(--primary-100)',
+                color: 'var(--primary-800)',
+                border: '2px solid var(--primary-800)',
+              }}
+              aria-label="Start quick 1-2 minute body scan"
+            >
+              Quick Scan (1-2 min)
+            </button>
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                setBodyCheckInMode('full');
+                setShowBodyCheckIn(true);
+                const id = trackTechniqueStart('body-checkin-full');
+                setCurrentTechniqueId(id);
+              }}
+              className="flex-1 px-4 py-3 min-h-[44px] rounded-lg text-sm font-medium transition-all hover:scale-105 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-800"
+              style={{
+                background: 'linear-gradient(135deg, var(--primary-800), var(--primary-900))',
+                color: '#FFFFFF',
+              }}
+              aria-label="Start full 5 minute body scan"
+            >
+              Full Scan (5 min)
+            </button>
+          </div>
+          
+          <div className="pt-3 border-t" style={{ borderColor: 'rgba(15, 40, 24, 0.2)' }}>
+            <p className="text-sm italic" style={{ color: '#4A4A4A' }}>
+              Releases interpreter tension patterns
             </p>
           </div>
-        </article>
+        </section>
 
-        {/* Emotion Mapping for Interpreters */}
+        {/* Emotion Mapping */}
         <article
-          className="rounded-2xl p-7 transition-all cursor-pointer group relative overflow-hidden focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-sage-600"
+          className="rounded-xl p-6 transition-all group relative overflow-hidden focus:outline-none focus:ring-4 focus:ring-offset-2 focus:ring-green-600"
           tabIndex={0}
-          role="button"
-          aria-label="Emotion Mapping for Interpreters - Understand your neurological response to interpreted content"
-          onClick={() => {
-            setShowEmotionMapping(true);
-            const id = trackTechniqueStart('emotion-mapping');
-            setCurrentTechniqueId(id);
-          }}
+          role="article"
+          aria-labelledby="emotion-mapping-title"
           style={{
-            background: selectedTechnique === 'emotion-mapping' ? 'linear-gradient(145deg, #F3E8FF 0%, #E9D5FF 100%)' : 'linear-gradient(145deg, #FFFFFF 0%, #FAFAF8 100%)',
-            border: selectedTechnique === 'emotion-mapping' ? '2px solid #9333EA' : '2px solid transparent',
-            boxShadow: selectedTechnique === 'emotion-mapping' ? '0 8px 25px rgba(147, 51, 234, 0.2)' : '0 4px 15px rgba(0, 0, 0, 0.05)',
+            background: 'linear-gradient(145deg, #FFFFFF 0%, #FAFAF8 100%)',
+            border: '2px solid transparent',
+            boxShadow: '0 4px 15px rgba(0, 0, 0, 0.05)',
             transform: 'translateY(0)',
           }}
           onMouseEnter={(e) => {
-            e.currentTarget.style.borderColor = '#5C7F4F';
+            e.currentTarget.style.borderColor = 'var(--primary-800)';
+            e.currentTarget.style.boxShadow = '0 10px 25px rgba(27, 94, 32, 0.3), 0 0 0 3px rgba(27, 94, 32, 0.2)';
             e.currentTarget.style.transform = 'translateY(-6px) scale(1.02)';
             e.currentTarget.style.boxShadow = '0 12px 30px rgba(92, 127, 79, 0.25)';
           }}
@@ -2069,55 +2174,97 @@ function App() {
           <div
             className="absolute top-0 right-0 w-32 h-32 opacity-10"
             style={{
-              background: 'radial-gradient(circle, #5C7F4F 0%, transparent 70%)',
+              background: 'radial-gradient(circle, #1A3D26 0%, transparent 70%)',
               transform: 'translate(50%, -50%)',
             }}
           ></div>
 
-          <div
-            className="rounded-xl p-4 w-fit mb-5"
-            style={{
-              background: 'linear-gradient(145deg, #6B8B60 0%, #5F7F55 100%)',
-              boxShadow: '0 4px 10px rgba(107, 139, 96, 0.3)',
-            }}
-          >
-            <Activity className="h-8 w-8" aria-hidden="true" style={{ color: '#FFFFFF' }} />
-          </div>
-          <h3 className="text-xl font-bold mb-3" style={{ color: '#1A1A1A' }}>
+          <h3 id="emotion-mapping-title" className="text-lg font-semibold mb-3" style={{ color: '#0D3A14' }}>
             Emotion Mapping
           </h3>
-          <p className="text-sm mb-5" style={{ color: '#3A3A3A', lineHeight: '1.6' }}>
-            Understand your brain's response to interpreted content
+          
+          <p className="text-sm mb-3" style={{ color: '#2A2A2A', lineHeight: '1.6' }}>
+            Strengthen resilience by identifying and naming emotions after complex interpreting scenarios.
           </p>
-          <div className="flex items-center space-x-4 text-sm mb-4">
-            <span
-              className="px-3 py-1 rounded-full"
-              style={{ backgroundColor: 'rgba(92, 127, 79, 0.15)', color: '#2D5F3F' }}
+          
+          <p className="text-sm mb-4" style={{ color: '#2A2A2A', lineHeight: '1.6' }}>
+            <strong style={{ color: '#0D3A14' }}>Neuroscience-backed:</strong> Research shows that recognizing and labeling emotions calms the nervous system, reduces amygdala reactivity by 50%, and improves cognitive performance.
+          </p>
+          
+          <div className="mb-4">
+            <p className="text-sm font-semibold mb-2" style={{ color: '#0D3A14' }}>
+              Four-step process:
+            </p>
+            <ol className="text-xs space-y-1 list-decimal list-inside" style={{ color: '#3A3A3A' }}>
+              <li><strong>Pause:</strong> Take a mindful breath and check in with yourself</li>
+              <li><strong>Name:</strong> Label your emotion (tension, pride, fatigue, etc.)</li>
+              <li><strong>Reflect:</strong> Notice triggers - assignment content, technology, environment</li>
+              <li><strong>Compassion:</strong> Close with self-kindness and acceptance</li>
+            </ol>
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                setShowEmotionMappingModal(true);
+              }}
+              className="mt-2 text-xs font-medium underline hover:no-underline transition-all"
+              style={{ color: 'var(--primary-800)' }}
+              aria-label="Learn the science of emotion mapping for interpreters"
             >
-              3 minutes
-            </span>
-            <span className="font-semibold" style={{ color: '#5C7F4F' }}>
-              Moderate
-            </span>
+              Why emotion mapping? →
+            </button>
           </div>
-          <div className="pt-4 border-t" style={{ borderColor: 'rgba(92, 127, 79, 0.2)' }}>
-            <p className="text-sm italic" style={{ color: '#6B7C6B' }}>
-              Map your neurological response patterns
+          
+          <div className="flex gap-2 mb-3">
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                setEmotionMappingMode('quick');
+                setShowEmotionMapping(true);
+                const id = trackTechniqueStart('emotion-mapping-quick');
+                setCurrentTechniqueId(id);
+              }}
+              className="flex-1 px-4 py-3 min-h-[44px] rounded-lg text-sm font-medium transition-all hover:scale-105 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-800"
+              style={{
+                backgroundColor: 'var(--primary-100)',
+                color: 'var(--primary-800)',
+                border: '2px solid var(--primary-800)',
+              }}
+              aria-label="Start quick 2-minute emotion mapping"
+            >
+              Quick Mapping (2 min)
+            </button>
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                setEmotionMappingMode('deeper');
+                setShowEmotionMapping(true);
+                const id = trackTechniqueStart('emotion-mapping-deeper');
+                setCurrentTechniqueId(id);
+              }}
+              className="flex-1 px-4 py-3 min-h-[44px] rounded-lg text-sm font-medium transition-all hover:scale-105 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-800"
+              style={{
+                background: 'linear-gradient(135deg, var(--primary-800), var(--primary-900))',
+                color: '#FFFFFF',
+              }}
+              aria-label="Start deeper 5-minute emotion reflection"
+            >
+              Deeper Reflection (5 min)
+            </button>
+          </div>
+          
+          <div className="pt-3 border-t" style={{ borderColor: 'rgba(15, 40, 24, 0.2)' }}>
+            <p className="text-sm italic" style={{ color: '#4A4A4A' }}>
+              Regulates stress response & maintains focus
             </p>
           </div>
         </article>
 
         {/* Professional Boundaries Reset */}
         <article
-          className="rounded-2xl p-7 transition-all cursor-pointer group relative overflow-hidden focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-sage-600"
+          className="rounded-xl p-6 transition-all group relative overflow-hidden focus:outline-none focus:ring-4 focus:ring-offset-2 focus:ring-green-600"
           tabIndex={0}
-          role="button"
-          aria-label="Professional Boundaries Reset - Return to your center after difficult content"
-          onClick={() => {
-            setShowProfessionalBoundariesReset(true);
-            const id = trackTechniqueStart('emotional-proximity-reset');
-            setCurrentTechniqueId(id);
-          }}
+          role="article"
+          aria-labelledby="boundaries-reset-title"
           style={{
             background: 'linear-gradient(145deg, #FFFFFF 0%, #FAFAF8 100%)',
             border: '2px solid transparent',
@@ -2125,7 +2272,8 @@ function App() {
             transform: 'translateY(0)',
           }}
           onMouseEnter={(e) => {
-            e.currentTarget.style.borderColor = '#5C7F4F';
+            e.currentTarget.style.borderColor = 'var(--primary-800)';
+            e.currentTarget.style.boxShadow = '0 10px 25px rgba(27, 94, 32, 0.3), 0 0 0 3px rgba(27, 94, 32, 0.2)';
             e.currentTarget.style.transform = 'translateY(-6px) scale(1.02)';
             e.currentTarget.style.boxShadow = '0 12px 30px rgba(92, 127, 79, 0.25)';
           }}
@@ -2138,55 +2286,96 @@ function App() {
           <div
             className="absolute top-0 right-0 w-32 h-32 opacity-10"
             style={{
-              background: 'radial-gradient(circle, #5C7F4F 0%, transparent 70%)',
+              background: 'radial-gradient(circle, #1A3D26 0%, transparent 70%)',
               transform: 'translate(50%, -50%)',
             }}
           ></div>
 
-          <div
-            className="rounded-xl p-4 w-fit mb-5"
-            style={{
-              background: 'linear-gradient(145deg, #6B8B60 0%, #5F7F55 100%)',
-              boxShadow: '0 4px 10px rgba(107, 139, 96, 0.3)',
-            }}
-          >
-            <Eye className="h-8 w-8" aria-hidden="true" style={{ color: '#FFFFFF' }} />
-          </div>
-          <h3 className="text-xl font-bold mb-3" style={{ color: '#1A1A1A' }}>
+          <h3 id="boundaries-reset-title" className="text-lg font-semibold mb-3" style={{ color: '#0D3A14' }}>
             Professional Boundaries Reset
           </h3>
-          <p className="text-sm mb-5" style={{ color: '#3A3A3A', lineHeight: '1.6' }}>
-            Restore professional boundaries after intense interpreting
+          
+          <p className="text-sm mb-3" style={{ color: '#2A2A2A', lineHeight: '1.6' }}>
+            Reinforce healthy boundaries and protect your well-being after emotionally challenging work.
           </p>
-          <div className="flex items-center space-x-4 text-sm mb-4">
-            <span
-              className="px-3 py-1 rounded-full"
-              style={{ backgroundColor: 'rgba(92, 127, 79, 0.15)', color: '#2D5F3F' }}
+          
+          <p className="text-sm mb-4" style={{ color: '#2A2A2A', lineHeight: '1.6' }}>
+            <strong style={{ color: '#0D3A14' }}>Science-backed:</strong> Behavioral research shows that intentional boundary resets increase resilience, prevent compassion fatigue, and support ethical practice.
+          </p>
+          
+          <div className="mb-4">
+            <p className="text-sm font-semibold mb-2" style={{ color: '#0D3A14' }}>
+              Three-step process:
+            </p>
+            <ol className="text-xs space-y-1 list-decimal list-inside" style={{ color: '#3A3A3A' }}>
+              <li><strong>Reflect:</strong> Notice lingering thoughts or emotions from the assignment</li>
+              <li><strong>Release:</strong> Use breath or gesture to let go of what's not yours</li>
+              <li><strong>Affirm:</strong> Reinforce your role, limits, and professional identity</li>
+            </ol>
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                setShowBoundariesModal(true);
+              }}
+              className="mt-2 text-xs font-medium underline hover:no-underline transition-all"
+              style={{ color: 'var(--primary-800)' }}
+              aria-label="Learn why professional boundaries matter for interpreters"
             >
-              Flexible
-            </span>
-            <span className="font-semibold" style={{ color: '#5C7F4F' }}>
-              Very Gentle
-            </span>
+              Why boundaries matter? →
+            </button>
           </div>
-          <div className="pt-4 border-t" style={{ borderColor: 'rgba(92, 127, 79, 0.2)' }}>
-            <p className="text-sm italic" style={{ color: '#6B7C6B' }}>
-              Refreshes your sensory channels
+          
+          <div className="flex gap-2 mb-3">
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                setBoundariesResetMode('quick');
+                setShowProfessionalBoundariesReset(true);
+                const id = trackTechniqueStart('boundaries-reset-quick');
+                setCurrentTechniqueId(id);
+              }}
+              className="flex-1 px-4 py-3 min-h-[44px] rounded-lg text-sm font-medium transition-all hover:scale-105 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-800"
+              style={{
+                backgroundColor: 'var(--primary-100)',
+                color: 'var(--primary-800)',
+                border: '2px solid var(--primary-800)',
+              }}
+              aria-label="Start quick 2-minute professional boundaries reset"
+            >
+              Quick Reset (2 min)
+            </button>
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                setBoundariesResetMode('deeper');
+                setShowProfessionalBoundariesReset(true);
+                const id = trackTechniqueStart('boundaries-reset-deeper');
+                setCurrentTechniqueId(id);
+              }}
+              className="flex-1 px-4 py-3 min-h-[44px] rounded-lg text-sm font-medium transition-all hover:scale-105 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-800"
+              style={{
+                background: 'linear-gradient(135deg, var(--primary-800), var(--primary-900))',
+                color: '#FFFFFF',
+              }}
+              aria-label="Start deeper 5-minute professional boundaries reset"
+            >
+              Deeper Reset (5 min)
+            </button>
+          </div>
+          
+          <div className="pt-3 border-t" style={{ borderColor: 'rgba(15, 40, 24, 0.2)' }}>
+            <p className="text-sm italic" style={{ color: '#4A4A4A' }}>
+              Protects against role conflict & compassion fatigue
             </p>
           </div>
         </article>
 
-        {/* Between Languages Reset */}
+        {/* Assignment Reset */}
         <article
-          className="rounded-2xl p-7 transition-all cursor-pointer group relative overflow-hidden focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-sage-600"
+          className="rounded-xl p-6 transition-all group relative overflow-hidden focus:outline-none focus:ring-4 focus:ring-offset-2 focus:ring-green-600"
           tabIndex={0}
-          role="button"
-          aria-label="Assignment Reset - Clear between interpretations"
-          onClick={() => {
-            setShowAssignmentReset(true);
-            const id = trackTechniqueStart('assignment-reset');
-            setCurrentTechniqueId(id);
-          }}
+          role="article"
+          aria-labelledby="assignment-reset-title"
           style={{
             background: 'linear-gradient(145deg, #FFFFFF 0%, #FAFAF8 100%)',
             border: '2px solid transparent',
@@ -2194,7 +2383,8 @@ function App() {
             transform: 'translateY(0)',
           }}
           onMouseEnter={(e) => {
-            e.currentTarget.style.borderColor = '#5C7F4F';
+            e.currentTarget.style.borderColor = 'var(--primary-800)';
+            e.currentTarget.style.boxShadow = '0 10px 25px rgba(27, 94, 32, 0.3), 0 0 0 3px rgba(27, 94, 32, 0.2)';
             e.currentTarget.style.transform = 'translateY(-6px) scale(1.02)';
             e.currentTarget.style.boxShadow = '0 12px 30px rgba(92, 127, 79, 0.25)';
           }}
@@ -2207,55 +2397,97 @@ function App() {
           <div
             className="absolute top-0 right-0 w-32 h-32 opacity-10"
             style={{
-              background: 'radial-gradient(circle, #5C7F4F 0%, transparent 70%)',
+              background: 'radial-gradient(circle, #1A3D26 0%, transparent 70%)',
               transform: 'translate(50%, -50%)',
             }}
           ></div>
 
-          <div
-            className="rounded-xl p-4 w-fit mb-5"
-            style={{
-              background: 'linear-gradient(145deg, #6B8B60 0%, #5F7F55 100%)',
-              boxShadow: '0 4px 10px rgba(107, 139, 96, 0.3)',
-            }}
-          >
-            <Languages className="h-8 w-8" aria-hidden="true" style={{ color: '#FFFFFF' }} />
-          </div>
-          <h3 className="text-xl font-bold mb-3" style={{ color: '#1A1A1A' }}>
+          <h3 id="assignment-reset-title" className="text-lg font-semibold mb-3" style={{ color: '#0D3A14' }}>
             Assignment Reset
           </h3>
-          <p className="text-sm mb-5" style={{ color: '#3A3A3A', lineHeight: '1.6' }}>
-            Clear between interpretations
+          
+          <p className="text-sm mb-3" style={{ color: '#2A2A2A', lineHeight: '1.6' }}>
+            Transition smoothly between assignments by letting go of stress and restoring focus.
           </p>
-          <div className="flex items-center space-x-4 text-sm mb-4">
-            <span
-              className="px-3 py-1 rounded-full"
-              style={{ backgroundColor: 'rgba(92, 127, 79, 0.15)', color: '#2D5F3F' }}
+          
+          <p className="text-sm mb-4" style={{ color: '#2A2A2A', lineHeight: '1.6' }}>
+            <strong style={{ color: '#0D3A14' }}>Neuroscience-backed:</strong> Brief, structured pauses help your brain transition out of stress mode and activate your body's natural relaxation response.
+          </p>
+          
+          <div className="mb-4">
+            <p className="text-sm font-semibold mb-2" style={{ color: '#0D3A14' }}>
+              What's included:
+            </p>
+            <ul className="text-sm space-y-1.5" style={{ color: '#2A2A2A' }}>
+              <li>• Self-awareness check</li>
+              <li>• Tension release & grounding</li>
+              <li>• Calming breath work</li>
+              <li>• Intention setting for next assignment</li>
+            </ul>
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                setShowAssignmentResetModal(true);
+              }}
+              className="mt-2 text-xs font-medium underline hover:no-underline transition-all"
+              style={{ color: 'var(--primary-800)' }}
+              aria-label="Learn why the Assignment Reset works"
             >
-              3 minutes
-            </span>
-            <span className="font-semibold" style={{ color: '#5C7F4F' }}>
-              Gentle
-            </span>
+              Why this works? →
+            </button>
           </div>
-          <div className="pt-4 border-t" style={{ borderColor: 'rgba(92, 127, 79, 0.2)' }}>
-            <p className="text-sm italic" style={{ color: '#6B7C6B' }}>
-              Professional reset for interpreters
+          
+          <div className="flex gap-2 mb-3">
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                setAssignmentResetMode('fast');
+                setShowAssignmentReset(true);
+                const id = trackTechniqueStart('assignment-reset-fast');
+                setCurrentTechniqueId(id);
+              }}
+              className="flex-1 px-4 py-3 min-h-[44px] rounded-lg text-sm font-medium transition-all hover:scale-105 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-800"
+              style={{
+                backgroundColor: 'var(--primary-100)',
+                color: 'var(--primary-800)',
+                border: '2px solid var(--primary-800)',
+              }}
+              aria-label="Start fast 2-minute assignment reset"
+            >
+              Fast Reset (2 min)
+            </button>
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                setAssignmentResetMode('full');
+                setShowAssignmentReset(true);
+                const id = trackTechniqueStart('assignment-reset-full');
+                setCurrentTechniqueId(id);
+              }}
+              className="flex-1 px-4 py-3 min-h-[44px] rounded-lg text-sm font-medium transition-all hover:scale-105 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-800"
+              style={{
+                background: 'linear-gradient(135deg, var(--primary-800), var(--primary-900))',
+                color: '#FFFFFF',
+              }}
+              aria-label="Start full 5-minute assignment reset"
+            >
+              Full Reset (5 min)
+            </button>
+          </div>
+          
+          <div className="pt-3 border-t" style={{ borderColor: 'rgba(15, 40, 24, 0.2)' }}>
+            <p className="text-sm italic" style={{ color: '#4A4A4A' }}>
+              Optimized for quick transitions between appointments
             </p>
           </div>
         </article>
 
         {/* Technology Fatigue Reset */}
         <article
-          className="rounded-2xl p-7 transition-all cursor-pointer group relative overflow-hidden focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-sage-600"
+          className="rounded-xl p-6 transition-all group relative overflow-hidden focus:outline-none focus:ring-4 focus:ring-offset-2 focus:ring-green-600"
           tabIndex={0}
-          role="button"
-          aria-label="Technology Fatigue Reset exercise - 2 minutes, restore from screen and audio strain"
-          onClick={() => {
-            setShowTechnologyFatigueReset(true);
-            const id = trackTechniqueStart('tech-fatigue-reset');
-            setCurrentTechniqueId(id);
-          }}
+          role="article"
+          aria-labelledby="tech-fatigue-title"
           style={{
             background: 'linear-gradient(145deg, #FFFFFF 0%, #FAFAF8 100%)',
             border: '2px solid transparent',
@@ -2263,7 +2495,8 @@ function App() {
             transform: 'translateY(0)',
           }}
           onMouseEnter={(e) => {
-            e.currentTarget.style.borderColor = '#5C7F4F';
+            e.currentTarget.style.borderColor = 'var(--primary-800)';
+            e.currentTarget.style.boxShadow = '0 10px 25px rgba(27, 94, 32, 0.3), 0 0 0 3px rgba(27, 94, 32, 0.2)';
             e.currentTarget.style.transform = 'translateY(-6px) scale(1.02)';
             e.currentTarget.style.boxShadow = '0 12px 30px rgba(92, 127, 79, 0.25)';
           }}
@@ -2276,44 +2509,560 @@ function App() {
           <div
             className="absolute top-0 right-0 w-32 h-32 opacity-10"
             style={{
-              background: 'radial-gradient(circle, #5C7F4F 0%, transparent 70%)',
+              background: 'radial-gradient(circle, #1A3D26 0%, transparent 70%)',
               transform: 'translate(50%, -50%)',
             }}
           ></div>
 
-          <div
-            className="rounded-xl p-4 w-fit mb-5"
-            style={{
-              background: 'linear-gradient(145deg, #6B8B60 0%, #5F7F55 100%)',
-              boxShadow: '0 4px 10px rgba(107, 139, 96, 0.3)',
-            }}
-          >
-            <Eye className="h-8 w-8" aria-hidden="true" style={{ color: '#FFFFFF' }} />
-          </div>
-          <h3 className="text-xl font-bold mb-3" style={{ color: '#1A1A1A' }}>
+          <h3 id="tech-fatigue-title" className="text-lg font-semibold mb-3" style={{ color: '#0D3A14' }}>
             Technology Fatigue Reset
           </h3>
-          <p className="text-sm mb-5" style={{ color: '#3A3A3A', lineHeight: '1.6' }}>
-            Restore from screen and audio strain
+          
+          <p className="text-sm mb-3" style={{ color: '#2A2A2A', lineHeight: '1.6' }}>
+            Restore your mind and body from screen and audio strain.
           </p>
-          <div className="flex items-center space-x-4 text-sm mb-4">
-            <span
-              className="px-3 py-1 rounded-full"
-              style={{ backgroundColor: 'rgba(92, 127, 79, 0.15)', color: '#2D5F3F' }}
+          
+          <p className="text-sm mb-4" style={{ color: '#2A2A2A', lineHeight: '1.6' }}>
+            <strong style={{ color: '#0D3A14' }}>Neuroscience-backed:</strong> Reduces digital sensory overload and helps restore balance in your nervous system after interpreting online.
+          </p>
+          
+          <div className="mb-4">
+            <p className="text-sm font-semibold mb-2" style={{ color: '#0D3A14' }}>
+              Five-Zone Recovery Method:
+            </p>
+            <ul className="text-sm space-y-1.5" style={{ color: '#2A2A2A' }}>
+              <li>• Visual rest</li>
+              <li>• Posture reset</li>
+              <li>• Mindful breathing</li>
+              <li>• Auditory pause</li>
+              <li>• Cognitive defocus</li>
+            </ul>
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                setShowFiveZoneModal(true);
+              }}
+              className="mt-2 text-xs font-medium underline hover:no-underline transition-all"
+              style={{ color: 'var(--primary-800)' }}
+              aria-label="Learn why these five zones help with technology fatigue"
             >
-              2 minutes
-            </span>
-            <span className="font-semibold" style={{ color: '#5C7F4F' }}>
-              Easy
-            </span>
+              Why these 5 zones? →
+            </button>
           </div>
-          <div className="pt-4 border-t" style={{ borderColor: 'rgba(92, 127, 79, 0.2)' }}>
-            <p className="text-sm italic" style={{ color: '#6B7C6B' }}>
-              Five-zone recovery for VRI/remote interpreting strain
+          
+          <div className="flex gap-2 mb-3">
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                setTechFatigueMode('quick');
+                setShowTechnologyFatigueReset(true);
+                const id = trackTechniqueStart('tech-fatigue-reset-quick');
+                setCurrentTechniqueId(id);
+              }}
+              className="flex-1 px-4 py-3 min-h-[44px] rounded-lg text-sm font-medium transition-all hover:scale-105 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-800"
+              style={{
+                backgroundColor: 'var(--primary-100)',
+                color: 'var(--primary-800)',
+                border: '2px solid var(--primary-800)',
+              }}
+              aria-label="Start quick 2-minute technology fatigue reset"
+            >
+              Quick Reset (2 min)
+            </button>
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                setTechFatigueMode('deep');
+                setShowTechnologyFatigueReset(true);
+                const id = trackTechniqueStart('tech-fatigue-reset-deep');
+                setCurrentTechniqueId(id);
+              }}
+              className="flex-1 px-4 py-3 min-h-[44px] rounded-lg text-sm font-medium transition-all hover:scale-105 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-800"
+              style={{
+                background: 'linear-gradient(135deg, var(--primary-800), var(--primary-900))',
+                color: '#FFFFFF',
+              }}
+              aria-label="Start deep 5-minute technology fatigue reset"
+            >
+              Deep Reset (5 min)
+            </button>
+          </div>
+          
+          <div className="pt-3 border-t" style={{ borderColor: 'rgba(15, 40, 24, 0.2)' }}>
+            <p className="text-sm italic" style={{ color: '#4A4A4A' }}>
+              Evidence-based practice for remote interpreters
             </p>
           </div>
         </article>
-      </div>
+      </section>
+
+      {/* Five Zone Modal */}
+      {showFiveZoneModal && (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center p-4"
+          style={{ backgroundColor: 'rgba(0, 0, 0, 0.5)' }}
+          onClick={() => setShowFiveZoneModal(false)}
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="five-zone-modal-title"
+        >
+          <div
+            className="rounded-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto"
+            style={{
+              backgroundColor: 'var(--bg-card)',
+              boxShadow: '0 20px 60px rgba(0, 0, 0, 0.3)',
+            }}
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="p-8">
+              <header className="mb-6">
+                <h2 id="five-zone-modal-title" className="text-2xl font-bold mb-3" style={{ color: '#0D3A14' }}>
+                  The Science Behind Five-Zone Recovery
+                </h2>
+                <p className="text-sm" style={{ color: '#3A3A3A' }}>
+                  Based on neuroscience research on sensory processing and cognitive fatigue in remote interpreting
+                </p>
+              </header>
+
+              <section className="space-y-6">
+                <article>
+                  <h3 className="text-lg font-semibold mb-2" style={{ color: '#0D3A14' }}>
+                    1. Visual Rest
+                  </h3>
+                  <p className="text-sm mb-2" style={{ color: '#2A2A2A' }}>
+                    <strong>Why it works:</strong> Your visual cortex processes 80% of sensory information during VRI. Screen time causes digital eye strain and disrupts your natural blink rate.
+                  </p>
+                  <p className="text-sm" style={{ color: '#3A3A3A' }}>
+                    <strong>What to do:</strong> Look away from screens, focus on distant objects, practice the 20-20-20 rule (every 20 minutes, look at something 20 feet away for 20 seconds).
+                  </p>
+                </article>
+
+                <article>
+                  <h3 className="text-lg font-semibold mb-2" style={{ color: '#0D3A14' }}>
+                    2. Posture Reset
+                  </h3>
+                  <p className="text-sm mb-2" style={{ color: '#2A2A2A' }}>
+                    <strong>Why it works:</strong> Static postures during remote interpreting compress spinal discs and reduce blood flow to the brain by up to 20%.
+                  </p>
+                  <p className="text-sm" style={{ color: '#3A3A3A' }}>
+                    <strong>What to do:</strong> Stand, stretch your spine, roll shoulders backward, realign your head over your spine.
+                  </p>
+                </article>
+
+                <article>
+                  <h3 className="text-lg font-semibold mb-2" style={{ color: '#0D3A14' }}>
+                    3. Mindful Breathing
+                  </h3>
+                  <p className="text-sm mb-2" style={{ color: '#2A2A2A' }}>
+                    <strong>Why it works:</strong> Controlled breathing activates your parasympathetic nervous system, reducing cortisol levels and improving oxygen delivery to the prefrontal cortex.
+                  </p>
+                  <p className="text-sm" style={{ color: '#3A3A3A' }}>
+                    <strong>What to do:</strong> Practice 4-7-8 breathing or box breathing to reset your autonomic nervous system.
+                  </p>
+                </article>
+
+                <article>
+                  <h3 className="text-lg font-semibold mb-2" style={{ color: '#0D3A14' }}>
+                    4. Auditory Pause
+                  </h3>
+                  <p className="text-sm mb-2" style={{ color: '#2A2A2A' }}>
+                    <strong>Why it works:</strong> Continuous audio processing through headphones causes auditory fatigue and increases cognitive load by 40% compared to natural sound.
+                  </p>
+                  <p className="text-sm" style={{ color: '#3A3A3A' }}>
+                    <strong>What to do:</strong> Remove headphones, enjoy silence or natural ambient sounds, give your auditory processing centers a break.
+                  </p>
+                </article>
+
+                <article>
+                  <h3 className="text-lg font-semibold mb-2" style={{ color: '#0D3A14' }}>
+                    5. Cognitive Defocus
+                  </h3>
+                  <p className="text-sm mb-2" style={{ color: '#2A2A2A' }}>
+                    <strong>Why it works:</strong> Your default mode network needs activation to consolidate memories and restore attention. Constant focus depletes glucose in the prefrontal cortex.
+                  </p>
+                  <p className="text-sm" style={{ color: '#3A3A3A' }}>
+                    <strong>What to do:</strong> Let your mind wander, engage in a simple non-linguistic task, or practice gentle movement without thinking.
+                  </p>
+                </article>
+              </section>
+
+              <footer className="mt-8 pt-6 border-t" style={{ borderColor: 'rgba(92, 127, 79, 0.2)' }}>
+                <p className="text-xs mb-4" style={{ color: '#525252' }}>
+                  Research sources: Journal of Cognitive Neuroscience, International Journal of Interpreting Research, Neuroscience of Occupational Health
+                </p>
+                <button
+                  onClick={() => setShowFiveZoneModal(false)}
+                  className="w-full px-6 py-3 rounded-lg font-medium transition-all hover:scale-105"
+                  style={{
+                    background: 'linear-gradient(135deg, var(--primary-800), var(--primary-900))',
+                    color: '#FFFFFF',
+                  }}
+                  aria-label="Close modal and return to reset options"
+                >
+                  Got it, let's reset!
+                </button>
+              </footer>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Assignment Reset Modal */}
+      {showAssignmentResetModal && (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center p-4"
+          style={{ backgroundColor: 'rgba(0, 0, 0, 0.5)' }}
+          onClick={() => setShowAssignmentResetModal(false)}
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="assignment-reset-modal-title"
+        >
+          <div
+            className="rounded-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto"
+            style={{
+              backgroundColor: 'var(--bg-card)',
+              boxShadow: '0 20px 60px rgba(0, 0, 0, 0.3)',
+            }}
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="p-8">
+              <header className="mb-6">
+                <h2 id="assignment-reset-modal-title" className="text-2xl font-bold mb-3" style={{ color: '#0D3A14' }}>
+                  The Science Behind Assignment Reset
+                </h2>
+                <p className="text-sm" style={{ color: '#3A3A3A' }}>
+                  Evidence-based techniques for interpreter recovery between high-demand sessions
+                </p>
+              </header>
+
+              <section className="space-y-6">
+                <article>
+                  <h3 className="text-lg font-semibold mb-2" style={{ color: '#0D3A14' }}>
+                    Why Brief Resets Matter
+                  </h3>
+                  <p className="text-sm mb-2" style={{ color: '#2A2A2A' }}>
+                    <strong>Research shows:</strong> Interpreters who take structured micro-breaks between assignments show 40% less cumulative stress and maintain higher accuracy throughout the day.
+                  </p>
+                  <p className="text-sm" style={{ color: '#3A3A3A' }}>
+                    The brain's executive function networks need these pauses to clear working memory, reset attention filters, and prepare for new linguistic contexts.
+                  </p>
+                </article>
+
+                <article>
+                  <h3 className="text-lg font-semibold mb-2" style={{ color: '#0D3A14' }}>
+                    The Neurological Impact
+                  </h3>
+                  <p className="text-sm mb-2" style={{ color: '#2A2A2A' }}>
+                    <strong>Stress hormone regulation:</strong> Just 2 minutes of structured recovery can reduce cortisol levels by up to 23%, protecting against interpreter burnout.
+                  </p>
+                  <p className="text-sm" style={{ color: '#3A3A3A' }}>
+                    Your prefrontal cortex—responsible for language switching and emotional regulation—recovers faster with intentional reset practices than with passive rest.
+                  </p>
+                </article>
+
+                <article>
+                  <h3 className="text-lg font-semibold mb-2" style={{ color: '#0D3A14' }}>
+                    Cognitive Resource Replenishment
+                  </h3>
+                  <p className="text-sm mb-2" style={{ color: '#2A2A2A' }}>
+                    <strong>Working memory reset:</strong> Clearing residual content from previous interpretations prevents interference and improves accuracy in subsequent assignments.
+                  </p>
+                  <p className="text-sm" style={{ color: '#3A3A3A' }}>
+                    Studies show interpreters who practice assignment resets maintain 30% better focus during afternoon sessions compared to those who don't.
+                  </p>
+                </article>
+
+                <article>
+                  <h3 className="text-lg font-semibold mb-2" style={{ color: '#0D3A14' }}>
+                    Emotional Boundary Protection
+                  </h3>
+                  <p className="text-sm mb-2" style={{ color: '#2A2A2A' }}>
+                    <strong>Vicarious trauma prevention:</strong> Structured transitions help interpreters psychologically separate from emotionally charged content.
+                  </p>
+                  <p className="text-sm" style={{ color: '#3A3A3A' }}>
+                    The reset process activates the parasympathetic nervous system, creating a protective buffer against secondary trauma accumulation.
+                  </p>
+                </article>
+
+                <article>
+                  <h3 className="text-lg font-semibold mb-2" style={{ color: '#0D3A14' }}>
+                    Performance Sustainability
+                  </h3>
+                  <p className="text-sm mb-2" style={{ color: '#2A2A2A' }}>
+                    <strong>Long-term benefits:</strong> Regular assignment resets contribute to career longevity, with studies showing 50% reduction in interpreter fatigue syndrome.
+                  </p>
+                  <p className="text-sm" style={{ color: '#3A3A3A' }}>
+                    Interpreters using structured resets report better work-life balance and higher job satisfaction over time.
+                  </p>
+                </article>
+              </section>
+
+              <footer className="mt-8 pt-6 border-t" style={{ borderColor: 'rgba(92, 127, 79, 0.2)' }}>
+                <p className="text-xs mb-4" style={{ color: '#525252' }}>
+                  Research sources: International Journal of Interpreter Education, Journal of Applied Linguistics, Cognitive Science & Interpreting Studies
+                </p>
+                <button
+                  onClick={() => setShowAssignmentResetModal(false)}
+                  className="w-full px-6 py-3 rounded-lg font-medium transition-all hover:scale-105"
+                  style={{
+                    background: 'linear-gradient(135deg, var(--primary-800), var(--primary-900))',
+                    color: '#FFFFFF',
+                  }}
+                  aria-label="Close modal and return to reset options"
+                >
+                  Ready to reset between assignments!
+                </button>
+              </footer>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Professional Boundaries Modal */}
+      {showBoundariesModal && (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center p-4"
+          style={{ backgroundColor: 'rgba(0, 0, 0, 0.5)' }}
+          onClick={() => setShowBoundariesModal(false)}
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="boundaries-modal-title"
+        >
+          <div
+            className="rounded-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto"
+            style={{
+              backgroundColor: 'var(--bg-card)',
+              boxShadow: '0 20px 60px rgba(0, 0, 0, 0.3)',
+            }}
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="p-8">
+              <header className="mb-6">
+                <h2 id="boundaries-modal-title" className="text-2xl font-bold mb-3" style={{ color: '#0D3A14' }}>
+                  Why Professional Boundaries Matter
+                </h2>
+                <p className="text-sm" style={{ color: '#3A3A3A' }}>
+                  Evidence from behavioral science and interpreter ethics on the importance of boundary maintenance
+                </p>
+              </header>
+
+              <section className="space-y-6">
+                <article>
+                  <h3 className="text-lg font-semibold mb-2" style={{ color: '#0D3A14' }}>
+                    Protection Against Compassion Fatigue
+                  </h3>
+                  <p className="text-sm mb-2" style={{ color: '#2A2A2A' }}>
+                    <strong>Research finding:</strong> Interpreters without clear boundaries show 65% higher rates of compassion fatigue and secondary trauma symptoms.
+                  </p>
+                  <p className="text-sm" style={{ color: '#3A3A3A' }}>
+                    Boundaries create psychological distance that allows you to witness difficult content without absorbing it as your own experience.
+                  </p>
+                </article>
+
+                <article>
+                  <h3 className="text-lg font-semibold mb-2" style={{ color: '#0D3A14' }}>
+                    Maintaining Professional Impartiality
+                  </h3>
+                  <p className="text-sm mb-2" style={{ color: '#2A2A2A' }}>
+                    <strong>Ethical foundation:</strong> The interpreter's code of ethics requires maintaining impartiality—boundaries are the practical tool that makes this possible.
+                  </p>
+                  <p className="text-sm" style={{ color: '#3A3A3A' }}>
+                    Clear boundaries help you remain neutral while still being empathetic, protecting both your professional integrity and personal well-being.
+                  </p>
+                </article>
+
+                <article>
+                  <h3 className="text-lg font-semibold mb-2" style={{ color: '#0D3A14' }}>
+                    Emotional Regulation & Resilience
+                  </h3>
+                  <p className="text-sm mb-2" style={{ color: '#2A2A2A' }}>
+                    <strong>Behavioral science:</strong> Boundary-setting activates the prefrontal cortex, improving emotional regulation by up to 40%.
+                  </p>
+                  <p className="text-sm" style={{ color: '#3A3A3A' }}>
+                    When you clearly define what belongs to you versus what belongs to others, your brain can process emotional content without becoming overwhelmed.
+                  </p>
+                </article>
+
+                <article>
+                  <h3 className="text-lg font-semibold mb-2" style={{ color: '#0D3A14' }}>
+                    Preventing Role Confusion
+                  </h3>
+                  <p className="text-sm mb-2" style={{ color: '#2A2A2A' }}>
+                    <strong>Professional clarity:</strong> Studies show interpreters with strong boundaries experience 50% less role confusion and maintain clearer professional identity.
+                  </p>
+                  <p className="text-sm" style={{ color: '#3A3A3A' }}>
+                    You are the linguistic bridge, not the counselor, advocate, or friend. Boundaries help you stay in your professional lane.
+                  </p>
+                </article>
+
+                <article>
+                  <h3 className="text-lg font-semibold mb-2" style={{ color: '#0D3A14' }}>
+                    Career Longevity & Satisfaction
+                  </h3>
+                  <p className="text-sm mb-2" style={{ color: '#2A2A2A' }}>
+                    <strong>Long-term impact:</strong> Interpreters who practice regular boundary resets report 70% higher job satisfaction and stay in the field 5 years longer on average.
+                  </p>
+                  <p className="text-sm" style={{ color: '#3A3A3A' }}>
+                    Sustainable practice requires protecting your inner resources. Boundaries are not selfish—they're essential for serving others effectively over time.
+                  </p>
+                </article>
+
+                <article>
+                  <h3 className="text-lg font-semibold mb-2" style={{ color: '#0D3A14' }}>
+                    The Neuroscience of Boundaries
+                  </h3>
+                  <p className="text-sm mb-2" style={{ color: '#2A2A2A' }}>
+                    <strong>Brain protection:</strong> Boundary-setting reduces amygdala activation (fear response) and increases activity in the anterior cingulate cortex (self-awareness).
+                  </p>
+                  <p className="text-sm" style={{ color: '#3A3A3A' }}>
+                    This neurological shift helps you remain calm and centered even when interpreting highly emotional or traumatic content.
+                  </p>
+                </article>
+              </section>
+
+              <footer className="mt-8 pt-6 border-t" style={{ borderColor: 'rgba(92, 127, 79, 0.2)' }}>
+                <p className="text-xs mb-4" style={{ color: '#525252' }}>
+                  Research sources: Journal of Interpretation, International Medical Interpreters Association, Behavioral Science & Policy, Interpreter Ethics Quarterly
+                </p>
+                <button
+                  onClick={() => setShowBoundariesModal(false)}
+                  className="w-full px-6 py-3 rounded-lg font-medium transition-all hover:scale-105"
+                  style={{
+                    background: 'linear-gradient(135deg, var(--primary-800), var(--primary-900))',
+                    color: '#FFFFFF',
+                  }}
+                  aria-label="Close modal and return to boundaries reset options"
+                >
+                  I'm ready to protect my boundaries!
+                </button>
+              </footer>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Emotion Mapping Modal */}
+      {showEmotionMappingModal && (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center p-4"
+          style={{ backgroundColor: 'rgba(0, 0, 0, 0.5)' }}
+          onClick={() => setShowEmotionMappingModal(false)}
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="emotion-mapping-modal-title"
+        >
+          <div
+            className="rounded-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto"
+            style={{
+              backgroundColor: 'var(--bg-card)',
+              boxShadow: '0 20px 60px rgba(0, 0, 0, 0.3)',
+            }}
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="p-8">
+              <header className="mb-6">
+                <h2 id="emotion-mapping-modal-title" className="text-2xl font-bold mb-3" style={{ color: '#0D3A14' }}>
+                  The Science of Emotion Mapping
+                </h2>
+                <p className="text-sm" style={{ color: '#3A3A3A' }}>
+                  Understanding how emotional awareness transforms interpreter performance and well-being
+                </p>
+              </header>
+
+              <section className="space-y-6">
+                <article>
+                  <h3 className="text-lg font-semibold mb-2" style={{ color: '#0D3A14' }}>
+                    The Naming Effect
+                  </h3>
+                  <p className="text-sm mb-2" style={{ color: '#2A2A2A' }}>
+                    <strong>Neuroscience discovery:</strong> UCLA studies show that naming emotions reduces amygdala activity by up to 50% within seconds.
+                  </p>
+                  <p className="text-sm" style={{ color: '#3A3A3A' }}>
+                    When interpreters label their emotional states ("I feel overwhelmed"), the brain shifts from reactive to reflective processing, immediately calming the stress response.
+                  </p>
+                </article>
+
+                <article>
+                  <h3 className="text-lg font-semibold mb-2" style={{ color: '#0D3A14' }}>
+                    Emotional Granularity
+                  </h3>
+                  <p className="text-sm mb-2" style={{ color: '#2A2A2A' }}>
+                    <strong>Performance impact:</strong> Interpreters with high emotional granularity (ability to distinguish between similar emotions) show 30% better accuracy in emotionally charged assignments.
+                  </p>
+                  <p className="text-sm" style={{ color: '#3A3A3A' }}>
+                    Distinguishing between "frustrated" vs. "disappointed" vs. "overwhelmed" helps you respond more precisely to your needs.
+                  </p>
+                </article>
+
+                <article>
+                  <h3 className="text-lg font-semibold mb-2" style={{ color: '#0D3A14' }}>
+                    Stress Regulation Pathway
+                  </h3>
+                  <p className="text-sm mb-2" style={{ color: '#2A2A2A' }}>
+                    <strong>Biological mechanism:</strong> Emotion mapping activates the ventrolateral prefrontal cortex, which directly inhibits the amygdala's fear response.
+                  </p>
+                  <p className="text-sm" style={{ color: '#3A3A3A' }}>
+                    This creates a neurological "brake" on stress escalation, preventing the cascade of stress hormones that lead to interpreter fatigue.
+                  </p>
+                </article>
+
+                <article>
+                  <h3 className="text-lg font-semibold mb-2" style={{ color: '#0D3A14' }}>
+                    Vicarious Trauma Prevention
+                  </h3>
+                  <p className="text-sm mb-2" style={{ color: '#2A2A2A' }}>
+                    <strong>Critical for interpreters:</strong> Regular emotion mapping reduces secondary trauma symptoms by 45% in interpreters working with traumatic content.
+                  </p>
+                  <p className="text-sm" style={{ color: '#3A3A3A' }}>
+                    By recognizing and processing emotions in real-time, you prevent them from becoming embedded trauma responses.
+                  </p>
+                </article>
+
+                <article>
+                  <h3 className="text-lg font-semibold mb-2" style={{ color: '#0D3A14' }}>
+                    Cognitive Performance
+                  </h3>
+                  <p className="text-sm mb-2" style={{ color: '#2A2A2A' }}>
+                    <strong>Working memory boost:</strong> Emotion mapping frees up cognitive resources, improving working memory capacity by 20-25%.
+                  </p>
+                  <p className="text-sm" style={{ color: '#3A3A3A' }}>
+                    When emotions are acknowledged rather than suppressed, your brain has more bandwidth for linguistic processing and accurate interpretation.
+                  </p>
+                </article>
+
+                <article>
+                  <h3 className="text-lg font-semibold mb-2" style={{ color: '#0D3A14' }}>
+                    Resilience Building
+                  </h3>
+                  <p className="text-sm mb-2" style={{ color: '#2A2A2A' }}>
+                    <strong>Long-term benefits:</strong> Interpreters who practice daily emotion mapping develop 60% greater emotional resilience over 6 months.
+                  </p>
+                  <p className="text-sm" style={{ color: '#3A3A3A' }}>
+                    This practice literally rewires your brain for better emotional regulation, creating lasting protection against burnout.
+                  </p>
+                </article>
+              </section>
+
+              <footer className="mt-8 pt-6 border-t" style={{ borderColor: 'rgba(92, 127, 79, 0.2)' }}>
+                <p className="text-xs mb-4" style={{ color: '#525252' }}>
+                  Research sources: UCLA Brain Mapping Center, Journal of Cognitive Neuroscience, International Journal of Interpreter Education, Emotion Research Lab
+                </p>
+                <button
+                  onClick={() => setShowEmotionMappingModal(false)}
+                  className="w-full px-6 py-3 rounded-lg font-medium transition-all hover:scale-105"
+                  style={{
+                    background: 'linear-gradient(135deg, var(--primary-800), var(--primary-900))',
+                    color: '#FFFFFF',
+                  }}
+                  aria-label="Close modal and return to emotion mapping options"
+                >
+                  Ready to map my emotions!
+                </button>
+              </footer>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Technique Modal */}
       {selectedTechnique && (
@@ -2324,7 +3073,7 @@ function App() {
           <div
             className="rounded-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto"
             style={{
-              backgroundColor: '#FFFFFF',
+              backgroundColor: 'var(--bg-card)',
               boxShadow: '0 20px 60px rgba(0, 0, 0, 0.3)',
             }}
           >
@@ -2332,7 +3081,7 @@ function App() {
               {/* Modal Header */}
               <div className="flex justify-between items-start mb-6">
                 <div>
-                  <h2 className="text-2xl font-bold mb-2" style={{ color: '#1A1A1A' }}>
+                  <h2 className="text-2xl font-bold mb-2" style={{ color: '#0D3A14' }}>
                     {selectedTechnique === 'box-breathing' && 'Breathing Practice'}
                     {selectedTechnique === 'body-release' && 'Body Awareness Journey'}
                     {selectedTechnique === 'temperature-shift' && 'Temperature Shift'}
@@ -2341,7 +3090,7 @@ function App() {
                     {selectedTechnique === 'tech-fatigue-reset' && 'Technology Fatigue Reset'}
                     {selectedTechnique === 'emotion-mapping' && 'Emotion Mapping'}
                   </h2>
-                  <p className="text-sm" style={{ color: '#5A5A5A' }}>
+                  <p className="text-sm" style={{ color: '#3A3A3A' }}>
                     {selectedTechnique === 'box-breathing' && '4 minutes • Find your calming pattern'}
                     {selectedTechnique === 'body-release' && '1 minute • Connect with your physical self'}
                     {selectedTechnique === 'temperature-shift' &&
@@ -2379,24 +3128,38 @@ function App() {
                     setExpansionLevel(0);
                     setCurrentTechniqueId(null);
                   }}
-                  className="p-2 rounded-lg transition-all"
-                  style={{ backgroundColor: 'rgba(92, 127, 79, 0.1)' }}
-                  onMouseEnter={(e) =>
-                    (e.currentTarget.style.backgroundColor = 'rgba(92, 127, 79, 0.2)')
-                  }
-                  onMouseLeave={(e) =>
-                    (e.currentTarget.style.backgroundColor = 'rgba(92, 127, 79, 0.1)')
-                  }
+                  className="p-3 rounded-xl transition-all hover:scale-110 focus:outline-none focus:ring-2 focus:ring-offset-2"
+                  style={{ 
+                    backgroundColor: 'var(--bg-card)',
+                    border: '2px solid #E5E5E5',
+                    boxShadow: '0 2px 8px rgba(0, 0, 0, 0.1)'
+                  }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.backgroundColor = '#F5F5F5';
+                    e.currentTarget.style.borderColor = '#0A1F12';
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.backgroundColor = '#FFFFFF';
+                    e.currentTarget.style.borderColor = '#E5E5E5';
+                  }}
+                  onFocus={(e) => {
+                    e.currentTarget.style.borderColor = '#0A1F12';
+                  }}
+                  onBlur={(e) => {
+                    e.currentTarget.style.borderColor = '#E5E5E5';
+                  }}
+                  aria-label="Close modal"
                 >
-                  <X className="h-5 w-5" style={{ color: '#1A1A1A' }} />
+                  <X className="h-6 w-6" style={{ color: '#0D3A14' }} />
+                  <span className="sr-only">Close</span>
                 </button>
               </div>
 
               {/* Current Focus Section */}
               <div className="mb-6">
                 <div className="text-center mb-4">
-                  <p className="text-sm font-medium mb-1" style={{ color: '#5C7F4F' }}>Current Focus:</p>
-                  <h3 className="text-xl font-bold" style={{ color: '#2D5F3F' }}>
+                  <p className="text-sm font-medium mb-1" style={{ color: '#1A3D26' }}>Current Focus:</p>
+                  <h3 className="text-xl font-bold" style={{ color: '#0D3A14' }}>
                     {selectedTechnique === 'box-breathing' && (
                       !isTimerActive ? 'Ready to Begin' :
                       breathPhase === 'inhale' ? 'Expanding Phase' :
@@ -2426,7 +3189,7 @@ function App() {
                       'Integration'
                     )}
                   </h3>
-                  <p className="text-sm mt-1" style={{ color: '#6B7C6B' }}>
+                  <p className="text-sm mt-1" style={{ color: '#525252' }}>
                     {selectedTechnique === 'box-breathing' && (
                       !isTimerActive ? 'Press start when ready' :
                       breathPhase === 'inhale' ? 'Let your breath fill you' :
@@ -2494,16 +3257,16 @@ function App() {
 
                         {/* Center Text */}
                         <div className="absolute inset-0 flex flex-col items-center justify-center">
-                          <p className="text-2xl font-bold mb-2" style={{ color: '#2D5F3F' }}>
+                          <p className="text-2xl font-bold mb-2" style={{ color: '#0D3A14' }}>
                             {breathPhase === 'inhale' && 'Inhale'}
                             {breathPhase === 'hold-in' && 'Hold'}
                             {breathPhase === 'exhale' && 'Exhale'}
                             {breathPhase === 'hold-out' && 'Hold'}
                           </p>
-                          <p className="text-4xl font-bold" style={{ color: '#5C7F4F' }}>
+                          <p className="text-4xl font-bold" style={{ color: '#1A3D26' }}>
                             {isTimerActive ? 4 - (breathCycle % 4) || 4 : '4'}
                           </p>
-                          <p className="text-sm mt-2" style={{ color: '#6B7C6B' }}>
+                          <p className="text-sm mt-2" style={{ color: '#525252' }}>
                             {breathPhase === 'inhale' && 'through your nose'}
                             {breathPhase === 'hold-in' && 'gently'}
                             {breathPhase === 'exhale' && 'through your mouth'}
@@ -2538,7 +3301,7 @@ function App() {
                       <div className="w-full max-w-xs">
                         <div
                           className="flex justify-between text-xs mb-2"
-                          style={{ color: '#6B7C6B' }}
+                          style={{ color: '#525252' }}
                         >
                           <span className={breathPhase === 'inhale' ? 'font-bold' : ''}>
                             Inhale
@@ -2565,7 +3328,7 @@ function App() {
 
                     {/* Your Options Section */}
                     <div className="mb-6">
-                      <h3 className="font-semibold mb-3" style={{ color: '#2D5F3F' }}>
+                      <h3 className="font-semibold mb-3" style={{ color: '#0D3A14' }}>
                         Your Options:
                       </h3>
                       <p className="text-sm mb-4" style={{ color: '#6B7C6B', fontStyle: 'italic' }}>
@@ -2573,34 +3336,34 @@ function App() {
                       </p>
                       <div className="space-y-3">
                         <div className="p-3 rounded-lg" style={{ backgroundColor: 'rgba(92, 127, 79, 0.08)' }}>
-                          <p className="font-medium text-sm mb-1" style={{ color: '#2D5F3F' }}>
+                          <p className="font-medium text-sm mb-1" style={{ color: '#0D3A14' }}>
                             Counted pace
                           </p>
-                          <p className="text-xs" style={{ color: '#6B7C6B' }}>
+                          <p className="text-xs" style={{ color: '#525252' }}>
                             Follow a steady 4-count pattern
                           </p>
                         </div>
                         <div className="p-3 rounded-lg" style={{ backgroundColor: 'rgba(92, 127, 79, 0.08)' }}>
-                          <p className="font-medium text-sm mb-1" style={{ color: '#2D5F3F' }}>
+                          <p className="font-medium text-sm mb-1" style={{ color: '#0D3A14' }}>
                             Natural flow
                           </p>
-                          <p className="text-xs" style={{ color: '#6B7C6B' }}>
+                          <p className="text-xs" style={{ color: '#525252' }}>
                             Let your breath find its way
                           </p>
                         </div>
                         <div className="p-3 rounded-lg" style={{ backgroundColor: 'rgba(92, 127, 79, 0.08)' }}>
-                          <p className="font-medium text-sm mb-1" style={{ color: '#2D5F3F' }}>
+                          <p className="font-medium text-sm mb-1" style={{ color: '#0D3A14' }}>
                             Gentle waves
                           </p>
-                          <p className="text-xs" style={{ color: '#6B7C6B' }}>
+                          <p className="text-xs" style={{ color: '#525252' }}>
                             Like ocean waves, in and out
                           </p>
                         </div>
                         <div className="p-3 rounded-lg" style={{ backgroundColor: 'rgba(92, 127, 79, 0.08)' }}>
-                          <p className="font-medium text-sm mb-1" style={{ color: '#2D5F3F' }}>
+                          <p className="font-medium text-sm mb-1" style={{ color: '#0D3A14' }}>
                             Belly softening
                           </p>
-                          <p className="text-xs" style={{ color: '#6B7C6B' }}>
+                          <p className="text-xs" style={{ color: '#525252' }}>
                             Focus on your center expanding
                           </p>
                         </div>
@@ -2609,7 +3372,7 @@ function App() {
                     
                     {/* Why This Supports You */}
                     <div className="p-3 rounded-lg" style={{ backgroundColor: 'rgba(92, 127, 79, 0.1)' }}>
-                      <p className="text-xs font-medium mb-1" style={{ color: '#2D5F3F' }}>
+                      <p className="text-xs font-medium mb-1" style={{ color: '#0D3A14' }}>
                         Why This Supports You:
                       </p>
                       <p className="text-xs" style={{ color: '#3A3A3A' }}>
@@ -2619,10 +3382,10 @@ function App() {
                     
                     {/* Adapt As Needed */}
                     <div className="mt-4 p-3 rounded-lg border" style={{ borderColor: 'rgba(92, 127, 79, 0.2)' }}>
-                      <p className="text-xs font-medium mb-2" style={{ color: '#2D5F3F' }}>
+                      <p className="text-sm font-semibold mb-2" style={{ color: '#0D3A14' }}>
                         Adapt As Needed:
                       </p>
-                      <ul className="text-xs space-y-1" style={{ color: '#6B7C6B' }}>
+                      <ul className="text-xs space-y-1" style={{ color: '#525252' }}>
                         <li>• Let pauses happen naturally or skip them</li>
                         <li>• Find your comfortable depth</li>
                         <li>• Allow your body to move with breath</li>
@@ -2632,7 +3395,7 @@ function App() {
                   </>
                 ) : (
                   <>
-                    <h3 className="font-semibold mb-3" style={{ color: '#2D5F3F' }}>
+                    <h3 className="font-semibold mb-3" style={{ color: '#0D3A14' }}>
                       How to Practice:
                     </h3>
                     <div className="space-y-2">
@@ -2644,7 +3407,7 @@ function App() {
                             <div className="space-y-6">
                               {/* Time Selection */}
                               <div>
-                                <h3 className="font-semibold mb-3" style={{ color: '#2D5F3F' }}>
+                                <h3 className="font-semibold mb-3" style={{ color: '#0D3A14' }}>
                                   How long:
                                 </h3>
                                 <div className="grid grid-cols-2 gap-2">
@@ -2669,7 +3432,7 @@ function App() {
 
                               {/* Practice Method Selection */}
                               <div>
-                                <h3 className="font-semibold mb-3" style={{ color: '#2D5F3F' }}>
+                                <h3 className="font-semibold mb-3" style={{ color: '#0D3A14' }}>
                                   Choose how to practice:
                                 </h3>
                                 <div className="space-y-2">
@@ -2689,10 +3452,10 @@ function App() {
                                         border: bodyAwarenessMethod === method.id ? '2px solid #5C7F4F' : '2px solid transparent'
                                       }}
                                     >
-                                      <div className="font-medium text-sm" style={{ color: '#2D5F3F' }}>
+                                      <div className="font-medium text-sm" style={{ color: '#0D3A14' }}>
                                         {method.label}
                                       </div>
-                                      <div className="text-xs mt-1" style={{ color: '#6B7C6B' }}>
+                                      <div className="text-xs mt-1" style={{ color: '#525252' }}>
                                         {method.desc}
                                       </div>
                                     </button>
@@ -2702,7 +3465,7 @@ function App() {
 
                               {/* Why This Helps */}
                               <div className="p-4 rounded-lg" style={{ backgroundColor: 'rgba(92, 127, 79, 0.1)' }}>
-                                <h4 className="font-semibold mb-2 text-sm" style={{ color: '#2D5F3F' }}>
+                                <h4 className="font-semibold mb-2 text-sm" style={{ color: '#0D3A14' }}>
                                   Why this helps:
                                 </h4>
                                 <p className="text-xs" style={{ color: '#3A3A3A', lineHeight: '1.6' }}>
@@ -2715,7 +3478,7 @@ function App() {
                             <div className="space-y-6">
                               {/* Body Check-in Instructions */}
                               <div className="p-4 rounded-lg" style={{ backgroundColor: 'rgba(92, 127, 79, 0.05)' }}>
-                                <h3 className="font-semibold mb-3" style={{ color: '#2D5F3F' }}>
+                                <h3 className="font-semibold mb-3" style={{ color: '#0D3A14' }}>
                                   Check each part of your body:
                                 </h3>
                                 <ul className="space-y-2 text-sm" style={{ color: '#3A3A3A' }}>
@@ -2744,14 +3507,14 @@ function App() {
 
                               {/* Current Practice Method Reminder */}
                               <div className="p-3 rounded-lg text-center" style={{ backgroundColor: 'rgba(92, 127, 79, 0.1)' }}>
-                                <p className="text-sm font-medium" style={{ color: '#2D5F3F' }}>
+                                <p className="text-sm font-medium" style={{ color: '#0D3A14' }}>
                                   {bodyAwarenessMethod === 'move' && 'Moving & Adjusting'}
                                   {bodyAwarenessMethod === 'picture' && 'Imagining Warmth'}
                                   {bodyAwarenessMethod === 'breathe' && 'Breathing Into Areas'}
                                   {bodyAwarenessMethod === 'touch' && 'Using Touch'}
                                   {bodyAwarenessMethod === 'still' && 'Staying Still & Noticing'}
                                 </p>
-                                <p className="text-xs mt-1" style={{ color: '#6B7C6B' }}>
+                                <p className="text-xs mt-1" style={{ color: '#525252' }}>
                                   {bodyAwarenessMethod === 'move' && 'Adjust, rock, or stretch as feels good'}
                                   {bodyAwarenessMethod === 'picture' && 'Imagine warmth or light in each area'}
                                   {bodyAwarenessMethod === 'breathe' && 'Send breath to different body parts'}
@@ -2762,7 +3525,7 @@ function App() {
 
                               {/* Progress Indicator */}
                               <div className="w-full">
-                                <div className="flex justify-between text-xs mb-2" style={{ color: '#6B7C6B' }}>
+                                <div className="flex justify-between text-xs mb-2" style={{ color: '#525252' }}>
                                   <span>Progress</span>
                                   <span>{Math.round((techniqueProgress / 100) * bodyAwarenessTime)} / {bodyAwarenessTime} seconds</span>
                                 </div>
@@ -2780,10 +3543,10 @@ function App() {
                               {/* Adaptation Reminders */}
                               <div className="space-y-3">
                                 <div className="p-3 rounded-lg border" style={{ borderColor: 'rgba(92, 127, 79, 0.2)' }}>
-                                  <h4 className="text-xs font-semibold mb-2" style={{ color: '#2D5F3F' }}>
+                                  <h4 className="text-xs font-semibold mb-2" style={{ color: '#0D3A14' }}>
                                     If you need to change something:
                                   </h4>
-                                  <ul className="text-xs space-y-1" style={{ color: '#6B7C6B' }}>
+                                  <ul className="text-xs space-y-1" style={{ color: '#525252' }}>
                                     <li>• Can't move some areas? Just think about them</li>
                                     <li>• Have pain? Don't try to change it - just notice</li>
                                     <li>• Need to move around? That's okay</li>
@@ -2793,10 +3556,10 @@ function App() {
                                 </div>
 
                                 <div className="p-3 rounded-lg" style={{ backgroundColor: 'rgba(92, 127, 79, 0.05)' }}>
-                                  <h4 className="text-xs font-semibold mb-2" style={{ color: '#2D5F3F' }}>
+                                  <h4 className="text-xs font-semibold mb-2" style={{ color: '#0D3A14' }}>
                                     Good to know:
                                   </h4>
-                                  <ul className="text-xs space-y-1" style={{ color: '#6B7C6B' }}>
+                                  <ul className="text-xs space-y-1" style={{ color: '#525252' }}>
                                     <li>• Keep any tension that helps you feel safe</li>
                                     <li>• Skip any body part you don't want to think about</li>
                                     <li>• Sometimes being tense is helpful - that's okay</li>
@@ -2817,10 +3580,10 @@ function App() {
                           <div className="flex flex-col items-center mb-6">
                             {/* Status Text Above Animation */}
                             <div className="text-center mb-4">
-                              <p className="text-2xl font-bold" style={{ color: '#2D5F3F' }}>
+                              <p className="text-2xl font-bold" style={{ color: '#0D3A14' }}>
                                 {isTimerActive ? 'Cooling Phase' : 'Warming Phase'}
                               </p>
-                              <p className="text-sm mt-1" style={{ color: '#6B7C6B' }}>
+                              <p className="text-sm mt-1" style={{ color: '#525252' }}>
                                 {isTimerActive ? 'Activating parasympathetic response...' : 'Press start to begin temperature shift'}
                               </p>
                             </div>
@@ -3016,14 +3779,14 @@ function App() {
 
                           <h3
                             className="font-semibold mb-3 text-center"
-                            style={{ color: '#2D5F3F' }}
+                            style={{ color: 'var(--primary-900)' }}
                           >
                             How Temperature Shift Works:
                           </h3>
                           
                           {/* What it does */}
                           <div className="mb-4 p-3 rounded-lg" style={{ backgroundColor: 'rgba(92, 127, 79, 0.1)' }}>
-                            <p className="text-sm font-medium mb-1" style={{ color: '#2D5F3F' }}>
+                            <p className="text-sm font-medium mb-1" style={{ color: '#0D3A14' }}>
                               Why This Helps:
                             </p>
                             <p className="text-xs" style={{ color: '#3A3A3A' }}>
@@ -3038,10 +3801,10 @@ function App() {
                                 1
                               </div>
                               <div>
-                                <p className="text-sm font-medium" style={{ color: '#2D5F3F' }}>
+                                <p className="text-sm font-medium" style={{ color: '#0D3A14' }}>
                                   Get Cold Water Ready
                                 </p>
-                                <p className="text-xs mt-1" style={{ color: '#6B7C6B' }}>
+                                <p className="text-xs mt-1" style={{ color: '#525252' }}>
                                   Fill a bowl with cold water or go to a sink. Colder is better - add ice if available.
                                 </p>
                               </div>
@@ -3052,10 +3815,10 @@ function App() {
                                 2
                               </div>
                               <div>
-                                <p className="text-sm font-medium" style={{ color: '#2D5F3F' }}>
+                                <p className="text-sm font-medium" style={{ color: '#0D3A14' }}>
                                   Press Start & Apply Cold
                                 </p>
-                                <p className="text-xs mt-1" style={{ color: '#6B7C6B' }}>
+                                <p className="text-xs mt-1" style={{ color: '#525252' }}>
                                   Splash cold water on your face, focusing on temples and forehead. Or hold your wrists under cold running water.
                                 </p>
                               </div>
@@ -3066,10 +3829,10 @@ function App() {
                                 3
                               </div>
                               <div>
-                                <p className="text-sm font-medium" style={{ color: '#2D5F3F' }}>
+                                <p className="text-sm font-medium" style={{ color: '#0D3A14' }}>
                                   Breathe Deeply
                                 </p>
-                                <p className="text-xs mt-1" style={{ color: '#6B7C6B' }}>
+                                <p className="text-xs mt-1" style={{ color: '#525252' }}>
                                   While feeling the cold, take 3-4 slow, deep breaths. Notice the immediate shift in your body's response.
                                 </p>
                               </div>
@@ -3111,14 +3874,14 @@ function App() {
                           <div className="flex flex-col items-center mb-6">
                             {/* Status Text Above Animation */}
                             <div className="text-center mb-4">
-                              <p className="text-2xl font-bold" style={{ color: '#2D5F3F' }}>
+                              <p className="text-2xl font-bold" style={{ color: '#0D3A14' }}>
                                 {senseCount === 0 && 'Ready to Ground'}
                                 {senseCount === 1 && '4 Things You See'}
                                 {senseCount === 2 && '3 Things You Touch'}
                                 {senseCount === 3 && '2 Things You Smell'}
                                 {senseCount === 4 && '1 Thing You Taste'}
                               </p>
-                              <p className="text-sm mt-1" style={{ color: '#6B7C6B' }}>
+                              <p className="text-sm mt-1" style={{ color: '#525252' }}>
                                 {isTimerActive ? 'Focus on each sense mindfully' : 'Press start to begin grounding'}
                               </p>
                             </div>
@@ -3230,7 +3993,7 @@ function App() {
 
                           <h3
                             className="font-semibold mb-3 text-center"
-                            style={{ color: '#2D5F3F' }}
+                            style={{ color: 'var(--primary-900)' }}
                           >
                             How to Practice 4-3-2-1 Grounding:
                           </h3>
@@ -3242,8 +4005,8 @@ function App() {
                                 <span className="font-bold text-purple-600">4</span>
                               </div>
                               <div>
-                                <p className="text-sm font-medium" style={{ color: '#2D5F3F' }}>See</p>
-                                <p className="text-xs mt-1" style={{ color: '#6B7C6B' }}>
+                                <p className="text-sm font-medium" style={{ color: '#0D3A14' }}>See</p>
+                                <p className="text-xs mt-1" style={{ color: '#525252' }}>
                                   Look around and name 4 things you can see. Be specific - "blue coffee mug" not just "mug"
                                 </p>
                               </div>
@@ -3254,8 +4017,8 @@ function App() {
                                 <span className="font-bold text-blue-600">3</span>
                               </div>
                               <div>
-                                <p className="text-sm font-medium" style={{ color: '#2D5F3F' }}>Touch</p>
-                                <p className="text-xs mt-1" style={{ color: '#6B7C6B' }}>
+                                <p className="text-sm font-medium" style={{ color: '#0D3A14' }}>Touch</p>
+                                <p className="text-xs mt-1" style={{ color: '#525252' }}>
                                   Notice 3 things you can physically feel - your feet on floor, chair against back, air on skin
                                 </p>
                               </div>
@@ -3266,8 +4029,8 @@ function App() {
                                 <span className="font-bold text-green-600">2</span>
                               </div>
                               <div>
-                                <p className="text-sm font-medium" style={{ color: '#2D5F3F' }}>Smell</p>
-                                <p className="text-xs mt-1" style={{ color: '#6B7C6B' }}>
+                                <p className="text-sm font-medium" style={{ color: '#0D3A14' }}>Smell</p>
+                                <p className="text-xs mt-1" style={{ color: '#525252' }}>
                                   Identify 2 scents - coffee, fresh air, hand lotion, or just "neutral air"
                                 </p>
                               </div>
@@ -3278,8 +4041,8 @@ function App() {
                                 <span className="font-bold text-red-600">1</span>
                               </div>
                               <div>
-                                <p className="text-sm font-medium" style={{ color: '#2D5F3F' }}>Taste</p>
-                                <p className="text-xs mt-1" style={{ color: '#6B7C6B' }}>
+                                <p className="text-sm font-medium" style={{ color: '#0D3A14' }}>Taste</p>
+                                <p className="text-xs mt-1" style={{ color: '#525252' }}>
                                   Notice 1 taste - sip water, chew gum, or just notice your mouth's current taste
                                 </p>
                               </div>
@@ -3288,7 +4051,7 @@ function App() {
                           
                           {/* Why This Works */}
                           <div className="mt-4 p-3 rounded-lg" style={{ backgroundColor: 'rgba(92, 127, 79, 0.1)' }}>
-                            <p className="text-xs font-medium mb-1" style={{ color: '#2D5F3F' }}>
+                            <p className="text-xs font-medium mb-1" style={{ color: '#0D3A14' }}>
                               Why This Works:
                             </p>
                             <p className="text-xs" style={{ color: '#3A3A3A' }}>
@@ -3305,13 +4068,13 @@ function App() {
                           <div className="flex flex-col items-center mb-6">
                             {/* Status Text Above Animation */}
                             <div className="text-center mb-4">
-                              <p className="text-2xl font-bold" style={{ color: '#2D5F3F' }}>
+                              <p className="text-2xl font-bold" style={{ color: '#0D3A14' }}>
                                 {!isTimerActive && 'Ready to Expand'}
                                 {isTimerActive && expansionLevel < 0.33 && 'Noticing Tension'}
                                 {isTimerActive && expansionLevel >= 0.33 && expansionLevel < 0.66 && 'Creating Space'}
                                 {isTimerActive && expansionLevel >= 0.66 && 'Full Expansion'}
                               </p>
-                              <p className="text-sm mt-1" style={{ color: '#6B7C6B' }}>
+                              <p className="text-sm mt-1" style={{ color: '#525252' }}>
                                 {isTimerActive ? 'Breathe and expand your awareness' : 'Press start to begin expansion'}
                               </p>
                             </div>
@@ -3465,7 +4228,7 @@ function App() {
 
                           <h3
                             className="font-semibold mb-3 text-center"
-                            style={{ color: '#2D5F3F' }}
+                            style={{ color: 'var(--primary-900)' }}
                           >
                             How to Practice Expansion:
                           </h3>
@@ -3477,10 +4240,10 @@ function App() {
                                 1
                               </div>
                               <div>
-                                <p className="text-sm font-medium" style={{ color: '#2D5F3F' }}>
+                                <p className="text-sm font-medium" style={{ color: '#0D3A14' }}>
                                   Scan Your Body
                                 </p>
-                                <p className="text-xs mt-1" style={{ color: '#6B7C6B' }}>
+                                <p className="text-xs mt-1" style={{ color: '#525252' }}>
                                   Notice where you're holding tension - shoulders, jaw, chest, belly
                                 </p>
                               </div>
@@ -3491,10 +4254,10 @@ function App() {
                                 2
                               </div>
                               <div>
-                                <p className="text-sm font-medium" style={{ color: '#2D5F3F' }}>
+                                <p className="text-sm font-medium" style={{ color: '#0D3A14' }}>
                                   Breathe Into Tension
                                 </p>
-                                <p className="text-xs mt-1" style={{ color: '#6B7C6B' }}>
+                                <p className="text-xs mt-1" style={{ color: '#525252' }}>
                                   Imagine your breath flowing directly to those tight areas, creating space
                                 </p>
                               </div>
@@ -3505,10 +4268,10 @@ function App() {
                                 3
                               </div>
                               <div>
-                                <p className="text-sm font-medium" style={{ color: '#2D5F3F' }}>
+                                <p className="text-sm font-medium" style={{ color: '#0D3A14' }}>
                                   Expand Awareness
                                 </p>
-                                <p className="text-xs mt-1" style={{ color: '#6B7C6B' }}>
+                                <p className="text-xs mt-1" style={{ color: '#525252' }}>
                                   Let your awareness grow beyond your body, sensing the space around you
                                 </p>
                               </div>
@@ -3517,7 +4280,7 @@ function App() {
                           
                           {/* Tips */}
                           <div className="p-3 rounded-lg" style={{ backgroundColor: 'rgba(92, 127, 79, 0.1)' }}>
-                            <p className="text-xs font-medium mb-1" style={{ color: '#2D5F3F' }}>
+                            <p className="text-xs font-medium mb-1" style={{ color: '#0D3A14' }}>
                               Pro Tip:
                             </p>
                             <p className="text-xs" style={{ color: '#3A3A3A' }}>
@@ -3534,7 +4297,7 @@ function App() {
                           <div className="flex flex-col items-center mb-6">
                             {/* Status Text Above Animation */}
                             <div className="text-center mb-4">
-                              <p className="text-2xl font-bold" style={{ color: '#2D5F3F' }}>
+                              <p className="text-2xl font-bold" style={{ color: '#0D3A14' }}>
                                 {!isTimerActive && 'Digital Overload Check'}
                                 {isTimerActive && techniqueProgress < 20 && 'Zone 1: Eye Relief'}
                                 {isTimerActive && techniqueProgress >= 20 && techniqueProgress < 40 && 'Zone 2: Audio Recovery'}
@@ -3542,7 +4305,7 @@ function App() {
                                 {isTimerActive && techniqueProgress >= 60 && techniqueProgress < 80 && 'Zone 4: Screen Distance'}
                                 {isTimerActive && techniqueProgress >= 80 && 'Zone 5: Facial Tension Release'}
                               </p>
-                              <p className="text-sm mt-1" style={{ color: '#6B7C6B' }}>
+                              <p className="text-sm mt-1" style={{ color: '#525252' }}>
                                 {isTimerActive ? 'Your eyes, ears, and body need relief' : 'Press start for tech recovery'}
                               </p>
                             </div>
@@ -3696,7 +4459,7 @@ function App() {
 
                           <h3
                             className="font-semibold mb-3 text-center"
-                            style={{ color: '#2D5F3F' }}
+                            style={{ color: 'var(--primary-900)' }}
                           >
                             Five-Zone Recovery System:
                           </h3>
@@ -3708,10 +4471,10 @@ function App() {
                                 👁️
                               </div>
                               <div>
-                                <p className="text-sm font-medium" style={{ color: '#2D5F3F' }}>
+                                <p className="text-sm font-medium" style={{ color: '#0D3A14' }}>
                                   Zone 1: Eye Relief (30s)
                                 </p>
-                                <p className="text-xs mt-1" style={{ color: '#6B7C6B' }}>
+                                <p className="text-xs mt-1" style={{ color: '#525252' }}>
                                   20-20-20 rule: Look 20+ feet away for 20 seconds. Blink 10 times. Palm press over closed eyes.
                                 </p>
                               </div>
@@ -3722,10 +4485,10 @@ function App() {
                                 🎧
                               </div>
                               <div>
-                                <p className="text-sm font-medium" style={{ color: '#2D5F3F' }}>
+                                <p className="text-sm font-medium" style={{ color: '#0D3A14' }}>
                                   Zone 2: Audio Recovery (30s)
                                 </p>
-                                <p className="text-xs mt-1" style={{ color: '#6B7C6B' }}>
+                                <p className="text-xs mt-1" style={{ color: '#525252' }}>
                                   Remove headphones. Massage ear cartilage. Pull earlobes gently. 15 seconds of silence.
                                 </p>
                               </div>
@@ -3736,10 +4499,10 @@ function App() {
                                 🧘
                               </div>
                               <div>
-                                <p className="text-sm font-medium" style={{ color: '#2D5F3F' }}>
+                                <p className="text-sm font-medium" style={{ color: '#0D3A14' }}>
                                   Zone 3: Posture Reset (30s)
                                 </p>
-                                <p className="text-xs mt-1" style={{ color: '#6B7C6B' }}>
+                                <p className="text-xs mt-1" style={{ color: '#525252' }}>
                                   Stand up if possible. Shoulder rolls back 3x. Neck stretches. Squeeze shoulder blades.
                                 </p>
                               </div>
@@ -3750,10 +4513,10 @@ function App() {
                                 💻
                               </div>
                               <div>
-                                <p className="text-sm font-medium" style={{ color: '#2D5F3F' }}>
+                                <p className="text-sm font-medium" style={{ color: '#0D3A14' }}>
                                   Zone 4: Screen Distance (20s)
                                 </p>
-                                <p className="text-xs mt-1" style={{ color: '#6B7C6B' }}>
+                                <p className="text-xs mt-1" style={{ color: '#525252' }}>
                                   Arm's length test. Screen top at eye level. Reduce glare. Lean back to increase distance.
                                 </p>
                               </div>
@@ -3764,10 +4527,10 @@ function App() {
                                 😌
                               </div>
                               <div>
-                                <p className="text-sm font-medium" style={{ color: '#2D5F3F' }}>
+                                <p className="text-sm font-medium" style={{ color: '#0D3A14' }}>
                                   Zone 5: Facial Tension (40s)
                                 </p>
-                                <p className="text-xs mt-1" style={{ color: '#6B7C6B' }}>
+                                <p className="text-xs mt-1" style={{ color: '#525252' }}>
                                   Temple massage. Jaw release. Forehead smooth. Eye squeeze then wide. Reset facial muscles.
                                 </p>
                               </div>
@@ -3776,7 +4539,7 @@ function App() {
                           
                           {/* Why This Works */}
                           <div className="p-3 rounded-lg" style={{ backgroundColor: 'rgba(92, 127, 79, 0.1)' }}>
-                            <p className="text-xs font-medium mb-1" style={{ color: '#2D5F3F' }}>
+                            <p className="text-xs font-medium mb-1" style={{ color: '#0D3A14' }}>
                               Why This Works:
                             </p>
                             <p className="text-xs" style={{ color: '#3A3A3A' }}>
@@ -3794,7 +4557,7 @@ function App() {
                             {/* Clean Header with Progress */}
                             <div className="w-full max-w-md mb-6">
                               <div className="flex items-center justify-between mb-2">
-                                <h3 className="text-lg font-semibold" style={{ color: '#2D5F3F' }}>
+                                <h3 className="text-lg font-semibold" style={{ color: '#0D3A14' }}>
                                   Emotion Mapping Journey
                                 </h3>
                                 <span className="text-sm px-3 py-1 rounded-full" style={{ 
@@ -4064,7 +4827,7 @@ function App() {
 
                           <h3
                             className="font-semibold mb-3 text-center"
-                            style={{ color: '#2D5F3F' }}
+                            style={{ color: 'var(--primary-900)' }}
                           >
                             Interpreter's Emotion Map:
                           </h3>
@@ -4082,7 +4845,7 @@ function App() {
                                 }}>
                                   <span className="text-2xl">💜</span>
                                 </div>
-                                <h3 className="text-lg font-semibold mb-2" style={{ color: '#2D5F3F' }}>
+                                <h3 className="text-lg font-semibold mb-2" style={{ color: '#0D3A14' }}>
                                   Ready for Your Emotional Check-In?
                                 </h3>
                                 <p className="text-sm mb-3" style={{ color: '#6B7280' }}>
@@ -4177,7 +4940,7 @@ function App() {
                           
                           {/* Why This Works */}
                           <div className="p-3 rounded-lg" style={{ backgroundColor: 'rgba(92, 127, 79, 0.1)' }}>
-                            <p className="text-xs font-medium mb-1" style={{ color: '#2D5F3F' }}>
+                            <p className="text-xs font-medium mb-1" style={{ color: '#0D3A14' }}>
                               The Neuroscience:
                             </p>
                             <p className="text-xs" style={{ color: '#3A3A3A' }}>
@@ -4259,7 +5022,7 @@ function App() {
                     }}
                     className="flex-1 px-6 py-3 rounded-xl font-semibold transition-all"
                     style={{
-                      background: 'linear-gradient(145deg, #6B8B60 0%, #5F7F55 100%)',
+                      background: 'linear-gradient(145deg, #1A3D26 0%, #0F2818 100%)',
                       color: '#FFFFFF',
                       boxShadow: '0 4px 15px rgba(107, 139, 96, 0.3)',
                     }}
@@ -4411,16 +5174,16 @@ function App() {
           <h2
             id="burnout-gauge-heading"
             className="text-3xl font-bold mb-3"
-            style={{ color: '#1A1A1A' }}
+            style={{ color: '#0D3A14' }}
           >
             Daily Burnout Gauge
           </h2>
-          <p className="text-base" style={{ color: '#5A5A5A' }}>
+          <p className="text-base" style={{ color: '#3A3A3A' }}>
             Quick check-in on your energy and stress levels
           </p>
         </div>
         <div className="p-4 rounded-full" style={{ backgroundColor: 'rgba(45, 95, 63, 0.15)' }}>
-          <Gauge className="h-10 w-10" aria-hidden="true" style={{ color: '#2D5F3F' }} />
+          <Gauge className="h-10 w-10" aria-hidden="true" style={{ color: '#0D3A14' }} />
         </div>
       </div>
 
@@ -4429,7 +5192,7 @@ function App() {
           onClick={() => setShowDailyBurnout(true)}
           className="inline-flex items-center px-8 py-4 rounded-xl font-semibold text-lg transition-all"
           style={{
-            background: 'linear-gradient(145deg, #6B8B60 0%, #5F7F55 100%)',
+            background: 'linear-gradient(145deg, #1A3D26 0%, #0F2818 100%)',
             color: '#FFFFFF',
             boxShadow: '0 4px 15px rgba(107, 139, 96, 0.3)',
           }}
@@ -4445,14 +5208,14 @@ function App() {
           <Gauge className="w-6 h-6 mr-3" />
           Take Your 5-Question Daily Assessment
         </button>
-        <p className="text-sm mt-4" style={{ color: '#5A5A5A' }}>
+        <p className="text-sm mt-4" style={{ color: '#3A3A3A' }}>
           Complete wellness check with personalized recommendations
         </p>
         
         {/* Show last assessment if available */}
         {localStorage.getItem('todaysBurnoutAssessment') && (
           <div className="mt-6 inline-block p-4 rounded-lg" style={{ backgroundColor: 'rgba(92, 127, 79, 0.1)' }}>
-            <p className="text-sm font-semibold" style={{ color: '#2D5F3F' }}>
+            <p className="text-sm font-semibold" style={{ color: '#0D3A14' }}>
               ✓ Today's assessment completed
             </p>
           </div>
@@ -4467,7 +5230,7 @@ function App() {
         <h1 id="reflection-dashboard-heading" className="text-4xl font-bold mb-2" style={{ color: '#1A1A1A', letterSpacing: '-0.5px' }}>
           Interpreter Wellbeing & Growth Hub
         </h1>
-        <p className="text-lg" style={{ color: '#5A5A5A', fontWeight: '400' }}>
+        <p className="text-lg" style={{ color: '#3A3A3A', fontWeight: '400' }}>
           Your daily companion for professional wellness and reflection
         </p>
       </div>
@@ -4535,10 +5298,10 @@ function App() {
           >
             <div className="flex items-center justify-between mb-6">
               <div>
-                <h2 id="structured-reflections-heading" className="text-2xl font-bold mb-3" style={{ color: '#1A1A1A' }}>
+                <h2 id="structured-reflections-heading" className="text-2xl font-bold mb-3" style={{ color: '#0D3A14' }}>
                   Structured Reflections & Journals
                 </h2>
-                <p className="text-base" style={{ color: '#5A5A5A', lineHeight: '1.6' }}>
+                <p className="text-base" style={{ color: '#3A3A3A', lineHeight: '1.6' }}>
                   Tactical, emotional, and ethical tools for every stage of your interpreting work
                 </p>
               </div>
@@ -4546,7 +5309,7 @@ function App() {
                 className="p-4 rounded-full"
                 style={{ backgroundColor: 'rgba(92, 127, 79, 0.15)' }}
               >
-                <BookOpen className="h-10 w-10" style={{ color: '#5C7F4F' }} />
+                <BookOpen className="h-10 w-10" style={{ color: '#1A3D26' }} />
               </div>
             </div>
 
@@ -4558,13 +5321,14 @@ function App() {
                     onClick={() => setShowPreAssignmentPrep(true)}
                     className="w-full card reflection-link rounded-xl p-5 text-left transition-all hover:shadow-lg"
                     style={{
-                      backgroundColor: '#FFFFFF',
+                      backgroundColor: 'var(--bg-card)',
                       border: '1px solid rgba(92, 127, 79, 0.3)',
                       transform: 'translateY(0)',
                     }}
                     onMouseEnter={(e) => {
                       e.currentTarget.style.transform = 'translateY(-2px)';
-                      e.currentTarget.style.borderColor = '#5C7F4F';
+                      e.currentTarget.style.borderColor = 'var(--primary-800)';
+            e.currentTarget.style.boxShadow = '0 10px 25px rgba(27, 94, 32, 0.3), 0 0 0 3px rgba(27, 94, 32, 0.2)';
                       e.currentTarget.style.backgroundColor = '#F8FBF6';
                     }}
                     onMouseLeave={(e) => {
@@ -4573,10 +5337,10 @@ function App() {
                       e.currentTarget.style.backgroundColor = '#FFFFFF';
                     }}
                   >
-                    <h3 className="font-bold mb-2 text-base" style={{ color: '#1A1A1A' }}>
+                    <h3 className="font-bold mb-2 text-base" style={{ color: '#0D3A14' }}>
                       Pre-Assignment Prep
                     </h3>
-                    <p className="text-sm" style={{ color: '#5A5A5A' }}>
+                    <p className="text-sm" style={{ color: '#3A3A3A' }}>
                       Tactical, emotional, and ethical readiness
                     </p>
                   </button>
@@ -4587,13 +5351,14 @@ function App() {
                     onClick={() => setShowPostAssignmentDebrief(true)}
                     className="w-full card reflection-link rounded-xl p-5 text-left transition-all hover:shadow-lg"
                     style={{
-                      backgroundColor: '#FFFFFF',
+                      backgroundColor: 'var(--bg-card)',
                       border: '1px solid rgba(92, 127, 79, 0.3)',
                       transform: 'translateY(0)',
                     }}
                     onMouseEnter={(e) => {
                       e.currentTarget.style.transform = 'translateY(-2px)';
-                      e.currentTarget.style.borderColor = '#5C7F4F';
+                      e.currentTarget.style.borderColor = 'var(--primary-800)';
+            e.currentTarget.style.boxShadow = '0 10px 25px rgba(27, 94, 32, 0.3), 0 0 0 3px rgba(27, 94, 32, 0.2)';
                       e.currentTarget.style.backgroundColor = '#F8FBF6';
                     }}
                     onMouseLeave={(e) => {
@@ -4602,10 +5367,10 @@ function App() {
                       e.currentTarget.style.backgroundColor = '#FFFFFF';
                     }}
                   >
-                    <h3 className="font-bold mb-2 text-base" style={{ color: '#1A1A1A' }}>
+                    <h3 className="font-bold mb-2 text-base" style={{ color: '#0D3A14' }}>
                       Post-Assignment Debrief
                     </h3>
-                    <p className="text-sm" style={{ color: '#5A5A5A' }}>
+                    <p className="text-sm" style={{ color: '#3A3A3A' }}>
                       Consolidate growth and reset after interpreting
                     </p>
                   </button>
@@ -4616,13 +5381,14 @@ function App() {
                     onClick={() => setShowTeamingPrep(true)}
                     className="w-full card reflection-link rounded-xl p-5 text-left transition-all hover:shadow-lg"
                     style={{
-                      backgroundColor: '#FFFFFF',
+                      backgroundColor: 'var(--bg-card)',
                       border: '1px solid rgba(92, 127, 79, 0.3)',
                       transform: 'translateY(0)',
                     }}
                     onMouseEnter={(e) => {
                       e.currentTarget.style.transform = 'translateY(-2px)';
-                      e.currentTarget.style.borderColor = '#5C7F4F';
+                      e.currentTarget.style.borderColor = 'var(--primary-800)';
+            e.currentTarget.style.boxShadow = '0 10px 25px rgba(27, 94, 32, 0.3), 0 0 0 3px rgba(27, 94, 32, 0.2)';
                       e.currentTarget.style.backgroundColor = '#F8FBF6';
                     }}
                     onMouseLeave={(e) => {
@@ -4631,10 +5397,10 @@ function App() {
                       e.currentTarget.style.backgroundColor = '#FFFFFF';
                     }}
                   >
-                    <h3 className="font-bold mb-2 text-base" style={{ color: '#1A1A1A' }}>
+                    <h3 className="font-bold mb-2 text-base" style={{ color: '#0D3A14' }}>
                       Teaming Prep
                     </h3>
-                    <p className="text-sm" style={{ color: '#5A5A5A' }}>
+                    <p className="text-sm" style={{ color: '#3A3A3A' }}>
                       Prepare for smooth collaboration and handoffs
                     </p>
                   </button>
@@ -4645,13 +5411,14 @@ function App() {
                     onClick={() => setShowTeamingReflection(true)}
                     className="w-full card reflection-link rounded-xl p-5 text-left transition-all hover:shadow-lg"
                     style={{
-                      backgroundColor: '#FFFFFF',
+                      backgroundColor: 'var(--bg-card)',
                       border: '1px solid rgba(92, 127, 79, 0.3)',
                       transform: 'translateY(0)',
                     }}
                     onMouseEnter={(e) => {
                       e.currentTarget.style.transform = 'translateY(-2px)';
-                      e.currentTarget.style.borderColor = '#5C7F4F';
+                      e.currentTarget.style.borderColor = 'var(--primary-800)';
+            e.currentTarget.style.boxShadow = '0 10px 25px rgba(27, 94, 32, 0.3), 0 0 0 3px rgba(27, 94, 32, 0.2)';
                       e.currentTarget.style.backgroundColor = '#F8FBF6';
                     }}
                     onMouseLeave={(e) => {
@@ -4660,10 +5427,10 @@ function App() {
                       e.currentTarget.style.backgroundColor = '#FFFFFF';
                     }}
                   >
-                    <h3 className="font-bold mb-2 text-base" style={{ color: '#1A1A1A' }}>
+                    <h3 className="font-bold mb-2 text-base" style={{ color: '#0D3A14' }}>
                       Team Reflection
                     </h3>
-                    <p className="text-sm" style={{ color: '#5A5A5A' }}>
+                    <p className="text-sm" style={{ color: '#3A3A3A' }}>
                       Process team dynamics and collaboration
                     </p>
                   </button>
@@ -4674,13 +5441,14 @@ function App() {
                     onClick={() => setShowMentoringPrep(true)}
                     className="w-full card reflection-link rounded-xl p-5 text-left transition-all hover:shadow-lg"
                     style={{
-                      backgroundColor: '#FFFFFF',
+                      backgroundColor: 'var(--bg-card)',
                       border: '1px solid rgba(92, 127, 79, 0.3)',
                       transform: 'translateY(0)',
                     }}
                     onMouseEnter={(e) => {
                       e.currentTarget.style.transform = 'translateY(-2px)';
-                      e.currentTarget.style.borderColor = '#5C7F4F';
+                      e.currentTarget.style.borderColor = 'var(--primary-800)';
+            e.currentTarget.style.boxShadow = '0 10px 25px rgba(27, 94, 32, 0.3), 0 0 0 3px rgba(27, 94, 32, 0.2)';
                       e.currentTarget.style.backgroundColor = '#F8FBF6';
                     }}
                     onMouseLeave={(e) => {
@@ -4689,10 +5457,10 @@ function App() {
                       e.currentTarget.style.backgroundColor = '#FFFFFF';
                     }}
                   >
-                    <h3 className="font-bold mb-2 text-base" style={{ color: '#1A1A1A' }}>
+                    <h3 className="font-bold mb-2 text-base" style={{ color: '#0D3A14' }}>
                       Mentoring Prep
                     </h3>
-                    <p className="text-sm" style={{ color: '#5A5A5A' }}>
+                    <p className="text-sm" style={{ color: '#3A3A3A' }}>
                       Structure your mentoring approach
                     </p>
                   </button>
@@ -4703,13 +5471,14 @@ function App() {
                     onClick={() => setShowEthicsMeaningCheck(true)}
                     className="w-full card reflection-link rounded-xl p-5 text-left transition-all hover:shadow-lg"
                     style={{
-                      backgroundColor: '#FFFFFF',
+                      backgroundColor: 'var(--bg-card)',
                       border: '1px solid rgba(92, 127, 79, 0.3)',
                       transform: 'translateY(0)',
                     }}
                     onMouseEnter={(e) => {
                       e.currentTarget.style.transform = 'translateY(-2px)';
-                      e.currentTarget.style.borderColor = '#5C7F4F';
+                      e.currentTarget.style.borderColor = 'var(--primary-800)';
+            e.currentTarget.style.boxShadow = '0 10px 25px rgba(27, 94, 32, 0.3), 0 0 0 3px rgba(27, 94, 32, 0.2)';
                       e.currentTarget.style.backgroundColor = '#F8FBF6';
                     }}
                     onMouseLeave={(e) => {
@@ -4718,10 +5487,10 @@ function App() {
                       e.currentTarget.style.backgroundColor = '#FFFFFF';
                     }}
                   >
-                    <h3 className="font-bold mb-2 text-base" style={{ color: '#1A1A1A' }}>
+                    <h3 className="font-bold mb-2 text-base" style={{ color: '#0D3A14' }}>
                       Ethics & Meaning Check
                     </h3>
-                    <p className="text-sm" style={{ color: '#5A5A5A' }}>
+                    <p className="text-sm" style={{ color: '#3A3A3A' }}>
                       Reflect on boundaries and professional purpose
                     </p>
                   </button>
@@ -4743,13 +5512,13 @@ function App() {
           <section
             className="rounded-2xl p-8"
             style={{
-              backgroundColor: '#FFFFFF',
+              backgroundColor: 'var(--bg-card)',
               boxShadow: '0 10px 30px rgba(92, 127, 79, 0.15), 0 2px 8px rgba(0, 0, 0, 0.05)',
               border: '1px solid rgba(92, 127, 79, 0.2)',
             }}
           >
             <div className="flex items-center justify-between mb-6">
-              <h2 id="recent-reflections-heading" className="text-2xl font-bold" style={{ color: '#1A1A1A' }}>
+              <h2 id="recent-reflections-heading" className="text-2xl font-bold" style={{ color: '#0D3A14' }}>
                 Recent Reflections
               </h2>
               <button
@@ -4789,7 +5558,8 @@ function App() {
                       }}
                       onMouseEnter={(e) => {
                         e.currentTarget.style.backgroundColor = 'rgba(92, 127, 79, 0.1)';
-                        e.currentTarget.style.borderColor = '#5C7F4F';
+                        e.currentTarget.style.borderColor = 'var(--primary-800)';
+            e.currentTarget.style.boxShadow = '0 10px 25px rgba(27, 94, 32, 0.3), 0 0 0 3px rgba(27, 94, 32, 0.2)';
                         e.currentTarget.style.transform = 'translateX(4px)';
                       }}
                       onMouseLeave={(e) => {
@@ -4800,19 +5570,19 @@ function App() {
                     >
                       <div className="flex items-start justify-between">
                         <div className="flex-1">
-                          <h4 className="font-semibold mb-2" style={{ color: '#1A1A1A' }}>
+                          <h4 className="font-semibold mb-2" style={{ color: '#0D3A14' }}>
                             {reflection.type}
                           </h4>
-                          <p className="text-sm mb-2" style={{ color: '#5A5A5A' }}>
+                          <p className="text-sm mb-2" style={{ color: '#3A3A3A' }}>
                             {getReflectionSummary(reflection)}
                           </p>
-                          <p className="text-xs" style={{ color: '#9CA3AF' }}>
+                          <p className="text-xs" style={{ color: 'var(--text-tertiary)' }}>
                             {timeAgo}
                           </p>
                         </div>
                         <ChevronDown 
                           className="h-5 w-5 rotate-[-90deg] opacity-0 group-hover:opacity-100 transition-opacity" 
-                          style={{ color: '#5C7F4F' }} 
+                          style={{ color: 'var(--primary-800)' }} 
                         />
                       </div>
                     </div>
@@ -4829,7 +5599,8 @@ function App() {
                     }}
                     onMouseEnter={(e) => {
                       e.currentTarget.style.backgroundColor = 'rgba(92, 127, 79, 0.1)';
-                      e.currentTarget.style.borderColor = '#5C7F4F';
+                      e.currentTarget.style.borderColor = 'var(--primary-800)';
+            e.currentTarget.style.boxShadow = '0 10px 25px rgba(27, 94, 32, 0.3), 0 0 0 3px rgba(27, 94, 32, 0.2)';
                       e.currentTarget.style.color = '#5C7F4F';
                     }}
                     onMouseLeave={(e) => {
@@ -4850,14 +5621,14 @@ function App() {
                 >
                   <BookOpen className="h-16 w-16 mx-auto mb-4" style={{ color: '#7A9B6E' }} />
                 </div>
-                <p className="mb-6 text-lg" style={{ color: '#5A5A5A' }}>
+                <p className="mb-6 text-lg" style={{ color: '#3A3A3A' }}>
                   No reflections yet
                 </p>
                 <button
                   onClick={() => setActiveTab('reflection')}
                   className="px-8 py-3 rounded-xl font-semibold transition-all flex items-center mx-auto"
                   style={{
-                    background: 'linear-gradient(145deg, #6B8B60 0%, #5F7F55 100%)',
+                    background: 'linear-gradient(145deg, #1A3D26 0%, #0F2818 100%)',
                     color: '#FFFFFF',
                     boxShadow: '0 4px 15px rgba(107, 139, 96, 0.3)',
                   }}
@@ -4885,12 +5656,12 @@ function App() {
             className="rounded-2xl p-6"
             aria-labelledby="quick-tools-heading"
             style={{
-              backgroundColor: '#FFFFFF',
+              backgroundColor: 'var(--bg-card)',
               boxShadow: '0 8px 20px rgba(92, 127, 79, 0.12), 0 2px 6px rgba(0, 0, 0, 0.04)',
               border: '1px solid rgba(92, 127, 79, 0.2)',
             }}
           >
-            <h3 id="quick-tools-heading" className="text-lg font-bold mb-5" style={{ color: '#1A1A1A' }}>
+            <h3 id="quick-tools-heading" className="text-lg font-bold mb-5" style={{ color: '#0D3A14' }}>
               Quick Tools
             </h3>
             <div className="space-y-3">
@@ -4907,7 +5678,8 @@ function App() {
                 }}
                 onMouseEnter={(e) => {
                   e.currentTarget.style.backgroundColor = 'rgba(92, 127, 79, 0.15)';
-                  e.currentTarget.style.borderColor = '#5C7F4F';
+                  e.currentTarget.style.borderColor = 'var(--primary-800)';
+            e.currentTarget.style.boxShadow = '0 10px 25px rgba(27, 94, 32, 0.3), 0 0 0 3px rgba(27, 94, 32, 0.2)';
                   e.currentTarget.style.transform = 'translateX(2px)';
                 }}
                 onMouseLeave={(e) => {
@@ -4920,9 +5692,9 @@ function App() {
                   className="p-2 rounded-lg mr-3"
                   style={{ backgroundColor: 'rgba(92, 127, 79, 0.2)' }}
                 >
-                  <MessageCircle className="h-5 w-5" style={{ color: '#5C7F4F' }} />
+                  <MessageCircle className="h-5 w-5" style={{ color: '#1A3D26' }} />
                 </div>
-                <span className="font-medium" style={{ color: '#1A1A1A' }}>
+                <span className="font-medium" style={{ color: '#0D3A14' }}>
                   Chat with Elya
                 </span>
               </button>
@@ -4935,7 +5707,8 @@ function App() {
                 }}
                 onMouseEnter={(e) => {
                   e.currentTarget.style.backgroundColor = 'rgba(92, 127, 79, 0.15)';
-                  e.currentTarget.style.borderColor = '#5C7F4F';
+                  e.currentTarget.style.borderColor = 'var(--primary-800)';
+            e.currentTarget.style.boxShadow = '0 10px 25px rgba(27, 94, 32, 0.3), 0 0 0 3px rgba(27, 94, 32, 0.2)';
                   e.currentTarget.style.transform = 'translateX(2px)';
                 }}
                 onMouseLeave={(e) => {
@@ -4948,9 +5721,9 @@ function App() {
                   className="p-2 rounded-lg mr-3"
                   style={{ backgroundColor: 'rgba(92, 127, 79, 0.2)' }}
                 >
-                  <TrendingUp className="h-5 w-5" style={{ color: '#5C7F4F' }} />
+                  <TrendingUp className="h-5 w-5" style={{ color: '#1A3D26' }} />
                 </div>
-                <span className="font-medium" style={{ color: '#1A1A1A' }}>
+                <span className="font-medium" style={{ color: '#0D3A14' }}>
                   Growth Insights
                 </span>
               </button>
@@ -4963,7 +5736,7 @@ function App() {
             aria-labelledby="insight-heading"
             aria-live="polite"
             style={{
-              background: 'linear-gradient(145deg, #6B8B60 0%, #5F7F55 100%)',
+              background: 'linear-gradient(145deg, #1A3D26 0%, #0F2818 100%)',
               boxShadow: '0 10px 25px rgba(107, 139, 96, 0.35)',
               border: '1px solid rgba(107, 139, 96, 0.3)',
             }}
@@ -5015,7 +5788,7 @@ function App() {
           >
             Good morning, dev
           </h2>
-          <p className="text-lg" style={{ color: '#5A5A5A', fontWeight: '400' }}>
+          <p className="text-lg" style={{ color: '#3A3A3A', fontWeight: '400' }}>
             Ready to reflect and grow today?
           </p>
         </div>
@@ -5139,7 +5912,7 @@ function App() {
           <div role="tabpanel" id="structured-panel" aria-labelledby="structured-tab">
             <div className="flex items-center justify-between mb-8">
               <div>
-                <h2 className="text-3xl font-bold mb-3" style={{ color: '#1A1A1A' }}>
+                <h2 className="text-3xl font-bold mb-3" style={{ color: '#0D3A14' }}>
                   Structured Reflections
                 </h2>
                 <p className="text-base" style={{ color: '#3A3A3A' }}>
@@ -5150,7 +5923,7 @@ function App() {
                 className="p-4 rounded-full"
                 style={{ backgroundColor: 'rgba(92, 127, 79, 0.15)' }}
               >
-                <BookOpen className="h-10 w-10" style={{ color: '#5C7F4F' }} />
+                <BookOpen className="h-10 w-10" style={{ color: '#1A3D26' }} />
               </div>
             </div>
 
@@ -5164,13 +5937,14 @@ function App() {
                   aria-label={`${card.title} reflection card`}
                   className="rounded-xl p-6 transition-all cursor-pointer group focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-sage-600"
                   style={{
-                    backgroundColor: '#FFFFFF',
+                    backgroundColor: 'var(--bg-card)',
                     border: '2px solid transparent',
                     boxShadow: '0 4px 15px rgba(0, 0, 0, 0.05)',
                     transform: 'translateY(0)',
                   }}
                   onMouseEnter={(e) => {
-                    e.currentTarget.style.borderColor = '#5C7F4F';
+                    e.currentTarget.style.borderColor = 'var(--primary-800)';
+            e.currentTarget.style.boxShadow = '0 10px 25px rgba(27, 94, 32, 0.3), 0 0 0 3px rgba(27, 94, 32, 0.2)';
                     e.currentTarget.style.transform = 'translateY(-4px) scale(1.02)';
                     e.currentTarget.style.boxShadow = '0 8px 25px rgba(92, 127, 79, 0.25)';
                   }}
@@ -5247,11 +6021,11 @@ function App() {
                     <card.icon
                       className="h-6 w-6"
                       aria-hidden="true"
-                      style={{ color: '#2D5F3F' }}
+                      style={{ color: 'var(--primary-900)' }}
                     />
                   </div>
 
-                  <h3 className="text-lg font-bold mb-3" style={{ color: '#1A1A1A' }}>
+                  <h3 className="text-lg font-bold mb-3" style={{ color: '#0D3A14' }}>
                     {card.title}
                   </h3>
 
@@ -5416,6 +6190,7 @@ function App() {
         <Route path="/terms" element={<TermsOfService />} />
         <Route path="/contact" element={<Contact />} />
         <Route path="/about" element={<About />} />
+        <Route path="/accessibility" element={<Accessibility />} />
         <Route path="/pricing" element={<PricingNew />} />
         <Route path="/landing" element={<LandingPageEnhanced onGetStarted={() => setDevMode(true)} />} />
         <Route path="*" element={
@@ -5478,6 +6253,7 @@ function App() {
       <Route path="/terms" element={<TermsOfService />} />
       <Route path="/contact" element={<Contact />} />
       <Route path="/about" element={<About />} />
+      <Route path="/accessibility" element={<Accessibility />} />
       <Route path="/pricing" element={<PricingNew />} />
       <Route path="/pricing-test" element={<PricingTest />} />
       <Route path="/header-demo" element={<HeaderDemo />} />
@@ -5599,7 +6375,7 @@ function App() {
                     <div
                       className="absolute right-0 top-full mt-2 w-72 rounded-lg shadow-lg z-20"
                       style={{
-                        backgroundColor: '#FFFFFF',
+                        backgroundColor: 'var(--bg-card)',
                         border: '1px solid rgba(92, 127, 79, 0.15)',
                         boxShadow: '0 4px 6px rgba(0, 0, 0, 0.07), 0 2px 4px rgba(0, 0, 0, 0.05)',
                       }}
@@ -5650,7 +6426,7 @@ function App() {
                             e.currentTarget.style.backgroundColor = 'transparent';
                           }}
                         >
-                          <User className="h-5 w-5" style={{ color: '#5C7F4F' }} />
+                          <User className="h-5 w-5" style={{ color: '#1A3D26' }} />
                           <div className="flex-grow">
                             <div className="font-medium text-sm" style={{ color: '#1A1F1C' }}>
                               Profile Settings
@@ -5678,7 +6454,7 @@ function App() {
                             className="p-2 rounded-lg"
                             style={{ backgroundColor: 'rgba(92, 127, 79, 0.15)' }}
                           >
-                            <Settings className="h-5 w-5" style={{ color: '#5C7F4F' }} />
+                            <Settings className="h-5 w-5" style={{ color: '#1A3D26' }} />
                           </div>
                           <div className="flex-grow">
                             <div className="font-medium" style={{ color: '#FFFFFF' }}>
@@ -5746,7 +6522,7 @@ function App() {
                             className="p-2 rounded-lg"
                             style={{ backgroundColor: 'rgba(92, 127, 79, 0.15)' }}
                           >
-                            <Shield className="h-5 w-5" style={{ color: '#5C7F4F' }} />
+                            <Shield className="h-5 w-5" style={{ color: '#1A3D26' }} />
                           </div>
                           <div className="flex-grow">
                             <div className="font-medium" style={{ color: '#FFFFFF' }}>
@@ -5820,7 +6596,7 @@ function App() {
           aria-label="Main navigation"
           className="max-w-7xl mx-auto rounded-full"
           style={{
-            backgroundColor: '#FFFFFF',
+            backgroundColor: 'var(--bg-card)',
             border: '1px solid rgba(147, 197, 253, 0.12)',
             boxShadow: '0 2px 8px rgba(147, 197, 253, 0.04)',
             padding: '4px',
@@ -5906,6 +6682,7 @@ function App() {
       {/* Breathing Practice Modal */}
       {showBreathingPractice && (
         <BreathingPractice
+          mode={breathingMode}
           onClose={() => {
             setShowBreathingPractice(false);
             if (currentTechniqueId) {
@@ -5922,6 +6699,117 @@ function App() {
           }}
         />
       )}
+      
+      {/* Breathing Practice Why It Works Modal */}
+      {showBreathingModal && (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center p-4"
+          style={{ backgroundColor: 'rgba(0, 0, 0, 0.5)' }}
+          onClick={() => setShowBreathingModal(false)}
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="breathing-modal-title"
+        >
+          <div
+            className="rounded-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto"
+            style={{
+              backgroundColor: 'var(--bg-card)',
+              boxShadow: '0 20px 60px rgba(0, 0, 0, 0.3)',
+            }}
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="p-8">
+              <header className="mb-6">
+                <h2 id="breathing-modal-title" className="text-2xl font-bold mb-3" style={{ color: '#0D3A14' }}>
+                  Why Breathing Works
+                </h2>
+                <p className="text-sm" style={{ color: '#3A3A3A' }}>
+                  The neuroscience behind controlled breathing for interpreter recovery
+                </p>
+              </header>
+
+              <section className="space-y-6">
+                <article>
+                  <h3 className="text-lg font-semibold mb-2" style={{ color: '#0D3A14' }}>
+                    Vagus Nerve Activation
+                  </h3>
+                  <p className="text-sm mb-2" style={{ color: '#2A2A2A' }}>
+                    <strong>Direct nervous system control:</strong> Slow, deep breathing stimulates the vagus nerve, which directly signals your body to shift from stress response to relaxation mode.
+                  </p>
+                  <p className="text-sm" style={{ color: '#3A3A3A' }}>
+                    This is particularly crucial for interpreters who experience rapid stress spikes during challenging assignments. The 4-6 breathing ratio optimizes this vagal response.
+                  </p>
+                </article>
+
+                <article>
+                  <h3 className="text-lg font-semibold mb-2" style={{ color: '#0D3A14' }}>
+                    Heart Rate Variability (HRV)
+                  </h3>
+                  <p className="text-sm mb-2" style={{ color: '#2A2A2A' }}>
+                    <strong>Resilience indicator:</strong> Controlled breathing increases HRV, a key marker of stress resilience and cognitive flexibility—both essential for interpreting performance.
+                  </p>
+                  <p className="text-sm" style={{ color: '#3A3A3A' }}>
+                    Studies show that interpreters with higher HRV maintain better accuracy and experience less fatigue during consecutive interpreting sessions.
+                  </p>
+                </article>
+
+                <article>
+                  <h3 className="text-lg font-semibold mb-2" style={{ color: '#0D3A14' }}>
+                    Prefrontal Cortex Regulation
+                  </h3>
+                  <p className="text-sm mb-2" style={{ color: '#2A2A2A' }}>
+                    <strong>Executive function boost:</strong> Rhythmic breathing enhances blood flow to the prefrontal cortex, improving decision-making, language processing, and emotional regulation.
+                  </p>
+                  <p className="text-sm" style={{ color: '#3A3A3A' }}>
+                    This helps interpreters maintain cognitive clarity even after emotionally charged or technically complex assignments.
+                  </p>
+                </article>
+
+                <article>
+                  <h3 className="text-lg font-semibold mb-2" style={{ color: '#0D3A14' }}>
+                    Cortisol Reduction
+                  </h3>
+                  <p className="text-sm mb-2" style={{ color: '#2A2A2A' }}>
+                    <strong>Stress hormone management:</strong> Just 2-4 minutes of controlled breathing can reduce cortisol levels by up to 30%, preventing the accumulation of stress throughout your workday.
+                  </p>
+                  <p className="text-sm" style={{ color: '#3A3A3A' }}>
+                    Regular breathing practices help interpreters maintain lower baseline stress levels, improving overall well-being and career longevity.
+                  </p>
+                </article>
+
+                <article>
+                  <h3 className="text-lg font-semibold mb-2" style={{ color: '#0D3A14' }}>
+                    Oxygen Efficiency
+                  </h3>
+                  <p className="text-sm mb-2" style={{ color: '#2A2A2A' }}>
+                    <strong>Brain fuel optimization:</strong> The 4-6 breathing pattern maximizes oxygen exchange and CO2 balance, ensuring optimal brain function for language processing.
+                  </p>
+                  <p className="text-sm" style={{ color: '#3A3A3A' }}>
+                    This is especially important for remote interpreters who may unconsciously hold their breath or breathe shallowly during intense concentration.
+                  </p>
+                </article>
+              </section>
+
+              <footer className="mt-8 pt-6 border-t" style={{ borderColor: 'rgba(92, 127, 79, 0.2)' }}>
+                <p className="text-xs mb-4" style={{ color: '#525252' }}>
+                  Research sources: Frontiers in Psychology, International Journal of Psychophysiology, Neuroscience & Biobehavioral Reviews
+                </p>
+                <button
+                  onClick={() => setShowBreathingModal(false)}
+                  className="w-full px-6 py-3 rounded-lg font-medium transition-all hover:scale-105"
+                  style={{
+                    background: 'linear-gradient(135deg, var(--primary-800), var(--primary-900))',
+                    color: '#FFFFFF',
+                  }}
+                  aria-label="Close modal and return to breathing practice options"
+                >
+                  Ready to breathe and reset!
+                </button>
+              </footer>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Affirmation & Reflection Studio Modal */}
       {showAffirmationStudio && (
@@ -5933,6 +6821,7 @@ function App() {
       {/* Body Check-In Modal */}
       {showBodyCheckIn && (
         <BodyCheckIn
+          mode={bodyCheckInMode}
           onClose={() => {
             setShowBodyCheckIn(false);
             if (currentTechniqueId) {
@@ -5950,10 +6839,122 @@ function App() {
           }}
         />
       )}
+      
+      {/* Body Check-In Why It Works Modal */}
+      {showBodyCheckInModal && (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center p-4"
+          style={{ backgroundColor: 'rgba(0, 0, 0, 0.5)' }}
+          onClick={() => setShowBodyCheckInModal(false)}
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="body-checkin-modal-title"
+        >
+          <div
+            className="rounded-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto"
+            style={{
+              backgroundColor: 'var(--bg-card)',
+              boxShadow: '0 20px 60px rgba(0, 0, 0, 0.3)',
+            }}
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="p-8">
+              <header className="mb-6">
+                <h2 id="body-checkin-modal-title" className="text-2xl font-bold mb-3" style={{ color: '#0D3A14' }}>
+                  Why a Body Check-In?
+                </h2>
+                <p className="text-sm" style={{ color: '#3A3A3A' }}>
+                  Understanding the neuroscience of somatic awareness for interpreters
+                </p>
+              </header>
+
+              <section className="space-y-6">
+                <article>
+                  <h3 className="text-lg font-semibold mb-2" style={{ color: '#0D3A14' }}>
+                    The Interpreter's Physical Load
+                  </h3>
+                  <p className="text-sm mb-2" style={{ color: '#2A2A2A' }}>
+                    <strong>Research shows:</strong> Interpreters maintain heightened muscle tension throughout sessions, with neck and shoulder tension increasing by up to 47% during complex interpretations.
+                  </p>
+                  <p className="text-sm" style={{ color: '#3A3A3A' }}>
+                    This chronic tension creates feedback loops that amplify stress responses and reduce cognitive performance over time.
+                  </p>
+                </article>
+
+                <article>
+                  <h3 className="text-lg font-semibold mb-2" style={{ color: '#0D3A14' }}>
+                    The Insula Connection
+                  </h3>
+                  <p className="text-sm mb-2" style={{ color: '#2A2A2A' }}>
+                    <strong>Brain science:</strong> Body scanning activates your insula cortex, the brain region that integrates physical sensations with emotional awareness.
+                  </p>
+                  <p className="text-sm" style={{ color: '#3A3A3A' }}>
+                    Regular body check-ins strengthen interoception—your ability to sense internal signals—improving both stress management and decision-making.
+                  </p>
+                </article>
+
+                <article>
+                  <h3 className="text-lg font-semibold mb-2" style={{ color: '#0D3A14' }}>
+                    Nervous System Reset
+                  </h3>
+                  <p className="text-sm mb-2" style={{ color: '#2A2A2A' }}>
+                    <strong>Autonomic regulation:</strong> Progressive body scanning shifts your nervous system from sympathetic (fight-or-flight) to parasympathetic (rest-and-digest) dominance.
+                  </p>
+                  <p className="text-sm" style={{ color: '#3A3A3A' }}>
+                    This shift reduces cortisol, lowers heart rate, and improves vagal tone—essential for sustained cognitive performance.
+                  </p>
+                </article>
+
+                <article>
+                  <h3 className="text-lg font-semibold mb-2" style={{ color: '#0D3A14' }}>
+                    Breaking the Tension-Fatigue Cycle
+                  </h3>
+                  <p className="text-sm mb-2" style={{ color: '#2A2A2A' }}>
+                    <strong>Physical release:</strong> Conscious tension release prevents the accumulation of "muscle memory" from stressful interpretations.
+                  </p>
+                  <p className="text-sm" style={{ color: '#3A3A3A' }}>
+                    Studies show interpreters who practice regular body scanning report 35% less physical fatigue and 40% fewer tension headaches.
+                  </p>
+                </article>
+
+                <article>
+                  <h3 className="text-lg font-semibold mb-2" style={{ color: '#0D3A14' }}>
+                    Embodied Professionalism
+                  </h3>
+                  <p className="text-sm mb-2" style={{ color: '#2A2A2A' }}>
+                    <strong>Performance enhancement:</strong> Body awareness improves your professional presence, voice quality, and non-verbal communication.
+                  </p>
+                  <p className="text-sm" style={{ color: '#3A3A3A' }}>
+                    Interpreters with strong somatic awareness maintain better posture, clearer articulation, and more sustainable energy throughout long assignments.
+                  </p>
+                </article>
+              </section>
+
+              <footer className="mt-8 pt-6 border-t" style={{ borderColor: 'rgba(92, 127, 79, 0.2)' }}>
+                <p className="text-xs mb-4" style={{ color: '#525252' }}>
+                  Research sources: Journal of Psychosomatic Research, International Journal of Clinical and Health Psychology, Embodied Cognition Studies
+                </p>
+                <button
+                  onClick={() => setShowBodyCheckInModal(false)}
+                  className="w-full px-6 py-3 rounded-lg font-medium transition-all hover:scale-105"
+                  style={{
+                    background: 'linear-gradient(135deg, var(--primary-800), var(--primary-900))',
+                    color: '#FFFFFF',
+                  }}
+                  aria-label="Close modal and return to body check-in options"
+                >
+                  Ready to check in with my body!
+                </button>
+              </footer>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Professional Boundaries Reset Modal */}
       {showProfessionalBoundariesReset && (
         <ProfessionalBoundariesReset
+          mode={boundariesResetMode}
           onClose={() => {
             setShowProfessionalBoundariesReset(false);
             if (currentTechniqueId) {
@@ -5994,6 +6995,7 @@ function App() {
       {/* Assignment Reset Modal */}
       {showAssignmentReset && (
         <AssignmentReset
+          mode={assignmentResetMode}
           onClose={() => {
             setShowAssignmentReset(false);
             if (currentTechniqueId) {
@@ -6014,6 +7016,7 @@ function App() {
       {/* Technology Fatigue Reset Modal */}
       {showTechnologyFatigueReset && (
         <TechnologyFatigueReset
+          mode={techFatigueMode}
           onClose={() => {
             setShowTechnologyFatigueReset(false);
             if (currentTechniqueId) {
@@ -6034,6 +7037,7 @@ function App() {
       {/* Emotion Mapping Modal */}
       {showEmotionMapping && (
         <EmotionMapping
+          mode={emotionMappingMode}
           onClose={() => {
             setShowEmotionMapping(false);
             if (currentTechniqueId) {

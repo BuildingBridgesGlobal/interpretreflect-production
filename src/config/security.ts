@@ -83,7 +83,7 @@ export const SECURITY_CONFIG = {
 export const SECURITY_MESSAGES = {
   sessionWarning: 'Your session will expire in 5 minutes due to inactivity. Any unsaved work will be lost.',
   sessionExpired: 'Your session has expired for security reasons. Please log in again.',
-  privacyConsent: 'We use encryption and follow HIPAA guidelines to protect your wellness data.',
+  privacyConsent: 'We use encryption and industry best practices to protect your wellness data.',
   securityReminder: 'Remember to log out when using shared devices.',
   dataEncrypted: 'Your data is encrypted at rest and in transit.',
   auditNotice: 'This action has been logged for security purposes.',

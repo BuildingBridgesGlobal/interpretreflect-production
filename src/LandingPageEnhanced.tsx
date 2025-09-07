@@ -1,32 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Logo } from './components/Logo';
 import { BrandVideo } from './components/BrandVideo';
-import {
-  Shield,
-  Brain,
-  Heart,
-  Users,
-  TrendingUp,
-  RefreshCw,
-  MessageCircle,
-  BookOpen,
-  Clock,
-  Award,
-  ArrowRight,
-  X,
-  Menu,
-  Eye,
-  Sparkles,
-  AlertCircle,
-  Globe,
-  Headphones,
-  Languages,
-  Palette,
-  Sun,
-  Moon,
-  AlertTriangle,
-  Zap,
-} from 'lucide-react';
 import { AuthModal } from './components/AuthModal';
 import { BurnoutAssessment } from './components/BurnoutAssessment';
 import { PricingModal } from './components/PricingModal';
@@ -213,14 +187,12 @@ function LandingPageEnhanced({ onGetStarted }: LandingPageProps) {
                   setTheme(newTheme);
                   setAnnounceMessage(`Theme changed to ${newTheme} mode`);
                 }}
-                className="p-2 rounded-lg hover:bg-gray-100 transition-all focus:outline-none focus:ring-4 focus:ring-sage-400"
+                className="px-3 py-2 rounded-lg hover:bg-gray-100 transition-all focus:outline-none focus:ring-4 focus:ring-sage-400 text-sm font-medium"
+                style={{ color: colors.neutral[600] }}
                 aria-label={`Switch to ${theme === 'light' ? 'dark' : 'light'} theme`}
                 aria-pressed={theme === 'dark'}
               >
-                {theme === 'light' ? 
-                  <Moon className="h-5 w-5" style={{ color: colors.neutral[600] }} /> :
-                  <Sun className="h-5 w-5" style={{ color: colors.neutral[600] }} />
-                }
+                {theme === 'light' ? 'Dark' : 'Light'}
               </button>
 
               {/* Auth buttons with better visual hierarchy */}
@@ -261,12 +233,13 @@ function LandingPageEnhanced({ onGetStarted }: LandingPageProps) {
                 setMobileMenuOpen(!mobileMenuOpen);
                 setAnnounceMessage(mobileMenuOpen ? 'Menu closed' : 'Menu opened');
               }}
-              className="md:hidden p-2 rounded-lg hover:bg-gray-100 focus:outline-none focus:ring-4 focus:ring-sage-400"
+              className="md:hidden px-3 py-2 rounded-lg hover:bg-gray-100 focus:outline-none focus:ring-4 focus:ring-sage-400 text-sm font-medium"
+              style={{ color: colors.neutral[600] }}
               aria-label={mobileMenuOpen ? 'Close menu' : 'Open menu'}
               aria-expanded={mobileMenuOpen}
               aria-controls="mobile-menu"
             >
-              {mobileMenuOpen ? <X className="h-6 w-6" aria-hidden="true" /> : <Menu className="h-6 w-6" aria-hidden="true" />}
+              {mobileMenuOpen ? 'Close' : 'Menu'}
             </button>
           </div>
         </div>
@@ -339,11 +312,10 @@ function LandingPageEnhanced({ onGetStarted }: LandingPageProps) {
           <div className="container mx-auto max-w-6xl">
             {/* Personalized greeting */}
             <div className="text-center mb-6 animate-fade-in">
-              <span className="text-sm font-medium px-4 py-2 rounded-full inline-flex items-center space-x-2"
+              <span className="text-sm font-medium px-4 py-2 rounded-full inline-block"
                 style={{ backgroundColor: colors.neutral[50], color: colors.primary.sage }}
               >
-                <Sparkles className="h-4 w-4" />
-                <span>{greeting}, interpreter</span>
+                {greeting}, interpreter
               </span>
             </div>
 
@@ -385,17 +357,15 @@ function LandingPageEnhanced({ onGetStarted }: LandingPageProps) {
                   handleAssessment();
                   setAnnounceMessage('Opening wellness assessment');
                 }}
-                className="group px-8 py-4 text-white font-semibold rounded-xl transition-all transform hover:scale-105 hover:shadow-xl flex items-center justify-center space-x-2 focus:outline-none focus:ring-4 focus:ring-offset-2 focus:ring-sage-400"
+                className="group px-8 py-4 text-white font-semibold rounded-xl transition-all transform hover:scale-105 hover:shadow-xl focus:outline-none focus:ring-4 focus:ring-offset-2 focus:ring-sage-400"
                 style={{ background: colors.gradients.accent, fontSize: '1.125rem' }}
                 aria-label="Start your wellness check - takes 2 minutes"
               >
-                <Heart className="h-5 w-5 group-hover:animate-pulse" aria-hidden="true" />
-                <span>Start Your Wellness Check</span>
-                <ArrowRight className="h-5 w-5 group-hover:translate-x-1 transition-transform" aria-hidden="true" />
+                Start Your Wellness Check
               </button>
               <button
                 onClick={handleSignup}
-                className="px-8 py-4 font-semibold rounded-xl border-2 transition-all hover:shadow-lg flex items-center justify-center space-x-2 focus:outline-none focus:ring-4 focus:ring-offset-2 focus:ring-sage-400"
+                className="px-8 py-4 font-semibold rounded-xl border-2 transition-all hover:shadow-lg focus:outline-none focus:ring-4 focus:ring-offset-2 focus:ring-sage-400"
                 style={{ 
                   borderColor: colors.primary.sage, 
                   color: colors.primary.sage,
@@ -404,7 +374,7 @@ function LandingPageEnhanced({ onGetStarted }: LandingPageProps) {
                 }}
                 aria-label="Browse free wellness resources"
               >
-                <span>Browse Free Resources</span>
+                Browse Free Resources
               </button>
             </div>
 
@@ -412,11 +382,8 @@ function LandingPageEnhanced({ onGetStarted }: LandingPageProps) {
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-16" role="region" aria-label="Interpreter specialization options">
               {/* Sign Language Interpreter */}
               <article className="p-6 rounded-2xl bg-white shadow-lg hover:shadow-xl transition-all focus-within:ring-4 focus-within:ring-sage-400" tabIndex={0} aria-label="Sign language interpreter resources">
-                <div className="flex items-center space-x-3 mb-4">
-                  <div className="p-3 rounded-xl" style={{ background: colors.gradients.ocean }}>
-                    <Globe className="h-6 w-6 text-white" aria-hidden="true" />
-                  </div>
-                  <h3 className="font-semibold" style={{ color: colors.neutral[800] }}>
+                <div className="mb-4">
+                  <h3 className="font-semibold text-lg" style={{ color: colors.neutral[800] }}>
                     Sign Language
                   </h3>
                 </div>
@@ -428,11 +395,8 @@ function LandingPageEnhanced({ onGetStarted }: LandingPageProps) {
 
               {/* Spoken Language Interpreter */}
               <article className="p-6 rounded-2xl bg-white shadow-lg hover:shadow-xl transition-all focus-within:ring-4 focus-within:ring-sage-400" tabIndex={0} aria-label="Spoken language interpreter resources">
-                <div className="flex items-center space-x-3 mb-4">
-                  <div className="p-3 rounded-xl" style={{ background: 'linear-gradient(135deg, #9B8AA3 0%, #B4A3BC 100%)' }}>
-                    <Languages className="h-6 w-6 text-white" aria-hidden="true" />
-                  </div>
-                  <h3 className="font-semibold" style={{ color: colors.neutral[800] }}>
+                <div className="mb-4">
+                  <h3 className="font-semibold text-lg" style={{ color: colors.neutral[800] }}>
                     Spoken Language
                   </h3>
                 </div>
@@ -444,11 +408,8 @@ function LandingPageEnhanced({ onGetStarted }: LandingPageProps) {
 
               {/* Conference/Remote Interpreter */}
               <article className="p-6 rounded-2xl bg-white shadow-lg hover:shadow-xl transition-all focus-within:ring-4 focus-within:ring-sage-400" tabIndex={0} aria-label="Remote and hybrid interpreter resources">
-                <div className="flex items-center space-x-3 mb-4">
-                  <div className="p-3 rounded-xl" style={{ background: 'linear-gradient(135deg, #8B7355 0%, #A58A6B 100%)' }}>
-                    <Headphones className="h-6 w-6 text-white" aria-hidden="true" />
-                  </div>
-                  <h3 className="font-semibold" style={{ color: colors.neutral[800] }}>
+                <div className="mb-4">
+                  <h3 className="font-semibold text-lg" style={{ color: colors.neutral[800] }}>
                     Remote & Hybrid
                   </h3>
                 </div>
@@ -461,26 +422,22 @@ function LandingPageEnhanced({ onGetStarted }: LandingPageProps) {
 
             {/* Trust badges with microinteractions */}
             <div className="flex flex-wrap justify-center items-center gap-8 py-8" role="list" aria-label="Trust and security features">
-              <div className="flex items-center space-x-2 opacity-80 hover:opacity-100 transition-opacity" role="listitem">
-                <Shield className="h-5 w-5" style={{ color: colors.primary.sage }} aria-hidden="true" />
+              <div className="opacity-80 hover:opacity-100 transition-opacity" role="listitem">
                 <span className="text-base font-medium" style={{ color: colors.neutral[700] }}>
                   HIPAA Compliant
                 </span>
               </div>
-              <div className="flex items-center space-x-2 opacity-80 hover:opacity-100 transition-opacity" role="listitem">
-                <Award className="h-5 w-5" style={{ color: colors.primary.sage }} aria-hidden="true" />
+              <div className="opacity-80 hover:opacity-100 transition-opacity" role="listitem">
                 <span className="text-base font-medium" style={{ color: colors.neutral[700] }}>
                   Evidence-Based
                 </span>
               </div>
-              <div className="flex items-center space-x-2 opacity-80 hover:opacity-100 transition-opacity" role="listitem">
-                <Users className="h-5 w-5" style={{ color: colors.primary.sage }} aria-hidden="true" />
+              <div className="opacity-80 hover:opacity-100 transition-opacity" role="listitem">
                 <span className="text-base font-medium" style={{ color: colors.neutral[700] }}>
                   2,000+ Interpreters
                 </span>
               </div>
-              <div className="flex items-center space-x-2 opacity-80 hover:opacity-100 transition-opacity" role="listitem">
-                <Heart className="h-5 w-5" style={{ color: colors.primary.sage }} aria-hidden="true" />
+              <div className="opacity-80 hover:opacity-100 transition-opacity" role="listitem">
                 <span className="text-base font-medium" style={{ color: colors.neutral[700] }}>
                   Built with Love
                 </span>
@@ -509,11 +466,6 @@ function LandingPageEnhanced({ onGetStarted }: LandingPageProps) {
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
               {/* Vicarious Trauma */}
               <div className="p-6 rounded-2xl border-2 border-orange-200 bg-orange-50 hover:shadow-xl transition-all">
-                <div className="mb-4">
-                  <div className="inline-flex p-3 rounded-xl bg-orange-100">
-                    <AlertTriangle className="h-6 w-6 text-orange-600" />
-                  </div>
-                </div>
                 <h3 className="text-xl font-bold mb-2" style={{ color: colors.neutral[800] }}>
                   Vicarious Trauma
                 </h3>
@@ -530,11 +482,6 @@ function LandingPageEnhanced({ onGetStarted }: LandingPageProps) {
 
               {/* Imposter Syndrome */}
               <div className="p-6 rounded-2xl border-2 border-purple-200 bg-purple-50 hover:shadow-xl transition-all">
-                <div className="mb-4">
-                  <div className="inline-flex p-3 rounded-xl bg-purple-100">
-                    <Award className="h-6 w-6 text-purple-600" />
-                  </div>
-                </div>
                 <h3 className="text-xl font-bold mb-2" style={{ color: colors.neutral[800] }}>
                   Imposter Syndrome
                 </h3>
@@ -551,11 +498,6 @@ function LandingPageEnhanced({ onGetStarted }: LandingPageProps) {
 
               {/* Professional Boundaries */}
               <div className="p-6 rounded-2xl border-2 border-blue-200 bg-blue-50 hover:shadow-xl transition-all">
-                <div className="mb-4">
-                  <div className="inline-flex p-3 rounded-xl bg-blue-100">
-                    <Shield className="h-6 w-6 text-blue-600" />
-                  </div>
-                </div>
                 <h3 className="text-xl font-bold mb-2" style={{ color: colors.neutral[800] }}>
                   Boundary Fatigue
                 </h3>
@@ -572,11 +514,6 @@ function LandingPageEnhanced({ onGetStarted }: LandingPageProps) {
 
               {/* Technology Stress */}
               <div className="p-6 rounded-2xl border-2 border-green-200 bg-green-50 hover:shadow-xl transition-all">
-                <div className="mb-4">
-                  <div className="inline-flex p-3 rounded-xl bg-green-100">
-                    <Zap className="h-6 w-6 text-green-600" />
-                  </div>
-                </div>
                 <h3 className="text-xl font-bold mb-2" style={{ color: colors.neutral[800] }}>
                   Platform Fatigue
                 </h3>
@@ -632,37 +569,31 @@ function LandingPageEnhanced({ onGetStarted }: LandingPageProps) {
               {/* Feature cards with hover effects */}
               {[
                 {
-                  icon: Brain,
                   title: 'Daily Burnout Check',
                   description: 'Quick 2-minute assessment to track your wellness trends over time',
                   color: colors.primary.sage,
                 },
                 {
-                  icon: RefreshCw,
                   title: 'Stress Reset Tools',
                   description: 'Immediate techniques for between assignments or difficult sessions',
                   color: colors.primary.ocean,
                 },
                 {
-                  icon: MessageCircle,
                   title: 'AI Wellness Coach',
                   description: 'Personalized support that understands interpreter challenges',
                   color: colors.primary.lavender,
                 },
                 {
-                  icon: BookOpen,
                   title: 'Reflection Studio',
                   description: 'Process vicarious trauma and challenging assignments safely',
                   color: colors.primary.earth,
                 },
                 {
-                  icon: TrendingUp,
                   title: 'Growth Insights',
                   description: 'Track patterns and celebrate your wellness progress',
                   color: colors.primary.mint,
                 },
                 {
-                  icon: Users,
                   title: 'Community Support',
                   description: 'Connect with peers who understand your unique challenges',
                   color: colors.primary.sage,
@@ -675,15 +606,7 @@ function LandingPageEnhanced({ onGetStarted }: LandingPageProps) {
                   role="listitem"
                   aria-label={`Feature: ${feature.title}`}
                 >
-                  <div className="mb-4">
-                    <div 
-                      className="inline-flex p-3 rounded-xl group-hover:scale-110 transition-transform"
-                      style={{ backgroundColor: `${feature.color}20` }}
-                    >
-                      <feature.icon className="h-6 w-6" style={{ color: feature.color }} aria-hidden="true" />
-                    </div>
-                  </div>
-                  <h3 className="text-xl font-semibold mb-2" style={{ color: colors.neutral[800] }}>
+                  <h3 className="text-xl font-semibold mb-3" style={{ color: colors.neutral[800] }}>
                     {feature.title}
                   </h3>
                   <p className="text-base leading-relaxed" style={{ color: colors.neutral[700], lineHeight: '1.6' }}>
@@ -709,60 +632,40 @@ function LandingPageEnhanced({ onGetStarted }: LandingPageProps) {
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6" role="list">
-                <div className="flex items-start space-x-4" role="listitem">
-                  <div className="p-2 rounded-lg" style={{ backgroundColor: colors.neutral[50] }} aria-hidden="true">
-                    <Palette className="h-5 w-5" style={{ color: colors.primary.sage }} aria-hidden="true" />
-                  </div>
-                  <div>
-                    <h3 className="font-semibold mb-1 text-lg" style={{ color: colors.neutral[800] }}>
-                      Custom Themes
-                    </h3>
-                    <p className="text-base" style={{ color: colors.neutral[700], lineHeight: '1.5' }}>
-                      Choose calming colors and fonts that work for you
-                    </p>
-                  </div>
+                <div role="listitem">
+                  <h3 className="font-semibold mb-2 text-lg" style={{ color: colors.neutral[800] }}>
+                    Custom Themes
+                  </h3>
+                  <p className="text-base" style={{ color: colors.neutral[700], lineHeight: '1.5' }}>
+                    Choose calming colors and fonts that work for you
+                  </p>
                 </div>
 
-                <div className="flex items-start space-x-4" role="listitem">
-                  <div className="p-2 rounded-lg" style={{ backgroundColor: colors.neutral[50] }} aria-hidden="true">
-                    <Eye className="h-5 w-5" style={{ color: colors.primary.sage }} aria-hidden="true" />
-                  </div>
-                  <div>
-                    <h3 className="font-semibold mb-1 text-lg" style={{ color: colors.neutral[800] }}>
-                      Accessibility First
-                    </h3>
-                    <p className="text-base" style={{ color: colors.neutral[700], lineHeight: '1.5' }}>
-                      Large text, high contrast, and screen reader support
-                    </p>
-                  </div>
+                <div role="listitem">
+                  <h3 className="font-semibold mb-2 text-lg" style={{ color: colors.neutral[800] }}>
+                    Accessibility First
+                  </h3>
+                  <p className="text-base" style={{ color: colors.neutral[700], lineHeight: '1.5' }}>
+                    Large text, high contrast, and screen reader support
+                  </p>
                 </div>
 
-                <div className="flex items-start space-x-4" role="listitem">
-                  <div className="p-2 rounded-lg" style={{ backgroundColor: colors.neutral[50] }} aria-hidden="true">
-                    <Clock className="h-5 w-5" style={{ color: colors.primary.sage }} aria-hidden="true" />
-                  </div>
-                  <div>
-                    <h3 className="font-semibold mb-1 text-lg" style={{ color: colors.neutral[800] }}>
-                      Your Schedule
-                    </h3>
-                    <p className="text-base" style={{ color: colors.neutral[700], lineHeight: '1.5' }}>
-                      Set reminders that work with your assignments
-                    </p>
-                  </div>
+                <div role="listitem">
+                  <h3 className="font-semibold mb-2 text-lg" style={{ color: colors.neutral[800] }}>
+                    Your Schedule
+                  </h3>
+                  <p className="text-base" style={{ color: colors.neutral[700], lineHeight: '1.5' }}>
+                    Set reminders that work with your assignments
+                  </p>
                 </div>
 
-                <div className="flex items-start space-x-4" role="listitem">
-                  <div className="p-2 rounded-lg" style={{ backgroundColor: colors.neutral[50] }} aria-hidden="true">
-                    <AlertCircle className="h-5 w-5" style={{ color: colors.primary.sage }} aria-hidden="true" />
-                  </div>
-                  <div>
-                    <h3 className="font-semibold mb-1 text-lg" style={{ color: colors.neutral[800] }}>
-                      Privacy Controls
-                    </h3>
-                    <p className="text-base" style={{ color: colors.neutral[700], lineHeight: '1.5' }}>
-                      You decide what to track and share
-                    </p>
-                  </div>
+                <div role="listitem">
+                  <h3 className="font-semibold mb-2 text-lg" style={{ color: colors.neutral[800] }}>
+                    Privacy Controls
+                  </h3>
+                  <p className="text-base" style={{ color: colors.neutral[700], lineHeight: '1.5' }}>
+                    You decide what to track and share
+                  </p>
                 </div>
               </div>
             </div>
@@ -783,13 +686,11 @@ function LandingPageEnhanced({ onGetStarted }: LandingPageProps) {
                 handleAssessment();
                 setAnnounceMessage('Opening wellness assessment');
               }}
-              className="px-8 py-4 bg-white font-semibold rounded-xl shadow-lg hover:shadow-xl transition-all transform hover:scale-105 inline-flex items-center space-x-2 focus:outline-none focus:ring-4 focus:ring-white focus:ring-offset-2 focus:ring-offset-sage-600"
+              className="px-8 py-4 bg-white font-semibold rounded-xl shadow-lg hover:shadow-xl transition-all transform hover:scale-105 focus:outline-none focus:ring-4 focus:ring-white focus:ring-offset-2 focus:ring-offset-sage-600"
               style={{ color: colors.primary.sage, fontSize: '1.125rem' }}
               aria-label="Take your free wellness assessment - takes 2 minutes"
             >
-              <Heart className="h-5 w-5" aria-hidden="true" />
-              <span>Take Your Free Assessment</span>
-              <ArrowRight className="h-5 w-5" aria-hidden="true" />
+              Take Your Free Assessment
             </button>
           </div>
         </section>

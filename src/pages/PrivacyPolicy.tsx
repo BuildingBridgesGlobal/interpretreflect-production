@@ -1,5 +1,5 @@
 import React from 'react';
-import { Shield, Lock, Eye, Cookie, ArrowLeft } from 'lucide-react';
+import { Shield, ArrowLeft } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 
 export function PrivacyPolicy() {
@@ -45,137 +45,179 @@ export function PrivacyPolicy() {
       </nav>
 
       {/* Content */}
-      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <h1 className="text-4xl font-bold mb-8" style={{ color: '#1A1A1A' }}>
-          Privacy Policy
-        </h1>
-        
-        <p className="text-sm mb-8" style={{ color: '#5A5A5A' }}>
-          Last updated: January 2025
-        </p>
+      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        {/* Title and Intro */}
+        <div className="text-center mb-8">
+          <h1 className="text-4xl md:text-5xl font-bold mb-3" style={{ color: '#1A1A1A' }}>
+            Privacy Policy
+          </h1>
+          <p className="text-sm mb-4" style={{ color: '#6B7C6B' }}>
+            Last updated: January 2025
+          </p>
+          <p className="text-base font-medium mb-6" style={{ color: '#2D5F3F' }}>
+            Your Privacy Matters
+          </p>
+        </div>
 
-        {/* Data Collection */}
-        <section className="mb-12">
-          <div className="flex items-center mb-4">
-            <Eye className="h-6 w-6 mr-3" style={{ color: '#6B8B60' }} />
-            <h2 className="text-2xl font-bold" style={{ color: '#1A1A1A' }}>
-              Data Collection Practices
+        <div 
+          className="rounded-2xl p-6 mb-6"
+          style={{
+            backgroundColor: '#FFFFFF',
+            boxShadow: '0 4px 15px rgba(0, 0, 0, 0.05)',
+          }}
+        >
+          <p className="text-base leading-relaxed" style={{ color: '#3A3A3A' }}>
+            InterpretReflect is committed to protecting your personal information and transparency in how we handle your data. 
+            This policy explains what we collect, how we use it, and your rights.
+          </p>
+        </div>
+
+        {/* 1. What We Collect */}
+        <section className="mb-8">
+          <div 
+            className="rounded-2xl p-6"
+            style={{
+              backgroundColor: '#FFFFFF',
+              boxShadow: '0 4px 15px rgba(0, 0, 0, 0.05)',
+            }}
+          >
+            <h2 className="text-2xl font-bold mb-3" style={{ color: '#1A1A1A' }}>
+              1. What We Collect
             </h2>
-          </div>
-          <div className="space-y-4" style={{ color: '#5A5A5A' }}>
-            <p>
-              InterpretReflect collects minimal personal information necessary to provide our wellness services:
-            </p>
-            <ul className="list-disc pl-6 space-y-2">
-              <li>Account information (email, name, professional credentials)</li>
-              <li>Wellness assessment responses and reflection entries</li>
-              <li>Usage analytics to improve our services</li>
-              <li>Payment information (processed securely through Stripe)</li>
-            </ul>
-            <p>
-              We never collect or store information about your clients or specific assignment details beyond what you choose to share in reflections.
-            </p>
+            <div className="space-y-2" style={{ color: '#3A3A3A' }}>
+              <p className="text-sm font-semibold">Account Information</p>
+              <p className="text-sm mb-2">Email, name, interpreting credentials.</p>
+              
+              <p className="text-sm font-semibold">Wellness Responses</p>
+              <p className="text-sm mb-2">Your entries in reflections, assessments, or journaling tools.</p>
+              
+              <p className="text-sm font-semibold">Service Usage</p>
+              <p className="text-sm mb-2">Non-identifiable analytics only; we do not track you across sites.</p>
+              
+              <p className="text-sm font-semibold">Payments</p>
+              <p className="text-sm mb-2">Managed securely by Stripe; we do not store your payment details.</p>
+              
+              <p className="mt-3 text-sm font-medium" style={{ color: '#2D5F3F' }}>
+                Important: We do not collect information about your own clients or assignments unless you share it in a reflection.
+              </p>
+            </div>
           </div>
         </section>
 
-        {/* Data Security Standards */}
-        <section className="mb-12">
-          <div className="flex items-center mb-4">
-            <Shield className="h-6 w-6 mr-3" style={{ color: '#6B8B60' }} />
-            <h2 className="text-2xl font-bold" style={{ color: '#1A1A1A' }}>
-              Data Security Standards
+        {/* 2. How We Protect Your Data */}
+        <section className="mb-8">
+          <div 
+            className="rounded-2xl p-6"
+            style={{
+              backgroundColor: '#FFFFFF',
+              boxShadow: '0 4px 15px rgba(0, 0, 0, 0.05)',
+            }}
+          >
+            <h2 className="text-2xl font-bold mb-3" style={{ color: '#1A1A1A' }}>
+              2. How We Protect Your Data
             </h2>
-          </div>
-          <div className="space-y-4" style={{ color: '#5A5A5A' }}>
-            <p>
-              InterpretReflect is committed to protecting your wellness data:
-            </p>
-            <ul className="list-disc pl-6 space-y-2">
-              <li>All data is encrypted at rest and in transit</li>
-              <li>Access controls ensure only you can view your personal data</li>
-              <li>We follow industry best practices for data security</li>
-              <li>Regular security audits and updates</li>
-              <li>We are working toward full HIPAA compliance</li>
-            </ul>
-            <p className="font-semibold" style={{ color: '#2D5F3F' }}>
-              Note: InterpretReflect is a wellness tool, not a medical service.
-            </p>
+            <div className="space-y-1.5 text-sm" style={{ color: '#3A3A3A' }}>
+              <p>• <strong>Encryption:</strong> All data is encrypted in transit and at rest.</p>
+              <p>• <strong>Access:</strong> Only you (and no one else) can view your personal reflections.</p>
+              <p>• <strong>Industry Best Practices:</strong> Security protocols are in place and regularly reviewed.</p>
+              <p>• <strong>Audit & Updates:</strong> Security is regularly checked, and we work to improve protections.</p>
+            </div>
           </div>
         </section>
 
-        {/* User Data Protection */}
-        <section className="mb-12">
-          <div className="flex items-center mb-4">
-            <Lock className="h-6 w-6 mr-3" style={{ color: '#6B8B60' }} />
-            <h2 className="text-2xl font-bold" style={{ color: '#1A1A1A' }}>
-              User Data Protection
+        {/* 3. Compliance Notice */}
+        <section className="mb-8">
+          <div 
+            className="rounded-2xl p-6"
+            style={{
+              backgroundColor: 'rgba(92, 127, 79, 0.05)',
+              border: '2px solid rgba(92, 127, 79, 0.2)',
+            }}
+          >
+            <h2 className="text-2xl font-bold mb-3" style={{ color: '#1A1A1A' }}>
+              3. Compliance Notice
             </h2>
-          </div>
-          <div className="space-y-4" style={{ color: '#5A5A5A' }}>
-            <p>
-              Your privacy and data security are our top priorities:
-            </p>
-            <ul className="list-disc pl-6 space-y-2">
-              <li>Your reflections and assessments are private and never shared without consent</li>
-              <li>Anonymous aggregated data may be used for research with explicit opt-in</li>
-              <li>Data export and deletion capabilities are being developed. Currently, contact info@buildingbridgeslearning.com to request data deletion</li>
-              <li>We never sell or share your personal information with third parties</li>
-              <li>Enhanced security features including two-factor authentication are in development</li>
-            </ul>
+            <div className="space-y-2 text-sm" style={{ color: '#3A3A3A' }}>
+              <p><strong>Not Medical/Clinical:</strong> InterpretReflect is a wellness tool, not a substitute for healthcare or counseling.</p>
+              <p><strong>GDPR:</strong> GDPR compliance features are in development.</p>
+            </div>
           </div>
         </section>
 
-        {/* Cookie Usage */}
-        <section className="mb-12">
-          <div className="flex items-center mb-4">
-            <Cookie className="h-6 w-6 mr-3" style={{ color: '#6B8B60' }} />
-            <h2 className="text-2xl font-bold" style={{ color: '#1A1A1A' }}>
-              Cookie Usage
+        {/* 4. Your Choices & Rights */}
+        <section className="mb-8">
+          <div 
+            className="rounded-2xl p-6"
+            style={{
+              backgroundColor: '#FFFFFF',
+              boxShadow: '0 4px 15px rgba(0, 0, 0, 0.05)',
+            }}
+          >
+            <h2 className="text-2xl font-bold mb-3" style={{ color: '#1A1A1A' }}>
+              4. Your Choices & Rights
             </h2>
-          </div>
-          <div className="space-y-4" style={{ color: '#5A5A5A' }}>
-            <p>
-              We use essential cookies for authentication and analytics. Full cookie management features are planned for future releases.
-            </p>
-            <ul className="list-disc pl-6 space-y-2">
-              <li><strong>Essential cookies:</strong> Required for authentication and security</li>
-              <li><strong>Analytics cookies:</strong> Help us understand usage patterns (anonymized)</li>
-            </ul>
-            <p>
-              You can manage cookie preferences in your browser settings. Enhanced cookie management tools are in development.
-            </p>
+            <div className="space-y-1.5 text-sm" style={{ color: '#3A3A3A' }}>
+              <p>• <strong>Privacy First:</strong> We never sell or share your data with third parties for marketing.</p>
+              <p>• <strong>Opt-In Research:</strong> We may use de-identified, aggregated data for research—but only with your explicit permission.</p>
+              <p>• <strong>Manage or Delete Data:</strong> To access or delete your data, email us at info@buildingbridgeslearning.com.</p>
+              <p>• <strong>Features:</strong> Data export and two-factor authentication are in our roadmap.</p>
+            </div>
           </div>
         </section>
 
-        {/* Contact */}
-        <section className="mb-12">
-          <h2 className="text-2xl font-bold mb-4" style={{ color: '#1A1A1A' }}>
-            Questions or Concerns?
-          </h2>
-          <p style={{ color: '#5A5A5A' }}>
-            If you have questions about our privacy practices or wish to exercise your data rights, please contact us at{' '}
-            <br /><br />
-            <strong>GDPR Compliance:</strong> GDPR compliance features are in development for our full launch.{' '}
-            <br /><br />
-            For current data deletion requests or privacy concerns, please contact us at{' '}
+        {/* 5. Cookies */}
+        <section className="mb-8">
+          <div 
+            className="rounded-2xl p-6"
+            style={{
+              backgroundColor: '#FFFFFF',
+              boxShadow: '0 4px 15px rgba(0, 0, 0, 0.05)',
+            }}
+          >
+            <h2 className="text-2xl font-bold mb-3" style={{ color: '#1A1A1A' }}>
+              5. Cookies
+            </h2>
+            <div className="space-y-1.5 text-sm" style={{ color: '#3A3A3A' }}>
+              <p><strong>Essential Cookies:</strong> For login and security.</p>
+              <p><strong>Analytics Cookies:</strong> Anonymous usage insights; you can control these in your browser settings.</p>
+            </div>
+          </div>
+        </section>
+
+        {/* 6. Contact */}
+        <section className="mb-8">
+          <div 
+            className="rounded-2xl p-6 text-center"
+            style={{
+              background: 'linear-gradient(145deg, rgba(107, 139, 96, 0.05) 0%, rgba(92, 127, 79, 0.05) 100%)',
+              border: '2px solid rgba(92, 127, 79, 0.2)',
+            }}
+          >
+            <h2 className="text-2xl font-bold mb-3" style={{ color: '#1A1A1A' }}>
+              6. Contact
+            </h2>
+            <p className="mb-2 text-sm" style={{ color: '#3A3A3A' }}>
+              Got questions about your data or privacy? Contact us at
+            </p>
             <a 
               href="mailto:info@buildingbridgeslearning.com" 
-              className="font-semibold hover:underline"
-              style={{ color: '#6B8B60' }}
+              className="font-semibold text-base hover:underline"
+              style={{ color: '#2D5F3F' }}
             >
               info@buildingbridgeslearning.com
             </a>
-          </p>
+          </div>
         </section>
+
 
         {/* Footer */}
         <div 
-          className="mt-16 pt-8 text-center" 
+          className="mt-12 pt-6 text-center" 
           style={{ borderTop: '1px solid #E8E5E0' }}
         >
           <button
             onClick={() => navigate('/')}
-            className="inline-flex items-center px-6 py-3 rounded-lg font-semibold transition-all"
+            className="inline-flex items-center px-5 py-2.5 rounded-lg font-semibold transition-all text-sm"
             style={{
               backgroundColor: '#FFFFFF',
               color: '#6B8B60',
@@ -188,7 +230,7 @@ export function PrivacyPolicy() {
               e.currentTarget.style.backgroundColor = '#FFFFFF';
             }}
           >
-            <ArrowLeft className="h-5 w-5 mr-2" />
+            <ArrowLeft className="h-4 w-4 mr-2" />
             Back to Home
           </button>
         </div>

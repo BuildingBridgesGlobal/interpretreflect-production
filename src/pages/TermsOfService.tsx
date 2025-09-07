@@ -1,35 +1,19 @@
 import React from 'react';
-import { FileText, Users, CreditCard, AlertCircle, ArrowLeft, Leaf, Waves, Flower, Heart } from 'lucide-react';
+import { FileText, Users, CreditCard, AlertCircle, ArrowLeft, Heart, Shield, BookOpen, Gavel } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 
 export function TermsOfService() {
   const navigate = useNavigate();
 
   return (
-    <div style={{
-      background: 'linear-gradient(135deg, #FAFBFA 0%, #F4F6F5 50%, #E8F5EC 100%)',
-      minHeight: '100vh',
-      position: 'relative',
-      overflow: 'hidden'
-    }}>
-      {/* Subtle background pattern */}
-      <div style={{
-        position: 'absolute',
-        top: 0,
-        left: 0,
-        right: 0,
-        bottom: 0,
-        backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%232D5A3D' fill-opacity='0.03'%3E%3Ccircle cx='30' cy='30' r='2'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`,
-        opacity: 0.5
-      }} />
-
+    <div style={{ backgroundColor: '#FAF9F6', minHeight: '100vh' }}>
       {/* Header */}
       <nav
         className="sticky top-0 z-50"
         style={{
-          backgroundColor: 'rgba(255, 255, 255, 0.95)',
+          backgroundColor: 'rgba(250, 249, 246, 0.95)',
           backdropFilter: 'blur(10px)',
-          borderBottom: '2px solid #2D5A3D',
+          borderBottom: '1px solid rgba(92, 127, 79, 0.2)',
         }}
       >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -39,21 +23,18 @@ export function TermsOfService() {
                 onClick={() => navigate('/')}
                 className="flex items-center space-x-3 hover:opacity-80 transition-opacity"
               >
-                <ArrowLeft className="h-5 w-5" style={{ color: '#2D5A3D' }} />
+                <ArrowLeft className="h-5 w-5" style={{ color: '#6B8B60' }} />
                 <div className="flex items-center space-x-3">
                   <div
-                    className="p-2 rounded-full"
+                    className="p-2 rounded-lg"
                     style={{
-                      background: 'linear-gradient(145deg, #2D5A3D 0%, #4A7C59 100%)',
-                      boxShadow: '0 4px 12px rgba(45, 90, 61, 0.3)',
+                      background: 'linear-gradient(145deg, #6B8B60 0%, #5F7F55 100%)',
+                      boxShadow: '0 2px 8px rgba(107, 139, 96, 0.3)',
                     }}
                   >
                     <FileText className="h-6 w-6" style={{ color: '#FFFFFF' }} />
                   </div>
-                  <span className="text-xl font-bold" style={{
-                    color: '#1A2821',
-                    fontFamily: "'Playfair Display', serif"
-                  }}>
+                  <span className="text-xl font-bold" style={{ color: '#1A1A1A' }}>
                     InterpretReflect™
                   </span>
                 </div>
@@ -64,325 +45,267 @@ export function TermsOfService() {
       </nav>
 
       {/* Content */}
-      <div className="relative max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
-        {/* Welcoming Introduction */}
-        <div className="text-center mb-16">
-          <div className="inline-flex items-center space-x-2 mb-6">
-            <Flower className="h-8 w-8" style={{ color: '#2D5A3D' }} />
-            <Heart className="h-6 w-6" style={{ color: '#3B6B7C' }} />
-            <Flower className="h-8 w-8" style={{ color: '#2D5A3D' }} />
-          </div>
-          <h1 className="text-5xl font-bold mb-6" style={{
-            color: '#2D5A3D',
-            fontFamily: "'Playfair Display', serif",
-            lineHeight: '1.2'
-          }}>
+      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        {/* Title and Intro */}
+        <div className="text-center mb-12">
+          <h1 className="text-4xl md:text-5xl font-bold mb-4" style={{ color: '#1A1A1A' }}>
             Terms of Service
           </h1>
-          <p className="text-xl max-w-3xl mx-auto leading-relaxed" style={{
-            color: '#3A4742',
-            fontFamily: "'Open Sans', sans-serif"
-          }}>
-            Welcome to InterpretReflect – where clarity meets calm. Please review our Terms of Service to ensure a harmonious and informed experience.
-          </p>
-          <p className="text-sm mt-4" style={{
-            color: '#546660',
-            fontFamily: "'Open Sans', sans-serif"
-          }}>
+          <p className="text-sm mb-6" style={{ color: '#6B7C6B' }}>
             Effective Date: January 2025
           </p>
         </div>
 
-        {/* Service Description Card */}
-        <div className="bg-white rounded-2xl shadow-lg p-8 mb-8 border border-gray-100">
-          <div className="flex items-center mb-6">
-            <div className="p-3 rounded-full mr-4" style={{ backgroundColor: 'rgba(45, 90, 61, 0.1)' }}>
-              <FileText className="h-8 w-8" style={{ color: '#2D5A3D' }} />
-            </div>
-            <h2 className="text-3xl font-bold" style={{
-              color: '#2D5A3D',
-              fontFamily: "'Playfair Display', serif"
-            }}>
-              Service Description
+        {/* 1. Introduction */}
+        <section className="mb-8">
+          <div 
+            className="rounded-2xl p-6"
+            style={{
+              backgroundColor: '#FFFFFF',
+              boxShadow: '0 4px 15px rgba(0, 0, 0, 0.05)',
+            }}
+          >
+            <h2 className="text-2xl font-bold mb-3" style={{ color: '#1A1A1A' }}>
+              1. Introduction
             </h2>
-          </div>
-          <div className="space-y-6" style={{
-            color: '#3A4742',
-            fontFamily: "'Open Sans', sans-serif",
-            lineHeight: '1.7'
-          }}>
-            <p>
-              InterpretReflect is a wellness platform designed specifically for professional interpreters. Our services include:
-            </p>
-            <ul className="space-y-3">
-              <li className="flex items-start">
-                <Leaf className="h-5 w-5 mr-3 mt-1 flex-shrink-0" style={{ color: '#2D5A3D' }} />
-                <span>Burnout assessment and monitoring tools</span>
-              </li>
-              <li className="flex items-start">
-                <Leaf className="h-5 w-5 mr-3 mt-1 flex-shrink-0" style={{ color: '#2D5A3D' }} />
-                <span>Guided reflection exercises and journaling</span>
-              </li>
-              <li className="flex items-start">
-                <Waves className="h-5 w-5 mr-3 mt-1 flex-shrink-0" style={{ color: '#2D5A3D' }} />
-                <span>Stress management and recovery techniques</span>
-              </li>
-              <li className="flex items-start">
-                <Leaf className="h-5 w-5 mr-3 mt-1 flex-shrink-0" style={{ color: '#2D5A3D' }} />
-                <span>Professional development tracking</span>
-              </li>
-              <li className="flex items-start">
-                <Heart className="h-5 w-5 mr-3 mt-1 flex-shrink-0" style={{ color: '#2D5A3D' }} />
-                <span>AI-powered wellness companion (Elya)</span>
-              </li>
-              <li className="flex items-start">
-                <Leaf className="h-5 w-5 mr-3 mt-1 flex-shrink-0" style={{ color: '#2D5A3D' }} />
-                <span>Educational resources and continuing education credits (Professional Plan)</span>
-              </li>
-            </ul>
-            <p className="font-semibold text-lg" style={{ color: '#2D5A3D' }}>
-              InterpretReflect is a wellness support tool and does not provide medical or psychological treatment.
+            <p className="text-lg leading-relaxed" style={{ color: '#3A3A3A' }}>
+              These Terms of Service ("Terms") govern your access to and use of the InterpretReflect™ wellness platform. 
+              By using our services, you acknowledge and accept these Terms in full.
             </p>
           </div>
-        </div>
+        </section>
 
-        {/* User Responsibilities Card */}
-        <div className="bg-white rounded-2xl shadow-lg p-8 mb-8 border border-gray-100">
-          <div className="flex items-center mb-6">
-            <div className="p-3 rounded-full mr-4" style={{ backgroundColor: 'rgba(45, 90, 61, 0.1)' }}>
-              <Users className="h-8 w-8" style={{ color: '#2D5A3D' }} />
-            </div>
-            <h2 className="text-3xl font-bold" style={{
-              color: '#2D5A3D',
-              fontFamily: "'Playfair Display', serif"
-            }}>
-              User Responsibilities
+        {/* 2. Service Description */}
+        <section className="mb-8">
+          <div 
+            className="rounded-2xl p-6"
+            style={{
+              backgroundColor: '#FFFFFF',
+              boxShadow: '0 4px 15px rgba(0, 0, 0, 0.05)',
+            }}
+          >
+            <h2 className="text-2xl font-bold mb-3" style={{ color: '#1A1A1A' }}>
+              2. Service Description
             </h2>
-          </div>
-          <div className="space-y-6" style={{
-            color: '#3A4742',
-            fontFamily: "'Open Sans', sans-serif",
-            lineHeight: '1.7'
-          }}>
-            <p>
-              By using InterpretReflect, you agree to:
-            </p>
-            <ul className="space-y-3">
-              <li className="flex items-start">
-                <Leaf className="h-5 w-5 mr-3 mt-1 flex-shrink-0" style={{ color: '#2D5A3D' }} />
-                <span>Provide accurate information during registration</span>
-              </li>
-              <li className="flex items-start">
-                <Leaf className="h-5 w-5 mr-3 mt-1 flex-shrink-0" style={{ color: '#2D5A3D' }} />
-                <span>Maintain the confidentiality of your account credentials</span>
-              </li>
-              <li className="flex items-start">
-                <Leaf className="h-5 w-5 mr-3 mt-1 flex-shrink-0" style={{ color: '#2D5A3D' }} />
-                <span>Use the service for personal wellness purposes only</span>
-              </li>
-              <li className="flex items-start">
-                <Leaf className="h-5 w-5 mr-3 mt-1 flex-shrink-0" style={{ color: '#2D5A3D' }} />
-                <span>Respect the privacy and confidentiality of any shared community features</span>
-              </li>
-              <li className="flex items-start">
-                <Leaf className="h-5 w-5 mr-3 mt-1 flex-shrink-0" style={{ color: '#2D5A3D' }} />
-                <span>Not share or redistribute proprietary content or tools</span>
-              </li>
-              <li className="flex items-start">
-                <Heart className="h-5 w-5 mr-3 mt-1 flex-shrink-0" style={{ color: '#2D5A3D' }} />
-                <span>Seek professional help for serious mental health concerns</span>
-              </li>
-            </ul>
-            <p>
-              You acknowledge that InterpretReflect is not a substitute for professional mental health care, and you should consult qualified professionals for medical or psychological conditions.
-            </p>
-          </div>
-        </div>
-
-        {/* Subscription Terms Card */}
-        <div className="bg-white rounded-2xl shadow-lg p-8 mb-8 border border-gray-100">
-          <div className="flex items-center mb-6">
-            <div className="p-3 rounded-full mr-4" style={{ backgroundColor: 'rgba(45, 90, 61, 0.1)' }}>
-              <CreditCard className="h-8 w-8" style={{ color: '#2D5A3D' }} />
+            <div className="space-y-3" style={{ color: '#3A3A3A' }}>
+              <p className="mb-2 text-sm">
+                InterpretReflect is a platform designed for professional interpreters, offering:
+              </p>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
+                <div className="flex items-start">
+                  <span className="mr-2 text-sm">•</span>
+                  <p className="text-sm">Burnout assessment and monitoring tools</p>
+                </div>
+                <div className="flex items-start">
+                  <span className="mr-2 text-sm">•</span>
+                  <p className="text-sm">Guided reflection and journaling</p>
+                </div>
+                <div className="flex items-start">
+                  <span className="mr-2 text-sm">•</span>
+                  <p className="text-sm">Stress management and recovery programming</p>
+                </div>
+                <div className="flex items-start">
+                  <span className="mr-2 text-sm">•</span>
+                  <p className="text-sm">Professional development tracking features</p>
+                </div>
+                <div className="flex items-start">
+                  <span className="mr-2 text-sm">•</span>
+                  <p className="text-sm">AI-powered wellness companion (Elya)</p>
+                </div>
+                <div className="flex items-start">
+                  <span className="mr-2 text-sm">•</span>
+                  <p className="text-sm">Continuing education credits (Professional Plan)</p>
+                </div>
+              </div>
+              <p className="mt-3 text-sm font-semibold" style={{ color: '#2D5F3F' }}>
+                InterpretReflect is not a provider of medical or psychological treatment.
+              </p>
             </div>
-            <h2 className="text-3xl font-bold" style={{
-              color: '#2D5A3D',
-              fontFamily: "'Playfair Display', serif"
-            }}>
-              Subscription Terms
+          </div>
+        </section>
+
+        {/* 3. User Obligations */}
+        <section className="mb-8">
+          <div 
+            className="rounded-2xl p-6"
+            style={{
+              backgroundColor: '#FFFFFF',
+              boxShadow: '0 4px 15px rgba(0, 0, 0, 0.05)',
+            }}
+          >
+            <h2 className="text-2xl font-bold mb-3" style={{ color: '#1A1A1A' }}>
+              3. User Obligations
             </h2>
-          </div>
-          <div className="space-y-6" style={{
-            color: '#3A4742',
-            fontFamily: "'Open Sans', sans-serif",
-            lineHeight: '1.7'
-          }}>
-            <p>
-              InterpretReflect offers monthly subscription plans:
-            </p>
-            <ul className="space-y-3">
-              <li className="flex items-start">
-                <Leaf className="h-5 w-5 mr-3 mt-1 flex-shrink-0" style={{ color: '#2D5A3D' }} />
-                <span><strong>Essential Plan ($12/month):</strong> Core wellness tools and unlimited reflections</span>
-              </li>
-              <li className="flex items-start">
-                <Leaf className="h-5 w-5 mr-3 mt-1 flex-shrink-0" style={{ color: '#2D5A3D' }} />
-                <span><strong>Professional Plan ($24/month):</strong> All Essential features plus AI companion, CEU credits, and advanced analytics</span>
-              </li>
-              <li className="flex items-start">
-                <Leaf className="h-5 w-5 mr-3 mt-1 flex-shrink-0" style={{ color: '#2D5A3D' }} />
-                <span><strong>Organizations:</strong> Custom pricing for agencies and educational programs</span>
-              </li>
-            </ul>
-            <div className="mt-6 space-y-3 bg-gray-50 rounded-xl p-6">
-              <p><strong>Billing:</strong> Subscriptions renew automatically each month</p>
-              <p><strong>Cancellation:</strong> Cancel anytime with no penalties. Access continues until the end of the billing period</p>
-              <p><strong>Refunds:</strong> We offer a 7-day money-back guarantee for new subscribers</p>
-              <p><strong>Price Changes:</strong> We'll notify you 30 days before any price increases</p>
+            <div className="space-y-3" style={{ color: '#3A3A3A' }}>
+              <p className="mb-2 text-sm">
+                By using InterpretReflect, you agree to:
+              </p>
+              <div className="space-y-1.5 text-sm">
+                <p>•
+ Provide accurate information during registration and account maintenance</p>
+                <p>• Maintain the confidentiality of your account credentials</p>
+                <p>• Use the platform solely for your personal wellness and professional development</p>
+                <p>• Respect privacy and confidentiality within any shared or community features</p>
+                <p>• Not copy, redistribute, or otherwise misuse proprietary content, tools, or intellectual property</p>
+                <p>• Consult qualified professionals for any serious mental health concerns</p>
+              </div>
+              <p className="mt-3 text-sm font-semibold" style={{ color: '#2D5F3F' }}>
+                The platform does not substitute professional medical, mental health, or therapeutic services.
+              </p>
             </div>
           </div>
-        </div>
+        </section>
 
-        {/* Liability Limitations Card */}
-        <div className="bg-white rounded-2xl shadow-lg p-8 mb-8 border border-gray-100">
-          <div className="flex items-center mb-6">
-            <div className="p-3 rounded-full mr-4" style={{ backgroundColor: 'rgba(45, 90, 61, 0.1)' }}>
-              <AlertCircle className="h-8 w-8" style={{ color: '#2D5A3D' }} />
-            </div>
-            <h2 className="text-3xl font-bold" style={{
-              color: '#2D5A3D',
-              fontFamily: "'Playfair Display', serif"
-            }}>
-              Liability Limitations
+        {/* 4. Subscription and Payment Terms */}
+        <section className="mb-8">
+          <div 
+            className="rounded-2xl p-6"
+            style={{
+              backgroundColor: '#FFFFFF',
+              boxShadow: '0 4px 15px rgba(0, 0, 0, 0.05)',
+            }}
+          >
+            <h2 className="text-2xl font-bold mb-3" style={{ color: '#1A1A1A' }}>
+              4. Subscription and Payment Terms
             </h2>
-          </div>
-          <div className="space-y-6" style={{
-            color: '#3A4742',
-            fontFamily: "'Open Sans', sans-serif",
-            lineHeight: '1.7'
-          }}>
-            <p>
-              InterpretReflect provides wellness tools on an "as is" basis:
-            </p>
-            <ul className="space-y-3">
-              <li className="flex items-start">
-                <Leaf className="h-5 w-5 mr-3 mt-1 flex-shrink-0" style={{ color: '#2D5A3D' }} />
-                <span>We do not guarantee specific wellness outcomes or results</span>
-              </li>
-              <li className="flex items-start">
-                <Leaf className="h-5 w-5 mr-3 mt-1 flex-shrink-0" style={{ color: '#2D5A3D' }} />
-                <span>We are not liable for decisions made based on our tools or content</span>
-              </li>
-              <li className="flex items-start">
-                <Leaf className="h-5 w-5 mr-3 mt-1 flex-shrink-0" style={{ color: '#2D5A3D' }} />
-                <span>Our liability is limited to the amount paid for the service in the past 12 months</span>
-              </li>
-              <li className="flex items-start">
-                <Leaf className="h-5 w-5 mr-3 mt-1 flex-shrink-0" style={{ color: '#2D5A3D' }} />
-                <span>We are not responsible for third-party services or content</span>
-              </li>
-              <li className="flex items-start">
-                <Leaf className="h-5 w-5 mr-3 mt-1 flex-shrink-0" style={{ color: '#2D5A3D' }} />
-                <span>Service availability may be interrupted for maintenance or updates</span>
-              </li>
-            </ul>
-            <p className="font-semibold text-lg" style={{ color: '#2D5A3D' }}>
-              In case of medical or psychological emergency, contact emergency services immediately.
-            </p>
-          </div>
-        </div>
+            <div className="space-y-3" style={{ color: '#3A3A3A' }}>
+              <p className="mb-2 text-sm">InterpretReflect offers the following plans:</p>
+              
+              <div className="space-y-2">
+                <p className="text-sm">• <strong>Essential Plan ($12/month):</strong> All core wellness tools and unlimited reflection</p>
+                <p className="text-sm">• <strong>Professional Plan ($24/month):</strong> Essential features plus access to the AI companion, CEU credits, and advanced analytics</p>
+                <p className="text-sm">• <strong>Custom organizational plans:</strong> Available upon request</p>
+              </div>
 
-        {/* Intellectual Property Card */}
-        <div className="bg-white rounded-2xl shadow-lg p-8 mb-8 border border-gray-100">
-          <h2 className="text-3xl font-bold mb-6" style={{
-            color: '#2D5A3D',
-            fontFamily: "'Playfair Display', serif"
-          }}>
-            Intellectual Property
-          </h2>
-          <div className="space-y-6" style={{
-            color: '#3A4742',
-            fontFamily: "'Open Sans', sans-serif",
-            lineHeight: '1.7'
-          }}>
-            <p>
-              All content, tools, and materials on InterpretReflect are protected by copyright and intellectual property laws. You retain ownership of your personal reflections and data. By using our service, you grant us a limited license to process and store your data to provide our services.
+              <div className="mt-3">
+                <p className="font-semibold mb-2 text-sm">Subscription details:</p>
+                <div className="space-y-1.5 text-sm">
+                  <p>• Subscriptions renew automatically each month</p>
+                  <p>• You may cancel at any time; services remain active until the end of the billing cycle</p>
+                  <p>• A 7-day money-back guarantee is available to new subscribers</p>
+                  <p>• Users will be notified of any changes in subscription fees no less than 30 days prior to implementation</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* 5. Liability Limitations */}
+        <section className="mb-8">
+          <div 
+            className="rounded-2xl p-6"
+            style={{
+              backgroundColor: 'rgba(92, 127, 79, 0.05)',
+              border: '2px solid rgba(92, 127, 79, 0.2)',
+            }}
+          >
+            <h2 className="text-2xl font-bold mb-3" style={{ color: '#1A1A1A' }}>
+              5. Liability Limitations
+            </h2>
+            <div style={{ color: '#3A3A3A' }}>
+              <p className="mb-2 text-sm">InterpretReflect services are provided "as is." The following limitations apply:</p>
+              <div className="space-y-1.5 text-sm">
+                <p>• InterpretReflect does not guarantee any specific outcomes or results from the use of its tools or services.</p>
+                <p>• InterpretReflect assumes no liability for user actions, decisions, or outcomes resulting from use of the platform's resources or recommendations.</p>
+                <p>• The total liability of InterpretReflect, in any claim, is limited to the amount paid for the service during the prior twelve months.</p>
+                <p>• The company is not responsible for third-party content, services, or conduct.</p>
+                <p>• Service availability may be suspended or interrupted without notice for maintenance, updates, or unforeseen circumstances.</p>
+                <p>• In emergencies or mental health crises, users must contact local emergency services.</p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* 6. Intellectual Property */}
+        <section className="mb-8">
+          <div 
+            className="rounded-2xl p-6"
+            style={{
+              backgroundColor: '#FFFFFF',
+              boxShadow: '0 4px 15px rgba(0, 0, 0, 0.05)',
+            }}
+          >
+            <h2 className="text-2xl font-bold mb-3" style={{ color: '#1A1A1A' }}>
+              6. Intellectual Property
+            </h2>
+            <p style={{ color: '#3A3A3A' }}>
+              All content, software, and materials provided via InterpretReflect remain the exclusive property of 
+              InterpretReflect or its licensors. User-generated reflections and data remain your property, but you 
+              grant us a limited license to process and store this information as needed for service provision.
             </p>
           </div>
-        </div>
+        </section>
 
-        {/* Modifications Card */}
-        <div className="bg-white rounded-2xl shadow-lg p-8 mb-8 border border-gray-100">
-          <h2 className="text-3xl font-bold mb-6" style={{
-            color: '#2D5A3D',
-            fontFamily: "'Playfair Display', serif"
-          }}>
-            Modifications to Terms
-          </h2>
-          <p style={{
-            color: '#3A4742',
-            fontFamily: "'Open Sans', sans-serif",
-            lineHeight: '1.7'
-          }}>
-            We may update these terms periodically. Significant changes will be communicated via email at least 30 days in advance. Continued use of the service after changes indicates acceptance of the updated terms.
-          </p>
-        </div>
+        {/* 7. Modifications to These Terms */}
+        <section className="mb-8">
+          <div 
+            className="rounded-2xl p-6"
+            style={{
+              backgroundColor: '#FFFFFF',
+              boxShadow: '0 4px 15px rgba(0, 0, 0, 0.05)',
+            }}
+          >
+            <h2 className="text-2xl font-bold mb-3" style={{ color: '#1A1A1A' }}>
+              7. Modifications to These Terms
+            </h2>
+            <p style={{ color: '#3A3A3A' }}>
+              We may update or revise these Terms from time to time. If material changes occur, you will be 
+              notified by email at least 30 days before the changes become effective. Continued use of the 
+              platform constitutes acceptance of revised Terms.
+            </p>
+          </div>
+        </section>
 
-        {/* Contact Card */}
-        <div className="bg-white rounded-2xl shadow-lg p-8 mb-8 border border-gray-100">
-          <h2 className="text-3xl font-bold mb-6" style={{
-            color: '#2D5A3D',
-            fontFamily: "'Playfair Display', serif"
-          }}>
-            Questions?
-          </h2>
-          <p style={{
-            color: '#3A4742',
-            fontFamily: "'Open Sans', sans-serif",
-            lineHeight: '1.7'
-          }}>
-            For questions about these terms, please contact us at{' '}
-            <a
-              href="mailto:info@buildingbridgeslearning.com"
-              className="font-semibold hover:underline transition-colors"
-              style={{ color: '#2D5A3D' }}
+        {/* 8. Contact */}
+        <section className="mb-8">
+          <div 
+            className="rounded-2xl p-6 text-center"
+            style={{
+              background: 'linear-gradient(145deg, rgba(107, 139, 96, 0.05) 0%, rgba(92, 127, 79, 0.05) 100%)',
+              border: '2px solid rgba(92, 127, 79, 0.2)',
+            }}
+          >
+            <h2 className="text-2xl font-bold mb-3" style={{ color: '#1A1A1A' }}>
+              8. Contact
+            </h2>
+            <p className="mb-2 text-sm" style={{ color: '#3A3A3A' }}>
+              For any questions or concerns related to these Terms, please email:
+            </p>
+            <a 
+              href="mailto:info@buildingbridgeslearning.com" 
+              className="font-semibold text-base hover:underline"
+              style={{ color: '#2D5F3F' }}
             >
               info@buildingbridgeslearning.com
             </a>
-          </p>
-        </div>
+          </div>
+        </section>
 
         {/* Footer */}
-        <div className="mt-16 pt-8 text-center">
+        <div 
+          className="mt-16 pt-8 text-center" 
+          style={{ borderTop: '1px solid #E8E5E0' }}
+        >
           <button
             onClick={() => navigate('/')}
-            className="inline-flex items-center px-8 py-4 rounded-full font-semibold transition-all duration-300 hover:scale-105"
+            className="inline-flex items-center px-6 py-3 rounded-lg font-semibold transition-all"
             style={{
               backgroundColor: '#FFFFFF',
-              color: '#2D5A3D',
-              border: '2px solid #2D5A3D',
-              boxShadow: '0 4px 12px rgba(45, 90, 61, 0.2)',
-              fontFamily: "'Open Sans', sans-serif"
+              color: '#6B8B60',
+              border: '2px solid #6B8B60',
             }}
             onMouseEnter={(e) => {
-              e.currentTarget.style.backgroundColor = '#2D5A3D';
-              e.currentTarget.style.color = '#FFFFFF';
+              e.currentTarget.style.backgroundColor = '#F8FBF6';
             }}
             onMouseLeave={(e) => {
               e.currentTarget.style.backgroundColor = '#FFFFFF';
-              e.currentTarget.style.color = '#2D5A3D';
             }}
           >
-            <ArrowLeft className="h-5 w-5 mr-3" />
+            <ArrowLeft className="h-5 w-5 mr-2" />
             Back to Home
           </button>
         </div>
       </div>
-
-      {/* Google Fonts */}
-      <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Open+Sans:wght@400;600;700&display=swap');
-      `}</style>
     </div>
   );
 }

@@ -43,6 +43,9 @@ import { ProfileSettings } from './components/ProfileSettings';
 import { CustomizePreferences } from './components/CustomizePreferences';
 import { ManageSubscription } from './components/ManageSubscription';
 import { BillingPlanDetails } from './components/BillingPlanDetails';
+import { Dashboard } from './components/Dashboard';
+import { LuxuryWellnessDashboard } from './components/LuxuryWellnessDashboard';
+import { Footer } from './components/Footer';
 import {
   Home,
   BookOpen,
@@ -1996,7 +1999,7 @@ function App() {
   };
 
   const renderChatWithElya = () => (
-    <div className="h-screen flex flex-col">
+    <div className="h-full flex flex-col overflow-hidden">
       <ChatWithElya />
     </div>
   );
@@ -5118,7 +5121,11 @@ function App() {
             </h3>
             <div className="space-y-3">
               <button
-                onClick={() => setActiveTab('chat')}
+                onClick={(e) => {
+                  e.preventDefault();
+                  e.stopPropagation();
+                  setActiveTab('chat');
+                }}
                 className="w-full flex items-center p-4 rounded-xl transition-all text-left group"
                 style={{
                   backgroundColor: 'rgba(92, 127, 79, 0.08)',
@@ -6034,16 +6041,18 @@ function App() {
       </header>
 
       {/* Navigation Tabs with proper semantic structure */}
-      <nav
-        aria-label="Main navigation"
-        style={{
-          backgroundColor: '#FFFFFF',
-          borderBottom: '1px solid #E8E5E0',
-          boxShadow: '0 1px 3px rgba(0,0,0,0.05)',
-        }}
-      >
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <ul className="flex space-x-8 list-none m-0 p-0" role="tablist">
+      <div className="px-4 sm:px-6 lg:px-8 py-3" style={{ backgroundColor: '#FAFAF8' }}>
+        <nav
+          aria-label="Main navigation"
+          className="max-w-7xl mx-auto rounded-full"
+          style={{
+            backgroundColor: '#FFFFFF',
+            border: '1px solid rgba(147, 197, 253, 0.12)',
+            boxShadow: '0 2px 8px rgba(147, 197, 253, 0.04)',
+            padding: '4px',
+          }}
+        >
+          <ul className="flex justify-center space-x-2 list-none m-0 p-0" role="tablist">
             {[
               { id: 'home', label: 'Home', icon: Home },
               { id: 'reflection', label: 'Reflection Studio', icon: BookOpen },
@@ -6053,41 +6062,43 @@ function App() {
             ].map((tab) => (
               <li key={tab.id} role="presentation">
                 <button
-                  onClick={() => setActiveTab(tab.id)}
-                  className="flex items-center px-3 py-4 text-sm font-medium transition-all"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    setActiveTab(tab.id);
+                  }}
+                  className="flex items-center px-4 py-2 text-sm font-medium transition-all rounded-full"
                   role="tab"
                   aria-selected={activeTab === tab.id}
                   aria-controls={`${tab.id}-panel`}
                   aria-current={activeTab === tab.id ? 'page' : undefined}
                 style={{
-                  color: activeTab === tab.id ? '#5C7F4F' : '#1A1A1A',
-                  borderBottom:
-                    activeTab === tab.id ? '3px solid #5C7F4F' : '3px solid transparent',
-                  fontWeight: activeTab === tab.id ? '600' : '500',
-                  paddingBottom: '13px',
+                  color: activeTab === tab.id ? '#FFFFFF' : '#4A5568',
+                  backgroundColor: activeTab === tab.id ? '#5B8FE3' : 'transparent',
+                  fontWeight: activeTab === tab.id ? '500' : '400',
                 }}
                 onMouseEnter={(e) => {
                   if (activeTab !== tab.id) {
-                    e.currentTarget.style.color = '#6B7C6B';
-                    e.currentTarget.style.background = 'rgba(92, 127, 79, 0.08)';
+                    e.currentTarget.style.backgroundColor = 'rgba(147, 197, 253, 0.08)';
+                    e.currentTarget.style.color = '#2D3748';
                   }
                 }}
                 onMouseLeave={(e) => {
                   if (activeTab !== tab.id) {
-                    e.currentTarget.style.color = '#1A1A1A';
-                    e.currentTarget.style.background = 'transparent';
+                    e.currentTarget.style.backgroundColor = 'transparent';
+                    e.currentTarget.style.color = '#4A5568';
                   }
                 }}
               >
-                <tab.icon className="h-4 w-4 mr-2" />
+                <tab.icon className="h-4 w-4 mr-1.5" />
                 {tab.label}
                 {tab.badge && (
                   <span 
-                    className="ml-2 px-2 py-0.5 text-xs font-bold rounded-full"
+                    className="ml-1.5 px-1.5 py-0.5 text-xs font-medium rounded-full"
                     style={{ 
-                      backgroundColor: '#5C7F4F', 
-                      color: '#FFFFFF',
-                      fontSize: '10px'
+                      backgroundColor: activeTab === tab.id ? 'rgba(255, 255, 255, 0.3)' : 'rgba(92, 127, 79, 0.15)', 
+                      color: activeTab === tab.id ? '#FFFFFF' : '#5C7F4F',
+                      fontSize: '9px'
                     }}
                   >
                     {tab.badge}
@@ -6097,14 +6108,19 @@ function App() {
               </li>
             ))}
           </ul>
-        </div>
-      </nav>
+        </nav>
+      </div>
 
       {/* Main content area with proper semantic structure */}
       <main id="main-content" role="main" className="flex-1">
         <div role="tabpanel" id={`${activeTab}-panel`} aria-labelledby={activeTab}>
           {activeTab === 'reflection' && renderReflectionStudio()}
-          {activeTab === 'home' && renderDashboardHome()}
+          {activeTab === 'home' && <LuxuryWellnessDashboard userName={user?.email?.split('@')[0] || 'there'} onTabChange={(tab, category) => {
+            setActiveTab(tab);
+            if (category) {
+              setActiveCategory(category);
+            }
+          }} />}
           {activeTab === 'stress' && renderStressReset()}
           {activeTab === 'chat' && renderChatWithElya()}
           {activeTab === 'insights' && renderGrowthInsights()}
@@ -6264,52 +6280,7 @@ function App() {
         />
       )}
       
-      {/* Footer with proper semantic structure */}
-      <footer 
-        role="contentinfo" 
-        className="mt-auto py-6 px-4 border-t"
-        style={{ 
-          backgroundColor: '#FFFFFF',
-          borderColor: '#E8E5E0'
-        }}
-      >
-        <div className="max-w-7xl mx-auto text-center">
-          <p className="text-sm" style={{ color: '#4A5568' }}>
-            © 2025 InterpretReflect™. All rights reserved.
-          </p>
-          <nav aria-label="Footer navigation" className="mt-3">
-            <ul className="flex justify-center space-x-6 list-none">
-              <li>
-                <a 
-                  href="/privacy" 
-                  className="text-sm hover:underline"
-                  style={{ color: '#5C7F4F' }}
-                >
-                  Privacy Policy
-                </a>
-              </li>
-              <li>
-                <a 
-                  href="/terms" 
-                  className="text-sm hover:underline"
-                  style={{ color: '#5C7F4F' }}
-                >
-                  Terms of Service
-                </a>
-              </li>
-              <li>
-                <a 
-                  href="/contact" 
-                  className="text-sm hover:underline"
-                  style={{ color: '#5C7F4F' }}
-                >
-                  Contact
-                </a>
-              </li>
-            </ul>
-          </nav>
-        </div>
-      </footer>
+      <Footer />
     </div>
         }
       />

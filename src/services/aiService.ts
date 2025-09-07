@@ -2,7 +2,7 @@
 // Supports OpenAI API integration with fallback to simulated responses
 
 interface AIConfig {
-  provider: 'openai' | 'simulated';
+  provider: 'openai' | 'openrouter' | 'simulated';
   apiKey?: string;
   model?: string;
   systemPrompt?: string;
@@ -10,11 +10,11 @@ interface AIConfig {
 
 // Default configuration - can be overridden via environment variables
 const defaultConfig: AIConfig = {
-  provider: (import.meta.env.VITE_AI_PROVIDER as 'openai' | 'simulated') || 'simulated',
-  apiKey: import.meta.env.VITE_OPENAI_API_KEY,
-  model: import.meta.env.VITE_AI_MODEL || 'gpt-3.5-turbo',
-  systemPrompt: `You are Elya, a compassionate and knowledgeable AI wellness coach specializing in burnout prevention for healthcare interpreters. 
-You provide evidence-based support, practical strategies, and empathetic guidance. 
+  provider: (import.meta.env.VITE_AI_PROVIDER as 'openai' | 'openrouter' | 'simulated') || 'simulated',
+  apiKey: import.meta.env.VITE_OPENAI_API_KEY || import.meta.env.VITE_OPENROUTER_API_KEY,
+  model: import.meta.env.VITE_AI_MODEL || 'openrouter/sonoma-sky-alpha',
+  systemPrompt: `You are Elya, a compassionate and knowledgeable AI wellness coach specializing in burnout prevention for healthcare interpreters.
+You provide evidence-based support, practical strategies, and empathetic guidance.
 You understand the unique challenges of medical interpretation including vicarious trauma, moral distress, and professional isolation.
 Keep responses concise, warm, and actionable. Focus on validation, practical tools, and gentle encouragement.`
 };
@@ -45,8 +45,8 @@ class AIService {
     try {
       let response: string;
 
-      if (this.config.provider === 'openai' && this.config.apiKey) {
-        response = await this.getOpenAIResponse(userMessage);
+      if ((this.config.provider === 'openai' || this.config.provider === 'openrouter') && this.config.apiKey) {
+        response = await this.getAIResponse();
       } else {
         response = this.getSimulatedResponse(userMessage);
       }
@@ -74,19 +74,26 @@ class AIService {
     }
   }
 
-  private async getOpenAIResponse(userMessage: string): Promise<string> {
+  private async getAIResponse(): Promise<string> {
     if (!this.config.apiKey) {
-      throw new Error('OpenAI API key not configured');
+      throw new Error(`${this.config.provider} API key not configured`);
     }
 
-    const response = await fetch('https://api.openai.com/v1/chat/completions', {
+    const isOpenRouter = this.config.provider === 'openrouter';
+    const endpoint = isOpenRouter
+      ? 'https://openrouter.ai/api/v1/chat/completions'
+      : 'https://api.openai.com/v1/chat/completions';
+
+    const response = await fetch(endpoint, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${this.config.apiKey}`
+        'Authorization': `Bearer ${this.config.apiKey}`,
+        ...(isOpenRouter && { 'HTTP-Referer': window.location.origin }),
+        ...(isOpenRouter && { 'X-Title': 'Elya Wellness Coach' })
       },
       body: JSON.stringify({
-        model: this.config.model || 'gpt-3.5-turbo',
+        model: this.config.model || (isOpenRouter ? 'openrouter/sonoma-sky-alpha' : 'gpt-3.5-turbo'),
         messages: this.conversationHistory,
         temperature: 0.7,
         max_tokens: 300,
@@ -97,7 +104,7 @@ class AIService {
 
     if (!response.ok) {
       const error = await response.text();
-      throw new Error(`OpenAI API error: ${error}`);
+      throw new Error(`${this.config.provider} API error: ${error}`);
     }
 
     const data = await response.json();

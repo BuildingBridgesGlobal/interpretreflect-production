@@ -2,11 +2,11 @@ import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { Logo } from './Logo';
 import {
-  LayoutDashboard,
+  Home,
   BookOpen,
-  PenTool,
+  RefreshCw,
+  TrendingUp,
   Users,
-  User,
   LogOut,
   Menu,
   X
@@ -42,11 +42,11 @@ export const Header: React.FC<HeaderProps> = ({
   }, [location]);
 
   const navItems = [
-    { path: '/dashboard', label: 'Dashboard', icon: LayoutDashboard },
-    { path: '/resources', label: 'Resources', icon: BookOpen },
-    { path: '/journal', label: 'Journal', icon: PenTool },
-    { path: '/community', label: 'Community', icon: Users },
-    { path: '/profile', label: 'Profile', icon: User },
+    { path: '/', label: 'Home', icon: Home },
+    { path: '/reflection-studio', label: 'Reflection Studio', icon: BookOpen },
+    { path: '/stress-reset', label: 'Stress Reset', icon: RefreshCw },
+    { path: '/growth-insights', label: 'Growth Insights', icon: TrendingUp },
+    { path: '/connect', label: 'Connect', icon: Users },
   ];
 
   const isActive = (path: string) => location.pathname === path;
@@ -124,228 +124,272 @@ export const Header: React.FC<HeaderProps> = ({
             </div>
 
             {/* Desktop Navigation */}
-            {isAuthenticated && (
-              <nav 
-                role="navigation" 
-                aria-label="Main navigation"
-                className="desktop-nav"
-                style={{
-                  display: 'none',
-                  '@media (min-width: 1024px)': { display: 'flex' },
-                }}
-              >
-                <ul 
-                  style={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: '0.5rem',
-                    listStyle: 'none',
-                    margin: 0,
-                    padding: 0,
-                  }}
-                >
-                  {navItems.map((item) => {
-                    const Icon = item.icon;
-                    const active = isActive(item.path);
-                    
-                    return (
-                      <li key={item.path}>
-                        <Link
-                          to={item.path}
-                          className={`nav-link ${active ? 'active' : ''}`}
-                          aria-current={active ? 'page' : undefined}
-                          style={{
-                            display: 'flex',
-                            alignItems: 'center',
-                            gap: '0.5rem',
-                            padding: '0.75rem 1.25rem',
-                            fontSize: '1.125rem',
-                            fontWeight: active ? 600 : 500,
-                            color: active ? '#5C7F4F' : '#2D3A31',
-                            backgroundColor: active ? 'rgba(92, 127, 79, 0.1)' : 'transparent',
-                            borderRadius: '0.5rem',
-                            textDecoration: 'none',
-                            transition: 'all 0.2s ease',
-                            position: 'relative',
-                          }}
-                          onMouseEnter={(e) => {
-                            if (!active) {
-                              e.currentTarget.style.backgroundColor = 'rgba(92, 127, 79, 0.05)';
-                              e.currentTarget.style.color = '#5C7F4F';
-                            }
-                          }}
-                          onMouseLeave={(e) => {
-                            if (!active) {
-                              e.currentTarget.style.backgroundColor = 'transparent';
-                              e.currentTarget.style.color = '#2D3A31';
-                            }
-                          }}
-                          onFocus={(e) => {
-                            e.currentTarget.style.outline = '3px solid #5C7F4F';
-                            e.currentTarget.style.outlineOffset = '2px';
-                          }}
-                          onBlur={(e) => {
-                            e.currentTarget.style.outline = 'none';
-                          }}
-                        >
-                          <Icon size={20} aria-hidden="true" />
-                          <span>{item.label}</span>
-                        </Link>
-                      </li>
-                    );
-                  })}
-                  
-                  {/* Logout Button */}
-                  <li style={{ marginLeft: '1rem' }}>
-                    <button
-                      onClick={onLogout}
-                      className="logout-btn"
-                      aria-label="Logout from your account"
-                      style={{
-                        display: 'flex',
-                        alignItems: 'center',
-                        gap: '0.5rem',
-                        padding: '0.75rem 1.5rem',
-                        fontSize: '1.125rem',
-                        fontWeight: 500,
-                        color: '#FFFFFF',
-                        backgroundColor: '#B91C1C',
-                        border: 'none',
-                        borderRadius: '0.5rem',
-                        cursor: 'pointer',
-                        transition: 'all 0.2s ease',
-                      }}
-                      onMouseEnter={(e) => {
-                        e.currentTarget.style.backgroundColor = '#991B1B';
-                        e.currentTarget.style.transform = 'translateY(-1px)';
-                      }}
-                      onMouseLeave={(e) => {
-                        e.currentTarget.style.backgroundColor = '#B91C1C';
-                        e.currentTarget.style.transform = 'translateY(0)';
-                      }}
-                      onFocus={(e) => {
-                        e.currentTarget.style.outline = '3px solid #B91C1C';
-                        e.currentTarget.style.outlineOffset = '2px';
-                      }}
-                      onBlur={(e) => {
-                        e.currentTarget.style.outline = 'none';
-                      }}
-                    >
-                      <LogOut size={20} aria-hidden="true" />
-                      <span>Logout</span>
-                    </button>
-                  </li>
-                </ul>
-              </nav>
-            )}
-
-            {/* Mobile Menu Button */}
-            {isAuthenticated && (
-              <button
-                onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-                className="mobile-menu-btn lg:hidden"
-                aria-label={isMobileMenuOpen ? 'Close navigation menu' : 'Open navigation menu'}
-                aria-expanded={isMobileMenuOpen}
-                aria-controls="mobile-navigation"
+            <nav
+              role="navigation"
+              aria-label="Main navigation"
+              className="desktop-nav"
+              style={{
+                flex: 1,
+                justifyContent: 'center',
+              }}
+            >
+              <ul
                 style={{
                   display: 'flex',
                   alignItems: 'center',
-                  justifyContent: 'center',
-                  width: '3rem',
-                  height: '3rem',
-                  color: '#2D3A31',
-                  backgroundColor: 'transparent',
-                  border: '2px solid #5C7F4F',
-                  borderRadius: '0.5rem',
-                  cursor: 'pointer',
-                  transition: 'all 0.2s ease',
-                }}
-                onFocus={(e) => {
-                  e.currentTarget.style.outline = '3px solid #5C7F4F';
-                  e.currentTarget.style.outlineOffset = '2px';
-                }}
-                onBlur={(e) => {
-                  e.currentTarget.style.outline = 'none';
+                  gap: '0.5rem',
+                  listStyle: 'none',
+                  margin: 0,
+                  padding: 0,
                 }}
               >
-                {isMobileMenuOpen ? (
-                  <X size={24} aria-hidden="true" />
-                ) : (
-                  <Menu size={24} aria-hidden="true" />
-                )}
-              </button>
-            )}
+                {navItems.map((item) => {
+                  const Icon = item.icon;
+                  const active = isActive(item.path);
 
-            {/* Sign In/Sign Up for non-authenticated users */}
-            {!isAuthenticated && (
-              <div style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
-                <Link
-                  to="/login"
-                  style={{
-                    padding: '0.75rem 1.5rem',
-                    fontSize: '1.125rem',
-                    fontWeight: 500,
-                    color: '#5C7F4F',
-                    backgroundColor: 'transparent',
-                    border: '2px solid #5C7F4F',
-                    borderRadius: '0.5rem',
-                    textDecoration: 'none',
-                    transition: 'all 0.2s ease',
-                  }}
-                  onMouseEnter={(e) => {
-                    e.currentTarget.style.backgroundColor = 'rgba(92, 127, 79, 0.1)';
-                  }}
-                  onMouseLeave={(e) => {
-                    e.currentTarget.style.backgroundColor = 'transparent';
-                  }}
-                  onFocus={(e) => {
-                    e.currentTarget.style.outline = '3px solid #5C7F4F';
-                    e.currentTarget.style.outlineOffset = '2px';
-                  }}
-                  onBlur={(e) => {
-                    e.currentTarget.style.outline = 'none';
-                  }}
-                >
-                  Sign In
-                </Link>
-                <Link
-                  to="/signup"
-                  style={{
-                    padding: '0.75rem 1.5rem',
-                    fontSize: '1.125rem',
-                    fontWeight: 600,
-                    color: '#FFFFFF',
-                    backgroundColor: '#5C7F4F',
-                    border: '2px solid #5C7F4F',
-                    borderRadius: '0.5rem',
-                    textDecoration: 'none',
-                    transition: 'all 0.2s ease',
-                  }}
-                  onMouseEnter={(e) => {
-                    e.currentTarget.style.backgroundColor = '#4A6B3E';
-                    e.currentTarget.style.transform = 'translateY(-1px)';
-                  }}
-                  onMouseLeave={(e) => {
-                    e.currentTarget.style.backgroundColor = '#5C7F4F';
-                    e.currentTarget.style.transform = 'translateY(0)';
-                  }}
-                  onFocus={(e) => {
-                    e.currentTarget.style.outline = '3px solid #5C7F4F';
-                    e.currentTarget.style.outlineOffset = '2px';
-                  }}
-                  onBlur={(e) => {
-                    e.currentTarget.style.outline = 'none';
-                  }}
-                >
-                  Get Started
-                </Link>
-              </div>
-            )}
+                  return (
+                    <li key={item.path}>
+                      <Link
+                        to={item.path}
+                        className={`nav-link ${active ? 'active' : ''}`}
+                        aria-current={active ? 'page' : undefined}
+                        style={{
+                          display: 'flex',
+                          alignItems: 'center',
+                          gap: '0.5rem',
+                          padding: '0.75rem 1.25rem',
+                          fontSize: '1.125rem',
+                          fontWeight: active ? 600 : 500,
+                          color: active ? '#5C7F4F' : '#2D3A31',
+                          backgroundColor: active ? 'rgba(92, 127, 79, 0.1)' : 'transparent',
+                          borderRadius: '0.5rem',
+                          textDecoration: 'none',
+                          transition: 'all 0.2s ease',
+                          position: 'relative',
+                          fontFamily: 'sans-serif',
+                        }}
+                        onMouseEnter={(e) => {
+                          if (!active) {
+                            e.currentTarget.style.backgroundColor = 'rgba(92, 127, 79, 0.05)';
+                            e.currentTarget.style.color = '#5C7F4F';
+                            e.currentTarget.style.transform = 'translateY(-2px)';
+                          }
+                        }}
+                        onMouseLeave={(e) => {
+                          if (!active) {
+                            e.currentTarget.style.backgroundColor = 'transparent';
+                            e.currentTarget.style.color = '#2D3A31';
+                            e.currentTarget.style.transform = 'translateY(0)';
+                          }
+                        }}
+                        onFocus={(e) => {
+                          e.currentTarget.style.outline = '3px solid #5C7F4F';
+                          e.currentTarget.style.outlineOffset = '2px';
+                        }}
+                        onBlur={(e) => {
+                          e.currentTarget.style.outline = 'none';
+                        }}
+                      >
+                        <Icon size={20} aria-hidden="true" />
+                        <span>{item.label}</span>
+                      </Link>
+                    </li>
+                  );
+                })}
+              </ul>
+            </nav>
+
+            {/* CTA Button */}
+            <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
+              {isAuthenticated ? (
+                <>
+                  <Link
+                    to="/reflection-studio"
+                    className="cta-button"
+                    aria-label="Launch Studio - Start your reflection journey"
+                    style={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: '0.5rem',
+                      padding: '0.75rem 1.5rem',
+                      fontSize: '1.125rem',
+                      fontWeight: 600,
+                      color: '#FFFFFF',
+                      background: 'linear-gradient(135deg, #5C7F4F 0%, #4A6B3E 100%)',
+                      border: 'none',
+                      borderRadius: '0.5rem',
+                      textDecoration: 'none',
+                      cursor: 'pointer',
+                      transition: 'all 0.3s ease',
+                      boxShadow: '0 4px 12px rgba(92, 127, 79, 0.3)',
+                      fontFamily: 'sans-serif',
+                    }}
+                    onMouseEnter={(e) => {
+                      e.currentTarget.style.transform = 'translateY(-2px)';
+                      e.currentTarget.style.boxShadow = '0 6px 16px rgba(92, 127, 79, 0.4)';
+                    }}
+                    onMouseLeave={(e) => {
+                      e.currentTarget.style.transform = 'translateY(0)';
+                      e.currentTarget.style.boxShadow = '0 4px 12px rgba(92, 127, 79, 0.3)';
+                    }}
+                    onFocus={(e) => {
+                      e.currentTarget.style.outline = '3px solid #5C7F4F';
+                      e.currentTarget.style.outlineOffset = '2px';
+                    }}
+                    onBlur={(e) => {
+                      e.currentTarget.style.outline = 'none';
+                    }}
+                  >
+                    <span>Launch Studio</span>
+                  </Link>
+
+                  <button
+                    onClick={onLogout}
+                    className="logout-btn"
+                    aria-label="Logout from your account"
+                    style={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: '0.5rem',
+                      padding: '0.75rem 1.5rem',
+                      fontSize: '1.125rem',
+                      fontWeight: 500,
+                      color: '#FFFFFF',
+                      backgroundColor: '#B91C1C',
+                      border: 'none',
+                      borderRadius: '0.5rem',
+                      cursor: 'pointer',
+                      transition: 'all 0.2s ease',
+                      fontFamily: 'sans-serif',
+                    }}
+                    onMouseEnter={(e) => {
+                      e.currentTarget.style.backgroundColor = '#991B1B';
+                      e.currentTarget.style.transform = 'translateY(-1px)';
+                    }}
+                    onMouseLeave={(e) => {
+                      e.currentTarget.style.backgroundColor = '#B91C1C';
+                      e.currentTarget.style.transform = 'translateY(0)';
+                    }}
+                    onFocus={(e) => {
+                      e.currentTarget.style.outline = '3px solid #B91C1C';
+                      e.currentTarget.style.outlineOffset = '2px';
+                    }}
+                    onBlur={(e) => {
+                      e.currentTarget.style.outline = 'none';
+                    }}
+                  >
+                    <LogOut size={20} aria-hidden="true" />
+                    <span>Logout</span>
+                  </button>
+                </>
+              ) : (
+                <div style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
+                  <Link
+                    to="/login"
+                    style={{
+                      padding: '0.75rem 1.5rem',
+                      fontSize: '1.125rem',
+                      fontWeight: 500,
+                      color: '#5C7F4F',
+                      backgroundColor: 'transparent',
+                      border: '2px solid #5C7F4F',
+                      borderRadius: '0.5rem',
+                      textDecoration: 'none',
+                      transition: 'all 0.2s ease',
+                      fontFamily: 'sans-serif',
+                    }}
+                    onMouseEnter={(e) => {
+                      e.currentTarget.style.backgroundColor = 'rgba(92, 127, 79, 0.1)';
+                    }}
+                    onMouseLeave={(e) => {
+                      e.currentTarget.style.backgroundColor = 'transparent';
+                    }}
+                    onFocus={(e) => {
+                      e.currentTarget.style.outline = '3px solid #5C7F4F';
+                      e.currentTarget.style.outlineOffset = '2px';
+                    }}
+                    onBlur={(e) => {
+                      e.currentTarget.style.outline = 'none';
+                    }}
+                  >
+                    Sign In
+                  </Link>
+                  <Link
+                    to="/signup"
+                    style={{
+                      padding: '0.75rem 1.5rem',
+                      fontSize: '1.125rem',
+                      fontWeight: 600,
+                      color: '#FFFFFF',
+                      backgroundColor: '#5C7F4F',
+                      border: '2px solid #5C7F4F',
+                      borderRadius: '0.5rem',
+                      textDecoration: 'none',
+                      transition: 'all 0.2s ease',
+                      fontFamily: 'sans-serif',
+                    }}
+                    onMouseEnter={(e) => {
+                      e.currentTarget.style.backgroundColor = '#4A6B3E';
+                      e.currentTarget.style.transform = 'translateY(-1px)';
+                    }}
+                    onMouseLeave={(e) => {
+                      e.currentTarget.style.backgroundColor = '#5C7F4F';
+                      e.currentTarget.style.transform = 'translateY(0)';
+                    }}
+                    onFocus={(e) => {
+                      e.currentTarget.style.outline = '3px solid #5C7F4F';
+                      e.currentTarget.style.outlineOffset = '2px';
+                    }}
+                    onBlur={(e) => {
+                      e.currentTarget.style.outline = 'none';
+                    }}
+                  >
+                    Get Started
+                  </Link>
+                </div>
+              )}
+            </div>
+
+            {/* Mobile Menu Button */}
+            <button
+              onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+              className="mobile-menu-btn lg:hidden"
+              aria-label={isMobileMenuOpen ? 'Close navigation menu' : 'Open navigation menu'}
+              aria-expanded={isMobileMenuOpen}
+              aria-controls="mobile-navigation"
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                width: '3rem',
+                height: '3rem',
+                color: '#2D3A31',
+                backgroundColor: 'transparent',
+                border: '2px solid #5C7F4F',
+                borderRadius: '0.5rem',
+                cursor: 'pointer',
+                transition: 'all 0.2s ease',
+              }}
+              onFocus={(e) => {
+                e.currentTarget.style.outline = '3px solid #5C7F4F';
+                e.currentTarget.style.outlineOffset = '2px';
+              }}
+              onBlur={(e) => {
+                e.currentTarget.style.outline = 'none';
+              }}
+            >
+              {isMobileMenuOpen ? (
+                <X size={24} aria-hidden="true" />
+              ) : (
+                <Menu size={24} aria-hidden="true" />
+              )}
+            </button>
+
           </div>
         </div>
 
         {/* Mobile Navigation Menu */}
-        {isAuthenticated && isMobileMenuOpen && (
+        {isMobileMenuOpen && (
           <nav
             id="mobile-navigation"
             role="navigation"
@@ -373,7 +417,7 @@ export const Header: React.FC<HeaderProps> = ({
               {navItems.map((item) => {
                 const Icon = item.icon;
                 const active = isActive(item.path);
-                
+
                 return (
                   <li key={item.path}>
                     <Link
@@ -392,6 +436,7 @@ export const Header: React.FC<HeaderProps> = ({
                         borderRadius: '0.5rem',
                         textDecoration: 'none',
                         transition: 'all 0.2s ease',
+                        fontFamily: 'sans-serif',
                       }}
                       onClick={() => setIsMobileMenuOpen(false)}
                     >
@@ -401,14 +446,11 @@ export const Header: React.FC<HeaderProps> = ({
                   </li>
                 );
               })}
-              
-              {/* Mobile Logout */}
+
+              {/* Mobile CTA */}
               <li style={{ marginTop: '1rem', paddingTop: '1rem', borderTop: '1px solid rgba(92, 127, 79, 0.2)' }}>
-                <button
-                  onClick={() => {
-                    setIsMobileMenuOpen(false);
-                    onLogout?.();
-                  }}
+                <Link
+                  to="/reflection-studio"
                   style={{
                     display: 'flex',
                     alignItems: 'center',
@@ -416,19 +458,54 @@ export const Header: React.FC<HeaderProps> = ({
                     width: '100%',
                     padding: '1rem',
                     fontSize: '1.125rem',
-                    fontWeight: 500,
-                    color: '#B91C1C',
-                    backgroundColor: 'rgba(185, 28, 28, 0.1)',
+                    fontWeight: 600,
+                    color: '#FFFFFF',
+                    background: 'linear-gradient(135deg, #5C7F4F 0%, #4A6B3E 100%)',
                     border: 'none',
                     borderRadius: '0.5rem',
+                    textDecoration: 'none',
                     cursor: 'pointer',
-                    textAlign: 'left',
+                    textAlign: 'center',
+                    justifyContent: 'center',
+                    boxShadow: '0 4px 12px rgba(92, 127, 79, 0.3)',
+                    fontFamily: 'sans-serif',
                   }}
+                  onClick={() => setIsMobileMenuOpen(false)}
                 >
-                  <LogOut size={20} aria-hidden="true" />
-                  <span>Logout</span>
-                </button>
+                  <span>Launch Studio</span>
+                </Link>
               </li>
+
+              {/* Mobile Logout for authenticated users */}
+              {isAuthenticated && (
+                <li style={{ marginTop: '1rem' }}>
+                  <button
+                    onClick={() => {
+                      setIsMobileMenuOpen(false);
+                      onLogout?.();
+                    }}
+                    style={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: '0.75rem',
+                      width: '100%',
+                      padding: '1rem',
+                      fontSize: '1.125rem',
+                      fontWeight: 500,
+                      color: '#B91C1C',
+                      backgroundColor: 'rgba(185, 28, 28, 0.1)',
+                      border: 'none',
+                      borderRadius: '0.5rem',
+                      cursor: 'pointer',
+                      textAlign: 'left',
+                      fontFamily: 'sans-serif',
+                    }}
+                  >
+                    <LogOut size={20} aria-hidden="true" />
+                    <span>Logout</span>
+                  </button>
+                </li>
+              )}
             </ul>
           </nav>
         )}
@@ -443,10 +520,16 @@ export const Header: React.FC<HeaderProps> = ({
           .desktop-nav {
             display: flex !important;
           }
+          .mobile-nav {
+            display: none !important;
+          }
         }
         @media (max-width: 1023px) {
           .desktop-nav {
             display: none !important;
+          }
+          .mobile-nav {
+            display: block !important;
           }
         }
       `}</style>

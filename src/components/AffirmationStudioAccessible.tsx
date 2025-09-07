@@ -28,6 +28,10 @@ interface AffirmationCategory {
   borderColor: string;
   affirmations: string[];
   reflection: string;
+  actionableTips: Array<{
+    challenge: string;
+    tip: string;
+  }>;
 }
 
 const affirmationCategories: AffirmationCategory[] = [
@@ -40,13 +44,27 @@ const affirmationCategories: AffirmationCategory[] = [
     bgColor: '#F0F5ED',
     borderColor: '#7A9B6E',
     affirmations: [
-      "My worth is not determined by my productivity or the number of words I interpret correctly.",
+      "My worth is not determined by my productivity or how perfectly I perform my work.",
       "I am valuable simply because I exist, not because of what I produce or achieve.",
       "My humanity and dignity remain intact regardless of mistakes or imperfect performances.",
       "I deserve rest, joy, and peace regardless of today's accomplishments.",
       "My value as a person extends far beyond my professional role."
     ],
-    reflection: "How can I remember my inherent worth today, separate from my work?"
+    reflection: "How can I remember my inherent worth today, separate from my work?",
+    actionableTips: [
+      {
+        challenge: "Write down three things you value about yourself that have nothing to do with work",
+        tip: "Think about your kindness, creativity, humor, or the way you care for others. These qualities exist whether you're working or not."
+      },
+      {
+        challenge: "Set aside 10 minutes today for something that brings you joy, regardless of its productivity value",
+        tip: "Listen to music, doodle, take a walk, or simply sit quietly. Joy for its own sake reinforces your inherent worth."
+      },
+      {
+        challenge: "Practice receiving a compliment without deflecting or minimizing it",
+        tip: "Simply say 'thank you' when someone acknowledges you. Let yourself absorb the recognition of your value."
+      }
+    ]
   },
   {
     id: 'wisdom',
@@ -57,13 +75,27 @@ const affirmationCategories: AffirmationCategory[] = [
     bgColor: '#FFF9F0',
     borderColor: '#C4A57B',
     affirmations: [
-      "I bring years of training, experience, and wisdom to every interpretation.",
-      "My skills have developed through dedication and practice - I can trust them.",
-      "I've successfully navigated countless challenging situations before.",
-      "My professional judgment is sound and continues to evolve.",
-      "I contribute meaningful value through my work as a language bridge."
+      "Your thoughtful choices and dedication weave understanding between worlds. Every decision reflects a deep, growing wisdom.",
+      "Your questions and openness nurture better communication for everyone. Seeking clarity is a sign of genuine insight and strength.",
+      "By sharing our experiences and learning together, we lift each other up and strengthen the wisdom of our community.",
+      "Each mindful reflection and new challenge helps your brain grow sharper and more adaptable—wisdom is built, one experience at a time.",
+      "You lead with empathy and discernment, balancing confidence in your skills with compassion for yourself and others."
     ],
-    reflection: "What professional skill or achievement am I most proud of today?"
+    reflection: "What professional skill or achievement am I most proud of today?",
+    actionableTips: [
+      {
+        challenge: "Share one piece of professional wisdom with a colleague or peer today",
+        tip: "Your experience has value. Sharing what you've learned helps others and reinforces your own expertise."
+      },
+      {
+        challenge: "Document one successful problem-solving moment from your recent work",
+        tip: "Write a brief note about how you handled a challenge. This creates a personal library of your competence."
+      },
+      {
+        challenge: "Ask a thoughtful question in your next meeting or interaction",
+        tip: "Asking good questions demonstrates wisdom. It shows you're thinking deeply and contributing to better outcomes."
+      }
+    ]
   },
   {
     id: 'resilience',
@@ -74,13 +106,27 @@ const affirmationCategories: AffirmationCategory[] = [
     bgColor: '#F0F3F7',
     borderColor: '#9BADC4',
     affirmations: [
-      "I have survived every difficult day so far, and I'll survive this one too.",
-      "My resilience is like a muscle that grows stronger with each challenge.",
-      "I can bend without breaking - flexibility is my strength.",
-      "Past struggles have prepared me for present challenges.",
-      "I trust my ability to navigate whatever comes my way."
+      "Your patience in tough moments matters, every small act of perseverance shapes a more resilient you.",
+      "Seeking support or rest isn't weakness, it's wisdom in action. Every time you value your own needs, you nurture your growth and well-being.",
+      "When challenges arise, remember, facing difficulty together makes our community more adaptable and compassionate.",
+      "Each time you learn from a setback, your brain grows new pathways for courage and creative problem-solving, resilience is a skill you build every day.",
+      "It's okay to have hard days. Showing up, even when it's tough, is a true act of inner strength, progress comes from kindness to yourself."
     ],
-    reflection: "What challenge have I overcome recently that shows my resilience?"
+    reflection: "What challenge have I overcome recently that shows my resilience?",
+    actionableTips: [
+      {
+        challenge: "Identify one coping strategy that worked for you recently and use it proactively today",
+        tip: "Whether it's deep breathing, taking breaks, or reaching out to someone, use what works before stress builds up."
+      },
+      {
+        challenge: "Acknowledge one difficult emotion without trying to fix or change it",
+        tip: "Simply name what you're feeling: 'I notice I'm feeling frustrated.' Acknowledgment without judgment builds emotional resilience."
+      },
+      {
+        challenge: "Do one small thing today that your future self will thank you for",
+        tip: "Prepare tomorrow's lunch, organize your workspace, or send that email. Small acts of self-care compound into resilience."
+      }
+    ]
   },
   {
     id: 'growth',
@@ -91,13 +137,27 @@ const affirmationCategories: AffirmationCategory[] = [
     bgColor: '#EFF5F6',
     borderColor: '#89B4BB',
     affirmations: [
-      "Every experience, comfortable or not, teaches me something valuable.",
-      "I'm exactly where I need to be in my learning journey.",
-      "Mistakes are proof that I'm trying and growing.",
-      "My curiosity and openness to learning serve me well.",
-      "I celebrate small improvements - progress over perfection."
+      "Every effort you make to learn something new moves you forward, no matter how small the step is.",
+      "Your curiosity and willingness to ask questions keep your mind flexible, every new skill or idea adds to your expertise.",
+      "Mistakes and setbacks are a natural part of learning, each one gives your brain a chance to grow and adapt.",
+      "Sharing your insights with others opens the door to new solutions and deeper understanding for everyone.",
+      "Growth isn't a race, it's a journey unique to you. Progress comes from trying, reflecting, and showing up again and again."
     ],
-    reflection: "What have I learned about myself through my work this week?"
+    reflection: "What have I learned about myself through my work this week?",
+    actionableTips: [
+      {
+        challenge: "Try one new approach or technique in your work today, no matter how small",
+        tip: "Growth happens through experimentation. Even tiny changes keep your mind flexible and curious."
+      },
+      {
+        challenge: "Write down one question you're curious about related to your field",
+        tip: "Curiosity is the engine of growth. Identifying what you want to learn gives direction to your development."
+      },
+      {
+        challenge: "Celebrate one learning moment from today, especially if it came from a mistake",
+        tip: "Every error is data for growth. Acknowledge what you learned and how it will inform your future actions."
+      }
+    ]
   },
   {
     id: 'purpose',
@@ -114,7 +174,21 @@ const affirmationCategories: AffirmationCategory[] = [
       "I honor the trust placed in me by those who depend on my voice.",
       "My work has ripple effects I may never fully see but can trust exist."
     ],
-    reflection: "How did my work make a positive difference today, even in small ways?"
+    reflection: "How did my work make a positive difference today, even in small ways?",
+    actionableTips: [
+      {
+        challenge: "Notice and appreciate one small positive impact you made today",
+        tip: "Look for the subtle moments - a smile you created, a problem you solved, or clarity you provided. Small impacts accumulate into meaningful change."
+      },
+      {
+        challenge: "Express gratitude to someone whose work impacts you",
+        tip: "Recognize another's contribution today. The ripple effects of appreciation strengthen our collective purpose."
+      },
+      {
+        challenge: "Document one way your work contributed to a larger goal",
+        tip: "Connect your daily tasks to the bigger picture. Write down how today's efforts moved something important forward."
+      }
+    ]
   },
   {
     id: 'boundaries',
@@ -125,13 +199,27 @@ const affirmationCategories: AffirmationCategory[] = [
     bgColor: '#F7F7F0',
     borderColor: '#B4B499',
     affirmations: [
-      "My needs matter and deserve to be honored.",
-      "Setting boundaries is an act of self-respect, not selfishness.",
-      "I can be compassionate with others while protecting my own energy.",
-      "Saying no to one thing means saying yes to my wellbeing.",
-      "Rest is productive - it's how I sustain my ability to serve."
+      "Taking time to care for yourself is not selfish, it helps you be present and authentic in every part of your life.",
+      "Setting clear boundaries allows you and others to show up with respect and honesty, creating room for real connection.",
+      "Listening to your own needs, whether for rest or space, helps you participate more fully in your own way and at your own pace.",
+      "Saying no when you need to is an act of kindness to yourself and others, making it easier for everyone to communicate and understand each other.",
+      "Your well-being matters to the whole community, every step you take towards self-care helps others feel safe to do the same."
     ],
-    reflection: "What boundary do I need to set or maintain to protect my wellbeing?"
+    reflection: "What boundary do I need to set or maintain to protect my wellbeing?",
+    actionableTips: [
+      {
+        challenge: "Implement one small act of self-care before the day ends",
+        tip: "Choose something nurturing - a short walk, a healthy snack, or five minutes of quiet. Small acts of self-care reinforce your worth."
+      },
+      {
+        challenge: "Practice one boundary-setting phrase today",
+        tip: "Try: 'I need to check my schedule,' or 'Let me think about that.' Having phrases ready makes boundary-setting easier."
+      },
+      {
+        challenge: "Schedule dedicated time for something that replenishes you",
+        tip: "Block out time this week for an activity that restores your energy. Treat it as non-negotiable as any other commitment."
+      }
+    ]
   }
 ];
 
@@ -142,6 +230,10 @@ export const AffirmationStudioAccessible: React.FC = () => {
   const [showReflection, setShowReflection] = useState(false);
   const [dailyAffirmation, setDailyAffirmation] = useState<{ category: string; index: number } | null>(null);
   const [recentlyUsed, setRecentlyUsed] = useState<string[]>([]);
+  const [viewMode, setViewMode] = useState<'all' | 'favorites'>('all');
+  const [reflectionInput, setReflectionInput] = useState('');
+  const [showActionableTip, setShowActionableTip] = useState(false);
+  const [currentTip, setCurrentTip] = useState<{ challenge: string; tip: string } | null>(null);
   
   const modalRef = useRef<HTMLDivElement>(null);
   const previousFocusRef = useRef<HTMLElement | null>(null);
@@ -202,9 +294,24 @@ export const AffirmationStudioAccessible: React.FC = () => {
     }, 100);
   };
 
+  const handleCompleteReflection = () => {
+    if (reflectionInput.trim()) {
+      // Select a random tip from the category
+      const tips = selectedCategory?.actionableTips || [];
+      if (tips.length > 0) {
+        const randomTip = tips[Math.floor(Math.random() * tips.length)];
+        setCurrentTip(randomTip);
+        setShowActionableTip(true);
+      }
+    }
+  };
+
   const handleClose = () => {
     setSelectedCategory(null);
     setShowReflection(false);
+    setShowActionableTip(false);
+    setReflectionInput('');
+    setCurrentTip(null);
     // Return focus to previous element
     if (previousFocusRef.current) {
       previousFocusRef.current.focus();
@@ -349,8 +456,38 @@ export const AffirmationStudioAccessible: React.FC = () => {
         </section>
       )}
 
+      {/* View Toggle */}
+      <div className="mb-6 flex items-center justify-between">
+        <div className="flex gap-2">
+          <button
+            onClick={() => setViewMode('all')}
+            className={`px-4 py-2 rounded-lg font-medium transition-all ${
+              viewMode === 'all' 
+                ? 'bg-green-600 text-white' 
+                : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+            }`}
+            aria-pressed={viewMode === 'all'}
+          >
+            All Categories
+          </button>
+          <button
+            onClick={() => setViewMode('favorites')}
+            className={`px-4 py-2 rounded-lg font-medium transition-all flex items-center gap-2 ${
+              viewMode === 'favorites' 
+                ? 'bg-purple-600 text-white' 
+                : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+            }`}
+            aria-pressed={viewMode === 'favorites'}
+          >
+            <BookmarkCheck className="h-4 w-4" />
+            My Favorites ({favorites.size})
+          </button>
+        </div>
+      </div>
+
       {/* Affirmation Categories Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      {viewMode === 'all' ? (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {affirmationCategories.map((category) => {
           const Icon = category.icon;
           return (
@@ -399,6 +536,74 @@ export const AffirmationStudioAccessible: React.FC = () => {
           );
         })}
       </div>
+      ) : (
+        /* Favorites View */
+        <div className="space-y-4">
+          {favorites.size === 0 ? (
+            <div className="text-center py-12 bg-gray-50 rounded-xl">
+              <BookmarkCheck className="h-12 w-12 text-gray-400 mx-auto mb-4" />
+              <h3 className="text-lg font-semibold text-gray-700 mb-2">No favorites yet</h3>
+              <p className="text-gray-600 mb-4">
+                Click the bookmark icon on any affirmation to save it here
+              </p>
+              <button
+                onClick={() => setViewMode('all')}
+                className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors"
+              >
+                Browse Affirmations
+              </button>
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              {Array.from(favorites).map((favoriteKey) => {
+                const [categoryId, indexStr] = favoriteKey.split('-');
+                const category = affirmationCategories.find(c => c.id === categoryId);
+                const index = parseInt(indexStr);
+                
+                if (!category || isNaN(index)) return null;
+                
+                const Icon = category.icon;
+                return (
+                  <div
+                    key={favoriteKey}
+                    className="p-4 rounded-xl border-2 transition-all hover:shadow-lg"
+                    style={{
+                      backgroundColor: category.bgColor,
+                      borderColor: category.borderColor
+                    }}
+                  >
+                    <div className="flex items-start justify-between mb-3">
+                      <div className="flex items-center gap-2">
+                        <Icon className="h-5 w-5" style={{ color: category.color }} />
+                        <span className="text-sm font-medium" style={{ color: category.color }}>
+                          {category.title}
+                        </span>
+                      </div>
+                      <button
+                        onClick={() => toggleFavorite(categoryId, index)}
+                        className="p-2 rounded-lg hover:bg-white/50 transition-colors"
+                        aria-label="Remove from favorites"
+                      >
+                        <BookmarkCheck className="h-4 w-4" style={{ color: category.color }} />
+                      </button>
+                    </div>
+                    <blockquote className="text-sm italic" style={{ color: '#2D3748' }}>
+                      "{category.affirmations[index]}"
+                    </blockquote>
+                    <button
+                      onClick={() => handleSelectCategory(category)}
+                      className="mt-3 text-xs font-medium hover:underline"
+                      style={{ color: category.color }}
+                    >
+                      View in context →
+                    </button>
+                  </div>
+                );
+              })}
+            </div>
+          )}
+        </div>
+      )}
 
       {/* Affirmation Modal */}
       {selectedCategory && (
@@ -558,6 +763,79 @@ export const AffirmationStudioAccessible: React.FC = () => {
                     </button>
                   </div>
                 </>
+              ) : showActionableTip && currentTip ? (
+                /* Actionable Tip View */
+                <div>
+                  <div
+                    className="p-6 rounded-xl mb-6"
+                    style={{
+                      backgroundColor: selectedCategory.bgColor,
+                      border: `2px solid ${selectedCategory.borderColor}`
+                    }}
+                  >
+                    <div className="flex items-center mb-4">
+                      <Sparkles className="h-6 w-6 mr-2" style={{ color: selectedCategory.color }} />
+                      <h4 className="text-lg font-semibold" style={{ color: selectedCategory.color }}>
+                        Your Gentle Challenge
+                      </h4>
+                    </div>
+                    <p className="text-lg font-medium mb-4" style={{ color: '#2D3748' }}>
+                      {currentTip.challenge}
+                    </p>
+                    <div className="border-t pt-4" style={{ borderColor: selectedCategory.borderColor }}>
+                      <p className="text-base" style={{ color: '#4A5568' }}>
+                        <strong>Tip:</strong> {currentTip.tip}
+                      </p>
+                    </div>
+                  </div>
+                  
+                  <div className="flex gap-3">
+                    <button
+                      onClick={() => {
+                        setShowActionableTip(false);
+                        setShowReflection(false);
+                        setReflectionInput('');
+                        setCurrentTip(null);
+                      }}
+                      className="px-4 py-2 rounded-lg font-medium transition-all"
+                      style={{
+                        backgroundColor: '#F7FAFC',
+                        color: '#4A5568'
+                      }}
+                    >
+                      Back to Affirmations
+                    </button>
+                    <button
+                      onClick={() => {
+                        // Get another random tip
+                        const tips = selectedCategory?.actionableTips || [];
+                        const availableTips = tips.filter(tip => tip !== currentTip);
+                        if (availableTips.length > 0) {
+                          const randomTip = availableTips[Math.floor(Math.random() * availableTips.length)];
+                          setCurrentTip(randomTip);
+                        }
+                      }}
+                      className="px-4 py-2 rounded-lg font-medium transition-all"
+                      style={{
+                        backgroundColor: selectedCategory.bgColor,
+                        color: selectedCategory.color,
+                        border: `1px solid ${selectedCategory.borderColor}`
+                      }}
+                    >
+                      <RefreshCw className="h-4 w-4 inline mr-2" />
+                      Try Another Tip
+                    </button>
+                    <button
+                      onClick={handleClose}
+                      className="flex-1 py-3 rounded-lg font-medium text-white transition-all"
+                      style={{
+                        backgroundColor: selectedCategory.color
+                      }}
+                    >
+                      Done
+                    </button>
+                  </div>
+                </div>
               ) : (
                 /* Reflection View */
                 <div>
@@ -585,6 +863,8 @@ export const AffirmationStudioAccessible: React.FC = () => {
                     rows={4}
                     placeholder="Take a moment to reflect..."
                     aria-label="Reflection notes"
+                    value={reflectionInput}
+                    onChange={(e) => setReflectionInput(e.target.value)}
                   />
                   
                   <div className="flex gap-3 mt-4">
@@ -599,11 +879,12 @@ export const AffirmationStudioAccessible: React.FC = () => {
                       Back to Affirmations
                     </button>
                     <button
-                      onClick={handleClose}
+                      onClick={handleCompleteReflection}
                       className="flex-1 py-3 rounded-lg font-medium text-white transition-all"
                       style={{
                         backgroundColor: selectedCategory.color
                       }}
+                      disabled={!reflectionInput.trim()}
                     >
                       Complete Reflection
                     </button>

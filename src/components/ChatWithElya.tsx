@@ -24,11 +24,14 @@ export function ChatWithElya() {
   const inputRef = useRef<HTMLInputElement>(null);
 
   const scrollToBottom = () => {
-    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
   };
 
   useEffect(() => {
-    scrollToBottom();
+    // Only scroll if there are new messages (not on initial render)
+    if (messages.length > 1) {
+      scrollToBottom();
+    }
   }, [messages]);
 
   const handleSendMessage = async () => {
@@ -134,7 +137,7 @@ export function ChatWithElya() {
       </div>
 
       {/* Messages Container */}
-      <div className="flex-1 overflow-y-auto px-6 py-4 space-y-4">
+      <div className="flex-1 overflow-y-auto px-6 py-4 space-y-4" style={{ overscrollBehavior: 'contain' }}>
         {messages.map((message) => (
           <div
             key={message.id}
@@ -305,9 +308,17 @@ export function ChatWithElya() {
             )}
           </button>
         </div>
-        <p className="text-xs mt-2 text-center" style={{ color: '#9CA3AF' }}>
-          Elya is an AI companion. For emergencies, please contact a healthcare professional.
-        </p>
+        <div className="flex flex-col items-center gap-1 mt-2">
+          <p className="text-xs text-center" style={{ color: '#9CA3AF' }}>
+            Elya is an AI companion. For emergencies, please contact a healthcare professional.
+          </p>
+          <div className="flex items-center gap-1.5">
+            <svg className="w-3 h-3" style={{ color: '#93C5FD' }} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+            </svg>
+            <span className="text-xs" style={{ color: '#93C5FD' }}>Your conversations are private and never shared</span>
+          </div>
+        </div>
       </div>
     </div>
   );

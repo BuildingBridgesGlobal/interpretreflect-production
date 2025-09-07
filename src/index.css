@@ -1,16 +1,29 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+/* Import WCAG AA compliant color system */
+@import './styles/colors.css';
+
+/* Import typography system - WCAG AA compliant */
+@import './styles/typography.css';
+
+/* Import balanced accessibility improvements */
+@import './styles/balanced-accessibility.css';
 
 /* Import preferences styles */
 @import './styles/preferences.css';
 
-/* Ensure body has proper background */
+/* Import button visibility fixes */
+@import './styles/button-fixes.css';
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Base body styles - enhanced with typography system */
 body {
   margin: 0;
   padding: 0;
   background: white;
   min-height: 100vh;
+  /* Typography is now handled by typography.css */
 }
 
 #root {

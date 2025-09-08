@@ -1,0 +1,53 @@
+-- InterpretReflect Complete Database Schema
+-- Deploy this file to Supabase to set up all tables and functions
+-- Generated: 2025-01-08
+
+-- ============================================
+-- 1. User Profiles Schema
+-- ============================================
+-- Run user_profiles_schema.sql first
+
+-- ============================================
+-- 2. Growth Insights Schema
+-- ============================================
+-- Run growth_insights_schema.sql second
+
+-- ============================================
+-- 3. Enhanced Growth Schema
+-- ============================================
+-- Run enhanced_growth_schema.sql third
+
+-- ============================================
+-- 4. Subscriptions Schema
+-- ============================================
+-- Run subscriptions_schema.sql fourth
+
+-- ============================================
+-- DEPLOYMENT INSTRUCTIONS:
+-- ============================================
+-- 
+-- Option 1: Manual Deployment (Recommended)
+-- 1. Go to https://supabase.com/dashboard/project/kvguxuxanpynwdffpssm/sql
+-- 2. Run each migration file in this order:
+--    a. user_profiles_schema.sql
+--    b. growth_insights_schema.sql
+--    c. enhanced_growth_schema.sql
+--    d. subscriptions_schema.sql
+--
+-- Option 2: Combined Deployment
+-- 1. Concatenate all files into one
+-- 2. Run the combined SQL in Supabase SQL Editor
+--
+-- Option 3: Using Supabase CLI
+-- 1. Install Supabase CLI: npm install -g supabase
+-- 2. Login: supabase login
+-- 3. Link project: supabase link --project-ref kvguxuxanpynwdffpssm
+-- 4. Push migrations: supabase db push
+--
+-- ============================================
+-- IMPORTANT NOTES:
+-- ============================================
+-- - Your Supabase URL: https://kvguxuxanpynwdffpssm.supabase.co
+-- - Ensure Row Level Security (RLS) is enabled for all tables
+-- - Set up authentication policies as needed
+-- - Configure storage buckets for file uploads if required

@@ -3,6 +3,8 @@ import { supabase } from '../lib/supabase';
 import { User, AuthResponse, AuthError } from '@supabase/supabase-js';
 import { SessionManager, RoleManager, AuditLogger, enforceHttps } from '../utils/security';
 import { SECURITY_CONFIG } from '../config/security';
+import { dataSyncService } from '../services/dataSync';
+import { UserDataLoader } from '../services/userDataLoader';
 
 interface AuthResult {
   user?: User | null;
@@ -74,6 +76,12 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
           const role = session.user.email?.includes('admin') ? 'admin' : 'user';
           RoleManager.setUserRole(session.user.id, role);
           setUserRole(role);
+          
+          // Load user data from Supabase on initial load
+          await UserDataLoader.loadUserData(session.user.id);
+          
+          // Trigger initial sync
+          dataSyncService.triggerManualSync();
         } else {
           // No session, no user - this is normal for logged out state
           setUser(null);
@@ -102,6 +110,14 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
           const role = session.user.email?.includes('admin') ? 'admin' : 'user';
           RoleManager.setUserRole(session.user.id, role);
           setUserRole(role);
+          
+          // Load user data from Supabase first
+          await UserDataLoader.loadUserData(session.user.id);
+          
+          // Then trigger data sync to ensure everything is up to date
+          dataSyncService.triggerManualSync().then(() => {
+            console.log('Initial data sync completed after sign in');
+          });
         } else if (event === 'SIGNED_OUT') {
           sessionManager.endSession('LOGOUT');
           setUserRole(SECURITY_CONFIG.rbac.defaultRole);
@@ -149,6 +165,14 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         const role = data.user.email?.includes('admin') ? 'admin' : 'user';
         RoleManager.setUserRole(data.user.id, role);
         setUserRole(role);
+        
+        // Load user data from Supabase first
+        await UserDataLoader.loadUserData(data.user.id);
+        
+        // Then trigger data sync to ensure everything is up to date
+        dataSyncService.triggerManualSync().then(() => {
+          console.log('Initial data sync completed after sign in');
+        });
       }
       
       return { user: data.user, error: null };

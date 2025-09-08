@@ -13,8 +13,8 @@ export class DataSyncService {
   private lastSyncTime: Date | null = null;
 
   private constructor() {
-    // Initialize sync on page load
-    this.initializeSync();
+    // Initialize auth listener
+    this.setupAuthListener();
   }
 
   static getInstance(): DataSyncService {
@@ -24,21 +24,57 @@ export class DataSyncService {
     return DataSyncService.instance;
   }
 
-  private async initializeSync() {
-    // Check if user is authenticated
-    const { data: { user } } = await supabase.auth.getUser();
-    if (user) {
-      // Sync on initialization
-      await this.syncAllData();
-      
-      // Set up periodic sync every 5 minutes
-      setInterval(() => this.syncAllData(), 5 * 60 * 1000);
-      
-      // Sync before page unload
-      window.addEventListener('beforeunload', () => {
-        this.syncAllData();
-      });
+  private setupAuthListener() {
+    // Listen for auth state changes
+    supabase.auth.onAuthStateChange(async (event, session) => {
+      if (event === 'SIGNED_IN' && session?.user) {
+        // User just signed in - start sync
+        await this.initializeSync();
+      } else if (event === 'SIGNED_OUT') {
+        // User signed out - stop sync
+        this.stopSync();
+      }
+    });
+
+    // Also check initial state
+    this.checkInitialAuth();
+  }
+
+  private async checkInitialAuth() {
+    const { data: { session } } = await supabase.auth.getSession();
+    if (session?.user) {
+      await this.initializeSync();
     }
+  }
+
+  private syncInterval: NodeJS.Timeout | null = null;
+
+  private async initializeSync() {
+    // Sync immediately on sign in
+    await this.syncAllData();
+    
+    // Clear any existing interval
+    if (this.syncInterval) {
+      clearInterval(this.syncInterval);
+    }
+    
+    // Set up periodic sync every 5 minutes
+    this.syncInterval = setInterval(() => this.syncAllData(), 5 * 60 * 1000);
+    
+    // Sync before page unload
+    window.addEventListener('beforeunload', () => {
+      this.syncAllData();
+    });
+  }
+
+  private stopSync() {
+    // Clear sync interval when user signs out
+    if (this.syncInterval) {
+      clearInterval(this.syncInterval);
+      this.syncInterval = null;
+    }
+    this.syncInProgress = false;
+    this.lastSyncTime = null;
   }
 
   async syncAllData(): Promise<SyncStatus> {

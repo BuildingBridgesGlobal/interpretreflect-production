@@ -11,8 +11,8 @@ export function SyncStatusIndicator() {
   const [syncResult, setSyncResult] = useState<{ synced?: number; failed?: number } | null>(null);
 
   useEffect(() => {
-    // Check sync status every 30 seconds
-    const interval = setInterval(() => {
+    // Check initial sync status
+    const checkStatus = () => {
       const status = dataSyncService.getSyncStatus();
       if (status.inProgress) {
         setSyncStatus('syncing');
@@ -20,10 +20,16 @@ export function SyncStatusIndicator() {
         setLastSyncTime(status.lastSync);
         setSyncStatus('idle');
       }
-    }, 30000);
+    };
+
+    // Check immediately
+    checkStatus();
+
+    // Check sync status every 5 seconds (more frequent to catch sync updates)
+    const interval = setInterval(checkStatus, 5000);
 
     return () => clearInterval(interval);
-  }, []);
+  }, [user]); // Re-run when user changes
 
   const handleManualSync = async () => {
     if (!user) {
@@ -61,15 +67,9 @@ export function SyncStatusIndicator() {
     return `${Math.floor(diff / 86400)} days ago`;
   };
 
+  // Don't show indicator for non-authenticated users since sync happens automatically
   if (!user) {
-    return (
-      <div className="fixed bottom-4 right-4 z-50">
-        <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-3 flex items-center gap-2 shadow-sm">
-          <CloudOff className="h-4 w-4 text-yellow-600" />
-          <span className="text-sm text-yellow-700">Sign in to sync data</span>
-        </div>
-      </div>
-    );
+    return null;
   }
 
   return (
@@ -102,10 +102,10 @@ export function SyncStatusIndicator() {
             ${syncStatus === 'success' ? 'text-green-700' : ''}
             ${syncStatus === 'error' ? 'text-red-700' : ''}
           `}>
-            {syncStatus === 'idle' && 'Sync data'}
+            {syncStatus === 'idle' && 'Data synced'}
             {syncStatus === 'syncing' && 'Syncing...'}
             {syncStatus === 'success' && 'Synced'}
-            {syncStatus === 'error' && 'Sync failed'}
+            {syncStatus === 'error' && 'Retry sync'}
           </span>
         </button>
 

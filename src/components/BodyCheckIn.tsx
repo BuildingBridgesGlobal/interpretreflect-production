@@ -4,19 +4,21 @@ import { X, ChevronRight } from 'lucide-react';
 interface BodyCheckInProps {
   onClose: () => void;
   onComplete?: (data: any) => void;
+  mode?: 'quick' | 'standard';
+  duration?: '30s' | '1m' | '2m' | '3m';
 }
 
 type PracticeDuration = '30s' | '1m' | '2m' | '3m';
 type PracticeMode = 'standard' | 'quick';
 type BodyArea = 'head' | 'shoulders' | 'chest' | 'belly' | 'legs';
 
-export const BodyCheckIn: React.FC<BodyCheckInProps> = ({ onClose, onComplete }) => {
-  const [phase, setPhase] = useState<'setup' | 'practice' | 'reflection'>('setup');
-  const [mode, setMode] = useState<PracticeMode>('standard');
+export const BodyCheckIn: React.FC<BodyCheckInProps> = ({ onClose, onComplete, mode: initialMode = 'standard', duration = '1m' }) => {
+  const [phase, setPhase] = useState<'setup' | 'practice' | 'reflection'>('practice');
+  const [mode, setMode] = useState<PracticeMode>(initialMode);
   const [currentArea, setCurrentArea] = useState<BodyArea>('head');
-  const [selectedDuration, setSelectedDuration] = useState<PracticeDuration>('1m');
+  const [selectedDuration, setSelectedDuration] = useState<PracticeDuration>(duration);
   const [timeElapsed, setTimeElapsed] = useState(0);
-  const [isActive, setIsActive] = useState(false);
+  const [isActive, setIsActive] = useState(true);
   
   // Reflection states
   const [feelingBetter, setFeelingBetter] = useState('');
@@ -130,31 +132,15 @@ export const BodyCheckIn: React.FC<BodyCheckInProps> = ({ onClose, onComplete })
                   Notice how your body feels
                 </p>
               </div>
-              <button onClick={onClose} className="p-2 hover:bg-gray-100 rounded-xl">
-                <X className="w-6 h-6" />
+              <button 
+                onClick={onClose} 
+                className="p-2 rounded-xl transition-all hover:scale-105"
+                style={{
+                  background: 'linear-gradient(135deg, #1b5e20, #2e7d32)',
+                }}
+              >
+                <X className="w-6 h-6 text-white" />
               </button>
-            </div>
-
-            {/* Duration selection */}
-            <div className="mb-6">
-              <p className="text-sm font-medium mb-3 text-gray-700">How long?</p>
-              <div className="flex gap-2">
-                {['30s', '1m', '2m', '3m'].map(duration => (
-                  <button
-                    key={duration}
-                    onClick={() => setSelectedDuration(duration as PracticeDuration)}
-                    className={`px-4 py-2 rounded-lg font-medium transition-all ${
-                      selectedDuration === duration
-                        ? 'bg-sky-600 text-white'
-                        : 'bg-gray-100 hover:bg-gray-200 text-gray-700'
-                    }`}
-                  >
-                    {duration === '30s' ? '30 sec' :
-                     duration === '1m' ? '1 min' :
-                     duration === '2m' ? '2 min' : '3 min'}
-                  </button>
-                ))}
-              </div>
             </div>
 
             {/* Practice options */}
@@ -218,8 +204,14 @@ export const BodyCheckIn: React.FC<BodyCheckInProps> = ({ onClose, onComplete })
           <div className="p-8">
             <div className="flex justify-between items-center mb-6">
               <h2 className="text-xl font-bold text-gray-900">Quick Scan</h2>
-              <button onClick={onClose} className="p-2 hover:bg-gray-100 rounded-xl">
-                <X className="w-6 h-6" />
+              <button 
+                onClick={onClose} 
+                className="p-2 rounded-xl transition-all hover:scale-105"
+                style={{
+                  background: 'linear-gradient(135deg, #1b5e20, #2e7d32)',
+                }}
+              >
+                <X className="w-6 h-6 text-white" />
               </button>
             </div>
 
@@ -322,8 +314,14 @@ export const BodyCheckIn: React.FC<BodyCheckInProps> = ({ onClose, onComplete })
           <div className="p-8">
             <div className="flex justify-between items-center mb-6">
               <h2 className="text-xl font-bold text-gray-900">Let's Check In</h2>
-              <button onClick={onClose} className="p-2 hover:bg-gray-100 rounded-xl">
-                <X className="w-6 h-6" />
+              <button 
+                onClick={onClose} 
+                className="p-2 rounded-xl transition-all hover:scale-105"
+                style={{
+                  background: 'linear-gradient(135deg, #1b5e20, #2e7d32)',
+                }}
+              >
+                <X className="w-6 h-6 text-white" />
               </button>
             </div>
 

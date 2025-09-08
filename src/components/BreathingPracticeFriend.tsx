@@ -2,12 +2,13 @@ import React, { useState, useEffect, useRef } from 'react';
 import { X, Pause, Play, Settings } from 'lucide-react';
 
 interface BreathingPracticeProps {
+  mode?: string;  // Optional mode prop from App.tsx
   onClose: () => void;
   onComplete?: (data: any) => void;
 }
 
 type PracticeDuration = '30s' | '1m' | '2m' | '4m';
-type BreathingStyle = 'steady' | 'calming' | 'natural' | 'gentle';
+type BreathingStyle = 'physiological' | '478' | 'box' | 'cyclic';
 type VisualMode = 'guide' | 'timer' | 'minimal';
 type ColorTheme = 'green' | 'sage' | 'forest' | 'gray';
 
@@ -21,30 +22,30 @@ const COLOR_THEMES: Record<ColorTheme, { primary: string; light: string; bg: str
 export const BreathingPractice: React.FC<BreathingPracticeProps> = ({ onClose, onComplete }) => {
   const [phase, setPhase] = useState<'setup' | 'settings' | 'practice' | 'reflection'>('setup');
   const [selectedDuration, setSelectedDuration] = useState<PracticeDuration>('2m');
-  const [selectedStyle, setSelectedStyle] = useState<BreathingStyle>('steady');
+  const [selectedStyle, setSelectedStyle] = useState<BreathingStyle>('physiological');
   const [visualMode, setVisualMode] = useState<VisualMode>('guide');
   const [colorTheme, setColorTheme] = useState<ColorTheme>('green');
   const [timeElapsed, setTimeElapsed] = useState(0);
   const [isActive, setIsActive] = useState(false);
-  const [breathPhase, setBreathPhase] = useState<'in' | 'out'>('in');
+  const [breathPhase, setBreathPhase] = useState<'in' | 'out' | 'hold'>('in');
   const [showSettings, setShowSettings] = useState(false);
+  const [cycleCount, setCycleCount] = useState(0);
   
   // Reflection states
   const [howFeeling, setHowFeeling] = useState('');
-  const [paceOkay, setPaceOkay] = useState('');
   const [shareThoughts, setShareThoughts] = useState('');
   
   const intervalRef = useRef<NodeJS.Timeout | null>(null);
   const breathIntervalRef = useRef<NodeJS.Timeout | null>(null);
 
-  // Get breathing timing
+  // Get breathing timing for research-based techniques
   const getBreathingTiming = () => {
     switch (selectedStyle) {
-      case 'steady': return { in: 4, out: 4 };
-      case 'calming': return { in: 4, out: 6 };
-      case 'natural': return { in: 0, out: 0 };
-      case 'gentle': return { in: 3, out: 3 };
-      default: return { in: 4, out: 4 };
+      case 'physiological': return { in: 2, hold: 0, out: 6 }; // Double inhale (1+1) + long exhale
+      case '478': return { in: 4, hold: 7, out: 8 }; // 4-7-8 pattern
+      case 'box': return { in: 4, hold: 4, out: 4, hold2: 4 }; // Box breathing 4-4-4-4
+      case 'cyclic': return { in: 10, hold: 0, out: 10 }; // Cyclic sighing (5+5 inhale, 10 exhale)
+      default: return { in: 4, hold: 0, out: 4 };
     }
   };
 
@@ -76,15 +77,48 @@ export const BreathingPractice: React.FC<BreathingPracticeProps> = ({ onClose, o
     };
   }, [isActive, phase, selectedDuration]);
 
+  const handleComplete = () => {
+    setIsActive(false);
+    setPhase('reflection');
+  };
+
   // Breathing animation effect
   useEffect(() => {
-    if (isActive && phase === 'practice' && selectedStyle !== 'natural' && visualMode === 'guide') {
+    if (isActive && phase === 'practice' && visualMode === 'guide') {
       const timing = getBreathingTiming();
       let cycleTime = 0;
+      let currentCycle = 0;
+      
+      // Calculate total cycle duration
+      const totalDuration = timing.in + (timing.hold || 0) + timing.out + (timing.hold2 || 0);
       
       breathIntervalRef.current = setInterval(() => {
-        cycleTime = (cycleTime + 0.1) % (timing.in + timing.out);
-        setBreathPhase(cycleTime < timing.in ? 'in' : 'out');
+        const prevCycleTime = cycleTime;
+        cycleTime = (cycleTime + 0.1) % totalDuration;
+        
+        // Track cycle completion
+        if (cycleTime < prevCycleTime) {
+          currentCycle++;
+          setCycleCount(currentCycle);
+          
+          // Auto-complete for techniques with specific cycle requirements
+          if (selectedStyle === 'physiological' && currentCycle >= 3) {
+            handleComplete();
+          } else if (selectedStyle === '478' && currentCycle >= 4) {
+            handleComplete();
+          }
+        }
+        
+        // Determine current phase based on timing
+        if (cycleTime < timing.in) {
+          setBreathPhase('in');
+        } else if (cycleTime < timing.in + (timing.hold || 0)) {
+          setBreathPhase('hold');
+        } else if (cycleTime < timing.in + (timing.hold || 0) + timing.out) {
+          setBreathPhase('out');
+        } else {
+          setBreathPhase('hold'); // Second hold for box breathing
+        }
       }, 100);
     }
 
@@ -99,30 +133,15 @@ export const BreathingPractice: React.FC<BreathingPracticeProps> = ({ onClose, o
     setPhase('practice');
     setIsActive(true);
     setTimeElapsed(0);
+    setCycleCount(0);
   };
 
   const handlePausePlay = () => {
     setIsActive(!isActive);
   };
 
-  const handleComplete = () => {
-    setIsActive(false);
-    setPhase('reflection');
-  };
-
   const handleSubmit = () => {
-    const data = {
-      duration: selectedDuration,
-      style: selectedStyle,
-      visualMode,
-      colorTheme,
-      howFeeling,
-      paceOkay,
-      shareThoughts,
-      completedDuration: timeElapsed,
-      timestamp: new Date().toISOString()
-    };
-    if (onComplete) onComplete(data);
+    // Just close and return to stress reset page
     onClose();
   };
 
@@ -130,7 +149,6 @@ export const BreathingPractice: React.FC<BreathingPracticeProps> = ({ onClose, o
     setPhase('setup');
     setTimeElapsed(0);
     setHowFeeling('');
-    setPaceOkay('');
     setShareThoughts('');
     setIsActive(false);
   };
@@ -162,57 +180,48 @@ export const BreathingPractice: React.FC<BreathingPracticeProps> = ({ onClose, o
                   Let's breathe together
                 </p>
               </div>
-              <button onClick={onClose} className="p-2 hover:bg-gray-50 rounded-xl transition-all">
-                <X className="w-5 h-5 text-gray-400" />
+              <button 
+                onClick={onClose} 
+                className="p-2 rounded-xl transition-all hover:scale-105"
+                style={{
+                  background: 'linear-gradient(135deg, #1b5e20, #2e7d32)',
+                }}
+              >
+                <X className="w-5 h-5 text-white" />
               </button>
-            </div>
-
-            {/* Duration selection */}
-            <div className="mb-8">
-              <p className="text-sm text-gray-600 mb-4">How long would you like?</p>
-              <div className="flex gap-2">
-                {['30s', '1m', '2m', '4m'].map(duration => (
-                  <button
-                    key={duration}
-                    onClick={() => setSelectedDuration(duration as PracticeDuration)}
-                    className={`flex-1 py-2 rounded-lg transition-all ${
-                      selectedDuration === duration
-                        ? `text-gray-700`
-                        : 'text-gray-500 hover:bg-gray-50'
-                    }`}
-                    style={{
-                      backgroundColor: selectedDuration === duration ? colors.bg : 'transparent'
-                    }}
-                  >
-                    {duration === '30s' ? '30 sec' :
-                     duration === '1m' ? '1 min' :
-                     duration === '2m' ? '2 min' : '4 min'}
-                  </button>
-                ))}
-              </div>
             </div>
 
             {/* Style selection */}
             <div className="mb-8">
-              <p className="text-sm text-gray-600 mb-4">Choose what feels right:</p>
+              <p className="text-sm text-gray-600 mb-4">Choose your research-based technique:</p>
               <div className="space-y-2">
                 {[
-                  { value: 'steady', label: 'Steady', desc: 'Even and balanced' },
-                  { value: 'calming', label: 'Calming', desc: 'Slower, deeper' },
-                  { value: 'natural', label: 'Natural', desc: 'Your comfortable pace' },
-                  { value: 'gentle', label: 'Gentle', desc: 'Soft and easy' }
+                  { value: 'physiological', label: 'Physiological Sigh', desc: 'Double inhale + long exhale (1-3 breaths)' },
+                  { value: '478', label: '4-7-8 Breathing', desc: 'Inhale 4 - Hold 7 - Exhale 8 (4 cycles)' },
+                  { value: 'box', label: 'Box Breathing', desc: '4-4-4-4 pattern (2-5 minutes)' },
+                  { value: 'cyclic', label: 'Cyclic Sighing', desc: 'Inhale 5 - Inhale 5 - Exhale 10 (5 min)' }
                 ].map(style => (
                   <button
                     key={style.value}
                     onClick={() => setSelectedStyle(style.value as BreathingStyle)}
-                    className={`w-full p-3 rounded-xl text-left transition-all ${
+                    className={`w-full p-3 rounded-xl text-left transition-all border ${
                       selectedStyle === style.value
-                        ? 'border'
-                        : 'bg-gray-50 hover:bg-gray-100 border border-transparent'
+                        ? ''
+                        : 'bg-gray-50 border-transparent'
                     }`}
                     style={{
                       backgroundColor: selectedStyle === style.value ? colors.bg : undefined,
                       borderColor: selectedStyle === style.value ? colors.light : undefined
+                    }}
+                    onMouseEnter={(e) => {
+                      if (selectedStyle !== style.value) {
+                        e.currentTarget.style.backgroundColor = 'rgba(34, 197, 94, 0.2)';
+                      }
+                    }}
+                    onMouseLeave={(e) => {
+                      if (selectedStyle !== style.value) {
+                        e.currentTarget.style.backgroundColor = '#F9FAFB';
+                      }
                     }}
                   >
                     <div className="flex justify-between items-center">
@@ -224,29 +233,24 @@ export const BreathingPractice: React.FC<BreathingPracticeProps> = ({ onClose, o
               </div>
             </div>
 
-            {/* Tip */}
-            <p className="text-sm text-gray-500 mb-6 text-center italic">
-              Just 30 seconds of steady breathing can shift how you feel.
-            </p>
+            {/* Technique-specific tip */}
+            <div className="mb-6 p-3 rounded-xl" style={{ backgroundColor: colors.bg }}>
+              <p className="text-sm text-gray-600">
+                {selectedStyle === 'physiological' && "Fastest stress relief - just 1-3 breaths needed. Double inhale fills alveoli, long exhale activates calm."}
+                {selectedStyle === '478' && "Dr. Weil's technique - acts as natural tranquilizer. Always exhale through mouth with whoosh sound."}
+                {selectedStyle === 'box' && "Military-grade focus tool. Creates mental clarity and emotional control in high-stress situations."}
+                {selectedStyle === 'cyclic' && "Stanford study: 5 min daily more effective than meditation for reducing anxiety and improving mood."}
+              </p>
+            </div>
 
-            {/* Settings button - more visible */}
-            <button
-              onClick={() => setPhase('settings')}
-              className="w-full mb-4 py-2.5 px-4 rounded-xl border transition-all flex items-center justify-center gap-2 hover:bg-gray-50"
-              style={{ 
-                borderColor: colors.light,
-                color: colors.primary
-              }}
-            >
-              <Settings className="w-4 h-4" />
-              <span className="text-sm font-medium">Adjust visual preferences</span>
-            </button>
 
             {/* Start button */}
             <button
               onClick={handleStart}
               className="w-full py-3 rounded-xl transition-all text-white font-medium hover:opacity-90"
-              style={{ backgroundColor: colors.primary }}
+              style={{ 
+                background: 'linear-gradient(135deg, #1b5e20, #2e7d32)'
+              }}
             >
               Let's Begin
             </button>
@@ -264,7 +268,7 @@ export const BreathingPractice: React.FC<BreathingPracticeProps> = ({ onClose, o
           <div className="p-8">
             <div className="flex justify-between items-start mb-6">
               <h2 className="text-xl font-normal text-gray-700">What works best for you?</h2>
-              <button onClick={() => setPhase('setup')} className="p-2 hover:bg-gray-50 rounded-xl">
+              <button onClick={() => setPhase('setup')} className="p-2 hover:bg-green-100 rounded-xl">
                 <X className="w-5 h-5 text-gray-400" />
               </button>
             </div>
@@ -344,7 +348,7 @@ export const BreathingPractice: React.FC<BreathingPracticeProps> = ({ onClose, o
 
             <button
               onClick={() => setPhase('setup')}
-              className="w-full py-3 rounded-xl transition-all text-white font-medium hover:opacity-90"
+              className="w-full py-3 rounded-xl transition-all text-white font-medium hover:bg-green-600"
               style={{ backgroundColor: colors.primary }}
             >
               Save What Works For Me
@@ -357,53 +361,60 @@ export const BreathingPractice: React.FC<BreathingPracticeProps> = ({ onClose, o
 
   // Practice phase
   if (phase === 'practice') {
-    const breathingScale = breathPhase === 'in' ? 1.2 : 0.85;
+    const breathingScale = breathPhase === 'in' ? 1.2 : breathPhase === 'hold' ? 1.2 : 0.85;
     const timing = getBreathingTiming();
     
+    // Calculate transition duration based on current phase
+    const getTransitionDuration = () => {
+      if (breathPhase === 'in') return timing.in * 1000;
+      if (breathPhase === 'hold') return (timing.hold || 0) * 1000;
+      if (breathPhase === 'out') return timing.out * 1000;
+      return 4000; // Default
+    };
+    
     const getGuidanceText = () => {
-      const progress = timeElapsed / getDurationSeconds();
-      
-      switch (selectedDuration) {
-        case '30s':
-          if (timeElapsed === 0) return "I'll breathe with you";
-          if (timeElapsed < 10) return "Three breaths with me.";
-          if (timeElapsed < 20) return "Almost there.";
-          return "Perfect.";
+      // Provide technique-specific guidance
+      switch (selectedStyle) {
+        case 'physiological':
+          if (timeElapsed === 0) return "Double inhale through nose, long exhale through mouth";
+          if (timeElapsed < 10) return "First inhale... second inhale... long exhale";
+          if (timeElapsed < 20) return "1-3 breaths is all you need";
+          return "Immediate calm achieved";
         
-        case '1m':
-          if (timeElapsed === 0) return "One minute, just us breathing";
-          if (timeElapsed < 20) return "Settle in with the motion.";
-          if (timeElapsed < 40) return "Halfway there.";
-          return "You're doing wonderfully.";
+        case '478':
+          if (timeElapsed === 0) return "Inhale for 4, hold for 7, exhale for 8";
+          if (timeElapsed < 20) return "Empty lungs completely first";
+          if (timeElapsed < 40) return "Tongue tip behind front teeth";
+          if (timeElapsed < 60) return "4 cycles total";
+          return "Natural tranquilizer for the nervous system";
         
-        case '2m':
-          if (timeElapsed === 0) return "Let's take our time";
-          if (timeElapsed < 30) return breathPhase === 'in' ? "Let's breathe in together..." : "And breathe out...";
-          if (timeElapsed < 60) return "Follow the gentle motion";
-          if (timeElapsed < 90) return "or find your own way.";
-          if (timeElapsed < 110) return "I'm here with you.";
-          return "No rush at all.";
+        case 'box':
+          if (timeElapsed === 0) return "4-4-4-4 pattern: in, hold, out, hold";
+          if (timeElapsed < 30) return "Equal counts for each phase";
+          if (timeElapsed < 60) return "Visualize drawing a box";
+          if (timeElapsed < 120) return "Used by Navy SEALs for focus";
+          return "Continue for 2-5 minutes";
         
-        case '4m':
-          if (timeElapsed === 0) return "We have plenty of time";
-          if (timeElapsed < 60) return "Settle into whatever feels comfortable.";
-          if (timeElapsed < 120) return "The circle breathes with us,";
-          if (timeElapsed < 180) return "or you can close your eyes.";
-          if (timeElapsed < 210) return "This is your time.";
-          return "I'm just here keeping you company.";
+        case 'cyclic':
+          if (timeElapsed === 0) return "Double inhale (5+5), long exhale (10)";
+          if (timeElapsed < 60) return "Emphasize the long exhale";
+          if (timeElapsed < 120) return "Activates parasympathetic response";
+          if (timeElapsed < 180) return "More effective than meditation";
+          if (timeElapsed < 240) return "Stanford research proven";
+          return "5 minutes for best results";
         
         default:
-          return "";
+          return "Follow the breathing guide";
       }
     };
 
     const getTitle = () => {
-      switch (selectedDuration) {
-        case '30s': return 'Quick reset together';
-        case '1m': return 'One minute together';
-        case '2m': return "I'll breathe with you";
-        case '4m': return 'Deep breathing together';
-        default: return '';
+      switch (selectedStyle) {
+        case 'physiological': return 'Physiological Sigh';
+        case '478': return '4-7-8 Breathing';
+        case 'box': return 'Box Breathing';
+        case 'cyclic': return 'Cyclic Sighing';
+        default: return 'Breathing Practice';
       }
     };
     
@@ -412,7 +423,7 @@ export const BreathingPractice: React.FC<BreathingPracticeProps> = ({ onClose, o
         <div className="max-w-md w-full text-center">
           <button 
             onClick={onClose} 
-            className="absolute top-8 right-8 p-2 hover:bg-gray-50 rounded-xl transition-all"
+            className="absolute top-8 right-8 p-2 hover:bg-green-100 rounded-xl transition-all"
           >
             <X className="w-5 h-5 text-gray-300" />
           </button>
@@ -422,14 +433,15 @@ export const BreathingPractice: React.FC<BreathingPracticeProps> = ({ onClose, o
 
           {/* Visual guide */}
           {visualMode === 'guide' && (
-            <div className="flex justify-center mb-8">
+            <div className="flex flex-col items-center mb-8">
               <div 
-                className="w-32 h-32 rounded-full transition-all duration-[4000ms] ease-in-out relative"
+                className="w-32 h-32 rounded-full transition-all ease-in-out relative mb-4"
                 style={{ 
                   backgroundColor: colors.light,
-                  transform: `scale(${selectedStyle === 'natural' ? 1 : breathingScale})`,
+                  transform: `scale(${breathingScale})`,
                   opacity: 0.4,
-                  boxShadow: `0 0 40px ${colors.primary}20`
+                  boxShadow: `0 0 40px ${colors.primary}20`,
+                  transitionDuration: `${getTransitionDuration()}ms`
                 }}
               >
                 <div 
@@ -440,6 +452,10 @@ export const BreathingPractice: React.FC<BreathingPracticeProps> = ({ onClose, o
                   }}
                 />
               </div>
+              {/* Breath phase indicator */}
+              <p className="text-lg font-medium" style={{ color: colors.primary }}>
+                {breathPhase === 'in' ? 'Breathe In' : breathPhase === 'hold' ? 'Hold' : 'Breathe Out'}
+              </p>
             </div>
           )}
 
@@ -456,9 +472,17 @@ export const BreathingPractice: React.FC<BreathingPracticeProps> = ({ onClose, o
           )}
 
           {/* Timer bar */}
-          <div className="text-sm text-gray-400 mb-6">
+          <div className="text-sm text-gray-400 mb-2">
             Timer: {formatTime(timeElapsed)} / {formatTime(getDurationSeconds())}
           </div>
+
+          {/* Cycle counter for specific techniques */}
+          {(selectedStyle === 'physiological' || selectedStyle === '478') && (
+            <div className="text-sm mb-4" style={{ color: colors.primary }}>
+              {selectedStyle === 'physiological' && `Breath ${cycleCount + 1} of 3`}
+              {selectedStyle === '478' && `Cycle ${cycleCount + 1} of 4`}
+            </div>
+          )}
 
           {/* Guidance text */}
           <div className="h-16 flex items-center justify-center mb-8">
@@ -490,8 +514,10 @@ export const BreathingPractice: React.FC<BreathingPracticeProps> = ({ onClose, o
             </button>
             <button
               onClick={handleComplete}
-              className="px-6 py-2 rounded-lg transition-all hover:bg-gray-50"
-              style={{ color: colors.primary }}
+              className="px-6 py-2 rounded-lg transition-all text-white hover:opacity-90"
+              style={{ 
+                background: 'linear-gradient(135deg, #1b5e20, #2e7d32)'
+              }}
             >
               I'm Done
             </button>
@@ -506,12 +532,6 @@ export const BreathingPractice: React.FC<BreathingPracticeProps> = ({ onClose, o
     <div className="fixed inset-0 bg-white bg-opacity-95 flex items-center justify-center z-50 p-4">
       <div className="rounded-3xl max-w-lg w-full bg-white shadow-sm">
         <div className="p-8">
-          <div className="flex justify-end mb-4">
-            <button onClick={onClose} className="p-2 hover:bg-gray-50 rounded-xl">
-              <X className="w-5 h-5 text-gray-400" />
-            </button>
-          </div>
-
           <h2 className="text-xl font-normal text-gray-700 mb-6">How are you feeling now?</h2>
 
           {/* Feeling check */}
@@ -523,36 +543,22 @@ export const BreathingPractice: React.FC<BreathingPracticeProps> = ({ onClose, o
                   onClick={() => setHowFeeling(option)}
                   className={`flex-1 py-3 px-3 rounded-xl transition-all text-sm ${
                     howFeeling === option
-                      ? 'text-gray-700 border'
-                      : 'text-gray-600 border border-transparent'
+                      ? 'text-white'
+                      : 'text-gray-600'
                   }`}
                   style={{
-                    backgroundColor: howFeeling === option ? colors.bg : '#F7FAFC',
-                    borderColor: howFeeling === option ? colors.light : undefined
+                    background: howFeeling === option ? 'linear-gradient(135deg, #1b5e20, #2e7d32)' : undefined,
+                    backgroundColor: howFeeling === option ? undefined : '#F0F5ED'
                   }}
-                >
-                  {option}
-                </button>
-              ))}
-            </div>
-          </div>
-
-          {/* Pace check */}
-          <div className="mb-6">
-            <p className="text-gray-600 mb-3">Was the pace okay?</p>
-            <div className="flex gap-2">
-              {['Perfect', "Let's adjust next time"].map(option => (
-                <button
-                  key={option}
-                  onClick={() => setPaceOkay(option)}
-                  className={`flex-1 py-3 px-3 rounded-xl transition-all text-sm ${
-                    paceOkay === option
-                      ? 'text-gray-700 border'
-                      : 'text-gray-600 border border-transparent'
-                  }`}
-                  style={{
-                    backgroundColor: paceOkay === option ? colors.bg : '#F7FAFC',
-                    borderColor: paceOkay === option ? colors.light : undefined
+                  onMouseEnter={(e) => {
+                    if (howFeeling !== option) {
+                      e.currentTarget.style.backgroundColor = 'rgba(34, 197, 94, 0.2)';
+                    }
+                  }}
+                  onMouseLeave={(e) => {
+                    if (howFeeling !== option) {
+                      e.currentTarget.style.backgroundColor = '#F0F5ED';
+                    }
                   }}
                 >
                   {option}
@@ -577,13 +583,21 @@ export const BreathingPractice: React.FC<BreathingPracticeProps> = ({ onClose, o
             <button
               onClick={handleSubmit}
               className="flex-1 py-3 rounded-xl transition-all text-white font-medium hover:opacity-90"
-              style={{ backgroundColor: colors.primary }}
+              style={{ 
+                background: 'linear-gradient(135deg, #1b5e20, #2e7d32)'
+              }}
             >
-              All Done
+              Done
             </button>
             <button
               onClick={handleBreatheAgain}
-              className="flex-1 py-3 bg-gray-100 hover:bg-gray-200 rounded-xl text-gray-700 font-medium transition-all"
+              className="flex-1 py-3 bg-gray-100 rounded-xl text-gray-700 font-medium transition-all"
+              onMouseEnter={(e) => {
+                e.currentTarget.style.backgroundColor = 'rgba(34, 197, 94, 0.2)';
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.backgroundColor = '#F3F4F6';
+              }}
             >
               Breathe Again
             </button>

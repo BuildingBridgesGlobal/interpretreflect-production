@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { Routes, Route } from 'react-router-dom';
+import { Routes, Route, useNavigate } from 'react-router-dom';
 import type { BurnoutData, ViewMode } from './types';
 import LandingPageEnhanced from './LandingPageEnhanced';
 import { Logo } from './components/Logo';
@@ -30,7 +30,6 @@ import { EmotionMappingAccessible as EmotionMapping } from './components/Emotion
 import { ProfessionalBoundariesResetAccessible as ProfessionalBoundariesReset } from './components/ProfessionalBoundariesResetAccessible';
 import { TemperatureExploration } from './components/TemperatureExploration';
 import { AssignmentResetAccessible as AssignmentReset } from './components/AssignmentResetAccessible';
-import { DailyBurnoutGaugeAccessible as DailyBurnoutGauge } from './components/DailyBurnoutGaugeAccessible';
 import { AffirmationStudioAccessible } from './components/AffirmationStudioAccessible';
 import { AffirmationReflectionStudio } from './components/AffirmationReflectionStudio';
 import { TeamReflectionJourneyAccessible } from './components/TeamReflectionJourneyAccessible';
@@ -38,6 +37,7 @@ import { BurnoutGauge } from './components/BurnoutGauge';
 import { MentoringPrepAccessible } from './components/MentoringPrepAccessible';
 import { MentoringReflectionAccessible } from './components/MentoringReflectionAccessible';
 import { ChatWithElya } from './components/ChatWithElya';
+import { ElyaEmbed } from './components/ElyaEmbed';
 import { GrowthInsights } from './components/GrowthInsights';
 import { GrowthInsightsDashboard } from './components/GrowthInsightsDashboard';
 import { GrowthInsightsEnhanced } from './components/GrowthInsightsEnhanced';
@@ -46,7 +46,7 @@ import { CustomizePreferences } from './components/CustomizePreferences';
 import { ManageSubscription } from './components/ManageSubscription';
 import { BillingPlanDetails } from './components/BillingPlanDetails';
 import { LuxuryWellnessDashboard } from './components/LuxuryWellnessDashboard';
-import { Footer } from './components/Footer';
+import { PersonalizedHomepage } from './components/PersonalizedHomepage';
 import {
   Home,
   BookOpen,
@@ -86,6 +86,7 @@ import {
 } from 'lucide-react';
 
 function App() {
+  const navigate = useNavigate();
   const { user, loading, signOut, extendSession } = useAuth();
   // Automatically enable dev mode in development environment
   const [devMode, setDevMode] = useState(
@@ -125,6 +126,7 @@ function App() {
   const [showBreathingPractice, setShowBreathingPractice] = useState(false);
   const [showBreathingModal, setShowBreathingModal] = useState(false);
   const [breathingMode, setBreathingMode] = useState<'gentle' | 'deep'>('gentle');
+  const [showEmotionMappingModal, setShowEmotionMappingModal] = useState(false);
   const [showBodyCheckIn, setShowBodyCheckIn] = useState(false);
   const [showBodyCheckInModal, setShowBodyCheckInModal] = useState(false);
   const [bodyCheckInMode, setBodyCheckInMode] = useState<'quick' | 'full'>('quick');
@@ -141,9 +143,9 @@ function App() {
   const [assignmentResetMode, setAssignmentResetMode] = useState<'fast' | 'full'>('fast');
   const [showBoundariesModal, setShowBoundariesModal] = useState(false);
   const [boundariesResetMode, setBoundariesResetMode] = useState<'quick' | 'deeper'>('quick');
-  const [showEmotionMappingModal, setShowEmotionMappingModal] = useState(false);
   const [emotionMappingMode, setEmotionMappingMode] = useState<'quick' | 'deeper'>('quick');
   const [savedReflections, setSavedReflections] = useState<Record<string, unknown>[]>([]);
+  const [bodyCheckInData, setBodyCheckInData] = useState<any[]>([]);
   const [techniqueUsage, setTechniqueUsage] = useState<Record<string, unknown>[]>([]);
   const [currentTechniqueId, setCurrentTechniqueId] = useState<string | null>(null);
   const [recoveryHabits, setRecoveryHabits] = useState<Record<string, unknown>[]>([]);
@@ -252,6 +254,15 @@ function App() {
       }
     };
     loadRecoveryHabits();
+    
+    // Load body check-in data
+    const loadBodyCheckInData = () => {
+      const storedData = localStorage.getItem('bodyCheckInData');
+      if (storedData) {
+        setBodyCheckInData(JSON.parse(storedData));
+      }
+    };
+    loadBodyCheckInData();
   }, []);
   
   // Check for privacy consent on mount
@@ -585,7 +596,7 @@ function App() {
                 }}
                 onMouseEnter={(e) => {
                   if (insightsTimePeriod !== 'week') {
-                    e.currentTarget.style.backgroundColor = 'rgba(92, 127, 79, 0.1)';
+                    e.currentTarget.style.backgroundColor = 'rgba(34, 197, 94, 0.2)';
                   }
                 }}
                 onMouseLeave={(e) => {
@@ -609,7 +620,7 @@ function App() {
                 }}
                 onMouseEnter={(e) => {
                   if (insightsTimePeriod !== 'month') {
-                    e.currentTarget.style.backgroundColor = 'rgba(92, 127, 79, 0.1)';
+                    e.currentTarget.style.backgroundColor = 'rgba(34, 197, 94, 0.2)';
                   }
                 }}
                 onMouseLeave={(e) => {
@@ -633,7 +644,7 @@ function App() {
                 }}
                 onMouseEnter={(e) => {
                   if (insightsTimePeriod !== '90days') {
-                    e.currentTarget.style.backgroundColor = 'rgba(92, 127, 79, 0.1)';
+                    e.currentTarget.style.backgroundColor = 'rgba(34, 197, 94, 0.2)';
                   }
                 }}
                 onMouseLeave={(e) => {
@@ -671,14 +682,14 @@ function App() {
               aria-label="View stress and energy data by assignment"
               style={{
                 color: '#5C7F4F',
-                backgroundColor: 'rgba(92, 127, 79, 0.1)',
+                backgroundColor: 'rgba(34, 197, 94, 0.1)',
               }}
               onMouseEnter={(e) => {
-                e.currentTarget.style.backgroundColor = 'rgba(92, 127, 79, 0.2)';
+                e.currentTarget.style.backgroundColor = 'rgba(34, 197, 94, 0.25)';
                 e.currentTarget.style.color = '#2D5F3F';
               }}
               onMouseLeave={(e) => {
-                e.currentTarget.style.backgroundColor = 'rgba(92, 127, 79, 0.1)';
+                e.currentTarget.style.backgroundColor = 'rgba(34, 197, 94, 0.1)';
                 e.currentTarget.style.color = '#5C7F4F';
               }}
             >
@@ -786,6 +797,146 @@ function App() {
           </div>
         </section>
 
+        {/* Body Check-In Analytics */}
+        <section
+          className="rounded-2xl p-8"
+          aria-labelledby="body-checkin-heading"
+          style={{
+            backgroundColor: 'var(--bg-card)',
+            boxShadow: '0 10px 30px rgba(92, 127, 79, 0.15), 0 2px 8px rgba(0, 0, 0, 0.05)',
+            border: '1px solid rgba(92, 127, 79, 0.2)',
+          }}
+        >
+          <div className="flex items-center justify-between mb-6">
+            <h2
+              id="body-checkin-heading"
+              className="text-2xl font-bold"
+              style={{ color: 'var(--primary-900)' }}
+            >
+              Body Check-In Trends
+            </h2>
+            <span className="text-sm" style={{ color: 'var(--text-secondary)' }}>
+              {bodyCheckInData.length} check-ins total
+            </span>
+          </div>
+
+          {bodyCheckInData.length === 0 ? (
+            <div className="text-center py-12">
+              <Activity className="h-12 w-12 mx-auto mb-3" style={{ color: 'var(--primary-400)' }} />
+              <p className="text-sm font-medium mb-2" style={{ color: 'var(--text-secondary)' }}>
+                No body check-in data yet
+              </p>
+              <p className="text-xs" style={{ color: 'var(--text-tertiary)' }}>
+                Complete a body check-in to see your trends
+              </p>
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              {/* Tension Level Chart */}
+              <div className="bg-white rounded-xl p-4" style={{ backgroundColor: 'var(--bg-secondary)' }}>
+                <h3 className="text-sm font-semibold mb-4" style={{ color: 'var(--text-primary)' }}>
+                  Tension Level
+                </h3>
+                <div className="space-y-3">
+                  {['Much lighter', 'Some release', 'Holding a lot'].map(level => {
+                    const count = bodyCheckInData.filter(d => d.tensionLevel === level).length;
+                    const percentage = bodyCheckInData.length > 0 ? (count / bodyCheckInData.length) * 100 : 0;
+                    return (
+                      <div key={level}>
+                        <div className="flex justify-between text-xs mb-1">
+                          <span style={{ color: 'var(--text-secondary)' }}>{level}</span>
+                          <span style={{ color: 'var(--text-tertiary)' }}>{count}</span>
+                        </div>
+                        <div className="h-6 bg-gray-100 rounded-full overflow-hidden">
+                          <div
+                            className="h-full transition-all duration-500"
+                            style={{
+                              width: `${percentage}%`,
+                              backgroundColor: level === 'Much lighter' ? '#22C55E' : 
+                                             level === 'Some release' ? '#7A9B6E' : '#EF4444'
+                            }}
+                          />
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+                <p className="text-xs italic mt-3" style={{ color: 'var(--text-tertiary)' }}>
+                  Most people feel some release after checking in
+                </p>
+              </div>
+
+              {/* Energy Level Chart */}
+              <div className="bg-white rounded-xl p-4" style={{ backgroundColor: 'var(--bg-secondary)' }}>
+                <h3 className="text-sm font-semibold mb-4" style={{ color: 'var(--text-primary)' }}>
+                  Energy Level
+                </h3>
+                <div className="space-y-3">
+                  {['Restored', 'Okay', 'Depleted'].map(level => {
+                    const count = bodyCheckInData.filter(d => d.energyLevel === level).length;
+                    const percentage = bodyCheckInData.length > 0 ? (count / bodyCheckInData.length) * 100 : 0;
+                    return (
+                      <div key={level}>
+                        <div className="flex justify-between text-xs mb-1">
+                          <span style={{ color: 'var(--text-secondary)' }}>{level}</span>
+                          <span style={{ color: 'var(--text-tertiary)' }}>{count}</span>
+                        </div>
+                        <div className="h-6 bg-gray-100 rounded-full overflow-hidden">
+                          <div
+                            className="h-full transition-all duration-500"
+                            style={{
+                              width: `${percentage}%`,
+                              backgroundColor: level === 'Restored' ? '#3B82F6' : 
+                                             level === 'Okay' ? '#7A9B6E' : '#F59E0B'
+                            }}
+                          />
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+                <p className="text-xs italic mt-3" style={{ color: 'var(--text-tertiary)' }}>
+                  Even noticing can bring energy back
+                </p>
+              </div>
+
+              {/* Overall Comfort Chart */}
+              <div className="bg-white rounded-xl p-4" style={{ backgroundColor: 'var(--bg-secondary)' }}>
+                <h3 className="text-sm font-semibold mb-4" style={{ color: 'var(--text-primary)' }}>
+                  Overall Comfort
+                </h3>
+                <div className="space-y-3">
+                  {['Easeful', 'Better', 'Tight'].map(level => {
+                    const count = bodyCheckInData.filter(d => d.overallFeeling === level).length;
+                    const percentage = bodyCheckInData.length > 0 ? (count / bodyCheckInData.length) * 100 : 0;
+                    return (
+                      <div key={level}>
+                        <div className="flex justify-between text-xs mb-1">
+                          <span style={{ color: 'var(--text-secondary)' }}>{level}</span>
+                          <span style={{ color: 'var(--text-tertiary)' }}>{count}</span>
+                        </div>
+                        <div className="h-6 bg-gray-100 rounded-full overflow-hidden">
+                          <div
+                            className="h-full transition-all duration-500"
+                            style={{
+                              width: `${percentage}%`,
+                              backgroundColor: level === 'Easeful' ? '#8B5CF6' : 
+                                             level === 'Better' ? '#7A9B6E' : '#DC2626'
+                            }}
+                          />
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+                <p className="text-xs italic mt-3" style={{ color: 'var(--text-tertiary)' }}>
+                  Every bit of ease helps
+                </p>
+              </div>
+            </div>
+          )}
+        </section>
+
         {/* Burnout Trend Chart */}
         <section
           className="rounded-2xl p-8"
@@ -816,7 +967,7 @@ function App() {
                     className={`px-3 py-1 rounded-lg text-sm transition-all ${
                       showSummaryView === view
                         ? 'bg-sage-500 text-white'
-                        : 'bg-gray-100 hover:bg-gray-200 text-gray-700'
+                        : 'bg-gray-100 hover:bg-green-500 hover:bg-opacity-20 text-gray-700'
                     }`}
                   >
                     {view.charAt(0).toUpperCase() + view.slice(1)}
@@ -827,17 +978,10 @@ function App() {
             <div className="flex gap-2">
               <button
                 onClick={() => exportBurnoutData()}
-                className="p-2 bg-gray-100 hover:bg-gray-200 rounded-lg transition-all group"
+                className="p-2 bg-gray-100 hover:bg-green-500 hover:bg-opacity-20 rounded-lg transition-all group"
                 title="Export data"
               >
                 <Download className="h-5 w-5 text-gray-600 group-hover:text-gray-800" />
-              </button>
-              <button
-                onClick={() => setShowDailyBurnout(true)}
-                className="px-4 py-2 bg-gradient-to-r from-sage-500 to-green-500 text-white rounded-lg font-medium hover:from-sage-600 hover:to-green-600 transition-all flex items-center"
-              >
-                <Gauge className="w-4 h-4 mr-2" />
-                Take Today's Assessment
               </button>
             </div>
           </div>
@@ -973,12 +1117,6 @@ function App() {
                 <p className="text-gray-600 text-center mb-4">
                   No burnout data yet. Start tracking your daily burnout levels to see trends.
                 </p>
-                <button
-                  onClick={() => setShowDailyBurnout(true)}
-                  className="px-4 py-2 bg-sage-500 text-white rounded-lg hover:bg-sage-600 transition-colors"
-                >
-                  Take First Assessment
-                </button>
               </div>
             )}
           </div>
@@ -1886,43 +2024,43 @@ function App() {
 
 
   const renderStressReset = () => (
-    <main
-      className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8"
-      role="main"
-      aria-labelledby="stress-reset-heading"
-    >
-      <header className="text-center mb-12">
-        <div
-          className="inline-block p-4 rounded-full mb-6"
-          style={{ backgroundColor: 'rgba(45, 95, 63, 0.15)' }}
-        >
-          <RefreshCw className="h-12 w-12" aria-hidden="true" style={{ color: '#0D3A14' }} />
-        </div>
-        <h1
-          id="stress-reset-heading"
-          className="text-4xl font-bold mb-4"
-          style={{ color: '#1A1A1A', letterSpacing: '-0.5px' }}
-        >
-          Your Personal Reset Space
-        </h1>
-        <p className="text-lg mb-2" style={{ color: '#2A2A2A', fontWeight: '400' }}>
-          Choose what your body-mind needs right now
-        </p>
-        <p className="text-sm" style={{ color: '#525252' }}>
-          All practices are accessible for every body and mind
-        </p>
-      </header>
+      <main
+        className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8"
+        role="main"
+        aria-labelledby="stress-reset-heading"
+      >
+        <header className="text-center mb-12">
+          <h1
+            id="stress-reset-heading"
+            className="text-4xl font-bold mb-4"
+            style={{ color: '#1A1A1A', letterSpacing: '-0.5px' }}
+          >
+            Your Personal Reset Space
+          </h1>
+          <p className="text-lg mb-2" style={{ color: '#2A2A2A', fontWeight: '400' }}>
+            Choose what your body-mind needs right now
+          </p>
+          <p className="text-sm" style={{ color: '#525252' }}>
+            All practices are accessible for every body and mind
+          </p>
+        </header>
 
-      <section
-        className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 max-w-6xl mx-auto"
-        aria-label="Available reset practices"
+        <section
+          className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 max-w-6xl mx-auto"
+          aria-label="Available reset practices"
       >
         {/* Breathing Practice */}
         <section
-          className="rounded-xl p-6 transition-all group relative overflow-hidden focus:outline-none focus:ring-4 focus:ring-offset-2 focus:ring-green-600"
+          className="rounded-xl p-6 transition-all group relative overflow-hidden focus:outline-none focus:ring-4 focus:ring-offset-2 focus:ring-green-600 cursor-pointer"
           tabIndex={0}
-          role="region"
+          role="button"
           aria-labelledby="breathing-practice-title"
+          onClick={() => {
+            setBreathingMode('gentle');
+            setShowBreathingPractice(true);
+            const id = trackTechniqueStart('breathing-practice');
+            setCurrentTechniqueId(id);
+          }}
           style={{
             background: 'linear-gradient(145deg, #FFFFFF 0%, #FAFAF8 100%)',
             border: '2px solid transparent',
@@ -1987,44 +2125,6 @@ function App() {
             </ol>
           </div>
           
-          <div className="flex gap-2 mb-3">
-            <button
-              onClick={(e) => {
-                e.stopPropagation();
-                setBreathingMode('gentle');
-                setShowBreathingPractice(true);
-                const id = trackTechniqueStart('breathing-gentle');
-                setCurrentTechniqueId(id);
-              }}
-              className="flex-1 px-4 py-3 min-h-[44px] rounded-lg text-sm font-medium transition-all hover:scale-105 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-800"
-              style={{
-                backgroundColor: 'var(--primary-100)',
-                color: 'var(--primary-800)',
-                border: '2px solid var(--primary-800)',
-              }}
-              aria-label="Start gentle 2-4 minute breathing practice"
-            >
-              Gentle Reset (2-4 min)
-            </button>
-            <button
-              onClick={(e) => {
-                e.stopPropagation();
-                setBreathingMode('deep');
-                setShowBreathingPractice(true);
-                const id = trackTechniqueStart('breathing-deep');
-                setCurrentTechniqueId(id);
-              }}
-              className="flex-1 px-4 py-3 min-h-[44px] rounded-lg text-sm font-medium transition-all hover:scale-105 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-800"
-              style={{
-                background: 'linear-gradient(135deg, var(--primary-800), var(--primary-900))',
-                color: '#FFFFFF',
-              }}
-              aria-label="Start deep 5+ minute breathing practice"
-            >
-              Deep Reset (5+ min)
-            </button>
-          </div>
-          
           <div className="pt-3 border-t" style={{ borderColor: 'rgba(15, 40, 24, 0.2)' }}>
             <p className="text-sm italic" style={{ color: '#4A4A4A' }}>
               Balances autonomic nervous system
@@ -2034,10 +2134,16 @@ function App() {
 
         {/* Body Check-In */}
         <section
-          className="rounded-xl p-6 transition-all group relative overflow-hidden focus:outline-none focus:ring-4 focus:ring-offset-2 focus:ring-green-600"
+          className="rounded-xl p-6 transition-all group relative overflow-hidden focus:outline-none focus:ring-4 focus:ring-offset-2 focus:ring-green-600 cursor-pointer"
           tabIndex={0}
-          role="region"
+          role="button"
           aria-labelledby="body-checkin-title"
+          onClick={() => {
+            setBodyCheckInMode('quick');
+            setShowBodyCheckIn(true);
+            const id = trackTechniqueStart('body-checkin');
+            setCurrentTechniqueId(id);
+          }}
           style={{
             background: 'linear-gradient(145deg, #FFFFFF 0%, #FAFAF8 100%)',
             border: '2px solid transparent',
@@ -2102,44 +2208,6 @@ function App() {
             </ol>
           </div>
           
-          <div className="flex gap-2 mb-3">
-            <button
-              onClick={(e) => {
-                e.stopPropagation();
-                setBodyCheckInMode('quick');
-                setShowBodyCheckIn(true);
-                const id = trackTechniqueStart('body-checkin-quick');
-                setCurrentTechniqueId(id);
-              }}
-              className="flex-1 px-4 py-3 min-h-[44px] rounded-lg text-sm font-medium transition-all hover:scale-105 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-800"
-              style={{
-                backgroundColor: 'var(--primary-100)',
-                color: 'var(--primary-800)',
-                border: '2px solid var(--primary-800)',
-              }}
-              aria-label="Start quick 1-2 minute body scan"
-            >
-              Quick Scan (1-2 min)
-            </button>
-            <button
-              onClick={(e) => {
-                e.stopPropagation();
-                setBodyCheckInMode('full');
-                setShowBodyCheckIn(true);
-                const id = trackTechniqueStart('body-checkin-full');
-                setCurrentTechniqueId(id);
-              }}
-              className="flex-1 px-4 py-3 min-h-[44px] rounded-lg text-sm font-medium transition-all hover:scale-105 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-800"
-              style={{
-                background: 'linear-gradient(135deg, var(--primary-800), var(--primary-900))',
-                color: '#FFFFFF',
-              }}
-              aria-label="Start full 5 minute body scan"
-            >
-              Full Scan (5 min)
-            </button>
-          </div>
-          
           <div className="pt-3 border-t" style={{ borderColor: 'rgba(15, 40, 24, 0.2)' }}>
             <p className="text-sm italic" style={{ color: '#4A4A4A' }}>
               Releases interpreter tension patterns
@@ -2149,10 +2217,16 @@ function App() {
 
         {/* Emotion Mapping */}
         <article
-          className="rounded-xl p-6 transition-all group relative overflow-hidden focus:outline-none focus:ring-4 focus:ring-offset-2 focus:ring-green-600"
+          className="rounded-xl p-6 transition-all group relative overflow-hidden focus:outline-none focus:ring-4 focus:ring-offset-2 focus:ring-green-600 cursor-pointer"
           tabIndex={0}
-          role="article"
+          role="button"
           aria-labelledby="emotion-mapping-title"
+          onClick={() => {
+            setEmotionMappingMode('quick');
+            setShowEmotionMapping(true);
+            const id = trackTechniqueStart('emotion-mapping');
+            setCurrentTechniqueId(id);
+          }}
           style={{
             background: 'linear-gradient(145deg, #FFFFFF 0%, #FAFAF8 100%)',
             border: '2px solid transparent',
@@ -2179,9 +2253,26 @@ function App() {
             }}
           ></div>
 
-          <h3 id="emotion-mapping-title" className="text-lg font-semibold mb-3" style={{ color: '#0D3A14' }}>
-            Emotion Mapping
-          </h3>
+          <header className="flex justify-between items-start mb-3">
+            <h3 id="emotion-mapping-title" className="text-lg font-semibold" style={{ color: '#0D3A14' }}>
+              Emotion Mapping
+            </h3>
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                setShowEmotionMappingModal(true);
+              }}
+              className="text-sm px-4 py-3 min-h-[44px] min-w-[44px] rounded-lg transition-all hover:scale-105 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-800"
+              style={{
+                backgroundColor: '#F1F8F4',
+                color: 'var(--primary-800)',
+                border: '2px solid #2E7D32',
+              }}
+              aria-label="Learn why emotion mapping works"
+            >
+              Why emotion mapping works?
+            </button>
+          </header>
           
           <p className="text-sm mb-3" style={{ color: '#2A2A2A', lineHeight: '1.6' }}>
             Strengthen resilience by identifying and naming emotions after complex interpreting scenarios.
@@ -2201,55 +2292,6 @@ function App() {
               <li><strong>Reflect:</strong> Notice triggers - assignment content, technology, environment</li>
               <li><strong>Compassion:</strong> Close with self-kindness and acceptance</li>
             </ol>
-            <button
-              onClick={(e) => {
-                e.stopPropagation();
-                setShowEmotionMappingModal(true);
-              }}
-              className="mt-2 text-xs font-medium underline hover:no-underline transition-all"
-              style={{ color: 'var(--primary-800)' }}
-              aria-label="Learn the science of emotion mapping for interpreters"
-            >
-              Why emotion mapping? →
-            </button>
-          </div>
-          
-          <div className="flex gap-2 mb-3">
-            <button
-              onClick={(e) => {
-                e.stopPropagation();
-                setEmotionMappingMode('quick');
-                setShowEmotionMapping(true);
-                const id = trackTechniqueStart('emotion-mapping-quick');
-                setCurrentTechniqueId(id);
-              }}
-              className="flex-1 px-4 py-3 min-h-[44px] rounded-lg text-sm font-medium transition-all hover:scale-105 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-800"
-              style={{
-                backgroundColor: 'var(--primary-100)',
-                color: 'var(--primary-800)',
-                border: '2px solid var(--primary-800)',
-              }}
-              aria-label="Start quick 2-minute emotion mapping"
-            >
-              Quick Mapping (2 min)
-            </button>
-            <button
-              onClick={(e) => {
-                e.stopPropagation();
-                setEmotionMappingMode('deeper');
-                setShowEmotionMapping(true);
-                const id = trackTechniqueStart('emotion-mapping-deeper');
-                setCurrentTechniqueId(id);
-              }}
-              className="flex-1 px-4 py-3 min-h-[44px] rounded-lg text-sm font-medium transition-all hover:scale-105 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-800"
-              style={{
-                background: 'linear-gradient(135deg, var(--primary-800), var(--primary-900))',
-                color: '#FFFFFF',
-              }}
-              aria-label="Start deeper 5-minute emotion reflection"
-            >
-              Deeper Reflection (5 min)
-            </button>
           </div>
           
           <div className="pt-3 border-t" style={{ borderColor: 'rgba(15, 40, 24, 0.2)' }}>
@@ -2261,10 +2303,16 @@ function App() {
 
         {/* Professional Boundaries Reset */}
         <article
-          className="rounded-xl p-6 transition-all group relative overflow-hidden focus:outline-none focus:ring-4 focus:ring-offset-2 focus:ring-green-600"
+          className="rounded-xl p-6 transition-all group relative overflow-hidden focus:outline-none focus:ring-4 focus:ring-offset-2 focus:ring-green-600 cursor-pointer"
           tabIndex={0}
-          role="article"
+          role="button"
           aria-labelledby="boundaries-reset-title"
+          onClick={() => {
+            setBoundariesResetMode('quick');
+            setShowProfessionalBoundariesReset(true);
+            const id = trackTechniqueStart('boundaries-reset');
+            setCurrentTechniqueId(id);
+          }}
           style={{
             background: 'linear-gradient(145deg, #FFFFFF 0%, #FAFAF8 100%)',
             border: '2px solid transparent',
@@ -2291,9 +2339,26 @@ function App() {
             }}
           ></div>
 
-          <h3 id="boundaries-reset-title" className="text-lg font-semibold mb-3" style={{ color: '#0D3A14' }}>
-            Professional Boundaries Reset
-          </h3>
+          <header className="flex justify-between items-start mb-3">
+            <h3 id="boundaries-reset-title" className="text-lg font-semibold" style={{ color: '#0D3A14' }}>
+              Professional Boundaries Reset
+            </h3>
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                setShowBoundariesModal(true);
+              }}
+              className="text-sm px-4 py-3 min-h-[44px] min-w-[44px] rounded-lg transition-all hover:scale-105 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-800"
+              style={{
+                backgroundColor: '#F1F8F4',
+                color: 'var(--primary-800)',
+                border: '2px solid #2E7D32',
+              }}
+              aria-label="Learn why professional boundaries matter"
+            >
+              Why boundaries matter?
+            </button>
+          </header>
           
           <p className="text-sm mb-3" style={{ color: '#2A2A2A', lineHeight: '1.6' }}>
             Reinforce healthy boundaries and protect your well-being after emotionally challenging work.
@@ -2312,55 +2377,6 @@ function App() {
               <li><strong>Release:</strong> Use breath or gesture to let go of what's not yours</li>
               <li><strong>Affirm:</strong> Reinforce your role, limits, and professional identity</li>
             </ol>
-            <button
-              onClick={(e) => {
-                e.stopPropagation();
-                setShowBoundariesModal(true);
-              }}
-              className="mt-2 text-xs font-medium underline hover:no-underline transition-all"
-              style={{ color: 'var(--primary-800)' }}
-              aria-label="Learn why professional boundaries matter for interpreters"
-            >
-              Why boundaries matter? →
-            </button>
-          </div>
-          
-          <div className="flex gap-2 mb-3">
-            <button
-              onClick={(e) => {
-                e.stopPropagation();
-                setBoundariesResetMode('quick');
-                setShowProfessionalBoundariesReset(true);
-                const id = trackTechniqueStart('boundaries-reset-quick');
-                setCurrentTechniqueId(id);
-              }}
-              className="flex-1 px-4 py-3 min-h-[44px] rounded-lg text-sm font-medium transition-all hover:scale-105 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-800"
-              style={{
-                backgroundColor: 'var(--primary-100)',
-                color: 'var(--primary-800)',
-                border: '2px solid var(--primary-800)',
-              }}
-              aria-label="Start quick 2-minute professional boundaries reset"
-            >
-              Quick Reset (2 min)
-            </button>
-            <button
-              onClick={(e) => {
-                e.stopPropagation();
-                setBoundariesResetMode('deeper');
-                setShowProfessionalBoundariesReset(true);
-                const id = trackTechniqueStart('boundaries-reset-deeper');
-                setCurrentTechniqueId(id);
-              }}
-              className="flex-1 px-4 py-3 min-h-[44px] rounded-lg text-sm font-medium transition-all hover:scale-105 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-800"
-              style={{
-                background: 'linear-gradient(135deg, var(--primary-800), var(--primary-900))',
-                color: '#FFFFFF',
-              }}
-              aria-label="Start deeper 5-minute professional boundaries reset"
-            >
-              Deeper Reset (5 min)
-            </button>
           </div>
           
           <div className="pt-3 border-t" style={{ borderColor: 'rgba(15, 40, 24, 0.2)' }}>
@@ -2372,10 +2388,16 @@ function App() {
 
         {/* Assignment Reset */}
         <article
-          className="rounded-xl p-6 transition-all group relative overflow-hidden focus:outline-none focus:ring-4 focus:ring-offset-2 focus:ring-green-600"
+          className="rounded-xl p-6 transition-all group relative overflow-hidden focus:outline-none focus:ring-4 focus:ring-offset-2 focus:ring-green-600 cursor-pointer"
           tabIndex={0}
-          role="article"
+          role="button"
           aria-labelledby="assignment-reset-title"
+          onClick={() => {
+            setAssignmentResetMode('fast');
+            setShowAssignmentReset(true);
+            const id = trackTechniqueStart('assignment-reset');
+            setCurrentTechniqueId(id);
+          }}
           style={{
             background: 'linear-gradient(145deg, #FFFFFF 0%, #FAFAF8 100%)',
             border: '2px solid transparent',
@@ -2402,9 +2424,26 @@ function App() {
             }}
           ></div>
 
-          <h3 id="assignment-reset-title" className="text-lg font-semibold mb-3" style={{ color: '#0D3A14' }}>
-            Assignment Reset
-          </h3>
+          <header className="flex justify-between items-start mb-3">
+            <h3 id="assignment-reset-title" className="text-lg font-semibold" style={{ color: '#0D3A14' }}>
+              Assignment Reset
+            </h3>
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                setShowAssignmentResetModal(true);
+              }}
+              className="text-sm px-4 py-3 min-h-[44px] min-w-[44px] rounded-lg transition-all hover:scale-105 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-800"
+              style={{
+                backgroundColor: '#F1F8F4',
+                color: 'var(--primary-800)',
+                border: '2px solid #2E7D32',
+              }}
+              aria-label="Learn why the Assignment Reset works"
+            >
+              Why this works?
+            </button>
+          </header>
           
           <p className="text-sm mb-3" style={{ color: '#2A2A2A', lineHeight: '1.6' }}>
             Transition smoothly between assignments by letting go of stress and restoring focus.
@@ -2424,55 +2463,6 @@ function App() {
               <li>• Calming breath work</li>
               <li>• Intention setting for next assignment</li>
             </ul>
-            <button
-              onClick={(e) => {
-                e.stopPropagation();
-                setShowAssignmentResetModal(true);
-              }}
-              className="mt-2 text-xs font-medium underline hover:no-underline transition-all"
-              style={{ color: 'var(--primary-800)' }}
-              aria-label="Learn why the Assignment Reset works"
-            >
-              Why this works? →
-            </button>
-          </div>
-          
-          <div className="flex gap-2 mb-3">
-            <button
-              onClick={(e) => {
-                e.stopPropagation();
-                setAssignmentResetMode('fast');
-                setShowAssignmentReset(true);
-                const id = trackTechniqueStart('assignment-reset-fast');
-                setCurrentTechniqueId(id);
-              }}
-              className="flex-1 px-4 py-3 min-h-[44px] rounded-lg text-sm font-medium transition-all hover:scale-105 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-800"
-              style={{
-                backgroundColor: 'var(--primary-100)',
-                color: 'var(--primary-800)',
-                border: '2px solid var(--primary-800)',
-              }}
-              aria-label="Start fast 2-minute assignment reset"
-            >
-              Fast Reset (2 min)
-            </button>
-            <button
-              onClick={(e) => {
-                e.stopPropagation();
-                setAssignmentResetMode('full');
-                setShowAssignmentReset(true);
-                const id = trackTechniqueStart('assignment-reset-full');
-                setCurrentTechniqueId(id);
-              }}
-              className="flex-1 px-4 py-3 min-h-[44px] rounded-lg text-sm font-medium transition-all hover:scale-105 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-800"
-              style={{
-                background: 'linear-gradient(135deg, var(--primary-800), var(--primary-900))',
-                color: '#FFFFFF',
-              }}
-              aria-label="Start full 5-minute assignment reset"
-            >
-              Full Reset (5 min)
-            </button>
           </div>
           
           <div className="pt-3 border-t" style={{ borderColor: 'rgba(15, 40, 24, 0.2)' }}>
@@ -2484,10 +2474,16 @@ function App() {
 
         {/* Technology Fatigue Reset */}
         <article
-          className="rounded-xl p-6 transition-all group relative overflow-hidden focus:outline-none focus:ring-4 focus:ring-offset-2 focus:ring-green-600"
+          className="rounded-xl p-6 transition-all group relative overflow-hidden focus:outline-none focus:ring-4 focus:ring-offset-2 focus:ring-green-600 cursor-pointer"
           tabIndex={0}
-          role="article"
+          role="button"
           aria-labelledby="tech-fatigue-title"
+          onClick={() => {
+            setTechFatigueMode('quick');
+            setShowTechnologyFatigueReset(true);
+            const id = trackTechniqueStart('tech-fatigue-reset');
+            setCurrentTechniqueId(id);
+          }}
           style={{
             background: 'linear-gradient(145deg, #FFFFFF 0%, #FAFAF8 100%)',
             border: '2px solid transparent',
@@ -2514,9 +2510,26 @@ function App() {
             }}
           ></div>
 
-          <h3 id="tech-fatigue-title" className="text-lg font-semibold mb-3" style={{ color: '#0D3A14' }}>
-            Technology Fatigue Reset
-          </h3>
+          <header className="flex justify-between items-start mb-3">
+            <h3 id="tech-fatigue-title" className="text-lg font-semibold" style={{ color: '#0D3A14' }}>
+              Technology Fatigue Reset
+            </h3>
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                setShowFiveZoneModal(true);
+              }}
+              className="text-sm px-4 py-3 min-h-[44px] min-w-[44px] rounded-lg transition-all hover:scale-105 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-800"
+              style={{
+                backgroundColor: '#F1F8F4',
+                color: 'var(--primary-800)',
+                border: '2px solid #2E7D32',
+              }}
+              aria-label="Learn why these five zones help with technology fatigue"
+            >
+              Why these 5 zones?
+            </button>
+          </header>
           
           <p className="text-sm mb-3" style={{ color: '#2A2A2A', lineHeight: '1.6' }}>
             Restore your mind and body from screen and audio strain.
@@ -2537,55 +2550,6 @@ function App() {
               <li>• Auditory pause</li>
               <li>• Cognitive defocus</li>
             </ul>
-            <button
-              onClick={(e) => {
-                e.stopPropagation();
-                setShowFiveZoneModal(true);
-              }}
-              className="mt-2 text-xs font-medium underline hover:no-underline transition-all"
-              style={{ color: 'var(--primary-800)' }}
-              aria-label="Learn why these five zones help with technology fatigue"
-            >
-              Why these 5 zones? →
-            </button>
-          </div>
-          
-          <div className="flex gap-2 mb-3">
-            <button
-              onClick={(e) => {
-                e.stopPropagation();
-                setTechFatigueMode('quick');
-                setShowTechnologyFatigueReset(true);
-                const id = trackTechniqueStart('tech-fatigue-reset-quick');
-                setCurrentTechniqueId(id);
-              }}
-              className="flex-1 px-4 py-3 min-h-[44px] rounded-lg text-sm font-medium transition-all hover:scale-105 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-800"
-              style={{
-                backgroundColor: 'var(--primary-100)',
-                color: 'var(--primary-800)',
-                border: '2px solid var(--primary-800)',
-              }}
-              aria-label="Start quick 2-minute technology fatigue reset"
-            >
-              Quick Reset (2 min)
-            </button>
-            <button
-              onClick={(e) => {
-                e.stopPropagation();
-                setTechFatigueMode('deep');
-                setShowTechnologyFatigueReset(true);
-                const id = trackTechniqueStart('tech-fatigue-reset-deep');
-                setCurrentTechniqueId(id);
-              }}
-              className="flex-1 px-4 py-3 min-h-[44px] rounded-lg text-sm font-medium transition-all hover:scale-105 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-800"
-              style={{
-                background: 'linear-gradient(135deg, var(--primary-800), var(--primary-900))',
-                color: '#FFFFFF',
-              }}
-              aria-label="Start deep 5-minute technology fatigue reset"
-            >
-              Deep Reset (5 min)
-            </button>
           </div>
           
           <div className="pt-3 border-t" style={{ borderColor: 'rgba(15, 40, 24, 0.2)' }}>
@@ -2595,7 +2559,11 @@ function App() {
           </div>
         </article>
       </section>
+    </main>
+  );
 
+  const renderStressResetModals = () => (
+    <>
       {/* Five Zone Modal */}
       {showFiveZoneModal && (
         <div
@@ -5163,66 +5131,10 @@ function App() {
           </div>
         </div>
       )}
-    </main>
+    </>
   );
 
 
-  const renderBurnoutGauge = () => (
-    <section aria-labelledby="burnout-gauge-heading">
-      <div className="flex items-center justify-between mb-8">
-        <div>
-          <h2
-            id="burnout-gauge-heading"
-            className="text-3xl font-bold mb-3"
-            style={{ color: '#0D3A14' }}
-          >
-            Daily Burnout Gauge
-          </h2>
-          <p className="text-base" style={{ color: '#3A3A3A' }}>
-            Quick check-in on your energy and stress levels
-          </p>
-        </div>
-        <div className="p-4 rounded-full" style={{ backgroundColor: 'rgba(45, 95, 63, 0.15)' }}>
-          <Gauge className="h-10 w-10" aria-hidden="true" style={{ color: '#0D3A14' }} />
-        </div>
-      </div>
-
-      <div className="text-center py-8">
-        <button
-          onClick={() => setShowDailyBurnout(true)}
-          className="inline-flex items-center px-8 py-4 rounded-xl font-semibold text-lg transition-all"
-          style={{
-            background: 'linear-gradient(145deg, #1A3D26 0%, #0F2818 100%)',
-            color: '#FFFFFF',
-            boxShadow: '0 4px 15px rgba(107, 139, 96, 0.3)',
-          }}
-          onMouseEnter={(e) => {
-            e.currentTarget.style.transform = 'translateY(-2px) scale(1.02)';
-            e.currentTarget.style.boxShadow = '0 8px 25px rgba(107, 139, 96, 0.4)';
-          }}
-          onMouseLeave={(e) => {
-            e.currentTarget.style.transform = 'translateY(0) scale(1)';
-            e.currentTarget.style.boxShadow = '0 4px 15px rgba(107, 139, 96, 0.3)';
-          }}
-        >
-          <Gauge className="w-6 h-6 mr-3" />
-          Take Your 5-Question Daily Assessment
-        </button>
-        <p className="text-sm mt-4" style={{ color: '#3A3A3A' }}>
-          Complete wellness check with personalized recommendations
-        </p>
-        
-        {/* Show last assessment if available */}
-        {localStorage.getItem('todaysBurnoutAssessment') && (
-          <div className="mt-6 inline-block p-4 rounded-lg" style={{ backgroundColor: 'rgba(92, 127, 79, 0.1)' }}>
-            <p className="text-sm font-semibold" style={{ color: '#0D3A14' }}>
-              ✓ Today's assessment completed
-            </p>
-          </div>
-        )}
-      </div>
-    </section>
-  );
 
   const renderDashboardHome = () => (
     <main id="dashboard-main" aria-labelledby="reflection-dashboard-heading" className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
@@ -5236,19 +5148,11 @@ function App() {
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
-        {/* Left Column - Burnout Gauge (Sticky) */}
+        {/* Left Column - Quick Tools (Sticky) */}
         <div className="lg:col-span-1">
           <div className="lg:sticky lg:top-4">
-            <BurnoutGauge 
-              onTakeGauge={() => {
-                setShowDailyBurnout(true);
-              }}
-              lastScore={savedReflections.find(r => r.type === 'Daily Burnout Gauge')?.data?.overall_wellbeing || null}
-              lastDate={savedReflections.find(r => r.type === 'Daily Burnout Gauge')?.timestamp || null}
-            />
-
-            {/* Quick Tools Bar - Desktop Only */}
-            <aside id="quick-tools-bar" aria-label="Quick Tools" className="hidden lg:block mt-6 space-y-3">
+            {/* Quick Tools Bar */}
+            <aside id="quick-tools-bar" aria-label="Quick Tools" className="space-y-3">
               <h3 className="text-sm font-semibold text-gray-700 uppercase tracking-wider mb-3">Quick Tools</h3>
               <button
                 onClick={() => setShowWellnessCheckIn(true)}
@@ -5283,7 +5187,7 @@ function App() {
         </div>
 
         {/* Main Content - Reflections Area */}
-        <div className="lg:col-span-2 space-y-8">
+        <div className="lg:col-span-3 space-y-8">
 
           {/* Structured Reflections Area */}
           <section
@@ -5816,7 +5720,7 @@ function App() {
             }}
             onMouseEnter={(e) => {
               if (activeCategory !== 'structured') {
-                e.currentTarget.style.backgroundColor = 'rgba(92, 127, 79, 0.1)';
+                e.currentTarget.style.backgroundColor = 'rgba(34, 197, 94, 0.15)';
               }
             }}
             onMouseLeave={(e) => {
@@ -5836,41 +5740,6 @@ function App() {
             <span>Structured</span>
           </button>
           <button
-            onClick={() => setActiveCategory('burnout')}
-            className="flex items-center space-x-2 px-6 py-3 rounded-xl font-semibold transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-sage-600"
-            role="tab"
-            aria-selected={activeCategory === 'burnout'}
-            aria-controls="burnout-panel"
-            aria-label="Daily burnout gauge tab"
-            style={{
-              backgroundColor: activeCategory === 'burnout' ? '#2D5F3F' : 'transparent',
-              color: activeCategory === 'burnout' ? '#FFFFFF' : '#1A1A1A',
-              transform: activeCategory === 'burnout' ? 'scale(1.02)' : 'scale(1)',
-              boxShadow:
-                activeCategory === 'burnout' ? '0 4px 15px rgba(92, 127, 79, 0.3)' : 'none',
-            }}
-            onMouseEnter={(e) => {
-              if (activeCategory !== 'burnout') {
-                e.currentTarget.style.backgroundColor = 'rgba(92, 127, 79, 0.1)';
-              }
-            }}
-            onMouseLeave={(e) => {
-              if (activeCategory !== 'burnout') {
-                e.currentTarget.style.backgroundColor = 'transparent';
-              }
-            }}
-            onFocus={(e) => {
-              e.currentTarget.style.outline = '2px solid #2D5F3F';
-              e.currentTarget.style.outlineOffset = '2px';
-            }}
-            onBlur={(e) => {
-              e.currentTarget.style.outline = 'none';
-            }}
-          >
-            <Gauge className="h-4 w-4" aria-hidden="true" />
-            <span>Daily Burnout Gauge</span>
-          </button>
-          <button
             onClick={() => setActiveCategory('affirmations')}
             className="flex items-center space-x-2 px-6 py-3 rounded-xl font-semibold transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-sage-600"
             role="tab"
@@ -5886,7 +5755,7 @@ function App() {
             }}
             onMouseEnter={(e) => {
               if (activeCategory !== 'affirmations') {
-                e.currentTarget.style.backgroundColor = 'rgba(92, 127, 79, 0.1)';
+                e.currentTarget.style.backgroundColor = 'rgba(34, 197, 94, 0.15)';
               }
             }}
             onMouseLeave={(e) => {
@@ -5983,8 +5852,6 @@ function App() {
                       setShowWellnessCheckIn(true);
                     } else if (card.title === 'Compass Check') {
                       setShowEthicsMeaningCheck(true);
-                    } else if (card.title === 'Daily Burnout Gauge') {
-                      setShowDailyBurnout(true);
                     }
                     // Add handlers for other cards here as needed
                   }}
@@ -6007,8 +5874,6 @@ function App() {
                         setShowWellnessCheckIn(true);
                       } else if (card.title === 'Compass Check') {
                         setShowEthicsMeaningCheck(true);
-                      } else if (card.title === 'Daily Burnout Gauge') {
-                        setShowDailyBurnout(true);
                       }
                       // Handle other card selections
                     }
@@ -6053,12 +5918,6 @@ function App() {
                 </article>
               ))}
             </div>
-          </div>
-        )}
-
-        {activeCategory === 'burnout' && (
-          <div role="tabpanel" id="burnout-panel" aria-labelledby="burnout-tab">
-            {renderBurnoutGauge()}
           </div>
         )}
 
@@ -6168,16 +6027,6 @@ function App() {
       )}
 
       {/* Daily Burnout Gauge Modal */}
-      {showDailyBurnout && (
-        <DailyBurnoutGauge
-          onComplete={() => {
-            // Daily burnout assessment completed
-            setShowDailyBurnout(false);
-            // Results are automatically saved to localStorage for graph
-          }}
-          onClose={() => setShowDailyBurnout(false)}
-        />
-      )}
 
     </main>
   );
@@ -6556,8 +6405,8 @@ function App() {
                             } else {
                               await signOut();
                             }
-                            // Force a refresh to show landing page
-                            window.location.href = '/';
+                            // Navigation will happen automatically as user state changes
+                            // The landing page will show when user becomes null
                           }}
                           className="w-full flex items-center space-x-3 p-4 rounded-xl transition-all text-left"
                           style={{
@@ -6617,26 +6466,28 @@ function App() {
                     e.stopPropagation();
                     setActiveTab(tab.id);
                   }}
-                  className="flex items-center px-4 py-2 text-sm font-medium transition-all rounded-full"
+                  className={`flex items-center px-4 py-2 text-sm font-medium transition-all duration-300 rounded-full ${
+                    activeTab === tab.id 
+                      ? 'bg-gradient-to-r from-sage-500 to-green-500 text-white shadow-md' 
+                      : 'bg-white'
+                  }`}
                   role="tab"
                   aria-selected={activeTab === tab.id}
                   aria-controls={`${tab.id}-panel`}
                   aria-current={activeTab === tab.id ? 'page' : undefined}
                 style={{
                   color: activeTab === tab.id ? '#FFFFFF' : '#4A5568',
-                  backgroundColor: activeTab === tab.id ? '#5B8FE3' : 'transparent',
                   fontWeight: activeTab === tab.id ? '500' : '400',
+                  backgroundColor: activeTab === tab.id ? undefined : '#FFFFFF',
                 }}
                 onMouseEnter={(e) => {
                   if (activeTab !== tab.id) {
-                    e.currentTarget.style.backgroundColor = 'rgba(147, 197, 253, 0.08)';
-                    e.currentTarget.style.color = '#2D3748';
+                    e.currentTarget.style.backgroundColor = 'rgba(34, 197, 94, 0.15)';
                   }
                 }}
                 onMouseLeave={(e) => {
                   if (activeTab !== tab.id) {
-                    e.currentTarget.style.backgroundColor = 'transparent';
-                    e.currentTarget.style.color = '#4A5568';
+                    e.currentTarget.style.backgroundColor = '#FFFFFF';
                   }
                 }}
               >
@@ -6646,8 +6497,8 @@ function App() {
                   <span 
                     className="ml-1.5 px-1.5 py-0.5 text-xs font-medium rounded-full"
                     style={{ 
-                      backgroundColor: activeTab === tab.id ? 'rgba(255, 255, 255, 0.3)' : 'rgba(92, 127, 79, 0.15)', 
-                      color: activeTab === tab.id ? '#FFFFFF' : '#5C7F4F',
+                      backgroundColor: activeTab === tab.id ? 'rgba(255, 255, 255, 0.3)' : 'rgba(156, 163, 175, 0.15)', 
+                      color: activeTab === tab.id ? '#FFFFFF' : '#6B7280',
                       fontSize: '9px'
                     }}
                   >
@@ -6665,20 +6516,13 @@ function App() {
       <main id="main-content" role="main" className="flex-1">
         <div role="tabpanel" id={`${activeTab}-panel`} aria-labelledby={activeTab}>
           {activeTab === 'reflection' && renderReflectionStudio()}
-          {activeTab === 'home' && <LuxuryWellnessDashboard userName={user?.email?.split('@')[0] || 'there'} onTabChange={(tab, category) => {
-            setActiveTab(tab);
-            if (category) {
-              setActiveCategory(category);
-            }
-          }} />}
+          {activeTab === 'home' && <PersonalizedHomepage onNavigate={setActiveTab} />}
           {activeTab === 'stress' && renderStressReset()}
           {activeTab === 'chat' && renderChatWithElya()}
           {activeTab === 'insights' && renderGrowthInsights()}
         </div>
       </main>
-
-
-
+      
       {/* Breathing Practice Modal */}
       {showBreathingPractice && (
         <BreathingPractice
@@ -6686,13 +6530,13 @@ function App() {
           onClose={() => {
             setShowBreathingPractice(false);
             if (currentTechniqueId) {
-              trackTechniqueEnd(currentTechniqueId, 'completed');
+              trackTechniqueComplete(currentTechniqueId, 'completed');
               setCurrentTechniqueId(null);
             }
           }}
           onComplete={() => {
             if (currentTechniqueId) {
-              trackTechniqueEnd(currentTechniqueId, 'completed');
+              trackTechniqueComplete(currentTechniqueId, 'completed');
               setCurrentTechniqueId(null);
             }
             setShowBreathingPractice(false);
@@ -6811,6 +6655,117 @@ function App() {
         </div>
       )}
 
+      {/* Emotion Mapping Why It Works Modal */}
+      {showEmotionMappingModal && (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center p-4"
+          style={{ backgroundColor: 'rgba(0, 0, 0, 0.5)' }}
+          onClick={() => setShowEmotionMappingModal(false)}
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="emotion-mapping-modal-title"
+        >
+          <div
+            className="rounded-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto"
+            style={{
+              backgroundColor: 'var(--bg-card)',
+              boxShadow: '0 20px 60px rgba(0, 0, 0, 0.3)',
+            }}
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="p-8">
+              <header className="mb-6">
+                <h2 id="emotion-mapping-modal-title" className="text-2xl font-bold mb-3" style={{ color: '#0D3A14' }}>
+                  Why Emotion Mapping Works
+                </h2>
+                <p className="text-sm" style={{ color: '#3A3A3A' }}>
+                  The neuroscience of emotional regulation for interpreters
+                </p>
+              </header>
+
+              <section className="space-y-6">
+                <article>
+                  <h3 className="text-lg font-semibold mb-2" style={{ color: '#0D3A14' }}>
+                    Affect Labeling
+                  </h3>
+                  <p className="text-sm mb-2" style={{ color: '#2A2A2A' }}>
+                    <strong>Neural deactivation:</strong> When you name an emotion, your brain's language centers (particularly the right ventrolateral prefrontal cortex) activate and calm the amygdala—your fear center.
+                  </p>
+                  <p className="text-sm" style={{ color: '#3A3A3A' }}>
+                    UCLA research shows that simply saying "I feel angry" reduces amygdala activity by up to 50%, helping interpreters process difficult content without becoming overwhelmed.
+                  </p>
+                </article>
+
+                <article>
+                  <h3 className="text-lg font-semibold mb-2" style={{ color: '#0D3A14' }}>
+                    Emotional Granularity
+                  </h3>
+                  <p className="text-sm mb-2" style={{ color: '#2A2A2A' }}>
+                    <strong>Precision matters:</strong> People who can distinguish between similar emotions (frustrated vs. irritated vs. overwhelmed) have better emotional regulation and lower stress.
+                  </p>
+                  <p className="text-sm" style={{ color: '#3A3A3A' }}>
+                    For interpreters handling complex emotional content, this granularity prevents emotional contagion and maintains professional boundaries.
+                  </p>
+                </article>
+
+                <article>
+                  <h3 className="text-lg font-semibold mb-2" style={{ color: '#0D3A14' }}>
+                    Interoception Enhancement
+                  </h3>
+                  <p className="text-sm mb-2" style={{ color: '#2A2A2A' }}>
+                    <strong>Body-mind connection:</strong> Noticing where emotions manifest physically (chest tightness, stomach butterflies) strengthens your insula—the brain region connecting body sensations to emotional awareness.
+                  </p>
+                  <p className="text-sm" style={{ color: '#3A3A3A' }}>
+                    This is crucial for interpreters who need to recognize early signs of secondary trauma or compassion fatigue before it impacts performance.
+                  </p>
+                </article>
+
+                <article>
+                  <h3 className="text-lg font-semibold mb-2" style={{ color: '#0D3A14' }}>
+                    Cognitive Reappraisal
+                  </h3>
+                  <p className="text-sm mb-2" style={{ color: '#2A2A2A' }}>
+                    <strong>Perspective shift:</strong> Understanding what triggered an emotion allows your prefrontal cortex to reframe the situation, reducing its emotional impact.
+                  </p>
+                  <p className="text-sm" style={{ color: '#3A3A3A' }}>
+                    This helps interpreters separate their personal reactions from professional responsibilities, maintaining neutrality while acknowledging human responses.
+                  </p>
+                </article>
+
+                <article>
+                  <h3 className="text-lg font-semibold mb-2" style={{ color: '#0D3A14' }}>
+                    Neuroplasticity Benefits
+                  </h3>
+                  <p className="text-sm mb-2" style={{ color: '#2A2A2A' }}>
+                    <strong>Long-term resilience:</strong> Regular emotion mapping literally rewires your brain, strengthening connections between emotional and rational centers.
+                  </p>
+                  <p className="text-sm" style={{ color: '#3A3A3A' }}>
+                    Studies show that interpreters who practice emotional awareness have 40% less burnout and maintain career longevity despite exposure to challenging content.
+                  </p>
+                </article>
+              </section>
+
+              <footer className="mt-8 pt-6 border-t" style={{ borderColor: 'rgba(92, 127, 79, 0.2)' }}>
+                <p className="text-xs mb-4" style={{ color: '#525252' }}>
+                  Research sources: UCLA Brain Mapping Center, Journal of Cognitive Neuroscience, Emotion Review, Current Opinion in Psychology
+                </p>
+                <button
+                  onClick={() => setShowEmotionMappingModal(false)}
+                  className="w-full px-6 py-3 rounded-lg font-medium transition-all hover:scale-105"
+                  style={{
+                    background: 'linear-gradient(135deg, #1b5e20, #2e7d32)',
+                    color: '#FFFFFF',
+                  }}
+                  aria-label="Close modal and return to emotion mapping options"
+                >
+                  Ready to map and reset!
+                </button>
+              </footer>
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* Affirmation & Reflection Studio Modal */}
       {showAffirmationStudio && (
         <AffirmationReflectionStudio
@@ -6825,17 +6780,37 @@ function App() {
           onClose={() => {
             setShowBodyCheckIn(false);
             if (currentTechniqueId) {
-              trackTechniqueEnd(currentTechniqueId, 'completed');
+              trackTechniqueComplete(currentTechniqueId, 'completed');
               setCurrentTechniqueId(null);
             }
           }}
           onComplete={(data) => {
             if (currentTechniqueId) {
-              trackTechniqueEnd(currentTechniqueId, 'completed');
+              trackTechniqueComplete(currentTechniqueId, data.completedDuration || 0);
               setCurrentTechniqueId(null);
             }
+            
+            // Save body check-in data
+            const newCheckIn = {
+              ...data,
+              id: Date.now(),
+              date: new Date().toISOString()
+            };
+            const updatedData = [newCheckIn, ...bodyCheckInData];
+            setBodyCheckInData(updatedData);
+            localStorage.setItem('bodyCheckInData', JSON.stringify(updatedData));
+            
+            // Close the modal and navigate to Growth Insights
             setShowBodyCheckIn(false);
-            console.log('Body Check-In completed:', data);
+            setActiveTab('insights');
+            
+            // Scroll to the Body Check-In section after a brief delay
+            setTimeout(() => {
+              const bodyCheckInSection = document.getElementById('body-checkin-heading');
+              if (bodyCheckInSection) {
+                bodyCheckInSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+              }
+            }, 100);
           }}
         />
       )}
@@ -6958,13 +6933,13 @@ function App() {
           onClose={() => {
             setShowProfessionalBoundariesReset(false);
             if (currentTechniqueId) {
-              trackTechniqueEnd(currentTechniqueId, 'completed');
+              trackTechniqueComplete(currentTechniqueId, 'completed');
               setCurrentTechniqueId(null);
             }
           }}
           onComplete={(data) => {
             if (currentTechniqueId) {
-              trackTechniqueEnd(currentTechniqueId, 'completed');
+              trackTechniqueComplete(currentTechniqueId, 'completed');
               setCurrentTechniqueId(null);
             }
             setShowProfessionalBoundariesReset(false);
@@ -6978,13 +6953,13 @@ function App() {
           onClose={() => {
             setShowTemperatureExploration(false);
             if (currentTechniqueId) {
-              trackTechniqueEnd(currentTechniqueId, 'completed');
+              trackTechniqueComplete(currentTechniqueId, 'completed');
               setCurrentTechniqueId(null);
             }
           }}
           onComplete={(data) => {
             if (currentTechniqueId) {
-              trackTechniqueEnd(currentTechniqueId, 'completed');
+              trackTechniqueComplete(currentTechniqueId, 'completed');
               setCurrentTechniqueId(null);
             }
             setShowTemperatureExploration(false);
@@ -6999,13 +6974,13 @@ function App() {
           onClose={() => {
             setShowAssignmentReset(false);
             if (currentTechniqueId) {
-              trackTechniqueEnd(currentTechniqueId, 'completed');
+              trackTechniqueComplete(currentTechniqueId, 'completed');
               setCurrentTechniqueId(null);
             }
           }}
           onComplete={(data) => {
             if (currentTechniqueId) {
-              trackTechniqueEnd(currentTechniqueId, 'completed');
+              trackTechniqueComplete(currentTechniqueId, 'completed');
               setCurrentTechniqueId(null);
             }
             setShowAssignmentReset(false);
@@ -7020,13 +6995,13 @@ function App() {
           onClose={() => {
             setShowTechnologyFatigueReset(false);
             if (currentTechniqueId) {
-              trackTechniqueEnd(currentTechniqueId, 'completed');
+              trackTechniqueComplete(currentTechniqueId, 'completed');
               setCurrentTechniqueId(null);
             }
           }}
           onComplete={(data) => {
             if (currentTechniqueId) {
-              trackTechniqueEnd(currentTechniqueId, 'completed');
+              trackTechniqueComplete(currentTechniqueId, 'completed');
               setCurrentTechniqueId(null);
             }
             setShowTechnologyFatigueReset(false);
@@ -7041,13 +7016,13 @@ function App() {
           onClose={() => {
             setShowEmotionMapping(false);
             if (currentTechniqueId) {
-              trackTechniqueEnd(currentTechniqueId, 'completed');
+              trackTechniqueComplete(currentTechniqueId, 'completed');
               setCurrentTechniqueId(null);
             }
           }}
           onComplete={(data) => {
             if (currentTechniqueId) {
-              trackTechniqueEnd(currentTechniqueId, 'completed');
+              trackTechniqueComplete(currentTechniqueId, 'completed');
               setCurrentTechniqueId(null);
             }
             setShowEmotionMapping(false);
@@ -7055,12 +7030,18 @@ function App() {
           }}
         />
       )}
-      
-      <Footer />
     </div>
         }
       />
     </Routes>
+    
+    {/* Elya AI Chat Widget - Available on all pages */}
+    <ElyaEmbed 
+      position="bottom-right"
+      defaultOpen={false}
+      bubbleColor="linear-gradient(135deg, #5C7F4F 0%, #8FA881 100%)"
+      headerColor="linear-gradient(135deg, #5C7F4F 0%, #8FA881 100%)"
+    />
     </>
   );
 }

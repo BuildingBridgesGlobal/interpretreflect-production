@@ -238,8 +238,15 @@ export const ProfessionalBoundariesReset: React.FC<ProfessionalBoundariesResetPr
                   Return to your center after difficult content
                 </p>
               </div>
-              <button onClick={onClose} className="p-2 hover:bg-white/50 rounded-xl transition-all">
-                <X className="w-6 h-6" />
+              <button 
+                onClick={onClose} 
+                className="p-2 rounded-xl transition-all hover:scale-105"
+                style={{
+                  background: 'linear-gradient(135deg, #1b5e20, #2e7d32)',
+                }}
+                aria-label="Close professional boundaries reset"
+              >
+                <X className="w-5 h-5 text-white" />
               </button>
             </div>
 
@@ -376,19 +383,33 @@ export const ProfessionalBoundariesReset: React.FC<ProfessionalBoundariesResetPr
             <div className="flex gap-3">
               <button
                 onClick={handleStart}
-                className="flex-1 py-4 bg-gradient-to-r from-rose-600 to-orange-600 text-white rounded-2xl font-semibold text-lg hover:opacity-90 transition-all"
+                className="flex-1 py-4 text-white rounded-2xl font-semibold text-lg transition-all hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-offset-2"
+                style={{ 
+                  background: 'linear-gradient(135deg, #1b5e20, #2e7d32)',
+                  focusRingColor: '#5C7F4F'
+                }}
               >
                 Begin Reset
               </button>
               <button
                 onClick={handleNeedSupport}
-                className="px-6 py-4 bg-white/70 hover:bg-white rounded-2xl font-medium text-gray-700 transition-all"
+                className="px-6 py-4 rounded-2xl font-medium text-gray-700 transition-all hover:shadow-md"
+                style={{ 
+                  backgroundColor: '#F0F5ED'
+                }}
+                onMouseEnter={(e) => e.currentTarget.style.backgroundColor = 'rgba(34, 197, 94, 0.2)'}
+                onMouseLeave={(e) => e.currentTarget.style.backgroundColor = '#F0F5ED'}
               >
                 I Need More Support
               </button>
               <button
                 onClick={onClose}
-                className="px-6 py-4 bg-white/70 hover:bg-white rounded-2xl font-medium text-gray-700 transition-all"
+                className="px-6 py-4 rounded-2xl font-medium text-gray-700 transition-all hover:shadow-md"
+                style={{ 
+                  backgroundColor: '#F0F5ED'
+                }}
+                onMouseEnter={(e) => e.currentTarget.style.backgroundColor = 'rgba(34, 197, 94, 0.2)'}
+                onMouseLeave={(e) => e.currentTarget.style.backgroundColor = '#F0F5ED'}
               >
                 Skip
               </button>
@@ -410,8 +431,15 @@ export const ProfessionalBoundariesReset: React.FC<ProfessionalBoundariesResetPr
               <h2 className="text-2xl font-bold text-gray-900">
                 Current Focus:
               </h2>
-              <button onClick={onClose} className="p-2 hover:bg-white/50 rounded-xl transition-all">
-                <X className="w-6 h-6" />
+              <button 
+                onClick={onClose} 
+                className="p-2 rounded-xl transition-all hover:scale-105"
+                style={{
+                  background: 'linear-gradient(135deg, #1b5e20, #2e7d32)',
+                }}
+                aria-label="Close professional boundaries reset"
+              >
+                <X className="w-5 h-5 text-white" />
               </button>
             </div>
 
@@ -485,14 +513,23 @@ export const ProfessionalBoundariesReset: React.FC<ProfessionalBoundariesResetPr
             <div className="flex justify-center gap-3">
               <button
                 onClick={handlePause}
-                className="px-8 py-3 bg-gradient-to-r from-rose-600 to-orange-600 text-white rounded-xl font-medium hover:opacity-90 transition-all flex items-center gap-2"
+                className="px-8 py-3 text-white rounded-xl font-medium transition-all hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-offset-2 flex items-center gap-2"
+                style={{ 
+                  background: 'linear-gradient(135deg, #1b5e20, #2e7d32)',
+                  focusRingColor: '#5C7F4F'
+                }}
               >
                 {isPlaying ? <Pause className="w-5 h-5" /> : <Play className="w-5 h-5" />}
                 {isPlaying ? 'Pause' : 'Resume'}
               </button>
               <button
                 onClick={handleComplete}
-                className="px-8 py-3 bg-white/70 hover:bg-white rounded-xl font-medium text-gray-700 transition-all"
+                className="px-8 py-3 rounded-xl font-medium text-gray-700 transition-all hover:shadow-md"
+                style={{ 
+                  backgroundColor: '#F0F5ED'
+                }}
+                onMouseEnter={(e) => e.currentTarget.style.backgroundColor = 'rgba(34, 197, 94, 0.2)'}
+                onMouseLeave={(e) => e.currentTarget.style.backgroundColor = '#F0F5ED'}
               >
                 Complete Early
               </button>
@@ -513,8 +550,15 @@ export const ProfessionalBoundariesReset: React.FC<ProfessionalBoundariesResetPr
               <h2 className="text-3xl font-bold text-gray-900">
                 Your Support Options
               </h2>
-              <button onClick={onClose} className="p-2 hover:bg-white/50 rounded-xl transition-all">
-                <X className="w-6 h-6" />
+              <button 
+                onClick={onClose} 
+                className="p-2 rounded-xl transition-all hover:scale-105"
+                style={{
+                  background: 'linear-gradient(135deg, #1b5e20, #2e7d32)',
+                }}
+                aria-label="Close professional boundaries reset"
+              >
+                <X className="w-5 h-5 text-white" />
               </button>
             </div>
 
@@ -592,13 +636,22 @@ export const ProfessionalBoundariesReset: React.FC<ProfessionalBoundariesResetPr
             <div className="flex gap-3">
               <button
                 onClick={() => setPhase('reflection')}
-                className="flex-1 py-3 bg-gradient-to-r from-rose-600 to-orange-600 text-white rounded-xl font-semibold hover:opacity-90 transition-all"
+                className="flex-1 py-3 text-white rounded-xl font-semibold transition-all hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-offset-2"
+                style={{ 
+                  background: 'linear-gradient(135deg, #1b5e20, #2e7d32)',
+                  focusRingColor: '#5C7F4F'
+                }}
               >
                 Continue to Check-In
               </button>
               <button
                 onClick={onClose}
-                className="px-6 py-3 bg-white/70 hover:bg-white rounded-xl font-medium text-gray-700 transition-all"
+                className="px-6 py-3 rounded-xl font-medium text-gray-700 transition-all hover:shadow-md"
+                style={{ 
+                  backgroundColor: '#F0F5ED'
+                }}
+                onMouseEnter={(e) => e.currentTarget.style.backgroundColor = 'rgba(34, 197, 94, 0.2)'}
+                onMouseLeave={(e) => e.currentTarget.style.backgroundColor = '#F0F5ED'}
               >
                 Close for Now
               </button>
@@ -849,13 +902,22 @@ export const ProfessionalBoundariesReset: React.FC<ProfessionalBoundariesResetPr
           <div className="flex gap-3">
             <button
               onClick={handleSubmit}
-              className="flex-1 py-3 bg-gradient-to-r from-rose-600 to-orange-600 text-white rounded-xl font-semibold hover:opacity-90 transition-all"
+              className="flex-1 py-3 text-white rounded-xl font-semibold transition-all hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-offset-2"
+              style={{ 
+                background: 'linear-gradient(135deg, #1b5e20, #2e7d32)',
+                focusRingColor: '#5C7F4F'
+              }}
             >
               Complete
             </button>
             <button
               onClick={() => setPhase('support')}
-              className="px-6 py-3 bg-white/70 hover:bg-white rounded-xl font-medium text-gray-700 transition-all"
+              className="px-6 py-3 rounded-xl font-medium text-gray-700 transition-all hover:shadow-md"
+              style={{ 
+                backgroundColor: '#F0F5ED'
+              }}
+              onMouseEnter={(e) => e.currentTarget.style.backgroundColor = 'rgba(34, 197, 94, 0.2)'}
+              onMouseLeave={(e) => e.currentTarget.style.backgroundColor = '#F0F5ED'}
             >
               Access Support Resources
             </button>

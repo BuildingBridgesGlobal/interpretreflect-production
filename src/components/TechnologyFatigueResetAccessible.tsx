@@ -156,46 +156,15 @@ export const TechnologyFatigueResetAccessible: React.FC<TechnologyFatigueResetPr
               </div>
               <button 
                 onClick={onClose} 
-                className="p-2 hover:bg-gray-50 rounded-xl transition-all"
+                className="p-2 rounded-xl transition-all hover:scale-105"
+                style={{
+                  background: 'linear-gradient(135deg, #1b5e20, #2e7d32)',
+                }}
                 aria-label="Close technology fatigue reset"
               >
-                <X className="w-5 h-5 text-gray-400" />
+                <X className="w-5 h-5 text-white" />
               </button>
             </div>
-
-            {/* Duration selection */}
-            <fieldset className="mb-6">
-              <legend className="text-sm font-medium mb-3" style={{ color: '#2D3748' }}>
-                How long?
-              </legend>
-              <div role="group" aria-label="Tech Fatigue Timer" className="flex gap-2">
-                {[
-                  { value: '20s', label: '20 sec', desc: 'Quick break' },
-                  { value: '1m', label: '1 min', desc: 'Standard' },
-                  { value: '2m', label: '2 min', desc: 'Extended' },
-                  { value: '3m', label: '3 min', desc: 'Full reset' }
-                ].map(duration => (
-                  <button
-                    key={duration.value}
-                    onClick={() => setSelectedDuration(duration.value as ResetDuration)}
-                    className={`flex-1 p-3 rounded-xl text-center transition-all border-2 focus:outline-none focus:ring-2 focus:ring-offset-2 ${
-                      selectedDuration === duration.value
-                        ? 'border-green-400'
-                        : 'border-transparent bg-gray-50 hover:bg-gray-100'
-                    }`}
-                    style={{
-                      backgroundColor: selectedDuration === duration.value ? '#F0F5ED' : undefined,
-                      borderColor: selectedDuration === duration.value ? '#7A9B6E' : undefined,
-                      focusRingColor: '#5C7F4F'
-                    }}
-                    aria-pressed={selectedDuration === duration.value}
-                  >
-                    <p className="font-medium text-sm" style={{ color: '#2D3748' }}>{duration.label}</p>
-                    <p className="text-xs" style={{ color: '#4A5568' }}>{duration.desc}</p>
-                  </button>
-                ))}
-              </div>
-            </fieldset>
 
             {/* Reset steps preview */}
             <div className="mb-6">
@@ -254,9 +223,9 @@ export const TechnologyFatigueResetAccessible: React.FC<TechnologyFatigueResetPr
             {/* Start button */}
             <button
               onClick={handleStart}
-              className="w-full py-3 text-white rounded-xl font-medium hover:opacity-90 transition-all focus:outline-none focus:ring-2 focus:ring-offset-2"
+              className="w-full py-3 text-white rounded-xl font-medium transition-all hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-offset-2"
               style={{ 
-                backgroundColor: '#5C7F4F',
+                background: 'linear-gradient(135deg, #1b5e20, #2e7d32)',
                 focusRingColor: '#5C7F4F'
               }}
               aria-label="Start Technology Fatigue Reset"
@@ -289,10 +258,13 @@ export const TechnologyFatigueResetAccessible: React.FC<TechnologyFatigueResetPr
               </h2>
               <button 
                 onClick={onClose} 
-                className="p-2 hover:bg-gray-50 rounded-xl transition-all"
+                className="p-2 rounded-xl transition-all hover:scale-105"
+                style={{
+                  background: 'linear-gradient(135deg, #1b5e20, #2e7d32)',
+                }}
                 aria-label="Close practice"
               >
-                <X className="w-5 h-5 text-gray-400" />
+                <X className="w-5 h-5 text-white" />
               </button>
             </div>
 
@@ -383,9 +355,9 @@ export const TechnologyFatigueResetAccessible: React.FC<TechnologyFatigueResetPr
 
             <button
               onClick={handleContinue}
-              className="w-full mt-6 py-3 text-white rounded-xl font-medium hover:opacity-90 transition-all focus:outline-none focus:ring-2 focus:ring-offset-2"
+              className="w-full mt-6 py-3 text-white rounded-xl font-medium transition-all hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-offset-2"
               style={{ 
-                backgroundColor: '#5C7F4F',
+                background: 'linear-gradient(135deg, #1b5e20, #2e7d32)',
                 focusRingColor: '#5C7F4F'
               }}
               aria-label={currentStep === 'distance' ? 'Complete reset' : 'Continue to next step'}

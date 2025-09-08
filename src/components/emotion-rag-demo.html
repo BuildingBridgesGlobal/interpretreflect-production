@@ -1,0 +1,443 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Emotion Rag Background System - Demo</title>
+  <link rel="stylesheet" href="../styles/emotion-rag.css">
+  <style>
+    body {
+      margin: 0;
+      font-family: system-ui, -apple-system, sans-serif;
+    }
+    
+    .demo-content {
+      position: relative;
+      z-index: 1;
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 2rem;
+    }
+    
+    .demo-header {
+      text-align: center;
+      margin-bottom: 3rem;
+    }
+    
+    .demo-title {
+      font-size: 2.5rem;
+      margin-bottom: 1rem;
+      color: var(--text-primary, #333);
+    }
+    
+    .demo-subtitle {
+      font-size: 1.125rem;
+      color: var(--text-secondary, #666);
+    }
+    
+    .emotion-selector {
+      background: white;
+      border-radius: 1rem;
+      padding: 2rem;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      margin-bottom: 2rem;
+    }
+    
+    .emotion-selector h2 {
+      margin-top: 0;
+      margin-bottom: 1.5rem;
+    }
+    
+    .emotion-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      gap: 1rem;
+    }
+    
+    .emotion-card {
+      padding: 1rem;
+      border: 2px solid transparent;
+      border-radius: 0.5rem;
+      cursor: pointer;
+      text-align: center;
+      transition: all 0.3s ease;
+      background: rgba(255, 255, 255, 0.8);
+    }
+    
+    .emotion-card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    }
+    
+    .emotion-card.active {
+      border-color: #3b82f6;
+      background: #eff6ff;
+    }
+    
+    .emotion-emoji {
+      font-size: 2rem;
+      margin-bottom: 0.5rem;
+    }
+    
+    .emotion-name {
+      font-weight: 600;
+      margin-bottom: 0.25rem;
+    }
+    
+    .emotion-description {
+      font-size: 0.875rem;
+      color: #666;
+    }
+    
+    .instructions {
+      background: white;
+      border-radius: 1rem;
+      padding: 2rem;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+    
+    .instructions h2 {
+      margin-top: 0;
+    }
+    
+    .instructions ul {
+      line-height: 1.8;
+    }
+    
+    .hidden {
+      display: none;
+    }
+  </style>
+</head>
+<body>
+  <!-- Main emotion rag container -->
+  <div class="emotion-rag-container" data-emotion="neutral" data-enabled="true" data-speed="medium" data-pattern="true">
+    <!-- Overlay layers for visual effects -->
+    <div class="emotion-overlay-1"></div>
+    <div class="emotion-overlay-2"></div>
+    
+    <!-- Main content -->
+    <div class="demo-content">
+      <header class="demo-header">
+        <h1 class="demo-title">Emotion Rag Background System</h1>
+        <p class="demo-subtitle">Experience dynamic backgrounds that respond to emotional states</p>
+      </header>
+      
+      <!-- Emotion selector -->
+      <div class="emotion-selector">
+        <h2>Select Your Current Emotion</h2>
+        <div class="emotion-grid">
+          <div class="emotion-card" data-emotion-value="calm">
+            <div class="emotion-emoji">😌</div>
+            <div class="emotion-name">Calm</div>
+            <div class="emotion-description">Peaceful & clear</div>
+          </div>
+          
+          <div class="emotion-card" data-emotion-value="anxious">
+            <div class="emotion-emoji">😰</div>
+            <div class="emotion-name">Anxious</div>
+            <div class="emotion-description">Worried & tense</div>
+          </div>
+          
+          <div class="emotion-card" data-emotion-value="stressed">
+            <div class="emotion-emoji">😤</div>
+            <div class="emotion-name">Stressed</div>
+            <div class="emotion-description">Under pressure</div>
+          </div>
+          
+          <div class="emotion-card" data-emotion-value="energized">
+            <div class="emotion-emoji">⚡</div>
+            <div class="emotion-name">Energized</div>
+            <div class="emotion-description">Full of energy</div>
+          </div>
+          
+          <div class="emotion-card" data-emotion-value="exhausted">
+            <div class="emotion-emoji">😴</div>
+            <div class="emotion-name">Exhausted</div>
+            <div class="emotion-description">Tired & drained</div>
+          </div>
+          
+          <div class="emotion-card" data-emotion-value="focused">
+            <div class="emotion-emoji">🎯</div>
+            <div class="emotion-name">Focused</div>
+            <div class="emotion-description">In the zone</div>
+          </div>
+          
+          <div class="emotion-card" data-emotion-value="overwhelmed">
+            <div class="emotion-emoji">😵</div>
+            <div class="emotion-name">Overwhelmed</div>
+            <div class="emotion-description">Too much at once</div>
+          </div>
+          
+          <div class="emotion-card" data-emotion-value="accomplished">
+            <div class="emotion-emoji">🏆</div>
+            <div class="emotion-name">Accomplished</div>
+            <div class="emotion-description">Proud & successful</div>
+          </div>
+          
+          <div class="emotion-card active" data-emotion-value="neutral">
+            <div class="emotion-emoji">😐</div>
+            <div class="emotion-name">Neutral</div>
+            <div class="emotion-description">Balanced state</div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Instructions -->
+      <div class="instructions">
+        <h2>How to Use This System</h2>
+        <ul>
+          <li><strong>Select an emotion</strong> from the grid above to see the background change</li>
+          <li><strong>Use accessibility controls</strong> (bottom-left) to adjust animation speed or disable effects</li>
+          <li><strong>Check the emotion indicator</strong> (top-right) to see your current emotional state</li>
+          <li><strong>Integration:</strong> This system can be integrated with reflection journals, wellness trackers, or mood logs</li>
+          <li><strong>Accessibility:</strong> Fully supports reduced motion preferences and high contrast modes</li>
+        </ul>
+        
+        <h3>For Developers</h3>
+        <p>To integrate this system:</p>
+        <ol>
+          <li>Include the <code>emotion-rag.css</code> stylesheet</li>
+          <li>Add the container with data attributes: <code>data-emotion</code>, <code>data-enabled</code>, <code>data-speed</code>, <code>data-pattern</code></li>
+          <li>Update the <code>data-emotion</code> attribute to change emotions dynamically</li>
+          <li>Use JavaScript to respond to user interactions or system events</li>
+        </ol>
+      </div>
+    </div>
+    
+    <!-- Emotion indicator -->
+    <div class="emotion-indicator">
+      <button class="emotion-indicator-button" aria-expanded="false" aria-label="Current emotion: Neutral">
+        <span class="emotion-indicator-icon">😐</span>
+        <span class="emotion-indicator-label">Neutral</span>
+      </button>
+      <div class="emotion-details hidden">
+        <div class="emotion-color-preview">
+          <div class="emotion-color-swatch" style="background: linear-gradient(135deg, #FAFAFA 0%, #F5F5F5 50%, #EEEEEE 100%)"></div>
+          <div>
+            <div style="font-weight: 600">Neutral</div>
+            <div style="font-size: 0.875rem; color: #666">Balanced state</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Accessibility controls -->
+    <div class="emotion-controls">
+      <button class="emotion-controls-toggle" aria-expanded="false" aria-label="Accessibility controls">
+        ⚙️ Controls
+      </button>
+      <div class="emotion-controls-panel hidden">
+        <div class="emotion-control-group">
+          <label class="emotion-control-label">Background Effects</label>
+          <button class="emotion-toggle-button" aria-pressed="true" data-control="enabled">
+            <span>Emotion backgrounds</span>
+            <span class="emotion-toggle-status">ON</span>
+          </button>
+        </div>
+        
+        <div class="emotion-control-group">
+          <label class="emotion-control-label">Animation Speed</label>
+          <div class="emotion-control-buttons">
+            <button class="emotion-control-button" aria-pressed="false" data-speed="none">None</button>
+            <button class="emotion-control-button" aria-pressed="false" data-speed="slow">Slow</button>
+            <button class="emotion-control-button" aria-pressed="true" data-speed="medium">Medium</button>
+            <button class="emotion-control-button" aria-pressed="false" data-speed="fast">Fast</button>
+          </div>
+        </div>
+        
+        <div class="emotion-control-group">
+          <label class="emotion-control-label">Pattern Overlay</label>
+          <button class="emotion-toggle-button" aria-pressed="true" data-control="pattern">
+            <span>Decorative patterns</span>
+            <span class="emotion-toggle-status">ON</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <script>
+    // Emotion data
+    const emotions = {
+      calm: { emoji: '😌', name: 'Calm', description: 'Peaceful & clear', color: 'linear-gradient(135deg, #E8F5E9 0%, #C8E6C9 50%, #A5D6A7 100%)' },
+      anxious: { emoji: '😰', name: 'Anxious', description: 'Worried & tense', color: 'linear-gradient(135deg, #FFF3E0 0%, #FFE0B2 50%, #FFCC80 100%)' },
+      stressed: { emoji: '😤', name: 'Stressed', description: 'Under pressure', color: 'linear-gradient(135deg, #FFEBEE 0%, #FFCDD2 50%, #EF9A9A 100%)' },
+      energized: { emoji: '⚡', name: 'Energized', description: 'Full of energy', color: 'linear-gradient(135deg, #E3F2FD 0%, #BBDEFB 50%, #90CAF9 100%)' },
+      exhausted: { emoji: '😴', name: 'Exhausted', description: 'Tired & drained', color: 'linear-gradient(135deg, #F3E5F5 0%, #E1BEE7 50%, #CE93D8 100%)' },
+      focused: { emoji: '🎯', name: 'Focused', description: 'In the zone', color: 'linear-gradient(135deg, #E0F2F1 0%, #B2DFDB 50%, #80CBC4 100%)' },
+      overwhelmed: { emoji: '😵', name: 'Overwhelmed', description: 'Too much at once', color: 'linear-gradient(135deg, #FBE9E7 0%, #FFCCBC 50%, #FFAB91 100%)' },
+      accomplished: { emoji: '🏆', name: 'Accomplished', description: 'Proud & successful', color: 'linear-gradient(135deg, #F1F8E9 0%, #DCEDC8 50%, #AED581 100%)' },
+      neutral: { emoji: '😐', name: 'Neutral', description: 'Balanced state', color: 'linear-gradient(135deg, #FAFAFA 0%, #F5F5F5 50%, #EEEEEE 100%)' }
+    };
+    
+    // Get elements
+    const container = document.querySelector('.emotion-rag-container');
+    const emotionCards = document.querySelectorAll('.emotion-card');
+    const indicatorButton = document.querySelector('.emotion-indicator-button');
+    const indicatorIcon = document.querySelector('.emotion-indicator-icon');
+    const indicatorLabel = document.querySelector('.emotion-indicator-label');
+    const emotionDetails = document.querySelector('.emotion-details');
+    const colorSwatch = document.querySelector('.emotion-color-swatch');
+    const controlsToggle = document.querySelector('.emotion-controls-toggle');
+    const controlsPanel = document.querySelector('.emotion-controls-panel');
+    const speedButtons = document.querySelectorAll('[data-speed]');
+    const toggleButtons = document.querySelectorAll('[data-control]');
+    
+    // Current state
+    let currentEmotion = 'neutral';
+    let controlsOpen = false;
+    let indicatorOpen = false;
+    
+    // Update emotion
+    function updateEmotion(emotionKey) {
+      currentEmotion = emotionKey;
+      const emotion = emotions[emotionKey];
+      
+      // Update container
+      container.setAttribute('data-emotion', emotionKey);
+      
+      // Update cards
+      emotionCards.forEach(card => {
+        if (card.dataset.emotionValue === emotionKey) {
+          card.classList.add('active');
+        } else {
+          card.classList.remove('active');
+        }
+      });
+      
+      // Update indicator
+      indicatorIcon.textContent = emotion.emoji;
+      indicatorLabel.textContent = emotion.name;
+      indicatorButton.setAttribute('aria-label', `Current emotion: ${emotion.name}`);
+      
+      // Update color swatch
+      colorSwatch.style.background = emotion.color;
+      emotionDetails.querySelector('div[style*="font-weight"]').textContent = emotion.name;
+      emotionDetails.querySelector('div[style*="0.875rem"]').textContent = emotion.description;
+    }
+    
+    // Emotion card clicks
+    emotionCards.forEach(card => {
+      card.addEventListener('click', () => {
+        updateEmotion(card.dataset.emotionValue);
+      });
+    });
+    
+    // Indicator toggle
+    indicatorButton.addEventListener('click', () => {
+      indicatorOpen = !indicatorOpen;
+      indicatorButton.setAttribute('aria-expanded', indicatorOpen);
+      emotionDetails.classList.toggle('hidden', !indicatorOpen);
+    });
+    
+    // Controls toggle
+    controlsToggle.addEventListener('click', () => {
+      controlsOpen = !controlsOpen;
+      controlsToggle.setAttribute('aria-expanded', controlsOpen);
+      controlsPanel.classList.toggle('hidden', !controlsOpen);
+    });
+    
+    // Speed controls
+    speedButtons.forEach(button => {
+      button.addEventListener('click', () => {
+        const speed = button.dataset.speed;
+        container.setAttribute('data-speed', speed);
+        
+        speedButtons.forEach(btn => {
+          btn.setAttribute('aria-pressed', btn === button);
+        });
+      });
+    });
+    
+    // Toggle controls
+    toggleButtons.forEach(button => {
+      button.addEventListener('click', () => {
+        const control = button.dataset.control;
+        const isPressed = button.getAttribute('aria-pressed') === 'true';
+        const newState = !isPressed;
+        
+        button.setAttribute('aria-pressed', newState);
+        button.querySelector('.emotion-toggle-status').textContent = newState ? 'ON' : 'OFF';
+        
+        if (control === 'enabled') {
+          container.setAttribute('data-enabled', newState);
+        } else if (control === 'pattern') {
+          container.setAttribute('data-pattern', newState);
+        }
+      });
+    });
+    
+    // Close dropdowns when clicking outside
+    document.addEventListener('click', (e) => {
+      if (!e.target.closest('.emotion-indicator') && indicatorOpen) {
+        indicatorOpen = false;
+        indicatorButton.setAttribute('aria-expanded', false);
+        emotionDetails.classList.add('hidden');
+      }
+      
+      if (!e.target.closest('.emotion-controls') && controlsOpen) {
+        controlsOpen = false;
+        controlsToggle.setAttribute('aria-expanded', false);
+        controlsPanel.classList.add('hidden');
+      }
+    });
+    
+    // Keyboard navigation
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') {
+        if (indicatorOpen) {
+          indicatorOpen = false;
+          indicatorButton.setAttribute('aria-expanded', false);
+          emotionDetails.classList.add('hidden');
+          indicatorButton.focus();
+        }
+        if (controlsOpen) {
+          controlsOpen = false;
+          controlsToggle.setAttribute('aria-expanded', false);
+          controlsPanel.classList.add('hidden');
+          controlsToggle.focus();
+        }
+      }
+    });
+    
+    // Respect reduced motion preference
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      container.setAttribute('data-speed', 'none');
+      speedButtons.forEach(btn => {
+        btn.setAttribute('aria-pressed', btn.dataset.speed === 'none');
+      });
+    }
+    
+    // Log emotion changes for integration
+    window.addEventListener('emotionChanged', (e) => {
+      console.log('Emotion changed to:', e.detail);
+      if (e.detail && emotions[e.detail]) {
+        updateEmotion(e.detail);
+      }
+    });
+    
+    // Expose API for external integration
+    window.EmotionRag = {
+      setEmotion: updateEmotion,
+      getCurrentEmotion: () => currentEmotion,
+      setEnabled: (enabled) => {
+        container.setAttribute('data-enabled', enabled);
+        const button = document.querySelector('[data-control="enabled"]');
+        if (button) {
+          button.setAttribute('aria-pressed', enabled);
+          button.querySelector('.emotion-toggle-status').textContent = enabled ? 'ON' : 'OFF';
+        }
+      },
+      setSpeed: (speed) => {
+        if (['none', 'slow', 'medium', 'fast'].includes(speed)) {
+          container.setAttribute('data-speed', speed);
+          speedButtons.forEach(btn => {
+            btn.setAttribute('aria-pressed', btn.dataset.speed === speed);
+          });
+        }
+      }
+    };
+  </script>
+</body>
+</html>

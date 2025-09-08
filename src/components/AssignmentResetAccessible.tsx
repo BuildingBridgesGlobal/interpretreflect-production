@@ -72,7 +72,6 @@ export const AssignmentResetAccessible: React.FC<AssignmentResetProps> = ({ onCl
   const [phase, setPhase] = useState<'setup' | 'practice' | 'complete'>('setup');
   const [selectedDuration, setSelectedDuration] = useState<ResetDuration>('30s');
   const [selectedMethod, setSelectedMethod] = useState<ResetMethod>('let-go');
-  const [minimalMode, setMinimalMode] = useState(false);
   const [timeElapsed, setTimeElapsed] = useState(0);
   const [isActive, setIsActive] = useState(false);
   
@@ -119,7 +118,6 @@ export const AssignmentResetAccessible: React.FC<AssignmentResetProps> = ({ onCl
     const data = {
       duration: selectedDuration,
       method: selectedMethod,
-      minimalMode,
       completedDuration: timeElapsed,
       timestamp: new Date().toISOString()
     };
@@ -172,46 +170,15 @@ export const AssignmentResetAccessible: React.FC<AssignmentResetProps> = ({ onCl
               </div>
               <button 
                 onClick={onClose} 
-                className="p-2 hover:bg-gray-50 rounded-xl transition-all"
+                className="p-2 rounded-xl transition-all hover:scale-105"
+                style={{
+                  background: 'linear-gradient(135deg, #1b5e20, #2e7d32)',
+                }}
                 aria-label="Close assignment reset"
               >
-                <X className="w-5 h-5 text-gray-400" />
+                <X className="w-5 h-5 text-white" />
               </button>
             </div>
-
-            {/* Duration selection */}
-            <fieldset className="mb-6">
-              <legend className="text-sm font-medium mb-3" style={{ color: '#2D3748' }}>
-                How long?
-              </legend>
-              <div role="group" aria-label="Assignment Reset Timer Options" className="grid grid-cols-4 gap-2">
-                {[
-                  { value: '10s', label: '10 sec', desc: 'Quick reset' },
-                  { value: '30s', label: '30 sec', desc: 'Standard' },
-                  { value: '1m', label: '1 min', desc: 'Full reset' },
-                  { value: '3m', label: '3 min', desc: 'Deep reset' }
-                ].map(duration => (
-                  <button
-                    key={duration.value}
-                    onClick={() => setSelectedDuration(duration.value as ResetDuration)}
-                    className={`p-3 rounded-xl text-center transition-all border-2 focus:outline-none focus:ring-2 focus:ring-offset-2 ${
-                      selectedDuration === duration.value
-                        ? 'border-green-400'
-                        : 'border-transparent bg-gray-50 hover:bg-gray-100'
-                    }`}
-                    style={{
-                      backgroundColor: selectedDuration === duration.value ? '#F0F5ED' : undefined,
-                      borderColor: selectedDuration === duration.value ? '#7A9B6E' : undefined,
-                      focusRingColor: '#5C7F4F'
-                    }}
-                    aria-pressed={selectedDuration === duration.value}
-                  >
-                    <p className="font-medium text-sm" style={{ color: '#2D3748' }}>{duration.label}</p>
-                    <p className="text-xs" style={{ color: '#4A5568' }}>{duration.desc}</p>
-                  </button>
-                ))}
-              </div>
-            </fieldset>
 
             {/* Method selection */}
             <fieldset className="mb-6">
@@ -249,28 +216,6 @@ export const AssignmentResetAccessible: React.FC<AssignmentResetProps> = ({ onCl
               </ol>
             </fieldset>
 
-            {/* Minimal mode */}
-            <div className="mb-6 p-3 rounded-xl" style={{ backgroundColor: '#F5F9F3' }}>
-              <label className="flex items-center gap-3 cursor-pointer">
-                <input
-                  type="checkbox"
-                  checked={minimalMode}
-                  onChange={(e) => setMinimalMode(e.target.checked)}
-                  className="w-4 h-4 rounded focus:ring-2"
-                  style={{ accentColor: '#5C7F4F' }}
-                  aria-label="Minimal mode: timer only"
-                />
-                <div>
-                  <span className="font-medium text-sm" style={{ color: '#2D3748' }}>
-                    Minimal mode
-                  </span>
-                  <span className="text-xs ml-2" style={{ color: '#4A5568' }}>
-                    (timer only, no guidance)
-                  </span>
-                </div>
-              </label>
-            </div>
-
             {/* Quick tip */}
             <div className="mb-6 p-4 rounded-xl" style={{ backgroundColor: '#F0F5ED' }}>
               <p className="text-sm" style={{ color: '#2D3748' }}>
@@ -281,9 +226,9 @@ export const AssignmentResetAccessible: React.FC<AssignmentResetProps> = ({ onCl
             {/* Start button */}
             <button
               onClick={handleStart}
-              className="w-full py-3 text-white rounded-xl font-medium hover:opacity-90 transition-all focus:outline-none focus:ring-2 focus:ring-offset-2"
+              className="w-full py-3 text-white rounded-xl font-medium transition-all hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-offset-2"
               style={{ 
-                backgroundColor: '#5C7F4F',
+                background: 'linear-gradient(135deg, #1b5e20, #2e7d32)',
                 focusRingColor: '#5C7F4F'
               }}
               aria-label="Start Assignment Reset"
@@ -311,14 +256,17 @@ export const AssignmentResetAccessible: React.FC<AssignmentResetProps> = ({ onCl
           <div className="p-8">
             <div className="flex justify-between items-center mb-6">
               <h2 id="practice-title" className="text-xl font-normal" style={{ color: '#2D3748' }}>
-                {minimalMode ? 'Reset Timer' : method.title}
+                {method.title}
               </h2>
               <button 
                 onClick={onClose} 
-                className="p-2 hover:bg-gray-50 rounded-xl transition-all"
+                className="p-2 rounded-xl transition-all hover:scale-105"
+                style={{
+                  background: 'linear-gradient(135deg, #1b5e20, #2e7d32)',
+                }}
                 aria-label="Close practice"
               >
-                <X className="w-5 h-5 text-gray-400" />
+                <X className="w-5 h-5 text-white" />
               </button>
             </div>
 
@@ -359,9 +307,8 @@ export const AssignmentResetAccessible: React.FC<AssignmentResetProps> = ({ onCl
               </div>
             </div>
 
-            {/* Method steps (if not minimal mode) */}
-            {!minimalMode && (
-              <div className="mb-8">
+            {/* Method steps */}
+            <div className="mb-8">
                 <div className="flex justify-center mb-4">
                   <div className="p-3 rounded-xl" style={{ backgroundColor: '#F0F5ED' }}>
                     {React.cloneElement(method.icon as React.ReactElement, {
@@ -387,24 +334,18 @@ export const AssignmentResetAccessible: React.FC<AssignmentResetProps> = ({ onCl
                     </li>
                   ))}
                 </ol>
-              </div>
-            )}
-
-            {/* Minimal mode message */}
-            {minimalMode && (
-              <div className="text-center mb-8">
-                <Clock className="w-12 h-12 mx-auto mb-4" style={{ color: '#7A9B6E' }} />
-                <p className="text-sm" style={{ color: '#4A5568' }}>
-                  Take this moment for yourself
-                </p>
-              </div>
-            )}
+            </div>
 
             {/* Skip button */}
             <button
               onClick={handleSkip}
-              className="w-full py-2 text-center transition-all hover:bg-gray-50"
-              style={{ color: '#4A5568' }}
+              className="w-full py-2 text-center rounded-xl transition-all hover:shadow-md"
+              style={{ 
+                color: '#4A5568',
+                backgroundColor: 'transparent'
+              }}
+              onMouseEnter={(e) => e.currentTarget.style.backgroundColor = 'rgba(34, 197, 94, 0.2)'}
+              onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'transparent'}
               aria-label="Skip to complete"
             >
               Skip

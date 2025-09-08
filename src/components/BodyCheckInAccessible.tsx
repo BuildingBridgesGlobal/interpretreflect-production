@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { X, ChevronRight, Heart, Sparkles, Clock, CheckCircle } from 'lucide-react';
 
 interface BodyCheckInProps {
+  mode?: string; // Optional mode prop from App.tsx
   onClose: () => void;
   onComplete?: (data: any) => void;
 }
@@ -149,6 +150,7 @@ export const BodyCheckInAccessible: React.FC<BodyCheckInProps> = ({ onClose, onC
   };
 
   const handleSubmit = () => {
+    // Create the data object
     const data = {
       duration: selectedDuration,
       justFinishedAssignment,
@@ -159,8 +161,12 @@ export const BodyCheckInAccessible: React.FC<BodyCheckInProps> = ({ onClose, onC
       completedDuration: timeElapsed,
       timestamp: new Date().toISOString()
     };
-    if (onComplete) onComplete(data);
-    onClose();
+    
+    // Call onComplete if provided, which will handle navigation
+    if (onComplete) {
+      onComplete(data);
+    }
+    // Note: onClose is NOT called here - it will be called by onComplete in App.tsx
   };
 
   const formatTime = (seconds: number) => {
@@ -199,73 +205,15 @@ export const BodyCheckInAccessible: React.FC<BodyCheckInProps> = ({ onClose, onC
               </div>
               <button 
                 onClick={onClose} 
-                className="p-2 hover:bg-gray-50 rounded-xl transition-all"
+                className="p-2 rounded-xl transition-all hover:scale-105"
+                style={{
+                  background: 'linear-gradient(135deg, #1b5e20, #2e7d32)',
+                }}
                 aria-label="Close body check-in"
               >
-                <X className="w-5 h-5 text-gray-400" />
+                <X className="w-5 h-5 text-white" />
               </button>
             </div>
-
-            {/* Pre-practice question */}
-            {justFinishedAssignment === null && (
-              <div className="mb-6 p-4 rounded-xl" style={{ backgroundColor: '#F0F5ED' }}>
-                <p className="text-sm font-medium mb-3" style={{ color: '#2D3748' }}>
-                  Just finished a tough assignment?
-                </p>
-                <div className="flex gap-2">
-                  <button
-                    onClick={() => setJustFinishedAssignment(true)}
-                    className="flex-1 px-4 py-2 rounded-lg text-sm font-medium text-white transition-all hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-offset-2"
-                    style={{ 
-                      backgroundColor: '#5C7F4F',
-                      focusRingColor: '#5C7F4F'
-                    }}
-                  >
-                    Yes - focus on release
-                  </button>
-                  <button
-                    onClick={() => setJustFinishedAssignment(false)}
-                    className="flex-1 px-4 py-2 bg-gray-100 hover:bg-gray-200 rounded-lg text-sm font-medium transition-all focus:outline-none focus:ring-2 focus:ring-gray-400 focus:ring-offset-2"
-                    style={{ color: '#4A5568' }}
-                  >
-                    No - general check-in
-                  </button>
-                </div>
-              </div>
-            )}
-
-            {/* Duration selection */}
-            <fieldset className="mb-6">
-              <legend className="text-sm font-medium mb-3" style={{ color: '#2D3748' }}>
-                How long?
-              </legend>
-              <div role="group" aria-label="Body Check-In Timer Options" className="flex gap-2">
-                {[
-                  { value: '1m', label: '1 minute', desc: 'Quick scan' },
-                  { value: '2m', label: '2 minutes', desc: 'Full check-in' },
-                  { value: '3m', label: '3 minutes', desc: 'Deep reset' }
-                ].map(duration => (
-                  <button
-                    key={duration.value}
-                    onClick={() => setSelectedDuration(duration.value as PracticeDuration)}
-                    className={`flex-1 p-3 rounded-xl text-center transition-all border-2 focus:outline-none focus:ring-2 focus:ring-offset-2 ${
-                      selectedDuration === duration.value
-                        ? 'border-green-400'
-                        : 'border-transparent bg-gray-50 hover:bg-gray-100'
-                    }`}
-                    style={{
-                      backgroundColor: selectedDuration === duration.value ? '#F0F5ED' : undefined,
-                      borderColor: selectedDuration === duration.value ? '#7A9B6E' : undefined,
-                      focusRingColor: '#5C7F4F'
-                    }}
-                    aria-pressed={selectedDuration === duration.value}
-                  >
-                    <p className="font-medium" style={{ color: '#2D3748' }}>{duration.label}</p>
-                    <p className="text-xs" style={{ color: '#4A5568' }}>{duration.desc}</p>
-                  </button>
-                ))}
-              </div>
-            </fieldset>
 
             {/* Body areas preview */}
             <div className="mb-6">
@@ -303,7 +251,7 @@ export const BodyCheckInAccessible: React.FC<BodyCheckInProps> = ({ onClose, onC
               onClick={handleStart}
               className="w-full py-3 text-white rounded-xl font-medium hover:opacity-90 transition-all focus:outline-none focus:ring-2 focus:ring-offset-2"
               style={{ 
-                backgroundColor: '#5C7F4F',
+                background: 'linear-gradient(135deg, #1b5e20, #2e7d32)',
                 focusRingColor: '#5C7F4F'
               }}
               aria-label="Begin Body Check-In"
@@ -337,10 +285,13 @@ export const BodyCheckInAccessible: React.FC<BodyCheckInProps> = ({ onClose, onC
               </h2>
               <button 
                 onClick={onClose} 
-                className="p-2 hover:bg-gray-50 rounded-xl transition-all"
+                className="p-2 rounded-xl transition-all hover:scale-105"
+                style={{
+                  background: 'linear-gradient(135deg, #1b5e20, #2e7d32)',
+                }}
                 aria-label="Close practice"
               >
-                <X className="w-5 h-5 text-gray-400" />
+                <X className="w-5 h-5 text-white" />
               </button>
             </div>
 
@@ -421,7 +372,7 @@ export const BodyCheckInAccessible: React.FC<BodyCheckInProps> = ({ onClose, onC
               onClick={handleContinue}
               className="w-full py-3 text-white rounded-xl font-medium hover:opacity-90 transition-all flex items-center justify-center gap-2 focus:outline-none focus:ring-2 focus:ring-offset-2"
               style={{ 
-                backgroundColor: '#5C7F4F',
+                background: 'linear-gradient(135deg, #1b5e20, #2e7d32)',
                 focusRingColor: '#5C7F4F'
               }}
               aria-label={currentArea === 'base-ground' ? 'Complete check-in' : 'Continue to next area'}
@@ -440,17 +391,20 @@ export const BodyCheckInAccessible: React.FC<BodyCheckInProps> = ({ onClose, onC
     <div className="fixed inset-0 bg-white bg-opacity-95 flex items-center justify-center z-50 p-4">
       <section 
         aria-labelledby="reflection-title"
-        className="rounded-3xl max-w-lg w-full bg-white shadow-sm"
+        className="rounded-3xl max-w-lg w-full bg-white shadow-sm max-h-[90vh] flex flex-col"
         lang="en"
       >
-        <div className="p-8">
+        <div className="p-8 overflow-y-auto flex-1">
           <div className="flex justify-end mb-4">
             <button 
               onClick={onClose} 
-              className="p-2 hover:bg-gray-50 rounded-xl transition-all"
+              className="p-2 rounded-xl transition-all hover:scale-105"
+              style={{
+                background: 'linear-gradient(135deg, #1b5e20, #2e7d32)',
+              }}
               aria-label="Close reflection"
             >
-              <X className="w-5 h-5 text-gray-400" />
+              <X className="w-5 h-5 text-white" />
             </button>
           </div>
 
@@ -471,12 +425,22 @@ export const BodyCheckInAccessible: React.FC<BodyCheckInProps> = ({ onClose, onC
                   className={`flex-1 py-2.5 px-3 rounded-xl transition-all text-sm font-medium focus:outline-none focus:ring-2 focus:ring-offset-2 ${
                     tensionLevel === option
                       ? 'text-white'
-                      : 'bg-gray-50 hover:bg-gray-100'
+                      : 'bg-gray-50'
                   }`}
                   style={{
-                    backgroundColor: tensionLevel === option ? '#5C7F4F' : undefined,
+                    background: tensionLevel === option ? 'linear-gradient(135deg, #1b5e20, #2e7d32)' : undefined,
                     color: tensionLevel === option ? 'white' : '#4A5568',
                     focusRingColor: '#5C7F4F'
+                  }}
+                  onMouseEnter={(e) => {
+                    if (tensionLevel !== option) {
+                      e.currentTarget.style.backgroundColor = 'rgba(34, 197, 94, 0.2)';
+                    }
+                  }}
+                  onMouseLeave={(e) => {
+                    if (tensionLevel !== option) {
+                      e.currentTarget.style.backgroundColor = '#F9FAFB';
+                    }
                   }}
                   role="radio"
                   aria-checked={tensionLevel === option}
@@ -503,12 +467,22 @@ export const BodyCheckInAccessible: React.FC<BodyCheckInProps> = ({ onClose, onC
                   className={`flex-1 py-2.5 px-3 rounded-xl transition-all text-sm font-medium focus:outline-none focus:ring-2 focus:ring-offset-2 ${
                     energyLevel === option
                       ? 'text-white'
-                      : 'bg-gray-50 hover:bg-gray-100'
+                      : 'bg-gray-50'
                   }`}
                   style={{
-                    backgroundColor: energyLevel === option ? '#5C7F4F' : undefined,
+                    background: energyLevel === option ? 'linear-gradient(135deg, #1b5e20, #2e7d32)' : undefined,
                     color: energyLevel === option ? 'white' : '#4A5568',
                     focusRingColor: '#5C7F4F'
+                  }}
+                  onMouseEnter={(e) => {
+                    if (energyLevel !== option) {
+                      e.currentTarget.style.backgroundColor = 'rgba(34, 197, 94, 0.2)';
+                    }
+                  }}
+                  onMouseLeave={(e) => {
+                    if (energyLevel !== option) {
+                      e.currentTarget.style.backgroundColor = '#F9FAFB';
+                    }
                   }}
                   role="radio"
                   aria-checked={energyLevel === option}
@@ -535,12 +509,22 @@ export const BodyCheckInAccessible: React.FC<BodyCheckInProps> = ({ onClose, onC
                   className={`flex-1 py-2.5 px-3 rounded-xl transition-all text-sm font-medium focus:outline-none focus:ring-2 focus:ring-offset-2 ${
                     overallFeeling === option
                       ? 'text-white'
-                      : 'bg-gray-50 hover:bg-gray-100'
+                      : 'bg-gray-50'
                   }`}
                   style={{
-                    backgroundColor: overallFeeling === option ? '#5C7F4F' : undefined,
+                    background: overallFeeling === option ? 'linear-gradient(135deg, #1b5e20, #2e7d32)' : undefined,
                     color: overallFeeling === option ? 'white' : '#4A5568',
                     focusRingColor: '#5C7F4F'
+                  }}
+                  onMouseEnter={(e) => {
+                    if (overallFeeling !== option) {
+                      e.currentTarget.style.backgroundColor = 'rgba(34, 197, 94, 0.2)';
+                    }
+                  }}
+                  onMouseLeave={(e) => {
+                    if (overallFeeling !== option) {
+                      e.currentTarget.style.backgroundColor = '#F9FAFB';
+                    }
                   }}
                   role="radio"
                   aria-checked={overallFeeling === option}
@@ -565,30 +549,36 @@ export const BodyCheckInAccessible: React.FC<BodyCheckInProps> = ({ onClose, onC
                 'Shoulders or neck',
                 'Chest',
                 'Back',
-                'Hands or arms',
-                'Feeling clear'
+                'Hands or arms'
               ].map(area => (
                 <button
                   key={area}
                   onClick={() => {
-                    if (area === 'Feeling clear') {
-                      setTensionAreas(['Feeling clear']);
-                    } else if (tensionAreas.includes(area)) {
+                    if (tensionAreas.includes(area)) {
                       setTensionAreas(tensionAreas.filter(a => a !== area));
                     } else {
-                      setTensionAreas([...tensionAreas.filter(a => a !== 'Feeling clear'), area]);
+                      setTensionAreas([...tensionAreas, area]);
                     }
                   }}
                   className={`p-2.5 rounded-xl text-center transition-all text-sm font-medium focus:outline-none focus:ring-2 focus:ring-offset-2 ${
                     tensionAreas.includes(area)
                       ? 'text-white'
-                      : 'bg-gray-50 hover:bg-gray-100'
+                      : 'bg-gray-50'
                   }`}
                   style={{
-                    backgroundColor: tensionAreas.includes(area) ? '#7A9B6E' : undefined,
+                    background: tensionAreas.includes(area) ? 'linear-gradient(135deg, #1b5e20, #2e7d32)' : undefined,
                     color: tensionAreas.includes(area) ? 'white' : '#4A5568',
-                    gridColumn: area === 'Feeling clear' ? 'span 2' : undefined,
                     focusRingColor: '#5C7F4F'
+                  }}
+                  onMouseEnter={(e) => {
+                    if (!tensionAreas.includes(area)) {
+                      e.currentTarget.style.backgroundColor = 'rgba(34, 197, 94, 0.2)';
+                    }
+                  }}
+                  onMouseLeave={(e) => {
+                    if (!tensionAreas.includes(area)) {
+                      e.currentTarget.style.backgroundColor = '#F9FAFB';
+                    }
                   }}
                   aria-pressed={tensionAreas.includes(area)}
                 >
@@ -628,17 +618,25 @@ export const BodyCheckInAccessible: React.FC<BodyCheckInProps> = ({ onClose, onC
               </p>
             </div>
           )}
-
+        </div>
+        
+        {/* Sticky button container */}
+        <div className="p-6 border-t border-gray-100 bg-white rounded-b-3xl">
           <button
             onClick={handleSubmit}
-            className="w-full py-3 text-white rounded-xl font-medium hover:opacity-90 transition-all focus:outline-none focus:ring-2 focus:ring-offset-2"
+            disabled={!tensionLevel || !energyLevel || !overallFeeling}
+            className={`w-full py-3 text-white rounded-xl font-medium transition-all focus:outline-none focus:ring-2 focus:ring-offset-2 ${
+              !tensionLevel || !energyLevel || !overallFeeling ? 'opacity-50 cursor-not-allowed' : 'hover:opacity-90'
+            }`}
             style={{ 
-              backgroundColor: '#5C7F4F',
+              background: 'linear-gradient(135deg, #1b5e20, #2e7d32)',
               focusRingColor: '#5C7F4F'
             }}
             aria-label="Save check-in and close"
           >
-            Save This Check-In
+            {!tensionLevel || !energyLevel || !overallFeeling 
+              ? 'Please complete all fields' 
+              : 'Save This Check-In'}
           </button>
         </div>
       </section>

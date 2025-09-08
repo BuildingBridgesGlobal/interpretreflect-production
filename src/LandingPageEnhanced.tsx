@@ -1,12 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { Logo } from './components/Logo';
-import { BrandVideo } from './components/BrandVideo';
 import { AuthModal } from './components/AuthModal';
-import { BurnoutAssessment } from './components/BurnoutAssessment';
 import { PricingModal } from './components/PricingModal';
 import { WaitlistModal } from './components/WaitlistModal';
+import { Footer } from './components/Footer';
 import { useAuth } from './contexts/AuthContext';
-import type { AssessmentResults } from './types';
+import { CheckCircle, Sparkles, Award, Users, Heart, Shield, Clock } from 'lucide-react';
 
 interface LandingPageProps {
   onGetStarted: () => void;
@@ -55,14 +54,11 @@ function LandingPageEnhanced({ onGetStarted }: LandingPageProps) {
   const { user } = useAuth();
   const [authModalOpen, setAuthModalOpen] = useState(false);
   const [authMode, setAuthMode] = useState<'login' | 'signup'>('login');
-  const [assessmentOpen, setAssessmentOpen] = useState(false);
   const [pricingModalOpen, setPricingModalOpen] = useState(false);
-  const [assessmentResults, setAssessmentResults] = useState<AssessmentResults | null>(null);
   const [waitlistModalOpen, setWaitlistModalOpen] = useState(false);
   const [waitlistPlan] = useState<'professional' | 'organizations'>('professional');
   const [showStripeMessage, setShowStripeMessage] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const [theme, setTheme] = useState<'light' | 'dark'>('light');
   const [greeting, setGreeting] = useState('');
   const [announceMessage, setAnnounceMessage] = useState('');
 
@@ -91,19 +87,17 @@ function LandingPageEnhanced({ onGetStarted }: LandingPageProps) {
     }
   };
 
-  const handleAssessment = () => {
-    setAssessmentOpen(true);
-  };
-
-  const handleAssessmentComplete = (results: AssessmentResults) => {
-    setAssessmentOpen(false);
-    setAssessmentResults(results);
-    setPricingModalOpen(true);
-  };
 
   const handleSelectPlan = () => {
     setWaitlistModalOpen(false);
     onGetStarted();
+  };
+
+  const scrollToSection = (sectionId: string) => {
+    const element = document.getElementById(sectionId);
+    if (element) {
+      element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
   };
 
   return (
@@ -158,41 +152,20 @@ function LandingPageEnhanced({ onGetStarted }: LandingPageProps) {
             {/* Desktop Navigation */}
             <div className="hidden md:flex items-center space-x-8">
               <button 
-                onClick={handleAssessment}
-                className="text-base font-medium hover:opacity-80 transition-all px-3 py-2 rounded-lg focus:outline-none focus:ring-4 focus:ring-sage-400"
-                style={{ color: colors.neutral[700] }}
-                aria-label="Take burnout assessment"
-              >
-                Take Assessment
-              </button>
-              <button 
-                className="text-base font-medium hover:opacity-80 transition-all px-3 py-2 rounded-lg focus:outline-none focus:ring-4 focus:ring-sage-400"
-                style={{ color: colors.neutral[700] }}
+                onClick={() => scrollToSection('how-it-works')}
+                className="px-4 py-2 text-base font-medium text-white rounded-lg transition-all hover:shadow-lg transform hover:-translate-y-0.5 focus:outline-none focus:ring-4 focus:ring-white"
+                style={{ background: colors.gradients.accent }}
                 aria-label="Learn how interpreterRx works"
               >
                 How It Works
               </button>
               <button 
-                className="text-base font-medium hover:opacity-80 transition-all px-3 py-2 rounded-lg focus:outline-none focus:ring-4 focus:ring-sage-400"
-                style={{ color: colors.neutral[700] }}
+                onClick={() => scrollToSection('pricing')}
+                className="px-4 py-2 text-base font-medium text-white rounded-lg transition-all hover:shadow-lg transform hover:-translate-y-0.5 focus:outline-none focus:ring-4 focus:ring-white"
+                style={{ background: colors.gradients.accent }}
                 aria-label="View pricing plans"
               >
                 Pricing
-              </button>
-              
-              {/* Theme toggle */}
-              <button 
-                onClick={() => {
-                  const newTheme = theme === 'light' ? 'dark' : 'light';
-                  setTheme(newTheme);
-                  setAnnounceMessage(`Theme changed to ${newTheme} mode`);
-                }}
-                className="px-3 py-2 rounded-lg hover:bg-gray-100 transition-all focus:outline-none focus:ring-4 focus:ring-sage-400 text-sm font-medium"
-                style={{ color: colors.neutral[600] }}
-                aria-label={`Switch to ${theme === 'light' ? 'dark' : 'light'} theme`}
-                aria-pressed={theme === 'dark'}
-              >
-                {theme === 'light' ? 'Dark' : 'Light'}
               </button>
 
               {/* Auth buttons with better visual hierarchy */}
@@ -200,8 +173,8 @@ function LandingPageEnhanced({ onGetStarted }: LandingPageProps) {
                 <>
                   <button
                     onClick={handleLogin}
-                    className="px-4 py-2 text-base font-medium rounded-lg transition-all hover:opacity-90 focus:outline-none focus:ring-4 focus:ring-sage-400"
-                    style={{ color: colors.neutral[700] }}
+                    className="px-4 py-2 text-base font-medium text-white rounded-lg transition-all hover:shadow-lg transform hover:-translate-y-0.5 focus:outline-none focus:ring-4 focus:ring-white"
+                    style={{ background: colors.gradients.accent }}
                     aria-label="Sign in to your account"
                   >
                     Sign In
@@ -210,9 +183,9 @@ function LandingPageEnhanced({ onGetStarted }: LandingPageProps) {
                     onClick={handleSignup}
                     className="px-4 py-2 text-base font-medium text-white rounded-lg transition-all hover:shadow-lg transform hover:-translate-y-0.5 focus:outline-none focus:ring-4 focus:ring-white"
                     style={{ background: colors.gradients.accent }}
-                    aria-label="Sign up for free account"
+                    aria-label="Sign up for account"
                   >
-                    Get Started Free
+                    Get Started
                   </button>
                 </>
               ) : (
@@ -254,32 +227,37 @@ function LandingPageEnhanced({ onGetStarted }: LandingPageProps) {
             aria-label="Mobile navigation"
           >
             <div className="px-4 py-4 space-y-3">
-              <button onClick={handleAssessment} className="block w-full text-left py-2 text-sm font-medium"
-                style={{ color: colors.neutral[700] }}
-              >
-                Take Assessment
-              </button>
-              <button className="block w-full text-left py-2 text-sm font-medium"
-                style={{ color: colors.neutral[700] }}
+              <button 
+                onClick={() => {
+                  scrollToSection('how-it-works');
+                  setMobileMenuOpen(false);
+                }}
+                className="block w-full py-2 text-center text-sm font-medium text-white rounded-lg"
+                style={{ background: colors.gradients.accent }}
               >
                 How It Works
               </button>
-              <button className="block w-full text-left py-2 text-sm font-medium"
-                style={{ color: colors.neutral[700] }}
+              <button 
+                onClick={() => {
+                  scrollToSection('pricing');
+                  setMobileMenuOpen(false);
+                }}
+                className="block w-full py-2 text-center text-sm font-medium text-white rounded-lg"
+                style={{ background: colors.gradients.accent }}
               >
                 Pricing
               </button>
               {!user ? (
                 <div className="space-y-2 pt-4 border-t" style={{ borderColor: colors.neutral[100] }}>
-                  <button onClick={handleLogin} className="block w-full py-2 text-center text-sm font-medium rounded-lg border"
-                    style={{ borderColor: colors.neutral[200], color: colors.neutral[700] }}
+                  <button onClick={handleLogin} className="block w-full py-2 text-center text-sm font-medium text-white rounded-lg"
+                    style={{ background: colors.gradients.accent }}
                   >
                     Sign In
                   </button>
                   <button onClick={handleSignup} className="block w-full py-2 text-center text-sm font-medium text-white rounded-lg"
                     style={{ background: colors.gradients.accent }}
                   >
-                    Get Started Free
+                    Get Started
                   </button>
                 </div>
               ) : (
@@ -295,17 +273,6 @@ function LandingPageEnhanced({ onGetStarted }: LandingPageProps) {
       </nav>
 
       <main id="main" role="main" aria-label="Main content">
-        {/* Brand Video Section */}
-        <section className="relative w-full mb-16">
-          <div className="max-w-7xl mx-auto px-4">
-            <BrandVideo 
-              className="w-full h-[500px] rounded-2xl shadow-2xl"
-              autoPlay={true}
-              muted={true}
-              loop={true}
-            />
-          </div>
-        </section>
 
         {/* Enhanced Hero Section with better visual hierarchy */}
         <section className="relative py-20 px-4" aria-labelledby="hero-heading">
@@ -353,15 +320,12 @@ function LandingPageEnhanced({ onGetStarted }: LandingPageProps) {
             {/* Primary CTA with microinteraction */}
             <div className="flex flex-col sm:flex-row gap-4 justify-center mb-16">
               <button
-                onClick={() => {
-                  handleAssessment();
-                  setAnnounceMessage('Opening wellness assessment');
-                }}
+                onClick={handleSignup}
                 className="group px-8 py-4 text-white font-semibold rounded-xl transition-all transform hover:scale-105 hover:shadow-xl focus:outline-none focus:ring-4 focus:ring-offset-2 focus:ring-sage-400"
                 style={{ background: colors.gradients.accent, fontSize: '1.125rem' }}
-                aria-label="Start your wellness check - takes 2 minutes"
+                aria-label="Get started with your wellness journey"
               >
-                Start Your Wellness Check
+                Get Started Today
               </button>
               <button
                 onClick={handleSignup}
@@ -372,9 +336,9 @@ function LandingPageEnhanced({ onGetStarted }: LandingPageProps) {
                   backgroundColor: 'white',
                   fontSize: '1.125rem'
                 }}
-                aria-label="Browse free wellness resources"
+                aria-label="Browse wellness resources"
               >
-                Browse Free Resources
+                Browse Resources
               </button>
             </div>
 
@@ -447,7 +411,7 @@ function LandingPageEnhanced({ onGetStarted }: LandingPageProps) {
         </section>
 
         {/* Modern Problems Section - NEW */}
-        <section className="py-20 px-4" style={{ backgroundColor: 'white' }}>
+        <section id="how-it-works" className="py-20 px-4" style={{ backgroundColor: 'white' }}>
           <div className="container mx-auto max-w-6xl">
             <div className="text-center mb-12">
               <span className="text-sm font-bold px-4 py-2 rounded-full inline-block mb-4"
@@ -569,11 +533,6 @@ function LandingPageEnhanced({ onGetStarted }: LandingPageProps) {
               {/* Feature cards with hover effects */}
               {[
                 {
-                  title: 'Daily Burnout Check',
-                  description: 'Quick 2-minute assessment to track your wellness trends over time',
-                  color: colors.primary.sage,
-                },
-                {
                   title: 'Stress Reset Tools',
                   description: 'Immediate techniques for between assignments or difficult sessions',
                   color: colors.primary.ocean,
@@ -634,10 +593,10 @@ function LandingPageEnhanced({ onGetStarted }: LandingPageProps) {
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6" role="list">
                 <div role="listitem">
                   <h3 className="font-semibold mb-2 text-lg" style={{ color: colors.neutral[800] }}>
-                    Custom Themes
+                    Personalized Experience
                   </h3>
                   <p className="text-base" style={{ color: colors.neutral[700], lineHeight: '1.5' }}>
-                    Choose calming colors and fonts that work for you
+                    Tailored content and recommendations just for you
                   </p>
                 </div>
 
@@ -672,6 +631,170 @@ function LandingPageEnhanced({ onGetStarted }: LandingPageProps) {
           </div>
         </section>
 
+        {/* Pricing Section */}
+        <section id="pricing" className="py-20 px-4" style={{ backgroundColor: 'white' }} aria-labelledby="pricing-heading">
+          <div className="container mx-auto max-w-6xl">
+            <div className="text-center mb-12">
+              <h2 id="pricing-heading" className="text-3xl sm:text-4xl font-bold mb-4" style={{ color: colors.neutral[900] }}>
+                Simple, Transparent Pricing
+              </h2>
+              <p className="text-xl" style={{ color: colors.neutral[600] }}>
+                Choose the plan that fits your wellness journey
+              </p>
+            </div>
+
+            <div className="grid md:grid-cols-3 gap-8">
+              {/* Essential Plan */}
+              <div className="rounded-xl border-2 border-sage-500 relative overflow-hidden bg-white shadow-lg hover:shadow-xl transition-shadow">
+                <div className="absolute top-0 left-0 right-0 bg-gradient-to-r from-sage-500 to-green-500 text-white text-center py-2 text-sm font-bold">
+                  AVAILABLE NOW
+                </div>
+                
+                <div className="p-6 mt-10">
+                  <h3 className="text-2xl font-bold mb-2" style={{ color: colors.neutral[900] }}>
+                    Essential
+                  </h3>
+                  <p className="text-gray-600 mb-4">Your daily wellness companion</p>
+                  
+                  <div className="mb-6">
+                    <span className="text-4xl font-bold" style={{ color: colors.neutral[900] }}>$12.99</span>
+                    <span className="text-gray-600">/month</span>
+                  </div>
+                  
+                  <ul className="space-y-3 mb-8">
+                    <li className="flex items-center">
+                      <CheckCircle className="h-5 w-5 mr-2 text-green-500 flex-shrink-0" />
+                      <span className="text-sm text-gray-700">Daily reflection prompts</span>
+                    </li>
+                    <li className="flex items-center">
+                      <CheckCircle className="h-5 w-5 mr-2 text-green-500 flex-shrink-0" />
+                      <span className="text-sm text-gray-700">Stress reset tools</span>
+                    </li>
+                    <li className="flex items-center">
+                      <CheckCircle className="h-5 w-5 mr-2 text-green-500 flex-shrink-0" />
+                      <span className="text-sm text-gray-700">Progress tracking</span>
+                    </li>
+                    <li className="flex items-center">
+                      <CheckCircle className="h-5 w-5 mr-2 text-green-500 flex-shrink-0" />
+                      <span className="text-sm text-gray-700">Mobile responsive</span>
+                    </li>
+                    <li className="flex items-center">
+                      <CheckCircle className="h-5 w-5 mr-2 text-green-500 flex-shrink-0" />
+                      <span className="text-sm text-gray-700">Private & secure</span>
+                    </li>
+                  </ul>
+                  
+                  <button
+                    onClick={handleSignup}
+                    className="w-full py-3 rounded-lg font-semibold text-white transition-all hover:shadow-lg transform hover:-translate-y-0.5"
+                    style={{ background: colors.gradients.accent }}
+                  >
+                    Get Started
+                  </button>
+                </div>
+              </div>
+
+              {/* Professional Plan */}
+              <div className="rounded-xl border-2 border-gray-300 relative overflow-hidden bg-white shadow-lg opacity-75">
+                <div className="absolute top-0 left-0 right-0 bg-gray-400 text-white text-center py-2 text-sm font-bold">
+                  COMING SOON
+                </div>
+                
+                <div className="p-6 mt-10">
+                  <h3 className="text-2xl font-bold mb-2" style={{ color: colors.neutral[900] }}>
+                    Professional
+                  </h3>
+                  <p className="text-gray-600 mb-4">Advanced practice support</p>
+                  
+                  <div className="mb-6">
+                    <span className="text-4xl font-bold text-gray-400">$24.99</span>
+                    <span className="text-gray-400">/month</span>
+                  </div>
+                  
+                  <ul className="space-y-3 mb-8">
+                    <li className="flex items-center text-gray-500">
+                      <Sparkles className="h-5 w-5 mr-2 flex-shrink-0" />
+                      <span className="text-sm">Everything in Essential</span>
+                    </li>
+                    <li className="flex items-center text-gray-500">
+                      <Award className="h-5 w-5 mr-2 flex-shrink-0" />
+                      <span className="text-sm">Advanced analytics</span>
+                    </li>
+                    <li className="flex items-center text-gray-500">
+                      <Users className="h-5 w-5 mr-2 flex-shrink-0" />
+                      <span className="text-sm">Peer mentoring</span>
+                    </li>
+                    <li className="flex items-center text-gray-500">
+                      <Heart className="h-5 w-5 mr-2 flex-shrink-0" />
+                      <span className="text-sm">Wellness workshops</span>
+                    </li>
+                    <li className="flex items-center text-gray-500">
+                      <Shield className="h-5 w-5 mr-2 flex-shrink-0" />
+                      <span className="text-sm">Priority support</span>
+                    </li>
+                  </ul>
+                  
+                  <button
+                    disabled
+                    className="w-full py-3 rounded-lg font-semibold bg-gray-300 text-gray-500 cursor-not-allowed"
+                  >
+                    Coming Soon
+                  </button>
+                </div>
+              </div>
+
+              {/* Organizations Plan */}
+              <div className="rounded-xl border-2 border-gray-300 relative overflow-hidden bg-white shadow-lg opacity-75">
+                <div className="absolute top-0 left-0 right-0 bg-gray-400 text-white text-center py-2 text-sm font-bold">
+                  COMING SOON
+                </div>
+                
+                <div className="p-6 mt-10">
+                  <h3 className="text-2xl font-bold mb-2" style={{ color: colors.neutral[900] }}>
+                    Organizations
+                  </h3>
+                  <p className="text-gray-600 mb-4">For agencies & teams</p>
+                  
+                  <div className="mb-6">
+                    <span className="text-4xl font-bold text-gray-400">Custom</span>
+                    <span className="text-gray-400">/pricing</span>
+                  </div>
+                  
+                  <ul className="space-y-3 mb-8">
+                    <li className="flex items-center text-gray-500">
+                      <Sparkles className="h-5 w-5 mr-2 flex-shrink-0" />
+                      <span className="text-sm">Everything in Professional</span>
+                    </li>
+                    <li className="flex items-center text-gray-500">
+                      <Users className="h-5 w-5 mr-2 flex-shrink-0" />
+                      <span className="text-sm">Team management</span>
+                    </li>
+                    <li className="flex items-center text-gray-500">
+                      <Shield className="h-5 w-5 mr-2 flex-shrink-0" />
+                      <span className="text-sm">Admin dashboard</span>
+                    </li>
+                    <li className="flex items-center text-gray-500">
+                      <Award className="h-5 w-5 mr-2 flex-shrink-0" />
+                      <span className="text-sm">Custom training</span>
+                    </li>
+                    <li className="flex items-center text-gray-500">
+                      <Clock className="h-5 w-5 mr-2 flex-shrink-0" />
+                      <span className="text-sm">Dedicated support</span>
+                    </li>
+                  </ul>
+                  
+                  <button
+                    disabled
+                    className="w-full py-3 rounded-lg font-semibold bg-gray-300 text-gray-500 cursor-not-allowed"
+                  >
+                    Coming Soon
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
         {/* Final CTA */}
         <section className="py-20 px-4" style={{ background: colors.gradients.accent }} aria-labelledby="cta-heading">
           <div className="container mx-auto max-w-4xl text-center">
@@ -679,37 +802,29 @@ function LandingPageEnhanced({ onGetStarted }: LandingPageProps) {
               Start Your Wellness Journey Today
             </h2>
             <p className="text-xl text-white/90 mb-8">
-              Free assessment • Evidence-based tools • Built by interpreters, for interpreters
+              Evidence-based tools • Built by interpreters, for interpreters
             </p>
             <button
-              onClick={() => {
-                handleAssessment();
-                setAnnounceMessage('Opening wellness assessment');
-              }}
+              onClick={handleSignup}
               className="px-8 py-4 bg-white font-semibold rounded-xl shadow-lg hover:shadow-xl transition-all transform hover:scale-105 focus:outline-none focus:ring-4 focus:ring-white focus:ring-offset-2 focus:ring-offset-sage-600"
               style={{ color: colors.primary.sage, fontSize: '1.125rem' }}
-              aria-label="Take your free wellness assessment - takes 2 minutes"
+              aria-label="Start your wellness journey today"
             >
-              Take Your Free Assessment
+              Get Started Today
             </button>
           </div>
         </section>
       </main>
 
-      {/* Footer for accessibility */}
-      <footer id="footer" role="contentinfo" className="sr-only">
-        <p>InterpretReflect - Wellness Platform for Interpreters</p>
-      </footer>
+      {/* Footer */}
+      <Footer />
 
       {/* Modals */}
       <AuthModal isOpen={authModalOpen} onClose={() => setAuthModalOpen(false)} mode={authMode} />
-      <BurnoutAssessment isOpen={assessmentOpen} onClose={() => setAssessmentOpen(false)} onComplete={handleAssessmentComplete} />
       <PricingModal 
         isOpen={pricingModalOpen} 
         onClose={() => setPricingModalOpen(false)} 
         onSelectPlan={handleSelectPlan}
-        burnoutScore={assessmentResults?.score}
-        riskLevel={assessmentResults?.riskLevel}
       />
       <WaitlistModal isOpen={waitlistModalOpen} onClose={() => setWaitlistModalOpen(false)} plan={waitlistPlan} />
 

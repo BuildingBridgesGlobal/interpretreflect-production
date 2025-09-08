@@ -13,7 +13,7 @@ export function ChatWithElya() {
   const [messages, setMessages] = useState<Message[]>([
     {
       id: '1',
-      text: "Hi! I'm Elya, your burnout prevention companion. I'm here to listen and support you. How are you feeling today?",
+      text: "Welcome back, Elya here! Your well-being matters to me. Let's pause together and take a breath. How are you feeling as you start (or wind down) your day?",
       sender: 'elya',
       timestamp: new Date(),
     },

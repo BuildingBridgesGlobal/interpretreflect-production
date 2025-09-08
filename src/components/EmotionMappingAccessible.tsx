@@ -20,6 +20,7 @@ export const EmotionMappingAccessible: React.FC<EmotionMappingProps> = ({ onClos
   const [feelingClearer, setFeelingClearer] = useState('');
   const [mostHelpful, setMostHelpful] = useState('');
   const [needSupport, setNeedSupport] = useState('');
+  const [manualNavigation, setManualNavigation] = useState(false);
   
   const intervalRef = useRef<NodeJS.Timeout | null>(null);
   const timerRef = useRef<HTMLDivElement>(null);
@@ -37,11 +38,14 @@ export const EmotionMappingAccessible: React.FC<EmotionMappingProps> = ({ onClos
           }[selectedDuration];
           
           // Auto-advance steps based on duration
-          const stepDuration = Math.floor(durationSeconds / 4); // 4 steps
-          const nextStep = Math.floor(next / stepDuration);
-          const steps: PracticeStep[] = ['body', 'name', 'pattern', 'strategy'];
-          if (nextStep < steps.length && steps[nextStep] !== currentStep) {
-            setCurrentStep(steps[nextStep]);
+          // Only auto-advance if user hasn't manually navigated
+          if (!manualNavigation) {
+            const stepDuration = Math.floor(durationSeconds / 4); // 4 steps
+            const nextStep = Math.floor(next / stepDuration);
+            const steps: PracticeStep[] = ['body', 'name', 'pattern', 'strategy'];
+            if (nextStep < steps.length && steps[nextStep] !== currentStep) {
+              setCurrentStep(steps[nextStep]);
+            }
           }
           
           if (next >= durationSeconds) {
@@ -64,9 +68,11 @@ export const EmotionMappingAccessible: React.FC<EmotionMappingProps> = ({ onClos
     setIsActive(true);
     setTimeElapsed(0);
     setCurrentStep('body');
+    setManualNavigation(false); // Reset manual navigation flag
   };
 
   const handleContinue = () => {
+    setManualNavigation(true); // User has taken control
     const steps: PracticeStep[] = ['body', 'name', 'pattern', 'strategy'];
     const currentIndex = steps.indexOf(currentStep);
     if (currentIndex < steps.length - 1) {
@@ -163,45 +169,15 @@ export const EmotionMappingAccessible: React.FC<EmotionMappingProps> = ({ onClos
               </div>
               <button 
                 onClick={onClose} 
-                className="p-2 hover:bg-gray-50 rounded-xl transition-all"
+                className="p-2 rounded-xl transition-all hover:scale-105"
+                style={{
+                  background: 'linear-gradient(135deg, #1b5e20, #2e7d32)',
+                }}
                 aria-label="Close emotion mapping"
               >
-                <X className="w-5 h-5 text-gray-400" />
+                <X className="w-5 h-5 text-white" />
               </button>
             </div>
-
-            {/* Duration selection */}
-            <fieldset className="mb-6">
-              <legend className="text-sm font-medium mb-3" style={{ color: '#2D3748' }}>
-                How long?
-              </legend>
-              <div role="group" aria-label="Emotion Mapping Timer Options" className="flex gap-2">
-                {[
-                  { value: '1m', label: '1 min', desc: 'Quick check' },
-                  { value: '3m', label: '3 min', desc: 'Standard' },
-                  { value: '5m', label: '5 min', desc: 'Deep dive' }
-                ].map(duration => (
-                  <button
-                    key={duration.value}
-                    onClick={() => setSelectedDuration(duration.value as PracticeDuration)}
-                    className={`flex-1 p-3 rounded-xl text-center transition-all border-2 focus:outline-none focus:ring-2 focus:ring-offset-2 ${
-                      selectedDuration === duration.value
-                        ? 'border-green-400'
-                        : 'border-transparent bg-gray-50 hover:bg-gray-100'
-                    }`}
-                    style={{
-                      backgroundColor: selectedDuration === duration.value ? '#F0F5ED' : undefined,
-                      borderColor: selectedDuration === duration.value ? '#7A9B6E' : undefined,
-                      focusRingColor: '#5C7F4F'
-                    }}
-                    aria-pressed={selectedDuration === duration.value}
-                  >
-                    <p className="font-medium" style={{ color: '#2D3748' }}>{duration.label}</p>
-                    <p className="text-xs" style={{ color: '#4A5568' }}>{duration.desc}</p>
-                  </button>
-                ))}
-              </div>
-            </fieldset>
 
             {/* Check-in steps */}
             <div className="mb-6">
@@ -284,7 +260,7 @@ export const EmotionMappingAccessible: React.FC<EmotionMappingProps> = ({ onClos
               onClick={handleStart}
               className="w-full py-3 text-white rounded-xl font-medium hover:opacity-90 transition-all focus:outline-none focus:ring-2 focus:ring-offset-2"
               style={{ 
-                backgroundColor: '#5C7F4F',
+                background: 'linear-gradient(135deg, #1b5e20, #2e7d32)',
                 focusRingColor: '#5C7F4F'
               }}
               aria-label="Begin Emotion Mapping"
@@ -318,10 +294,13 @@ export const EmotionMappingAccessible: React.FC<EmotionMappingProps> = ({ onClos
               </h2>
               <button 
                 onClick={onClose} 
-                className="p-2 hover:bg-gray-50 rounded-xl transition-all"
+                className="p-2 rounded-xl transition-all hover:scale-105"
+                style={{
+                  background: 'linear-gradient(135deg, #1b5e20, #2e7d32)',
+                }}
                 aria-label="Close practice"
               >
-                <X className="w-5 h-5 text-gray-400" />
+                <X className="w-5 h-5 text-white" />
               </button>
             </div>
 
@@ -404,7 +383,7 @@ export const EmotionMappingAccessible: React.FC<EmotionMappingProps> = ({ onClos
               onClick={handleContinue}
               className="w-full mt-8 py-3 text-white rounded-xl font-medium hover:opacity-90 transition-all flex items-center justify-center gap-2 focus:outline-none focus:ring-2 focus:ring-offset-2"
               style={{ 
-                backgroundColor: '#5C7F4F',
+                background: 'linear-gradient(135deg, #1b5e20, #2e7d32)',
                 focusRingColor: '#5C7F4F'
               }}
               aria-label={currentStep === 'strategy' ? 'Complete mapping' : 'Continue to next step'}
@@ -433,10 +412,13 @@ export const EmotionMappingAccessible: React.FC<EmotionMappingProps> = ({ onClos
             </h2>
             <button 
               onClick={onClose} 
-              className="p-2 hover:bg-gray-50 rounded-xl transition-all"
+              className="p-2 rounded-xl transition-all hover:scale-105"
+              style={{
+                background: 'linear-gradient(135deg, #1b5e20, #2e7d32)',
+              }}
               aria-label="Close reflection"
             >
-              <X className="w-5 h-5 text-gray-400" />
+              <X className="w-5 h-5 text-white" />
             </button>
           </div>
 
@@ -453,12 +435,23 @@ export const EmotionMappingAccessible: React.FC<EmotionMappingProps> = ({ onClos
                   className={`flex-1 py-2.5 px-3 rounded-xl transition-all text-sm font-medium focus:outline-none focus:ring-2 focus:ring-offset-2 ${
                     feelingClearer === option
                       ? 'text-white'
-                      : 'bg-gray-50 hover:bg-gray-100'
+                      : ''
                   }`}
                   style={{
-                    backgroundColor: feelingClearer === option ? '#5C7F4F' : undefined,
+                    background: feelingClearer === option ? 'linear-gradient(135deg, #1b5e20, #2e7d32)' : undefined,
+                    backgroundColor: feelingClearer === option ? undefined : '#F0F5ED',
                     color: feelingClearer === option ? 'white' : '#4A5568',
                     focusRingColor: '#5C7F4F'
+                  }}
+                  onMouseEnter={(e) => {
+                    if (feelingClearer !== option) {
+                      e.currentTarget.style.backgroundColor = 'rgba(34, 197, 94, 0.2)';
+                    }
+                  }}
+                  onMouseLeave={(e) => {
+                    if (feelingClearer !== option) {
+                      e.currentTarget.style.backgroundColor = '#F0F5ED';
+                    }
                   }}
                   role="radio"
                   aria-checked={feelingClearer === option}
@@ -490,12 +483,23 @@ export const EmotionMappingAccessible: React.FC<EmotionMappingProps> = ({ onClos
                   className={`py-2.5 px-3 rounded-xl transition-all text-sm font-medium focus:outline-none focus:ring-2 focus:ring-offset-2 ${
                     mostHelpful === option
                       ? 'text-white'
-                      : 'bg-gray-50 hover:bg-gray-100'
+                      : ''
                   }`}
                   style={{
-                    backgroundColor: mostHelpful === option ? '#7A9B6E' : undefined,
+                    background: mostHelpful === option ? 'linear-gradient(135deg, #1b5e20, #2e7d32)' : undefined,
+                    backgroundColor: mostHelpful === option ? undefined : '#F0F5ED',
                     color: mostHelpful === option ? 'white' : '#4A5568',
                     focusRingColor: '#5C7F4F'
+                  }}
+                  onMouseEnter={(e) => {
+                    if (mostHelpful !== option) {
+                      e.currentTarget.style.backgroundColor = 'rgba(34, 197, 94, 0.2)';
+                    }
+                  }}
+                  onMouseLeave={(e) => {
+                    if (mostHelpful !== option) {
+                      e.currentTarget.style.backgroundColor = '#F0F5ED';
+                    }
                   }}
                   role="radio"
                   aria-checked={mostHelpful === option}
@@ -523,12 +527,23 @@ export const EmotionMappingAccessible: React.FC<EmotionMappingProps> = ({ onClos
                   className={`flex-1 py-2.5 px-3 rounded-xl transition-all text-sm font-medium focus:outline-none focus:ring-2 focus:ring-offset-2 ${
                     needSupport === option
                       ? 'text-white'
-                      : 'bg-gray-50 hover:bg-gray-100'
+                      : ''
                   }`}
                   style={{
-                    backgroundColor: needSupport === option ? '#5C7F4F' : undefined,
+                    background: needSupport === option ? 'linear-gradient(135deg, #1b5e20, #2e7d32)' : undefined,
+                    backgroundColor: needSupport === option ? undefined : '#F0F5ED',
                     color: needSupport === option ? 'white' : '#4A5568',
                     focusRingColor: '#5C7F4F'
+                  }}
+                  onMouseEnter={(e) => {
+                    if (needSupport !== option) {
+                      e.currentTarget.style.backgroundColor = 'rgba(34, 197, 94, 0.2)';
+                    }
+                  }}
+                  onMouseLeave={(e) => {
+                    if (needSupport !== option) {
+                      e.currentTarget.style.backgroundColor = '#F0F5ED';
+                    }
                   }}
                   role="radio"
                   aria-checked={needSupport === option}
@@ -562,7 +577,7 @@ export const EmotionMappingAccessible: React.FC<EmotionMappingProps> = ({ onClos
             onClick={handleSubmit}
             className="w-full py-3 text-white rounded-xl font-medium hover:opacity-90 transition-all focus:outline-none focus:ring-2 focus:ring-offset-2"
             style={{ 
-              backgroundColor: '#5C7F4F',
+              background: 'linear-gradient(135deg, #1b5e20, #2e7d32)',
               focusRingColor: '#5C7F4F'
             }}
             aria-label="Complete emotion mapping and close"

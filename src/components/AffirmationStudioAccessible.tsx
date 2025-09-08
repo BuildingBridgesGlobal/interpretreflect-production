@@ -423,39 +423,6 @@ export const AffirmationStudioAccessible: React.FC = () => {
         </div>
       </section>
 
-      {/* Recently Used Section */}
-      {recentlyUsed.length > 0 && (
-        <section aria-labelledby="recent-heading" className="mb-6">
-          <h3 id="recent-heading" className="text-lg font-semibold mb-3 flex items-center gap-2" style={{ color: '#2D3748' }}>
-            <Clock className="h-5 w-5" style={{ color: '#718096' }} />
-            Recently Reflected On
-          </h3>
-          <div className="flex gap-2 flex-wrap">
-            {recentlyUsed.map(id => {
-              const category = affirmationCategories.find(c => c.id === id);
-              if (!category) return null;
-              const Icon = category.icon;
-              return (
-                <button
-                  key={id}
-                  onClick={() => handleSelectCategory(category)}
-                  className="px-3 py-2 rounded-lg flex items-center gap-2 text-sm transition-all"
-                  style={{
-                    backgroundColor: category.bgColor,
-                    color: category.color,
-                    border: `1px solid ${category.borderColor}`
-                  }}
-                  aria-label={`View ${category.title} affirmations (recently used)`}
-                >
-                  <Icon className="h-4 w-4" />
-                  {category.title}
-                </button>
-              );
-            })}
-          </div>
-        </section>
-      )}
-
       {/* View Toggle */}
       <div className="mb-6 flex items-center justify-between">
         <div className="flex gap-2">

@@ -194,6 +194,15 @@ export const DailyBurnoutGaugeAccessible: React.FC<DailyBurnoutGaugeProps> = ({ 
   const handleAnswer = (value: number) => {
     const questionId = questions[currentQuestion].id as keyof typeof answers;
     setAnswers(prev => ({ ...prev, [questionId]: value }));
+  };
+
+  const handleNext = () => {
+    const questionId = questions[currentQuestion].id as keyof typeof answers;
+    
+    // Only proceed if an answer has been selected
+    if (answers[questionId] === 0) {
+      return;
+    }
     
     if (currentQuestion < questions.length - 1) {
       setCurrentQuestion(prev => prev + 1);
@@ -203,6 +212,15 @@ export const DailyBurnoutGaugeAccessible: React.FC<DailyBurnoutGaugeProps> = ({ 
       }
     } else {
       calculateResults();
+    }
+  };
+
+  const handlePrevious = () => {
+    if (currentQuestion > 0) {
+      setCurrentQuestion(prev => prev - 1);
+      if (progressRef.current) {
+        progressRef.current.focus();
+      }
     }
   };
 
@@ -532,11 +550,10 @@ export const DailyBurnoutGaugeAccessible: React.FC<DailyBurnoutGaugeProps> = ({ 
               {currentQ.options.map((option) => (
                 <label
                   key={option.value}
-                  className="flex items-start gap-3 p-4 rounded-xl cursor-pointer transition-all hover:bg-gray-50 focus-within:ring-2 focus-within:ring-offset-2"
+                  className="relative flex items-start gap-3 p-4 rounded-xl cursor-pointer transition-all hover:bg-gray-50"
                   style={{
                     backgroundColor: answers[currentQ.id as keyof typeof answers] === option.value ? '#F0F5ED' : '#FFFFFF',
-                    border: `2px solid ${answers[currentQ.id as keyof typeof answers] === option.value ? '#5C7F4F' : '#E2E8F0'}`,
-                    focusRingColor: '#5C7F4F'
+                    border: `2px solid ${answers[currentQ.id as keyof typeof answers] === option.value ? '#5C7F4F' : '#E2E8F0'}`
                   }}
                 >
                   <input
@@ -544,8 +561,9 @@ export const DailyBurnoutGaugeAccessible: React.FC<DailyBurnoutGaugeProps> = ({ 
                     name={currentQ.id}
                     value={option.value}
                     onChange={() => handleAnswer(option.value)}
-                    className="sr-only"
+                    className="absolute opacity-0 pointer-events-none"
                     aria-describedby={`${currentQ.id}-${option.value}-desc`}
+                    tabIndex={-1}
                   />
                   <div
                     className="w-5 h-5 rounded-full border-2 flex items-center justify-center flex-shrink-0 mt-0.5"
@@ -587,7 +605,7 @@ export const DailyBurnoutGaugeAccessible: React.FC<DailyBurnoutGaugeProps> = ({ 
             {currentQuestion > 0 && (
               <button
                 type="button"
-                onClick={() => setCurrentQuestion(prev => prev - 1)}
+                onClick={handlePrevious}
                 className="px-6 py-3 rounded-xl font-medium transition-all"
                 style={{
                   backgroundColor: '#F0F5ED',
@@ -601,14 +619,10 @@ export const DailyBurnoutGaugeAccessible: React.FC<DailyBurnoutGaugeProps> = ({ 
             )}
             <button
               type="button"
-              onClick={() => {
-                if (currentQuestion === questions.length - 1) {
-                  calculateResults();
-                }
-              }}
-              className="flex-1 py-3 rounded-xl font-medium text-white transition-all disabled:opacity-50"
-              style={{ backgroundColor: '#5C7F4F' }}
-              disabled={!answers[currentQ.id as keyof typeof answers]}
+              onClick={handleNext}
+              className="flex-1 py-3 rounded-xl font-medium text-white transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+              style={{ backgroundColor: answers[currentQ.id as keyof typeof answers] === 0 ? '#A0AEC0' : '#5C7F4F' }}
+              disabled={answers[currentQ.id as keyof typeof answers] === 0}
               aria-label={currentQuestion === questions.length - 1 ? 'Complete assessment' : 'Go to next question'}
             >
               {currentQuestion === questions.length - 1 ? 'Complete' : 'Next'}

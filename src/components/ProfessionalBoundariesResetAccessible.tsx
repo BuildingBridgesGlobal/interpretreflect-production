@@ -109,48 +109,15 @@ export const ProfessionalBoundariesResetAccessible: React.FC<ProfessionalBoundar
               </div>
               <button 
                 onClick={onClose} 
-                className="p-2 hover:bg-gray-50 rounded-xl transition-all"
+                className="p-2 rounded-xl transition-all hover:scale-105"
+                style={{
+                  background: 'linear-gradient(135deg, #1b5e20, #2e7d32)',
+                }}
                 aria-label="Close professional boundaries reset"
               >
-                <X className="w-5 h-5 text-gray-400" />
+                <X className="w-5 h-5 text-white" />
               </button>
             </div>
-
-            {/* Duration selection */}
-            <fieldset className="mb-6">
-              <legend className="text-sm font-medium mb-3" style={{ color: '#2D3748' }}>
-                How long do you need?
-              </legend>
-              <div role="group" aria-label="Reset timer options" className="grid grid-cols-2 gap-2">
-                {[
-                  { value: '30s', label: '30 seconds', desc: 'Quick reset' },
-                  { value: '90s', label: '90 seconds', desc: 'Standard reset' },
-                  { value: '3m', label: '3 minutes', desc: 'Deep reset' },
-                  { value: '5m', label: '5 minutes', desc: 'Full recovery' }
-                ].map(duration => (
-                  <button
-                    key={duration.value}
-                    onClick={() => setSelectedDuration(duration.value as ResetDuration)}
-                    className={`p-4 min-h-[60px] rounded-xl text-left transition-all border-2 focus:outline-none focus:ring-2 focus:ring-offset-2 ${
-                      selectedDuration === duration.value
-                        ? 'border-green-400'
-                        : 'border-transparent bg-gray-50 hover:bg-gray-100'
-                    }`}
-                    style={{
-                      backgroundColor: selectedDuration === duration.value ? '#F0F5ED' : undefined,
-                      borderColor: selectedDuration === duration.value ? '#7A9B6E' : undefined,
-                      focusRingColor: '#5C7F4F',
-                      minWidth: '44px'
-                    }}
-                    aria-pressed={selectedDuration === duration.value}
-                    aria-label={`Select ${duration.label} reset duration`}
-                  >
-                    <p className="font-medium" style={{ color: '#2D3748' }}>{duration.label}</p>
-                    <p className="text-xs" style={{ color: '#4A5568' }}>{duration.desc}</p>
-                  </button>
-                ))}
-              </div>
-            </fieldset>
 
             {/* Reset Steps */}
             <div className="mb-6">
@@ -233,7 +200,7 @@ export const ProfessionalBoundariesResetAccessible: React.FC<ProfessionalBoundar
               onClick={handleStart}
               className="w-full py-4 min-h-[56px] text-white rounded-xl font-medium text-lg hover:opacity-90 transition-all focus:outline-none focus:ring-2 focus:ring-offset-2"
               style={{ 
-                backgroundColor: '#5C7F4F',
+                background: 'linear-gradient(135deg, #1b5e20, #2e7d32)',
                 focusRingColor: '#5C7F4F'
               }}
               aria-label="Begin professional boundaries reset process"
@@ -264,10 +231,13 @@ export const ProfessionalBoundariesResetAccessible: React.FC<ProfessionalBoundar
               </h2>
               <button 
                 onClick={onClose} 
-                className="p-2 hover:bg-gray-50 rounded-xl transition-all"
+                className="p-2 rounded-xl transition-all hover:scale-105"
+                style={{
+                  background: 'linear-gradient(135deg, #1b5e20, #2e7d32)',
+                }}
                 aria-label="Close reset practice"
               >
-                <X className="w-5 h-5 text-gray-400" />
+                <X className="w-5 h-5 text-white" />
               </button>
             </div>
 
@@ -359,7 +329,7 @@ export const ProfessionalBoundariesResetAccessible: React.FC<ProfessionalBoundar
                 onClick={() => setIsPlaying(!isPlaying)}
                 className="flex-1 py-3 min-h-[48px] text-white rounded-xl font-medium hover:opacity-90 transition-all flex items-center justify-center gap-2 focus:outline-none focus:ring-2 focus:ring-offset-2"
                 style={{ 
-                  backgroundColor: '#5C7F4F',
+                  background: 'linear-gradient(135deg, #1b5e20, #2e7d32)',
                   focusRingColor: '#5C7F4F'
                 }}
                 aria-label={isPlaying ? 'Pause timer' : 'Resume timer'}
@@ -369,8 +339,14 @@ export const ProfessionalBoundariesResetAccessible: React.FC<ProfessionalBoundar
               </button>
               <button
                 onClick={handleComplete}
-                className="px-6 py-3 min-h-[48px] bg-gray-100 hover:bg-gray-200 rounded-xl font-medium transition-all focus:outline-none focus:ring-2 focus:ring-gray-400 focus:ring-offset-2"
-                style={{ color: '#2D3748' }}
+                className="px-6 py-3 min-h-[48px] rounded-xl font-medium transition-all hover:shadow-md focus:outline-none focus:ring-2 focus:ring-offset-2"
+                style={{ 
+                  backgroundColor: '#F0F5ED',
+                  color: '#2D3748',
+                  focusRingColor: '#5C7F4F'
+                }}
+                onMouseEnter={(e) => e.currentTarget.style.backgroundColor = 'rgba(34, 197, 94, 0.2)'}
+                onMouseLeave={(e) => e.currentTarget.style.backgroundColor = '#F0F5ED'}
                 aria-label="Skip to reflection phase"
               >
                 Skip
@@ -397,10 +373,13 @@ export const ProfessionalBoundariesResetAccessible: React.FC<ProfessionalBoundar
             </h2>
             <button 
               onClick={onClose} 
-              className="p-2 hover:bg-gray-50 rounded-xl transition-all"
+              className="p-2 rounded-xl transition-all hover:scale-105"
+              style={{
+                background: 'linear-gradient(135deg, #1b5e20, #2e7d32)',
+              }}
               aria-label="Close reflection"
             >
-              <X className="w-5 h-5 text-gray-400" />
+              <X className="w-5 h-5 text-white" />
             </button>
           </div>
 
@@ -417,12 +396,23 @@ export const ProfessionalBoundariesResetAccessible: React.FC<ProfessionalBoundar
                   className={`flex-1 py-2.5 px-3 rounded-xl transition-all text-sm font-medium focus:outline-none focus:ring-2 focus:ring-offset-2 ${
                     feelingBetter === option
                       ? 'text-white'
-                      : 'bg-gray-50 hover:bg-gray-100'
+                      : ''
                   }`}
                   style={{
-                    backgroundColor: feelingBetter === option ? '#5C7F4F' : undefined,
+                    background: feelingBetter === option ? 'linear-gradient(135deg, #1b5e20, #2e7d32)' : undefined,
+                    backgroundColor: feelingBetter === option ? undefined : '#F0F5ED',
                     color: feelingBetter === option ? 'white' : '#4A5568',
                     focusRingColor: '#5C7F4F'
+                  }}
+                  onMouseEnter={(e) => {
+                    if (feelingBetter !== option) {
+                      e.currentTarget.style.backgroundColor = 'rgba(34, 197, 94, 0.2)';
+                    }
+                  }}
+                  onMouseLeave={(e) => {
+                    if (feelingBetter !== option) {
+                      e.currentTarget.style.backgroundColor = '#F0F5ED';
+                    }
                   }}
                   role="radio"
                   aria-checked={feelingBetter === option}
@@ -446,12 +436,23 @@ export const ProfessionalBoundariesResetAccessible: React.FC<ProfessionalBoundar
                   className={`py-2.5 px-3 rounded-xl transition-all text-sm font-medium focus:outline-none focus:ring-2 focus:ring-offset-2 ${
                     whatHelped === option
                       ? 'text-white'
-                      : 'bg-gray-50 hover:bg-gray-100'
+                      : ''
                   }`}
                   style={{
-                    backgroundColor: whatHelped === option ? '#7A9B6E' : undefined,
+                    background: whatHelped === option ? 'linear-gradient(135deg, #1b5e20, #2e7d32)' : undefined,
+                    backgroundColor: whatHelped === option ? undefined : '#F0F5ED',
                     color: whatHelped === option ? 'white' : '#4A5568',
                     focusRingColor: '#5C7F4F'
+                  }}
+                  onMouseEnter={(e) => {
+                    if (whatHelped !== option) {
+                      e.currentTarget.style.backgroundColor = 'rgba(34, 197, 94, 0.2)';
+                    }
+                  }}
+                  onMouseLeave={(e) => {
+                    if (whatHelped !== option) {
+                      e.currentTarget.style.backgroundColor = '#F0F5ED';
+                    }
                   }}
                   role="radio"
                   aria-checked={whatHelped === option}
@@ -475,12 +476,23 @@ export const ProfessionalBoundariesResetAccessible: React.FC<ProfessionalBoundar
                   className={`flex-1 py-2.5 px-3 rounded-xl transition-all text-sm font-medium focus:outline-none focus:ring-2 focus:ring-offset-2 ${
                     needSupport === option
                       ? 'text-white'
-                      : 'bg-gray-50 hover:bg-gray-100'
+                      : ''
                   }`}
                   style={{
-                    backgroundColor: needSupport === option ? '#5C7F4F' : undefined,
+                    background: needSupport === option ? 'linear-gradient(135deg, #1b5e20, #2e7d32)' : undefined,
+                    backgroundColor: needSupport === option ? undefined : '#F0F5ED',
                     color: needSupport === option ? 'white' : '#4A5568',
                     focusRingColor: '#5C7F4F'
+                  }}
+                  onMouseEnter={(e) => {
+                    if (needSupport !== option) {
+                      e.currentTarget.style.backgroundColor = 'rgba(34, 197, 94, 0.2)';
+                    }
+                  }}
+                  onMouseLeave={(e) => {
+                    if (needSupport !== option) {
+                      e.currentTarget.style.backgroundColor = '#F0F5ED';
+                    }
                   }}
                   role="radio"
                   aria-checked={needSupport === option}
@@ -514,7 +526,7 @@ export const ProfessionalBoundariesResetAccessible: React.FC<ProfessionalBoundar
             onClick={handleSubmit}
             className="w-full py-3 text-white rounded-xl font-medium hover:opacity-90 transition-all focus:outline-none focus:ring-2 focus:ring-offset-2"
             style={{ 
-              backgroundColor: '#5C7F4F',
+              background: 'linear-gradient(135deg, #1b5e20, #2e7d32)',
               focusRingColor: '#5C7F4F'
             }}
             aria-label="Complete reset and close"

@@ -127,8 +127,15 @@ export const EmotionMapping: React.FC<EmotionMappingProps> = ({ onClose, onCompl
                   Understand what you're feeling
                 </p>
               </div>
-              <button onClick={onClose} className="p-2 hover:bg-gray-100 rounded-xl">
-                <X className="w-6 h-6" />
+              <button 
+                onClick={onClose} 
+                className="p-2 rounded-xl transition-all hover:scale-105"
+                style={{
+                  background: 'linear-gradient(135deg, #1b5e20, #2e7d32)',
+                }}
+                aria-label="Close emotion mapping"
+              >
+                <X className="w-5 h-5 text-white" />
               </button>
             </div>
 
@@ -188,13 +195,22 @@ export const EmotionMapping: React.FC<EmotionMappingProps> = ({ onClose, onCompl
             <div className="flex gap-3">
               <button
                 onClick={handleStart}
-                className="flex-1 py-3 bg-emerald-600 text-white rounded-xl font-medium hover:bg-emerald-700 transition-all"
+                className="flex-1 py-3 text-white rounded-xl font-medium transition-all hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-offset-2"
+                style={{ 
+                  background: 'linear-gradient(135deg, #1b5e20, #2e7d32)',
+                  focusRingColor: '#5C7F4F'
+                }}
               >
                 Begin Mapping
               </button>
               <button
                 onClick={handleQuickStart}
-                className="px-6 py-3 bg-gray-100 hover:bg-gray-200 rounded-xl font-medium text-gray-700 transition-all"
+                className="px-6 py-3 rounded-xl font-medium text-gray-700 transition-all hover:shadow-md"
+                style={{ 
+                  backgroundColor: '#F0F5ED'
+                }}
+                onMouseEnter={(e) => e.currentTarget.style.backgroundColor = 'rgba(34, 197, 94, 0.2)'}
+                onMouseLeave={(e) => e.currentTarget.style.backgroundColor = '#F0F5ED'}
               >
                 Quick 1-minute check
               </button>
@@ -215,8 +231,15 @@ export const EmotionMapping: React.FC<EmotionMappingProps> = ({ onClose, onCompl
           <div className="p-8">
             <div className="flex justify-between items-center mb-6">
               <h2 className="text-xl font-bold text-gray-900">Quick Check</h2>
-              <button onClick={onClose} className="p-2 hover:bg-gray-100 rounded-xl">
-                <X className="w-6 h-6" />
+              <button 
+                onClick={onClose} 
+                className="p-2 rounded-xl transition-all hover:scale-105"
+                style={{
+                  background: 'linear-gradient(135deg, #1b5e20, #2e7d32)',
+                }}
+                aria-label="Close emotion mapping"
+              >
+                <X className="w-5 h-5 text-white" />
               </button>
             </div>
 
@@ -257,7 +280,11 @@ export const EmotionMapping: React.FC<EmotionMappingProps> = ({ onClose, onCompl
 
             <button
               onClick={handleComplete}
-              className="w-full mt-8 py-3 bg-emerald-600 text-white rounded-xl font-medium hover:bg-emerald-700 transition-all"
+              className="w-full mt-8 py-3 text-white rounded-xl font-medium transition-all hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-offset-2"
+              style={{ 
+                background: 'linear-gradient(135deg, #1b5e20, #2e7d32)',
+                focusRingColor: '#5C7F4F'
+              }}
             >
               Done
             </button>
@@ -280,8 +307,15 @@ export const EmotionMapping: React.FC<EmotionMappingProps> = ({ onClose, onCompl
           <div className="p-8">
             <div className="flex justify-between items-center mb-6">
               <h2 className="text-xl font-bold text-gray-900">Let's Check In</h2>
-              <button onClick={onClose} className="p-2 hover:bg-gray-100 rounded-xl">
-                <X className="w-6 h-6" />
+              <button 
+                onClick={onClose} 
+                className="p-2 rounded-xl transition-all hover:scale-105"
+                style={{
+                  background: 'linear-gradient(135deg, #1b5e20, #2e7d32)',
+                }}
+                aria-label="Close emotion mapping"
+              >
+                <X className="w-5 h-5 text-white" />
               </button>
             </div>
 
@@ -319,7 +353,11 @@ export const EmotionMapping: React.FC<EmotionMappingProps> = ({ onClose, onCompl
 
             <button
               onClick={handleContinue}
-              className="w-full mt-8 py-3 bg-emerald-600 text-white rounded-xl font-medium hover:bg-emerald-700 transition-all flex items-center justify-center gap-2"
+              className="w-full mt-8 py-3 text-white rounded-xl font-medium transition-all hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-offset-2 flex items-center justify-center gap-2"
+              style={{ 
+                background: 'linear-gradient(135deg, #1b5e20, #2e7d32)',
+                focusRingColor: '#5C7F4F'
+              }}
             >
               Continue
               <ChevronRight className="w-5 h-5" />
@@ -340,8 +378,15 @@ export const EmotionMapping: React.FC<EmotionMappingProps> = ({ onClose, onCompl
           <div className="p-8">
             <div className="flex justify-between items-center mb-6">
               <h2 className="text-xl font-bold text-gray-900">Let's Check In</h2>
-              <button onClick={onClose} className="p-2 hover:bg-gray-100 rounded-xl">
-                <X className="w-6 h-6" />
+              <button 
+                onClick={onClose} 
+                className="p-2 rounded-xl transition-all hover:scale-105"
+                style={{
+                  background: 'linear-gradient(135deg, #1b5e20, #2e7d32)',
+                }}
+                aria-label="Close emotion mapping"
+              >
+                <X className="w-5 h-5 text-white" />
               </button>
             </div>
 
@@ -377,7 +422,11 @@ export const EmotionMapping: React.FC<EmotionMappingProps> = ({ onClose, onCompl
 
             <button
               onClick={handleContinue}
-              className="w-full mt-8 py-3 bg-emerald-600 text-white rounded-xl font-medium hover:bg-emerald-700 transition-all flex items-center justify-center gap-2"
+              className="w-full mt-8 py-3 text-white rounded-xl font-medium transition-all hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-offset-2 flex items-center justify-center gap-2"
+              style={{ 
+                background: 'linear-gradient(135deg, #1b5e20, #2e7d32)',
+                focusRingColor: '#5C7F4F'
+              }}
             >
               Continue
               <ChevronRight className="w-5 h-5" />
@@ -398,8 +447,15 @@ export const EmotionMapping: React.FC<EmotionMappingProps> = ({ onClose, onCompl
           <div className="p-8">
             <div className="flex justify-between items-center mb-6">
               <h2 className="text-xl font-bold text-gray-900">Let's Check In</h2>
-              <button onClick={onClose} className="p-2 hover:bg-gray-100 rounded-xl">
-                <X className="w-6 h-6" />
+              <button 
+                onClick={onClose} 
+                className="p-2 rounded-xl transition-all hover:scale-105"
+                style={{
+                  background: 'linear-gradient(135deg, #1b5e20, #2e7d32)',
+                }}
+                aria-label="Close emotion mapping"
+              >
+                <X className="w-5 h-5 text-white" />
               </button>
             </div>
 
@@ -436,7 +492,11 @@ export const EmotionMapping: React.FC<EmotionMappingProps> = ({ onClose, onCompl
 
             <button
               onClick={handleContinue}
-              className="w-full mt-8 py-3 bg-emerald-600 text-white rounded-xl font-medium hover:bg-emerald-700 transition-all flex items-center justify-center gap-2"
+              className="w-full mt-8 py-3 text-white rounded-xl font-medium transition-all hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-offset-2 flex items-center justify-center gap-2"
+              style={{ 
+                background: 'linear-gradient(135deg, #1b5e20, #2e7d32)',
+                focusRingColor: '#5C7F4F'
+              }}
             >
               Continue
               <ChevronRight className="w-5 h-5" />
@@ -457,8 +517,15 @@ export const EmotionMapping: React.FC<EmotionMappingProps> = ({ onClose, onCompl
           <div className="p-8">
             <div className="flex justify-between items-center mb-6">
               <h2 className="text-xl font-bold text-gray-900">Let's Check In</h2>
-              <button onClick={onClose} className="p-2 hover:bg-gray-100 rounded-xl">
-                <X className="w-6 h-6" />
+              <button 
+                onClick={onClose} 
+                className="p-2 rounded-xl transition-all hover:scale-105"
+                style={{
+                  background: 'linear-gradient(135deg, #1b5e20, #2e7d32)',
+                }}
+                aria-label="Close emotion mapping"
+              >
+                <X className="w-5 h-5 text-white" />
               </button>
             </div>
 
@@ -495,7 +562,11 @@ export const EmotionMapping: React.FC<EmotionMappingProps> = ({ onClose, onCompl
 
             <button
               onClick={handleComplete}
-              className="w-full mt-8 py-3 bg-emerald-600 text-white rounded-xl font-medium hover:bg-emerald-700 transition-all"
+              className="w-full mt-8 py-3 text-white rounded-xl font-medium transition-all hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-offset-2"
+              style={{ 
+                background: 'linear-gradient(135deg, #1b5e20, #2e7d32)',
+                focusRingColor: '#5C7F4F'
+              }}
             >
               Complete
             </button>
@@ -580,14 +651,23 @@ export const EmotionMapping: React.FC<EmotionMappingProps> = ({ onClose, onCompl
           <div className="flex gap-3">
             <button
               onClick={handleSubmit}
-              className="flex-1 py-3 bg-emerald-600 text-white rounded-xl font-medium hover:bg-emerald-700 transition-all"
+              className="flex-1 py-3 text-white rounded-xl font-medium transition-all hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-offset-2"
+              style={{ 
+                background: 'linear-gradient(135deg, #1b5e20, #2e7d32)',
+                focusRingColor: '#5C7F4F'
+              }}
             >
               Done
             </button>
             {needSupport === 'Want to talk to someone' && (
               <button
                 onClick={handleSupportResources}
-                className="flex-1 py-3 bg-gray-100 hover:bg-gray-200 rounded-xl font-medium text-gray-700 transition-all"
+                className="flex-1 py-3 rounded-xl font-medium text-gray-700 transition-all hover:shadow-md"
+                style={{ 
+                  backgroundColor: '#F0F5ED'
+                }}
+                onMouseEnter={(e) => e.currentTarget.style.backgroundColor = 'rgba(34, 197, 94, 0.2)'}
+                onMouseLeave={(e) => e.currentTarget.style.backgroundColor = '#F0F5ED'}
               >
                 Support Resources
               </button>

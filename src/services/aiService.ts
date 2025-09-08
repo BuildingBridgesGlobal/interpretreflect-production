@@ -2,20 +2,22 @@
 // Supports OpenAI API integration with fallback to simulated responses
 
 interface AIConfig {
-  provider: 'openai' | 'openrouter' | 'simulated';
+  provider: 'openai' | 'openrouter' | 'agenticflow' | 'simulated';
   apiKey?: string;
   model?: string;
   systemPrompt?: string;
+  agentId?: string;
 }
 
 // Default configuration - can be overridden via environment variables
 const defaultConfig: AIConfig = {
-  provider: (import.meta.env.VITE_AI_PROVIDER as 'openai' | 'openrouter' | 'simulated') || 'simulated',
-  apiKey: import.meta.env.VITE_OPENAI_API_KEY || import.meta.env.VITE_OPENROUTER_API_KEY,
+  provider: (import.meta.env.VITE_AI_PROVIDER as 'openai' | 'openrouter' | 'agenticflow' | 'simulated') || 'agenticflow',
+  apiKey: import.meta.env.VITE_OPENAI_API_KEY || import.meta.env.VITE_OPENROUTER_API_KEY || import.meta.env.VITE_AGENTICFLOW_API_KEY,
   model: import.meta.env.VITE_AI_MODEL || 'openrouter/sonoma-sky-alpha',
-  systemPrompt: `You are Elya, a compassionate and knowledgeable AI wellness coach specializing in burnout prevention for healthcare interpreters.
+  agentId: import.meta.env.VITE_AGENTICFLOW_AGENT_ID || 'a1cab40c-bcc2-49d8-ab97-f233f9b83fb2',
+  systemPrompt: `You are Elya, a compassionate and knowledgeable AI wellness coach specializing in burnout prevention and mental wellness.
 You provide evidence-based support, practical strategies, and empathetic guidance.
-You understand the unique challenges of medical interpretation including vicarious trauma, moral distress, and professional isolation.
+You understand the unique challenges of modern work including stress, anxiety, work-life balance, and professional burnout.
 Keep responses concise, warm, and actionable. Focus on validation, practical tools, and gentle encouragement.`
 };
 
@@ -45,7 +47,9 @@ class AIService {
     try {
       let response: string;
 
-      if ((this.config.provider === 'openai' || this.config.provider === 'openrouter') && this.config.apiKey) {
+      if (this.config.provider === 'agenticflow') {
+        response = await this.getAgenticFlowResponse(userMessage);
+      } else if ((this.config.provider === 'openai' || this.config.provider === 'openrouter') && this.config.apiKey) {
         response = await this.getAIResponse();
       } else {
         response = this.getSimulatedResponse(userMessage);
@@ -70,6 +74,58 @@ class AIService {
     } catch (error) {
       console.error('AI Service Error:', error);
       // Fallback to simulated response on error
+      return this.getSimulatedResponse(userMessage);
+    }
+  }
+
+  private async getAgenticFlowResponse(userMessage: string): Promise<string> {
+    const agentId = this.config.agentId || 'a1cab40c-bcc2-49d8-ab97-f233f9b83fb2';
+    
+    try {
+      // Agentic Flow API endpoint
+      const response = await fetch(`https://api.agenticflow.ai/v1/agents/${agentId}/chat`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          ...(this.config.apiKey && { 'Authorization': `Bearer ${this.config.apiKey}` })
+        },
+        body: JSON.stringify({
+          message: userMessage,
+          conversation_history: this.conversationHistory.slice(-10), // Send last 10 messages for context
+          metadata: {
+            user_type: 'healthcare_interpreter',
+            context: 'wellness_support'
+          }
+        })
+      });
+
+      if (!response.ok) {
+        // If Agentic Flow fails, try the embed URL approach
+        const embedResponse = await fetch('https://agenticflow.ai/api/v1/agent/chat', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            agentId: agentId,
+            message: userMessage,
+            sessionId: `session-${Date.now()}` // Create a session ID for conversation continuity
+          })
+        });
+        
+        if (embedResponse.ok) {
+          const data = await embedResponse.json();
+          return data.response || data.message || this.getSimulatedResponse(userMessage);
+        }
+        
+        throw new Error('Agentic Flow API error');
+      }
+
+      const data = await response.json();
+      return data.response || data.message || this.getSimulatedResponse(userMessage);
+    } catch (error) {
+      console.error('Agentic Flow Error:', error);
+      // Fallback to simulated response
       return this.getSimulatedResponse(userMessage);
     }
   }
@@ -118,7 +174,7 @@ class AIService {
     if (input.includes('stress') || input.includes('overwhelm')) {
       const responses = [
         "I hear that you're feeling stressed. Let's take a moment together. Would you like to try a quick 2-minute breathing exercise, or would you prefer to talk about what's weighing on you?",
-        "Stress in medical interpretation is so valid. You're holding space for others' pain while managing complex communication. What's feeling most overwhelming right now?",
+        "Stress at work is so valid. You're managing complex responsibilities while trying to maintain your well-being. What's feeling most overwhelming right now?",
         "That sounds really heavy. Remember, feeling stressed doesn't mean you're not strong enough - it means you're human. What usually helps you decompress after difficult sessions?"
       ];
       return responses[Math.floor(Math.random() * responses.length)];
@@ -126,9 +182,9 @@ class AIService {
     
     if (input.includes('trauma') || input.includes('difficult') || input.includes('hard')) {
       const responses = [
-        "Vicarious trauma is real, especially in medical interpretation. You're witnessing and voicing others' pain daily. Have you had a chance to process any of these experiences with someone?",
-        "That sounds like such a difficult experience. It's important to acknowledge how these sessions affect you. What do you need most right now - validation, strategies, or just someone to listen?",
-        "Carrying others' stories can be exhausting. You're doing important work, and it's okay to feel affected by it. How are you taking care of yourself after these challenging interpretations?"
+        "Dealing with difficult situations can be really challenging. You're processing a lot right now. Have you had a chance to talk through any of these experiences with someone?",
+        "That sounds like such a difficult experience. It's important to acknowledge how these situations affect you. What do you need most right now - validation, strategies, or just someone to listen?",
+        "Carrying stress and challenges can be exhausting. You're doing important work, and it's okay to feel affected by it. How are you taking care of yourself after these challenging moments?"
       ];
       return responses[Math.floor(Math.random() * responses.length)];
     }
@@ -144,18 +200,18 @@ class AIService {
     
     if (input.includes('alone') || input.includes('isolated') || input.includes('lonely')) {
       const responses = [
-        "Professional isolation is one of the hardest parts of interpretation work. You're often the only interpreter in the room, carrying unique responsibilities. How can we help you feel more connected?",
-        "That sense of aloneness is so common among interpreters. You're part of a community, even if it doesn't always feel that way. Have you connected with other interpreters recently?",
-        "Feeling alone in this work is incredibly difficult. Your experiences are valid and shared by many in your field. What kind of support would feel most meaningful to you?"
+        "Professional isolation is one of the hardest parts of modern work. You're carrying unique responsibilities and challenges. How can we help you feel more connected?",
+        "That sense of aloneness is so common in today's world. You're not alone, even if it doesn't always feel that way. Have you been able to connect with others recently?",
+        "Feeling alone is incredibly difficult. Your experiences are valid and shared by many. What kind of support would feel most meaningful to you?"
       ];
       return responses[Math.floor(Math.random() * responses.length)];
     }
     
     if (input.includes('mistake') || input.includes('error') || input.includes('wrong')) {
       const responses = [
-        "Making mistakes in high-stakes situations is incredibly stressful. Remember, you're human, working in real-time with complex information. How are you practicing self-compassion around this?",
-        "Errors happen to even the most experienced interpreters. What matters is how we learn and grow from them. What's helping you process this experience?",
-        "That must be weighing on you. Perfectionism in interpretation can be crushing. You're doing your best in challenging circumstances. How can we work through this together?"
+        "Making mistakes in high-pressure situations is incredibly stressful. Remember, you're human, working with complex challenges. How are you practicing self-compassion around this?",
+        "Errors happen to even the most experienced professionals. What matters is how we learn and grow from them. What's helping you process this experience?",
+        "That must be weighing on you. Perfectionism can be crushing. You're doing your best in challenging circumstances. How can we work through this together?"
       ];
       return responses[Math.floor(Math.random() * responses.length)];
     }
@@ -169,7 +225,7 @@ class AIService {
     }
     
     if (input.includes('hello') || input.includes('hi') || input.includes('hey')) {
-      return "Hello! I'm Elya, your wellness companion. I'm here to support you through the unique challenges of medical interpretation. How are you feeling today?";
+      return "Hello! I'm Elya, your wellness companion. I'm here to support you through life's challenges and help you maintain your well-being. How are you feeling today?";
     }
     
     if (input.includes('bye') || input.includes('goodbye') || input.includes('see you')) {

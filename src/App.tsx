@@ -5,6 +5,7 @@ import LandingPageEnhanced from './LandingPageEnhanced';
 import { Logo } from './components/Logo';
 import { useAuth } from './contexts/AuthContext';
 import { supabase } from './lib/supabase';
+import { dataSyncService } from './services/dataSync';
 import { PrivacyConsent } from './components/PrivacyConsent';
 import { SecurityBanner, SessionTimeoutModal } from './components/SecurityBanner';
 import { SessionManager } from './utils/security';
@@ -47,6 +48,7 @@ import { ManageSubscription } from './components/ManageSubscription';
 import { BillingPlanDetails } from './components/BillingPlanDetails';
 import { LuxuryWellnessDashboard } from './components/LuxuryWellnessDashboard';
 import { PersonalizedHomepage } from './components/PersonalizedHomepage';
+import { SyncStatusIndicator } from './components/SyncStatusIndicator';
 import {
   Home,
   BookOpen,
@@ -6074,6 +6076,9 @@ function App() {
   // Show main app for authenticated users or dev mode
   return (
     <>
+      {/* Data Sync Indicator */}
+      <SyncStatusIndicator />
+      
       {/* Security Components */}
       <PrivacyConsent 
         isOpen={showPrivacyConsent} 

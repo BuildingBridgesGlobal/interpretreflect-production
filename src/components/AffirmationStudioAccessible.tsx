@@ -428,22 +428,42 @@ export const AffirmationStudioAccessible: React.FC = () => {
         <div className="flex gap-2">
           <button
             onClick={() => setViewMode('all')}
-            className={`px-4 py-2 rounded-lg font-medium transition-all ${
-              viewMode === 'all' 
-                ? 'bg-green-600 text-white' 
-                : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
-            }`}
+            className="px-4 py-2 rounded-lg font-medium transition-all"
+            style={{
+              background: viewMode === 'all' ? 'linear-gradient(135deg, #1b5e20, #2e7d32)' : '#e5e7eb',
+              color: viewMode === 'all' ? '#ffffff' : '#374151'
+            }}
+            onMouseEnter={(e) => {
+              if (viewMode !== 'all') {
+                e.currentTarget.style.backgroundColor = 'rgba(34, 197, 94, 0.15)';
+              }
+            }}
+            onMouseLeave={(e) => {
+              if (viewMode !== 'all') {
+                e.currentTarget.style.backgroundColor = '#e5e7eb';
+              }
+            }}
             aria-pressed={viewMode === 'all'}
           >
             All Categories
           </button>
           <button
             onClick={() => setViewMode('favorites')}
-            className={`px-4 py-2 rounded-lg font-medium transition-all flex items-center gap-2 ${
-              viewMode === 'favorites' 
-                ? 'bg-purple-600 text-white' 
-                : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
-            }`}
+            className="px-4 py-2 rounded-lg font-medium transition-all flex items-center gap-2"
+            style={{
+              backgroundColor: viewMode === 'favorites' ? '#9333ea' : '#e5e7eb',
+              color: viewMode === 'favorites' ? '#ffffff' : '#374151'
+            }}
+            onMouseEnter={(e) => {
+              if (viewMode !== 'favorites') {
+                e.currentTarget.style.backgroundColor = 'rgba(34, 197, 94, 0.15)';
+              }
+            }}
+            onMouseLeave={(e) => {
+              if (viewMode !== 'favorites') {
+                e.currentTarget.style.backgroundColor = '#e5e7eb';
+              }
+            }}
             aria-pressed={viewMode === 'favorites'}
           >
             <BookmarkCheck className="h-4 w-4" />
@@ -515,7 +535,8 @@ export const AffirmationStudioAccessible: React.FC = () => {
               </p>
               <button
                 onClick={() => setViewMode('all')}
-                className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors"
+                className="px-4 py-2 text-white rounded-lg transition-all hover:opacity-90"
+                style={{ background: 'linear-gradient(135deg, #1b5e20, #2e7d32)' }}
               >
                 Browse Affirmations
               </button>
@@ -608,10 +629,11 @@ export const AffirmationStudioAccessible: React.FC = () => {
                 </div>
                 <button
                   onClick={handleClose}
-                  className="p-2 hover:bg-gray-50 rounded-lg transition-all"
+                  className="p-2 rounded-lg transition-all hover:opacity-90"
+                  style={{ background: 'linear-gradient(135deg, #1b5e20, #2e7d32)' }}
                   aria-label="Close affirmation modal"
                 >
-                  <X className="h-5 w-5" style={{ color: '#4A5568' }} />
+                  <X className="h-5 w-5" style={{ color: '#FFFFFF' }} />
                 </button>
               </div>
 
@@ -759,21 +781,6 @@ export const AffirmationStudioAccessible: React.FC = () => {
                   <div className="flex gap-3">
                     <button
                       onClick={() => {
-                        setShowActionableTip(false);
-                        setShowReflection(false);
-                        setReflectionInput('');
-                        setCurrentTip(null);
-                      }}
-                      className="px-4 py-2 rounded-lg font-medium transition-all"
-                      style={{
-                        backgroundColor: '#F7FAFC',
-                        color: '#4A5568'
-                      }}
-                    >
-                      Back to Affirmations
-                    </button>
-                    <button
-                      onClick={() => {
                         // Get another random tip
                         const tips = selectedCategory?.actionableTips || [];
                         const availableTips = tips.filter(tip => tip !== currentTip);
@@ -835,16 +842,6 @@ export const AffirmationStudioAccessible: React.FC = () => {
                   />
                   
                   <div className="flex gap-3 mt-4">
-                    <button
-                      onClick={() => setShowReflection(false)}
-                      className="px-4 py-2 rounded-lg font-medium transition-all"
-                      style={{
-                        backgroundColor: '#F7FAFC',
-                        color: '#4A5568'
-                      }}
-                    >
-                      Back to Affirmations
-                    </button>
                     <button
                       onClick={handleCompleteReflection}
                       className="flex-1 py-3 rounded-lg font-medium text-white transition-all"

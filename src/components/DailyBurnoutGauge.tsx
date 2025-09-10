@@ -601,7 +601,7 @@ const DailyBurnoutGauge: React.FC<DailyBurnoutGaugeProps> = ({ onComplete, onClo
       <div className="bg-white rounded-2xl w-full max-w-2xl max-h-[90vh] overflow-hidden shadow-2xl">
         {!showResults ? (
           <>
-            <div className="p-6 border-b border-gray-200 bg-gradient-to-r from-sage-50 to-green-50">
+            <div className="p-6 border-b border-gray-200 bg-gradient-to-r from-sage-500 to-green-500 from-sage-50 to-green-50">
               <div className="flex items-center justify-between">
                 <div className="flex items-center space-x-3">
                   <div className="w-12 h-12 bg-gradient-to-br from-sage-500 to-green-500 rounded-xl flex items-center justify-center">
@@ -687,7 +687,7 @@ const DailyBurnoutGauge: React.FC<DailyBurnoutGaugeProps> = ({ onComplete, onClo
           </>
         ) : (
           <>
-            <div className={`p-6 border-b border-gray-200 bg-gradient-to-r ${getRiskColor()}`}>
+            <div className={`p-6 border-b border-gray-200 bg-gradient-to-r from-sage-500 to-green-500 ${getRiskColor()}`}>
               <div className="flex items-center justify-between">
                 <div className="flex items-center space-x-3">
                   <div className="w-12 h-12 bg-white bg-opacity-20 rounded-xl flex items-center justify-center">

@@ -1139,10 +1139,11 @@ Generated: ${new Date().toLocaleString()}`;
               </div>
               <button
                 onClick={onClose}
-                className="p-2 hover:bg-white hover:bg-opacity-50 rounded-lg transition-colors"
+                className="p-2 rounded-lg transition-all hover:opacity-90"
+              style={{ background: 'linear-gradient(135deg, #1b5e20, #2e7d32)' }}
                 aria-label="Close"
               >
-                <X className="w-5 h-5" style={{ color: '#5A5A5A' }} />
+                <X className="w-5 h-5 text-white" />
               </button>
             </div>
 

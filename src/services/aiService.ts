@@ -1,5 +1,7 @@
 // AI Service for Chat with Elya
-// Supports OpenAI API integration with fallback to simulated responses
+// Supports Agentic Flow integration with user context from Supabase
+
+import { userContextService, ElyaUserContext } from './userContextService';
 
 interface AIConfig {
   provider: 'openai' | 'openrouter' | 'agenticflow' | 'simulated';
@@ -24,20 +26,56 @@ Keep responses concise, warm, and actionable. Focus on validation, practical too
 class AIService {
   private config: AIConfig;
   private conversationHistory: Array<{ role: string; content: string }> = [];
+  private sessionId: string;
+  private userContext: ElyaUserContext | null = null;
 
   constructor(config: AIConfig = defaultConfig) {
     this.config = config;
+    this.sessionId = `session-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
     
-    // Initialize conversation with system prompt
-    if (this.config.systemPrompt) {
-      this.conversationHistory.push({
+    // Initialize conversation with system prompt (will be updated with user context)
+    this.initializeWithContext();
+  }
+
+  private async initializeWithContext() {
+    try {
+      // Get user context and generate contextual system prompt
+      this.userContext = await userContextService.getUserContextForElya();
+      const contextualPrompt = await userContextService.generateContextualSystemPrompt();
+      
+      // Initialize with contextual system prompt
+      this.conversationHistory = [{
         role: 'system',
-        content: this.config.systemPrompt
-      });
+        content: contextualPrompt
+      }];
+      
+      // Update user activity
+      await userContextService.updateUserActivity();
+    } catch (error) {
+      console.error('Error initializing with context:', error);
+      // Fallback to default system prompt
+      if (this.config.systemPrompt) {
+        this.conversationHistory.push({
+          role: 'system',
+          content: this.config.systemPrompt
+        });
+      }
     }
   }
 
   async getResponse(userMessage: string): Promise<string> {
+    // Generate unique message ID
+    const messageId = `msg-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
+    
+    // Save user message to Supabase
+    await userContextService.saveConversationMessage(
+      this.sessionId,
+      `${messageId}-user`,
+      'user',
+      userMessage,
+      { message_id: messageId, timestamp: new Date().toISOString() }
+    );
+    
     // Add user message to history
     this.conversationHistory.push({
       role: 'user',
@@ -55,6 +93,20 @@ class AIService {
         response = this.getSimulatedResponse(userMessage);
       }
 
+      // Save Elya response to Supabase
+      await userContextService.saveConversationMessage(
+        this.sessionId,
+        `${messageId}-elya`,
+        'elya',
+        response,
+        { 
+          message_id: messageId, 
+          timestamp: new Date().toISOString(),
+          provider: this.config.provider,
+          user_context_used: this.userContext ? true : false
+        }
+      );
+      
       // Add assistant response to history
       this.conversationHistory.push({
         role: 'assistant',
@@ -82,7 +134,25 @@ class AIService {
     const agentId = this.config.agentId || 'a1cab40c-bcc2-49d8-ab97-f233f9b83fb2';
     
     try {
-      // Agentic Flow API endpoint
+      // Prepare enhanced metadata with user context
+      const enhancedMetadata = {
+        user_type: 'healthcare_interpreter',
+        context: 'wellness_support',
+        session_id: this.sessionId,
+        has_user_context: this.userContext ? true : false,
+        ...(this.userContext?.user_summary && {
+          user_profile: {
+            avg_stress_level: this.userContext.user_summary.avg_stress_level,
+            avg_energy_level: this.userContext.user_summary.avg_energy_level,
+            burnout_risk: this.userContext.user_summary.burnout_risk_level,
+            recent_emotions: this.userContext.user_summary.recent_emotions?.slice(0, 5),
+            common_challenges: this.userContext.user_summary.common_challenges?.slice(0, 3),
+            effective_strategies: this.userContext.user_summary.effective_strategies?.slice(0, 3)
+          }
+        })
+      };
+      
+      // Try primary Agentic Flow API endpoint
       const response = await fetch(`https://api.agenticflow.ai/v1/agents/${agentId}/chat`, {
         method: 'POST',
         headers: {
@@ -91,11 +161,8 @@ class AIService {
         },
         body: JSON.stringify({
           message: userMessage,
-          conversation_history: this.conversationHistory.slice(-10), // Send last 10 messages for context
-          metadata: {
-            user_type: 'healthcare_interpreter',
-            context: 'wellness_support'
-          }
+          conversation_history: this.conversationHistory.slice(-10),
+          metadata: enhancedMetadata
         })
       });
 
@@ -115,18 +182,18 @@ class AIService {
         
         if (embedResponse.ok) {
           const data = await embedResponse.json();
-          return data.response || data.message || this.getSimulatedResponse(userMessage);
+          return data.response || data.message || this.getContextualSimulatedResponse(userMessage);
         }
         
         throw new Error('Agentic Flow API error');
       }
 
       const data = await response.json();
-      return data.response || data.message || this.getSimulatedResponse(userMessage);
+      return data.response || data.message || this.getContextualSimulatedResponse(userMessage);
     } catch (error) {
       console.error('Agentic Flow Error:', error);
-      // Fallback to simulated response
-      return this.getSimulatedResponse(userMessage);
+      // Fallback to contextual simulated response
+      return this.getContextualSimulatedResponse(userMessage);
     }
   }
 
@@ -165,6 +232,55 @@ class AIService {
 
     const data = await response.json();
     return data.choices[0].message.content.trim();
+  }
+
+  private getContextualSimulatedResponse(userInput: string): string {
+    // Use user context to provide more personalized fallback responses
+    if (this.userContext?.user_summary) {
+      return this.getContextAwareResponse(userInput, this.userContext);
+    }
+    return this.getSimulatedResponse(userInput);
+  }
+
+  private getContextAwareResponse(userInput: string, context: ElyaUserContext): string {
+    const input = userInput.toLowerCase();
+    const summary = context.user_summary;
+    
+    // High stress context responses
+    if ((input.includes('stress') || input.includes('overwhelm')) && summary.avg_stress_level >= 7) {
+      return `I can see you've been carrying a lot of stress lately. Your recent patterns show stress levels around ${summary.avg_stress_level.toFixed(1)}/10. Let's work together on some immediate relief strategies. What feels most urgent to address right now?`;
+    }
+    
+    // Low energy context responses
+    if ((input.includes('tired') || input.includes('exhausted')) && summary.avg_energy_level <= 4) {
+      return `Your energy levels have been running quite low (around ${summary.avg_energy_level.toFixed(1)}/10 recently). This kind of persistent fatigue is your body telling you something important. When did you last have genuinely restorative time?`;
+    }
+    
+    // Burnout risk awareness
+    if (summary.burnout_risk_level === 'high' || summary.burnout_risk_level === 'critical') {
+      const riskMessages = {
+        'high': 'I want you to know that you\'re showing signs of high burnout risk. This isn\'t a judgment - it\'s information we can use to better support you.',
+        'critical': 'Your recent patterns suggest critical burnout risk. I\'m genuinely concerned about your wellbeing right now.'
+      };
+      return `${riskMessages[summary.burnout_risk_level]} What kind of support would feel most helpful right now? I\'m here to help you navigate this.`;
+    }
+    
+    // Use effective strategies context
+    if (input.includes('help') && summary.effective_strategies?.length > 0) {
+      const strategies = summary.effective_strategies.slice(0, 2).join(' and ');
+      return `I remember that ${strategies} have worked well for you before. Would you like to explore how to apply these strategies to what you're facing now, or try something different?`;
+    }
+    
+    // Recent emotions context
+    if (summary.recent_emotions?.length > 0) {
+      const commonEmotion = summary.recent_emotions[0];
+      if (input.includes(commonEmotion) || input.includes('feeling')) {
+        return `I notice that ${commonEmotion} has come up for you recently. These patterns in our emotions often have important messages. What do you think this feeling is trying to tell you?`;
+      }
+    }
+    
+    // Fallback to general contextual awareness
+    return `Based on what I know about your recent experiences, this sounds like something that's been weighing on you. I'm here to support you through this. What would feel most helpful right now?`;
   }
 
   private getSimulatedResponse(userInput: string): string {
@@ -244,14 +360,30 @@ class AIService {
     return defaultResponses[Math.floor(Math.random() * defaultResponses.length)];
   }
 
-  resetConversation() {
-    // Reset conversation history but keep system prompt
-    this.conversationHistory = this.config.systemPrompt 
-      ? [{
-          role: 'system',
-          content: this.config.systemPrompt
-        }]
-      : [];
+  async resetConversation() {
+    // Generate new session ID
+    this.sessionId = `session-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
+    
+    // Re-initialize with fresh context
+    await this.initializeWithContext();
+  }
+
+  getSessionId(): string {
+    return this.sessionId;
+  }
+
+  async refreshUserContext(): Promise<void> {
+    try {
+      this.userContext = await userContextService.getUserContextForElya();
+      const contextualPrompt = await userContextService.generateContextualSystemPrompt();
+      
+      // Update system prompt with fresh context
+      if (this.conversationHistory.length > 0 && this.conversationHistory[0].role === 'system') {
+        this.conversationHistory[0].content = contextualPrompt;
+      }
+    } catch (error) {
+      console.error('Error refreshing user context:', error);
+    }
   }
 
   updateConfig(newConfig: Partial<AIConfig>) {
@@ -264,6 +396,10 @@ class AIService {
         content: newConfig.systemPrompt
       };
     }
+  }
+
+  getUserContext(): ElyaUserContext | null {
+    return this.userContext;
   }
 }
 

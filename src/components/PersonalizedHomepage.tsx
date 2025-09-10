@@ -219,7 +219,7 @@ export const PersonalizedHomepage: React.FC<PersonalizedHomepageProps> = ({ onNa
                   <div className="flex items-center gap-2">
                     <div className="flex-1 bg-gray-200 rounded-full h-2">
                       <div 
-                        className="h-2 rounded-full bg-gradient-to-r from-yellow-400 to-yellow-500 transition-all duration-500"
+                        className="h-2 rounded-full bg-gradient-to-r from-sage-500 to-green-500 from-yellow-400 to-yellow-500 transition-all duration-500"
                         style={{ width: `${(wellnessStats.mood / 5) * 100}%` }}
                       />
                     </div>
@@ -236,7 +236,7 @@ export const PersonalizedHomepage: React.FC<PersonalizedHomepageProps> = ({ onNa
                   <div className="flex items-center gap-2">
                     <div className="flex-1 bg-gray-200 rounded-full h-2">
                       <div 
-                        className="h-2 rounded-full bg-gradient-to-r from-green-400 to-green-500 transition-all duration-500"
+                        className="h-2 rounded-full bg-gradient-to-r from-sage-500 to-green-500 from-green-400 to-green-500 transition-all duration-500"
                         style={{ width: `${(wellnessStats.energy / 5) * 100}%` }}
                       />
                     </div>
@@ -263,7 +263,7 @@ export const PersonalizedHomepage: React.FC<PersonalizedHomepageProps> = ({ onNa
                   </div>
                   <div className="bg-gray-200 rounded-full h-2">
                     <div 
-                      className="h-2 rounded-full bg-gradient-to-r from-sage-400 to-green-400 transition-all duration-500"
+                      className="h-2 rounded-full bg-gradient-to-r from-sage-500 to-green-500 from-sage-400 to-green-400 transition-all duration-500"
                       style={{ width: `${wellnessStats.weeklyProgress}%` }}
                     />
                   </div>
@@ -308,7 +308,8 @@ export const PersonalizedHomepage: React.FC<PersonalizedHomepageProps> = ({ onNa
                   </div>
                   <button 
                     onClick={() => setShowBurnoutGauge(true)}
-                    className="w-full px-3 py-2 text-sm bg-gradient-to-r from-sage-500 to-green-500 hover:from-sage-600 hover:to-green-600 text-white rounded-lg font-medium transition-all shadow-sm hover:shadow-md"
+                    className="w-full px-3 py-2 text-sm text-white rounded-lg font-medium transition-all shadow-sm hover:shadow-md hover:opacity-90"
+                    style={{ background: 'linear-gradient(135deg, #1b5e20, #2e7d32)' }}
                   >
                     Retake Assessment
                   </button>
@@ -320,7 +321,8 @@ export const PersonalizedHomepage: React.FC<PersonalizedHomepageProps> = ({ onNa
                   </p>
                   <button 
                     onClick={() => setShowBurnoutGauge(true)}
-                    className="w-full px-4 py-2.5 bg-gradient-to-r from-sage-500 to-green-500 hover:from-sage-600 hover:to-green-600 text-white rounded-lg font-medium text-sm transition-all flex items-center justify-center gap-2 shadow-sm hover:shadow-md"
+                    className="w-full px-4 py-2.5 text-white rounded-lg font-medium text-sm transition-all flex items-center justify-center gap-2 shadow-sm hover:shadow-md hover:opacity-90"
+                    style={{ background: 'linear-gradient(135deg, #1b5e20, #2e7d32)' }}
                   >
                     <Gauge className="w-4 h-4" />
                     Take Assessment
@@ -330,14 +332,15 @@ export const PersonalizedHomepage: React.FC<PersonalizedHomepageProps> = ({ onNa
             </div>
 
             {/* Start Reflection CTA */}
-            <div className="bg-gradient-to-br from-green-50 to-emerald-50 rounded-xl p-5 border border-green-100">
+            <div className="bg-white rounded-xl p-5 shadow-sm border border-gray-100">
               <h3 className="font-semibold text-gray-900 mb-2">Ready to reflect?</h3>
               <p className="text-sm text-gray-600 mb-4">
                 Take 5 minutes to check in with yourself
               </p>
               <button 
                 onClick={() => onNavigate?.('reflection')}
-                className="w-full px-4 py-2.5 bg-gradient-to-r from-sage-500 to-green-500 hover:from-sage-600 hover:to-green-600 text-white rounded-lg font-medium text-sm transition-all flex items-center justify-center gap-2 shadow-sm hover:shadow-md"
+                className="w-full px-4 py-2.5 text-white rounded-lg font-medium text-sm transition-all flex items-center justify-center gap-2 shadow-sm hover:shadow-md hover:opacity-90"
+                style={{ background: 'linear-gradient(135deg, #1b5e20, #2e7d32)' }}
                 title="Go to Reflection Studio to create a new reflection"
               >
                 <BookOpen className="w-4 h-4" />
@@ -400,7 +403,8 @@ export const PersonalizedHomepage: React.FC<PersonalizedHomepageProps> = ({ onNa
                               onNavigate?.('reflection');
                               // In a real app, this would open the specific reflection
                             }}
-                            className="p-2 bg-gradient-to-r from-sage-500 to-green-500 hover:from-sage-600 hover:to-green-600 text-white rounded-lg transition-all shadow-sm hover:shadow-md"
+                            className="p-2 text-white rounded-lg transition-all shadow-sm hover:shadow-md hover:opacity-90"
+                            style={{ background: 'linear-gradient(135deg, #1b5e20, #2e7d32)' }}
                             title="View reflection"
                           >
                             <Eye className="w-3.5 h-3.5" />
@@ -410,7 +414,8 @@ export const PersonalizedHomepage: React.FC<PersonalizedHomepageProps> = ({ onNa
                               onNavigate?.('reflection');
                               // In a real app, this would open the reflection in edit mode
                             }}
-                            className="p-2 bg-gradient-to-r from-sage-500 to-green-500 hover:from-sage-600 hover:to-green-600 text-white rounded-lg transition-all shadow-sm hover:shadow-md"
+                            className="p-2 text-white rounded-lg transition-all shadow-sm hover:shadow-md hover:opacity-90"
+                            style={{ background: 'linear-gradient(135deg, #1b5e20, #2e7d32)' }}
                             title="Edit reflection"
                           >
                             <Edit3 className="w-3.5 h-3.5" />
@@ -426,7 +431,7 @@ export const PersonalizedHomepage: React.FC<PersonalizedHomepageProps> = ({ onNa
                         {reflection.tags.map((tag) => (
                           <span 
                             key={tag}
-                            className="px-2 py-1 text-xs rounded-full bg-gradient-to-r from-sage-50 to-green-50 text-sage-700 border border-sage-200"
+                            className="px-2 py-1 text-xs rounded-full bg-gradient-to-r from-sage-500 to-green-500 from-sage-50 to-green-50 text-sage-700 border border-sage-200"
                           >
                             {tag}
                           </span>
@@ -443,7 +448,8 @@ export const PersonalizedHomepage: React.FC<PersonalizedHomepageProps> = ({ onNa
                     </p>
                     <button 
                       onClick={() => onNavigate?.('reflection')}
-                      className="px-4 py-2 bg-gradient-to-r from-sage-500 to-green-500 hover:from-sage-600 hover:to-green-600 text-white rounded-lg font-medium text-sm transition-all shadow-sm hover:shadow-md"
+                      className="px-4 py-2 text-white rounded-lg font-medium text-sm transition-all shadow-sm hover:shadow-md hover:opacity-90"
+                      style={{ background: 'linear-gradient(135deg, #1b5e20, #2e7d32)' }}
                     >
                       Create First Reflection
                     </button>

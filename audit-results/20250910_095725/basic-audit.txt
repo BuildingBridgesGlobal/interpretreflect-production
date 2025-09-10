@@ -1,0 +1,72 @@
+
+[36m[1m
+╔════════════════════════════════════════════╗
+║   InterpretReflect Basic Audit Tool        ║
+║   Checking: http://localhost:5173/              ║
+╚════════════════════════════════════════════╝
+[0m
+[34mFetching page content...[0m
+
+[1mDocument Checks:[0m
+────────────────────────────────────────
+[32m✅ HTML lang attribute[0m
+[32m✅ Viewport meta tag[0m
+
+[1mSEO Checks:[0m
+────────────────────────────────────────
+[32m✅ Meta description[0m
+[32m✅ Title tag[0m
+
+[1mAccessibility Checks:[0m
+────────────────────────────────────────
+[32m✅ Skip to main content link[0m
+[31m❌ Main landmark[0m
+[31m❌ Navigation landmark[0m
+[31m❌ Header landmark[0m
+[31m❌ Footer landmark[0m
+
+[1mBranding Checks:[0m
+────────────────────────────────────────
+[32m✅ Favicon SVG[0m
+[32m✅ Apple touch icon[0m
+
+[1mPWA Checks:[0m
+────────────────────────────────────────
+[32m✅ Web manifest[0m
+[32m✅ Theme color[0m
+
+[1mSocial Checks:[0m
+────────────────────────────────────────
+[32m✅ Open Graph title[0m
+[32m✅ Open Graph description[0m
+[32m✅ Twitter card[0m
+
+[1mComponents Checks:[0m
+────────────────────────────────────────
+[31m❌ Search functionality[0m
+[31m❌ Help widget[0m
+
+[1mSecurity Checks:[0m
+────────────────────────────────────────
+[33m⚠️  HTTPS recommendation[0m
+
+[36m[1m═══════════════════════════════════════[0m
+[1mAudit Summary:[0m
+[32mPassed: 12[0m
+[33mWarnings: 1[0m
+[31mFailed: 6[0m
+
+[1mOverall Score: [33m63%[0m
+
+[1mRecommendations:[0m
+1. Review failed checks above
+2. Ensure all accessibility landmarks are present
+3. Add missing meta tags for SEO
+4. Implement any missing components
+
+[36mNote: This is a basic audit. For comprehensive testing:[0m
+• Use Lighthouse in Chrome DevTools
+• Test with screen readers (NVDA, JAWS)
+• Run axe DevTools extension
+• Test keyboard navigation manually
+• Validate color contrast ratios

@@ -47,6 +47,8 @@ interface AccessibleHomepageProps {
   onShowMentoringPrep: () => void;
   onShowMentoringReflection: () => void;
   onShowTeamReflection: () => void;
+  onShowInSessionSelfCheck: () => void;
+  onShowInSessionTeamSync: () => void;
   burnoutData: any;
   onBurnoutComplete: (data: any) => void;
 }
@@ -65,6 +67,8 @@ export const AccessibleHomepage: React.FC<AccessibleHomepageProps> = ({
   onShowMentoringPrep,
   onShowMentoringReflection,
   onShowTeamReflection,
+  onShowInSessionSelfCheck,
+  onShowInSessionTeamSync,
   burnoutData,
   onBurnoutComplete
 }) => {
@@ -93,7 +97,7 @@ export const AccessibleHomepage: React.FC<AccessibleHomepageProps> = ({
     switch (variant) {
       case 'primary':
         // WCAG: Color contrast ratio of 4.5:1 for normal text
-        return `${baseStyle} bg-green-600 text-white hover:bg-green-700 focus:ring-green-500`;
+        return `${baseStyle} text-white hover:opacity-90 focus:ring-green-500`;
       case 'secondary':
         return `${baseStyle} bg-gray-100 text-gray-700 hover:bg-gray-200 focus:ring-gray-500`;
       case 'ghost':
@@ -191,6 +195,7 @@ export const AccessibleHomepage: React.FC<AccessibleHomepageProps> = ({
                     <button
                       onClick={onShowWellnessCheckIn}
                       className={getButtonStyle('primary')}
+                      style={{ background: 'linear-gradient(135deg, #1b5e20, #2e7d32)' }}
                       aria-label="Start Wellness Check-In assessment" // WCAG: Descriptive button labels
                     >
                       Start Check-In
@@ -213,7 +218,7 @@ export const AccessibleHomepage: React.FC<AccessibleHomepageProps> = ({
                   </div>
                   <div className="flex-1">
                     <h3 className="font-semibold text-lg mb-2 text-gray-800">
-                      Ethics & Meaning Check
+                      Values Alignment Check
                     </h3>
                     <p className="text-sm text-gray-600 mb-4">
                       Reflect on professional boundaries and purpose
@@ -221,7 +226,8 @@ export const AccessibleHomepage: React.FC<AccessibleHomepageProps> = ({
                     <button
                       onClick={onShowEthicsMeaningCheck}
                       className={getButtonStyle('primary')}
-                      aria-label="Start Ethics and Meaning reflection"
+                      style={{ background: 'linear-gradient(135deg, #1b5e20, #2e7d32)' }}
+                      aria-label="Start Values Alignment reflection"
                     >
                       Begin Reflection
                       <ChevronRight className="inline ml-2 w-4 h-4" aria-hidden="true" />
@@ -251,6 +257,7 @@ export const AccessibleHomepage: React.FC<AccessibleHomepageProps> = ({
                     <button
                       onClick={onShowTeamReflection}
                       className={getButtonStyle('primary')}
+                      style={{ background: 'linear-gradient(135deg, #1b5e20, #2e7d32)' }}
                       aria-label="Start Team Reflection journey"
                     >
                       Reflect on Team
@@ -281,9 +288,72 @@ export const AccessibleHomepage: React.FC<AccessibleHomepageProps> = ({
                     <button
                       onClick={() => setShowAffirmationStudio(true)}
                       className={getButtonStyle('primary')}
+                      style={{ background: 'linear-gradient(135deg, #1b5e20, #2e7d32)' }}
                       aria-label="Open Affirmation and Reflection Studio"
                     >
                       Open Studio
+                      <ChevronRight className="inline ml-2 w-4 h-4" aria-hidden="true" />
+                    </button>
+                  </div>
+                </div>
+              </article>
+
+              <article 
+                className="p-6 bg-white rounded-xl shadow-md hover:shadow-lg transition-shadow"
+                role="listitem"
+              >
+                <div className="flex items-start gap-4">
+                  <div 
+                    className="p-3 bg-orange-100 rounded-lg"
+                    aria-hidden="true"
+                  >
+                    <AlertTriangle className="w-6 h-6 text-orange-600" />
+                  </div>
+                  <div className="flex-1">
+                    <h3 className="font-semibold text-lg mb-2 text-gray-800">
+                      In-Session Self-Check
+                    </h3>
+                    <p className="text-sm text-gray-600 mb-4">
+                      Quick monitoring for active interpreting
+                    </p>
+                    <button
+                      onClick={onShowInSessionSelfCheck}
+                      className={getButtonStyle('primary')}
+                      style={{ background: 'linear-gradient(135deg, #1b5e20, #2e7d32)' }}
+                      aria-label="Start In-Session Self-Check"
+                    >
+                      Begin Check
+                      <ChevronRight className="inline ml-2 w-4 h-4" aria-hidden="true" />
+                    </button>
+                  </div>
+                </div>
+              </article>
+
+              <article 
+                className="p-6 bg-white rounded-xl shadow-md hover:shadow-lg transition-shadow"
+                role="listitem"
+              >
+                <div className="flex items-start gap-4">
+                  <div 
+                    className="p-3 bg-purple-100 rounded-lg"
+                    aria-hidden="true"
+                  >
+                    <Users className="w-6 h-6 text-purple-600" />
+                  </div>
+                  <div className="flex-1">
+                    <h3 className="font-semibold text-lg mb-2 text-gray-800">
+                      In-Session Team Sync
+                    </h3>
+                    <p className="text-sm text-gray-600 mb-4">
+                      Team coordination during assignments
+                    </p>
+                    <button
+                      onClick={onShowInSessionTeamSync}
+                      className={getButtonStyle('primary')}
+                      style={{ background: 'linear-gradient(135deg, #1b5e20, #2e7d32)' }}
+                      aria-label="Start In-Session Team Sync"
+                    >
+                      Begin Sync
                       <ChevronRight className="inline ml-2 w-4 h-4" aria-hidden="true" />
                     </button>
                   </div>

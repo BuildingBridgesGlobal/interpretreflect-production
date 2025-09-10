@@ -934,7 +934,7 @@ export const TeamingReflectionEnhanced: React.FC<TeamingReflectionEnhancedProps>
               <div 
                 className="w-12 h-12 rounded-xl flex items-center justify-center"
                 style={{
-                  background: 'linear-gradient(145deg, #6B8B60 0%, #5F7F55 100%)',
+                  background: 'linear-gradient(135deg, #1b5e20, #2e7d32)',
                   boxShadow: '0 2px 8px rgba(107, 139, 96, 0.3)'
                 }}
               >
@@ -951,10 +951,11 @@ export const TeamingReflectionEnhanced: React.FC<TeamingReflectionEnhancedProps>
             </div>
             <button
               onClick={onClose}
-              className="p-2 hover:bg-white hover:bg-opacity-50 rounded-lg transition-colors"
+              className="p-2 rounded-lg transition-all hover:opacity-90"
+              style={{ background: 'linear-gradient(135deg, #1b5e20, #2e7d32)' }}
               aria-label="Close"
             >
-              <X className="w-5 h-5" style={{ color: '#5A5A5A' }} />
+              <X className="w-5 h-5 text-white" />
             </button>
           </div>
 
@@ -1029,7 +1030,7 @@ export const TeamingReflectionEnhanced: React.FC<TeamingReflectionEnhancedProps>
               onClick={handleNext}
               className="px-6 py-2 rounded-lg flex items-center transition-all"
               style={{
-                background: 'linear-gradient(145deg, #6B8B60 0%, #5F7F55 100%)',
+                background: 'linear-gradient(135deg, #1b5e20, #2e7d32)',
                 color: '#FFFFFF',
                 boxShadow: '0 2px 8px rgba(107, 139, 96, 0.3)'
               }}
@@ -1067,7 +1068,7 @@ export const TeamingReflectionEnhanced: React.FC<TeamingReflectionEnhancedProps>
                 style={{
                   background: isSaving 
                     ? 'linear-gradient(145deg, #9CA3AF 0%, #6B7280 100%)'
-                    : 'linear-gradient(145deg, #6B8B60 0%, #5F7F55 100%)',
+                    : 'linear-gradient(135deg, #1b5e20, #2e7d32)',
                   color: '#FFFFFF',
                   boxShadow: '0 2px 8px rgba(107, 139, 96, 0.3)',
                   cursor: isSaving ? 'not-allowed' : 'pointer'
@@ -1104,7 +1105,7 @@ export const TeamingReflectionEnhanced: React.FC<TeamingReflectionEnhancedProps>
               <div 
                 className="w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4"
                 style={{
-                  background: 'linear-gradient(145deg, #6B8B60 0%, #5F7F55 100%)',
+                  background: 'linear-gradient(135deg, #1b5e20, #2e7d32)',
                   boxShadow: '0 4px 12px rgba(107, 139, 96, 0.3)'
                 }}
               >
@@ -1140,7 +1141,7 @@ export const TeamingReflectionEnhanced: React.FC<TeamingReflectionEnhancedProps>
                       }}
                       className="px-3 py-2 rounded-lg flex items-center"
                       style={{
-                        backgroundColor: '#6B8B60',
+                        background: 'linear-gradient(135deg, #1b5e20, #2e7d32)',
                         color: '#FFFFFF'
                       }}
                     >
@@ -1158,7 +1159,7 @@ export const TeamingReflectionEnhanced: React.FC<TeamingReflectionEnhancedProps>
                   }}
                   className="px-6 py-3 rounded-lg transition-all"
                   style={{
-                    background: 'linear-gradient(145deg, #6B8B60 0%, #5F7F55 100%)',
+                    background: 'linear-gradient(135deg, #1b5e20, #2e7d32)',
                     color: '#FFFFFF',
                     boxShadow: '0 2px 8px rgba(107, 139, 96, 0.3)'
                   }}

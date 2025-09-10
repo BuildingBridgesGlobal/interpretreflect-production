@@ -195,17 +195,34 @@ function LandingPage({ onGetStarted }: LandingPageProps) {
 
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-20 pb-32">
           <div className="text-center">
-            <div
-              className="inline-flex items-center px-4 py-2 rounded-full mb-8"
-              style={{
-                backgroundColor: 'rgba(107, 139, 96, 0.1)',
-                border: '1px solid rgba(107, 139, 96, 0.3)',
-              }}
-            >
-              <Brain className="h-4 w-4 mr-2" style={{ color: '#4A6B3E' }} />
-              <span className="text-sm font-semibold" style={{ color: '#4A6B3E' }}>
-                The only wellness platform built for interpreters, backed by neuroscience, grounded in community
-              </span>
+            {/* HIPAA Compliance Badge */}
+            <div className="flex flex-col items-center gap-4 mb-8">
+              <div
+                className="inline-flex items-center px-6 py-3 rounded-full"
+                style={{
+                  background: 'linear-gradient(145deg, #FFD700 0%, #FFC107 100%)',
+                  border: '2px solid #FFB000',
+                  boxShadow: '0 4px 15px rgba(255, 193, 7, 0.3)',
+                }}
+              >
+                <Shield className="h-5 w-5 mr-2" style={{ color: '#1A1A1A' }} />
+                <span className="text-base font-bold" style={{ color: '#1A1A1A' }}>
+                  The ONLY HIPAA-Compliant Interpreter Wellness Platform
+                </span>
+              </div>
+              
+              <div
+                className="inline-flex items-center px-4 py-2 rounded-full"
+                style={{
+                  backgroundColor: 'rgba(107, 139, 96, 0.1)',
+                  border: '1px solid rgba(107, 139, 96, 0.3)',
+                }}
+              >
+                <Brain className="h-4 w-4 mr-2" style={{ color: '#4A6B3E' }} />
+                <span className="text-sm font-semibold" style={{ color: '#4A6B3E' }}>
+                  Built for interpreters, backed by neuroscience, grounded in community
+                </span>
+              </div>
             </div>
 
             <h1
@@ -865,6 +882,98 @@ function LandingPage({ onGetStarted }: LandingPageProps) {
               </article>
             </div>
             {/* END REMOVED EXTRA TOOLS */}
+          </div>
+        </div>
+      </section>
+
+      {/* Enterprise Trust & Compliance Section */}
+      <section
+        className="py-16"
+        style={{ backgroundColor: '#F8FBF6' }}
+        aria-labelledby="trust-heading"
+      >
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-12">
+            <h2 id="trust-heading" className="text-3xl font-bold mb-4" style={{ color: '#1A1A1A' }}>
+              Enterprise-Ready Security & Compliance
+            </h2>
+            <p className="text-lg" style={{ color: '#5A5A5A' }}>
+              Trusted by healthcare systems, government agencies, and Fortune 500 companies
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12">
+            {/* HIPAA Compliance */}
+            <div className="text-center">
+              <div
+                className="inline-block p-4 rounded-xl mb-4"
+                style={{
+                  background: 'linear-gradient(145deg, #FFD700 0%, #FFC107 100%)',
+                  boxShadow: '0 4px 15px rgba(255, 193, 7, 0.3)',
+                }}
+              >
+                <Shield className="h-10 w-10" style={{ color: '#1A1A1A' }} />
+              </div>
+              <h3 className="text-xl font-bold mb-2" style={{ color: '#1A1A1A' }}>
+                HIPAA Compliant
+              </h3>
+              <p className="text-sm" style={{ color: '#5A5A5A' }}>
+                Zero-Knowledge Wellness Verification ensures no PHI is ever stored or exposed
+              </p>
+            </div>
+
+            {/* SOC 2 Ready */}
+            <div className="text-center">
+              <div
+                className="inline-block p-4 rounded-xl mb-4"
+                style={{
+                  background: 'linear-gradient(145deg, #6B8B60 0%, #5F7F55 100%)',
+                  boxShadow: '0 4px 15px rgba(107, 139, 96, 0.3)',
+                }}
+              >
+                <Award className="h-10 w-10" style={{ color: '#FFFFFF' }} />
+              </div>
+              <h3 className="text-xl font-bold mb-2" style={{ color: '#1A1A1A' }}>
+                SOC 2 Type II Ready
+              </h3>
+              <p className="text-sm" style={{ color: '#5A5A5A' }}>
+                Enterprise-grade security controls and audit-ready compliance documentation
+              </p>
+            </div>
+
+            {/* GDPR Compliant */}
+            <div className="text-center">
+              <div
+                className="inline-block p-4 rounded-xl mb-4"
+                style={{
+                  background: 'linear-gradient(145deg, #4B79A1 0%, #283E51 100%)',
+                  boxShadow: '0 4px 15px rgba(75, 121, 161, 0.3)',
+                }}
+              >
+                <Users className="h-10 w-10" style={{ color: '#FFFFFF' }} />
+              </div>
+              <h3 className="text-xl font-bold mb-2" style={{ color: '#1A1A1A' }}>
+                GDPR Compliant
+              </h3>
+              <p className="text-sm" style={{ color: '#5A5A5A' }}>
+                Full data privacy rights for EU clients with complete transparency
+              </p>
+            </div>
+          </div>
+
+          <div
+            className="rounded-2xl p-8 text-center"
+            style={{
+              backgroundColor: 'rgba(255, 215, 0, 0.1)',
+              border: '2px solid rgba(255, 193, 7, 0.3)',
+            }}
+          >
+            <p className="text-lg font-semibold mb-2" style={{ color: '#1A1A1A' }}>
+              🏆 The ONLY HIPAA-Compliant Interpreter Wellness Platform
+            </p>
+            <p className="text-sm" style={{ color: '#5A5A5A' }}>
+              Unmatched data protection for healthcare systems and enterprise organizations
+            </p>
           </div>
         </div>
       </section>

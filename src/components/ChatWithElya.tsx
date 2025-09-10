@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { Send, Bot, User, Loader } from 'lucide-react';
+import { Send, Bot, User, Loader, Download, Calendar, BookOpen, RotateCcw } from 'lucide-react';
 import { aiService } from '../services/aiService';
 
 interface Message {
@@ -7,32 +7,111 @@ interface Message {
   text: string;
   sender: 'user' | 'elya';
   timestamp: Date;
+  theme?: string;
+}
+
+interface WellnessPrompt {
+  category: string;
+  prompts: string[];
 }
 
 export function ChatWithElya() {
-  const [messages, setMessages] = useState<Message[]>([
-    {
-      id: '1',
-      text: "Welcome back, Elya here! Your well-being matters to me. Let's pause together and take a breath. How are you feeling as you start (or wind down) your day?",
-      sender: 'elya',
-      timestamp: new Date(),
-    },
-  ]);
+  const [messages, setMessages] = useState<Message[]>([]);
+  const [showWellnessPrompts, setShowWellnessPrompts] = useState(false);
   const [inputMessage, setInputMessage] = useState('');
   const [isTyping, setIsTyping] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
+  const [conversationStarted, setConversationStarted] = useState(false);
+
+  // Wellness prompts for journaling
+  const wellnessPrompts: WellnessPrompt[] = [
+    {
+      category: "Daily Check-in",
+      prompts: [
+        "How is my energy level right now, and what might be contributing to it?",
+        "What emotions am I noticing in my body today?",
+        "What do I need most for my well-being right now?"
+      ]
+    },
+    {
+      category: "Burnout Prevention", 
+      prompts: [
+        "What signs of stress or overwhelm am I noticing lately?",
+        "How have I been taking care of myself this week?",
+        "What boundaries do I need to set to protect my energy?"
+      ]
+    },
+    {
+      category: "Interpreter-Specific",
+      prompts: [
+        "How did today's assignments affect me emotionally?",
+        "What challenging content did I encounter and how did I process it?",
+        "How am I managing the emotional labor of interpreting?"
+      ]
+    },
+    {
+      category: "Reflection & Growth",
+      prompts: [
+        "What am I learning about myself through my work?",
+        "How can I celebrate my resilience today?",
+        "What would I tell a fellow interpreter who was struggling?"
+      ]
+    }
+  ];
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
   };
 
+  // Load conversation history from localStorage
+  useEffect(() => {
+    const savedMessages = localStorage.getItem('elyaConversation');
+    if (savedMessages) {
+      try {
+        const parsedMessages = JSON.parse(savedMessages).map((msg: any) => ({
+          ...msg,
+          timestamp: new Date(msg.timestamp)
+        }));
+        setMessages(parsedMessages);
+        setConversationStarted(parsedMessages.length > 0);
+      } catch (error) {
+        console.error('Error loading conversation history:', error);
+      }
+    }
+    
+    // If no saved messages, start with welcome message
+    if (!savedMessages || JSON.parse(savedMessages).length === 0) {
+      const welcomeMessage: Message = {
+        id: '1',
+        text: "Welcome to your wellness journal! I'm Elya, your AI companion for interpreter well-being. This is your private space for reflection, processing, and growth. How would you like to begin today?",
+        sender: 'elya',
+        timestamp: new Date(),
+      };
+      setMessages([welcomeMessage]);
+      saveMessagesToStorage([welcomeMessage]);
+    }
+  }, []);
+
+  // Save messages to localStorage
+  const saveMessagesToStorage = (messagesToSave: Message[]) => {
+    try {
+      localStorage.setItem('elyaConversation', JSON.stringify(messagesToSave));
+    } catch (error) {
+      console.error('Error saving conversation:', error);
+    }
+  };
+
   useEffect(() => {
     // Only scroll if there are new messages (not on initial render)
-    if (messages.length > 1) {
+    if (messages.length > 0) {
       scrollToBottom();
+      // Save messages when they change
+      if (conversationStarted) {
+        saveMessagesToStorage(messages);
+      }
     }
-  }, [messages]);
+  }, [messages, conversationStarted]);
 
   const handleSendMessage = async () => {
     if (inputMessage.trim() === '') return;
@@ -44,7 +123,9 @@ export function ChatWithElya() {
       timestamp: new Date(),
     };
 
-    setMessages((prev) => [...prev, userMessage]);
+    const newMessages = [...messages, userMessage];
+    setMessages(newMessages);
+    setConversationStarted(true);
     const messageText = inputMessage;
     setInputMessage('');
     setIsTyping(true);
@@ -60,7 +141,8 @@ export function ChatWithElya() {
         timestamp: new Date(),
       };
       
-      setMessages((prev) => [...prev, elyaResponse]);
+      const finalMessages = [...newMessages, elyaResponse];
+      setMessages(finalMessages);
     } catch (error) {
       console.error('Error getting AI response:', error);
       // Fallback to simulated response on error
@@ -70,7 +152,8 @@ export function ChatWithElya() {
         sender: 'elya',
         timestamp: new Date(),
       };
-      setMessages((prev) => [...prev, elyaResponse]);
+      const finalMessages = [...newMessages, elyaResponse];
+      setMessages(finalMessages);
     } finally {
       setIsTyping(false);
     }
@@ -100,36 +183,101 @@ export function ChatWithElya() {
     }
   };
 
+  // Export conversation as text file
+  const exportConversation = () => {
+    const conversationText = messages
+      .map(msg => {
+        const time = msg.timestamp.toLocaleString();
+        const sender = msg.sender === 'elya' ? 'Elya' : 'You';
+        return `[${time}] ${sender}: ${msg.text}`;
+      })
+      .join('\n\n');
+    
+    const blob = new Blob([conversationText], { type: 'text/plain' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `wellness-journal-${new Date().toISOString().split('T')[0]}.txt`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+  };
+
+  // Clear conversation history
+  const clearConversation = () => {
+    if (window.confirm('Are you sure you want to clear your wellness journal? This cannot be undone.')) {
+      localStorage.removeItem('elyaConversation');
+      const welcomeMessage: Message = {
+        id: '1',
+        text: "Welcome to your wellness journal! I'm Elya, your AI companion for interpreter well-being. This is your private space for reflection, processing, and growth. How would you like to begin today?",
+        sender: 'elya',
+        timestamp: new Date(),
+      };
+      setMessages([welcomeMessage]);
+      setConversationStarted(false);
+    }
+  };
+
+  // Use wellness prompt
+  const usePrompt = (prompt: string) => {
+    setInputMessage(prompt);
+    setShowWellnessPrompts(false);
+    inputRef.current?.focus();
+  };
+
   return (
-    <div className="flex flex-col h-full" style={{ backgroundColor: '#FAFAF8' }}>
+    <div className="flex flex-col h-screen" style={{ backgroundColor: '#F8FBF9' }}>
       {/* Chat Header */}
       <div
-        className="px-6 py-4 border-b"
+        className="px-8 py-5 shadow-sm"
         style={{
-          backgroundColor: '#FFFFFF',
-          borderColor: 'rgba(92, 127, 79, 0.2)',
+          background: 'linear-gradient(135deg, #FFFFFF 0%, #F0F7F3 100%)',
+          borderBottom: '1px solid rgba(92, 127, 79, 0.15)',
         }}
       >
-        <div className="flex items-center space-x-3">
+        <div className="flex items-center space-x-4 max-w-7xl mx-auto">
           <div
-            className="w-10 h-10 rounded-full flex items-center justify-center"
-            style={{ backgroundColor: 'rgba(92, 127, 79, 0.2)' }}
+            className="w-12 h-12 rounded-full flex items-center justify-center shadow-sm"
+            style={{ 
+              background: 'linear-gradient(135deg, #1b5e20, #2e7d32)',
+            }}
           >
-            <Bot className="h-6 w-6" style={{ color: '#2D5F3F' }} />
+            <Bot className="h-7 w-7 text-white" />
           </div>
-          <div>
-            <h2 className="font-semibold text-lg" style={{ color: '#1A1A1A' }}>
-              Elya
+          <div className="flex-1">
+            <h2 className="font-bold text-xl" style={{ color: '#0D3A14' }}>
+              Wellness Journal with Elya
             </h2>
-            <p className="text-xs" style={{ color: '#6B7C6B' }}>
-              Your burnout prevention companion
+            <p className="text-sm" style={{ color: '#5C7F4F' }}>
+              Your private space for reflection, processing, and growth
             </p>
           </div>
-          <div className="ml-auto">
-            <div className="flex items-center space-x-1">
-              <div className="w-2 h-2 rounded-full bg-green-500 animate-pulse" />
-              <span className="text-xs" style={{ color: '#6B7C6B' }}>
-                Online
+          <div className="flex items-center space-x-3">
+            {messages.length > 1 && (
+              <button
+                onClick={exportConversation}
+                className="flex items-center gap-2 px-3 py-2 rounded-lg transition-colors hover:bg-gray-100"
+                title="Export journal as text file"
+              >
+                <Download size={16} style={{ color: '#5C7F4F' }} />
+                <span className="text-sm" style={{ color: '#5C7F4F' }}>Export</span>
+              </button>
+            )}
+            {messages.length > 1 && (
+              <button
+                onClick={clearConversation}
+                className="flex items-center gap-2 px-3 py-2 rounded-lg transition-colors hover:bg-gray-100"
+                title="Clear journal history"
+              >
+                <RotateCcw size={16} style={{ color: '#5C7F4F' }} />
+                <span className="text-sm" style={{ color: '#5C7F4F' }}>Clear</span>
+              </button>
+            )}
+            <div className="flex items-center space-x-2 px-4 py-2 rounded-full" style={{ backgroundColor: 'rgba(34, 197, 94, 0.1)' }}>
+              <div className="w-2.5 h-2.5 rounded-full bg-green-500 animate-pulse" />
+              <span className="text-sm font-medium" style={{ color: '#2D5F3F' }}>
+                Private & Secure
               </span>
             </div>
           </div>
@@ -137,46 +285,60 @@ export function ChatWithElya() {
       </div>
 
       {/* Messages Container */}
-      <div className="flex-1 overflow-y-auto px-6 py-4 space-y-4" style={{ overscrollBehavior: 'contain' }}>
-        {messages.map((message) => (
+      <div className="flex-1 overflow-y-auto px-8 py-6 space-y-6 max-w-5xl mx-auto w-full" style={{ overscrollBehavior: 'contain' }}>
+        {messages.length === 0 ? (
+          <div className="flex items-center justify-center h-full">
+            <div className="text-center">
+              <Calendar size={48} className="mx-auto mb-4" style={{ color: '#5C7F4F' }} />
+              <p className="text-lg" style={{ color: '#0D3A14' }}>Your wellness journal awaits</p>
+              <p className="text-sm" style={{ color: '#5C7F4F' }}>Start by sharing how you're feeling or use a reflection prompt below</p>
+            </div>
+          </div>
+        ) : (
+          messages.map((message, index) => {
           <div
             key={message.id}
             className={`flex ${message.sender === 'user' ? 'justify-end' : 'justify-start'}`}
           >
             <div
-              className={`flex space-x-2 max-w-[70%] ${
+              className={`flex space-x-3 max-w-[75%] ${
                 message.sender === 'user' ? 'flex-row-reverse space-x-reverse' : ''
               }`}
             >
               {/* Avatar */}
               <div
-                className={`w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 ${
+                className={`w-10 h-10 rounded-full flex items-center justify-center flex-shrink-0 shadow-sm ${
                   message.sender === 'user'
-                    ? 'bg-blue-500'
+                    ? ''
                     : ''
                 }`}
                 style={{
-                  backgroundColor: message.sender === 'elya' ? 'rgba(92, 127, 79, 0.2)' : undefined,
+                  background: message.sender === 'elya' 
+                    ? 'linear-gradient(135deg, #1b5e20, #2e7d32)' 
+                    : 'linear-gradient(135deg, #4F46E5, #7C3AED)',
                 }}
               >
                 {message.sender === 'user' ? (
                   <User className="h-5 w-5 text-white" />
                 ) : (
-                  <Bot className="h-5 w-5" style={{ color: '#2D5F3F' }} />
+                  <Bot className="h-5 w-5 text-white" />
                 )}
               </div>
 
               {/* Message Bubble */}
               <div
-                className={`px-4 py-3 rounded-2xl ${
+                className={`px-5 py-3.5 rounded-2xl shadow-sm ${
                   message.sender === 'user'
-                    ? 'bg-blue-500 text-white'
+                    ? 'text-white'
                     : ''
                 }`}
                 style={{
-                  backgroundColor: message.sender === 'elya' ? '#FFFFFF' : undefined,
-                  border: message.sender === 'elya' ? '1px solid rgba(92, 127, 79, 0.2)' : undefined,
-                  color: message.sender === 'elya' ? '#3A3A3A' : undefined,
+                  background: message.sender === 'elya' 
+                    ? '#FFFFFF' 
+                    : 'linear-gradient(135deg, #4F46E5, #7C3AED)',
+                  border: message.sender === 'elya' ? '1px solid rgba(92, 127, 79, 0.1)' : 'none',
+                  color: message.sender === 'elya' ? '#2D3748' : '#FFFFFF',
+                  maxWidth: '100%',
                 }}
               >
                 <p className="text-sm leading-relaxed">{message.text}</p>
@@ -188,31 +350,39 @@ export function ChatWithElya() {
                     color: message.sender === 'elya' ? '#9CA3AF' : undefined,
                   }}
                 >
-                  {message.timestamp.toLocaleTimeString([], {
-                    hour: '2-digit',
-                    minute: '2-digit',
-                  })}
+                  {message.timestamp.toLocaleDateString() === new Date().toLocaleDateString() 
+                    ? message.timestamp.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+                    : message.timestamp.toLocaleString([], { 
+                        month: 'short', 
+                        day: 'numeric', 
+                        hour: '2-digit', 
+                        minute: '2-digit' 
+                      })
+                  }
                 </p>
               </div>
             </div>
           </div>
-        ))}
+        })
+        )}
 
         {/* Typing Indicator */}
         {isTyping && (
           <div className="flex justify-start">
-            <div className="flex space-x-2 max-w-[70%]">
+            <div className="flex space-x-3 max-w-[75%]">
               <div
-                className="w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0"
-                style={{ backgroundColor: 'rgba(92, 127, 79, 0.2)' }}
+                className="w-10 h-10 rounded-full flex items-center justify-center flex-shrink-0 shadow-sm"
+                style={{ 
+                  background: 'linear-gradient(135deg, #1b5e20, #2e7d32)',
+                }}
               >
-                <Bot className="h-5 w-5" style={{ color: '#2D5F3F' }} />
+                <Bot className="h-5 w-5 text-white" />
               </div>
               <div
-                className="px-4 py-3 rounded-2xl"
+                className="px-5 py-3.5 rounded-2xl shadow-sm"
                 style={{
                   backgroundColor: '#FFFFFF',
-                  border: '1px solid rgba(92, 127, 79, 0.2)',
+                  border: '1px solid rgba(92, 127, 79, 0.1)',
                 }}
               >
                 <div className="flex space-x-1">
@@ -248,47 +418,95 @@ export function ChatWithElya() {
 
       {/* Input Area */}
       <div
-        className="px-6 py-4 border-t"
+        className="px-8 py-5 shadow-lg"
         style={{
-          backgroundColor: '#FFFFFF',
-          borderColor: 'rgba(92, 127, 79, 0.2)',
+          background: 'linear-gradient(135deg, #FFFFFF 0%, #F8FBF9 100%)',
+          borderTop: '1px solid rgba(92, 127, 79, 0.1)',
         }}
       >
-        <div className="flex space-x-3">
+        {/* Wellness Prompts */}
+        {showWellnessPrompts && (
+          <div className="max-w-5xl mx-auto mb-4 p-4 rounded-xl" style={{ backgroundColor: 'rgba(92, 127, 79, 0.05)', border: '1px solid rgba(92, 127, 79, 0.1)' }}>
+            <h3 className="text-lg font-semibold mb-3" style={{ color: '#0D3A14' }}>Wellness Reflection Prompts</h3>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              {wellnessPrompts.map((category, categoryIndex) => (
+                <div key={categoryIndex}>
+                  <h4 className="text-sm font-medium mb-2" style={{ color: '#5C7F4F' }}>{category.category}</h4>
+                  <div className="space-y-2">
+                    {category.prompts.map((prompt, promptIndex) => (
+                      <button
+                        key={promptIndex}
+                        onClick={() => usePrompt(prompt)}
+                        className="w-full text-left text-sm p-2 rounded-lg hover:bg-white transition-colors"
+                        style={{ color: '#2D3748', border: '1px solid rgba(92, 127, 79, 0.1)' }}
+                      >
+                        {prompt}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              ))}
+            </div>
+            <button
+              onClick={() => setShowWellnessPrompts(false)}
+              className="mt-3 text-sm px-3 py-1 rounded-md" 
+              style={{ color: '#5C7F4F', backgroundColor: 'rgba(92, 127, 79, 0.1)' }}
+            >
+              Close prompts
+            </button>
+          </div>
+        )}
+        
+        <div className="flex space-x-4 max-w-5xl mx-auto">
+          {!showWellnessPrompts && (
+            <button
+              onClick={() => setShowWellnessPrompts(true)}
+              className="flex items-center justify-center px-4 py-3.5 rounded-xl transition-all"
+              style={{
+                backgroundColor: 'rgba(92, 127, 79, 0.1)',
+                border: '2px solid rgba(92, 127, 79, 0.15)',
+                color: '#5C7F4F'
+              }}
+              title="Show wellness reflection prompts"
+            >
+              <BookOpen size={20} />
+            </button>
+          )}
           <input
             ref={inputRef}
             type="text"
             value={inputMessage}
             onChange={(e) => setInputMessage(e.target.value)}
             onKeyPress={handleKeyPress}
-            placeholder="Type your message..."
-            className="flex-1 px-4 py-3 rounded-xl outline-none transition-all"
+            placeholder="Ask Elya anything about your wellness..."
+            className="flex-1 px-5 py-3.5 rounded-xl outline-none transition-all text-base shadow-sm"
             style={{
-              backgroundColor: 'rgba(92, 127, 79, 0.05)',
-              border: '1px solid rgba(92, 127, 79, 0.2)',
-              color: '#3A3A3A',
+              backgroundColor: '#FFFFFF',
+              border: '2px solid rgba(92, 127, 79, 0.15)',
+              color: '#2D3748',
             }}
             onFocus={(e) => {
-              e.currentTarget.style.borderColor = '#5C7F4F';
+              e.currentTarget.style.borderColor = '#2e7d32';
+              e.currentTarget.style.boxShadow = '0 0 0 3px rgba(46, 125, 50, 0.1)';
             }}
             onBlur={(e) => {
-              e.currentTarget.style.borderColor = 'rgba(92, 127, 79, 0.2)';
+              e.currentTarget.style.borderColor = 'rgba(92, 127, 79, 0.15)';
+              e.currentTarget.style.boxShadow = 'none';
             }}
           />
           <button
             onClick={handleSendMessage}
             disabled={inputMessage.trim() === '' || isTyping}
-            className="px-4 py-3 rounded-xl transition-all flex items-center justify-center"
+            className="px-6 py-3.5 rounded-xl transition-all flex items-center justify-center shadow-sm hover:shadow-md"
             style={{
-              backgroundColor: inputMessage.trim() === '' || isTyping 
+              background: inputMessage.trim() === '' || isTyping 
                 ? 'rgba(92, 127, 79, 0.2)' 
-                : '#5C7F4F',
-              color: inputMessage.trim() === '' || isTyping 
-                ? '#9CA3AF' 
-                : '#FFFFFF',
+                : 'linear-gradient(135deg, #1b5e20, #2e7d32)',
+              color: '#FFFFFF',
               cursor: inputMessage.trim() === '' || isTyping 
                 ? 'not-allowed' 
                 : 'pointer',
+              minWidth: '120px',
             }}
             onMouseEnter={(e) => {
               if (inputMessage.trim() !== '' && !isTyping) {
@@ -310,14 +528,22 @@ export function ChatWithElya() {
         </div>
         <div className="flex flex-col items-center gap-1 mt-2">
           <p className="text-xs text-center" style={{ color: '#9CA3AF' }}>
-            Elya is an AI companion. For emergencies, please contact a healthcare professional.
+            Elya is an AI wellness companion. For mental health emergencies, please contact a healthcare professional or crisis hotline.
           </p>
           <div className="flex items-center gap-1.5">
-            <svg className="w-3 h-3" style={{ color: '#93C5FD' }} fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
-            </svg>
-            <span className="text-xs" style={{ color: '#93C5FD' }}>Your conversations are private and never shared</span>
+            <Shield className="w-3 h-3" style={{ color: '#93C5FD' }} />
+            <span className="text-xs" style={{ color: '#93C5FD' }}>
+              {isConnected 
+                ? 'Your conversations are encrypted and stored securely'
+                : 'Your journal entries are stored locally and kept private'
+              }
+            </span>
           </div>
+          {!isAuthenticated && (
+            <p className="text-xs text-center" style={{ color: '#F59E0B' }}>
+              Sign in to sync conversations and get personalized support based on your wellness history
+            </p>
+          )}
         </div>
       </div>
     </div>

@@ -956,7 +956,7 @@ Share with Team: ${formData.shareWithTeam ? 'Yes' : 'No'}
             }}
             className="flex-1 flex items-center justify-center gap-2 px-6 py-4 font-semibold rounded-lg transition-all focus:outline-none focus:ring-2 focus:ring-offset-2"
             style={{
-              background: 'linear-gradient(145deg, #6B8B60 0%, #5F7F55 100%)',
+              background: 'linear-gradient(135deg, #1b5e20, #2e7d32)',
               color: '#FFFFFF',
               focusRingColor: '#5C7F4F'
             }}
@@ -1037,7 +1037,7 @@ Share with Team: ${formData.shareWithTeam ? 'Yes' : 'No'}
             onClick={handleNext}
             className="flex items-center gap-2 px-6 py-3 font-semibold rounded-lg transition-all focus:outline-none focus:ring-2 focus:ring-offset-2"
             style={{
-              background: 'linear-gradient(145deg, #6B8B60 0%, #5F7F55 100%)',
+              background: 'linear-gradient(135deg, #1b5e20, #2e7d32)',
               color: '#FFFFFF',
               focusRingColor: '#5C7F4F'
             }}
@@ -1050,7 +1050,7 @@ Share with Team: ${formData.shareWithTeam ? 'Yes' : 'No'}
             onClick={() => setIsReviewing(true)}
             className="flex items-center gap-2 px-6 py-4 font-semibold rounded-lg transition-all focus:outline-none focus:ring-2 focus:ring-offset-2"
             style={{
-              background: 'linear-gradient(145deg, #6B8B60 0%, #5F7F55 100%)',
+              background: 'linear-gradient(135deg, #1b5e20, #2e7d32)',
               color: '#FFFFFF',
               focusRingColor: '#5C7F4F'
             }}

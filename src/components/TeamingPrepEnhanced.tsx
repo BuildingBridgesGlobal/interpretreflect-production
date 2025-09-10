@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import {
   X, Users, ChevronRight, ChevronLeft, Check, 
   Monitor, MapPin, Heart, Target, MessageSquare,
@@ -22,6 +22,21 @@ export const TeamingPrepEnhanced: React.FC<TeamingPrepEnhancedProps> = ({
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [showSummary, setShowSummary] = useState(false);
   const startTime = Date.now();
+  const modalRef = useRef<HTMLDivElement>(null);
+
+  // Handle Escape key
+  useEffect(() => {
+    const handleEscape = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        e.preventDefault();
+        e.stopPropagation();
+        onClose();
+      }
+    };
+
+    document.addEventListener('keydown', handleEscape);
+    return () => document.removeEventListener('keydown', handleEscape);
+  }, [onClose]);
   
   // Form state for all fields
   const [formData, setFormData] = useState<TeamingPrepEnhancedData>({
@@ -41,6 +56,7 @@ export const TeamingPrepEnhanced: React.FC<TeamingPrepEnhancedProps> = ({
     communication_style: '',
     feedback_preferences: '',
     boundaries_preferences: '',
+    debriefing_plan: '',
     // Section 3
     typical_stressor: '',
     stress_management_plan: '',
@@ -49,12 +65,14 @@ export const TeamingPrepEnhanced: React.FC<TeamingPrepEnhancedProps> = ({
     anticipated_obstacles: '',
     skills_to_develop: '',
     success_indicators: '',
+    conflict_management: '',
     // Section 4
     unique_strengths: '',
     support_needs: '',
     transition_strategy: '',
     dynamic_not_working_plan: '',
     corrections_approach: '',
+    roles_responsibilities: '',
     // Section 5
     success_description: '',
     ten_out_of_ten: '',
@@ -484,6 +502,19 @@ ${formData.support_needs}
               className="w-full px-4 py-3 border rounded-lg resize-none focus:ring-2 focus:ring-sage-500"
             />
           </div>
+
+          <div>
+            <label className="block text-sm font-medium mb-2" style={{ color: '#2D5F3F' }}>
+              Team Debriefing Plan
+            </label>
+            <textarea
+              value={formData.debriefing_plan}
+              onChange={(e) => handleFieldChange('debriefing_plan', e.target.value)}
+              placeholder="After the assignment, how will we come together to debrief as a team? Who will initiate or lead the debrief? What format will we use (quick check-in, structured reflection, written notes, etc.)? When and where will the debrief take place?"
+              rows={3}
+              className="w-full px-4 py-3 border rounded-lg resize-none focus:ring-2 focus:ring-sage-500"
+            />
+          </div>
         </div>
       )
     },
@@ -586,6 +617,19 @@ ${formData.support_needs}
               className="w-full px-4 py-3 border rounded-lg resize-none focus:ring-2 focus:ring-sage-500"
             />
           </div>
+
+          <div>
+            <label className="block text-sm font-medium mb-2" style={{ color: '#2D5F3F' }}>
+              Addressing Disagreements or Conflicts
+            </label>
+            <textarea
+              value={formData.conflict_management}
+              onChange={(e) => handleFieldChange('conflict_management', e.target.value)}
+              placeholder="How will we address disagreements or conflicts if they arise during the assignment? What ground rules or communication strategies will help us resolve issues constructively? When would we pause the assignment to address a conflict, and how will we do so respectfully?"
+              rows={3}
+              className="w-full px-4 py-3 border rounded-lg resize-none focus:ring-2 focus:ring-sage-500"
+            />
+          </div>
         </div>
       )
     },
@@ -655,6 +699,19 @@ ${formData.support_needs}
               onChange={(e) => handleFieldChange('corrections_approach', e.target.value)}
               placeholder="Describe your approach to corrections..."
               rows={2}
+              className="w-full px-4 py-3 border rounded-lg resize-none focus:ring-2 focus:ring-sage-500"
+            />
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium mb-2" style={{ color: '#2D5F3F' }}>
+              Roles and Responsibilities
+            </label>
+            <textarea
+              value={formData.roles_responsibilities}
+              onChange={(e) => handleFieldChange('roles_responsibilities', e.target.value)}
+              placeholder="How will we divide or rotate key roles and responsibilities before, during, and after the assignment? Who will handle preparation, monitoring, switching, and note-taking? Are there any specialized tasks or leadership roles we need to clarify?"
+              rows={3}
               className="w-full px-4 py-3 border rounded-lg resize-none focus:ring-2 focus:ring-sage-500"
             />
           </div>
@@ -870,10 +927,14 @@ ${formData.support_needs}
   const isLastSection = currentSection === sections.length - 1;
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+    <div 
+      className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4"
+      onClick={onClose}
+    >
       <div 
-        className="bg-white rounded-2xl w-full max-w-4xl max-h-[90vh] overflow-hidden"
+        className="bg-white rounded-2xl w-full max-w-4xl max-h-[90vh] flex flex-col"
         style={{ backgroundColor: '#FAF9F6' }}
+        onClick={(e) => e.stopPropagation()}
       >
         {/* Header */}
         <div 
@@ -888,7 +949,7 @@ ${formData.support_needs}
               <div 
                 className="w-12 h-12 rounded-xl flex items-center justify-center"
                 style={{
-                  background: 'linear-gradient(145deg, #6B8B60 0%, #5F7F55 100%)',
+                  background: 'linear-gradient(135deg, #1b5e20, #2e7d32)',
                   boxShadow: '0 2px 8px rgba(107, 139, 96, 0.3)'
                 }}
               >
@@ -905,10 +966,11 @@ ${formData.support_needs}
             </div>
             <button
               onClick={onClose}
-              className="p-2 hover:bg-white hover:bg-opacity-50 rounded-lg transition-colors"
+              className="p-2 rounded-lg transition-all hover:opacity-90"
+              style={{ background: 'linear-gradient(135deg, #1b5e20, #2e7d32)' }}
               aria-label="Close"
             >
-              <X className="w-5 h-5" style={{ color: '#5A5A5A' }} />
+              <X className="w-5 h-5 text-white" />
             </button>
           </div>
 
@@ -935,7 +997,7 @@ ${formData.support_needs}
         </div>
 
         {/* Content */}
-        <div className="p-6 overflow-y-auto" style={{ maxHeight: 'calc(90vh - 240px)' }}>
+        <div className="p-6 flex-1 overflow-y-auto">
           <div className="mb-4 flex items-center space-x-2">
             {currentSectionData.icon}
             <h3 className="text-xl font-semibold" style={{ color: '#1A1A1A' }}>
@@ -983,7 +1045,7 @@ ${formData.support_needs}
               onClick={handleNext}
               className="px-6 py-2 rounded-lg flex items-center transition-all"
               style={{
-                background: 'linear-gradient(145deg, #6B8B60 0%, #5F7F55 100%)',
+                background: 'linear-gradient(135deg, #1b5e20, #2e7d32)',
                 color: '#FFFFFF',
                 boxShadow: '0 2px 8px rgba(107, 139, 96, 0.3)'
               }}

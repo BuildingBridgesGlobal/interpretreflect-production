@@ -216,13 +216,13 @@ export const Footer: React.FC = () => {
 
             {/* Contact */}
             <div className="space-y-2">
-              <a href="mailto:info@buildingbridgeslearning.com" 
+              <a href="mailto:hello@huviatechnologies.com" 
                 className="flex items-center gap-2 text-sm transition-colors"
                 style={{ color: '#6B7280' }}
                 onMouseEnter={(e) => e.currentTarget.style.color = '#5B8FE3'}
                 onMouseLeave={(e) => e.currentTarget.style.color = '#6B7280'}>
                 <Mail className="w-4 h-4" />
-                info@buildingbridgeslearning.com
+                hello@huviatechnologies.com
               </a>
             </div>
 

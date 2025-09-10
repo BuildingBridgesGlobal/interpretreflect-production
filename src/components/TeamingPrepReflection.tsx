@@ -499,7 +499,7 @@ export const TeamingPrepReflection: React.FC<TeamingPrepReflectionProps> = ({
               <div 
                 className="w-12 h-12 rounded-xl flex items-center justify-center"
                 style={{
-                  background: 'linear-gradient(145deg, #6B8B60 0%, #5F7F55 100%)',
+                  background: 'linear-gradient(135deg, #1b5e20, #2e7d32)',
                   boxShadow: '0 2px 8px rgba(107, 139, 96, 0.3)'
                 }}
               >
@@ -516,10 +516,11 @@ export const TeamingPrepReflection: React.FC<TeamingPrepReflectionProps> = ({
             </div>
             <button
               onClick={onClose}
-              className="p-2 hover:bg-white hover:bg-opacity-50 rounded-lg transition-colors"
+              className="p-2 rounded-lg transition-all hover:opacity-90"
+              style={{ background: 'linear-gradient(135deg, #1b5e20, #2e7d32)' }}
               aria-label="Close"
             >
-              <X className="w-5 h-5" style={{ color: '#5A5A5A' }} />
+              <X className="w-5 h-5 text-white" />
             </button>
           </div>
 
@@ -593,7 +594,7 @@ export const TeamingPrepReflection: React.FC<TeamingPrepReflectionProps> = ({
               onClick={handleNext}
               className="px-6 py-2 rounded-lg flex items-center transition-all"
               style={{
-                background: 'linear-gradient(145deg, #6B8B60 0%, #5F7F55 100%)',
+                background: 'linear-gradient(135deg, #1b5e20, #2e7d32)',
                 color: '#FFFFFF',
                 boxShadow: '0 2px 8px rgba(107, 139, 96, 0.3)'
               }}

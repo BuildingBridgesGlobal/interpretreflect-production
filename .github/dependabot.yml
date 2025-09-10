@@ -1,0 +1,29 @@
+version: 2
+updates:
+  # Keep npm deps (app + dev) fresh
+  - package-ecosystem: "npm"
+    directory: "/"
+    schedule:
+      interval: "daily"           # or "weekly"
+      time: "09:00"
+      timezone: "America/New_York"
+    open-pull-requests-limit: 10
+    # Group noisy dev-server bumps (Vite/esbuild/etc.)
+    groups:
+      dev-server:
+        applies-to: "version-updates"
+        patterns:
+          - "vite*"
+          - "esbuild*"
+          - "@vitejs/*"
+        update-types:
+          - "minor"
+          - "patch"
+    # Optional: target your default branch if not "main"
+    target-branch: "main"
+
+  # Keep GitHub Actions up to date
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"

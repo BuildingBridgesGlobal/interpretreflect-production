@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { Send, Bot, User, Loader, Download, Calendar, BookOpen, RotateCcw } from 'lucide-react';
+import { Send, Bot, User, Loader, Download, Calendar, BookOpen, RotateCcw, Shield } from 'lucide-react';
 import { aiService } from '../services/aiService';
 
 interface Message {
@@ -23,6 +23,7 @@ export function ChatWithElya() {
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
   const [conversationStarted, setConversationStarted] = useState(false);
+  const [isConnected] = useState(true); // Connected to AI service with Supabase
 
   // Wellness prompts for journaling
   const wellnessPrompts: WellnessPrompt[] = [
@@ -113,7 +114,9 @@ export function ChatWithElya() {
     }
   }, [messages, conversationStarted]);
 
-  const handleSendMessage = async () => {
+  const handleSendMessage = async (e?: React.FormEvent) => {
+    if (e) e.preventDefault();
+    console.log('handleSendMessage called with:', inputMessage);
     if (inputMessage.trim() === '') return;
 
     const userMessage: Message = {
@@ -132,7 +135,9 @@ export function ChatWithElya() {
 
     try {
       // Get AI response using the AI service
+      console.log('Sending message to AI:', messageText);
       const responseText = await aiService.getResponse(messageText);
+      console.log('AI response received:', responseText);
       
       const elyaResponse: Message = {
         id: (Date.now() + 1).toString(),
@@ -220,7 +225,7 @@ export function ChatWithElya() {
   };
 
   // Use wellness prompt
-  const usePrompt = (prompt: string) => {
+  const selectPrompt = (prompt: string) => {
     setInputMessage(prompt);
     setShowWellnessPrompts(false);
     inputRef.current?.focus();
@@ -228,28 +233,28 @@ export function ChatWithElya() {
 
   return (
     <div className="flex flex-col h-screen" style={{ backgroundColor: '#F8FBF9' }}>
-      {/* Chat Header */}
+      {/* Chat Header - Reduced padding for more compact layout */}
       <div
-        className="px-8 py-5 shadow-sm"
+        className="px-6 py-3 shadow-sm"
         style={{
           background: 'linear-gradient(135deg, #FFFFFF 0%, #F0F7F3 100%)',
           borderBottom: '1px solid rgba(92, 127, 79, 0.15)',
         }}
       >
-        <div className="flex items-center space-x-4 max-w-7xl mx-auto">
+        <div className="flex items-center space-x-3 max-w-7xl mx-auto">
           <div
-            className="w-12 h-12 rounded-full flex items-center justify-center shadow-sm"
+            className="w-10 h-10 rounded-full flex items-center justify-center shadow-sm"
             style={{ 
               background: 'linear-gradient(135deg, #1b5e20, #2e7d32)',
             }}
           >
-            <Bot className="h-7 w-7 text-white" />
+            <Bot className="h-6 w-6 text-white" />
           </div>
           <div className="flex-1">
-            <h2 className="font-bold text-xl" style={{ color: '#0D3A14' }}>
+            <h2 className="font-bold text-lg" style={{ color: '#0D3A14' }}>
               Wellness Journal with Elya
             </h2>
-            <p className="text-sm" style={{ color: '#5C7F4F' }}>
+            <p className="text-xs" style={{ color: '#5C7F4F' }}>
               Your private space for reflection, processing, and growth
             </p>
           </div>
@@ -284,8 +289,112 @@ export function ChatWithElya() {
         </div>
       </div>
 
-      {/* Messages Container */}
-      <div className="flex-1 overflow-y-auto px-8 py-6 space-y-6 max-w-5xl mx-auto w-full" style={{ overscrollBehavior: 'contain' }}>
+      {/* Input Area - Moved to top, right under header */}
+      <div
+        className="px-6 py-3 shadow-md"
+        style={{
+          background: 'linear-gradient(135deg, #FFFFFF 0%, #F8FBF9 100%)',
+          borderBottom: '1px solid rgba(92, 127, 79, 0.1)',
+        }}
+      >
+        {/* Wellness Prompts */}
+        {showWellnessPrompts && (
+          <div className="max-w-5xl mx-auto mb-4 p-4 rounded-xl" style={{ backgroundColor: 'rgba(92, 127, 79, 0.05)', border: '1px solid rgba(92, 127, 79, 0.1)' }}>
+            <h3 className="text-lg font-semibold mb-3" style={{ color: '#0D3A14' }}>Wellness Reflection Prompts</h3>
+            <div className="space-y-3">
+              {wellnessPrompts.map((category, categoryIndex) => (
+                <div key={categoryIndex}>
+                  <h4 className="font-medium text-sm mb-2" style={{ color: '#5C7F4F' }}>{category.category}</h4>
+                  <div className="flex flex-wrap gap-2">
+                    {category.prompts.map((prompt, promptIndex) => (
+                      <button
+                        key={promptIndex}
+                        onClick={() => selectPrompt(prompt)}
+                        className="text-left px-3 py-2 rounded-lg text-sm transition-all hover:shadow-md"
+                        style={{
+                          backgroundColor: 'rgba(255, 255, 255, 0.9)',
+                          border: '1px solid rgba(92, 127, 79, 0.2)',
+                          color: '#2D3748',
+                        }}
+                      >
+                        {prompt}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* Input Form */}
+        <form onSubmit={handleSendMessage} className="max-w-5xl mx-auto">
+          <div className="flex items-center space-x-3">
+            <button
+              type="button"
+              onClick={() => setShowWellnessPrompts(!showWellnessPrompts)}
+              className="p-3 rounded-xl transition-all hover:shadow-md"
+              style={{
+                backgroundColor: showWellnessPrompts ? 'rgba(92, 127, 79, 0.1)' : '#FFFFFF',
+                border: '2px solid rgba(92, 127, 79, 0.15)',
+              }}
+              title="Wellness reflection prompts"
+            >
+              <BookOpen size={20} style={{ color: '#5C7F4F' }} />
+            </button>
+            <input
+              ref={inputRef}
+              type="text"
+              value={inputMessage}
+              onChange={(e) => setInputMessage(e.target.value)}
+              onKeyPress={handleKeyPress}
+              placeholder="Ask Elya anything about your wellness..."
+              className="flex-1 px-5 py-3.5 rounded-xl outline-none transition-all text-base shadow-sm"
+              style={{
+                backgroundColor: '#FFFFFF',
+                border: '2px solid rgba(92, 127, 79, 0.15)',
+                color: '#2D3748',
+              }}
+              disabled={isTyping}
+            />
+            <button
+              type="submit"
+              disabled={!inputMessage.trim() || isTyping}
+              className="p-3 rounded-xl transition-all hover:shadow-lg disabled:opacity-50 disabled:cursor-not-allowed"
+              style={{
+                background: inputMessage.trim() && !isTyping
+                  ? 'linear-gradient(135deg, #1b5e20, #2e7d32)'
+                  : 'rgba(92, 127, 79, 0.2)',
+              }}
+            >
+              {isTyping ? (
+                <Loader className="h-5 w-5 text-white animate-spin" />
+              ) : (
+                <Send className="h-5 w-5 text-white" />
+              )}
+            </button>
+          </div>
+        </form>
+
+        {/* Privacy Notice - Moved inside input area */}
+        <div className="max-w-5xl mx-auto mt-3 text-center">
+          <p className="text-xs" style={{ color: '#9CA3AF' }}>
+            Elya is an AI wellness companion. For mental health emergencies, please contact a healthcare professional or crisis hotline.
+          </p>
+          <div className="flex items-center justify-center gap-1.5 mt-1">
+            <Shield className="w-3 h-3" style={{ color: '#93C5FD' }} />
+            <span className="text-xs" style={{ color: '#93C5FD' }}>
+              {isConnected 
+                ? 'Your conversations are encrypted and stored securely'
+                : 'Your journal entries are stored locally and kept private'
+              }
+            </span>
+          </div>
+        </div>
+      </div>
+
+      {/* Messages Container - Now below the input */}
+      <div className="flex-1 overflow-y-auto px-6 py-4 space-y-4 max-w-5xl mx-auto w-full" style={{ overscrollBehavior: 'contain' }}>
         {messages.length === 0 ? (
           <div className="flex items-center justify-center h-full">
             <div className="text-center">
@@ -295,7 +404,7 @@ export function ChatWithElya() {
             </div>
           </div>
         ) : (
-          messages.map((message, index) => {
+          messages.map((message, index) => (
           <div
             key={message.id}
             className={`flex ${message.sender === 'user' ? 'justify-end' : 'justify-start'}`}
@@ -363,7 +472,7 @@ export function ChatWithElya() {
               </div>
             </div>
           </div>
-        })
+          ))
         )}
 
         {/* Typing Indicator */}
@@ -414,137 +523,6 @@ export function ChatWithElya() {
         )}
 
         <div ref={messagesEndRef} />
-      </div>
-
-      {/* Input Area */}
-      <div
-        className="px-8 py-5 shadow-lg"
-        style={{
-          background: 'linear-gradient(135deg, #FFFFFF 0%, #F8FBF9 100%)',
-          borderTop: '1px solid rgba(92, 127, 79, 0.1)',
-        }}
-      >
-        {/* Wellness Prompts */}
-        {showWellnessPrompts && (
-          <div className="max-w-5xl mx-auto mb-4 p-4 rounded-xl" style={{ backgroundColor: 'rgba(92, 127, 79, 0.05)', border: '1px solid rgba(92, 127, 79, 0.1)' }}>
-            <h3 className="text-lg font-semibold mb-3" style={{ color: '#0D3A14' }}>Wellness Reflection Prompts</h3>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              {wellnessPrompts.map((category, categoryIndex) => (
-                <div key={categoryIndex}>
-                  <h4 className="text-sm font-medium mb-2" style={{ color: '#5C7F4F' }}>{category.category}</h4>
-                  <div className="space-y-2">
-                    {category.prompts.map((prompt, promptIndex) => (
-                      <button
-                        key={promptIndex}
-                        onClick={() => usePrompt(prompt)}
-                        className="w-full text-left text-sm p-2 rounded-lg hover:bg-white transition-colors"
-                        style={{ color: '#2D3748', border: '1px solid rgba(92, 127, 79, 0.1)' }}
-                      >
-                        {prompt}
-                      </button>
-                    ))}
-                  </div>
-                </div>
-              ))}
-            </div>
-            <button
-              onClick={() => setShowWellnessPrompts(false)}
-              className="mt-3 text-sm px-3 py-1 rounded-md" 
-              style={{ color: '#5C7F4F', backgroundColor: 'rgba(92, 127, 79, 0.1)' }}
-            >
-              Close prompts
-            </button>
-          </div>
-        )}
-        
-        <div className="flex space-x-4 max-w-5xl mx-auto">
-          {!showWellnessPrompts && (
-            <button
-              onClick={() => setShowWellnessPrompts(true)}
-              className="flex items-center justify-center px-4 py-3.5 rounded-xl transition-all"
-              style={{
-                backgroundColor: 'rgba(92, 127, 79, 0.1)',
-                border: '2px solid rgba(92, 127, 79, 0.15)',
-                color: '#5C7F4F'
-              }}
-              title="Show wellness reflection prompts"
-            >
-              <BookOpen size={20} />
-            </button>
-          )}
-          <input
-            ref={inputRef}
-            type="text"
-            value={inputMessage}
-            onChange={(e) => setInputMessage(e.target.value)}
-            onKeyPress={handleKeyPress}
-            placeholder="Ask Elya anything about your wellness..."
-            className="flex-1 px-5 py-3.5 rounded-xl outline-none transition-all text-base shadow-sm"
-            style={{
-              backgroundColor: '#FFFFFF',
-              border: '2px solid rgba(92, 127, 79, 0.15)',
-              color: '#2D3748',
-            }}
-            onFocus={(e) => {
-              e.currentTarget.style.borderColor = '#2e7d32';
-              e.currentTarget.style.boxShadow = '0 0 0 3px rgba(46, 125, 50, 0.1)';
-            }}
-            onBlur={(e) => {
-              e.currentTarget.style.borderColor = 'rgba(92, 127, 79, 0.15)';
-              e.currentTarget.style.boxShadow = 'none';
-            }}
-          />
-          <button
-            onClick={handleSendMessage}
-            disabled={inputMessage.trim() === '' || isTyping}
-            className="px-6 py-3.5 rounded-xl transition-all flex items-center justify-center shadow-sm hover:shadow-md"
-            style={{
-              background: inputMessage.trim() === '' || isTyping 
-                ? 'rgba(92, 127, 79, 0.2)' 
-                : 'linear-gradient(135deg, #1b5e20, #2e7d32)',
-              color: '#FFFFFF',
-              cursor: inputMessage.trim() === '' || isTyping 
-                ? 'not-allowed' 
-                : 'pointer',
-              minWidth: '120px',
-            }}
-            onMouseEnter={(e) => {
-              if (inputMessage.trim() !== '' && !isTyping) {
-                e.currentTarget.style.backgroundColor = '#8FAC82';
-              }
-            }}
-            onMouseLeave={(e) => {
-              if (inputMessage.trim() !== '' && !isTyping) {
-                e.currentTarget.style.backgroundColor = '#5C7F4F';
-              }
-            }}
-          >
-            {isTyping ? (
-              <Loader className="h-5 w-5 animate-spin" />
-            ) : (
-              <Send className="h-5 w-5" />
-            )}
-          </button>
-        </div>
-        <div className="flex flex-col items-center gap-1 mt-2">
-          <p className="text-xs text-center" style={{ color: '#9CA3AF' }}>
-            Elya is an AI wellness companion. For mental health emergencies, please contact a healthcare professional or crisis hotline.
-          </p>
-          <div className="flex items-center gap-1.5">
-            <Shield className="w-3 h-3" style={{ color: '#93C5FD' }} />
-            <span className="text-xs" style={{ color: '#93C5FD' }}>
-              {isConnected 
-                ? 'Your conversations are encrypted and stored securely'
-                : 'Your journal entries are stored locally and kept private'
-              }
-            </span>
-          </div>
-          {!isAuthenticated && (
-            <p className="text-xs text-center" style={{ color: '#F59E0B' }}>
-              Sign in to sync conversations and get personalized support based on your wellness history
-            </p>
-          )}
-        </div>
       </div>
     </div>
   );

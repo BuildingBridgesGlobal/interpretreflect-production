@@ -116,12 +116,12 @@ class UserContextService {
     try {
       const { data, error } = await supabase
         .rpc('save_elya_conversation', {
-          target_user_id: userId,
-          target_session_id: sessionId,
-          target_message_id: messageId,
-          message_sender: sender,
-          message_content: content,
-          message_metadata: metadata
+          p_user_id: userId,
+          p_session_id: sessionId,
+          p_message_id: messageId,
+          p_sender: sender,
+          p_content: content,
+          p_metadata: metadata
         });
 
       if (error) {
@@ -253,6 +253,131 @@ Keep responses warm, concise, and actionable. Focus on validation, practical too
       }
     } catch (error) {
       console.error('Error in updateUserActivity:', error);
+    }
+  }
+
+  /**
+   * Get wellness insights for the current user
+   */
+  async getWellnessInsights(): Promise<any> {
+    const userId = await this.getCurrentUserId();
+    if (!userId) return null;
+
+    try {
+      const { data, error } = await supabase
+        .rpc('get_wellness_insights_for_elya', {
+          target_user_id: userId
+        });
+
+      if (error) {
+        console.error('Error fetching wellness insights:', error);
+        return null;
+      }
+
+      return data;
+    } catch (error) {
+      console.error('Error in getWellnessInsights:', error);
+      return null;
+    }
+  }
+
+  /**
+   * Get team insights for the current user
+   */
+  async getTeamInsights(): Promise<any> {
+    const userId = await this.getCurrentUserId();
+    if (!userId) return null;
+
+    try {
+      const { data, error } = await supabase
+        .rpc('get_team_insights_for_elya', {
+          target_user_id: userId
+        });
+
+      if (error) {
+        console.error('Error fetching team insights:', error);
+        return null;
+      }
+
+      return data;
+    } catch (error) {
+      console.error('Error in getTeamInsights:', error);
+      return null;
+    }
+  }
+
+  /**
+   * Generate personalized recommendations
+   */
+  async generateRecommendations(): Promise<any> {
+    const userId = await this.getCurrentUserId();
+    if (!userId) return null;
+
+    try {
+      const { data, error } = await supabase
+        .rpc('generate_recommendations_for_elya', {
+          target_user_id: userId
+        });
+
+      if (error) {
+        console.error('Error generating recommendations:', error);
+        return null;
+      }
+
+      return data;
+    } catch (error) {
+      console.error('Error in generateRecommendations:', error);
+      return null;
+    }
+  }
+
+  /**
+   * Analyze emotion patterns
+   */
+  async analyzeEmotionPatterns(): Promise<any> {
+    const userId = await this.getCurrentUserId();
+    if (!userId) return null;
+
+    try {
+      const { data, error } = await supabase
+        .rpc('analyze_emotion_patterns_for_elya', {
+          target_user_id: userId
+        });
+
+      if (error) {
+        console.error('Error analyzing emotion patterns:', error);
+        return null;
+      }
+
+      return data;
+    } catch (error) {
+      console.error('Error in analyzeEmotionPatterns:', error);
+      return null;
+    }
+  }
+
+  /**
+   * Get assignment insights
+   */
+  async getAssignmentInsights(): Promise<any> {
+    const userId = await this.getCurrentUserId();
+    if (!userId) return null;
+
+    try {
+      const { data, error } = await supabase
+        .rpc('get_assignment_insights_for_elya', {
+          target_user_id: userId
+        });
+
+      if (error) {
+        console.error('Error fetching assignment insights:', error);
+        return null;
+      }
+
+      return data;
+    } catch (error) {
+      console.error('Error in getAssignmentInsights:', error);
+      return null;
     }
   }
 

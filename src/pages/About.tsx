@@ -21,10 +21,23 @@ export function About() {
             <div className="flex items-center">
               <button
                 onClick={() => navigate('/')}
-                className="flex items-center space-x-3 hover:opacity-80 transition-opacity"
+                className="flex items-center space-x-2 px-4 py-2 rounded-lg font-semibold transition-all"
+                style={{
+                  background: 'linear-gradient(135deg, rgb(27, 94, 32), rgb(46, 125, 50))',
+                  color: '#FFFFFF',
+                  boxShadow: '0 2px 8px rgba(27, 94, 32, 0.2)',
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.transform = 'translateY(-1px)';
+                  e.currentTarget.style.boxShadow = '0 4px 12px rgba(27, 94, 32, 0.3)';
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.transform = 'translateY(0)';
+                  e.currentTarget.style.boxShadow = '0 2px 8px rgba(27, 94, 32, 0.2)';
+                }}
               >
-                <ArrowLeft className="h-5 w-5" style={{ color: '#6B8B60' }} />
-                <span className="text-xl font-bold" style={{ color: '#1A1A1A' }}>
+                <ArrowLeft className="h-5 w-5" style={{ color: '#FFFFFF' }} />
+                <span className="text-base">
                   InterpretReflect™
                 </span>
               </button>
@@ -35,202 +48,391 @@ export function About() {
 
       {/* Hero Section */}
       <div 
-        className="relative overflow-hidden py-12"
+        className="relative overflow-hidden py-16"
         style={{
           background: 'linear-gradient(135deg, rgba(107, 139, 96, 0.05) 0%, rgba(92, 127, 79, 0.05) 100%)',
         }}
       >
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h1 className="text-4xl md:text-5xl font-bold mb-3" style={{ color: '#1A1A1A' }}>
-            About InterpretReflect
+          <h1 className="text-4xl md:text-5xl font-bold mb-6" style={{ color: '#1A1A1A' }}>
+            About InterpretReflect™
           </h1>
-          <p className="text-xl mb-6" style={{ color: '#5A5A5A' }}>
-            Wellness tools made for interpreters, by interpreters
-          </p>
-          {/* Mission Statement */}
+          
+          {/* Opening Statement */}
+          <div className="max-w-3xl mx-auto mb-8">
+            <p className="text-2xl font-semibold mb-4" style={{ color: '#2D5F3F' }}>
+              Interpreters carry the weight of other people's most difficult moments.
+            </p>
+            <p className="text-xl italic" style={{ color: '#5A5A5A' }}>
+              Now there is a place designed to help them put it down.
+            </p>
+          </div>
+
+          {/* Context Setting */}
           <div 
-            className="max-w-3xl mx-auto p-4 rounded-xl"
+            className="max-w-3xl mx-auto p-6 rounded-xl"
             style={{
-              backgroundColor: 'rgba(255, 255, 255, 0.8)',
+              backgroundColor: 'rgba(255, 255, 255, 0.9)',
               border: '2px solid rgba(92, 127, 79, 0.2)',
             }}
           >
-            <p className="text-lg font-medium italic" style={{ color: '#2D5F3F' }}>
-              "InterpretReflect™ exists to empower interpreters to thrive, both personally and professionally, 
-              through science-backed, practical wellness tools designed by interpreters, for interpreters."
+            <p className="text-lg leading-relaxed mb-4" style={{ color: '#3A3A3A' }}>
+              Imagine finishing an assignment where you interpreted a traumatic medical diagnosis. 
+              The family's emotions still linger as you walk away. Where can you go to safely 
+              process what you just experienced?
+            </p>
+            <p className="text-lg leading-relaxed" style={{ color: '#3A3A3A' }}>
+              Interpreters navigate high-stakes conversations that shape lives. They deliver news, 
+              bridge cultures, and stand with people in moments of celebration and crisis. The impact 
+              of how interpreters show up affects not only their own wellbeing but also the trust, 
+              clarity, and dignity of the people they serve. InterpretReflect™ was created to support 
+              both sides of that equation.
             </p>
           </div>
         </div>
       </div>
 
       {/* Content */}
-      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        
         {/* Why We Exist */}
-        <section className="mb-10">
-          <h2 className="text-2xl font-bold mb-4" style={{ color: '#1A1A1A' }}>
+        <section className="mb-12">
+          <h2 className="text-3xl font-bold mb-6" style={{ color: '#1A1A1A' }}>
             Why We Exist
           </h2>
           <div 
-            className="rounded-2xl p-6"
+            className="rounded-2xl p-8"
             style={{
               backgroundColor: '#FFFFFF',
               boxShadow: '0 4px 15px rgba(0, 0, 0, 0.05)',
             }}
           >
-            <p className="text-base leading-relaxed mb-3" style={{ color: '#3A3A3A' }}>
-              Interpreters show up in life's most important moments. Hospital rooms. Courtrooms. Classrooms. 
-              We carry the weight of people's stories, and too often, we carry it alone.
+            <p className="text-lg leading-relaxed mb-4" style={{ color: '#3A3A3A' }}>
+              Burnout, vicarious trauma, and compassion fatigue are not signs of weakness. 
+              They are natural outcomes of a profession that requires emotional endurance.
             </p>
-            <p className="text-base leading-relaxed" style={{ color: '#3A3A3A' }}>
-              InterpretReflect was created to change that. Our goal is simple: give interpreters the space, 
-              tools, and support to recover, reflect, and keep doing the work we love without burning out.
+            
+            <p className="text-lg font-semibold mb-4" style={{ color: '#2D5F3F' }}>
+              InterpretReflect provides tools that:
             </p>
+            
+            <div className="space-y-3 mb-6 ml-4">
+              <div className="flex items-start">
+                <div className="w-2 h-2 rounded-full mr-3 mt-2" style={{ backgroundColor: '#6B8B60' }} />
+                <p className="text-base" style={{ color: '#3A3A3A' }}>
+                  Help manage compassion fatigue through evidence-based daily practices
+                </p>
+              </div>
+              <div className="flex items-start">
+                <div className="w-2 h-2 rounded-full mr-3 mt-2" style={{ backgroundColor: '#6B8B60' }} />
+                <p className="text-base" style={{ color: '#3A3A3A' }}>
+                  Offer confidential, guided reflection to process the emotional load of assignments
+                </p>
+              </div>
+              <div className="flex items-start">
+                <div className="w-2 h-2 rounded-full mr-3 mt-2" style={{ backgroundColor: '#6B8B60' }} />
+                <p className="text-base" style={{ color: '#3A3A3A' }}>
+                  Build long-term resilience so interpreters can sustain their careers while serving 
+                  communities with clarity and presence
+                </p>
+              </div>
+            </div>
+            
+            <div className="p-4 rounded-lg" style={{ backgroundColor: 'rgba(92, 127, 79, 0.05)' }}>
+              <p className="text-base font-medium" style={{ color: '#2D5F3F' }}>
+                When interpreters are supported, the people who rely on them benefit too. 
+                Conversations become clearer, interactions feel safer, and communities experience 
+                more equitable access to communication.
+              </p>
+            </div>
           </div>
         </section>
 
         {/* What We Do */}
-        <section className="mb-10">
-          <h2 className="text-2xl font-bold mb-4" style={{ color: '#1A1A1A' }}>
+        <section className="mb-12">
+          <h2 className="text-3xl font-bold mb-6" style={{ color: '#1A1A1A' }}>
             What We Do
           </h2>
           <div 
-            className="rounded-2xl p-6"
+            className="rounded-2xl p-8"
             style={{
               backgroundColor: '#FFFFFF',
               boxShadow: '0 4px 15px rgba(0, 0, 0, 0.05)',
             }}
           >
-            <p className="text-base leading-relaxed mb-3" style={{ color: '#3A3A3A' }}>
-              We bring together three things that matter:
+            <p className="text-lg leading-relaxed mb-4" style={{ color: '#3A3A3A' }}>
+              We translate neuroscience and trauma-informed care into tools that fit into 
+              an interpreter's real workday:
             </p>
-            <div className="space-y-2 mb-4 ml-4">
-              <div className="flex items-start">
-                <div className="w-1.5 h-1.5 rounded-full mr-3 mt-2" style={{ backgroundColor: '#6B8B60' }} />
-                <p className="text-base" style={{ color: '#3A3A3A' }}>
-                  Neuroscience that explains stress and resilience
+            
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+              <div className="p-4 rounded-lg" style={{ backgroundColor: 'rgba(107, 139, 96, 0.05)' }}>
+                <p className="text-base font-semibold" style={{ color: '#2D5F3F' }}>
+                  3-minute decompression exercises
+                </p>
+                <p className="text-sm mt-1" style={{ color: '#5A5A5A' }}>
+                  Designed for use between assignments
                 </p>
               </div>
-              <div className="flex items-start">
-                <div className="w-1.5 h-1.5 rounded-full mr-3 mt-2" style={{ backgroundColor: '#6B8B60' }} />
-                <p className="text-base" style={{ color: '#3A3A3A' }}>
-                  Real interpreter experience across all settings
+              
+              <div className="p-4 rounded-lg" style={{ backgroundColor: 'rgba(107, 139, 96, 0.05)' }}>
+                <p className="text-base font-semibold" style={{ color: '#2D5F3F' }}>
+                  Confidential journaling prompts
+                </p>
+                <p className="text-sm mt-1" style={{ color: '#5A5A5A' }}>
+                  That reflect interpreting realities
                 </p>
               </div>
-              <div className="flex items-start">
-                <div className="w-1.5 h-1.5 rounded-full mr-3 mt-2" style={{ backgroundColor: '#6B8B60' }} />
-                <p className="text-base" style={{ color: '#3A3A3A' }}>
-                  Technology that is private, secure, and easy to use
+              
+              <div className="p-4 rounded-lg" style={{ backgroundColor: 'rgba(107, 139, 96, 0.05)' }}>
+                <p className="text-base font-semibold" style={{ color: '#2D5F3F' }}>
+                  Grounding techniques
+                </p>
+                <p className="text-sm mt-1" style={{ color: '#5A5A5A' }}>
+                  For moments when stress runs high
+                </p>
+              </div>
+              
+              <div className="p-4 rounded-lg" style={{ backgroundColor: 'rgba(107, 139, 96, 0.05)' }}>
+                <p className="text-base font-semibold" style={{ color: '#2D5F3F' }}>
+                  Reflection guidance
+                </p>
+                <p className="text-sm mt-1" style={{ color: '#5A5A5A' }}>
+                  Informed by lived experience of interpreters
                 </p>
               </div>
             </div>
-            <p className="text-base font-semibold p-3 rounded-lg" style={{ 
-              color: '#2D5F3F',
-              backgroundColor: 'rgba(92, 127, 79, 0.05)'
-            }}>
-              The result: practical tools you can use anywhere — in the break room, in your car after an assignment, 
-              or at home when you're trying to reset.
-            </p>
           </div>
         </section>
 
-        {/* Who We Are */}
-        <section className="mb-10">
-          <h2 className="text-2xl font-bold mb-4" style={{ color: '#1A1A1A' }}>
-            Who We Are
+        {/* How It Works */}
+        <section className="mb-12">
+          <h2 className="text-3xl font-bold mb-6" style={{ color: '#1A1A1A' }}>
+            How It Works
           </h2>
           <div 
-            className="rounded-2xl p-6"
+            className="rounded-2xl p-8"
             style={{
               backgroundColor: '#FFFFFF',
               boxShadow: '0 4px 15px rgba(0, 0, 0, 0.05)',
             }}
           >
-            <p className="text-base leading-relaxed" style={{ color: '#3A3A3A' }}>
-              We are interpreters, researchers, and wellness experts who believe interpreters deserve the same care 
-              we give to others. Everything we build is tested with working interpreters to make sure it fits the 
-              real world, not just theory.
+            <p className="text-lg mb-6" style={{ color: '#3A3A3A' }}>
+              In three simple steps, support is always within reach:
             </p>
+            
+            <div className="space-y-4">
+              <div className="flex items-center">
+                <div 
+                  className="w-10 h-10 rounded-full flex items-center justify-center mr-4 font-bold text-white"
+                  style={{ background: 'linear-gradient(135deg, #6B8B60, #5F7F55)' }}
+                >
+                  1
+                </div>
+                <p className="text-base" style={{ color: '#3A3A3A' }}>
+                  Sign up in 30 seconds
+                </p>
+              </div>
+              
+              <div className="flex items-center">
+                <div 
+                  className="w-10 h-10 rounded-full flex items-center justify-center mr-4 font-bold text-white"
+                  style={{ background: 'linear-gradient(135deg, #6B8B60, #5F7F55)' }}
+                >
+                  2
+                </div>
+                <p className="text-base" style={{ color: '#3A3A3A' }}>
+                  Choose your focus: stress relief, resilience, or emotional reset
+                </p>
+              </div>
+              
+              <div className="flex items-center">
+                <div 
+                  className="w-10 h-10 rounded-full flex items-center justify-center mr-4 font-bold text-white"
+                  style={{ background: 'linear-gradient(135deg, #6B8B60, #5F7F55)' }}
+                >
+                  3
+                </div>
+                <p className="text-base" style={{ color: '#3A3A3A' }}>
+                  Access tools instantly on any device, in any setting
+                </p>
+              </div>
+            </div>
           </div>
         </section>
 
-        {/* Values */}
-        <section className="mb-10">
-          <h2 className="text-2xl font-bold mb-4" style={{ color: '#1A1A1A' }}>
-            What We Value
+        {/* Why Choose InterpretReflect */}
+        <section className="mb-12">
+          <h2 className="text-3xl font-bold mb-6" style={{ color: '#1A1A1A' }}>
+            Why Choose InterpretReflect
           </h2>
           <div 
-            className="rounded-2xl p-6"
+            className="rounded-2xl p-8"
             style={{
-              background: 'linear-gradient(145deg, rgba(107, 139, 96, 0.05) 0%, rgba(92, 127, 79, 0.05) 100%)',
+              background: 'linear-gradient(145deg, rgba(107, 139, 96, 0.03) 0%, rgba(92, 127, 79, 0.03) 100%)',
               border: '2px solid rgba(92, 127, 79, 0.2)',
             }}
           >
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div>
-                <h3 className="font-bold mb-1" style={{ color: '#2D5F3F' }}>
-                  Accessibility
-                </h3>
-                <p className="text-sm" style={{ color: '#3A3A3A' }}>
-                  Support that works for every interpreter, no matter the setting.
+            <div className="space-y-4">
+              <div className="flex items-start">
+                <div className="w-2 h-2 rounded-full mr-3 mt-2" style={{ backgroundColor: '#6B8B60' }} />
+                <p className="text-base" style={{ color: '#3A3A3A' }}>
+                  Created by interpreters who understand the work from the inside
                 </p>
               </div>
-              
-              <div>
-                <h3 className="font-bold mb-1" style={{ color: '#2D5F3F' }}>
-                  Authenticity
-                </h3>
-                <p className="text-sm" style={{ color: '#3A3A3A' }}>
-                  Built by people who understand this work.
+              <div className="flex items-start">
+                <div className="w-2 h-2 rounded-full mr-3 mt-2" style={{ backgroundColor: '#6B8B60' }} />
+                <p className="text-base" style={{ color: '#3A3A3A' }}>
+                  Grounded in neuroscience and trauma-informed care principles
                 </p>
               </div>
-              
-              <div>
-                <h3 className="font-bold mb-1" style={{ color: '#2D5F3F' }}>
-                  Sustainability
-                </h3>
-                <p className="text-sm" style={{ color: '#3A3A3A' }}>
-                  Helping interpreters build long, healthy careers.
+              <div className="flex items-start">
+                <div className="w-2 h-2 rounded-full mr-3 mt-2" style={{ backgroundColor: '#6B8B60' }} />
+                <p className="text-base" style={{ color: '#3A3A3A' }}>
+                  Confidential, secure, and designed for interpreter privacy
                 </p>
               </div>
-              
-              <div>
-                <h3 className="font-bold mb-1" style={{ color: '#2D5F3F' }}>
-                  Innovation
-                </h3>
-                <p className="text-sm" style={{ color: '#3A3A3A' }}>
-                  Smarter tools for reflection, recovery, and growth.
+              <div className="flex items-start">
+                <div className="w-2 h-2 rounded-full mr-3 mt-2" style={{ backgroundColor: '#6B8B60' }} />
+                <p className="text-base" style={{ color: '#3A3A3A' }}>
+                  Developed through consultation with working interpreters across healthcare, legal, and educational settings
                 </p>
               </div>
+              <div className="flex items-start">
+                <div className="w-2 h-2 rounded-full mr-3 mt-2" style={{ backgroundColor: '#6B8B60' }} />
+                <p className="text-base" style={{ color: '#3A3A3A' }}>
+                  Building a growing community of interpreters committed to sustainable practice
+                </p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* Common Concerns */}
+        <section className="mb-12">
+          <h2 className="text-3xl font-bold mb-6" style={{ color: '#1A1A1A' }}>
+            Common Concerns, Answered
+          </h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div 
+              className="rounded-xl p-6"
+              style={{
+                backgroundColor: '#FFFFFF',
+                boxShadow: '0 4px 15px rgba(0, 0, 0, 0.05)',
+              }}
+            >
+              <p className="font-semibold mb-2" style={{ color: '#2D5F3F' }}>No time?</p>
+              <p className="text-sm" style={{ color: '#5A5A5A' }}>
+                Tools are designed for 3–5 minute breaks.
+              </p>
+            </div>
+            
+            <div 
+              className="rounded-xl p-6"
+              style={{
+                backgroundColor: '#FFFFFF',
+                boxShadow: '0 4px 15px rgba(0, 0, 0, 0.05)',
+              }}
+            >
+              <p className="font-semibold mb-2" style={{ color: '#2D5F3F' }}>Privacy worried?</p>
+              <p className="text-sm" style={{ color: '#5A5A5A' }}>
+                All reflections are secure and can remain anonymous if you choose.
+              </p>
+            </div>
+            
+            <div 
+              className="rounded-xl p-6"
+              style={{
+                backgroundColor: '#FFFFFF',
+                boxShadow: '0 4px 15px rgba(0, 0, 0, 0.05)',
+              }}
+            >
+              <p className="font-semibold mb-2" style={{ color: '#2D5F3F' }}>Not tech-savvy?</p>
+              <p className="text-sm" style={{ color: '#5A5A5A' }}>
+                The interface is simple and tested with interpreters across experience levels.
+              </p>
+            </div>
+            
+            <div 
+              className="rounded-xl p-6"
+              style={{
+                backgroundColor: '#FFFFFF',
+                boxShadow: '0 4px 15px rgba(0, 0, 0, 0.05)',
+              }}
+            >
+              <p className="font-semibold mb-2" style={{ color: '#2D5F3F' }}>Cost concerns?</p>
+              <p className="text-sm" style={{ color: '#5A5A5A' }}>
+                Affordable options are available, with employer sponsorship programs on the way.
+              </p>
+            </div>
+          </div>
+        </section>
+
+        {/* The Bigger Picture */}
+        <section className="mb-12">
+          <h2 className="text-3xl font-bold mb-6" style={{ color: '#1A1A1A' }}>
+            The Bigger Picture
+          </h2>
+          <div 
+            className="rounded-2xl p-8"
+            style={{
+              backgroundColor: '#FFFFFF',
+              boxShadow: '0 4px 15px rgba(0, 0, 0, 0.05)',
+            }}
+          >
+            <p className="text-lg leading-relaxed mb-4" style={{ color: '#3A3A3A' }}>
+              Research consistently shows that interpreters experience high levels of stress, 
+              vicarious trauma, and burnout. Many leave the profession earlier than expected 
+              because of the emotional toll.
+            </p>
+            
+            <div className="p-5 rounded-lg" style={{ 
+              backgroundColor: 'rgba(92, 127, 79, 0.05)',
+              borderLeft: '4px solid #6B8B60'
+            }}>
+              <p className="text-base font-medium" style={{ color: '#2D5F3F' }}>
+                Supporting interpreters is not just about protecting professionals. It is about 
+                ensuring that the communities who depend on interpreters for access to communication 
+                receive support from professionals who are clear, present, and able to sustain their service.
+              </p>
             </div>
           </div>
         </section>
 
         {/* Call to Action */}
-        <section className="text-center mb-12">
-          <h2 className="text-2xl font-bold mb-3" style={{ color: '#1A1A1A' }}>
-            Join Us
+        <section className="text-center mb-16">
+          <h2 className="text-3xl font-bold mb-6" style={{ color: '#1A1A1A' }}>
+            Take the First Step
           </h2>
-          <p className="text-base mb-2" style={{ color: '#3A3A3A' }}>
-            We are building a future where interpreter wellness is just as important as professional skill.
-          </p>
-          <p className="text-base mb-6 font-semibold" style={{ color: '#2D5F3F' }}>
-            Because when interpreters are supported, everyone benefits.
-          </p>
+          
+          <div 
+            className="max-w-2xl mx-auto p-6 rounded-xl mb-8"
+            style={{
+              backgroundColor: 'rgba(255, 255, 255, 0.9)',
+              border: '2px solid rgba(92, 127, 79, 0.2)',
+            }}
+          >
+            <p className="text-lg font-medium" style={{ color: '#2D5F3F' }}>
+              Every day interpreters help others carry their burdens. InterpretReflect is here 
+              to help carry theirs, so the communities they serve can thrive too.
+            </p>
+          </div>
+          
           <button
             onClick={() => navigate('/')}
-            className="inline-flex items-center px-6 py-3 rounded-xl font-semibold text-base transition-all"
+            className="inline-flex items-center px-8 py-4 rounded-xl font-semibold text-lg transition-all"
             style={{
-              background: 'linear-gradient(145deg, #6B8B60 0%, #5F7F55 100%)',
+              background: 'linear-gradient(135deg, rgb(27, 94, 32), rgb(46, 125, 50))',
               color: '#FFFFFF',
-              boxShadow: '0 4px 15px rgba(107, 139, 96, 0.3)',
+              boxShadow: '0 4px 15px rgba(27, 94, 32, 0.3)',
             }}
             onMouseEnter={(e) => {
               e.currentTarget.style.transform = 'translateY(-2px) scale(1.02)';
-              e.currentTarget.style.boxShadow = '0 8px 25px rgba(107, 139, 96, 0.4)';
+              e.currentTarget.style.boxShadow = '0 8px 25px rgba(27, 94, 32, 0.4)';
             }}
             onMouseLeave={(e) => {
               e.currentTarget.style.transform = 'translateY(0) scale(1)';
-              e.currentTarget.style.boxShadow = '0 4px 15px rgba(107, 139, 96, 0.3)';
+              e.currentTarget.style.boxShadow = '0 4px 15px rgba(27, 94, 32, 0.3)';
             }}
           >
             Start Your Wellness Journey
@@ -239,7 +441,7 @@ export function About() {
 
         {/* Footer */}
         <div 
-          className="mt-12 pt-6 text-center" 
+          className="mt-16 pt-8 text-center" 
           style={{ borderTop: '1px solid #E8E5E0' }}
         >
           <button

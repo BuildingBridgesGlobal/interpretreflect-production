@@ -13,6 +13,8 @@ import {
   ChevronLeft,
   AlertCircle,
 } from 'lucide-react';
+import { supabase } from '../lib/supabase';
+import { useAuth } from '../contexts/AuthContext';
 
 interface WellnessCheckInProps {
   onComplete: (results: WellnessCheckInResults) => void;
@@ -87,9 +89,11 @@ interface WellnessCheckInResults {
 }
 
 const WellnessCheckIn: React.FC<WellnessCheckInProps> = ({ onComplete, onClose }) => {
+  const { user } = useAuth();
   const [currentStep, setCurrentStep] = useState(1);
   const [stressLevel] = useState(5);
   const [energyLevel] = useState(5);
+  const [isSaving, setIsSaving] = useState(false);
 
   // Step 1: Body Scan
   const [headNeck, setHeadNeck] = useState('');
@@ -163,7 +167,7 @@ const WellnessCheckIn: React.FC<WellnessCheckInProps> = ({ onComplete, onClose }
     }
   };
 
-  const handleComplete = () => {
+  const handleComplete = async () => {
     const results: WellnessCheckInResults = {
       bodyScan: {
         headNeck,
@@ -231,6 +235,56 @@ const WellnessCheckIn: React.FC<WellnessCheckInProps> = ({ onComplete, onClose }
       energyLevel,
       timestamp: new Date(),
     };
+
+    // Save to Supabase if user is authenticated
+    if (user) {
+      setIsSaving(true);
+      try {
+        // Save wellness scores
+        const { error: scoresError } = await supabase
+          .from('wellness_scores')
+          .insert({
+            user_id: user.id,
+            physical_energy: parseInt(overallEnergy) || 5,
+            emotional_balance: intensityLevel === 'low' ? 8 : intensityLevel === 'medium' ? 5 : 3,
+            mental_clarity: parseInt(workingMemory) || 5,
+            social_connection: parseInt(supportSystem) || 5,
+            professional_satisfaction: parseInt(meaningPurpose) || 5,
+            overall_wellbeing: Math.round((stressLevel + energyLevel) / 2),
+            notes: `Body message: ${bodyMessage}, Primary emotion: ${primaryEmotion}`
+          });
+
+        if (scoresError) {
+          console.error('Error saving wellness scores:', scoresError);
+        }
+
+        // Save as reflection entry
+        const { error: reflectionError } = await supabase
+          .from('reflections')
+          .insert({
+            user_id: user.id,
+            reflection_type: 'wellness_checkin',
+            type: 'wellness',
+            answers: results,
+            status: 'completed',
+            metadata: {
+              stress_level: stressLevel,
+              energy_level: energyLevel,
+              timestamp: new Date().toISOString()
+            }
+          });
+
+        if (reflectionError) {
+          console.error('Error saving reflection:', reflectionError);
+        } else {
+          console.log('Wellness check-in saved successfully');
+        }
+      } catch (err) {
+        console.error('Error saving wellness check-in:', err);
+      } finally {
+        setIsSaving(false);
+      }
+    }
 
     setShowSummary(true);
     setTimeout(() => {
@@ -1619,15 +1673,15 @@ const WellnessCheckIn: React.FC<WellnessCheckInProps> = ({ onComplete, onClose }
             {currentStep === 8 && !showSummary && (
               <button
                 onClick={handleComplete}
-                disabled={!isStepComplete()}
+                disabled={!isStepComplete() || isSaving}
                 className={`px-6 py-2 rounded-lg transition-all flex items-center ${
-                  isStepComplete()
+                  isStepComplete() && !isSaving
                     ? 'bg-gradient-to-r from-teal-500 to-cyan-500 text-white hover:from-teal-600 hover:to-cyan-600'
                     : 'bg-gray-300 text-gray-500 cursor-not-allowed'
                 }`}
               >
                 <Check className="w-4 h-4 mr-2" />
-                Complete Check-In
+                {isSaving ? 'Saving...' : 'Complete Check-In'}
               </button>
             )}
           </div>

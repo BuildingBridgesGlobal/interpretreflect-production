@@ -10,6 +10,33 @@ const supabaseUrl = Deno.env.get('SUPABASE_URL') ?? ''
 const supabaseServiceKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? ''
 const endpointSecret = Deno.env.get('STRIPE_WEBHOOK_SECRET') ?? ''
 
+// Helper function to send events to Encharge
+async function sendEnchargeEvent(userId: string, eventType: string, eventData: any, userEmail?: string) {
+  try {
+    const response = await fetch(`${supabaseUrl}/functions/v1/send-encharge-event`, {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${supabaseServiceKey}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        userId,
+        eventType,
+        eventData,
+        userEmail
+      })
+    })
+    
+    if (!response.ok) {
+      console.error('Failed to send Encharge event:', await response.text())
+    } else {
+      console.log(`Encharge event sent successfully: ${eventType} for user ${userId}`)
+    }
+  } catch (error) {
+    console.error('Error sending Encharge event:', error)
+  }
+}
+
 serve(async (req) => {
   const signature = req.headers.get('stripe-signature')
   
@@ -57,6 +84,24 @@ serve(async (req) => {
               subscription_tier: subscription.items.data[0].price.nickname || 'Premium',
             })
             .eq('id', userId)
+          
+          // Send subscription created event to Encharge
+          await sendEnchargeEvent(userId, 'subscription_created', {
+            customerName: session.customer_details?.name || 'Valued Customer',
+            planName: 'Premium',
+            amount: (session.amount_total || 0) / 100,
+            customFields: {
+              stripe_customer_id: session.customer as string,
+              stripe_subscription_id: subscription.id
+            }
+          }, session.customer_email || undefined)
+          
+          // Send payment success event to Encharge
+          await sendEnchargeEvent(userId, 'payment_success', {
+            amount: (session.amount_total || 0) / 100,
+            invoiceUrl: session.url,
+            paymentMethod: session.payment_method_types?.[0] || 'card'
+          }, session.customer_email || undefined)
         }
         break
       }
@@ -110,6 +155,12 @@ serve(async (req) => {
               subscription_tier: null,
             })
             .eq('id', userId)
+          
+          // Send cancellation event to Encharge
+          await sendEnchargeEvent(userId, 'subscription_cancelled', {
+            customerName: 'Valued Customer',
+            cancellationReason: subscription.cancellation_details?.reason || 'user_initiated'
+          })
         }
         break
       }
@@ -127,6 +178,23 @@ serve(async (req) => {
               updated_at: new Date().toISOString(),
             })
             .eq('id', subscriptionId)
+          
+          // Get user ID from subscription
+          const { data: subscription } = await supabase
+            .from('subscriptions')
+            .select('user_id')
+            .eq('id', subscriptionId)
+            .single()
+          
+          if (subscription?.user_id) {
+            // Send payment failed event to Encharge
+            await sendEnchargeEvent(subscription.user_id, 'payment_failed', {
+              customerName: invoice.customer_name || 'Valued Customer',
+              amount: (invoice.amount_due || 0) / 100,
+              retryDate: new Date(Date.now() + 3 * 24 * 60 * 60 * 1000).toLocaleDateString(),
+              failureReason: invoice.last_finalization_error?.message || 'Payment failed'
+            })
+          }
         }
         break
       }

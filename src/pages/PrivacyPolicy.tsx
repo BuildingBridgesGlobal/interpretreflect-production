@@ -21,23 +21,26 @@ export function PrivacyPolicy() {
             <div className="flex items-center">
               <button
                 onClick={() => navigate('/')}
-                className="flex items-center space-x-3 hover:opacity-80 transition-opacity"
+                className="flex items-center space-x-2 px-4 py-2 rounded-lg font-semibold transition-all"
+                style={{
+                  background: 'linear-gradient(135deg, rgb(27, 94, 32), rgb(46, 125, 50))',
+                  color: '#FFFFFF',
+                  boxShadow: '0 2px 8px rgba(27, 94, 32, 0.2)',
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.transform = 'translateY(-1px)';
+                  e.currentTarget.style.boxShadow = '0 4px 12px rgba(27, 94, 32, 0.3)';
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.transform = 'translateY(0)';
+                  e.currentTarget.style.boxShadow = '0 2px 8px rgba(27, 94, 32, 0.2)';
+                }}
               >
-                <ArrowLeft className="h-5 w-5" style={{ color: '#6B8B60' }} />
-                <div className="flex items-center space-x-3">
-                  <div
-                    className="p-2 rounded-lg"
-                    style={{
-                      background: 'linear-gradient(145deg, #6B8B60 0%, #5F7F55 100%)',
-                      boxShadow: '0 2px 8px rgba(107, 139, 96, 0.3)',
-                    }}
-                  >
-                    <Shield className="h-6 w-6" style={{ color: '#FFFFFF' }} />
-                  </div>
-                  <span className="text-xl font-bold" style={{ color: '#1A1A1A' }}>
-                    InterpretReflect™
-                  </span>
-                </div>
+                <ArrowLeft className="h-5 w-5" style={{ color: '#FFFFFF' }} />
+                <Shield className="h-5 w-5" style={{ color: '#FFFFFF' }} />
+                <span className="text-base">
+                  InterpretReflect™
+                </span>
               </button>
             </div>
           </div>

@@ -47,7 +47,6 @@ export const PersonalizedHomepage: React.FC<PersonalizedHomepageProps> = ({ onNa
   const [userName] = useState('Sarah');
   const [greeting, setGreeting] = useState('');
   const [dateString, setDateString] = useState('');
-  const [tipOfDay, setTipOfDay] = useState('');
   const [showBurnoutGauge, setShowBurnoutGauge] = useState(false);
   const [burnoutScore, setBurnoutScore] = useState<number | null>(null);
   const [burnoutLevel, setBurnoutLevel] = useState<'low' | 'moderate' | 'high' | 'severe' | null>(null);
@@ -122,21 +121,6 @@ export const PersonalizedHomepage: React.FC<PersonalizedHomepageProps> = ({ onNa
     return () => clearInterval(interval);
   }, [userName]);
 
-  useEffect(() => {
-    const tips = [
-      "Take a moment to check in with your body. Where are you holding tension?",
-      "Remember: You're not responsible for fixing, only for bridging communication.",
-      "Try a 4-7-8 breathing exercise before your next challenging assignment.",
-      "Your emotional responses are valid. Acknowledge them without judgment.",
-      "Celebrate small wins today—every successful interpretation matters.",
-      "Hydration affects focus. Have you had enough water today?",
-      "Set one small boundary this week and notice how it feels.",
-      "Your wellness practice doesn't need to be perfect, just consistent."
-    ];
-    
-    const randomTip = tips[Math.floor(Math.random() * tips.length)];
-    setTipOfDay(randomTip);
-  }, []);
 
   const getMoodIcon = (mood: number) => {
     if (mood >= 4) return <Sun className="w-4 h-4 text-yellow-500" />;
@@ -187,15 +171,6 @@ export const PersonalizedHomepage: React.FC<PersonalizedHomepageProps> = ({ onNa
             </div>
             
             {/* Tip of the Day */}
-            <div className="mt-4 sm:mt-0 sm:max-w-xs">
-              <div className="flex items-start gap-2">
-                <Sparkles className="w-4 h-4 text-sage-500 mt-0.5 flex-shrink-0" />
-                <div>
-                  <p className="text-xs font-medium text-gray-700 mb-1">Daily Wisdom</p>
-                  <p className="text-xs text-gray-600">{tipOfDay}</p>
-                </div>
-              </div>
-            </div>
           </div>
         </div>
 

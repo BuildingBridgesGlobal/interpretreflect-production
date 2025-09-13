@@ -86,3 +86,77 @@ body {
   outline: 2px solid #ffffff;
   outline-offset: 2px;
 }
+
+/* Subtle pulse animation for premium buttons */
+@keyframes pulse-subtle {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.85;
+  }
+}
+
+.animate-pulse-subtle {
+  animation: pulse-subtle 2s ease-in-out infinite;
+}
+
+/* Accessibility Settings Classes */
+/* Larger Text */
+.larger-text {
+  font-size: 1.2em !important;
+}
+
+.larger-text * {
+  font-size: inherit;
+}
+
+.larger-text h1 { font-size: 2.4em !important; }
+.larger-text h2 { font-size: 2em !important; }
+.larger-text h3 { font-size: 1.7em !important; }
+.larger-text h4 { font-size: 1.4em !important; }
+.larger-text h5 { font-size: 1.2em !important; }
+.larger-text h6 { font-size: 1.1em !important; }
+
+/* High Contrast Mode */
+.high-contrast {
+  filter: contrast(1.2);
+}
+
+.high-contrast * {
+  border-color: #000 !important;
+}
+
+.high-contrast button,
+.high-contrast input,
+.high-contrast textarea,
+.high-contrast select {
+  border: 2px solid #000 !important;
+}
+
+.high-contrast a {
+  text-decoration: underline !important;
+}
+
+/* Reduce Motion */
+.reduce-motion * {
+  animation-duration: 0.01ms !important;
+  animation-iteration-count: 1 !important;
+  transition-duration: 0.01ms !important;
+  animation-delay: 0.01ms !important;
+  transition-delay: 0.01ms !important;
+}
+
+.reduce-motion *::before,
+.reduce-motion *::after {
+  animation-duration: 0.01ms !important;
+  animation-iteration-count: 1 !important;
+  transition-duration: 0.01ms !important;
+}
+
+/* Screen Reader Announcements */
+[role="status"],
+[role="alert"],
+[aria-live] {
+  position: relative;
+}

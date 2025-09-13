@@ -329,10 +329,11 @@ export const DailyBurnoutGaugeAccessible: React.FC<DailyBurnoutGaugeProps> = ({ 
               </h2>
               <button
                 onClick={onClose}
-                className="p-2 hover:bg-gray-50 rounded-lg transition-all"
+                className="p-2 rounded-lg transition-all text-white hover:opacity-90"
+                style={{ background: 'linear-gradient(135deg, #1b5e20, #2e7d32)' }}
                 aria-label="Close assessment results"
               >
-                <X className="h-5 w-5" style={{ color: '#4A5568' }} />
+                <X className="h-5 w-5" />
               </button>
             </div>
 
@@ -488,10 +489,11 @@ export const DailyBurnoutGaugeAccessible: React.FC<DailyBurnoutGaugeProps> = ({ 
             <button
               type="button"
               onClick={onClose}
-              className="p-2 hover:bg-gray-50 rounded-lg transition-all"
+              className="p-2 rounded-lg transition-all text-white hover:opacity-90"
+              style={{ background: 'linear-gradient(135deg, #1b5e20, #2e7d32)' }}
               aria-label="Close daily burnout gauge"
             >
-              <X className="h-5 w-5" style={{ color: '#4A5568' }} />
+              <X className="h-5 w-5" />
             </button>
           </div>
 
@@ -621,7 +623,7 @@ export const DailyBurnoutGaugeAccessible: React.FC<DailyBurnoutGaugeProps> = ({ 
               type="button"
               onClick={handleNext}
               className="flex-1 py-3 rounded-xl font-medium text-white transition-all disabled:opacity-50 disabled:cursor-not-allowed"
-              style={{ backgroundColor: answers[currentQ.id as keyof typeof answers] === 0 ? '#A0AEC0' : '#5C7F4F' }}
+              style={{ background: answers[currentQ.id as keyof typeof answers] === 0 ? '#A0AEC0' : 'linear-gradient(135deg, #1b5e20, #2e7d32)' }}
               disabled={answers[currentQ.id as keyof typeof answers] === 0}
               aria-label={currentQuestion === questions.length - 1 ? 'Complete assessment' : 'Go to next question'}
             >

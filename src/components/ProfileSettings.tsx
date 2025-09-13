@@ -16,10 +16,23 @@ import {
   Lock,
   ChevronDown,
   Upload,
-  RefreshCw
+  RefreshCw,
+  Mail,
+  Award,
+  Briefcase,
+  Languages,
+  Palette,
+  Bell,
+  UserPlus,
+  Settings,
+  Zap,
+  BarChart3,
+  Users,
+  Sparkles
 } from 'lucide-react';
 import { supabase } from '../lib/supabase';
 import { useAuth } from '../contexts/AuthContext';
+import { useNavigate } from 'react-router-dom';
 
 // ========== TYPES ==========
 interface UserProfile {
@@ -32,8 +45,13 @@ interface UserProfile {
   accessibility_settings: {
     larger_text: boolean;
     high_contrast: boolean;
+    reduce_motion: boolean;
+    screen_reader: boolean;
   };
   email?: string;
+  bio?: string;
+  years_experience?: number;
+  specializations?: string[];
   created_at?: string;
   updated_at?: string;
 }
@@ -43,40 +61,66 @@ interface FormErrors {
   pronouns?: string;
   credentials?: string;
   profile_photo?: string;
+  bio?: string;
   general?: string;
 }
 
 // ========== CONSTANTS ==========
 const SUPPORTED_LANGUAGES = [
-  { code: 'en', label: 'English (default)', flag: '🇺🇸' },
+  { code: 'en', label: 'English', flag: '🇺🇸' },
   { code: 'es', label: 'Spanish', flag: '🇪🇸' },
   { code: 'fr', label: 'French', flag: '🇫🇷' },
   { code: 'asl', label: 'ASL Resources', flag: '🤟' },
   { code: 'zh', label: 'Chinese', flag: '🇨🇳' },
-  { code: 'ar', label: 'Arabic', flag: '🇸🇦' }
+  { code: 'ar', label: 'Arabic', flag: '🇸🇦' },
+  { code: 'pt', label: 'Portuguese', flag: '🇵🇹' },
+  { code: 'ru', label: 'Russian', flag: '🇷🇺' }
 ];
 
 const COMMON_CREDENTIALS = [
   'RID CI/CT',
   'NIC-Advanced',
   'BEI Master',
-  'CHIT',
+  'CHI™',
   'CCHI',
   'NAATI',
   'AIIC',
   'RID CDI',
   'BEI Court',
-  'Medical Interpreter'
+  'Medical Interpreter',
+  'Legal Interpreter',
+  'Conference Interpreter'
+];
+
+const SPECIALIZATIONS = [
+  'Medical',
+  'Legal',
+  'Mental Health',
+  'Education',
+  'Conference',
+  'Community',
+  'VRI/VRS',
+  'Theatre',
+  'Government',
+  'Technology',
+  'Business',
+  'Religious'
 ];
 
 const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB
 const ALLOWED_FILE_TYPES = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
 
 // ========== MAIN COMPONENT ==========
-export const ProfileSettings: React.FC = () => {
+interface ProfileSettingsProps {
+  devMode?: boolean;
+}
+
+export const ProfileSettings: React.FC<ProfileSettingsProps> = ({ devMode = false }) => {
   const { user } = useAuth();
+  const navigate = useNavigate();
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
+  const [activeSection, setActiveSection] = useState<'profile' | 'accessibility' | 'privacy'>('profile');
   const [profile, setProfile] = useState<UserProfile>({
     id: '',
     full_name: '',
@@ -86,8 +130,13 @@ export const ProfileSettings: React.FC = () => {
     preferred_language: 'en',
     accessibility_settings: {
       larger_text: false,
-      high_contrast: false
-    }
+      high_contrast: false,
+      reduce_motion: false,
+      screen_reader: false
+    },
+    bio: '',
+    years_experience: 0,
+    specializations: []
   });
   const [originalProfile, setOriginalProfile] = useState<UserProfile | null>(null);
   const [errors, setErrors] = useState<FormErrors>({});
@@ -95,18 +144,55 @@ export const ProfileSettings: React.FC = () => {
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
   const [credentialInput, setCredentialInput] = useState('');
   const [showCredentialSuggestions, setShowCredentialSuggestions] = useState(false);
+  const [notificationPrefs, setNotificationPrefs] = useState({
+    email_reminders: true,
+    weekly_insights: true,
+    team_updates: false,
+    product_news: false
+  });
+  
+  // Privacy settings state
+  const [privacySettings, setPrivacySettings] = useState({
+    analytics: true,
+    notifications: true,
+    team_visibility: false
+  });
   
   // Refs for accessibility
   const fileInputRef = useRef<HTMLInputElement>(null);
   const announcementRef = useRef<HTMLDivElement>(null);
-  const formRef = useRef<HTMLFormElement>(null);
-  const nameInputRef = useRef<HTMLInputElement>(null);
 
   // ========== DATA FETCHING ==========
   useEffect(() => {
-    if (!user) return;
-    fetchUserProfile();
-  }, [user]);
+    if (devMode) {
+      // Use mock data in dev mode
+      const mockProfile: UserProfile = {
+        id: 'dev-user',
+        full_name: 'Developer User',
+        pronouns: 'they/them',
+        credentials: ['RID CI/CT'],
+        profile_photo_url: '',
+        preferred_language: 'en',
+        accessibility_settings: {
+          larger_text: false,
+          high_contrast: false,
+          reduce_motion: false,
+          screen_reader: false
+        },
+        email: 'dev@interpretreflect.com',
+        bio: 'Testing the platform in development mode',
+        years_experience: 5,
+        specializations: ['Medical', 'Legal']
+      };
+      setProfile(mockProfile);
+      setOriginalProfile(mockProfile);
+      setLoading(false);
+    } else if (user) {
+      fetchUserProfile();
+    } else {
+      setLoading(false);
+    }
+  }, [user, devMode]);
 
   // Apply accessibility settings
   useEffect(() => {
@@ -123,6 +209,12 @@ export const ProfileSettings: React.FC = () => {
     } else {
       root.classList.remove('high-contrast');
     }
+
+    if (profile.accessibility_settings.reduce_motion) {
+      root.classList.add('reduce-motion');
+    } else {
+      root.classList.remove('reduce-motion');
+    }
   }, [profile.accessibility_settings]);
 
   const fetchUserProfile = async () => {
@@ -130,14 +222,13 @@ export const ProfileSettings: React.FC = () => {
       setLoading(true);
       setErrors({});
       
-      // Fetch profile from database
       const { data, error } = await supabase
         .from('user_profiles')
         .select('*')
         .eq('id', user?.id)
         .single();
 
-      if (error && error.code !== 'PGRST116') { // Not found is ok
+      if (error && error.code !== 'PGRST116') {
         throw error;
       }
 
@@ -150,9 +241,14 @@ export const ProfileSettings: React.FC = () => {
         preferred_language: 'en',
         accessibility_settings: {
           larger_text: false,
-          high_contrast: false
+          high_contrast: false,
+          reduce_motion: false,
+          screen_reader: false
         },
-        email: user?.email
+        email: user?.email,
+        bio: '',
+        years_experience: 0,
+        specializations: []
       };
 
       setProfile(profileData);
@@ -170,19 +266,20 @@ export const ProfileSettings: React.FC = () => {
   const validateForm = (): boolean => {
     const newErrors: FormErrors = {};
     
-    // Validate full name
     if (!profile.full_name.trim()) {
       newErrors.full_name = 'Full name is required';
     } else if (profile.full_name.length > 100) {
       newErrors.full_name = 'Full name must be less than 100 characters';
     }
     
-    // Validate pronouns (optional but if provided, check length)
     if (profile.pronouns && profile.pronouns.length > 50) {
       newErrors.pronouns = 'Pronouns must be less than 50 characters';
     }
+
+    if (profile.bio && profile.bio.length > 500) {
+      newErrors.bio = 'Bio must be less than 500 characters';
+    }
     
-    // Validate credentials
     if (profile.credentials && profile.credentials.length > 10) {
       newErrors.credentials = 'Maximum 10 credentials allowed';
     }
@@ -204,35 +301,44 @@ export const ProfileSettings: React.FC = () => {
       setErrors({});
       setSuccessMessage('');
       
-      // Save to database
-      const { error } = await supabase
-        .from('user_profiles')
-        .upsert({
-          id: user?.id,
-          full_name: profile.full_name.trim(),
-          pronouns: profile.pronouns?.trim() || null,
-          credentials: profile.credentials,
-          profile_photo_url: profile.profile_photo_url || null,
+      if (devMode) {
+        // In dev mode, just simulate saving
+        await new Promise(resolve => setTimeout(resolve, 1000));
+        setOriginalProfile(profile);
+        setSuccessMessage('Profile updated successfully!');
+        announceToScreenReader('Profile saved successfully');
+        setTimeout(() => setSuccessMessage(''), 5000);
+      } else {
+        const { error } = await supabase
+          .from('user_profiles')
+          .upsert({
+            id: user?.id,
+            full_name: profile.full_name.trim(),
+            pronouns: profile.pronouns?.trim() || null,
+            credentials: profile.credentials,
+            profile_photo_url: profile.profile_photo_url || null,
           preferred_language: profile.preferred_language,
           accessibility_settings: profile.accessibility_settings,
+          bio: profile.bio?.trim() || null,
+          years_experience: profile.years_experience,
+          specializations: profile.specializations,
           updated_at: new Date().toISOString()
         });
 
-      if (error) throw error;
-      
-      // Update auth metadata if name changed
-      if (profile.full_name !== originalProfile?.full_name) {
-        await supabase.auth.updateUser({
-          data: { full_name: profile.full_name }
-        });
+        if (error) throw error;
+        
+        if (profile.full_name !== originalProfile?.full_name) {
+          await supabase.auth.updateUser({
+            data: { full_name: profile.full_name }
+          });
+        }
+        
+        setOriginalProfile(profile);
+        setSuccessMessage('Profile updated successfully!');
+        announceToScreenReader('Profile settings saved successfully');
+        
+        setTimeout(() => setSuccessMessage(''), 5000);
       }
-      
-      setOriginalProfile(profile);
-      setSuccessMessage('Profile updated successfully!');
-      announceToScreenReader('Profile settings saved successfully');
-      
-      // Clear success message after 5 seconds
-      setTimeout(() => setSuccessMessage(''), 5000);
       
     } catch (err) {
       console.error('Error saving profile:', err);
@@ -257,23 +363,19 @@ export const ProfileSettings: React.FC = () => {
     const file = e.target.files?.[0];
     if (!file) return;
     
-    // Validate file
     if (!ALLOWED_FILE_TYPES.includes(file.type)) {
       setErrors({ profile_photo: 'Please upload a valid image file (JPEG, PNG, GIF, or WebP)' });
-      announceToScreenReader('Invalid file type. Please upload an image file');
       return;
     }
     
     if (file.size > MAX_FILE_SIZE) {
       setErrors({ profile_photo: 'File size must be less than 5MB' });
-      announceToScreenReader('File too large. Please upload a smaller image');
       return;
     }
     
     try {
       setErrors({ ...errors, profile_photo: undefined });
       
-      // Upload to Supabase Storage
       const fileExt = file.name.split('.').pop();
       const fileName = `${user?.id}-${Date.now()}.${fileExt}`;
       const filePath = `profile-photos/${fileName}`;
@@ -287,7 +389,6 @@ export const ProfileSettings: React.FC = () => {
 
       if (uploadError) throw uploadError;
       
-      // Get public URL
       const { data } = supabase.storage
         .from('avatars')
         .getPublicUrl(filePath);
@@ -298,28 +399,6 @@ export const ProfileSettings: React.FC = () => {
     } catch (err) {
       console.error('Error uploading photo:', err);
       setErrors({ profile_photo: 'Failed to upload photo. Please try again.' });
-      announceToScreenReader('Error uploading photo');
-    }
-  };
-
-  const handlePhotoRemove = async () => {
-    try {
-      // Remove from storage if it's a custom upload
-      if (profile.profile_photo_url && profile.profile_photo_url.includes('avatars')) {
-        const path = profile.profile_photo_url.split('/').pop();
-        if (path) {
-          await supabase.storage
-            .from('avatars')
-            .remove([`profile-photos/${path}`]);
-        }
-      }
-      
-      setProfile({ ...profile, profile_photo_url: '' });
-      announceToScreenReader('Profile photo removed');
-      
-    } catch (err) {
-      console.error('Error removing photo:', err);
-      setErrors({ profile_photo: 'Failed to remove photo. Please try again.' });
     }
   };
 
@@ -345,76 +424,29 @@ export const ProfileSettings: React.FC = () => {
     setCredentialInput('');
     setShowCredentialSuggestions(false);
     setErrors({ ...errors, credentials: undefined });
-    announceToScreenReader(`Credential ${trimmed} added`);
   };
 
   const handleRemoveCredential = (index: number) => {
-    const removed = profile.credentials?.[index];
     setProfile({
       ...profile,
       credentials: profile.credentials?.filter((_, i) => i !== index) || []
     });
-    announceToScreenReader(`Credential ${removed} removed`);
   };
 
-  // ========== DATA MANAGEMENT ==========
-  const handleDataExport = async () => {
-    try {
-      // Gather all user data
-      const exportData = {
-        profile,
-        reflections: await fetchUserReflections(),
-        exportedAt: new Date().toISOString()
-      };
-      
-      // Create download
-      const blob = new Blob([JSON.stringify(exportData, null, 2)], 
-        { type: 'application/json' });
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = `interpretreflect-data-${Date.now()}.json`;
-      a.click();
-      URL.revokeObjectURL(url);
-      
-      announceToScreenReader('Data export downloaded');
-      
-    } catch (err) {
-      console.error('Error exporting data:', err);
-      setErrors({ general: 'Failed to export data. Please try again.' });
-    }
-  };
-
-  const handleDataDeletion = async () => {
-    if (!showDeleteConfirm) {
-      setShowDeleteConfirm(true);
-      return;
-    }
-    
-    try {
-      // This would trigger a deletion request
-      // In production, this should be handled by backend/support
-      await supabase.from('deletion_requests').insert({
-        user_id: user?.id,
-        requested_at: new Date().toISOString()
+  // ========== SPECIALIZATIONS ==========
+  const toggleSpecialization = (spec: string) => {
+    const current = profile.specializations || [];
+    if (current.includes(spec)) {
+      setProfile({
+        ...profile,
+        specializations: current.filter(s => s !== spec)
       });
-      
-      setSuccessMessage('Deletion request submitted. We will contact you within 48 hours.');
-      setShowDeleteConfirm(false);
-      announceToScreenReader('Data deletion request submitted');
-      
-    } catch (err) {
-      console.error('Error requesting deletion:', err);
-      setErrors({ general: 'Failed to submit deletion request. Please contact support.' });
+    } else {
+      setProfile({
+        ...profile,
+        specializations: [...current, spec]
+      });
     }
-  };
-
-  const fetchUserReflections = async () => {
-    const { data } = await supabase
-      .from('reflection_entries')
-      .select('*')
-      .eq('user_id', user?.id);
-    return data || [];
   };
 
   // ========== UTILITY FUNCTIONS ==========
@@ -431,526 +463,820 @@ export const ProfileSettings: React.FC = () => {
   // ========== RENDER ==========
   if (loading) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-        <div className="text-center" role="status" aria-live="polite">
-          <RefreshCw className="w-8 h-8 animate-spin mx-auto mb-4 text-blue-600" aria-hidden="true" />
-          <p className="text-gray-600">Loading profile settings...</p>
+      <div style={{ 
+        backgroundColor: '#FAF9F6', 
+        minHeight: '100vh',
+        fontFamily: "'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif"
+      }} className="flex items-center justify-center">
+        <div className="text-center">
+          <RefreshCw className="w-8 h-8 animate-spin mx-auto mb-4" style={{ color: '#6B8B60' }} />
+          <p style={{ color: '#666666' }}>Loading profile settings...</p>
         </div>
       </div>
     );
   }
 
   return (
-    <div className={`min-h-screen bg-gray-50 ${
-      profile.accessibility_settings.larger_text ? 'text-lg' : ''
-    } ${
-      profile.accessibility_settings.high_contrast ? 'high-contrast' : ''
-    }`}>
-      {/* Skip to main content */}
-      <a
-        href="#main-content"
-        className="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 focus:z-50 focus:px-4 focus:py-2 focus:bg-white focus:text-black focus:rounded-lg focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
-      >
-        Skip to main content
-      </a>
-
+    <div style={{ 
+      backgroundColor: '#FAF9F6', 
+      minHeight: '100vh',
+      fontFamily: "'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif"
+    }}>
       {/* Screen reader announcements */}
-      <div
-        ref={announcementRef}
-        className="sr-only"
-        role="status"
-        aria-live="polite"
-        aria-atomic="true"
-      />
+      <div ref={announcementRef} className="sr-only" role="status" aria-live="polite" />
 
       {/* Header */}
-      <header className="bg-white shadow-sm">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-          <div className="flex items-center gap-4">
-            <div className="p-3 bg-blue-100 rounded-lg">
-              <User className="w-6 h-6 text-blue-600" aria-hidden="true" />
+      <div 
+        className="border-b"
+        style={{ 
+          backgroundColor: '#FFFFFF',
+          borderColor: 'rgba(92, 127, 79, 0.15)'
+        }}
+      >
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+          <div className="flex items-center justify-between mb-2">
+            <div className="flex items-center gap-4">
+              <div 
+                className="w-12 h-12 rounded-xl flex items-center justify-center"
+                style={{ backgroundColor: 'rgba(107, 139, 96, 0.1)' }}
+              >
+                <User className="w-6 h-6" style={{ color: '#6B8B60' }} />
+              </div>
+              <div>
+                <h1 className="text-3xl font-bold" style={{ color: '#1A1A1A' }}>
+                  Profile Settings
+                </h1>
+                <p className="text-sm mt-1" style={{ color: '#666666' }}>
+                  Personalize your professional experience
+                </p>
+              </div>
             </div>
-            <div>
-              <h1 className="text-2xl font-bold text-gray-900">
-                Profile Settings
-              </h1>
-              <p className="text-gray-600 mt-1">
-                Personalize your professional experience
-              </p>
-            </div>
+            <button
+              onClick={() => navigate('/')}
+              className="p-2 rounded-lg transition-all hover:scale-110"
+              style={{
+                backgroundColor: 'rgba(107, 139, 96, 0.1)',
+              }}
+              aria-label="Close profile settings"
+            >
+              <X className="w-6 h-6" style={{ color: '#6B8B60' }} />
+            </button>
           </div>
-          <p className="text-sm text-gray-500 mt-4">
-            Manage what you share, control how you appear, and update your details securely at any time.
-          </p>
         </div>
-      </header>
+      </div>
+
+      {/* Tab Navigation */}
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 mt-6">
+        <div className="flex gap-2 p-1 rounded-xl" style={{ backgroundColor: '#FFFFFF' }}>
+          {(['profile', 'accessibility', 'privacy'] as const).map((section) => (
+            <button
+              key={section}
+              onClick={() => setActiveSection(section)}
+              className={`flex-1 px-4 py-3 rounded-lg font-medium transition-all capitalize ${
+                activeSection === section 
+                  ? 'text-white' 
+                  : 'text-gray-600'
+              }`}
+              style={{
+                background: activeSection === section 
+                  ? 'linear-gradient(135deg, rgb(27, 94, 32), rgb(46, 125, 50))'
+                  : 'transparent'
+              }}
+              onMouseEnter={(e) => {
+                if (activeSection !== section) {
+                  e.currentTarget.style.backgroundColor = 'rgba(107, 139, 96, 0.1)';
+                }
+              }}
+              onMouseLeave={(e) => {
+                if (activeSection !== section) {
+                  e.currentTarget.style.backgroundColor = 'transparent';
+                  e.currentTarget.style.background = 'transparent';
+                }
+              }}
+            >
+              {section === 'profile' && <User className="w-4 h-4 inline mr-2" />}
+              {section === 'accessibility' && <Eye className="w-4 h-4 inline mr-2" />}
+              {section === 'privacy' && <Shield className="w-4 h-4 inline mr-2" />}
+              {section === 'privacy' ? 'Privacy & Data' : section}
+            </button>
+          ))}
+        </div>
+      </div>
 
       {/* Main Content */}
-      <main id="main-content" className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
         {/* Success/Error Messages */}
         {successMessage && (
           <div 
-            className="mb-6 p-4 bg-green-50 border-l-4 border-green-500 rounded-lg"
-            role="alert"
+            className="mb-6 p-4 rounded-xl flex items-center gap-3"
+            style={{
+              backgroundColor: 'rgba(16, 185, 129, 0.1)',
+              border: '1px solid rgba(16, 185, 129, 0.2)'
+            }}
           >
-            <div className="flex items-center">
-              <Check className="w-5 h-5 text-green-600 mr-2" aria-hidden="true" />
-              <p className="text-green-800">{successMessage}</p>
-            </div>
+            <Check className="w-5 h-5" style={{ color: '#10B981' }} />
+            <p style={{ color: '#047857' }}>{successMessage}</p>
           </div>
         )}
 
         {errors.general && (
           <div 
-            className="mb-6 p-4 bg-red-50 border-l-4 border-red-500 rounded-lg"
-            role="alert"
+            className="mb-6 p-4 rounded-xl flex items-center gap-3"
+            style={{
+              backgroundColor: 'rgba(239, 68, 68, 0.1)',
+              border: '1px solid rgba(239, 68, 68, 0.2)'
+            }}
           >
-            <div className="flex items-center">
-              <AlertCircle className="w-5 h-5 text-red-600 mr-2" aria-hidden="true" />
-              <p className="text-red-800">{errors.general}</p>
-            </div>
+            <AlertCircle className="w-5 h-5" style={{ color: '#EF4444' }} />
+            <p style={{ color: '#DC2626' }}>{errors.general}</p>
           </div>
         )}
 
-        {/* Profile Form */}
-        <form 
-          ref={formRef}
-          onSubmit={handleSubmit}
-          className="bg-white rounded-xl shadow-sm p-6 space-y-6"
-          noValidate
-        >
-          {/* Full Name */}
-          <div className="space-y-2">
-            <label 
-              htmlFor="full-name"
-              className="block text-sm font-medium text-gray-700"
-            >
-              Full Name
-              <span className="text-red-500 ml-1" aria-label="required">*</span>
-            </label>
-            <p className="text-sm text-gray-500">
-              Your name as it appears in reflections and records.
-            </p>
-            <input
-              ref={nameInputRef}
-              id="full-name"
-              type="text"
-              value={profile.full_name}
-              onChange={(e) => setProfile({ ...profile, full_name: e.target.value })}
-              className={`w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent ${
-                errors.full_name ? 'border-red-500' : 'border-gray-300'
-              }`}
-              aria-required="true"
-              aria-invalid={!!errors.full_name}
-              aria-describedby={errors.full_name ? 'name-error' : 'name-help'}
-              autoComplete="name"
-            />
-            {errors.full_name && (
-              <p id="name-error" className="text-sm text-red-600 mt-1" role="alert">
-                {errors.full_name}
-              </p>
-            )}
-          </div>
-
-          {/* Pronouns */}
-          <div className="space-y-2">
-            <label 
-              htmlFor="pronouns"
-              className="block text-sm font-medium text-gray-700"
-            >
-              Pronouns
-              <span className="text-gray-400 ml-2 text-xs font-normal">(optional)</span>
-            </label>
-            <p id="pronouns-help" className="text-sm text-gray-500">
-              Let others know your pronouns if you wish.
-            </p>
-            <input
-              id="pronouns"
-              type="text"
-              value={profile.pronouns || ''}
-              onChange={(e) => setProfile({ ...profile, pronouns: e.target.value })}
-              className={`w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent ${
-                errors.pronouns ? 'border-red-500' : 'border-gray-300'
-              }`}
-              placeholder="e.g., she/her, he/him, they/them"
-              aria-describedby="pronouns-help"
-              aria-invalid={!!errors.pronouns}
-            />
-            {errors.pronouns && (
-              <p className="text-sm text-red-600 mt-1" role="alert">
-                {errors.pronouns}
-              </p>
-            )}
-          </div>
-
-          {/* Professional Credentials */}
-          <div className="space-y-2">
-            <label 
-              htmlFor="credentials"
-              className="block text-sm font-medium text-gray-700"
-            >
-              Professional Credentials
-              <button
-                type="button"
-                className="ml-2 text-gray-400 hover:text-gray-600"
-                aria-label="Help with credentials"
-                onClick={() => setShowCredentialSuggestions(!showCredentialSuggestions)}
-              >
-                <HelpCircle className="w-4 h-4 inline" />
-              </button>
-            </label>
-            <p id="credentials-help" className="text-sm text-gray-500">
-              E.g., "RID CI/CT," "NIC-Advanced," "BEI Master," "CHIT"
-            </p>
-            
-            {/* Credential Tags */}
-            {profile.credentials && profile.credentials.length > 0 && (
-              <div className="flex flex-wrap gap-2 mb-2" role="list" aria-label="Your credentials">
-                {profile.credentials.map((cred, index) => (
-                  <div
-                    key={index}
-                    className="flex items-center gap-1 px-3 py-1 bg-blue-100 text-blue-800 rounded-full text-sm"
-                    role="listitem"
-                  >
-                    <span>{cred}</span>
-                    <button
-                      type="button"
-                      onClick={() => handleRemoveCredential(index)}
-                      className="ml-1 hover:text-blue-900"
-                      aria-label={`Remove ${cred}`}
-                    >
-                      <X className="w-3 h-3" />
-                    </button>
-                  </div>
-                ))}
-              </div>
-            )}
-            
-            {/* Credential Input */}
-            <div className="flex gap-2">
-              <input
-                id="credentials"
-                type="text"
-                value={credentialInput}
-                onChange={(e) => setCredentialInput(e.target.value)}
-                onKeyPress={(e) => {
-                  if (e.key === 'Enter') {
-                    e.preventDefault();
-                    handleAddCredential(credentialInput);
-                  }
+        <form onSubmit={handleSubmit}>
+          {/* Profile Section */}
+          {activeSection === 'profile' && (
+            <div className="space-y-6">
+              {/* Basic Information */}
+              <div 
+                className="rounded-2xl p-6"
+                style={{
+                  backgroundColor: '#FFFFFF',
+                  boxShadow: '0 4px 15px rgba(0, 0, 0, 0.05)'
                 }}
-                className="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                placeholder="Add a credential"
-                aria-describedby="credentials-help"
-              />
-              <button
-                type="button"
-                onClick={() => handleAddCredential(credentialInput)}
-                className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
-                aria-label="Add credential"
               >
-                Add
-              </button>
-            </div>
-            
-            {/* Credential Suggestions */}
-            {showCredentialSuggestions && (
-              <div className="mt-2 p-3 bg-gray-50 rounded-lg">
-                <p className="text-sm font-medium text-gray-700 mb-2">Common credentials:</p>
-                <div className="flex flex-wrap gap-1">
-                  {COMMON_CREDENTIALS.map(cred => (
-                    <button
-                      key={cred}
-                      type="button"
-                      onClick={() => handleAddCredential(cred)}
-                      className="text-xs px-2 py-1 bg-white border border-gray-300 rounded hover:bg-gray-100"
-                    >
-                      {cred}
-                    </button>
-                  ))}
-                </div>
-              </div>
-            )}
-            
-            {errors.credentials && (
-              <p className="text-sm text-red-600 mt-1" role="alert">
-                {errors.credentials}
-              </p>
-            )}
-          </div>
+                <h2 className="text-xl font-bold mb-6" style={{ color: '#1A1A1A' }}>
+                  Basic Information
+                </h2>
 
-          {/* Profile Photo */}
-          <div className="space-y-2">
-            <label className="block text-sm font-medium text-gray-700">
-              Profile Photo
-              <span className="text-gray-400 ml-2 text-xs font-normal">(optional)</span>
-            </label>
-            <p className="text-sm text-gray-500">
-              Upload a photo—used only within your private dashboard.
-            </p>
-            
-            <div className="flex items-center gap-4">
-              {/* Photo Preview */}
-              <div className="relative">
-                {profile.profile_photo_url ? (
-                  <img
-                    src={profile.profile_photo_url}
-                    alt="Profile photo"
-                    className="w-24 h-24 rounded-full object-cover border-2 border-gray-200"
-                  />
-                ) : (
-                  <div className="w-24 h-24 rounded-full bg-gray-200 flex items-center justify-center">
-                    <User className="w-8 h-8 text-gray-400" aria-hidden="true" />
+                <div className="grid md:grid-cols-2 gap-6">
+                  {/* Full Name */}
+                  <div>
+                    <label className="block text-sm font-medium mb-2" style={{ color: '#1A1A1A' }}>
+                      Full Name <span style={{ color: '#EF4444' }}>*</span>
+                    </label>
+                    <input
+                      type="text"
+                      value={profile.full_name}
+                      onChange={(e) => setProfile({ ...profile, full_name: e.target.value })}
+                      className="w-full px-4 py-3 rounded-xl border focus:outline-none focus:ring-2"
+                      style={{
+                        borderColor: errors.full_name ? '#EF4444' : '#E5E5E5',
+                        backgroundColor: '#FAF9F6',
+                        focusRingColor: '#6B8B60'
+                      }}
+                      placeholder="Enter your full name"
+                    />
+                    {errors.full_name && (
+                      <p className="text-sm mt-1" style={{ color: '#EF4444' }}>
+                        {errors.full_name}
+                      </p>
+                    )}
                   </div>
-                )}
-              </div>
-              
-              {/* Photo Actions */}
-              <div className="flex flex-col gap-2">
-                <input
-                  ref={fileInputRef}
-                  type="file"
-                  accept="image/jpeg,image/png,image/gif,image/webp"
-                  onChange={handlePhotoUpload}
-                  className="sr-only"
-                  id="photo-upload"
-                  aria-label="Upload profile photo"
-                />
-                <label
-                  htmlFor="photo-upload"
-                  className="px-4 py-2 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 cursor-pointer flex items-center gap-2 text-sm"
-                >
-                  <Upload className="w-4 h-4" aria-hidden="true" />
-                  {profile.profile_photo_url ? 'Replace' : 'Upload'}
-                </label>
-                {profile.profile_photo_url && (
-                  <button
-                    type="button"
-                    onClick={handlePhotoRemove}
-                    className="px-4 py-2 bg-white border border-red-300 text-red-600 rounded-lg hover:bg-red-50 text-sm"
-                    aria-label="Remove profile photo"
-                  >
-                    <Trash2 className="w-4 h-4 inline mr-1" aria-hidden="true" />
-                    Remove
-                  </button>
-                )}
-              </div>
-            </div>
-            
-            {errors.profile_photo && (
-              <p className="text-sm text-red-600 mt-1" role="alert">
-                {errors.profile_photo}
-              </p>
-            )}
-          </div>
 
-          {/* Preferred Language */}
-          <div className="space-y-2">
-            <label 
-              htmlFor="language"
-              className="block text-sm font-medium text-gray-700"
-            >
-              Preferred Language
-            </label>
-            <p id="language-help" className="text-sm text-gray-500">
-              Interact with the platform in your language of choice.
-            </p>
-            <div className="relative">
-              <select
-                id="language"
-                value={profile.preferred_language}
-                onChange={(e) => setProfile({ ...profile, preferred_language: e.target.value })}
-                className="w-full px-4 py-2 pr-10 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent appearance-none"
-                aria-describedby="language-help"
-              >
-                {SUPPORTED_LANGUAGES.map(lang => (
-                  <option key={lang.code} value={lang.code}>
-                    {lang.flag} {lang.label}
-                  </option>
-                ))}
-              </select>
-              <ChevronDown className="absolute right-3 top-3 w-5 h-5 text-gray-400 pointer-events-none" aria-hidden="true" />
-            </div>
-          </div>
+                  {/* Email */}
+                  <div>
+                    <label className="block text-sm font-medium mb-2" style={{ color: '#1A1A1A' }}>
+                      Email
+                    </label>
+                    <div className="relative">
+                      <Mail className="absolute left-4 top-3.5 w-5 h-5" style={{ color: '#999999' }} />
+                      <input
+                        type="email"
+                        value={profile.email || ''}
+                        disabled
+                        className="w-full pl-12 pr-4 py-3 rounded-xl border"
+                        style={{
+                          borderColor: '#E5E5E5',
+                          backgroundColor: '#F5F5F5',
+                          color: '#999999'
+                        }}
+                      />
+                    </div>
+                  </div>
 
-          {/* Accessibility Controls */}
-          <div className="space-y-4">
-            <h2 className="text-sm font-medium text-gray-700">
-              Accessibility Controls
-            </h2>
-            <p className="text-sm text-gray-500">
-              Improve readability as needed. Settings are saved automatically.
-            </p>
-            
-            {/* Larger Text Toggle */}
-            <div className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
-              <div className="flex items-center gap-3">
-                <Eye className="w-5 h-5 text-gray-600" aria-hidden="true" />
-                <div>
-                  <label htmlFor="larger-text" className="text-sm font-medium text-gray-700">
-                    Larger Text
+                  {/* Years of Experience */}
+                  <div>
+                    <label className="block text-sm font-medium mb-2" style={{ color: '#1A1A1A' }}>
+                      Years of Experience
+                    </label>
+                    <input
+                      type="number"
+                      min="0"
+                      max="50"
+                      value={profile.years_experience || 0}
+                      onChange={(e) => setProfile({ ...profile, years_experience: parseInt(e.target.value) || 0 })}
+                      className="w-full px-4 py-3 rounded-xl border focus:outline-none focus:ring-2"
+                      style={{
+                        borderColor: '#E5E5E5',
+                        backgroundColor: '#FAF9F6'
+                      }}
+                    />
+                  </div>
+                </div>
+
+                {/* Bio */}
+                <div className="mt-6">
+                  <label className="block text-sm font-medium mb-2" style={{ color: '#1A1A1A' }}>
+                    Professional Bio
                   </label>
-                  <p className="text-xs text-gray-500">Increase text size for better readability</p>
+                  <textarea
+                    value={profile.bio || ''}
+                    onChange={(e) => setProfile({ ...profile, bio: e.target.value })}
+                    rows={4}
+                    className="w-full px-4 py-3 rounded-xl border focus:outline-none focus:ring-2 resize-none"
+                    style={{
+                      borderColor: errors.bio ? '#EF4444' : '#E5E5E5',
+                      backgroundColor: '#FAF9F6'
+                    }}
+                    placeholder="Tell us about your professional background and interests..."
+                    maxLength={500}
+                  />
+                  <p className="text-xs mt-1 text-right" style={{ color: '#999999' }}>
+                    {profile.bio?.length || 0}/500 characters
+                  </p>
                 </div>
               </div>
-              <button
-                type="button"
-                id="larger-text"
-                role="switch"
-                aria-checked={profile.accessibility_settings.larger_text}
-                onClick={() => setProfile({
-                  ...profile,
-                  accessibility_settings: {
-                    ...profile.accessibility_settings,
-                    larger_text: !profile.accessibility_settings.larger_text
-                  }
-                })}
-                className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 ${
-                  profile.accessibility_settings.larger_text ? 'bg-blue-600' : 'bg-gray-200'
-                }`}
+
+              {/* Profile Photo */}
+              <div 
+                className="rounded-2xl p-6"
+                style={{
+                  backgroundColor: '#FFFFFF',
+                  boxShadow: '0 4px 15px rgba(0, 0, 0, 0.05)'
+                }}
               >
-                <span className="sr-only">Enable larger text</span>
-                <span
-                  className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
-                    profile.accessibility_settings.larger_text ? 'translate-x-6' : 'translate-x-1'
-                  }`}
-                />
-              </button>
-            </div>
-            
-            {/* High Contrast Toggle */}
-            <div className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
-              <div className="flex items-center gap-3">
-                <div className="w-5 h-5 border-2 border-gray-600 bg-black rounded" aria-hidden="true" />
-                <div>
-                  <label htmlFor="high-contrast" className="text-sm font-medium text-gray-700">
-                    High Contrast Mode
-                  </label>
-                  <p className="text-xs text-gray-500">Enhance color contrast for visual clarity</p>
+                <h2 className="text-xl font-bold mb-6" style={{ color: '#1A1A1A' }}>
+                  Profile Photo
+                </h2>
+                
+                <div className="flex items-center gap-6">
+                  <div className="relative">
+                    {profile.profile_photo_url ? (
+                      <img
+                        src={profile.profile_photo_url}
+                        alt="Profile"
+                        className="w-32 h-32 rounded-2xl object-cover"
+                        style={{ border: '3px solid rgba(107, 139, 96, 0.2)' }}
+                      />
+                    ) : (
+                      <div 
+                        className="w-32 h-32 rounded-2xl flex items-center justify-center"
+                        style={{ 
+                          backgroundColor: 'rgba(107, 139, 96, 0.1)',
+                          border: '2px dashed rgba(107, 139, 96, 0.3)'
+                        }}
+                      >
+                        <Camera className="w-10 h-10" style={{ color: '#6B8B60' }} />
+                      </div>
+                    )}
+                  </div>
+                  
+                  <div className="flex-1">
+                    <p className="text-sm mb-3" style={{ color: '#666666' }}>
+                      Upload a professional photo for your profile
+                    </p>
+                    <div className="flex gap-3">
+                      <input
+                        ref={fileInputRef}
+                        type="file"
+                        accept="image/*"
+                        onChange={handlePhotoUpload}
+                        className="hidden"
+                      />
+                      <button
+                        type="button"
+                        onClick={() => fileInputRef.current?.click()}
+                        className="px-4 py-2 rounded-lg font-medium flex items-center gap-2"
+                        style={{
+                          backgroundColor: '#6B8B60',
+                          color: '#FFFFFF'
+                        }}
+                      >
+                        <Upload className="w-4 h-4" />
+                        Upload Photo
+                      </button>
+                      {profile.profile_photo_url && (
+                        <button
+                          type="button"
+                          onClick={() => setProfile({ ...profile, profile_photo_url: '' })}
+                          className="px-4 py-2 rounded-lg font-medium border"
+                          style={{
+                            borderColor: '#E5E5E5',
+                            color: '#666666'
+                          }}
+                        >
+                          Remove
+                        </button>
+                      )}
+                    </div>
+                    {errors.profile_photo && (
+                      <p className="text-sm mt-2" style={{ color: '#EF4444' }}>
+                        {errors.profile_photo}
+                      </p>
+                    )}
+                  </div>
                 </div>
               </div>
-              <button
-                type="button"
-                id="high-contrast"
-                role="switch"
-                aria-checked={profile.accessibility_settings.high_contrast}
-                onClick={() => setProfile({
-                  ...profile,
-                  accessibility_settings: {
-                    ...profile.accessibility_settings,
-                    high_contrast: !profile.accessibility_settings.high_contrast
-                  }
-                })}
-                className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 ${
-                  profile.accessibility_settings.high_contrast ? 'bg-blue-600' : 'bg-gray-200'
-                }`}
-              >
-                <span className="sr-only">Enable high contrast mode</span>
-                <span
-                  className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
-                    profile.accessibility_settings.high_contrast ? 'translate-x-6' : 'translate-x-1'
-                  }`}
-                />
-              </button>
-            </div>
-          </div>
 
-          {/* Security & Privacy Message */}
-          <div className="p-4 bg-blue-50 rounded-lg">
-            <div className="flex items-start gap-3">
-              <Shield className="w-5 h-5 text-blue-600 mt-0.5 flex-shrink-0" aria-hidden="true" />
-              <div className="space-y-2 text-sm">
-                <p className="font-medium text-blue-900">
-                  Your data is always encrypted and never shared outside InterpretReflect without your explicit consent.
-                </p>
-                <p className="text-blue-800">
-                  You may request a copy or deletion of your data at any time:
-                </p>
-                <div className="flex flex-wrap gap-2 mt-2">
-                  <button
-                    type="button"
-                    onClick={handleDataExport}
-                    className="inline-flex items-center gap-2 px-3 py-1 bg-white text-blue-700 border border-blue-300 rounded-lg hover:bg-blue-50 text-sm"
-                    aria-label="Request data export"
-                  >
-                    <Download className="w-4 h-4" aria-hidden="true" />
-                    Export Data
-                  </button>
-                  {!showDeleteConfirm ? (
+              {/* Professional Details */}
+              <div 
+                className="rounded-2xl p-6"
+                style={{
+                  backgroundColor: '#FFFFFF',
+                  boxShadow: '0 4px 15px rgba(0, 0, 0, 0.05)'
+                }}
+              >
+                <h2 className="text-xl font-bold mb-6" style={{ color: '#1A1A1A' }}>
+                  Professional Details
+                </h2>
+
+                {/* Credentials */}
+                <div className="mb-6">
+                  <label className="block text-sm font-medium mb-3" style={{ color: '#1A1A1A' }}>
+                    Credentials & Certifications
+                  </label>
+                  
+                  {profile.credentials && profile.credentials.length > 0 && (
+                    <div className="flex flex-wrap gap-2 mb-3">
+                      {profile.credentials.map((cred, index) => (
+                        <div
+                          key={index}
+                          className="flex items-center gap-2 px-3 py-2 rounded-lg"
+                          style={{ backgroundColor: 'rgba(107, 139, 96, 0.1)' }}
+                        >
+                          <Award className="w-4 h-4" style={{ color: '#6B8B60' }} />
+                          <span style={{ color: '#1A1A1A' }}>{cred}</span>
+                          <button
+                            type="button"
+                            onClick={() => handleRemoveCredential(index)}
+                            className="hover:opacity-70"
+                          >
+                            <X className="w-4 h-4" style={{ color: '#666666' }} />
+                          </button>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                  
+                  <div className="flex gap-2">
+                    <input
+                      type="text"
+                      value={credentialInput}
+                      onChange={(e) => setCredentialInput(e.target.value)}
+                      onKeyPress={(e) => {
+                        if (e.key === 'Enter') {
+                          e.preventDefault();
+                          handleAddCredential(credentialInput);
+                        }
+                      }}
+                      className="flex-1 px-4 py-2 rounded-lg border"
+                      style={{
+                        borderColor: '#E5E5E5',
+                        backgroundColor: '#FAF9F6'
+                      }}
+                      placeholder="Add a credential"
+                    />
                     <button
                       type="button"
-                      onClick={() => setShowDeleteConfirm(true)}
-                      className="inline-flex items-center gap-2 px-3 py-1 bg-white text-red-700 border border-red-300 rounded-lg hover:bg-red-50 text-sm"
-                      aria-label="Request data deletion"
+                      onClick={() => handleAddCredential(credentialInput)}
+                      className="px-4 py-2 rounded-lg font-medium"
+                      style={{
+                        backgroundColor: '#6B8B60',
+                        color: '#FFFFFF'
+                      }}
                     >
-                      <Trash2 className="w-4 h-4" aria-hidden="true" />
-                      Request Deletion
+                      Add
                     </button>
-                  ) : (
-                    <div className="flex items-center gap-2">
-                      <span className="text-red-700 text-sm">Confirm deletion?</span>
-                      <button
-                        type="button"
-                        onClick={handleDataDeletion}
-                        className="px-3 py-1 bg-red-600 text-white rounded-lg hover:bg-red-700 text-sm"
-                      >
-                        Yes
-                      </button>
-                      <button
-                        type="button"
-                        onClick={() => setShowDeleteConfirm(false)}
-                        className="px-3 py-1 bg-gray-300 text-gray-700 rounded-lg hover:bg-gray-400 text-sm"
-                      >
-                        No
-                      </button>
+                  </div>
+                  
+                  {showCredentialSuggestions && (
+                    <div className="mt-3 p-3 rounded-lg" style={{ backgroundColor: '#FAF9F6' }}>
+                      <p className="text-xs font-medium mb-2" style={{ color: '#666666' }}>
+                        Common credentials:
+                      </p>
+                      <div className="flex flex-wrap gap-1">
+                        {COMMON_CREDENTIALS.map(cred => (
+                          <button
+                            key={cred}
+                            type="button"
+                            onClick={() => handleAddCredential(cred)}
+                            className="text-xs px-2 py-1 rounded hover:opacity-80"
+                            style={{
+                              backgroundColor: 'rgba(107, 139, 96, 0.1)',
+                              color: '#6B8B60'
+                            }}
+                          >
+                            {cred}
+                          </button>
+                        ))}
+                      </div>
                     </div>
                   )}
                 </div>
+
+                {/* Specializations */}
+                <div>
+                  <label className="block text-sm font-medium mb-3" style={{ color: '#1A1A1A' }}>
+                    Areas of Specialization
+                  </label>
+                  <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
+                    {SPECIALIZATIONS.map(spec => (
+                      <label
+                        key={spec}
+                        className="flex items-center gap-2 p-3 rounded-lg cursor-pointer transition-all"
+                        onClick={() => toggleSpecialization(spec)}
+                        style={{
+                          backgroundColor: profile.specializations?.includes(spec) 
+                            ? 'rgba(107, 139, 96, 0.1)' 
+                            : '#FAF9F6',
+                          border: `1px solid ${profile.specializations?.includes(spec) 
+                            ? 'rgba(107, 139, 96, 0.3)' 
+                            : 'transparent'}`
+                        }}
+                      >
+                        <div 
+                          className="w-5 h-5 rounded flex items-center justify-center"
+                          style={{
+                            backgroundColor: profile.specializations?.includes(spec) 
+                              ? '#6B8B60' 
+                              : '#FFFFFF',
+                            border: '2px solid #6B8B60'
+                          }}
+                        >
+                          {profile.specializations?.includes(spec) && (
+                            <Check className="w-3 h-3" style={{ color: '#FFFFFF' }} />
+                          )}
+                        </div>
+                        <span style={{ color: '#1A1A1A' }}>{spec}</span>
+                      </label>
+                    ))}
+                  </div>
+                </div>
               </div>
             </div>
-          </div>
+          )}
+
+          {/* Accessibility Section */}
+          {activeSection === 'accessibility' && (
+            <div className="space-y-6">
+              <div 
+                className="rounded-2xl p-6"
+                style={{
+                  backgroundColor: '#FFFFFF',
+                  boxShadow: '0 4px 15px rgba(0, 0, 0, 0.05)'
+                }}
+              >
+                <h2 className="text-xl font-bold mb-6" style={{ color: '#1A1A1A' }}>
+                  Accessibility Settings
+                </h2>
+
+                <div className="space-y-4">
+                  {[
+                    {
+                      id: 'larger_text',
+                      label: 'Larger Text',
+                      description: 'Increase text size for better readability',
+                      icon: Eye,
+                      enabled: profile.accessibility_settings.larger_text
+                    },
+                    {
+                      id: 'high_contrast',
+                      label: 'High Contrast Mode',
+                      description: 'Enhance color contrast for visual clarity',
+                      icon: Palette,
+                      enabled: profile.accessibility_settings.high_contrast
+                    },
+                    {
+                      id: 'reduce_motion',
+                      label: 'Reduce Motion',
+                      description: 'Minimize animations and transitions',
+                      icon: Zap,
+                      enabled: profile.accessibility_settings.reduce_motion
+                    },
+                    {
+                      id: 'screen_reader',
+                      label: 'Screen Reader Support',
+                      description: 'Optimize for screen reader compatibility',
+                      icon: Languages,
+                      enabled: profile.accessibility_settings.screen_reader
+                    }
+                  ].map(setting => (
+                    <div
+                      key={setting.id}
+                      className="p-4 rounded-xl"
+                      style={{ backgroundColor: '#FAF9F6' }}
+                    >
+                      <label 
+                        className="flex items-start gap-3 cursor-pointer focus:outline-none" 
+                        style={{ outline: 'none' }}
+                        onClick={() => setProfile({
+                          ...profile,
+                          accessibility_settings: {
+                            ...profile.accessibility_settings,
+                            [setting.id]: !setting.enabled
+                          }
+                        })}
+                      >
+                        <div className="relative mt-0.5">
+                          <div
+                            className="rounded transition-all duration-200 focus:outline-none"
+                            style={{
+                              width: '20px',
+                              height: '20px',
+                              backgroundColor: setting.enabled ? '#059669' : '#ffffff',
+                              border: setting.enabled ? '2px solid #059669' : '2px solid #d1d5db',
+                              outline: 'none'
+                            }}
+                          >
+                            {setting.enabled && (
+                              <svg
+                                className="absolute inset-0 w-full h-full"
+                                viewBox="0 0 20 20"
+                                fill="none"
+                                style={{ padding: '2px' }}
+                              >
+                                <path
+                                  d="M5 10l3 3 7-7"
+                                  stroke="white"
+                                  strokeWidth="3"
+                                  strokeLinecap="round"
+                                  strokeLinejoin="round"
+                                />
+                              </svg>
+                            )}
+                          </div>
+                        </div>
+                        <div>
+                          <h3 className="font-medium" style={{ color: '#1A1A1A' }}>
+                            {setting.label}
+                          </h3>
+                          <p className="text-sm mt-1" style={{ color: '#666666' }}>
+                            {setting.description}
+                          </p>
+                        </div>
+                      </label>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* Privacy & Data Notice */}
+              <div 
+                className="rounded-xl p-4"
+                style={{
+                  backgroundColor: 'rgba(59, 130, 246, 0.05)',
+                  border: '1px solid rgba(59, 130, 246, 0.2)'
+                }}
+              >
+                <div>
+                  <p className="text-sm" style={{ color: '#1A1A1A' }}>
+                    Your data is encrypted and never shared without consent. Visit{' '}
+                    <button 
+                      type="button"
+                      onClick={() => setActiveSection('privacy')}
+                      className="underline" 
+                      style={{ 
+                        color: '#3B82F6',
+                        background: 'none',
+                        border: 'none',
+                        padding: 0,
+                        font: 'inherit',
+                        cursor: 'pointer'
+                      }}
+                    >
+                      Privacy & Data
+                    </button>{' '}
+                    to manage your data preferences.
+                  </p>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* Privacy & Data Section */}
+          {activeSection === 'privacy' && (
+            <div className="space-y-6">
+              <div 
+                className="rounded-2xl p-6"
+                style={{
+                  backgroundColor: '#FFFFFF',
+                  boxShadow: '0 4px 15px rgba(0, 0, 0, 0.05)'
+                }}
+              >
+                <h2 className="text-xl font-bold mb-6" style={{ color: '#1A1A1A' }}>
+                  Privacy & Data Settings
+                </h2>
+                
+                <div className="space-y-6">
+                  {/* Data Management */}
+                  <div>
+                    <h3 className="font-semibold mb-4" style={{ color: '#1A1A1A' }}>
+                      Data Management
+                    </h3>
+                    <div className="space-y-4">
+                      <div 
+                        className="p-4 rounded-xl border flex items-start justify-between"
+                        style={{ 
+                          backgroundColor: '#FAF9F6',
+                          borderColor: 'rgba(107, 139, 96, 0.2)'
+                        }}
+                      >
+                        <div className="flex items-start gap-3">
+                          <Download className="w-5 h-5 mt-0.5" style={{ color: '#6B8B60' }} />
+                          <div>
+                            <h4 className="font-medium" style={{ color: '#1A1A1A' }}>
+                              Export Your Data
+                            </h4>
+                            <p className="text-sm mt-1" style={{ color: '#666666' }}>
+                              Download all your reflections and settings
+                            </p>
+                          </div>
+                        </div>
+                        <button
+                          type="button"
+                          onClick={() => {
+                            alert('Export functionality coming soon. Your data will be downloadable in JSON format.');
+                          }}
+                          className="px-4 py-2 rounded-lg font-medium transition-all hover:opacity-90"
+                          style={{
+                            backgroundColor: '#6B8B60',
+                            color: '#FFFFFF'
+                          }}
+                        >
+                          Export
+                        </button>
+                      </div>
+                      
+                      <div 
+                        className="p-4 rounded-xl border flex items-start justify-between"
+                        style={{ 
+                          backgroundColor: 'rgba(239, 68, 68, 0.05)',
+                          borderColor: 'rgba(239, 68, 68, 0.2)'
+                        }}
+                      >
+                        <div className="flex items-start gap-3">
+                          <Trash2 className="w-5 h-5 mt-0.5" style={{ color: '#EF4444' }} />
+                          <div>
+                            <h4 className="font-medium" style={{ color: '#1A1A1A' }}>
+                              Delete Account
+                            </h4>
+                            <p className="text-sm mt-1" style={{ color: '#666666' }}>
+                              Permanently remove your account and data
+                            </p>
+                          </div>
+                        </div>
+                        <button
+                          type="button"
+                          onClick={() => {
+                            if (confirm('Are you sure you want to delete your account? This action cannot be undone.')) {
+                              alert('Account deletion request submitted. You will receive a confirmation email.');
+                            }
+                          }}
+                          className="px-4 py-2 rounded-lg font-medium border transition-all hover:bg-red-50"
+                          style={{
+                            borderColor: '#EF4444',
+                            color: '#EF4444'
+                          }}
+                        >
+                          Delete
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                  
+                  {/* Privacy Settings */}
+                  <div>
+                    <h3 className="font-semibold mb-4" style={{ color: '#1A1A1A' }}>
+                      Privacy Preferences
+                    </h3>
+                    <div className="space-y-3">
+                      {[
+                        { id: 'analytics' as keyof typeof privacySettings, label: 'Usage Analytics', description: 'Help improve InterpretReflect' },
+                        { id: 'notifications' as keyof typeof privacySettings, label: 'Email Notifications', description: 'Receive wellness reminders' },
+                        { id: 'team_visibility' as keyof typeof privacySettings, label: 'Team Visibility', description: 'Share wellness status with team' }
+                      ].map((setting) => {
+                        const isEnabled = privacySettings[setting.id];
+                        return (
+                          <div
+                            key={setting.id}
+                            className="p-4 rounded-xl"
+                            style={{ backgroundColor: '#FAF9F6' }}
+                          >
+                            <label 
+                              className="cursor-pointer focus:outline-none flex items-center gap-3" 
+                              style={{ outline: 'none' }}
+                              onClick={() => setPrivacySettings(prev => ({
+                                ...prev,
+                                [setting.id]: !prev[setting.id]
+                              }))}
+                            >
+                              <div
+                                className="rounded transition-all duration-200 focus:outline-none"
+                                style={{
+                                  width: '20px',
+                                  height: '20px',
+                                  backgroundColor: isEnabled ? '#059669' : '#ffffff',
+                                  border: isEnabled ? '2px solid #059669' : '2px solid #d1d5db',
+                                  outline: 'none'
+                                }}
+                              >
+                                {isEnabled && (
+                                  <svg
+                                    className="w-full h-full"
+                                    viewBox="0 0 20 20"
+                                    fill="none"
+                                    style={{ padding: '2px' }}
+                                  >
+                                    <path
+                                      d="M5 10l3 3 7-7"
+                                      stroke="white"
+                                      strokeWidth="3"
+                                      strokeLinecap="round"
+                                      strokeLinejoin="round"
+                                    />
+                                  </svg>
+                                )}
+                              </div>
+                              <div className="flex-1">
+                                <h4 className="font-medium" style={{ color: '#1A1A1A' }}>
+                                  {setting.label}
+                                </h4>
+                                <p className="text-sm" style={{ color: '#666666' }}>
+                                  {setting.description}
+                                </p>
+                              </div>
+                            </label>
+                          </div>
+                        );
+                      })}
+                    </div>
+                  </div>
+                </div>
+              </div>
+              
+              {/* Security Notice */}
+              <div 
+                className="rounded-xl p-4 flex items-start gap-3"
+                style={{
+                  backgroundColor: 'rgba(59, 130, 246, 0.05)',
+                  border: '1px solid rgba(59, 130, 246, 0.2)'
+                }}
+              >
+                <Lock className="w-5 h-5 mt-0.5 flex-shrink-0" style={{ color: '#3B82F6' }} />
+                <div>
+                  <p className="text-sm" style={{ color: '#1A1A1A' }}>
+                    Your data is protected with end-to-end encryption and stored in HIPAA-compliant servers. 
+                    We never sell or share your personal information without explicit consent.
+                  </p>
+                </div>
+              </div>
+            </div>
+          )}
 
           {/* Form Actions */}
-          <div className="flex gap-3 pt-4 border-t">
+          <div className="flex gap-3 mt-8 pb-8 px-4 sm:px-6 lg:px-8 max-w-4xl mx-auto">
             <button
               type="submit"
               disabled={saving || !hasUnsavedChanges()}
-              className={`flex-1 px-6 py-3 rounded-lg font-medium focus:outline-none focus:ring-2 focus:ring-offset-2 transition-colors ${
-                saving || !hasUnsavedChanges()
-                  ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
-                  : 'bg-blue-600 text-white hover:bg-blue-700 focus:ring-blue-500'
-              }`}
-              aria-label={saving ? 'Saving changes' : 'Save changes'}
-              aria-busy={saving}
+              className="flex-1 px-6 py-3 rounded-xl font-medium transition-all flex items-center justify-center gap-2 shadow-md hover:shadow-lg"
+              style={{
+                backgroundColor: saving || !hasUnsavedChanges() ? '#E5E5E5' : '#6B8B60',
+                color: saving || !hasUnsavedChanges() ? '#999999' : '#FFFFFF',
+                cursor: saving || !hasUnsavedChanges() ? 'not-allowed' : 'pointer',
+                minHeight: '48px'
+              }}
             >
               {saving ? (
                 <>
-                  <RefreshCw className="w-5 h-5 animate-spin inline mr-2" aria-hidden="true" />
+                  <RefreshCw className="w-5 h-5 animate-spin" />
                   Saving...
                 </>
               ) : (
                 <>
-                  <Save className="w-5 h-5 inline mr-2" aria-hidden="true" />
+                  <Save className="w-5 h-5" />
                   Save Changes
                 </>
               )}
             </button>
+            
             <button
               type="button"
               onClick={handleCancel}
               disabled={!hasUnsavedChanges()}
-              className={`px-6 py-3 rounded-lg font-medium focus:outline-none focus:ring-2 focus:ring-offset-2 transition-colors ${
-                !hasUnsavedChanges()
-                  ? 'bg-gray-200 text-gray-400 cursor-not-allowed'
-                  : 'bg-white text-gray-700 border border-gray-300 hover:bg-gray-50 focus:ring-gray-500'
-              }`}
-              aria-label="Cancel changes"
+              className="px-6 py-3 rounded-xl font-medium border-2 transition-all shadow-md hover:shadow-lg"
+              style={{
+                borderColor: !hasUnsavedChanges() ? '#9CA3AF' : '#6B8B60',
+                color: !hasUnsavedChanges() ? '#4B5563' : '#6B8B60',
+                backgroundColor: !hasUnsavedChanges() ? '#F3F4F6' : '#FFFFFF',
+                cursor: !hasUnsavedChanges() ? 'not-allowed' : 'pointer',
+                minHeight: '48px'
+              }}
             >
               Cancel
             </button>
           </div>
         </form>
-      </main>
+      </div>
 
       {/* CSS for accessibility settings */}
       <style jsx global>{`
@@ -971,14 +1297,13 @@ export const ProfileSettings: React.FC = () => {
         }
         
         .high-contrast input,
-        .high-contrast select,
         .high-contrast button {
           border-width: 2px;
         }
         
-        .high-contrast *:focus {
-          outline-width: 3px;
-          outline-color: #000;
+        .reduce-motion * {
+          animation-duration: 0.01ms !important;
+          transition-duration: 0.01ms !important;
         }
       `}</style>
     </div>

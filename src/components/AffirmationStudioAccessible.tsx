@@ -569,10 +569,11 @@ export const AffirmationStudioAccessible: React.FC = () => {
                       </div>
                       <button
                         onClick={() => toggleFavorite(categoryId, index)}
-                        className="p-2 rounded-lg hover:bg-white/50 transition-colors"
+                        className="p-2 rounded-lg transition-all hover:opacity-90"
+                        style={{ background: 'linear-gradient(135deg, #1b5e20, #2e7d32)' }}
                         aria-label="Remove from favorites"
                       >
-                        <BookmarkCheck className="h-4 w-4" style={{ color: category.color }} />
+                        <BookmarkCheck className="h-4 w-4" style={{ color: '#FFFFFF' }} />
                       </button>
                     </div>
                     <blockquote className="text-sm italic" style={{ color: '#2D3748' }}>
@@ -580,8 +581,8 @@ export const AffirmationStudioAccessible: React.FC = () => {
                     </blockquote>
                     <button
                       onClick={() => handleSelectCategory(category)}
-                      className="mt-3 text-xs font-medium hover:underline"
-                      style={{ color: category.color }}
+                      className="mt-3 px-3 py-1.5 text-xs font-medium rounded-lg text-white hover:opacity-90 transition-all"
+                      style={{ background: 'linear-gradient(135deg, #1b5e20, #2e7d32)' }}
                     >
                       View in context →
                     </button>
@@ -630,7 +631,7 @@ export const AffirmationStudioAccessible: React.FC = () => {
                 <button
                   onClick={handleClose}
                   className="p-2 rounded-lg transition-all hover:opacity-90"
-                  style={{ background: 'linear-gradient(135deg, #1b5e20, #2e7d32)' }}
+                  style={{ backgroundColor: selectedCategory.color }}
                   aria-label="Close affirmation modal"
                 >
                   <X className="h-5 w-5" style={{ color: '#FFFFFF' }} />

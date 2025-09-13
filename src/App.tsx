@@ -18,6 +18,8 @@ import { About } from './pages/About';
 import { Accessibility } from './pages/Accessibility';
 import { PricingNew } from './pages/PricingNew';
 import { PricingTest } from './pages/PricingTest';
+import { PricingProduction } from './pages/PricingProduction';
+import { AdminDashboard } from './pages/AdminDashboard';
 import { HeaderDemo } from './pages/HeaderDemo';
 import { SubscriptionManager } from './components/SubscriptionManager';
 import { PaymentSuccess } from './pages/PaymentSuccess';
@@ -106,6 +108,8 @@ import {
   Brain,
   Compass,
   Scale,
+  ClipboardCheck,
+  GraduationCap,
 } from 'lucide-react';
 
 function App() {
@@ -186,6 +190,34 @@ function App() {
   const [recoveryHabits, setRecoveryHabits] = useState<Record<string, unknown>[]>([]);
   const [burnoutData, setBurnoutData] = useState<BurnoutData[]>([]);
   const [showSummaryView, setShowSummaryView] = useState<ViewMode>('daily');
+  
+  // Helper to check if any modal is open
+  const isAnyModalOpen = () => {
+    return showBreathingPractice || 
+           showEmotionMappingModal || 
+           showBodyCheckIn || 
+           showAssignmentReset || 
+           showEmotionMapping || 
+           showAffirmationStudio ||
+           showTechnologyFatigueReset ||
+           showDailyBurnout ||
+           showTemperatureExploration ||
+           showBreathingModal ||
+           showAssignmentWhyModal ||
+           showFiveZoneModal ||
+           showPostAssignmentDebrief ||
+           showPreAssignmentPrep ||
+           showTeamingPrep ||
+           showTeamingReflection ||
+           showMentoringPrep ||
+           showMentoringReflection ||
+           showWellnessCheckIn ||
+           showEthicsMeaningCheck ||
+           showInSessionSelfCheck ||
+           showInSessionTeamSync ||
+           showRoleSpaceReflection ||
+           showDirectCommunicationReflection;
+  };
   
   // Security state
   const [showPrivacyConsent, setShowPrivacyConsent] = useState(false);
@@ -644,8 +676,8 @@ function App() {
                 aria-controls="insights-panel"
                 aria-label="View past week insights"
                 style={{
-                  backgroundColor: insightsTimePeriod === 'week' ? '#5C7F4F' : 'transparent',
-                  color: insightsTimePeriod === 'week' ? 'var(--text-inverse)' : 'var(--text-primary)',
+                  background: insightsTimePeriod === 'week' ? 'linear-gradient(135deg, rgb(27, 94, 32), rgb(46, 125, 50))' : 'transparent',
+                  color: insightsTimePeriod === 'week' ? '#FFFFFF' : '#1A1A1A',
                 }}
                 onMouseEnter={(e) => {
                   if (insightsTimePeriod !== 'week') {
@@ -668,8 +700,8 @@ function App() {
                 aria-controls="insights-panel"
                 aria-label="View past month insights"
                 style={{
-                  backgroundColor: insightsTimePeriod === 'month' ? '#5C7F4F' : 'transparent',
-                  color: insightsTimePeriod === 'month' ? 'var(--text-inverse)' : 'var(--text-primary)',
+                  background: insightsTimePeriod === 'month' ? 'linear-gradient(135deg, rgb(27, 94, 32), rgb(46, 125, 50))' : 'transparent',
+                  color: insightsTimePeriod === 'month' ? '#FFFFFF' : '#1A1A1A',
                 }}
                 onMouseEnter={(e) => {
                   if (insightsTimePeriod !== 'month') {
@@ -692,8 +724,8 @@ function App() {
                 aria-controls="insights-panel"
                 aria-label="View past 90 days insights"
                 style={{
-                  backgroundColor: insightsTimePeriod === '90days' ? '#5C7F4F' : 'transparent',
-                  color: insightsTimePeriod === '90days' ? 'var(--text-inverse)' : 'var(--text-primary)',
+                  background: insightsTimePeriod === '90days' ? 'linear-gradient(135deg, rgb(27, 94, 32), rgb(46, 125, 50))' : 'transparent',
+                  color: insightsTimePeriod === '90days' ? '#FFFFFF' : '#1A1A1A',
                 }}
                 onMouseEnter={(e) => {
                   if (insightsTimePeriod !== '90days') {
@@ -776,11 +808,11 @@ function App() {
                 if (reflectionsWithStress.length === 0 && reflectionsWithEnergy.length === 0) {
                   return (
                     <div className="text-center">
-                      <Activity className="h-12 w-12 mx-auto mb-3" style={{ color: 'var(--primary-400)' }} />
-                      <p className="text-sm font-medium mb-2" style={{ color: 'var(--text-secondary)' }}>
+                      <Activity className="h-12 w-12 mx-auto mb-3" style={{ color: '#6B8B60' }} />
+                      <p className="text-sm font-medium mb-2" style={{ color: '#1A1A1A' }}>
                         No stress or energy data yet
                       </p>
-                      <p className="text-xs" style={{ color: 'var(--text-tertiary)' }}>
+                      <p className="text-xs" style={{ color: '#666666' }}>
                         Complete reflections to see your trends
                       </p>
                     </div>
@@ -875,19 +907,19 @@ function App() {
 
           {bodyCheckInData.length === 0 ? (
             <div className="text-center py-12">
-              <Activity className="h-12 w-12 mx-auto mb-3" style={{ color: 'var(--primary-400)' }} />
-              <p className="text-sm font-medium mb-2" style={{ color: 'var(--text-secondary)' }}>
+              <Activity className="h-12 w-12 mx-auto mb-3" style={{ color: 'var(--brand-secondary)' }} />
+              <p className="text-sm font-medium mb-2" style={{ color: 'var(--text-primary)' }}>
                 No body check-in data yet
               </p>
-              <p className="text-xs" style={{ color: 'var(--text-tertiary)' }}>
+              <p className="text-xs" style={{ color: 'var(--text-secondary)' }}>
                 Complete a body check-in to see your trends
               </p>
             </div>
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
               {/* Tension Level Chart */}
-              <div className="bg-white rounded-xl p-4" style={{ backgroundColor: 'var(--bg-secondary)' }}>
-                <h3 className="text-sm font-semibold mb-4" style={{ color: 'var(--text-primary)' }}>
+              <div className="bg-white rounded-xl p-4 border" style={{ backgroundColor: '#ffffff', borderColor: 'var(--border-light)' }}>
+                <h3 className="text-sm font-semibold mb-4" style={{ color: '#000000' }}>
                   Tension Level
                 </h3>
                 <div className="space-y-3">
@@ -897,16 +929,16 @@ function App() {
                     return (
                       <div key={level}>
                         <div className="flex justify-between text-xs mb-1">
-                          <span style={{ color: 'var(--text-secondary)' }}>{level}</span>
-                          <span style={{ color: 'var(--text-tertiary)' }}>{count}</span>
+                          <span style={{ color: '#000000' }}>{level}</span>
+                          <span style={{ color: '#000000', fontWeight: '600' }}>{count}</span>
                         </div>
-                        <div className="h-6 bg-gray-100 rounded-full overflow-hidden">
+                        <div className="h-6 rounded-full overflow-hidden" style={{ backgroundColor: '#f0f4f0' }}>
                           <div
                             className="h-full transition-all duration-500"
                             style={{
                               width: `${percentage}%`,
-                              backgroundColor: level === 'Much lighter' ? '#2e7d32' : 
-                                             level === 'Some release' ? '#6B8B60' : '#8B4513'
+                              backgroundColor: level === 'Much lighter' ? '#4ade80' : 
+                                             level === 'Some release' ? '#60a5fa' : '#fbbf24'
                             }}
                           />
                         </div>
@@ -914,14 +946,14 @@ function App() {
                     );
                   })}
                 </div>
-                <p className="text-xs italic mt-3" style={{ color: 'var(--text-tertiary)' }}>
+                <p className="text-xs italic mt-3" style={{ color: '#333333' }}>
                   Most people feel some release after checking in
                 </p>
               </div>
 
               {/* Energy Level Chart */}
-              <div className="bg-white rounded-xl p-4" style={{ backgroundColor: 'var(--bg-secondary)' }}>
-                <h3 className="text-sm font-semibold mb-4" style={{ color: 'var(--text-primary)' }}>
+              <div className="bg-white rounded-xl p-4 border" style={{ backgroundColor: '#ffffff', borderColor: 'var(--border-light)' }}>
+                <h3 className="text-sm font-semibold mb-4" style={{ color: '#000000' }}>
                   Energy Level
                 </h3>
                 <div className="space-y-3">
@@ -931,16 +963,16 @@ function App() {
                     return (
                       <div key={level}>
                         <div className="flex justify-between text-xs mb-1">
-                          <span style={{ color: 'var(--text-secondary)' }}>{level}</span>
-                          <span style={{ color: 'var(--text-tertiary)' }}>{count}</span>
+                          <span style={{ color: '#000000' }}>{level}</span>
+                          <span style={{ color: '#000000', fontWeight: '600' }}>{count}</span>
                         </div>
-                        <div className="h-6 bg-gray-100 rounded-full overflow-hidden">
+                        <div className="h-6 rounded-full overflow-hidden" style={{ backgroundColor: '#f0f4f0' }}>
                           <div
                             className="h-full transition-all duration-500"
                             style={{
                               width: `${percentage}%`,
-                              backgroundColor: level === 'Restored' ? '#2e7d32' : 
-                                             level === 'Okay' ? '#6B8B60' : '#B8860B'
+                              backgroundColor: level === 'Restored' ? '#34d399' : 
+                                             level === 'Okay' ? '#a78bfa' : '#f87171'
                             }}
                           />
                         </div>
@@ -948,14 +980,14 @@ function App() {
                     );
                   })}
                 </div>
-                <p className="text-xs italic mt-3" style={{ color: 'var(--text-tertiary)' }}>
+                <p className="text-xs italic mt-3" style={{ color: '#333333' }}>
                   Even noticing can bring energy back
                 </p>
               </div>
 
               {/* Overall Comfort Chart */}
-              <div className="bg-white rounded-xl p-4" style={{ backgroundColor: 'var(--bg-secondary)' }}>
-                <h3 className="text-sm font-semibold mb-4" style={{ color: 'var(--text-primary)' }}>
+              <div className="bg-white rounded-xl p-4 border" style={{ backgroundColor: '#ffffff', borderColor: 'var(--border-light)' }}>
+                <h3 className="text-sm font-semibold mb-4" style={{ color: '#000000' }}>
                   Overall Comfort
                 </h3>
                 <div className="space-y-3">
@@ -965,16 +997,16 @@ function App() {
                     return (
                       <div key={level}>
                         <div className="flex justify-between text-xs mb-1">
-                          <span style={{ color: 'var(--text-secondary)' }}>{level}</span>
-                          <span style={{ color: 'var(--text-tertiary)' }}>{count}</span>
+                          <span style={{ color: '#000000' }}>{level}</span>
+                          <span style={{ color: '#000000', fontWeight: '600' }}>{count}</span>
                         </div>
-                        <div className="h-6 bg-gray-100 rounded-full overflow-hidden">
+                        <div className="h-6 rounded-full overflow-hidden" style={{ backgroundColor: '#f0f4f0' }}>
                           <div
                             className="h-full transition-all duration-500"
                             style={{
                               width: `${percentage}%`,
-                              backgroundColor: level === 'Easeful' ? '#2e7d32' : 
-                                             level === 'Better' ? '#6B8B60' : '#8B4513'
+                              backgroundColor: level === 'Easeful' ? '#10b981' : 
+                                             level === 'Better' ? '#3b82f6' : '#fb923c'
                             }}
                           />
                         </div>
@@ -982,7 +1014,7 @@ function App() {
                     );
                   })}
                 </div>
-                <p className="text-xs italic mt-3" style={{ color: 'var(--text-tertiary)' }}>
+                <p className="text-xs italic mt-3" style={{ color: '#333333' }}>
                   Every bit of ease helps
                 </p>
               </div>
@@ -1027,9 +1059,24 @@ function App() {
                     onClick={() => setShowSummaryView(view as ViewMode)}
                     className={`px-3 py-1 rounded-lg text-sm transition-all ${
                       showSummaryView === view
-                        ? 'bg-sage-500 text-white'
-                        : 'bg-gray-100 hover:bg-green-500 hover:bg-opacity-20 text-gray-700'
+                        ? 'text-white'
+                        : 'text-gray-700'
                     }`}
+                    style={showSummaryView === view ? {
+                      background: 'linear-gradient(135deg, rgb(27, 94, 32), rgb(46, 125, 50))'
+                    } : {
+                      backgroundColor: '#F3F4F6'
+                    }}
+                    onMouseEnter={(e) => {
+                      if (showSummaryView !== view) {
+                        e.currentTarget.style.backgroundColor = 'rgba(34, 197, 94, 0.15)';
+                      }
+                    }}
+                    onMouseLeave={(e) => {
+                      if (showSummaryView !== view) {
+                        e.currentTarget.style.backgroundColor = '#F3F4F6';
+                      }
+                    }}
                   >
                     {view.charAt(0).toUpperCase() + view.slice(1)}
                   </button>
@@ -1965,7 +2012,7 @@ function App() {
 
   const reflectionCards = [
     {
-      icon: Target,
+      icon: ClipboardCheck,
       iconColor: 'text-blue-400',
       iconBg: 'bg-blue-500/20',
       title: 'Pre-Assignment Prep',
@@ -1976,7 +2023,7 @@ function App() {
       ],
     },
     {
-      icon: Clock,
+      icon: Brain,
       iconColor: 'text-blue-400',
       iconBg: 'bg-blue-500/20',
       title: 'Post-Assignment Debrief',
@@ -1998,7 +2045,7 @@ function App() {
       ],
     },
     {
-      icon: Users,
+      icon: RefreshCw,
       iconColor: 'text-purple-400',
       iconBg: 'bg-purple-500/20',
       title: 'Teaming Reflection',
@@ -2009,7 +2056,7 @@ function App() {
       ],
     },
     {
-      icon: Target,
+      icon: GraduationCap,
       iconColor: 'text-purple-400',
       iconBg: 'bg-purple-500/20',
       title: 'Mentoring Prep',
@@ -2042,7 +2089,7 @@ function App() {
       ],
     },
     {
-      icon: Settings,
+      icon: Compass,
       iconColor: 'text-red-400',
       iconBg: 'bg-red-500/20',
       title: 'Values Alignment Check-In',
@@ -2053,7 +2100,7 @@ function App() {
       ],
     },
     {
-      icon: AlertTriangle,
+      icon: Activity,
       iconColor: 'text-orange-400',
       iconBg: 'bg-orange-500/20',
       title: 'In-Session Self-Check',
@@ -2064,7 +2111,7 @@ function App() {
       ],
     },
     {
-      icon: Users,
+      icon: Zap,
       iconColor: 'text-purple-400',
       iconBg: 'bg-purple-500/20',
       title: 'In-Session Team Sync',
@@ -2131,7 +2178,9 @@ function App() {
           tabIndex={0}
           role="button"
           aria-labelledby="breathing-practice-title"
-          onClick={() => {
+          onClick={(e) => {
+            // Blur the card to prevent it from receiving keyboard events
+            e.currentTarget.blur();
             setBreathingMode('gentle');
             setShowBreathingPractice(true);
             const id = trackTechniqueStart('breathing-practice');
@@ -2144,12 +2193,18 @@ function App() {
             transform: 'translateY(0)',
           }}
           onMouseEnter={(e) => {
+            // Disable hover effects when any modal is open
+            if (isAnyModalOpen()) return;
+            
             e.currentTarget.style.borderColor = 'var(--primary-800)';
             e.currentTarget.style.boxShadow = '0 10px 25px rgba(27, 94, 32, 0.3), 0 0 0 3px rgba(27, 94, 32, 0.2)';
             e.currentTarget.style.transform = 'translateY(-4px) scale(1.01)';
             e.currentTarget.style.boxShadow = '0 10px 25px rgba(92, 127, 79, 0.2)';
           }}
           onMouseLeave={(e) => {
+            // Disable hover effects when any modal is open
+            if (isAnyModalOpen()) return;
+            
             e.currentTarget.style.borderColor = 'transparent';
             e.currentTarget.style.transform = 'translateY(0) scale(1)';
             e.currentTarget.style.boxShadow = '0 4px 15px rgba(0, 0, 0, 0.05)';
@@ -2214,7 +2269,9 @@ function App() {
           tabIndex={0}
           role="button"
           aria-labelledby="body-checkin-title"
-          onClick={() => {
+          onClick={(e) => {
+            // Blur the card to prevent it from receiving keyboard events
+            e.currentTarget.blur();
             setBodyCheckInMode('quick');
             setShowBodyCheckIn(true);
             const id = trackTechniqueStart('body-checkin');
@@ -2227,12 +2284,18 @@ function App() {
             transform: 'translateY(0)',
           }}
           onMouseEnter={(e) => {
+            // Disable hover effects when any modal is open
+            if (isAnyModalOpen()) return;
+            
             e.currentTarget.style.borderColor = 'var(--primary-800)';
             e.currentTarget.style.boxShadow = '0 10px 25px rgba(27, 94, 32, 0.3), 0 0 0 3px rgba(27, 94, 32, 0.2)';
             e.currentTarget.style.transform = 'translateY(-4px) scale(1.01)';
             e.currentTarget.style.boxShadow = '0 10px 25px rgba(92, 127, 79, 0.2)';
           }}
           onMouseLeave={(e) => {
+            // Disable hover effects when any modal is open
+            if (isAnyModalOpen()) return;
+            
             e.currentTarget.style.borderColor = 'transparent';
             e.currentTarget.style.transform = 'translateY(0) scale(1)';
             e.currentTarget.style.boxShadow = '0 4px 15px rgba(0, 0, 0, 0.05)';
@@ -2297,7 +2360,9 @@ function App() {
           tabIndex={0}
           role="button"
           aria-labelledby="emotion-mapping-title"
-          onClick={() => {
+          onClick={(e) => {
+            // Blur the card to prevent it from receiving keyboard events
+            e.currentTarget.blur();
             setEmotionMappingMode('quick');
             setShowEmotionMapping(true);
             const id = trackTechniqueStart('emotion-mapping');
@@ -2468,7 +2533,9 @@ function App() {
           tabIndex={0}
           role="button"
           aria-labelledby="assignment-reset-title"
-          onClick={() => {
+          onClick={(e) => {
+            // Blur the card to prevent it from receiving keyboard events
+            e.currentTarget.blur();
             setAssignmentResetMode('fast');
             setShowAssignmentReset(true);
             const id = trackTechniqueStart('assignment-reset');
@@ -2554,7 +2621,9 @@ function App() {
           tabIndex={0}
           role="button"
           aria-labelledby="tech-fatigue-title"
-          onClick={() => {
+          onClick={(e) => {
+            // Blur the card to prevent it from receiving keyboard events
+            e.currentTarget.blur();
             setTechFatigueMode('quick');
             setShowTechnologyFatigueReset(true);
             const id = trackTechniqueStart('tech-fatigue-reset');
@@ -3095,7 +3164,7 @@ function App() {
                   onClick={() => setShowEmotionMappingModal(false)}
                   className="w-full px-6 py-3 rounded-lg font-medium transition-all hover:scale-105"
                   style={{
-                    background: 'linear-gradient(135deg, var(--primary-800), var(--primary-900))',
+                    background: 'linear-gradient(135deg, #1b5e20, #2e7d32)',
                     color: '#FFFFFF',
                   }}
                   aria-label="Close modal and return to emotion mapping options"
@@ -5299,12 +5368,6 @@ function App() {
                   Tactical, emotional, and ethical tools for every stage of your interpreting work
                 </p>
               </div>
-              <div
-                className="p-4 rounded-full"
-                style={{ backgroundColor: 'rgba(92, 127, 79, 0.15)' }}
-              >
-                <BookOpen className="h-10 w-10" style={{ color: '#1A3D26' }} />
-              </div>
             </div>
 
             {/* Reflection Navigation */}
@@ -5835,7 +5898,7 @@ function App() {
             role="tab"
             aria-selected={activeCategory === 'context'}
             aria-controls="context-panel"
-            aria-label="Context-Specific Questions tab"
+            aria-label="Context-Specific Guided Questions tab"
             style={{
               background: activeCategory === 'context' ? 'linear-gradient(135deg, #1b5e20, #2e7d32)' : 'transparent',
               color: activeCategory === 'context' ? '#FFFFFF' : '#1A1A1A',
@@ -5947,12 +6010,6 @@ function App() {
                 <p className="text-base" style={{ color: '#3A3A3A' }}>
                   Choose your reflection focus for today
                 </p>
-              </div>
-              <div
-                className="p-4 rounded-full"
-                style={{ backgroundColor: 'rgba(92, 127, 79, 0.15)' }}
-              >
-                <BookOpen className="h-10 w-10" style={{ color: '#1A3D26' }} />
               </div>
             </div>
 
@@ -6103,16 +6160,16 @@ function App() {
           </div>
         )}
         
-        {/* Context-Specific Questions Tab Content */}
+        {/* Context-Specific Guided Questions Tab Content */}
         {activeCategory === 'context' && (
           <div role="tabpanel" id="context-panel" aria-labelledby="context-tab">
             <div className="flex items-center justify-between mb-8">
               <div>
                 <h2 className="text-3xl font-bold mb-3" style={{ color: '#0D3A14' }}>
-                  Context-Specific Questions
+                  Context-Specific Guided Questions
                 </h2>
                 <p className="text-base" style={{ color: '#3A3A3A' }}>
-                  Targeted reflection questions for different interpreting settings
+                  These questions are crafted for Elya guidance, grounded in community. Designed with research and different interpreter circumstances to support interpreters in all settings.
                 </p>
               </div>
             </div>
@@ -6287,26 +6344,6 @@ function App() {
                           Consider this accuracy question for medical settings: "Which specific medical terms or concepts required the most cognitive effort to interpret accurately, and what strategies helped you maintain precision?"
                         </p>
                       </div>
-                      
-                      {/* Research Foundation */}
-                      <button
-                        onClick={() => setShowResearchInfo(prev => ({ ...prev, medical: !prev.medical }))}
-                        className="mt-4 text-base font-bold flex items-center gap-2 hover:gap-3 transition-all"
-                        style={{ 
-                          color: '#1b5e20', 
-                          textDecoration: 'underline', 
-                          textDecorationThickness: '2px', 
-                          textUnderlineOffset: '3px',
-                          textShadow: '0 1px 2px rgba(0,0,0,0.1)'
-                        }}
-                      >
-                        📚 Why reflect on these? See research and best practices →
-                      </button>
-                      {showResearchInfo['medical'] && (
-                        <div className="mt-3 p-4 rounded-lg text-sm" style={{ backgroundColor: 'rgba(245, 245, 245, 0.8)', color: '#5A5A5A' }}>
-                          Research shows that structured reflection on medical interpreting experiences improves accuracy rates, reduces vicarious trauma, and enhances professional boundaries. These questions are based on healthcare communication studies and interpreter performance assessments.
-                        </div>
-                      )}
                     </>
                   )}
 
@@ -6371,26 +6408,6 @@ function App() {
                           Consider this boundaries question for legal settings: "How did you maintain professional distance while accurately conveying the emotional weight of testimony? What helped you stay impartial?"
                         </p>
                       </div>
-                      
-                      {/* Research Foundation */}
-                      <button
-                        onClick={() => setShowResearchInfo(prev => ({ ...prev, legal: !prev.legal }))}
-                        className="mt-4 text-base font-bold flex items-center gap-2 hover:gap-3 transition-all"
-                        style={{ 
-                          color: '#1b5e20', 
-                          textDecoration: 'underline', 
-                          textDecorationThickness: '2px', 
-                          textUnderlineOffset: '3px',
-                          textShadow: '0 1px 2px rgba(0,0,0,0.1)'
-                        }}
-                      >
-                        📚 Why reflect on these? See research and best practices →
-                      </button>
-                      {showResearchInfo['legal'] && (
-                        <div className="mt-3 p-4 rounded-lg text-sm" style={{ backgroundColor: 'rgba(245, 245, 245, 0.8)', color: '#5A5A5A' }}>
-                          Studies in legal interpreting emphasize the critical importance of neutrality, accuracy, and professional boundaries. These questions are derived from court interpreter certification standards and judicial communication research.
-                        </div>
-                      )}
                     </>
                   )}
 
@@ -6455,26 +6472,6 @@ function App() {
                           Consider this communication management question: "How did you adapt your interpreting style to match the educational setting\'s pace while ensuring comprehension for all participants?"
                         </p>
                       </div>
-                      
-                      {/* Research Foundation */}
-                      <button
-                        onClick={() => setShowResearchInfo(prev => ({ ...prev, educational: !prev.educational }))}
-                        className="mt-4 text-base font-bold flex items-center gap-2 hover:gap-3 transition-all"
-                        style={{ 
-                          color: '#1b5e20', 
-                          textDecoration: 'underline', 
-                          textDecorationThickness: '2px', 
-                          textUnderlineOffset: '3px',
-                          textShadow: '0 1px 2px rgba(0,0,0,0.1)'
-                        }}
-                      >
-                        📚 Why reflect on these? See research and best practices →
-                      </button>
-                      {showResearchInfo['educational'] && (
-                        <div className="mt-3 p-4 rounded-lg text-sm" style={{ backgroundColor: 'rgba(245, 245, 245, 0.8)', color: '#5A5A5A' }}>
-                          Educational interpreting research highlights the importance of facilitating learning access while maintaining professional boundaries. These questions are based on inclusive education studies and academic communication frameworks.
-                        </div>
-                      )}
                     </>
                   )}
 
@@ -6539,26 +6536,6 @@ function App() {
                           Consider this self-care question: "What specific moments or content triggered an emotional response in you? What support or practices would help you process these experiences?"
                         </p>
                       </div>
-                      
-                      {/* Research Foundation */}
-                      <button
-                        onClick={() => setShowResearchInfo(prev => ({ ...prev, mentalhealth: !prev.mentalhealth }))}
-                        className="mt-4 text-base font-bold flex items-center gap-2 hover:gap-3 transition-all"
-                        style={{ 
-                          color: '#1b5e20', 
-                          textDecoration: 'underline', 
-                          textDecorationThickness: '2px', 
-                          textUnderlineOffset: '3px',
-                          textShadow: '0 1px 2px rgba(0,0,0,0.1)'
-                        }}
-                      >
-                        📚 Why reflect on these? See research and best practices →
-                      </button>
-                      {showResearchInfo['mentalhealth'] && (
-                        <div className="mt-3 p-4 rounded-lg text-sm" style={{ backgroundColor: 'rgba(245, 245, 245, 0.8)', color: '#5A5A5A' }}>
-                          Mental health interpreting research emphasizes the importance of preserving therapeutic dynamics while managing vicarious trauma. These questions are based on therapeutic communication studies and interpreter wellness research.
-                        </div>
-                      )}
                     </>
                   )}
 
@@ -6623,26 +6600,6 @@ function App() {
                           Consider this cultural mediation question: "How did you navigate situations where community values conflicted with institutional requirements? What helped you maintain cultural respect?"
                         </p>
                       </div>
-                      
-                      {/* Research Foundation */}
-                      <button
-                        onClick={() => setShowResearchInfo(prev => ({ ...prev, community: !prev.community }))}
-                        className="mt-4 text-base font-bold flex items-center gap-2 hover:gap-3 transition-all"
-                        style={{ 
-                          color: '#1b5e20', 
-                          textDecoration: 'underline', 
-                          textDecorationThickness: '2px', 
-                          textUnderlineOffset: '3px',
-                          textShadow: '0 1px 2px rgba(0,0,0,0.1)'
-                        }}
-                      >
-                        📚 Why reflect on these? See research and best practices →
-                      </button>
-                      {showResearchInfo['community'] && (
-                        <div className="mt-3 p-4 rounded-lg text-sm" style={{ backgroundColor: 'rgba(245, 245, 245, 0.8)', color: '#5A5A5A' }}>
-                          Community interpreting research highlights the importance of cultural humility, trust-building, and navigating power dynamics. These questions are based on community engagement studies and social justice frameworks.
-                        </div>
-                      )}
                     </>
                   )}
                 </div>
@@ -6670,7 +6627,7 @@ function App() {
                   Skill-Specific Reflection Questions
                 </h2>
                 <p className="text-base mb-2" style={{ color: '#3A3A3A' }}>
-                  Select a skill area to dive deeper into targeted reflection questions, based on best-practice research and professional assessment frameworks.
+                  Select a skill area for Elya guidance—explore focused questions grounded in research and designed for interpreters in any setting.
                 </p>
               </div>
             </div>
@@ -7258,8 +7215,10 @@ function App() {
       <Route path="/contact" element={<Contact />} />
       <Route path="/about" element={<About />} />
       <Route path="/accessibility" element={<Accessibility />} />
-      <Route path="/pricing" element={<PricingNew />} />
+      <Route path="/pricing" element={<PricingProduction />} />
+      <Route path="/pricing-old" element={<PricingNew />} />
       <Route path="/pricing-test" element={<PricingTest />} />
+      <Route path="/admin" element={<AdminDashboard />} />
       <Route path="/header-demo" element={<HeaderDemo />} />
       <Route path="/payment-success" element={<PaymentSuccess />} />
       <Route path="/landing" element={<LandingPageEnhanced onGetStarted={() => setDevMode(true)} />} />
@@ -7271,7 +7230,7 @@ function App() {
       <Route path="/pre-assignment-v4" element={<PreAssignmentPrepV4 />} />
       <Route path="/pre-assignment" element={<PreAssignmentPrepV5 />} />
       <Route path="/post-assignment-v2" element={<PostAssignmentDebriefV2 />} />
-      <Route path="/profile-settings" element={<ProfileSettings />} />
+      <Route path="/profile-settings" element={<ProfileSettings devMode={devMode} />} />
       <Route path="/customize-preferences" element={<CustomizePreferences />} />
       <Route path="/manage-subscription" element={<ManageSubscription />} />
       <Route path="/billing-plan-details" element={<BillingPlanDetails />} />
@@ -7333,19 +7292,35 @@ function App() {
               </div>
             </div>
 
-            {/* Search Box */}
-            <div className="hidden lg:block flex-1 max-w-md mx-8">
-              <SearchBox 
-                onSearch={handleSearch}
-                placeholder="Search tools, reflections, or insights..."
-                variant="compact"
-                showClearButton={true}
-                debounceMs={300}
-              />
-            </div>
 
             {/* Right side controls */}
             <div className="flex items-center space-x-4">
+              {/* Upgrade to Premium Button - Show only for non-premium users */}
+              {user && !devMode && (
+                <button
+                  onClick={() => window.open('https://buy.stripe.com/3cIcN5fYa7Ry2bA9i1b7y03', '_blank')}
+                  className="hidden md:flex items-center gap-2 px-4 py-2 rounded-lg font-semibold text-sm transition-all animate-pulse-subtle"
+                  style={{
+                    background: 'linear-gradient(135deg, rgb(27, 94, 32), rgb(46, 125, 50))',
+                    color: '#FFFFFF',
+                    boxShadow: '0 2px 8px rgba(27, 94, 32, 0.2)',
+                  }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.transform = 'translateY(-1px)';
+                    e.currentTarget.style.boxShadow = '0 4px 12px rgba(27, 94, 32, 0.3)';
+                    e.currentTarget.classList.remove('animate-pulse-subtle');
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.transform = 'translateY(0)';
+                    e.currentTarget.style.boxShadow = '0 2px 8px rgba(27, 94, 32, 0.2)';
+                    e.currentTarget.classList.add('animate-pulse-subtle');
+                  }}
+                >
+                  <Sparkles size={16} />
+                  Upgrade to Premium
+                </button>
+              )}
+              
               <div className="relative">
                 <button
                   onClick={() => setShowUserDropdown(!showUserDropdown)}
@@ -7369,7 +7344,7 @@ function App() {
                   <div
                     className="w-8 h-8 rounded-full flex items-center justify-center"
                     style={{
-                      backgroundColor: '#5C7F4F',
+                      background: 'linear-gradient(135deg, rgb(27, 94, 32), rgb(46, 125, 50))',
                       color: '#FFFFFF',
                     }}
                   >
@@ -7412,7 +7387,7 @@ function App() {
                           <div
                             className="w-10 h-10 rounded-full flex items-center justify-center"
                             style={{
-                              backgroundColor: '#5C7F4F',
+                              background: 'linear-gradient(135deg, rgb(27, 94, 32), rgb(46, 125, 50))',
                             }}
                           >
                             <span className="text-base font-medium" style={{ color: '#FFFFFF' }}>
@@ -7420,10 +7395,10 @@ function App() {
                             </span>
                           </div>
                           <div>
-                            <div className="font-medium text-base" style={{ color: '#1A1F1C' }}>
+                            <div className="font-medium text-base" style={{ color: '#000000' }}>
                               {devMode ? 'Dev Mode' : user?.email?.split('@')[0] || 'User'}
                             </div>
-                            <div className="text-sm" style={{ color: '#5C6A60' }}>
+                            <div className="text-sm" style={{ color: '#333333' }}>
                               {devMode
                                 ? 'Development Environment'
                                 : user?.email || 'user@interpretreflect.com'}
@@ -7435,65 +7410,9 @@ function App() {
                       {/* Menu Items */}
                       <div className="p-3">
                         <button
-                          className="w-full flex items-center space-x-3 px-3 py-2 rounded-lg transition-all text-left"
-                          style={{
-                            backgroundColor: 'transparent',
-                          }}
-                          onMouseEnter={(e) => {
-                            e.currentTarget.style.backgroundColor = 'rgba(92, 127, 79, 0.05)';
-                          }}
-                          onMouseLeave={(e) => {
-                            e.currentTarget.style.backgroundColor = 'transparent';
-                          }}
-                        >
-                          <User className="h-5 w-5" style={{ color: '#1A3D26' }} />
-                          <div className="flex-grow">
-                            <div className="font-medium text-sm" style={{ color: '#1A1F1C' }}>
-                              Profile Settings
-                            </div>
-                          </div>
-                          <ChevronRight
-                            className="h-4 w-4"
-                            style={{ color: '#748278' }}
-                          />
-                        </button>
-
-                        <button
-                          className="w-full flex items-center space-x-3 px-3 py-2 rounded-lg transition-all text-left"
-                          style={{
-                            backgroundColor: 'transparent',
-                          }}
-                          onMouseEnter={(e) => {
-                            e.currentTarget.style.backgroundColor = 'rgba(92, 127, 79, 0.05)';
-                          }}
-                          onMouseLeave={(e) => {
-                            e.currentTarget.style.backgroundColor = 'transparent';
-                          }}
-                        >
-                          <div
-                            className="p-2 rounded-lg"
-                            style={{ backgroundColor: 'rgba(92, 127, 79, 0.15)' }}
-                          >
-                            <Settings className="h-5 w-5" style={{ color: '#1A3D26' }} />
-                          </div>
-                          <div className="flex-grow">
-                            <div className="font-medium" style={{ color: '#FFFFFF' }}>
-                              Manage Subscription
-                            </div>
-                            <div className="text-xs" style={{ color: '#8A8A8A' }}>
-                              Billing and plan details
-                            </div>
-                          </div>
-                          <ChevronRight
-                            className="h-4 w-4 opacity-60"
-                            style={{ color: '#6A6A6A' }}
-                          />
-                        </button>
-
-                        <button
                           onClick={() => {
                             setShowUserDropdown(false);
-                            window.location.href = '/pricing';
+                            navigate('/profile-settings');
                           }}
                           className="w-full flex items-center space-x-3 p-4 rounded-xl transition-all text-left group"
                           style={{
@@ -7508,48 +7427,16 @@ function App() {
                         >
                           <div
                             className="p-2 rounded-lg"
-                            style={{ backgroundColor: 'rgba(147, 51, 234, 0.15)' }}
-                          >
-                            <Zap className="h-5 w-5" style={{ color: '#9333ea' }} />
-                          </div>
-                          <div className="flex-grow">
-                            <div className="font-medium" style={{ color: '#FFFFFF' }}>
-                              Upgrade Plan
-                            </div>
-                            <div className="text-xs" style={{ color: '#8A8A8A' }}>
-                              View pricing & features
-                            </div>
-                          </div>
-                          <ChevronRight
-                            className="h-4 w-4 opacity-60"
-                            style={{ color: '#6A6A6A' }}
-                          />
-                        </button>
-
-                        <button
-                          className="w-full flex items-center space-x-3 px-3 py-2 rounded-lg transition-all text-left"
-                          style={{
-                            backgroundColor: 'transparent',
-                          }}
-                          onMouseEnter={(e) => {
-                            e.currentTarget.style.backgroundColor = 'rgba(92, 127, 79, 0.05)';
-                          }}
-                          onMouseLeave={(e) => {
-                            e.currentTarget.style.backgroundColor = 'transparent';
-                          }}
-                        >
-                          <div
-                            className="p-2 rounded-lg"
                             style={{ backgroundColor: 'rgba(92, 127, 79, 0.15)' }}
                           >
-                            <Shield className="h-5 w-5" style={{ color: '#1A3D26' }} />
+                            <User className="h-5 w-5" style={{ color: '#1A3D26' }} />
                           </div>
                           <div className="flex-grow">
-                            <div className="font-medium" style={{ color: '#FFFFFF' }}>
-                              Privacy & Data
+                            <div className="font-medium" style={{ color: '#000000' }}>
+                              Profile Settings
                             </div>
-                            <div className="text-xs" style={{ color: '#8A8A8A' }}>
-                              Control your data sharing
+                            <div className="text-xs" style={{ color: '#333333' }}>
+                              Manage your account
                             </div>
                           </div>
                           <ChevronRight
@@ -7596,7 +7483,7 @@ function App() {
                           >
                             <Globe className="h-5 w-5" style={{ color: '#FF8A8A' }} />
                           </div>
-                          <div className="font-medium" style={{ color: '#FF8A8A' }}>
+                          <div className="font-medium" style={{ color: '#000000' }}>
                             Sign Out
                           </div>
                         </button>
@@ -7686,6 +7573,54 @@ function App() {
 
       {/* Main content area with proper semantic structure */}
       <main id="main-content" role="main" className="flex-1">
+        {/* Premium Upgrade Banner - Show for free users */}
+        {user && !devMode && activeTab === 'home' && (
+          <div 
+            className="mx-4 mt-4 p-4 rounded-xl flex items-center justify-between"
+            style={{
+              background: 'linear-gradient(135deg, rgba(27, 94, 32, 0.05), rgba(46, 125, 50, 0.05))',
+              border: '1px solid rgba(27, 94, 32, 0.2)',
+            }}
+          >
+            <div className="flex items-center gap-4">
+              <div 
+                className="w-12 h-12 rounded-full flex items-center justify-center"
+                style={{
+                  background: 'linear-gradient(135deg, rgb(27, 94, 32), rgb(46, 125, 50))',
+                }}
+              >
+                <Sparkles className="text-white" size={24} />
+              </div>
+              <div>
+                <h3 className="font-semibold text-lg" style={{ color: '#1A1A1A' }}>
+                  Unlock Your Full Wellness Potential
+                </h3>
+                <p className="text-sm" style={{ color: '#666' }}>
+                  Get unlimited access to Elya AI, advanced insights, and premium tools for just $12.99/month
+                </p>
+              </div>
+            </div>
+            <button
+              onClick={() => window.open('https://buy.stripe.com/3cIcN5fYa7Ry2bA9i1b7y03', '_blank')}
+              className="px-6 py-2.5 rounded-lg font-semibold text-sm transition-all whitespace-nowrap"
+              style={{
+                background: 'linear-gradient(135deg, rgb(27, 94, 32), rgb(46, 125, 50))',
+                color: '#FFFFFF',
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.transform = 'scale(1.05)';
+                e.currentTarget.style.boxShadow = '0 4px 12px rgba(27, 94, 32, 0.3)';
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.transform = 'scale(1)';
+                e.currentTarget.style.boxShadow = 'none';
+              }}
+            >
+              Start Free Trial →
+            </button>
+          </div>
+        )}
+        
         <div role="tabpanel" id={`${activeTab}-panel`} aria-labelledby={activeTab}>
           {activeTab === 'reflection' && renderReflectionStudio()}
           {activeTab === 'home' && <PersonalizedHomepage onNavigate={setActiveTab} />}
@@ -8447,8 +8382,8 @@ function App() {
       }}
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-          {/* Brand and Description */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+          {/* Brand, Description and Contact */}
           <div>
             <Logo 
               size="md" 
@@ -8461,44 +8396,47 @@ function App() {
             </p>
           </div>
 
-          {/* Quick Links */}
-          <div>
-            <h3 className="font-semibold mb-3" style={{ color: '#2D3A31' }}>Quick Links</h3>
-            <nav aria-label="Footer navigation">
-              <ul className="space-y-2">
-                <li>
-                  <a href="/about" className="text-sm hover:underline" style={{ color: '#5C6A60' }}>
-                    About Us
+          {/* Contact and Quick Links */}
+          <div className="flex justify-between">
+            {/* Contact Information */}
+            <div>
+              <h3 className="font-semibold mb-3" style={{ color: '#2D3A31' }}>Contact Us</h3>
+              <div className="space-y-2">
+                <p className="text-sm" style={{ color: '#5C6A60' }}>
+                  Email: <a href="mailto:hello@huviatechnologies.com" className="hover:underline">
+                    hello@huviatechnologies.com
                   </a>
-                </li>
-                <li>
-                  <a href="/privacy" className="text-sm hover:underline" style={{ color: '#5C6A60' }}>
-                    Privacy Policy
-                  </a>
-                </li>
-                <li>
-                  <a href="/terms" className="text-sm hover:underline" style={{ color: '#5C6A60' }}>
-                    Terms of Service
-                  </a>
-                </li>
-                <li>
-                  <a href="/accessibility" className="text-sm hover:underline" style={{ color: '#5C6A60' }}>
-                    Accessibility
-                  </a>
-                </li>
-              </ul>
-            </nav>
-          </div>
-
-          {/* Contact Information */}
-          <div>
-            <h3 className="font-semibold mb-3" style={{ color: '#2D3A31' }}>Contact Us</h3>
-            <div className="space-y-2">
-              <p className="text-sm" style={{ color: '#5C6A60' }}>
-                Email: <a href="mailto:hello@huviatechnologies.com" className="hover:underline">
-                  hello@huviatechnologies.com
-                </a>
-              </p>
+                </p>
+              </div>
+            </div>
+            
+            {/* Quick Links */}
+            <div style={{ paddingRight: '2rem' }}>
+              <h3 className="font-semibold mb-3" style={{ color: '#2D3A31' }}>Quick Links</h3>
+              <nav aria-label="Footer navigation">
+                <ul className="space-y-2">
+                  <li>
+                    <a href="/about" className="text-sm hover:underline" style={{ color: '#5C6A60' }}>
+                      About Us
+                    </a>
+                  </li>
+                  <li>
+                    <a href="/privacy" className="text-sm hover:underline" style={{ color: '#5C6A60' }}>
+                      Privacy Policy
+                    </a>
+                  </li>
+                  <li>
+                    <a href="/terms" className="text-sm hover:underline" style={{ color: '#5C6A60' }}>
+                      Terms of Service
+                    </a>
+                  </li>
+                  <li>
+                    <a href="/accessibility" className="text-sm hover:underline" style={{ color: '#5C6A60' }}>
+                      Accessibility
+                    </a>
+                  </li>
+                </ul>
+              </nav>
             </div>
           </div>
         </div>
@@ -8512,19 +8450,6 @@ function App() {
       </div>
     </footer>
 
-    {/* Help Widget - Available on all pages */}
-    <HelpWidget 
-      position="bottom-left"
-      theme="brand"
-      showContactInfo={true}
-      onLinkClick={(link) => {
-        console.log('Help link clicked:', link.label);
-        // You can add navigation logic here if needed
-        if (link.href.startsWith('/')) {
-          navigate(link.href);
-        }
-      }}
-    />
 
     </>
   );

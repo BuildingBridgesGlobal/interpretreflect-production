@@ -1,5 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { X, ChevronRight } from 'lucide-react';
+import { supabase } from '../lib/supabase';
+import { useAuth } from '../contexts/AuthContext';
 
 interface BodyCheckInProps {
   onClose: () => void;
@@ -13,17 +15,24 @@ type PracticeMode = 'standard' | 'quick';
 type BodyArea = 'head' | 'shoulders' | 'chest' | 'belly' | 'legs';
 
 export const BodyCheckIn: React.FC<BodyCheckInProps> = ({ onClose, onComplete, mode: initialMode = 'standard', duration = '1m' }) => {
+  const { user } = useAuth();
   const [phase, setPhase] = useState<'setup' | 'practice' | 'reflection'>('practice');
   const [mode, setMode] = useState<PracticeMode>(initialMode);
   const [currentArea, setCurrentArea] = useState<BodyArea>('head');
   const [selectedDuration, setSelectedDuration] = useState<PracticeDuration>(duration);
   const [timeElapsed, setTimeElapsed] = useState(0);
   const [isActive, setIsActive] = useState(true);
+  const [isSaving, setIsSaving] = useState(false);
   
   // Reflection states
   const [feelingBetter, setFeelingBetter] = useState('');
   const [whatHelped, setWhatHelped] = useState('');
   const [needsAttention, setNeedsAttention] = useState('');
+  
+  // Body tension tracking
+  const [tensionLevel, setTensionLevel] = useState<number>(5);
+  const [energyLevel, setEnergyLevel] = useState<number>(5);
+  const [moodLevel, setMoodLevel] = useState<number>(5);
   
   const intervalRef = useRef<NodeJS.Timeout | null>(null);
 
@@ -85,17 +94,95 @@ export const BodyCheckIn: React.FC<BodyCheckInProps> = ({ onClose, onComplete, m
     setPhase('reflection');
   };
 
-  const handleSubmit = () => {
-    const data = {
-      mode,
-      feelingBetter,
-      whatHelped,
-      needsAttention,
-      duration: timeElapsed,
-      timestamp: new Date().toISOString()
-    };
-    if (onComplete) onComplete(data);
-    onClose();
+  const handleSubmit = async () => {
+    if (!user) {
+      console.log('No user authenticated, saving locally');
+      const data = {
+        mode,
+        feelingBetter,
+        whatHelped,
+        needsAttention,
+        duration: timeElapsed,
+        timestamp: new Date().toISOString()
+      };
+      if (onComplete) onComplete(data);
+      onClose();
+      return;
+    }
+
+    setIsSaving(true);
+    
+    try {
+      // Save body check-in data to Supabase
+      const { error } = await supabase
+        .from('body_checkins')
+        .insert({
+          user_id: user.id,
+          tension_level: tensionLevel,
+          energy_level: energyLevel,
+          mood_level: moodLevel,
+          overall_feeling: Math.round((tensionLevel + energyLevel + moodLevel) / 3),
+          notes: `Mode: ${mode}, Feeling better: ${feelingBetter}, What helped: ${whatHelped}, Needs attention: ${needsAttention}`,
+          body_areas: {
+            feelingBetter,
+            whatHelped,
+            needsAttention,
+            mode,
+            duration: timeElapsed
+          }
+        });
+
+      if (error) {
+        console.error('Error saving body check-in:', error);
+      } else {
+        console.log('Body check-in saved successfully');
+      }
+
+      // Also save as a reflection entry
+      const reflectionData = {
+        user_id: user.id,
+        reflection_type: 'body_checkin',
+        type: 'wellness',
+        answers: {
+          feelingBetter,
+          whatHelped,
+          needsAttention,
+          mode,
+          duration: timeElapsed,
+          tensionLevel,
+          energyLevel,
+          moodLevel
+        },
+        status: 'completed',
+        metadata: {
+          practice_mode: mode,
+          duration_seconds: timeElapsed
+        }
+      };
+
+      const { error: reflectionError } = await supabase
+        .from('reflections')
+        .insert(reflectionData);
+
+      if (reflectionError) {
+        console.error('Error saving reflection:', reflectionError);
+      }
+
+      const data = {
+        mode,
+        feelingBetter,
+        whatHelped,
+        needsAttention,
+        duration: timeElapsed,
+        timestamp: new Date().toISOString()
+      };
+      if (onComplete) onComplete(data);
+    } catch (err) {
+      console.error('Error in handleSubmit:', err);
+    } finally {
+      setIsSaving(false);
+      onClose();
+    }
   };
 
   const handleCheckInAgain = () => {
@@ -441,13 +528,15 @@ export const BodyCheckIn: React.FC<BodyCheckInProps> = ({ onClose, onComplete, m
           <div className="flex gap-3">
             <button
               onClick={handleSubmit}
-              className="flex-1 py-3 bg-sky-600 text-white rounded-xl font-medium hover:bg-sky-700 transition-all"
+              disabled={isSaving}
+              className="flex-1 py-3 bg-sky-600 text-white rounded-xl font-medium hover:bg-sky-700 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              Done
+              {isSaving ? 'Saving...' : 'Done'}
             </button>
             <button
               onClick={handleCheckInAgain}
-              className="flex-1 py-3 bg-gray-100 hover:bg-gray-200 rounded-xl font-medium text-gray-700 transition-all"
+              disabled={isSaving}
+              className="flex-1 py-3 bg-gray-100 hover:bg-gray-200 rounded-xl font-medium text-gray-700 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
             >
               Check In Again
             </button>

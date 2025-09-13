@@ -43,3 +43,6 @@ coverage/
 # Deployment
 .vercel/
 .netlify/
+
+# Security - Never commit deployment scripts with secrets
+scripts/deploy-stripe-secrets.sh

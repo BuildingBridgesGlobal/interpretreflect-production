@@ -15,7 +15,7 @@
   position: relative;
   width: 100%;
   background: var(--bg-primary);
-  border: 2px solid var(--border-default);
+  border: 1px solid rgba(0, 0, 0, 0.15);
   border-radius: var(--radius-2xl);
   transition: all var(--transition-base);
   overflow: hidden;
@@ -23,8 +23,8 @@
 
 /* Focus state for wrapper */
 .search-box-focused .search-input-wrapper {
-  border-color: var(--brand-primary);
-  box-shadow: 0 0 0 3px rgba(92, 127, 79, 0.15);
+  border-color: rgba(92, 127, 79, 0.5);
+  box-shadow: 0 0 0 2px rgba(92, 127, 79, 0.1);
 }
 
 /* Search icon */
@@ -97,8 +97,8 @@
   align-items: center;
   justify-content: center;
   padding: var(--spacing-sm) var(--spacing-lg);
-  background: var(--brand-primary);
-  color: var(--text-inverse);
+  background: linear-gradient(135deg, rgb(27, 94, 32), rgb(46, 125, 50));
+  color: white;
   border: none;
   font-size: var(--font-size-base);
   font-weight: var(--font-weight-medium);
@@ -109,7 +109,9 @@
 }
 
 .search-submit-button:hover {
-  background: var(--brand-dark);
+  background: linear-gradient(135deg, rgb(21, 74, 25), rgb(36, 100, 40));
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(27, 94, 32, 0.3);
 }
 
 .search-submit-button:focus-visible {

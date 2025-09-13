@@ -82,15 +82,84 @@ class UserContextService {
     }
 
     try {
-      const { data, error } = await supabase
+      // First try the RPC function
+      const { data: rpcData, error: rpcError } = await supabase
         .rpc('get_user_context_for_elya', { target_user_id: userId });
 
-      if (error) {
-        console.error('Error fetching user context for Elya:', error);
-        return null;
+      if (!rpcError && rpcData) {
+        return rpcData as ElyaUserContext;
       }
 
-      return data as ElyaUserContext;
+      // If RPC doesn't exist, build context manually
+      console.log('RPC function not found, building context manually');
+      
+      // Get recent reflections
+      const { data: reflections } = await supabase
+        .from('reflections')
+        .select('*')
+        .eq('user_id', userId)
+        .order('created_at', { ascending: false })
+        .limit(10);
+
+      // Build a basic context object
+      const context: ElyaUserContext = {
+        user_summary: {
+          recent_stress_patterns: [],
+          recent_emotions: [],
+          common_challenges: [],
+          effective_strategies: [],
+          avg_energy_level: 5,
+          avg_stress_level: 5,
+          avg_confidence_level: 5,
+          burnout_risk_level: 'moderate',
+          interpreter_experience_level: 'intermediate',
+          common_assignment_types: [],
+          preferred_support_types: [],
+          last_reflection_date: reflections?.[0]?.created_at || 'never',
+          last_activity_date: new Date().toISOString()
+        },
+        recent_reflections: reflections?.slice(0, 5).map(r => ({
+          type: r.reflection_type,
+          date: r.created_at,
+          key_insights: r.answers,
+          stress_level: r.metadata?.stress_level || 5,
+          energy_level: r.metadata?.energy_level || 5
+        })) || [],
+        recent_conversations: [],
+        context_generated_at: new Date().toISOString()
+      };
+
+      // Extract data from reflections if available
+      if (reflections && reflections.length > 0) {
+        const stressLevels = reflections
+          .map(r => r.metadata?.stress_level)
+          .filter(Boolean) as number[];
+        const energyLevels = reflections
+          .map(r => r.metadata?.energy_level)
+          .filter(Boolean) as number[];
+        
+        if (stressLevels.length > 0) {
+          context.user_summary.avg_stress_level = 
+            stressLevels.reduce((a, b) => a + b, 0) / stressLevels.length;
+        }
+        if (energyLevels.length > 0) {
+          context.user_summary.avg_energy_level = 
+            energyLevels.reduce((a, b) => a + b, 0) / energyLevels.length;
+        }
+
+        // Determine burnout risk
+        if (context.user_summary.avg_stress_level >= 8 && context.user_summary.avg_energy_level <= 3) {
+          context.user_summary.burnout_risk_level = 'critical';
+        } else if (context.user_summary.avg_stress_level >= 7 && context.user_summary.avg_energy_level <= 4) {
+          context.user_summary.burnout_risk_level = 'high';
+        } else if (context.user_summary.avg_stress_level >= 6 || context.user_summary.avg_energy_level <= 5) {
+          context.user_summary.burnout_risk_level = 'moderate';
+        } else {
+          context.user_summary.burnout_risk_level = 'low';
+        }
+      }
+
+      return context;
     } catch (error) {
       console.error('Error in getUserContextForElya:', error);
       return null;
@@ -109,12 +178,13 @@ class UserContextService {
   ): Promise<string | null> {
     const userId = await this.getCurrentUserId();
     if (!userId) {
-      console.warn('No authenticated user found');
+      console.warn('No authenticated user found - conversation not saved');
       return null;
     }
 
     try {
-      const { data, error } = await supabase
+      // First try the RPC function (if it exists)
+      const { data: rpcData, error: rpcError } = await supabase
         .rpc('save_elya_conversation', {
           p_user_id: userId,
           p_session_id: sessionId,
@@ -124,12 +194,38 @@ class UserContextService {
           p_metadata: metadata
         });
 
+      if (!rpcError) {
+        return rpcData;
+      }
+
+      // If RPC function doesn't exist, try direct insert
+      console.log('RPC function not found, using direct insert');
+      const { data, error } = await supabase
+        .from('elya_conversations')
+        .insert({
+          user_id: userId,
+          session_id: sessionId,
+          message_id: messageId,
+          sender: sender,
+          message: content,
+          metadata: metadata,
+          provider: metadata.provider || 'agenticflow',
+          user_context_used: metadata.user_context_used || false
+        })
+        .select()
+        .single();
+
       if (error) {
-        console.error('Error saving conversation message:', error);
+        // If table doesn't exist, just log and continue
+        if (error.code === '42P01') {
+          console.log('Elya conversations table not yet created in Supabase');
+        } else {
+          console.error('Error saving conversation:', error);
+        }
         return null;
       }
 
-      return data;
+      return data?.id || null;
     } catch (error) {
       console.error('Error in saveConversationMessage:', error);
       return null;

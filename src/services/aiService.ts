@@ -253,7 +253,7 @@ class AIService {
     
     // Low energy context responses
     if ((input.includes('tired') || input.includes('exhausted')) && summary.avg_energy_level <= 4) {
-      return `Your energy levels have been running quite low (around ${summary.avg_energy_level.toFixed(1)}/10 recently). This kind of persistent fatigue is your body telling you something important. When did you last have genuinely restorative time?`;
+      return `Your energy levels have been running quite low (around ${summary.avg_energy_level.toFixed(1)}/10 recently). This kind of persistent fatigue is your body communicating something important. When did you last have genuinely restorative time?`;
     }
     
     // Burnout risk awareness
@@ -289,9 +289,9 @@ class AIService {
     // Enhanced simulated responses for better fallback experience
     if (input.includes('stress') || input.includes('overwhelm')) {
       const responses = [
-        "I hear that you're feeling stressed. Let's take a moment together. Would you like to try a quick 2-minute breathing exercise, or would you prefer to talk about what's weighing on you?",
+        "I can sense that you're feeling stressed. Let's take a moment together. Would you like to try a quick 2-minute breathing exercise, or would you prefer to talk about what's weighing on you?",
         "Stress at work is so valid. You're managing complex responsibilities while trying to maintain your well-being. What's feeling most overwhelming right now?",
-        "That sounds really heavy. Remember, feeling stressed doesn't mean you're not strong enough - it means you're human. What usually helps you decompress after difficult sessions?"
+        "That seems really heavy. Remember, feeling stressed doesn't mean you're not strong enough - it means you're human. What usually helps you decompress after difficult sessions?"
       ];
       return responses[Math.floor(Math.random() * responses.length)];
     }
@@ -299,7 +299,7 @@ class AIService {
     if (input.includes('trauma') || input.includes('difficult') || input.includes('hard')) {
       const responses = [
         "Dealing with difficult situations can be really challenging. You're processing a lot right now. Have you had a chance to talk through any of these experiences with someone?",
-        "That sounds like such a difficult experience. It's important to acknowledge how these situations affect you. What do you need most right now - validation, strategies, or just someone to listen?",
+        "That seems like such a difficult experience. It's important to acknowledge how these situations affect you. What do you need most right now - validation, strategies, or just someone to be present with you?",
         "Carrying stress and challenges can be exhausting. You're doing important work, and it's okay to feel affected by it. How are you taking care of yourself after these challenging moments?"
       ];
       return responses[Math.floor(Math.random() * responses.length)];
@@ -351,9 +351,9 @@ class AIService {
     // Default response for unmatched inputs
     const defaultResponses = [
       "Tell me more about that. How is this affecting you day-to-day?",
-      "I'm listening. What aspect of this feels most important to explore right now?",
+      "I'm here for you. What aspect of this feels most important to explore right now?",
       "That's significant. How long have you been experiencing this?",
-      "I hear you. What would meaningful support look like for you in this situation?",
+      "I understand. What would meaningful support look like for you in this situation?",
       "Thank you for sharing that. How can I best support you with this?"
     ];
     

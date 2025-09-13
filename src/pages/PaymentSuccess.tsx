@@ -62,8 +62,19 @@ export const PaymentSuccess: React.FC = () => {
 
         <div className="space-y-3">
           <button
-            onClick={() => navigate('/dashboard')}
-            className="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-3 px-6 rounded-lg transition-colors flex items-center justify-center"
+            onClick={() => navigate('/')}
+            className="w-full text-white font-semibold py-3 px-6 rounded-lg transition-all flex items-center justify-center"
+            style={{
+              background: 'linear-gradient(135deg, rgb(27, 94, 32), rgb(46, 125, 50))',
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.transform = 'translateY(-2px)';
+              e.currentTarget.style.boxShadow = '0 8px 25px rgba(27, 94, 32, 0.3)';
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.transform = 'translateY(0)';
+              e.currentTarget.style.boxShadow = 'none';
+            }}
           >
             Go to Dashboard
             <ArrowRight className="w-5 h-5 ml-2" />

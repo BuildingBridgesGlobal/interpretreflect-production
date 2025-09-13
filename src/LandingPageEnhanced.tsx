@@ -318,7 +318,7 @@ function LandingPageEnhanced({ onGetStarted }: LandingPageProps) {
             </div>
 
             {/* Primary CTA with microinteraction */}
-            <div className="flex flex-col sm:flex-row gap-4 justify-center mb-16">
+            <div className="flex justify-center mb-16">
               <button
                 onClick={handleSignup}
                 className="group px-8 py-4 text-white font-semibold rounded-xl transition-all transform hover:scale-105 hover:shadow-xl focus:outline-none focus:ring-4 focus:ring-offset-2 focus:ring-sage-400"
@@ -326,19 +326,6 @@ function LandingPageEnhanced({ onGetStarted }: LandingPageProps) {
                 aria-label="Get started with your wellness journey"
               >
                 Get Started Today
-              </button>
-              <button
-                onClick={handleSignup}
-                className="px-8 py-4 font-semibold rounded-xl border-2 transition-all hover:shadow-lg focus:outline-none focus:ring-4 focus:ring-offset-2 focus:ring-sage-400"
-                style={{ 
-                  borderColor: colors.primary.sage, 
-                  color: colors.primary.sage,
-                  backgroundColor: 'white',
-                  fontSize: '1.125rem'
-                }}
-                aria-label="Browse wellness resources"
-              >
-                Browse Resources
               </button>
             </div>
 
@@ -352,7 +339,7 @@ function LandingPageEnhanced({ onGetStarted }: LandingPageProps) {
                   </h3>
                 </div>
                 <p className="text-base" style={{ color: colors.neutral[600], lineHeight: '1.6' }}>
-                  Supporting ASL, BSL, and international sign language interpreters with 
+                  Supporting all sign language interpreters with 
                   specialized wellness resources
                 </p>
               </article>
@@ -394,11 +381,6 @@ function LandingPageEnhanced({ onGetStarted }: LandingPageProps) {
               <div className="opacity-80 hover:opacity-100 transition-opacity" role="listitem">
                 <span className="text-base font-medium" style={{ color: colors.neutral[700] }}>
                   Evidence-Based
-                </span>
-              </div>
-              <div className="opacity-80 hover:opacity-100 transition-opacity" role="listitem">
-                <span className="text-base font-medium" style={{ color: colors.neutral[700] }}>
-                  2,000+ Interpreters
                 </span>
               </div>
               <div className="opacity-80 hover:opacity-100 transition-opacity" role="listitem">
@@ -497,19 +479,19 @@ function LandingPageEnhanced({ onGetStarted }: LandingPageProps) {
             <div className="mt-12 p-6 rounded-2xl" style={{ background: colors.gradients.accent }}>
               <div className="grid grid-cols-2 md:grid-cols-4 gap-6 text-center text-white">
                 <div>
-                  <div className="text-3xl font-bold">82%</div>
+                  <div className="text-3xl font-bold">24%</div>
                   <div className="text-sm opacity-90">Experience Burnout</div>
                 </div>
                 <div>
-                  <div className="text-3xl font-bold">67%</div>
+                  <div className="text-3xl font-bold">41.5%</div>
                   <div className="text-sm opacity-90">Report Vicarious Trauma</div>
                 </div>
                 <div>
-                  <div className="text-3xl font-bold">71%</div>
+                  <div className="text-3xl font-bold">57.5%</div>
                   <div className="text-sm opacity-90">Feel Imposter Syndrome</div>
                 </div>
                 <div>
-                  <div className="text-3xl font-bold">89%</div>
+                  <div className="text-3xl font-bold">50%</div>
                   <div className="text-sm opacity-90">Struggle with Boundaries</div>
                 </div>
               </div>
@@ -529,7 +511,7 @@ function LandingPageEnhanced({ onGetStarted }: LandingPageProps) {
               </p>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8" role="list">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto" role="list">
               {/* Feature cards with hover effects */}
               {[
                 {
@@ -552,11 +534,6 @@ function LandingPageEnhanced({ onGetStarted }: LandingPageProps) {
                   description: 'Track patterns and celebrate your wellness progress',
                   color: colors.primary.mint,
                 },
-                {
-                  title: 'Community Support',
-                  description: 'Connect with peers who understand your unique challenges',
-                  color: colors.primary.sage,
-                },
               ].map((feature, index) => (
                 <article
                   key={index}
@@ -573,60 +550,6 @@ function LandingPageEnhanced({ onGetStarted }: LandingPageProps) {
                   </p>
                 </article>
               ))}
-            </div>
-          </div>
-        </section>
-
-        {/* Personalization options preview */}
-        <section className="py-20 px-4" aria-labelledby="personalization-heading">
-          <div className="container mx-auto max-w-4xl">
-            <div className="bg-white rounded-3xl shadow-xl p-8 md:p-12">
-              <div className="text-center mb-8">
-                <h2 id="personalization-heading" className="text-3xl font-bold mb-4" style={{ color: colors.neutral[900] }}>
-                  Personalize Your Experience
-                </h2>
-                <p className="text-lg" style={{ color: colors.neutral[700], lineHeight: '1.6' }}>
-                  Customize your wellness journey to match your needs
-                </p>
-              </div>
-
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6" role="list">
-                <div role="listitem">
-                  <h3 className="font-semibold mb-2 text-lg" style={{ color: colors.neutral[800] }}>
-                    Personalized Experience
-                  </h3>
-                  <p className="text-base" style={{ color: colors.neutral[700], lineHeight: '1.5' }}>
-                    Tailored content and recommendations just for you
-                  </p>
-                </div>
-
-                <div role="listitem">
-                  <h3 className="font-semibold mb-2 text-lg" style={{ color: colors.neutral[800] }}>
-                    Accessibility First
-                  </h3>
-                  <p className="text-base" style={{ color: colors.neutral[700], lineHeight: '1.5' }}>
-                    Large text, high contrast, and screen reader support
-                  </p>
-                </div>
-
-                <div role="listitem">
-                  <h3 className="font-semibold mb-2 text-lg" style={{ color: colors.neutral[800] }}>
-                    Your Schedule
-                  </h3>
-                  <p className="text-base" style={{ color: colors.neutral[700], lineHeight: '1.5' }}>
-                    Set reminders that work with your assignments
-                  </p>
-                </div>
-
-                <div role="listitem">
-                  <h3 className="font-semibold mb-2 text-lg" style={{ color: colors.neutral[800] }}>
-                    Privacy Controls
-                  </h3>
-                  <p className="text-base" style={{ color: colors.neutral[700], lineHeight: '1.5' }}>
-                    You decide what to track and share
-                  </p>
-                </div>
-              </div>
             </div>
           </div>
         </section>

@@ -127,7 +127,7 @@ export function BurnoutRiskMonitor() {
       <div className="rounded-xl p-6" style={{ backgroundColor: '#FFFFFF', border: '1px solid #E5E7EB' }}>
         <div className="flex items-center justify-center">
           <RefreshCw className="h-6 w-6 animate-spin" style={{ color: '#6B8B60' }} />
-          <span className="ml-2">Analyzing burnout risk...</span>
+          <span className="ml-2" style={{ color: '#1A1A1A' }}>Analyzing burnout risk...</span>
         </div>
       </div>
     );

@@ -1,10 +1,18 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { Routes, Route, useNavigate } from 'react-router-dom';
 import type { BurnoutData, ViewMode } from './types';
+import { AppRoutes } from './routes/AppRoutes';
+import { publicRoutes } from './routes/PublicRoutes';
+import { authenticatedRoutes } from './routes/AuthenticatedRoutes';
 import LandingPageEnhanced from './LandingPageEnhanced';
 import { Logo } from './components/Logo';
 import SearchBox from './components/SearchBox';
 import HelpWidget from './components/HelpWidget';
+import { Header } from './components/layout/Header';
+import { NavigationTabs } from './components/layout/NavigationTabs';
+import { ChatWithElyaView } from './components/views/ChatWithElyaView';
+import { StressResetView } from './components/views/StressResetView';
+import { getTimeAgo } from './utils/dateHelpers';
 import { useAuth } from './contexts/AuthContext';
 import { supabase } from './lib/supabase';
 import { dataSyncService } from './services/dataSync';
@@ -25,16 +33,11 @@ import { SubscriptionManager } from './components/SubscriptionManager';
 import { PaymentSuccess } from './pages/PaymentSuccess';
 import { AuthTest } from './pages/AuthTest';
 import { PreAssignmentPrepAccessible as PreAssignmentPrepEnhanced } from './components/PreAssignmentPrepAccessible';
-import { PreAssignmentPrepV2 } from './components/PreAssignmentPrepV2';
-import { PreAssignmentPrepV3 } from './components/PreAssignmentPrepV3';
-import { PreAssignmentPrepV4 } from './components/PreAssignmentPrepV4';
 import { PreAssignmentPrepV5 } from './components/PreAssignmentPrepV5';
 import { PreAssignmentPrepV6 } from './components/PreAssignmentPrepV6';
 import { PostAssignmentDebriefAccessible as PostAssignmentDebriefEnhanced } from './components/PostAssignmentDebriefAccessible';
-import { PostAssignmentDebriefV2 } from './components/PostAssignmentDebriefV2';
-import { PostAssignmentDebriefV3 } from './components/PostAssignmentDebriefV3';
 import { TeamingPrepEnhanced } from './components/TeamingPrepEnhanced';
-import { TeamingReflectionV2 } from './components/TeamingReflectionV2';
+import { TeamingReflectionEnhanced } from './components/TeamingReflectionEnhanced';
 import { WellnessCheckInAccessible } from './components/WellnessCheckInAccessible';
 import { EthicsMeaningCheckAccessible } from './components/EthicsMeaningCheckAccessible';
 import { BreathingPractice } from './components/BreathingPracticeFriend';
@@ -52,7 +55,6 @@ import { TeamReflectionJourneyAccessible } from './components/TeamReflectionJour
 import { BurnoutGauge } from './components/BurnoutGauge';
 import { BurnoutRiskMonitor } from './components/BurnoutRiskMonitor';
 import { MentoringPrepAccessible } from './components/MentoringPrepAccessible';
-import { MentoringPrepV2 } from './components/MentoringPrepV2';
 import { MentoringReflectionAccessible } from './components/MentoringReflectionAccessible';
 import { RoleSpaceReflection } from './components/RoleSpaceReflection';
 import { DirectCommunicationReflection } from './components/DirectCommunicationReflection';
@@ -371,19 +373,8 @@ function App() {
   };
   
   // Helper function to get time ago string
-  const getTimeAgo = (date: Date) => {
-    const now = new Date();
-    const diff = now.getTime() - date.getTime();
-    const minutes = Math.floor(diff / 60000);
-    const hours = Math.floor(diff / 3600000);
-    const days = Math.floor(diff / 86400000);
-    
-    if (minutes < 1) return 'Just now';
-    if (minutes < 60) return `${minutes} minute${minutes > 1 ? 's' : ''} ago`;
-    if (hours < 24) return `${hours} hour${hours > 1 ? 's' : ''} ago`;
-    if (days < 7) return `${days} day${days > 1 ? 's' : ''} ago`;
-    return date.toLocaleDateString();
-  };
+  // Moved to utils/dateHelpers.ts
+  // const getTimeAgo = (date: Date) => { ... }
   
   // Helper function to track technique start
   const trackTechniqueStart = (technique: string) => {
@@ -2003,11 +1994,7 @@ function App() {
     </main>
   );
 
-  const renderChatWithElya = () => (
-    <div className="h-screen flex flex-col overflow-hidden">
-      <ChatWithElya />
-    </div>
-  );
+  const renderChatWithElya = () => <ChatWithElyaView />;
 
 
   const reflectionCards = [
@@ -6975,7 +6962,7 @@ function App() {
 
       {/* Post-Assignment Debrief Modal */}
       {showPostAssignmentDebrief && (
-        <PostAssignmentDebriefV3
+        <PostAssignmentDebriefEnhanced
           onComplete={(data) => {
             console.log('Post-Assignment Debrief Results:', data);
             // Data is automatically saved to Supabase in the component
@@ -6999,7 +6986,7 @@ function App() {
 
       {/* Teaming Reflection Modal */}
       {showTeamingReflection && (
-        <TeamingReflectionV2
+        <TeamingReflectionEnhanced
           onComplete={(data) => {
             console.log('Team Reflection Results:', data);
             // Data is automatically saved to Supabase in the component
@@ -7011,7 +6998,7 @@ function App() {
 
       {/* Mentoring Prep Modal */}
       {showMentoringPrep && (
-        <MentoringPrepV2
+        <MentoringPrepAccessible
           onComplete={(data) => {
             console.log('Mentoring Prep Results:', data);
             // Data is automatically saved to Supabase in the component
@@ -7225,11 +7212,7 @@ function App() {
       <Route path="/growth-insights" element={<GrowthInsights />} />
       <Route path="/growth-dashboard" element={<GrowthInsightsDashboard />} />
       <Route path="/auth-test" element={<AuthTest />} />
-      <Route path="/pre-assignment-v2" element={<PreAssignmentPrepV2 />} />
-      <Route path="/pre-assignment-v3" element={<PreAssignmentPrepV3 />} />
-      <Route path="/pre-assignment-v4" element={<PreAssignmentPrepV4 />} />
       <Route path="/pre-assignment" element={<PreAssignmentPrepV5 />} />
-      <Route path="/post-assignment-v2" element={<PostAssignmentDebriefV2 />} />
       <Route path="/profile-settings" element={<ProfileSettings devMode={devMode} />} />
       <Route path="/customize-preferences" element={<CustomizePreferences />} />
       <Route path="/manage-subscription" element={<ManageSubscription />} />
@@ -7251,325 +7234,17 @@ function App() {
       >
         Skip to main content
       </a>
-      {/* DEV MODE INDICATOR */}
-      {devMode && (
-        <div className="fixed top-0 left-0 right-0 text-center py-1 text-xs font-medium z-50" 
-             style={{ backgroundColor: '#FEF3C7', color: '#92400E', borderBottom: '1px solid #FDE68A' }}>
-          Development Mode - Authentication Bypassed
-        </div>
-      )}
       
-      {/* Header with proper semantic structure */}
-      <header
-        className="border-b"
-        style={{
-          backgroundColor: '#FFFFFF',
-          borderBottomColor: 'rgba(92, 127, 79, 0.15)',
-          boxShadow: '0 1px 3px rgba(0, 0, 0, 0.05)',
-        }}
-        role="banner"
-      >
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center h-16">
-            {/* Logo and Greeting */}
-            <div className="flex items-center space-x-8">
-              <Logo 
-                size="md" 
-                variant="default"
-                linkToHome={false}
-              />
-              <div className="hidden md:block">
-                <p className="text-lg font-medium" style={{ color: '#2D3A31' }}>
-                  Welcome back, {devMode ? 'Dev Mode' : user?.email?.split('@')[0] || 'User'}
-                </p>
-                <p className="text-sm" style={{ color: '#5C6A60' }}>
-                  {new Date().toLocaleDateString('en-US', {
-                    weekday: 'long',
-                    month: 'long',
-                    day: 'numeric',
-                  })}
-                </p>
-              </div>
-            </div>
+      <Header
+        user={user}
+        devMode={devMode}
+        showUserDropdown={showUserDropdown}
+        setShowUserDropdown={setShowUserDropdown}
+        setDevMode={setDevMode}
+        signOut={signOut}
+      />
 
-
-            {/* Right side controls */}
-            <div className="flex items-center space-x-4">
-              {/* Upgrade to Premium Button - Show only for non-premium users */}
-              {user && !devMode && (
-                <button
-                  onClick={() => window.open('https://buy.stripe.com/3cIcN5fYa7Ry2bA9i1b7y03', '_blank')}
-                  className="hidden md:flex items-center gap-2 px-4 py-2 rounded-lg font-semibold text-sm transition-all animate-pulse-subtle"
-                  style={{
-                    background: 'linear-gradient(135deg, rgb(27, 94, 32), rgb(46, 125, 50))',
-                    color: '#FFFFFF',
-                    boxShadow: '0 2px 8px rgba(27, 94, 32, 0.2)',
-                  }}
-                  onMouseEnter={(e) => {
-                    e.currentTarget.style.transform = 'translateY(-1px)';
-                    e.currentTarget.style.boxShadow = '0 4px 12px rgba(27, 94, 32, 0.3)';
-                    e.currentTarget.classList.remove('animate-pulse-subtle');
-                  }}
-                  onMouseLeave={(e) => {
-                    e.currentTarget.style.transform = 'translateY(0)';
-                    e.currentTarget.style.boxShadow = '0 2px 8px rgba(27, 94, 32, 0.2)';
-                    e.currentTarget.classList.add('animate-pulse-subtle');
-                  }}
-                >
-                  <Sparkles size={16} />
-                  Upgrade to Premium
-                </button>
-              )}
-              
-              <div className="relative">
-                <button
-                  onClick={() => setShowUserDropdown(!showUserDropdown)}
-                  className="flex items-center space-x-2 rounded-lg px-3 py-2 transition-all"
-                  style={{
-                    backgroundColor: 'transparent',
-                    border: '1px solid rgba(92, 127, 79, 0.3)',
-                  }}
-                  aria-label="User menu"
-                  aria-expanded={showUserDropdown}
-                  aria-haspopup="true"
-                  onMouseEnter={(e) => {
-                    e.currentTarget.style.backgroundColor = 'rgba(92, 127, 79, 0.05)';
-                    e.currentTarget.style.borderColor = 'rgba(92, 127, 79, 0.5)';
-                  }}
-                  onMouseLeave={(e) => {
-                    e.currentTarget.style.backgroundColor = 'transparent';
-                    e.currentTarget.style.borderColor = 'rgba(92, 127, 79, 0.3)';
-                  }}
-                >
-                  <div
-                    className="w-8 h-8 rounded-full flex items-center justify-center"
-                    style={{
-                      background: 'linear-gradient(135deg, rgb(27, 94, 32), rgb(46, 125, 50))',
-                      color: '#FFFFFF',
-                    }}
-                  >
-                    <span className="text-sm font-medium">
-                      {user?.email?.charAt(0).toUpperCase() || 'U'}
-                    </span>
-                  </div>
-                  <ChevronDown
-                    className={`h-4 w-4 transition-transform ${showUserDropdown ? 'rotate-180' : ''}`}
-                    style={{ color: '#5C6A60' }}
-                  />
-                </button>
-
-                {/* User Dropdown Menu */}
-                {showUserDropdown && (
-                  <>
-                    {/* Backdrop to close dropdown */}
-                    <div
-                      className="fixed inset-0 z-10"
-                      onClick={() => setShowUserDropdown(false)}
-                    />
-
-                    <div
-                      className="absolute right-0 top-full mt-2 w-72 rounded-lg shadow-lg z-20"
-                      style={{
-                        backgroundColor: 'var(--bg-card)',
-                        border: '1px solid rgba(92, 127, 79, 0.15)',
-                        boxShadow: '0 4px 6px rgba(0, 0, 0, 0.07), 0 2px 4px rgba(0, 0, 0, 0.05)',
-                      }}
-                    >
-                      {/* User Info */}
-                      <div
-                        className="p-4"
-                        style={{
-                          borderBottom: '1px solid rgba(92, 127, 79, 0.1)',
-                          backgroundColor: 'rgba(92, 127, 79, 0.03)',
-                        }}
-                      >
-                        <div className="flex items-center space-x-3">
-                          <div
-                            className="w-10 h-10 rounded-full flex items-center justify-center"
-                            style={{
-                              background: 'linear-gradient(135deg, rgb(27, 94, 32), rgb(46, 125, 50))',
-                            }}
-                          >
-                            <span className="text-base font-medium" style={{ color: '#FFFFFF' }}>
-                              {user?.email?.charAt(0).toUpperCase() || 'U'}
-                            </span>
-                          </div>
-                          <div>
-                            <div className="font-medium text-base" style={{ color: '#000000' }}>
-                              {devMode ? 'Dev Mode' : user?.email?.split('@')[0] || 'User'}
-                            </div>
-                            <div className="text-sm" style={{ color: '#333333' }}>
-                              {devMode
-                                ? 'Development Environment'
-                                : user?.email || 'user@interpretreflect.com'}
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-
-                      {/* Menu Items */}
-                      <div className="p-3">
-                        <button
-                          onClick={() => {
-                            setShowUserDropdown(false);
-                            navigate('/profile-settings');
-                          }}
-                          className="w-full flex items-center space-x-3 p-4 rounded-xl transition-all text-left group"
-                          style={{
-                            backgroundColor: 'transparent',
-                          }}
-                          onMouseEnter={(e) => {
-                            e.currentTarget.style.backgroundColor = 'rgba(92, 127, 79, 0.05)';
-                          }}
-                          onMouseLeave={(e) => {
-                            e.currentTarget.style.backgroundColor = 'transparent';
-                          }}
-                        >
-                          <div
-                            className="p-2 rounded-lg"
-                            style={{ backgroundColor: 'rgba(92, 127, 79, 0.15)' }}
-                          >
-                            <User className="h-5 w-5" style={{ color: '#1A3D26' }} />
-                          </div>
-                          <div className="flex-grow">
-                            <div className="font-medium" style={{ color: '#000000' }}>
-                              Profile Settings
-                            </div>
-                            <div className="text-xs" style={{ color: '#333333' }}>
-                              Manage your account
-                            </div>
-                          </div>
-                          <ChevronRight
-                            className="h-4 w-4 opacity-60"
-                            style={{ color: '#6A6A6A' }}
-                          />
-                        </button>
-                      </div>
-
-                      {/* Sign Out */}
-                      <div
-                        className="p-3"
-                        style={{
-                          borderTop: '1px solid rgba(255, 255, 255, 0.1)',
-                        }}
-                      >
-                        <button
-                          onClick={async () => {
-                            setShowUserDropdown(false);
-                            if (devMode) {
-                              setDevMode(false);
-                              // Clear any local storage
-                              localStorage.clear();
-                            } else {
-                              await signOut();
-                            }
-                            // Navigation will happen automatically as user state changes
-                            // The landing page will show when user becomes null
-                          }}
-                          className="w-full flex items-center space-x-3 p-4 rounded-xl transition-all text-left"
-                          style={{
-                            backgroundColor: 'transparent',
-                          }}
-                          onMouseEnter={(e) => {
-                            e.currentTarget.style.backgroundColor = 'rgba(255, 100, 100, 0.1)';
-                          }}
-                          onMouseLeave={(e) => {
-                            e.currentTarget.style.backgroundColor = 'transparent';
-                          }}
-                        >
-                          <div
-                            className="p-2 rounded-lg"
-                            style={{ backgroundColor: 'rgba(255, 100, 100, 0.15)' }}
-                          >
-                            <Globe className="h-5 w-5" style={{ color: '#FF8A8A' }} />
-                          </div>
-                          <div className="font-medium" style={{ color: '#000000' }}>
-                            Sign Out
-                          </div>
-                        </button>
-                      </div>
-                    </div>
-                  </>
-                )}
-              </div>
-            </div>
-          </div>
-        </div>
-      </header>
-
-      {/* Navigation Tabs with proper semantic structure */}
-      <div className="px-4 sm:px-6 lg:px-8 py-3" style={{ backgroundColor: '#FAFAF8' }}>
-        <nav
-          role="navigation"
-          aria-label="Main navigation"
-          className="max-w-7xl mx-auto rounded-full"
-          style={{
-            backgroundColor: 'var(--bg-card)',
-            border: '1px solid rgba(147, 197, 253, 0.12)',
-            boxShadow: '0 2px 8px rgba(147, 197, 253, 0.04)',
-            padding: '4px',
-          }}
-        >
-          <ul className="flex justify-center space-x-2 list-none m-0 p-0" role="tablist">
-            {[
-              { id: 'home', label: 'Home', icon: Home },
-              { id: 'reflection', label: 'Reflection Studio', icon: BookOpen },
-              { id: 'stress', label: 'Stress Reset', icon: RefreshCw },
-              { id: 'chat', label: 'Wellness Journal', icon: MessageCircle, badge: 'NEW' },
-              { id: 'insights', label: 'Growth Insights', icon: TrendingUp },
-            ].map((tab) => (
-              <li key={tab.id} role="presentation">
-                <button
-                  onClick={(e) => {
-                    e.preventDefault();
-                    e.stopPropagation();
-                    setActiveTab(tab.id);
-                  }}
-                  className={`flex items-center px-4 py-2 text-sm font-medium transition-all duration-300 rounded-full ${
-                    activeTab === tab.id 
-                      ? 'text-white shadow-md' 
-                      : 'bg-white'
-                  }`}
-                  role="tab"
-                  aria-selected={activeTab === tab.id}
-                  aria-controls={`${tab.id}-panel`}
-                  aria-current={activeTab === tab.id ? 'page' : undefined}
-                style={{
-                  color: activeTab === tab.id ? '#FFFFFF' : '#4A5568',
-                  fontWeight: activeTab === tab.id ? '500' : '400',
-                  background: activeTab === tab.id ? 'linear-gradient(135deg, #1b5e20, #2e7d32)' : '#FFFFFF',
-                }}
-                onMouseEnter={(e) => {
-                  if (activeTab !== tab.id) {
-                    e.currentTarget.style.backgroundColor = 'rgba(34, 197, 94, 0.15)';
-                  }
-                }}
-                onMouseLeave={(e) => {
-                  if (activeTab !== tab.id) {
-                    e.currentTarget.style.backgroundColor = '#FFFFFF';
-                  }
-                }}
-              >
-                <tab.icon className="h-4 w-4 mr-1.5" />
-                {tab.label}
-                {tab.badge && (
-                  <span 
-                    className="ml-1.5 px-1.5 py-0.5 text-xs font-medium rounded-full"
-                    style={{ 
-                      backgroundColor: activeTab === tab.id ? 'rgba(255, 255, 255, 0.3)' : 'rgba(156, 163, 175, 0.15)', 
-                      color: activeTab === tab.id ? '#FFFFFF' : '#6B7280',
-                      fontSize: '9px'
-                    }}
-                  >
-                    {tab.badge}
-                  </span>
-                )}
-                </button>
-              </li>
-            ))}
-          </ul>
-        </nav>
-      </div>
+      <NavigationTabs activeTab={activeTab} setActiveTab={setActiveTab} />
 
       {/* Main content area with proper semantic structure */}
       <main id="main-content" role="main" className="flex-1">

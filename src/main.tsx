@@ -5,7 +5,6 @@ import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
 import { BrowserRouter } from 'react-router-dom';
 import App from './App.tsx';
-// import { DebugApp as App } from './DebugApp.tsx';
 import { AuthProvider } from './contexts/AuthContext';
 import { ErrorBoundary } from './components/ErrorBoundary';
 import './index.css';
@@ -14,6 +13,13 @@ import './styles/typography.css';
 import './styles/header.css';
 import './styles/accessibleColors.css';
 import './styles/yellowSelection.css';
+
+// Disable console logs in production for better performance and security
+if (import.meta.env.PROD) {
+  console.log = () => {};
+  console.warn = () => {};
+  // Keep console.error for critical issues
+}
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>

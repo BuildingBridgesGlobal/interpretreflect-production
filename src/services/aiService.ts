@@ -262,7 +262,7 @@ class AIService {
         'high': 'I want you to know that you\'re showing signs of high burnout risk. This isn\'t a judgment - it\'s information we can use to better support you.',
         'critical': 'Your recent patterns suggest critical burnout risk. I\'m genuinely concerned about your wellbeing right now.'
       };
-      return `${riskMessages[summary.burnout_risk_level]} What kind of support would feel most helpful right now? I\'m here to help you navigate this.`;
+      return `${riskMessages[summary.burnout_risk_level]} What kind of support would feel most helpful right now? I'm here to help you navigate this.`;
     }
     
     // Use effective strategies context

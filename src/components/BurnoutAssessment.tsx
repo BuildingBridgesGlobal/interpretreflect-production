@@ -322,7 +322,7 @@ export const BurnoutAssessment: React.FC<AssessmentProps> = ({ isOpen, onClose, 
               className="h-full transition-all duration-500 ease-out rounded-full"
               style={{
                 width: `${progress}%`,
-                background: 'linear-gradient(90deg, #5C7F4F 0%, #6B8B60 100%)',
+                background: 'linear-gradient(135deg, #1b5e20, #2e7d32)',
               }}
             />
           </div>
@@ -497,7 +497,7 @@ const AssessmentResults: React.FC<{
           onClick={onClose}
           className="px-8 py-3 rounded-xl font-semibold transition-all"
           style={{
-            background: 'linear-gradient(145deg, #6B8B60 0%, #5F7F55 100%)',
+            background: 'linear-gradient(135deg, #1b5e20, #2e7d32)',
             color: '#FFFFFF',
             boxShadow: '0 4px 15px rgba(107, 139, 96, 0.3)',
           }}

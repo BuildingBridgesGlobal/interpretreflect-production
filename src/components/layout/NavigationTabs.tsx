@@ -1,5 +1,6 @@
 import React from 'react';
-import { Home, BookOpen, RefreshCw, MessageCircle, TrendingUp } from 'lucide-react';
+import { Home, BookOpen, RefreshCw, TrendingUp } from 'lucide-react';
+import { HeartPulseIcon, NotepadIcon, HourglassPersonIcon, TargetIcon } from '../CustomIcon';
 
 interface NavigationTabsProps {
   activeTab: string;
@@ -7,11 +8,10 @@ interface NavigationTabsProps {
 }
 
 const tabs = [
-  { id: 'home', label: 'Home', icon: Home },
-  { id: 'reflection', label: 'Reflection Studio', icon: BookOpen },
-  { id: 'stress', label: 'Stress Reset', icon: RefreshCw },
-  { id: 'chat', label: 'Wellness Journal', icon: MessageCircle, badge: 'NEW' },
-  { id: 'insights', label: 'Growth Insights', icon: TrendingUp },
+  { id: 'home', label: 'Home', icon: HeartPulseIcon },
+  { id: 'reflection', label: 'Reflection Studio', icon: NotepadIcon },
+  { id: 'stress', label: 'Stress Reset', icon: HourglassPersonIcon },
+  { id: 'insights', label: 'Growth Insights', icon: TargetIcon },
 ];
 
 export const NavigationTabs: React.FC<NavigationTabsProps> = ({ activeTab, setActiveTab }) => {
@@ -22,10 +22,9 @@ export const NavigationTabs: React.FC<NavigationTabsProps> = ({ activeTab, setAc
         aria-label="Main navigation"
         className="max-w-7xl mx-auto rounded-full"
         style={{
-          backgroundColor: 'var(--bg-card)',
-          border: '1px solid rgba(147, 197, 253, 0.12)',
-          boxShadow: '0 2px 8px rgba(147, 197, 253, 0.04)',
-          padding: '4px',
+          backgroundColor: 'transparent',
+          border: 'none',
+          padding: '6px',
         }}
       >
         <ul className="flex justify-center space-x-2 list-none m-0 p-0" role="tablist">
@@ -37,33 +36,32 @@ export const NavigationTabs: React.FC<NavigationTabsProps> = ({ activeTab, setAc
                   e.stopPropagation();
                   setActiveTab(tab.id);
                 }}
-                className={`flex items-center px-4 py-2 text-sm font-medium transition-all duration-300 rounded-full ${
-                  activeTab === tab.id ? 'text-white shadow-md' : 'bg-white'
+                className={`flex items-center px-5 py-3 text-base font-medium transition-all duration-300 rounded-full ${
+                  activeTab === tab.id ? 'shadow-md' : ''
                 }`}
                 role="tab"
                 aria-selected={activeTab === tab.id}
                 aria-controls={`${tab.id}-panel`}
                 aria-current={activeTab === tab.id ? 'page' : undefined}
                 style={{
-                  color: activeTab === tab.id ? '#FFFFFF' : '#4A5568',
-                  fontWeight: activeTab === tab.id ? '500' : '400',
-                  background:
-                    activeTab === tab.id
-                      ? 'linear-gradient(135deg, #1b5e20, #2e7d32)'
-                      : '#FFFFFF',
+                  color: activeTab === tab.id ? '#1b5e20' : '#4A5568',
+                  fontWeight: activeTab === tab.id ? '600' : '400',
+                  background: 'transparent',
                 }}
                 onMouseEnter={(e) => {
                   if (activeTab !== tab.id) {
-                    e.currentTarget.style.backgroundColor = 'rgba(34, 197, 94, 0.15)';
+                    e.currentTarget.style.color = '#1b5e20';
+                    e.currentTarget.style.transform = 'translateY(-2px)';
                   }
                 }}
                 onMouseLeave={(e) => {
                   if (activeTab !== tab.id) {
-                    e.currentTarget.style.backgroundColor = '#FFFFFF';
+                    e.currentTarget.style.color = '#4A5568';
+                    e.currentTarget.style.transform = 'translateY(0)';
                   }
                 }}
               >
-                <tab.icon className="h-4 w-4 mr-1.5" />
+                <tab.icon size={48} className="mr-2" />
                 {tab.label}
                 {tab.badge && (
                   <span

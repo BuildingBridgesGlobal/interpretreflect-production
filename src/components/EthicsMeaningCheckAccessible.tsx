@@ -11,17 +11,13 @@ import React, { useState, useRef, useEffect } from 'react';
 import { 
   ChevronRight, 
   ChevronLeft, 
-  Shield,
-  Heart,
-  Brain,
   Compass,
-  Users,
-  Target,
   AlertTriangle,
   Sparkles,
   X,
   Check
 } from 'lucide-react';
+import { TargetIcon, HeartPulseIcon, NotepadIcon, CommunityIcon, SecureLockIcon } from './CustomIcon';
 import { supabase } from '../lib/supabase';
 import { useAuth } from '../contexts/AuthContext';
 import { updateGrowthInsightsForUser } from '../services/growthInsightsService';
@@ -387,7 +383,7 @@ OVERALL RESILIENCE: ${formData.overall_resilience}/10
     },
     {
       title: "Ethical Landscape",
-      icon: <Shield className="w-5 h-5" style={{ color: '#6B8B60' }} />,
+      icon: <SecureLockIcon size={64} />,
       content: (
         <div className="space-y-6">
           <div>
@@ -502,7 +498,7 @@ OVERALL RESILIENCE: ${formData.overall_resilience}/10
     },
     {
       title: "Meaning & Purpose",
-      icon: <Heart className="w-5 h-5" style={{ color: '#6B8B60' }} />,
+      icon: <HeartPulseIcon size={64} />,
       content: (
         <div className="space-y-6">
           <div>
@@ -565,7 +561,7 @@ OVERALL RESILIENCE: ${formData.overall_resilience}/10
     },
     {
       title: "Impact & Growth",
-      icon: <Target className="w-5 h-5" style={{ color: '#6B8B60' }} />,
+      icon: <TargetIcon size={64} />,
       content: (
         <div className="space-y-6">
           <div>
@@ -617,7 +613,7 @@ OVERALL RESILIENCE: ${formData.overall_resilience}/10
     },
     {
       title: "Support & Resources",
-      icon: <Users className="w-5 h-5" style={{ color: '#6B8B60' }} />,
+      icon: <CommunityIcon size={64} />,
       content: (
         <div className="space-y-6">
           <div>
@@ -680,7 +676,7 @@ OVERALL RESILIENCE: ${formData.overall_resilience}/10
     },
     {
       title: "Technology & Innovation",
-      icon: <Brain className="w-5 h-5" style={{ color: '#6B8B60' }} />,
+      icon: <NotepadIcon size={64} />,
       content: (
         <div className="space-y-6">
           <div>
@@ -863,7 +859,7 @@ OVERALL RESILIENCE: ${formData.overall_resilience}/10
                   boxShadow: '0 2px 8px rgba(107, 139, 96, 0.3)'
                 }}
               >
-                <Shield className="w-6 h-6 text-white" />
+                <TargetIcon size={64} />
               </div>
               <div>
                 <h2 className="text-2xl font-bold" style={{ color: '#1A1A1A' }}>

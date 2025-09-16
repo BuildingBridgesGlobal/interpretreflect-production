@@ -42,6 +42,7 @@ interface ReflectionStudioViewProps {
   setShowRoleSpaceReflection: (show: boolean) => void;
   showDirectCommunication: boolean;
   setShowDirectCommunication: (show: boolean) => void;
+  saveReflection?: (type: string, data: any) => void;
 }
 
 export const ReflectionStudioView: React.FC<ReflectionStudioViewProps> = ({
@@ -73,6 +74,7 @@ export const ReflectionStudioView: React.FC<ReflectionStudioViewProps> = ({
   setShowRoleSpaceReflection,
   showDirectCommunication,
   setShowDirectCommunication,
+  saveReflection,
 }) => {
   const handleToolSelect = (tool: string) => {
     switch (tool) {
@@ -218,7 +220,15 @@ export const ReflectionStudioView: React.FC<ReflectionStudioViewProps> = ({
       )}
       
       {showWellnessCheck && (
-        <WellnessCheckInAccessible onClose={() => setShowWellnessCheck(false)} />
+        <WellnessCheckInAccessible 
+          onClose={() => setShowWellnessCheck(false)}
+          onComplete={(data) => {
+            if (saveReflection) {
+              saveReflection('wellness_checkin', data);
+            }
+            setShowWellnessCheck(false);
+          }}
+        />
       )}
       
       {showEthicsMeaningCheck && (

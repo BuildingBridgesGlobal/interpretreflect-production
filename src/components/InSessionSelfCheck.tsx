@@ -15,17 +15,13 @@ import {
   ChevronRight, 
   ChevronLeft, 
   Activity,
-  Brain,
-  Shield,
-  Users,
-  Heart,
   Compass,
   AlertTriangle,
-  Target,
   X,
   Check,
   Sparkles
 } from 'lucide-react';
+import { HeartPulseIcon, NotepadIcon, SecureLockIcon, CommunityIcon, TargetIcon } from './CustomIcon';
 import { supabase } from '../lib/supabase';
 import { useAuth } from '../contexts/AuthContext';
 import { updateGrowthInsightsForUser } from '../services/growthInsightsService';
@@ -300,7 +296,7 @@ OVERALL STATUS: ${formData.overall_status}/10
     },
     {
       title: "Control Strategies",
-      icon: <Brain className="w-5 h-5" style={{ color: '#6B8B60' }} />,
+      icon: <NotepadIcon size={64} />,
       content: (
         <div className="space-y-6">
           <div>
@@ -345,7 +341,7 @@ OVERALL STATUS: ${formData.overall_status}/10
     },
     {
       title: "Energy & Focus",
-      icon: <Target className="w-5 h-5" style={{ color: '#6B8B60' }} />,
+      icon: <TargetIcon size={64} />,
       content: (
         <div className="space-y-6">
           <div>
@@ -390,7 +386,7 @@ OVERALL STATUS: ${formData.overall_status}/10
     },
     {
       title: "Professional Boundaries",
-      icon: <Shield className="w-5 h-5" style={{ color: '#6B8B60' }} />,
+      icon: <SecureLockIcon size={64} />,
       content: (
         <div className="space-y-6">
           <div>
@@ -435,7 +431,7 @@ OVERALL STATUS: ${formData.overall_status}/10
     },
     {
       title: "Communication Flow",
-      icon: <Users className="w-5 h-5" style={{ color: '#6B8B60' }} />,
+      icon: <CommunityIcon size={64} />,
       content: (
         <div className="space-y-6">
           <div>
@@ -570,7 +566,7 @@ OVERALL STATUS: ${formData.overall_status}/10
     },
     {
       title: "Team Support",
-      icon: <Users className="w-5 h-5" style={{ color: '#6B8B60' }} />,
+      icon: <CommunityIcon size={64} />,
       content: (
         <div className="space-y-6">
           <div>
@@ -615,7 +611,7 @@ OVERALL STATUS: ${formData.overall_status}/10
     },
     {
       title: "Emotional Management",
-      icon: <Heart className="w-5 h-5" style={{ color: '#6B8B60' }} />,
+      icon: <HeartPulseIcon size={64} />,
       content: (
         <div className="space-y-6">
           <div>
@@ -773,7 +769,7 @@ OVERALL STATUS: ${formData.overall_status}/10
                   boxShadow: '0 2px 8px rgba(107, 139, 96, 0.3)'
                 }}
               >
-                <Activity className="w-6 h-6 text-white" />
+                <HeartPulseIcon size={64} />
               </div>
               <div>
                 <h2 className="text-2xl font-bold" style={{ color: '#1A1A1A' }}>
@@ -889,7 +885,7 @@ OVERALL STATUS: ${formData.overall_status}/10
               style={{
                 background: isSaving 
                   ? '#CCCCCC' 
-                  : 'linear-gradient(145deg, #6B8B60 0%, #5F7F55 100%)',
+                  : 'linear-gradient(135deg, #1b5e20, #2e7d32)',
                 color: '#FFFFFF',
                 boxShadow: isSaving 
                   ? 'none' 

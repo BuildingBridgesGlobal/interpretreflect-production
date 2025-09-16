@@ -165,9 +165,9 @@ export function ChatWithElya() {
         }}
       >
         <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-full flex items-center justify-center" 
-            style={{ background: 'linear-gradient(135deg, #1b5e20, #2e7d32)' }}>
-            <Sparkles size={20} className="text-white" />
+          <div className="w-10 h-10 rounded-full flex items-center justify-center overflow-hidden" 
+            style={{ background: '#E8F5E9' }}>
+            <img src="/elya_2.png" alt="Elya AI" className="w-full h-full object-cover" />
           </div>
           <div>
             <h2 className="font-semibold text-xl" style={{ color: '#1A1A1A' }}>
@@ -202,9 +202,9 @@ export function ChatWithElya() {
           <div className="max-w-4xl mx-auto px-4">
           {messages.length === 0 ? (
             <div className="flex flex-col items-center justify-center min-h-[60vh] py-20">
-              <div className="w-20 h-20 rounded-full flex items-center justify-center mb-6"
-                style={{ background: 'linear-gradient(135deg, #1b5e20, #2e7d32)' }}>
-                <Sparkles size={40} className="text-white" />
+              <div className="w-20 h-20 rounded-full flex items-center justify-center mb-6 overflow-hidden"
+                style={{ background: '#E8F5E9' }}>
+                <img src="/elya_2.png" alt="Elya AI" className="w-full h-full object-cover" />
               </div>
               <h3 className="text-3xl font-semibold mb-3" style={{ color: '#1A1A1A' }}>
                 How can I help you today?
@@ -245,17 +245,17 @@ export function ChatWithElya() {
                     {/* Avatar */}
                     <div className="flex-shrink-0">
                       <div 
-                        className="w-9 h-9 rounded-full flex items-center justify-center shadow-sm"
+                        className="w-9 h-9 rounded-full flex items-center justify-center shadow-sm overflow-hidden"
                         style={{
                           background: message.sender === 'elya' 
-                            ? 'linear-gradient(135deg, #1b5e20, #2e7d32)'
+                            ? '#E8F5E9'
                             : 'linear-gradient(135deg, #6B7280, #4B5563)'
                         }}
                       >
                         {message.sender === 'user' ? (
                           <User size={18} className="text-white" />
                         ) : (
-                          <Sparkles size={18} className="text-white" />
+                          <img src="/elya_2.png" alt="Elya AI" className="w-full h-full object-cover" />
                         )}
                       </div>
                     </div>
@@ -318,10 +318,10 @@ export function ChatWithElya() {
                 <div className="flex gap-3">
                   <div className="flex-shrink-0">
                     <div 
-                      className="w-9 h-9 rounded-full flex items-center justify-center shadow-sm"
-                      style={{ background: 'linear-gradient(135deg, #1b5e20, #2e7d32)' }}
+                      className="w-9 h-9 rounded-full flex items-center justify-center shadow-sm overflow-hidden"
+                      style={{ background: '#E8F5E9' }}
                     >
-                      <Sparkles size={18} className="text-white" />
+                      <img src="/elya_2.png" alt="Elya AI" className="w-full h-full object-cover" />
                     </div>
                   </div>
                   <div className="flex items-center gap-1 px-4 py-3">

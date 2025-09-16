@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { X, Mail, Lock, Eye, EyeOff, Loader2 } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
+import { SecureLockIcon } from './CustomIcon';
 
 interface AuthModalProps {
   isOpen: boolean;

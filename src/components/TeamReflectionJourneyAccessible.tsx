@@ -234,9 +234,9 @@ Share with Team: ${formData.shareWithTeam ? 'Yes' : 'No'}
                   isCompleted ? 'cursor-pointer' : 'cursor-default'
                 }`}
                 style={{
-                  backgroundColor: isCurrent ? '#5C7F4F' : isCompleted ? '#F0F5ED' : '#FFFFFF',
+                  background: isCurrent ? 'linear-gradient(135deg, #1b5e20, #2e7d32)' : isCompleted ? '#F0F5ED' : '#FFFFFF',
                   color: isCurrent ? '#FFFFFF' : isCompleted ? '#5C7F4F' : '#A0AEC0',
-                  borderColor: isCurrent ? '#5C7F4F' : isCompleted ? '#5C7F4F' : '#E2E8F0',
+                  borderColor: isCurrent ? 'transparent' : isCompleted ? '#5C7F4F' : '#E2E8F0',
                   focusRingColor: '#5C7F4F'
                 }}
                 disabled={!isCompleted && !isCurrent}
@@ -1072,8 +1072,11 @@ Share with Team: ${formData.shareWithTeam ? 'Yes' : 'No'}
           {onClose && (
             <button
               onClick={onClose}
-              className="absolute top-4 right-4 p-2 rounded-full hover:bg-gray-100 transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2"
-              style={{ focusRingColor: '#5C7F4F' }}
+              className="absolute top-4 right-4 p-2 rounded-lg transition-all text-white shadow-md hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-offset-2"
+              style={{ 
+                background: 'linear-gradient(135deg, #1b5e20, #2e7d32)',
+                focusRingColor: '#5C7F4F' 
+              }}
               aria-label="Close team reflection"
             >
               <span className="sr-only">Close</span>

@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { Send, Loader, Sparkles, MessageCircle, X } from 'lucide-react';
+import { Send, Loader, MessageCircle, X, Plus, Mic } from 'lucide-react';
 import { aiService } from '../services/aiService';
 
 interface Message {
@@ -11,6 +11,11 @@ interface Message {
 
 export function GlobalElyaChat() {
   const [isOpen, setIsOpen] = useState(false);
+  
+  // Log to confirm component is mounted
+  useEffect(() => {
+    console.log('GlobalElyaChat component mounted');
+  }, []);
   const [messages, setMessages] = useState<Message[]>([]);
   const [inputMessage, setInputMessage] = useState('');
   const [isTyping, setIsTyping] = useState(false);
@@ -34,6 +39,18 @@ export function GlobalElyaChat() {
       document.head.removeChild(style);
     };
   }, []);
+
+  // Add/remove class to body when chat opens/closes
+  useEffect(() => {
+    if (isOpen) {
+      document.body.classList.add('elya-chat-open');
+    } else {
+      document.body.classList.remove('elya-chat-open');
+    }
+    return () => {
+      document.body.classList.remove('elya-chat-open');
+    };
+  }, [isOpen]);
 
   // Load messages from localStorage
   useEffect(() => {
@@ -126,61 +143,79 @@ export function GlobalElyaChat() {
 
   return (
     <>
+      {/* Test element to confirm rendering */}
+      <div style={{
+        position: 'fixed',
+        top: '10px',
+        right: '10px',
+        background: 'red',
+        color: 'white',
+        padding: '10px',
+        zIndex: 999999,
+        fontSize: '14px',
+        fontWeight: 'bold'
+      }}>
+        CHAT COMPONENT LOADED
+      </div>
+      
       {/* Floating Action Button */}
       {!isOpen && (
         <button
           onClick={() => setIsOpen(true)}
-          className="fixed bottom-6 right-6 shadow-lg hover:shadow-xl transition-all hover:scale-105"
+          className="fixed shadow-lg hover:shadow-xl transition-all hover:scale-105"
           style={{
+            bottom: '30px',
+            right: '30px',
             background: 'linear-gradient(135deg, rgb(27, 94, 32), rgb(46, 125, 50))',
             borderRadius: '50%',
-            width: '60px',
-            height: '60px',
+            width: '70px',
+            height: '70px',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
-            zIndex: 999
+            zIndex: 99999,
+            border: '3px solid white',
+            boxShadow: '0 4px 20px rgba(0,0,0,0.3)'
           }}
           title="Chat with Elya"
         >
-          <MessageCircle size={28} className="text-white" />
+          <MessageCircle size={30} className="text-white" />
         </button>
       )}
 
       {/* Chat Window */}
       {isOpen && (
         <div
-          className="fixed bottom-6 right-6 shadow-2xl rounded-2xl overflow-hidden"
+          className="fixed shadow-2xl rounded-2xl"
           style={{
+            bottom: '30px',
+            right: '30px',
             width: '380px',
-            height: '550px',
+            maxWidth: 'calc(100vw - 40px)',
+            height: '480px',
+            maxHeight: 'calc(100vh - 100px)',
             backgroundColor: '#FFFFFF',
-            border: '1px solid #E5E5E5',
-            zIndex: 1000,
+            border: '2px solid #E5E5E5',
+            zIndex: 99999,
             display: 'flex',
-            flexDirection: 'column'
+            flexDirection: 'column',
+            overflow: 'hidden'
           }}
         >
           {/* Header */}
           <div
-            className="px-4 py-3 flex items-center justify-between"
+            className="px-3 py-2 flex items-center justify-between"
             style={{
-              borderBottom: '1px solid #E5E5E5',
+              borderBottom: '0.5px solid #E5E5E5',
               background: 'linear-gradient(135deg, #FFFFFF 0%, #F8FBF9 100%)'
             }}
           >
             <div className="flex items-center gap-2">
-              <div
-                className="w-8 h-8 rounded-full flex items-center justify-center"
-                style={{ background: 'linear-gradient(135deg, #1b5e20, #2e7d32)' }}
-              >
-                <Sparkles size={16} className="text-white" />
-              </div>
               <div>
-                <h3 className="font-semibold text-sm" style={{ color: '#1A1A1A' }}>
-                  Elya AI
+                <h3 className="font-semibold text-xs" style={{ color: '#1A1A1A' }}>
+                  Chat with Elya
                 </h3>
-                <p className="text-xs" style={{ color: '#666' }}>
+                <p className="text-xs" style={{ color: '#666', fontSize: '10px' }}>
                   Always here to help
                 </p>
               </div>
@@ -196,7 +231,10 @@ export function GlobalElyaChat() {
           {/* Messages */}
           <div
             className="flex-1 overflow-y-auto p-4 space-y-3"
-            style={{ backgroundColor: '#FAFAFA' }}
+            style={{ 
+              backgroundColor: '#FAFAFA',
+              paddingBottom: '20px'
+            }}
           >
             {messages.length === 0 ? (
               <div className="text-center py-8">
@@ -246,55 +284,171 @@ export function GlobalElyaChat() {
             <div ref={messagesEndRef} />
           </div>
 
-          {/* Input */}
+          {/* Input Container */}
           <div
-            className="p-3"
-            style={{ borderTop: '1px solid #E5E5E5' }}
+            style={{ 
+              backgroundColor: '#FFFFFF',
+              borderTop: '1px solid #E5E7EB',
+              padding: '12px',
+              display: 'flex',
+              flexDirection: 'column',
+              gap: '8px',
+              flexShrink: 0
+            }}
           >
-            <form onSubmit={handleSendMessage} className="flex items-end gap-2">
-              <textarea
-                ref={textareaRef}
-                value={inputMessage}
-                onChange={(e) => setInputMessage(e.target.value)}
-                onKeyDown={handleKeyDown}
-                placeholder="Type a message..."
-                className="flex-1 resize-none outline-none px-3 py-2 elya-global-textarea"
-                style={{
-                  backgroundColor: '#F7F7F7',
-                  borderRadius: '20px',
-                  border: '1px solid #E0E0E0',
-                  fontSize: '14px',
-                  minHeight: '36px',
-                  maxHeight: '80px',
-                  color: '#2D3748'
-                }}
-                rows={1}
-                disabled={isTyping}
-              />
+            {/* Privacy Notice */}
+            <div style={{
+              textAlign: 'center',
+              color: '#6B7280',
+              fontSize: '11px',
+              marginBottom: '4px'
+            }}>
+              Your conversations are private and secure.
+            </div>
+            
+            {/* Input Wrapper */}
+            <div style={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: '8px',
+              width: '100%',
+              position: 'relative'
+            }}>
+              {/* Attachment Button */}
               <button
-                type="submit"
-                disabled={!inputMessage.trim() || isTyping}
-                className="transition-all hover:scale-110 disabled:hover:scale-100"
+                type="button"
+                className="flex-shrink-0"
                 style={{
-                  background: inputMessage.trim() && !isTyping
-                    ? 'linear-gradient(135deg, rgb(27, 94, 32), rgb(46, 125, 50))'
-                    : '#E0E0E0',
+                  width: '48px',
+                  height: '48px',
+                  minWidth: '48px',
+                  minHeight: '48px',
                   borderRadius: '50%',
-                  width: '36px',
-                  height: '36px',
+                  backgroundColor: '#F3F4F6',
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
-                  color: 'white'
+                  border: '1px solid #E5E7EB',
+                  cursor: 'pointer',
+                  transition: 'all 0.2s',
+                  fontSize: '20px',
+                  flexShrink: 0
                 }}
+                onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#E5E7EB'}
+                onMouseLeave={(e) => e.currentTarget.style.backgroundColor = '#F3F4F6'}
+                aria-label="Add attachment"
+                title="Add attachment"
+              >
+                <Plus size={24} style={{ color: '#6B7280' }} />
+              </button>
+              
+              {/* Text Input */}
+              <div style={{
+                flex: 1,
+                position: 'relative',
+                display: 'flex',
+                alignItems: 'center'
+              }}>
+                <textarea
+                  ref={textareaRef}
+                  value={inputMessage}
+                  onChange={(e) => setInputMessage(e.target.value)}
+                  onKeyDown={handleKeyDown}
+                  placeholder="Ask me anything..."
+                  className="elya-global-textarea"
+                  style={{
+                    width: '100%',
+                    backgroundColor: '#FFFFFF',
+                    borderRadius: '26px',
+                    border: '2px solid #E5E7EB',
+                    fontSize: '16px',
+                    padding: '14px 18px',
+                    minHeight: '52px',
+                    height: '52px',
+                    maxHeight: '104px',
+                    resize: 'none',
+                    outline: 'none',
+                    color: '#1F2937',
+                    lineHeight: '1.5',
+                    fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif'
+                  }}
+                  rows={1}
+                  disabled={isTyping}
+                  aria-label="Message input"
+                />
+              </div>
+              
+              {/* Audio Button */}
+              <button
+                type="button"
+                className="flex-shrink-0"
+                style={{
+                  width: '48px',
+                  height: '48px',
+                  minWidth: '48px',
+                  minHeight: '48px',
+                  borderRadius: '50%',
+                  backgroundColor: '#F3F4F6',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  border: '1px solid #E5E7EB',
+                  cursor: 'pointer',
+                  transition: 'all 0.2s',
+                  fontSize: '20px',
+                  flexShrink: 0
+                }}
+                onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#E5E7EB'}
+                onMouseLeave={(e) => e.currentTarget.style.backgroundColor = '#F3F4F6'}
+                aria-label="Voice input"
+                title="Voice input"
+              >
+                <Mic size={24} style={{ color: '#6B7280' }} />
+              </button>
+              
+              {/* Send Button */}
+              <button
+                type="button"
+                disabled={!inputMessage.trim() || isTyping}
+                onClick={handleSendMessage}
+                className="flex-shrink-0"
+                style={{
+                  background: inputMessage.trim() && !isTyping
+                    ? '#10B981'
+                    : '#F3F4F6',
+                  borderRadius: '50%',
+                  width: '48px',
+                  height: '48px',
+                  minWidth: '48px',
+                  minHeight: '48px',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  border: '1px solid',
+                  borderColor: inputMessage.trim() && !isTyping ? '#10B981' : '#E5E7EB',
+                  cursor: inputMessage.trim() && !isTyping ? 'pointer' : 'not-allowed',
+                  transition: 'all 0.2s',
+                  fontSize: '20px',
+                  flexShrink: 0
+                }}
+                onMouseEnter={(e) => {
+                  if (inputMessage.trim() && !isTyping) {
+                    e.currentTarget.style.transform = 'scale(1.05)';
+                  }
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.transform = 'scale(1)';
+                }}
+                aria-label="Send message"
+                title="Send message"
               >
                 {isTyping ? (
-                  <Loader size={16} className="animate-spin" />
+                  <Loader size={22} className="animate-spin" style={{ color: inputMessage.trim() ? 'white' : '#6B7280' }} />
                 ) : (
-                  <Send size={16} />
+                  <Send size={22} style={{ color: inputMessage.trim() ? 'white' : '#6B7280' }} />
                 )}
               </button>
-            </form>
+            </div>
           </div>
         </div>
       )}

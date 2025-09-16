@@ -3,17 +3,14 @@ import {
   X, 
   ChevronRight, 
   ChevronLeft, 
-  Users,
   MessageSquare,
   HandHeart,
   MapPin,
   Info,
   AlertCircle,
-  Shield,
-  Eye,
-  Target,
-  Heart
+  Eye
 } from 'lucide-react';
+import { CommunityIcon, SecureLockIcon, TargetIcon, HeartPulseIcon } from './CustomIcon';
 import { supabase } from '../lib/supabase';
 import { useAuth } from '../contexts/AuthContext';
 
@@ -97,7 +94,7 @@ export const InSessionTeamSync: React.FC<InSessionTeamSyncProps> = ({ onClose, o
     },
     {
       title: "Role Management",
-      icon: <Users className="w-5 h-5" style={{ color: '#6B8B60' }} />,
+      icon: <CommunityIcon size={64} />,
       fields: [
         {
           id: 'role_switching',
@@ -194,7 +191,7 @@ export const InSessionTeamSync: React.FC<InSessionTeamSyncProps> = ({ onClose, o
     },
     {
       title: "Professional Standards",
-      icon: <Shield className="w-5 h-5" style={{ color: '#6B8B60' }} />,
+      icon: <SecureLockIcon size={64} />,
       fields: [
         {
           id: 'standards_check',
@@ -236,7 +233,7 @@ export const InSessionTeamSync: React.FC<InSessionTeamSyncProps> = ({ onClose, o
     },
     {
       title: "Collaboration Optimization",
-      icon: <Target className="w-5 h-5" style={{ color: '#6B8B60' }} />,
+      icon: <TargetIcon size={64} />,
       fields: [
         {
           id: 'optimization_ideas',
@@ -255,7 +252,7 @@ export const InSessionTeamSync: React.FC<InSessionTeamSyncProps> = ({ onClose, o
     },
     {
       title: "Team Effectiveness",
-      icon: <Heart className="w-5 h-5" style={{ color: '#6B8B60' }} />,
+      icon: <HeartPulseIcon size={64} />,
       fields: [
         {
           id: 'team_support',
@@ -496,15 +493,22 @@ export const InSessionTeamSync: React.FC<InSessionTeamSyncProps> = ({ onClose, o
       <div className="bg-white rounded-2xl w-full max-w-4xl max-h-[90vh] overflow-hidden shadow-2xl flex flex-col">
         {/* Header */}
         <div className="px-8 py-6 border-b flex-shrink-0" style={{ backgroundColor: '#FAF9F6' }}>
-        onClick={(e) => e.stopPropagation()}
           <div className="flex items-center justify-between mb-4">
-            <div>
-              <h2 className="text-2xl font-bold" style={{ color: '#1A1A1A' }}>
-                In-Session Team Sync
-              </h2>
-              <p className="text-sm mt-1" style={{ color: '#5F7F55' }}>
-                Boosting coordination and mutual support, one break at a time.
-              </p>
+            <div className="flex items-center gap-3">
+              <div 
+                className="w-12 h-12 rounded-lg flex items-center justify-center"
+                style={{ background: 'linear-gradient(135deg, #1b5e20, #2e7d32)' }}
+              >
+                <CommunityIcon size={64} />
+              </div>
+              <div>
+                <h2 className="text-2xl font-bold" style={{ color: '#1A1A1A' }}>
+                  In-Session Team Sync
+                </h2>
+                <p className="text-sm mt-1" style={{ color: '#5F7F55' }}>
+                  Boosting coordination and mutual support, one break at a time.
+                </p>
+              </div>
             </div>
             <button
               onClick={onClose}

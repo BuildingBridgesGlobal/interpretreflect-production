@@ -1,6 +1,7 @@
 import React from 'react';
 import { STRIPE_PRODUCT } from '../lib/stripe';
 import { supabase } from '../lib/supabase';
+import { analytics } from '../utils/analytics';
 
 interface StripePaymentButtonProps {
   className?: string;
@@ -17,6 +18,9 @@ export function StripePaymentButton({
 
   const handlePayment = async () => {
     setLoading(true);
+    
+    // Track subscription intent
+    analytics.trackSubscriptionIntent();
     
     try {
       // Get current user

@@ -1,13 +1,23 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { Routes, Route } from 'react-router-dom';
+import { Routes, Route, useNavigate } from 'react-router-dom';
 import type { BurnoutData, ViewMode } from './types';
+import { AppRoutes } from './routes/AppRoutes';
+import { publicRoutes } from './routes/PublicRoutes';
+import { authenticatedRoutes } from './routes/AuthenticatedRoutes';
 import LandingPageEnhanced from './LandingPageEnhanced';
+import { Logo } from './components/Logo';
+import SearchBox from './components/SearchBox';
+import HelpWidget from './components/HelpWidget';
 import { Header } from './components/layout/Header';
 import { NavigationTabs } from './components/layout/NavigationTabs';
+import { StressResetView } from './components/views/StressResetView';
+import { getTimeAgo } from './utils/dateHelpers';
 import { useAuth } from './contexts/AuthContext';
 import { supabase } from './lib/supabase';
+import { dataSyncService } from './services/dataSync';
 import { PrivacyConsent } from './components/PrivacyConsent';
 import { SecurityBanner, SessionTimeoutModal } from './components/SecurityBanner';
+import { SessionManager } from './utils/security';
 import { PrivacyPolicy } from './pages/PrivacyPolicy';
 import { TermsOfService } from './pages/TermsOfService';
 import { Contact } from './pages/Contact';
@@ -18,11 +28,11 @@ import { PricingTest } from './pages/PricingTest';
 import { PricingProduction } from './pages/PricingProduction';
 import { AdminDashboard } from './pages/AdminDashboard';
 import { HeaderDemo } from './pages/HeaderDemo';
+import { SubscriptionManager } from './components/SubscriptionManager';
 import { PaymentSuccess } from './pages/PaymentSuccess';
 import { AuthTest } from './pages/AuthTest';
 import { AgenticFlowChat } from './components/AgenticFlowChat';
-import { OnboardingFlow } from './components/OnboardingFlow';
-import { useOnboarding } from './hooks/useOnboarding';
+import { PreAssignmentPrepAccessible as PreAssignmentPrepEnhanced } from './components/PreAssignmentPrepAccessible';
 import { PreAssignmentPrepV5 } from './components/PreAssignmentPrepV5';
 import { PreAssignmentPrepV6 } from './components/PreAssignmentPrepV6';
 import { PostAssignmentDebriefAccessible as PostAssignmentDebriefEnhanced } from './components/PostAssignmentDebriefAccessible';
@@ -41,55 +51,72 @@ import { TemperatureExploration } from './components/TemperatureExploration';
 import { AssignmentResetAccessible as AssignmentReset } from './components/AssignmentResetAccessible';
 import { AffirmationStudioAccessible } from './components/AffirmationStudioAccessible';
 import { AffirmationReflectionStudio } from './components/AffirmationReflectionStudio';
+import { TeamReflectionJourneyAccessible } from './components/TeamReflectionJourneyAccessible';
+import { BurnoutGauge } from './components/BurnoutGauge';
 import { BurnoutRiskMonitor } from './components/BurnoutRiskMonitor';
 import { MentoringPrepAccessible } from './components/MentoringPrepAccessible';
 import { MentoringReflectionAccessible } from './components/MentoringReflectionAccessible';
 import { RoleSpaceReflection } from './components/RoleSpaceReflection';
 import { DirectCommunicationReflection } from './components/DirectCommunicationReflection';
+import { ChatWithElya } from './components/ChatWithElya';
 import { GrowthInsights } from './components/GrowthInsights';
 import { GrowthInsightsDashboard } from './components/GrowthInsightsDashboard';
-import { HeartPulseIcon, NotepadIcon, CommunityIcon, GrowthIcon, SecureLockIcon, TargetIcon, ChatBubbleIcon } from './components/CustomIcon';
+import { GrowthInsightsEnhanced } from './components/GrowthInsightsEnhanced';
 import { ProfileSettings } from './components/ProfileSettings';
 import { CustomizePreferences } from './components/CustomizePreferences';
 import { ManageSubscription } from './components/ManageSubscription';
 import { BillingPlanDetails } from './components/BillingPlanDetails';
+import { LuxuryWellnessDashboard } from './components/LuxuryWellnessDashboard';
 import { PersonalizedHomepage } from './components/PersonalizedHomepage';
 import { SyncStatusIndicator } from './components/SyncStatusIndicator';
-import { WelcomeModal } from './components/WelcomeModal';
 import { runDatabaseCheck } from './utils/checkDatabaseStatus';
 import {
+  Home,
   BookOpen,
+  RefreshCw,
+  MessageCircle,
   MessageSquare,
+  TrendingUp,
   Target,
   Shield,
   Heart,
   Clock,
   Users,
   Lightbulb,
+  Settings,
   ChevronDown,
   Globe,
+  User,
   Gauge,
   Sparkles,
+  Square,
+  Waves,
+  Eye,
+  Languages,
+  ArrowLeft,
   Star,
   Activity,
   BarChart3,
   Triangle,
   CheckCircle,
   AlertTriangle,
+  Zap,
+  ChevronRight,
+  Lock,
+  Database,
+  Settings as SettingsIcon,
   Download,
   X,
   Brain,
   Compass,
   Scale,
+  ClipboardCheck,
+  GraduationCap,
 } from 'lucide-react';
 
 function App() {
+  const navigate = useNavigate();
   const { user, loading, signOut, extendSession } = useAuth();
-  const {
-    isVisible: onboardingVisible,
-    completeOnboarding,
-    hideOnboarding
-  } = useOnboarding();
   // Automatically enable dev mode in development environment
   const [devMode, setDevMode] = useState(
     import.meta.env.DEV || // Vite development mode
@@ -105,11 +132,15 @@ function App() {
   const [structuredSubTab, setStructuredSubTab] = useState('reflections'); // 'reflections', 'context', or 'skills'
   const [insightsTimePeriod, setInsightsTimePeriod] = useState('month');
   const [showUserDropdown, setShowUserDropdown] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
   const [selectedTechnique, setSelectedTechnique] = useState<string | null>(null);
   const [techniqueProgress, setTechniqueProgress] = useState(0);
   const [isTimerActive, setIsTimerActive] = useState(false);
   const [selectedContextCategory, setSelectedContextCategory] = useState<string | null>(null);
   const [selectedSkillCategory, setSelectedSkillCategory] = useState<string | null>(null);
+  const [showAllSkillQuestions, setShowAllSkillQuestions] = useState<Record<string, boolean>>({});
+  const [showAllContextQuestions, setShowAllContextQuestions] = useState<Record<string, boolean>>({});
+  const [showResearchInfo, setShowResearchInfo] = useState<Record<string, boolean>>({});
   const [breathPhase, setBreathPhase] = useState<'inhale' | 'hold-in' | 'exhale' | 'hold-out'>(
     'inhale'
   );
@@ -144,9 +175,9 @@ function App() {
   const [showAssignmentReset, setShowAssignmentReset] = useState(false);
   const [showTechnologyFatigueReset, setShowTechnologyFatigueReset] = useState(false);
   const [showEmotionMapping, setShowEmotionMapping] = useState(false);
+  const [showDailyBurnout, setShowDailyBurnout] = useState(false);
   const [showAffirmationStudio, setShowAffirmationStudio] = useState(false);
   const [showFiveZoneModal, setShowFiveZoneModal] = useState(false);
-  const [showDailyBurnout] = useState(false);
   const [techFatigueMode, setTechFatigueMode] = useState<'quick' | 'deep'>('quick');
   const [showAssignmentResetModal, setShowAssignmentResetModal] = useState(false);
   const [assignmentResetMode, setAssignmentResetMode] = useState<'fast' | 'full'>('fast');
@@ -158,34 +189,12 @@ function App() {
   interface SavedReflection {
     id: string;
     type: string;
-    data: Record<string, unknown>;
+    data: any;
     timestamp: string;
   }
-
-  interface BodyCheckInData {
-    id: number;
-    date: string;
-    tensionLevel?: string;
-    energyLevel?: string;
-    overallFeeling?: string;
-    completedDuration?: number;
-    [key: string]: unknown;
-  }
-
-  interface TechniqueUsage {
-    id: string;
-    technique: string;
-    startTime: string;
-    completed: boolean;
-    stressLevelBefore?: number | null;
-    stressLevelAfter?: number | null;
-    duration?: number | string;
-    endTime?: string;
-  }
-
   const [savedReflections, setSavedReflections] = useState<SavedReflection[]>([]);
-  const [bodyCheckInData, setBodyCheckInData] = useState<BodyCheckInData[]>([]);
-  const [techniqueUsage, setTechniqueUsage] = useState<TechniqueUsage[]>([]);
+  const [bodyCheckInData, setBodyCheckInData] = useState<any[]>([]);
+  const [techniqueUsage, setTechniqueUsage] = useState<Record<string, unknown>[]>([]);
   const [currentTechniqueId, setCurrentTechniqueId] = useState<string | null>(null);
   const [recoveryHabits, setRecoveryHabits] = useState<Record<string, unknown>[]>([]);
   const [burnoutData, setBurnoutData] = useState<BurnoutData[]>([]);
@@ -223,19 +232,8 @@ function App() {
   const [showPrivacyConsent, setShowPrivacyConsent] = useState(false);
   const [showSessionWarning, setShowSessionWarning] = useState(false);
   const [sessionTimeRemaining, setSessionTimeRemaining] = useState(0);
-  
-  // Welcome modal state
-  const [showWelcomeModal, setShowWelcomeModal] = useState(false);
+  const sessionManager = SessionManager.getInstance();
 
-  // Check if first-time user and show welcome modal
-  React.useEffect(() => {
-    const hasSeenWelcome = localStorage.getItem('hasSeenWelcomeModal');
-    if (!hasSeenWelcome && activeTab === 'reflection') {
-      // Show welcome modal only on reflection tab for first-time users
-      setShowWelcomeModal(true);
-    }
-  }, [activeTab]); // Run when activeTab changes
-  
   // Save tab preference when it changes
   React.useEffect(() => {
     if (activeTab) {
@@ -509,7 +507,7 @@ function App() {
   
   // Helper function to track technique completion
   const trackTechniqueComplete = (techniqueId: string, duration: number | string) => {
-    let completedTechnique: TechniqueUsage | null = null;
+    let completedTechnique: any = null;
     
     const updatedUsage = techniqueUsage.map(usage => {
       if (usage.id === techniqueId || 
@@ -535,8 +533,8 @@ function App() {
       import('./services/reflectionService').then(({ reflectionService }) => {
         reflectionService.saveStressResetLog(user.id, completedTechnique.technique, {
           duration: durationMinutes,
-          stressLevelBefore: completedTechnique.stressLevelBefore ?? undefined,
-          stressLevelAfter: completedTechnique.stressLevelAfter ?? undefined,
+          stressLevelBefore: completedTechnique.stressLevelBefore,
+          stressLevelAfter: completedTechnique.stressLevelAfter,
           notes: `Completed ${completedTechnique.technique} technique`
         }).catch(console.error);
       });
@@ -563,7 +561,49 @@ function App() {
     localStorage.setItem('recoveryHabits', JSON.stringify(updatedHabits));
   };
   
+  // Handle search functionality
+  const handleSearch = (query: string) => {
+    setSearchQuery(query);
+    // You can implement search logic here
+    // For now, we'll just log the search query
+    console.log('Searching for:', query);
+    
+    // Example: Navigate to search results or filter current view
+    if (query.toLowerCase().includes('wellness')) {
+      setActiveTab('reflection');
+      setActiveCategory('wellness');
+    } else if (query.toLowerCase().includes('growth') || query.toLowerCase().includes('insights')) {
+      setActiveTab('insights');
+    } else if (query.toLowerCase().includes('stress')) {
+      setActiveTab('stress');
+    }
+  };
 
+  // Helper function to get reflection summary
+  const getReflectionSummary = (reflection: Record<string, unknown>) => {
+    const data = reflection.data;
+    
+    switch (reflection.type) {
+      case 'Pre-Assignment Prep':
+        return `Cognitive load: ${data.cognitiveLoad || 'Not assessed'}. Set intention for the session.`;
+      case 'Post-Assignment Debrief':
+        return `Energy level: ${data.energyLevel || 'Not assessed'}. Processed session outcomes.`;
+      case 'Teaming Prep':
+        return `Team dynamics assessed. ${data.roleClarity ? 'Role clarified' : 'Preparation complete'}.`;
+      case 'Teaming Reflection':
+        return `Team performance reviewed. ${data.teamDynamics || 'Collaboration'} focus.`;
+      case 'Mentoring Prep':
+        return `${data.mentoringGoals || 'Goals set'}. Ready for mentoring session.`;
+      case 'Mentoring Reflection':
+        return `Mentoring insights captured. ${data.learningOutcomes || 'Growth'} identified.`;
+      case 'Wellness Check-in':
+        return `Wellness status: ${data.overallWellness || 'Assessed'}. ${data.stressLevel || 'Stress'} managed.`;
+      case 'Compass Check':
+        return `Direction aligned. ${data.priorityFocus || 'Priorities'} clarified.`;
+      default:
+        return 'Reflection completed successfully.';
+    }
+  };
 
   // Export burnout data function
   const exportBurnoutData = () => {
@@ -1751,7 +1791,7 @@ function App() {
 
   const reflectionCards = [
     {
-      icon: NotepadIcon,
+      icon: ClipboardCheck,
       iconColor: 'text-blue-400',
       iconBg: 'bg-blue-500/20',
       title: 'Pre-Assignment Prep',
@@ -1762,7 +1802,7 @@ function App() {
       ],
     },
     {
-      icon: TargetIcon,
+      icon: Brain,
       iconColor: 'text-blue-400',
       iconBg: 'bg-blue-500/20',
       title: 'Post-Assignment Debrief',
@@ -1773,7 +1813,7 @@ function App() {
       ],
     },
     {
-      icon: CommunityIcon,
+      icon: Users,
       iconColor: 'text-purple-400',
       iconBg: 'bg-purple-500/20',
       title: 'Teaming Prep',
@@ -1784,7 +1824,7 @@ function App() {
       ],
     },
     {
-      icon: CommunityIcon,
+      icon: RefreshCw,
       iconColor: 'text-purple-400',
       iconBg: 'bg-purple-500/20',
       title: 'Teaming Reflection',
@@ -1795,7 +1835,7 @@ function App() {
       ],
     },
     {
-      icon: GrowthIcon,
+      icon: GraduationCap,
       iconColor: 'text-purple-400',
       iconBg: 'bg-purple-500/20',
       title: 'Mentoring Prep',
@@ -1806,7 +1846,7 @@ function App() {
       ],
     },
     {
-      icon: GrowthIcon,
+      icon: Lightbulb,
       iconColor: 'text-purple-400',
       iconBg: 'bg-purple-500/20',
       title: 'Mentoring Reflection',
@@ -1817,7 +1857,7 @@ function App() {
       ],
     },
     {
-      icon: HeartPulseIcon,
+      icon: Heart,
       iconColor: 'text-purple-400',
       iconBg: 'bg-purple-500/20',
       title: 'Wellness Check-in',
@@ -1828,7 +1868,7 @@ function App() {
       ],
     },
     {
-      icon: TargetIcon,
+      icon: Compass,
       iconColor: 'text-red-400',
       iconBg: 'bg-red-500/20',
       title: 'Values Alignment Check-In',
@@ -1839,7 +1879,7 @@ function App() {
       ],
     },
     {
-      icon: HeartPulseIcon,
+      icon: Activity,
       iconColor: 'text-orange-400',
       iconBg: 'bg-orange-500/20',
       title: 'In-Session Self-Check',
@@ -1850,7 +1890,7 @@ function App() {
       ],
     },
     {
-      icon: CommunityIcon,
+      icon: Zap,
       iconColor: 'text-purple-400',
       iconBg: 'bg-purple-500/20',
       title: 'In-Session Team Sync',
@@ -1861,7 +1901,7 @@ function App() {
       ],
     },
     {
-      icon: SecureLockIcon,
+      icon: Shield,
       iconColor: 'text-green-400',
       iconBg: 'bg-green-500/20',
       title: 'Role-Space Reflection',
@@ -1872,7 +1912,7 @@ function App() {
       ],
     },
     {
-      icon: ChatBubbleIcon,
+      icon: MessageSquare,
       iconColor: 'text-blue-400',
       iconBg: 'bg-blue-500/20',
       title: 'Supporting Direct Communication',
@@ -5020,6 +5060,519 @@ function App() {
 
 
 
+  const renderDashboardHome = () => (
+    <main id="dashboard-main" aria-labelledby="reflection-dashboard-heading" className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <div className="mb-8">
+        <h1 id="reflection-dashboard-heading" className="text-4xl font-bold mb-2" style={{ color: '#1A1A1A', letterSpacing: '-0.5px' }}>
+          Interpreter Wellbeing & Growth Hub
+        </h1>
+        <p className="text-lg" style={{ color: '#3A3A3A', fontWeight: '400' }}>
+          Your daily companion for professional wellness and reflection
+        </p>
+      </div>
+
+      <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
+        {/* Left Column - Quick Tools (Sticky) */}
+        <div className="lg:col-span-1">
+          <div className="lg:sticky lg:top-4">
+            {/* Quick Tools Bar */}
+            <aside id="quick-tools-bar" aria-label="Quick Tools" className="space-y-3">
+              <h3 className="text-sm font-semibold text-gray-700 uppercase tracking-wider mb-3">Quick Tools</h3>
+              <button
+                onClick={() => setShowWellnessCheckIn(true)}
+                className="w-full text-left px-4 py-3 bg-white rounded-lg border border-gray-200 hover:border-blue-400 hover:bg-blue-50 transition-all text-sm font-medium"
+                style={{ minHeight: '44px' }}
+              >
+                Wellness Check-In
+              </button>
+              <button
+                onClick={() => setShowInSessionSelfCheck(true)}
+                className="w-full text-left px-4 py-3 bg-white rounded-lg border border-gray-200 hover:border-orange-400 hover:bg-orange-50 transition-all text-sm font-medium"
+                style={{ minHeight: '44px' }}
+              >
+                In-Session Self-Check
+              </button>
+              <button
+                onClick={() => setShowInSessionTeamSync(true)}
+                className="w-full text-left px-4 py-3 bg-white rounded-lg border border-gray-200 hover:border-purple-400 hover:bg-purple-50 transition-all text-sm font-medium"
+                style={{ minHeight: '44px' }}
+              >
+                In-Session Team Sync
+              </button>
+              <button
+                onClick={() => setShowAffirmationStudio(true)}
+                className="w-full text-left px-4 py-3 bg-white rounded-lg border border-gray-200 hover:border-purple-400 hover:bg-purple-50 transition-all text-sm font-medium"
+                style={{ minHeight: '44px' }}
+              >
+                Affirmation Studio
+              </button>
+              <button
+                onClick={() => setShowBreathingPractice(true)}
+                className="w-full text-left px-4 py-3 bg-white rounded-lg border border-gray-200 hover:border-green-400 hover:bg-green-50 transition-all text-sm font-medium"
+                style={{ minHeight: '44px' }}
+              >
+                Breathing Practice
+              </button>
+              <button
+                onClick={() => setShowBodyCheckIn(true)}
+                className="w-full text-left px-4 py-3 bg-white rounded-lg border border-gray-200 hover:border-orange-400 hover:bg-orange-50 transition-all text-sm font-medium"
+                style={{ minHeight: '44px' }}
+              >
+                Body Check-In
+              </button>
+            </aside>
+          </div>
+        </div>
+
+        {/* Main Content - Reflections Area */}
+        <div className="lg:col-span-3 space-y-8">
+
+          {/* Structured Reflections Area */}
+          <section
+            id="structured-reflections-area"
+            className="rounded-2xl p-8"
+            aria-labelledby="structured-reflections-heading"
+            style={{
+              background: 'linear-gradient(135deg, #FFFFFF 0%, #FAFAF8 100%)',
+              boxShadow: '0 10px 30px rgba(92, 127, 79, 0.15), 0 2px 8px rgba(0, 0, 0, 0.05)',
+              border: '1px solid rgba(92, 127, 79, 0.2)',
+            }}
+          >
+            <div className="flex items-center justify-between mb-6">
+              <div>
+                <h2 id="structured-reflections-heading" className="text-2xl font-bold mb-3" style={{ color: '#0D3A14' }}>
+                  Structured Reflections & Journals
+                </h2>
+                <p className="text-base" style={{ color: '#3A3A3A', lineHeight: '1.6' }}>
+                  Tactical, emotional, and ethical tools for every stage of your interpreting work
+                </p>
+              </div>
+            </div>
+
+            {/* Reflection Navigation */}
+            <nav aria-label="Structured Reflections">
+              <ul className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <li>
+                  <button
+                    onClick={() => setShowPreAssignmentPrep(true)}
+                    className="w-full card reflection-link rounded-xl p-5 text-left transition-all hover:shadow-lg"
+                    style={{
+                      backgroundColor: 'var(--bg-card)',
+                      border: '1px solid rgba(92, 127, 79, 0.3)',
+                      transform: 'translateY(0)',
+                    }}
+                    onMouseEnter={(e) => {
+                      e.currentTarget.style.transform = 'translateY(-2px)';
+                      e.currentTarget.style.borderColor = 'var(--primary-800)';
+            e.currentTarget.style.boxShadow = '0 10px 25px rgba(27, 94, 32, 0.3), 0 0 0 3px rgba(27, 94, 32, 0.2)';
+                      e.currentTarget.style.backgroundColor = '#F8FBF6';
+                    }}
+                    onMouseLeave={(e) => {
+                      e.currentTarget.style.transform = 'translateY(0)';
+                      e.currentTarget.style.borderColor = 'rgba(92, 127, 79, 0.3)';
+                      e.currentTarget.style.backgroundColor = '#FFFFFF';
+                    }}
+                  >
+                    <h3 className="font-bold mb-2 text-base" style={{ color: '#0D3A14' }}>
+                      Pre-Assignment Prep
+                    </h3>
+                    <p className="text-sm" style={{ color: '#3A3A3A' }}>
+                      Tactical, emotional, and ethical readiness
+                    </p>
+                  </button>
+                </li>
+                
+                <li>
+                  <button
+                    onClick={() => setShowPostAssignmentDebrief(true)}
+                    className="w-full card reflection-link rounded-xl p-5 text-left transition-all hover:shadow-lg"
+                    style={{
+                      backgroundColor: 'var(--bg-card)',
+                      border: '1px solid rgba(92, 127, 79, 0.3)',
+                      transform: 'translateY(0)',
+                    }}
+                    onMouseEnter={(e) => {
+                      e.currentTarget.style.transform = 'translateY(-2px)';
+                      e.currentTarget.style.borderColor = 'var(--primary-800)';
+            e.currentTarget.style.boxShadow = '0 10px 25px rgba(27, 94, 32, 0.3), 0 0 0 3px rgba(27, 94, 32, 0.2)';
+                      e.currentTarget.style.backgroundColor = '#F8FBF6';
+                    }}
+                    onMouseLeave={(e) => {
+                      e.currentTarget.style.transform = 'translateY(0)';
+                      e.currentTarget.style.borderColor = 'rgba(92, 127, 79, 0.3)';
+                      e.currentTarget.style.backgroundColor = '#FFFFFF';
+                    }}
+                  >
+                    <h3 className="font-bold mb-2 text-base" style={{ color: '#0D3A14' }}>
+                      Post-Assignment Debrief
+                    </h3>
+                    <p className="text-sm" style={{ color: '#3A3A3A' }}>
+                      Consolidate growth and reset after interpreting
+                    </p>
+                  </button>
+                </li>
+                
+                <li>
+                  <button
+                    onClick={() => setShowTeamingPrep(true)}
+                    className="w-full card reflection-link rounded-xl p-5 text-left transition-all hover:shadow-lg"
+                    style={{
+                      backgroundColor: 'var(--bg-card)',
+                      border: '1px solid rgba(92, 127, 79, 0.3)',
+                      transform: 'translateY(0)',
+                    }}
+                    onMouseEnter={(e) => {
+                      e.currentTarget.style.transform = 'translateY(-2px)';
+                      e.currentTarget.style.borderColor = 'var(--primary-800)';
+            e.currentTarget.style.boxShadow = '0 10px 25px rgba(27, 94, 32, 0.3), 0 0 0 3px rgba(27, 94, 32, 0.2)';
+                      e.currentTarget.style.backgroundColor = '#F8FBF6';
+                    }}
+                    onMouseLeave={(e) => {
+                      e.currentTarget.style.transform = 'translateY(0)';
+                      e.currentTarget.style.borderColor = 'rgba(92, 127, 79, 0.3)';
+                      e.currentTarget.style.backgroundColor = '#FFFFFF';
+                    }}
+                  >
+                    <h3 className="font-bold mb-2 text-base" style={{ color: '#0D3A14' }}>
+                      Teaming Prep
+                    </h3>
+                    <p className="text-sm" style={{ color: '#3A3A3A' }}>
+                      Prepare for smooth collaboration and handoffs
+                    </p>
+                  </button>
+                </li>
+                
+                <li>
+                  <button
+                    onClick={() => setShowTeamingReflection(true)}
+                    className="w-full card reflection-link rounded-xl p-5 text-left transition-all hover:shadow-lg"
+                    style={{
+                      backgroundColor: 'var(--bg-card)',
+                      border: '1px solid rgba(92, 127, 79, 0.3)',
+                      transform: 'translateY(0)',
+                    }}
+                    onMouseEnter={(e) => {
+                      e.currentTarget.style.transform = 'translateY(-2px)';
+                      e.currentTarget.style.borderColor = 'var(--primary-800)';
+            e.currentTarget.style.boxShadow = '0 10px 25px rgba(27, 94, 32, 0.3), 0 0 0 3px rgba(27, 94, 32, 0.2)';
+                      e.currentTarget.style.backgroundColor = '#F8FBF6';
+                    }}
+                    onMouseLeave={(e) => {
+                      e.currentTarget.style.transform = 'translateY(0)';
+                      e.currentTarget.style.borderColor = 'rgba(92, 127, 79, 0.3)';
+                      e.currentTarget.style.backgroundColor = '#FFFFFF';
+                    }}
+                  >
+                    <h3 className="font-bold mb-2 text-base" style={{ color: '#0D3A14' }}>
+                      Team Reflection
+                    </h3>
+                    <p className="text-sm" style={{ color: '#3A3A3A' }}>
+                      Process team dynamics and collaboration
+                    </p>
+                  </button>
+                </li>
+                
+                <li>
+                  <button
+                    onClick={() => setShowMentoringPrep(true)}
+                    className="w-full card reflection-link rounded-xl p-5 text-left transition-all hover:shadow-lg"
+                    style={{
+                      backgroundColor: 'var(--bg-card)',
+                      border: '1px solid rgba(92, 127, 79, 0.3)',
+                      transform: 'translateY(0)',
+                    }}
+                    onMouseEnter={(e) => {
+                      e.currentTarget.style.transform = 'translateY(-2px)';
+                      e.currentTarget.style.borderColor = 'var(--primary-800)';
+            e.currentTarget.style.boxShadow = '0 10px 25px rgba(27, 94, 32, 0.3), 0 0 0 3px rgba(27, 94, 32, 0.2)';
+                      e.currentTarget.style.backgroundColor = '#F8FBF6';
+                    }}
+                    onMouseLeave={(e) => {
+                      e.currentTarget.style.transform = 'translateY(0)';
+                      e.currentTarget.style.borderColor = 'rgba(92, 127, 79, 0.3)';
+                      e.currentTarget.style.backgroundColor = '#FFFFFF';
+                    }}
+                  >
+                    <h3 className="font-bold mb-2 text-base" style={{ color: '#0D3A14' }}>
+                      Mentoring Prep
+                    </h3>
+                    <p className="text-sm" style={{ color: '#3A3A3A' }}>
+                      Structure your mentoring approach
+                    </p>
+                  </button>
+                </li>
+                
+                <li>
+                  <button
+                    onClick={() => setShowEthicsMeaningCheck(true)}
+                    className="w-full card reflection-link rounded-xl p-5 text-left transition-all hover:shadow-lg"
+                    style={{
+                      backgroundColor: 'var(--bg-card)',
+                      border: '1px solid rgba(92, 127, 79, 0.3)',
+                      transform: 'translateY(0)',
+                    }}
+                    onMouseEnter={(e) => {
+                      e.currentTarget.style.transform = 'translateY(-2px)';
+                      e.currentTarget.style.borderColor = 'var(--primary-800)';
+            e.currentTarget.style.boxShadow = '0 10px 25px rgba(27, 94, 32, 0.3), 0 0 0 3px rgba(27, 94, 32, 0.2)';
+                      e.currentTarget.style.backgroundColor = '#F8FBF6';
+                    }}
+                    onMouseLeave={(e) => {
+                      e.currentTarget.style.transform = 'translateY(0)';
+                      e.currentTarget.style.borderColor = 'rgba(92, 127, 79, 0.3)';
+                      e.currentTarget.style.backgroundColor = '#FFFFFF';
+                    }}
+                  >
+                    <h3 className="font-bold mb-2 text-base" style={{ color: '#0D3A14' }}>
+                      Values Alignment Check
+                    </h3>
+                    <p className="text-sm" style={{ color: '#3A3A3A' }}>
+                      Reflect on boundaries and professional purpose
+                    </p>
+                  </button>
+                </li>
+              </ul>
+              
+              <div className="mt-6 text-center">
+                <button
+                  onClick={() => setActiveTab('reflection')}
+                  className="inline-flex items-center px-4 py-2 text-sm font-medium text-blue-600 hover:text-blue-800 hover:underline"
+                >
+                  View All Reflection Tools →
+                </button>
+              </div>
+            </nav>
+          </section>
+
+          {/* Recent Reflections */}
+          <section
+            className="rounded-2xl p-8"
+            style={{
+              backgroundColor: 'var(--bg-card)',
+              boxShadow: '0 10px 30px rgba(92, 127, 79, 0.15), 0 2px 8px rgba(0, 0, 0, 0.05)',
+              border: '1px solid rgba(92, 127, 79, 0.2)',
+            }}
+          >
+            <div className="flex items-center justify-between mb-6">
+              <h2 id="recent-reflections-heading" className="text-2xl font-bold" style={{ color: '#0D3A14' }}>
+                Recent Reflections
+              </h2>
+              <button
+                className="font-semibold flex items-center transition-all px-4 py-2 rounded-lg"
+                style={{
+                  color: '#6B7C6B',
+                  backgroundColor: 'transparent',
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.backgroundColor = 'rgba(92, 127, 79, 0.1)';
+                  e.currentTarget.style.color = '#5C7F4F';
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.backgroundColor = 'transparent';
+                  e.currentTarget.style.color = '#6B7C6B';
+                }}
+              >
+                View All
+                <ChevronDown className="h-4 w-4 ml-1 rotate-[-90deg]" />
+              </button>
+            </div>
+
+            {/* Reflections List or Empty State */}
+            {savedReflections.length > 0 ? (
+              <div className="space-y-4">
+                {savedReflections.slice(0, 3).map((reflection) => {
+                  const date = new Date(reflection.timestamp);
+                  const timeAgo = getTimeAgo(date);
+                  
+                  return (
+                    <div
+                      key={reflection.id}
+                      className="p-5 rounded-xl transition-all cursor-pointer group"
+                      style={{
+                        backgroundColor: 'rgba(92, 127, 79, 0.05)',
+                        border: '1px solid rgba(92, 127, 79, 0.2)',
+                      }}
+                      onMouseEnter={(e) => {
+                        e.currentTarget.style.backgroundColor = 'rgba(92, 127, 79, 0.1)';
+                        e.currentTarget.style.borderColor = 'var(--primary-800)';
+            e.currentTarget.style.boxShadow = '0 10px 25px rgba(27, 94, 32, 0.3), 0 0 0 3px rgba(27, 94, 32, 0.2)';
+                        e.currentTarget.style.transform = 'translateX(4px)';
+                      }}
+                      onMouseLeave={(e) => {
+                        e.currentTarget.style.backgroundColor = 'rgba(92, 127, 79, 0.05)';
+                        e.currentTarget.style.borderColor = 'rgba(92, 127, 79, 0.2)';
+                        e.currentTarget.style.transform = 'translateX(0)';
+                      }}
+                    >
+                      <div className="flex items-start justify-between">
+                        <div className="flex-1">
+                          <h4 className="font-semibold mb-2" style={{ color: '#0D3A14' }}>
+                            {reflection.type}
+                          </h4>
+                          <p className="text-sm mb-2" style={{ color: '#3A3A3A' }}>
+                            {getReflectionSummary(reflection)}
+                          </p>
+                          <p className="text-xs" style={{ color: 'var(--text-tertiary)' }}>
+                            {timeAgo}
+                          </p>
+                        </div>
+                        <ChevronDown 
+                          className="h-5 w-5 rotate-[-90deg] opacity-0 group-hover:opacity-100 transition-opacity" 
+                          style={{ color: 'var(--primary-800)' }} 
+                        />
+                      </div>
+                    </div>
+                  );
+                })}
+                
+                {savedReflections.length > 3 && (
+                  <button
+                    className="w-full py-3 rounded-xl font-medium transition-all"
+                    style={{
+                      backgroundColor: 'transparent',
+                      color: '#6B7C6B',
+                      border: '1px solid rgba(92, 127, 79, 0.3)',
+                    }}
+                    onMouseEnter={(e) => {
+                      e.currentTarget.style.backgroundColor = 'rgba(92, 127, 79, 0.1)';
+                      e.currentTarget.style.borderColor = 'var(--primary-800)';
+            e.currentTarget.style.boxShadow = '0 10px 25px rgba(27, 94, 32, 0.3), 0 0 0 3px rgba(27, 94, 32, 0.2)';
+                      e.currentTarget.style.color = '#5C7F4F';
+                    }}
+                    onMouseLeave={(e) => {
+                      e.currentTarget.style.backgroundColor = 'transparent';
+                      e.currentTarget.style.borderColor = 'rgba(92, 127, 79, 0.3)';
+                      e.currentTarget.style.color = '#6B7C6B';
+                    }}
+                  >
+                    View All {savedReflections.length} Reflections
+                  </button>
+                )}
+              </div>
+            ) : (
+              <div className="text-center py-16">
+                <div
+                  className="p-6 rounded-xl mb-6"
+                  style={{ backgroundColor: 'rgba(92, 127, 79, 0.05)' }}
+                >
+                  <BookOpen className="h-16 w-16 mx-auto mb-4" style={{ color: '#7A9B6E' }} />
+                </div>
+                <p className="mb-6 text-lg" style={{ color: '#3A3A3A' }}>
+                  No reflections yet
+                </p>
+                <button
+                  onClick={() => setActiveTab('reflection')}
+                  className="px-8 py-3 rounded-xl font-semibold transition-all flex items-center mx-auto"
+                  style={{
+                    background: 'linear-gradient(145deg, #1A3D26 0%, #0F2818 100%)',
+                    color: '#FFFFFF',
+                    boxShadow: '0 4px 15px rgba(107, 139, 96, 0.3)',
+                  }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.transform = 'translateY(-2px) scale(1.05)';
+                    e.currentTarget.style.boxShadow = '0 6px 20px rgba(107, 139, 96, 0.4)';
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.transform = 'translateY(0) scale(1)';
+                    e.currentTarget.style.boxShadow = '0 4px 15px rgba(107, 139, 96, 0.3)';
+                  }}
+                >
+                  <span className="mr-2 text-xl">+</span>
+                  Start Your First Reflection
+                </button>
+              </div>
+            )}
+          </section>
+        </div>
+
+        {/* Right Column - Sidebar */}
+        <div className="space-y-6">
+          {/* Quick Tools */}
+          <section
+            className="rounded-2xl p-6"
+            aria-labelledby="quick-tools-heading"
+            style={{
+              backgroundColor: 'var(--bg-card)',
+              boxShadow: '0 8px 20px rgba(92, 127, 79, 0.12), 0 2px 6px rgba(0, 0, 0, 0.04)',
+              border: '1px solid rgba(92, 127, 79, 0.2)',
+            }}
+          >
+            <h3 id="quick-tools-heading" className="text-lg font-bold mb-5" style={{ color: '#0D3A14' }}>
+              Quick Tools
+            </h3>
+            <div className="space-y-3">
+              <button
+                onClick={() => setActiveTab('insights')}
+                className="w-full flex items-center p-4 rounded-xl transition-all text-left group"
+                style={{
+                  backgroundColor: 'rgba(92, 127, 79, 0.08)',
+                  border: '1px solid transparent',
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.backgroundColor = 'rgba(92, 127, 79, 0.15)';
+                  e.currentTarget.style.borderColor = 'var(--primary-800)';
+            e.currentTarget.style.boxShadow = '0 10px 25px rgba(27, 94, 32, 0.3), 0 0 0 3px rgba(27, 94, 32, 0.2)';
+                  e.currentTarget.style.transform = 'translateX(2px)';
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.backgroundColor = 'rgba(92, 127, 79, 0.08)';
+                  e.currentTarget.style.borderColor = 'transparent';
+                  e.currentTarget.style.transform = 'translateX(0)';
+                }}
+              >
+                <div
+                  className="p-2 rounded-lg mr-3"
+                  style={{ backgroundColor: 'rgba(92, 127, 79, 0.2)' }}
+                >
+                  <TrendingUp className="h-5 w-5" style={{ color: '#1A3D26' }} />
+                </div>
+                <span className="font-medium" style={{ color: '#0D3A14' }}>
+                  Growth Insights
+                </span>
+              </button>
+            </div>
+          </section>
+
+          {/* Today's Insight */}
+          <section
+            className="rounded-2xl p-6"
+            aria-labelledby="insight-heading"
+            aria-live="polite"
+            style={{
+              background: 'linear-gradient(145deg, #1A3D26 0%, #0F2818 100%)',
+              boxShadow: '0 10px 25px rgba(107, 139, 96, 0.35)',
+              border: '1px solid rgba(107, 139, 96, 0.3)',
+            }}
+          >
+            <div className="flex items-center mb-4">
+              <div
+                className="p-2 rounded-lg mr-3"
+                style={{ backgroundColor: 'rgba(92, 127, 79, 0.25)' }}
+              >
+                <Lightbulb className="h-5 w-5" style={{ color: '#FFFFFF' }} />
+              </div>
+              <h3 id="insight-heading" className="text-lg font-bold" style={{ color: '#FFFFFF' }}>
+                Today's Insight
+              </h3>
+            </div>
+            <blockquote
+              className="italic mb-4 leading-relaxed text-base"
+              style={{ color: '#FFFFFF', opacity: '0.95' }}
+            >
+              "Regular reflection helps build emotional resilience and prevents burnout in
+              high-stress professions."
+            </blockquote>
+            <p className="text-sm" style={{ color: 'rgba(255, 255, 255, 0.75)' }}>
+              Based on your reflection patterns
+            </p>
+          </section>
+
+          {/* Subscription Manager */}
+          <SubscriptionManager />
+        </div>
+      </div>
+    </main>
+  );
 
   const renderReflectionStudio = () => (
     <main
@@ -5278,10 +5831,14 @@ function App() {
                     }
                   }}
                 >
-                  <div className="mb-4">
+                  <div
+                    className="rounded-lg p-3 w-fit mb-4"
+                    style={{ backgroundColor: 'rgba(45, 95, 63, 0.15)' }}
+                  >
                     <card.icon
-                      size={64}
+                      className="h-6 w-6"
                       aria-hidden="true"
+                      style={{ color: 'var(--primary-900)' }}
                     />
                   </div>
 
@@ -5667,6 +6224,744 @@ function App() {
   );
 
   // Show landing page if not authenticated and not in dev mode
+                        'How did you manage the cognitive load of simultaneous interpretation while maintaining accuracy in fast-paced proceedings?',
+                        'What strategies helped you preserve the exact register and tone of witness testimony, even when it included hesitations or contradictions?',
+                        'How did you ensure accuracy and clarity when interpreting legal terminology and complex concepts?',
+                        'Were there moments when you needed to ask for clarification? How did you do so appropriately and professionally?',
+                        'How did you help ensure confidentiality and privilege were upheld in legal communications?',
+                        'How did you approach interpreting for emotional testimony, victim statements, or sensitive disclosures while supporting dignity and respect?',
+                        'What steps did you take to prepare for complex or lengthy legal proceedings to ensure equitable communication access?',
+                        'How did you manage the stress of interpreting in high-pressure or emotionally charged legal contexts?'
+                      ]).map((question, index) => (
+                        <div key={index} className="p-4 rounded-lg hover:bg-gray-50 transition-colors" style={{ backgroundColor: 'rgba(245, 245, 245, 0.5)' }}>
+                          <p className="text-base" style={{ color: '#3A3A3A' }}>{index + 1}. {question}</p>
+                        </div>
+                      ))}
+                      
+                      {/* Show More/Less Button */}
+                      {!showAllContextQuestions['legal'] ? (
+                        <button
+                          onClick={() => setShowAllContextQuestions(prev => ({ ...prev, legal: true }))}
+                          className="mt-2 px-4 py-2 rounded-lg text-sm font-medium transition-all hover:shadow-md"
+                          style={{
+                            backgroundColor: 'rgba(34, 197, 94, 0.1)',
+                            color: '#2e7d32',
+                            border: '1px solid rgba(34, 197, 94, 0.3)'
+                          }}
+                        >
+                          🔍 Deep Dive - Show All Questions
+                        </button>
+                      ) : (
+                        <button
+                          onClick={() => setShowAllContextQuestions(prev => ({ ...prev, legal: false }))}
+                          className="mt-2 px-4 py-2 rounded-lg text-sm font-medium transition-all"
+                          style={{
+                            backgroundColor: 'transparent',
+                            color: '#6B8B60',
+                            border: '1px solid rgba(92, 127, 79, 0.3)'
+                          }}
+                        >
+                          Show Less
+                        </button>
+                      )}
+                      
+                      {/* Contextual Skill Question */}
+                      <div className="mt-6 p-4 rounded-xl" style={{ backgroundColor: 'rgba(107, 139, 96, 0.05)', borderLeft: '3px solid #6B8B60' }}>
+                        <p className="text-sm font-medium mb-2" style={{ color: '#2D5F3F' }}>
+                          💡 Want to reflect further?
+                        </p>
+                        <p className="text-sm" style={{ color: '#3A3A3A' }}>
+                          Consider this boundaries question for legal settings: "How did you maintain professional distance while accurately conveying the emotional weight of testimony? What helped you stay impartial?"
+                        </p>
+                      </div>
+                    </>
+                  )}
+
+                  {selectedContextCategory === 'educational' && (
+                    <>
+                      {/* Curated default questions */}
+                      {(!showAllContextQuestions['educational'] ? [
+                        'How did you balance supporting the student\'s learning process with maintaining your role as an interpreter, not a tutor?',
+                        'What strategies helped you convey complex academic concepts when direct translation wasn\'t sufficient for understanding?',
+                        'How did you facilitate communication in group discussions or collaborative learning activities while ensuring equal access?',
+                        'Were there moments when cultural differences in educational expectations created tension? How did you navigate them?'
+                      ] : [
+                        'How did you balance supporting the student\'s learning process with maintaining your role as an interpreter, not a tutor?',
+                        'What strategies helped you convey complex academic concepts when direct translation wasn\'t sufficient for understanding?',
+                        'How did you facilitate communication in group discussions or collaborative learning activities while ensuring equal access?',
+                        'Were there moments when cultural differences in educational expectations created tension? How did you navigate them?',
+                        'How did you handle IEP or special education meetings with multiple participants and perspectives?',
+                        'What strategies did you use to support classroom discussions and peer interactions inclusively?',
+                        'How did you manage interpreting for diverse learning styles, abilities, and access needs?',
+                        'How did you handle disciplinary or conflict-related meetings while maintaining neutrality and respect for all involved?',
+                        'What approaches did you use to foster inclusive, equitable communication in educational settings?',
+                        'How did you support learners\' educational goals while maintaining interpreting accuracy?'
+                      ]).map((question, index) => (
+                        <div key={index} className="p-4 rounded-lg hover:bg-gray-50 transition-colors" style={{ backgroundColor: 'rgba(245, 245, 245, 0.5)' }}>
+                          <p className="text-base" style={{ color: '#3A3A3A' }}>{index + 1}. {question}</p>
+                        </div>
+                      ))}
+                      
+                      {/* Show More/Less Button */}
+                      {!showAllContextQuestions['educational'] ? (
+                        <button
+                          onClick={() => setShowAllContextQuestions(prev => ({ ...prev, educational: true }))}
+                          className="mt-2 px-4 py-2 rounded-lg text-sm font-medium transition-all hover:shadow-md"
+                          style={{
+                            backgroundColor: 'rgba(34, 197, 94, 0.1)',
+                            color: '#2e7d32',
+                            border: '1px solid rgba(34, 197, 94, 0.3)'
+                          }}
+                        >
+                          🔍 Deep Dive - Show All Questions
+                        </button>
+                      ) : (
+                        <button
+                          onClick={() => setShowAllContextQuestions(prev => ({ ...prev, educational: false }))}
+                          className="mt-2 px-4 py-2 rounded-lg text-sm font-medium transition-all"
+                          style={{
+                            backgroundColor: 'transparent',
+                            color: '#6B8B60',
+                            border: '1px solid rgba(92, 127, 79, 0.3)'
+                          }}
+                        >
+                          Show Less
+                        </button>
+                      )}
+                      
+                      {/* Contextual Skill Question */}
+                      <div className="mt-6 p-4 rounded-xl" style={{ backgroundColor: 'rgba(107, 139, 96, 0.05)', borderLeft: '3px solid #6B8B60' }}>
+                        <p className="text-sm font-medium mb-2" style={{ color: '#2D5F3F' }}>
+                          💡 Want to reflect further?
+                        </p>
+                        <p className="text-sm" style={{ color: '#3A3A3A' }}>
+                          Consider this communication management question: "How did you adapt your interpreting style to match the educational setting\'s pace while ensuring comprehension for all participants?"
+                        </p>
+                      </div>
+                    </>
+                  )}
+
+                  {selectedContextCategory === 'mentalhealth' && (
+                    <>
+                      {/* Curated default questions */}
+                      {(!showAllContextQuestions['mentalhealth'] ? [
+                        'How did you preserve the therapeutic silence and emotional pauses that are essential to the healing process?',
+                        'What helped you maintain professional boundaries while being present for deeply personal and vulnerable disclosures?',
+                        'How did you convey not just words but emotional tone and non-verbal cues that are crucial in therapy?',
+                        'Were there moments when cultural stigma around mental health created barriers? How did you facilitate understanding?'
+                      ] : [
+                        'How did you preserve the therapeutic silence and emotional pauses that are essential to the healing process?',
+                        'What helped you maintain professional boundaries while being present for deeply personal and vulnerable disclosures?',
+                        'How did you convey not just words but emotional tone and non-verbal cues that are crucial in therapy?',
+                        'Were there moments when cultural stigma around mental health created barriers? How did you facilitate understanding?',
+                        'How did you manage your own emotional responses to difficult or triggering mental health content?',
+                        'What strategies did you use to preserve the therapeutic relationship between provider and client through interpretation?',
+                        'How did you handle crisis situations or safety concerns during mental health sessions?',
+                        'How did you support the development of trust and rapport between providers and clients?',
+                        'What self-care or wellness practices did you use after interpreting emotionally intense or high-stress sessions?',
+                        'Were there challenges with mental health terminology or concepts? How did you address them?'
+                      ]).map((question, index) => (
+                        <div key={index} className="p-4 rounded-lg hover:bg-gray-50 transition-colors" style={{ backgroundColor: 'rgba(245, 245, 245, 0.5)' }}>
+                          <p className="text-base" style={{ color: '#3A3A3A' }}>{index + 1}. {question}</p>
+                        </div>
+                      ))}
+                      
+                      {/* Show More/Less Button */}
+                      {!showAllContextQuestions['mentalhealth'] ? (
+                        <button
+                          onClick={() => setShowAllContextQuestions(prev => ({ ...prev, mentalhealth: true }))}
+                          className="mt-2 px-4 py-2 rounded-lg text-sm font-medium transition-all hover:shadow-md"
+                          style={{
+                            backgroundColor: 'rgba(34, 197, 94, 0.1)',
+                            color: '#2e7d32',
+                            border: '1px solid rgba(34, 197, 94, 0.3)'
+                          }}
+                        >
+                          🔍 Deep Dive - Show All Questions
+                        </button>
+                      ) : (
+                        <button
+                          onClick={() => setShowAllContextQuestions(prev => ({ ...prev, mentalhealth: false }))}
+                          className="mt-2 px-4 py-2 rounded-lg text-sm font-medium transition-all"
+                          style={{
+                            backgroundColor: 'transparent',
+                            color: '#6B8B60',
+                            border: '1px solid rgba(92, 127, 79, 0.3)'
+                          }}
+                        >
+                          Show Less
+                        </button>
+                      )}
+                      
+                      {/* Contextual Skill Question */}
+                      <div className="mt-6 p-4 rounded-xl" style={{ backgroundColor: 'rgba(107, 139, 96, 0.05)', borderLeft: '3px solid #6B8B60' }}>
+                        <p className="text-sm font-medium mb-2" style={{ color: '#2D5F3F' }}>
+                          💡 Want to reflect further?
+                        </p>
+                        <p className="text-sm" style={{ color: '#3A3A3A' }}>
+                          Consider this self-care question: "What specific moments or content triggered an emotional response in you? What support or practices would help you process these experiences?"
+                        </p>
+                      </div>
+                    </>
+                  )}
+
+                  {selectedContextCategory === 'community' && (
+                    <>
+                      {/* Curated default questions */}
+                      {(!showAllContextQuestions['community'] ? [
+                        'How did you bridge different levels of system familiarity when community members had varying experience with services?',
+                        'What power dynamics or social hierarchies did you observe, and how did you maintain neutrality while ensuring equitable communication?',
+                        'How did you adapt your interpreting style between formal service provider language and informal community expressions?',
+                        'Were there moments when you sensed distrust or fear? How did you help create a safer communication space?'
+                      ] : [
+                        'How did you bridge different levels of system familiarity when community members had varying experience with services?',
+                        'What power dynamics or social hierarchies did you observe, and how did you maintain neutrality while ensuring equitable communication?',
+                        'How did you adapt your interpreting style between formal service provider language and informal community expressions?',
+                        'Were there moments when you sensed distrust or fear? How did you help create a safer communication space?',
+                        'How did you manage interpreting for multiple participants or group discussions?',
+                        'What cultural or linguistic considerations influenced your approach to community interpreting?',
+                        'How did you facilitate inclusive engagement and participation through your interpretation?',
+                        'How did you manage interpreting for emotional or sensitive situations in community or social service contexts?',
+                        'What strategies did you use to build trust and rapport with community members?',
+                        'What approaches did you use to promote equitable access to services and resources through your interpretation?'
+                      ]).map((question, index) => (
+                        <div key={index} className="p-4 rounded-lg hover:bg-gray-50 transition-colors" style={{ backgroundColor: 'rgba(245, 245, 245, 0.5)' }}>
+                          <p className="text-base" style={{ color: '#3A3A3A' }}>{index + 1}. {question}</p>
+                        </div>
+                      ))}
+                      
+                      {/* Show More/Less Button */}
+                      {!showAllContextQuestions['community'] ? (
+                        <button
+                          onClick={() => setShowAllContextQuestions(prev => ({ ...prev, community: true }))}
+                          className="mt-2 px-4 py-2 rounded-lg text-sm font-medium transition-all hover:shadow-md"
+                          style={{
+                            backgroundColor: 'rgba(34, 197, 94, 0.1)',
+                            color: '#2e7d32',
+                            border: '1px solid rgba(34, 197, 94, 0.3)'
+                          }}
+                        >
+                          🔍 Deep Dive - Show All Questions
+                        </button>
+                      ) : (
+                        <button
+                          onClick={() => setShowAllContextQuestions(prev => ({ ...prev, community: false }))}
+                          className="mt-2 px-4 py-2 rounded-lg text-sm font-medium transition-all"
+                          style={{
+                            backgroundColor: 'transparent',
+                            color: '#6B8B60',
+                            border: '1px solid rgba(92, 127, 79, 0.3)'
+                          }}
+                        >
+                          Show Less
+                        </button>
+                      )}
+                      
+                      {/* Contextual Skill Question */}
+                      <div className="mt-6 p-4 rounded-xl" style={{ backgroundColor: 'rgba(107, 139, 96, 0.05)', borderLeft: '3px solid #6B8B60' }}>
+                        <p className="text-sm font-medium mb-2" style={{ color: '#2D5F3F' }}>
+                          💡 Want to reflect further?
+                        </p>
+                        <p className="text-sm" style={{ color: '#3A3A3A' }}>
+                          Consider this cultural mediation question: "How did you navigate situations where community values conflicted with institutional requirements? What helped you maintain cultural respect?"
+                        </p>
+                      </div>
+                    </>
+                  )}
+                </div>
+              </div>
+            )}
+
+            {/* Prompt to select a category if none selected */}
+            {!selectedContextCategory && (
+              <div className="bg-gray-50 rounded-2xl p-8 text-center">
+                <Compass className="w-16 h-16 mx-auto mb-4" style={{ color: '#6B8B60' }} />
+                <p className="text-lg" style={{ color: '#3A3A3A' }}>
+                  Select a context above to view targeted reflection questions
+                </p>
+              </div>
+            )}
+          </div>
+        )}
+
+
+            {/* Skill Category Selection */}
+            <div className="mb-8">
+              <h3 className="text-lg font-semibold mb-4" style={{ color: '#2D5F3F' }}>
+                Select Your Skill Focus:
+              </h3>
+              <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-4">
+                {/* Accuracy and Completeness */}
+                <button
+                  onClick={() => setSelectedSkillCategory('accuracy')}
+                  className="p-4 rounded-xl border-2 transition-all text-center hover:shadow-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-600"
+                  style={{
+                    backgroundColor: selectedSkillCategory === 'accuracy' ? 'rgba(34, 197, 94, 0.1)' : '#FFFFFF',
+                    borderColor: selectedSkillCategory === 'accuracy' ? '#2e7d32' : 'rgba(92, 127, 79, 0.2)',
+                    transform: selectedSkillCategory === 'accuracy' ? 'scale(1.02)' : 'scale(1)',
+                  }}
+                >
+                  <CheckCircle className="w-8 h-8 mx-auto mb-2" style={{ color: selectedSkillCategory === 'accuracy' ? '#2e7d32' : '#6B8B60' }} />
+                  <span className="font-medium block" style={{ color: selectedSkillCategory === 'accuracy' ? '#1b5e20' : '#2D5F3F' }}>
+                    Accuracy & Completeness
+                  </span>
+                </button>
+
+                {/* Cultural Mediation */}
+                <button
+                  onClick={() => setSelectedSkillCategory('cultural')}
+                  className="p-4 rounded-xl border-2 transition-all text-center hover:shadow-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-600"
+                  style={{
+                    backgroundColor: selectedSkillCategory === 'cultural' ? 'rgba(34, 197, 94, 0.1)' : '#FFFFFF',
+                    borderColor: selectedSkillCategory === 'cultural' ? '#2e7d32' : 'rgba(92, 127, 79, 0.2)',
+                    transform: selectedSkillCategory === 'cultural' ? 'scale(1.02)' : 'scale(1)',
+                  }}
+                >
+                  <Globe className="w-8 h-8 mx-auto mb-2" style={{ color: selectedSkillCategory === 'cultural' ? '#2e7d32' : '#6B8B60' }} />
+                  <span className="font-medium block" style={{ color: selectedSkillCategory === 'cultural' ? '#1b5e20' : '#2D5F3F' }}>
+                    Cultural Mediation
+                  </span>
+                </button>
+
+                {/* Professional Boundaries */}
+                <button
+                  onClick={() => setSelectedSkillCategory('boundaries')}
+                  className="p-4 rounded-xl border-2 transition-all text-center hover:shadow-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-600"
+                  style={{
+                    backgroundColor: selectedSkillCategory === 'boundaries' ? 'rgba(34, 197, 94, 0.1)' : '#FFFFFF',
+                    borderColor: selectedSkillCategory === 'boundaries' ? '#2e7d32' : 'rgba(92, 127, 79, 0.2)',
+                    transform: selectedSkillCategory === 'boundaries' ? 'scale(1.02)' : 'scale(1)',
+                  }}
+                >
+                  <Shield className="w-8 h-8 mx-auto mb-2" style={{ color: selectedSkillCategory === 'boundaries' ? '#2e7d32' : '#6B8B60' }} />
+                  <span className="font-medium block" style={{ color: selectedSkillCategory === 'boundaries' ? '#1b5e20' : '#2D5F3F' }}>
+                    Professional Boundaries
+                  </span>
+                </button>
+
+                {/* Communication Management */}
+                <button
+                  onClick={() => setSelectedSkillCategory('communication')}
+                  className="p-4 rounded-xl border-2 transition-all text-center hover:shadow-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-600"
+                  style={{
+                    backgroundColor: selectedSkillCategory === 'communication' ? 'rgba(34, 197, 94, 0.1)' : '#FFFFFF',
+                    borderColor: selectedSkillCategory === 'communication' ? '#2e7d32' : 'rgba(92, 127, 79, 0.2)',
+                    transform: selectedSkillCategory === 'communication' ? 'scale(1.02)' : 'scale(1)',
+                  }}
+                >
+                  <MessageSquare className="w-8 h-8 mx-auto mb-2" style={{ color: selectedSkillCategory === 'communication' ? '#2e7d32' : '#6B8B60' }} />
+                  <span className="font-medium block" style={{ color: selectedSkillCategory === 'communication' ? '#1b5e20' : '#2D5F3F' }}>
+                    Communication Management
+                  </span>
+                </button>
+
+                {/* Self-Care and Resilience */}
+                <button
+                  onClick={() => setSelectedSkillCategory('selfcare')}
+                  className="p-4 rounded-xl border-2 transition-all text-center hover:shadow-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-600"
+                  style={{
+                    backgroundColor: selectedSkillCategory === 'selfcare' ? 'rgba(34, 197, 94, 0.1)' : '#FFFFFF',
+                    borderColor: selectedSkillCategory === 'selfcare' ? '#2e7d32' : 'rgba(92, 127, 79, 0.2)',
+                    transform: selectedSkillCategory === 'selfcare' ? 'scale(1.02)' : 'scale(1)',
+                  }}
+                >
+                  <Heart className="w-8 h-8 mx-auto mb-2" style={{ color: selectedSkillCategory === 'selfcare' ? '#2e7d32' : '#6B8B60' }} />
+                  <span className="font-medium block" style={{ color: selectedSkillCategory === 'selfcare' ? '#1b5e20' : '#2D5F3F' }}>
+                    Self-Care & Resilience
+                  </span>
+                </button>
+              </div>
+            </div>
+
+            {/* Questions for Selected Skill */}
+            {selectedSkillCategory && (
+              <div className="bg-white rounded-2xl p-6 shadow-lg" style={{ borderColor: 'rgba(92, 127, 79, 0.2)', border: '1px solid' }}>
+                <h3 className="text-xl font-bold mb-4" style={{ color: '#2D5F3F' }}>
+                  {selectedSkillCategory === 'accuracy' && 'Accuracy and Completeness'}
+                  {selectedSkillCategory === 'cultural' && 'Cultural Mediation'}
+                  {selectedSkillCategory === 'boundaries' && 'Professional Boundaries'}
+                  {selectedSkillCategory === 'communication' && 'Communication Management'}
+                  {selectedSkillCategory === 'selfcare' && 'Self-Care and Resilience'}
+                </h3>
+                
+                <p className="text-sm italic mb-6" style={{ color: '#5A5A5A' }}>
+                  {selectedSkillCategory === 'accuracy' && 'Research foundation: interpreter performance assessment rubrics and accuracy studies'}
+                  {selectedSkillCategory === 'cultural' && 'Research foundation: cultural competency and intercultural communication studies'}
+                  {selectedSkillCategory === 'boundaries' && 'Research foundation: interpreter ethics and professional standards'}
+                  {selectedSkillCategory === 'communication' && 'Research foundation: communication effectiveness and discourse analysis'}
+                  {selectedSkillCategory === 'selfcare' && 'Research foundation: interpreter wellness and occupational health studies'}
+                </p>
+
+                <div className="space-y-4">
+                  {selectedSkillCategory === 'accuracy' && (
+                    <>
+                      {(!showAllSkillQuestions['accuracy'] ? [
+                        'Did I convey all meaningful content with completeness and clarity?',
+                        'How did I approach interpreting numbers, dates, and specific details?',
+                        'What information was most challenging to interpret accurately, and why?',
+                        'Did I seek clarification when meaning was uncertain?',
+                        'How did I manage rapid speech or highly complex information?'
+                      ] : [
+                        'Did I convey all meaningful content with completeness and clarity?',
+                        'How did I approach interpreting numbers, dates, and specific details?',
+                        'What information was most challenging to interpret accurately, and why?',
+                        'Did I seek clarification when meaning was uncertain?',
+                        'How did I manage rapid speech or highly complex information?',
+                        'What strategies supported me in maintaining accuracy under pressure?',
+                        'How did I interpret idiomatic expressions and culturally specific references?',
+                        'How did I handle technical or specialized terminology across languages?',
+                        'Which memory strategies served me well, and which need further development?',
+                        'How did I approach information that was difficult to interpret directly while still maintaining fidelity?'
+                      ]).map((question, index) => (
+                        <div key={index} className="p-4 rounded-lg hover:bg-gray-50 transition-colors" style={{ backgroundColor: 'rgba(245, 245, 245, 0.5)' }}>
+                          <p className="text-base" style={{ color: '#3A3A3A' }}>{index + 1}. {question}</p>
+                        </div>
+                      ))}
+                      {!showAllSkillQuestions['accuracy'] && (
+                        <button
+                          onClick={() => setShowAllSkillQuestions(prev => ({ ...prev, accuracy: true }))}
+                          className="mt-4 px-4 py-2 rounded-lg text-sm font-medium transition-colors"
+                          style={{
+                            backgroundColor: 'rgba(34, 197, 94, 0.1)',
+                            color: '#2e7d32',
+                            border: '1px solid rgba(34, 197, 94, 0.3)'
+                          }}
+                        >
+                          View More Questions →
+                        </button>
+                      )}
+                    </>
+                  )}
+
+                  {selectedSkillCategory === 'cultural' && (
+                    <>
+                      {(!showAllSkillQuestions['cultural'] ? [
+                        'What cultural differences in communication styles surfaced?',
+                        'How did I interpret culturally specific concepts or practices?',
+                        'In what ways did I support understanding when cultural misunderstandings arose?',
+                        'What cultural assumptions shaped the communication, and how did I respond?',
+                        'How did I navigate moments when differing cultural values were in conflict?'
+                      ] : [
+                        'What cultural differences in communication styles surfaced?',
+                        'How did I interpret culturally specific concepts or practices?',
+                        'In what ways did I support understanding when cultural misunderstandings arose?',
+                        'What cultural assumptions shaped the communication, and how did I respond?',
+                        'How did I navigate moments when differing cultural values were in conflict?',
+                        'Did I interpret culturally embedded meanings in ways that were accurate and respectful?',
+                        'How did I address differences in emotional cues or communication norms across cultures?',
+                        'What cultural knowledge gaps did I notice in myself?',
+                        'How did I stay grounded in neutrality while ensuring mutual understanding?',
+                        'What approaches helped reduce or remove cultural barriers to effective communication?',
+                        'How did I expand my own cultural fluency by learning from this experience?',
+                        'In what ways did I demonstrate respect for diverse cultural frameworks while supporting direct communication?'
+                      ]).map((question, index) => (
+                        <div key={index} className="p-4 rounded-lg hover:bg-gray-50 transition-colors" style={{ backgroundColor: 'rgba(245, 245, 245, 0.5)' }}>
+                          <p className="text-base" style={{ color: '#3A3A3A' }}>{index + 1}. {question}</p>
+                        </div>
+                      ))}
+                      {!showAllSkillQuestions['cultural'] && (
+                        <button
+                          onClick={() => setShowAllSkillQuestions(prev => ({ ...prev, cultural: true }))}
+                          className="mt-4 px-4 py-2 rounded-lg text-sm font-medium transition-colors"
+                          style={{
+                            backgroundColor: 'rgba(34, 197, 94, 0.1)',
+                            color: '#2e7d32',
+                            border: '1px solid rgba(34, 197, 94, 0.3)'
+                          }}
+                        >
+                          View More Questions →
+                        </button>
+                      )}
+                    </>
+                  )}
+
+                  {selectedSkillCategory === 'boundaries' && (
+                    <>
+                      {(!showAllSkillQuestions['boundaries'] ? [
+                        'Did I maintain clear professional role boundaries throughout the assignment?',
+                        'How did I respond when asked to act outside of my interpreting role?',
+                        'What situations challenged my ability to remain neutral?',
+                        'How did I manage my own reactions to sensitive or difficult content?',
+                        'How did I uphold confidentiality and privacy expectations?'
+                      ] : [
+                        'Did I maintain clear professional role boundaries throughout the assignment?',
+                        'How did I respond when asked to act outside of my interpreting role?',
+                        'What situations challenged my ability to remain neutral?',
+                        'How did I manage my own reactions to sensitive or difficult content?',
+                        'How did I uphold confidentiality and privacy expectations?',
+                        'What ethical dilemmas arose, and how did I approach them?',
+                        'Did I maintain professionalism in my relationships with all participants?',
+                        'How did I respond when there was pressure to advocate or give advice?',
+                        'What moments tested my professional judgment, and what did I learn?',
+                        'Did I appropriately seek consultation, mentorship, or supervision when needed?'
+                      ]).map((question, index) => (
+                        <div key={index} className="p-4 rounded-lg hover:bg-gray-50 transition-colors" style={{ backgroundColor: 'rgba(245, 245, 245, 0.5)' }}>
+                          <p className="text-base" style={{ color: '#3A3A3A' }}>{index + 1}. {question}</p>
+                        </div>
+                      ))}
+                      {!showAllSkillQuestions['boundaries'] && (
+                        <button
+                          onClick={() => setShowAllSkillQuestions(prev => ({ ...prev, boundaries: true }))}
+                          className="mt-4 px-4 py-2 rounded-lg text-sm font-medium transition-colors"
+                          style={{
+                            backgroundColor: 'rgba(34, 197, 94, 0.1)',
+                            color: '#2e7d32',
+                            border: '1px solid rgba(34, 197, 94, 0.3)'
+                          }}
+                        >
+                          View More Questions →
+                        </button>
+                      )}
+                    </>
+                  )}
+
+                  {selectedSkillCategory === 'communication' && (
+                    <>
+                      {(!showAllSkillQuestions['communication'] ? [
+                        'How effectively did I manage turn-taking and the flow of communication?',
+                        'Did I request clarification or repetition in ways that were clear and respectful?',
+                        'How did I handle overlapping speech or interruptions?',
+                        'What strategies supported me in navigating difficult communication dynamics?',
+                        'Did I position myself effectively to support communication access?'
+                      ] : [
+                        'How effectively did I manage turn-taking and the flow of communication?',
+                        'Did I request clarification or repetition in ways that were clear and respectful?',
+                        'How did I handle overlapping speech or interruptions?',
+                        'What strategies supported me in navigating difficult communication dynamics?',
+                        'Did I position myself effectively to support communication access?',
+                        'How did I adapt to acoustic, environmental, or technical challenges?',
+                        'What techniques helped me manage multi-party conversations?',
+                        'Did I pace the interaction in a way that allowed for processing and reflection?',
+                        'How did I interpret emotional content that impacted communication?',
+                        'What communication repair strategies did I use when breakdowns occurred?'
+                      ]).map((question, index) => (
+                        <div key={index} className="p-4 rounded-lg hover:bg-gray-50 transition-colors" style={{ backgroundColor: 'rgba(245, 245, 245, 0.5)' }}>
+                          <p className="text-base" style={{ color: '#3A3A3A' }}>{index + 1}. {question}</p>
+                        </div>
+                      ))}
+                      {!showAllSkillQuestions['communication'] && (
+                        <button
+                          onClick={() => setShowAllSkillQuestions(prev => ({ ...prev, communication: true }))}
+                          className="mt-4 px-4 py-2 rounded-lg text-sm font-medium transition-colors"
+                          style={{
+                            backgroundColor: 'rgba(34, 197, 94, 0.1)',
+                            color: '#2e7d32',
+                            border: '1px solid rgba(34, 197, 94, 0.3)'
+                          }}
+                        >
+                          View More Questions →
+                        </button>
+                      )}
+                    </>
+                  )}
+
+                  {selectedSkillCategory === 'selfcare' && (
+                    <>
+                      {(!showAllSkillQuestions['selfcare'] ? [
+                        'How did I manage my physical energy and emotional presence during the assignment?',
+                        'What self-care practices supported me before, during, and after?',
+                        'How did I respond to emotionally challenging or traumatic content?',
+                        'What signs of stress, fatigue, or overload did I notice in myself?',
+                        'Did I seek support or resources when I needed them?'
+                      ] : [
+                        'How did I manage my physical energy and emotional presence during the assignment?',
+                        'What self-care practices supported me before, during, and after?',
+                        'How did I respond to emotionally challenging or traumatic content?',
+                        'What signs of stress, fatigue, or overload did I notice in myself?',
+                        'Did I seek support or resources when I needed them?',
+                        'How did I protect my own well-being while maintaining professional boundaries?',
+                        'What resilience strategies were most effective for me?',
+                        'How did I process and release difficult emotions after the assignment?',
+                        'What ongoing supports would strengthen me for this type of work?',
+                        'How can I prepare myself emotionally and physically for future assignments of this nature?'
+                      ]).map((question, index) => (
+                        <div key={index} className="p-4 rounded-lg hover:bg-gray-50 transition-colors" style={{ backgroundColor: 'rgba(245, 245, 245, 0.5)' }}>
+                          <p className="text-base" style={{ color: '#3A3A3A' }}>{index + 1}. {question}</p>
+                        </div>
+                      ))}
+                      {!showAllSkillQuestions['selfcare'] && (
+                        <button
+                          onClick={() => setShowAllSkillQuestions(prev => ({ ...prev, selfcare: true }))}
+                          className="mt-4 px-4 py-2 rounded-lg text-sm font-medium transition-colors"
+                          style={{
+                            backgroundColor: 'rgba(34, 197, 94, 0.1)',
+                            color: '#2e7d32',
+                            border: '1px solid rgba(34, 197, 94, 0.3)'
+                          }}
+                        >
+                          View More Questions →
+                        </button>
+                      )}
+                    </>
+                  )}
+                </div>
+              </div>
+            )}
+
+            {/* Prompt to select a category if none selected */}
+            {!selectedSkillCategory && (
+              <div className="bg-gray-50 rounded-2xl p-8 text-center">
+                <Target className="w-16 h-16 mx-auto mb-4" style={{ color: '#6B8B60' }} />
+                <p className="text-lg" style={{ color: '#3A3A3A' }}>
+                  Select a skill area above to explore targeted reflection questions
+                </p>
+                <p className="text-sm mt-2" style={{ color: '#5A5A5A' }}>
+                  Each category includes research-based questions to deepen your professional development
+                </p>
+              </div>
+            )}
+          </div>
+        )}
+      </div>
+
+      {/* Pre-Assignment Prep Modal */}
+      {showPreAssignmentPrep && (
+        <PreAssignmentPrepV6
+          onComplete={(data) => {
+            console.log('Pre-Assignment Prep Results:', data);
+            // Data is automatically saved to Supabase in the component
+            setShowPreAssignmentPrep(false);
+          }}
+          onClose={() => setShowPreAssignmentPrep(false)}
+        />
+      )}
+
+      {/* Post-Assignment Debrief Modal */}
+      {showPostAssignmentDebrief && (
+        <PostAssignmentDebriefEnhanced
+          onComplete={(data) => {
+            console.log('Post-Assignment Debrief Results:', data);
+            // Data is automatically saved to Supabase in the component
+            setShowPostAssignmentDebrief(false);
+          }}
+          onClose={() => setShowPostAssignmentDebrief(false)}
+        />
+      )}
+
+      {/* Teaming Prep Modal */}
+      {showTeamingPrep && (
+        <TeamingPrepEnhanced
+          onComplete={(data) => {
+            console.log('Team Prep Results:', data);
+            // Data is automatically saved to Supabase in the component
+            setShowTeamingPrep(false);
+          }}
+          onClose={() => setShowTeamingPrep(false)}
+        />
+      )}
+
+      {/* Teaming Reflection Modal */}
+      {showTeamingReflection && (
+        <TeamingReflectionEnhanced
+          onComplete={(data) => {
+            console.log('Team Reflection Results:', data);
+            // Data is automatically saved to Supabase in the component
+            setShowTeamingReflection(false);
+          }}
+          onClose={() => setShowTeamingReflection(false)}
+        />
+      )}
+
+      {/* Mentoring Prep Modal */}
+      {showMentoringPrep && (
+        <MentoringPrepAccessible
+          onComplete={(data) => {
+            console.log('Mentoring Prep Results:', data);
+            // Data is automatically saved to Supabase in the component
+            setShowMentoringPrep(false);
+          }}
+          onClose={() => setShowMentoringPrep(false)}
+        />
+      )}
+
+      {/* Mentoring Reflection Modal */}
+      {showMentoringReflection && (
+        <MentoringReflectionAccessible
+          onComplete={(results) => {
+            console.log('Mentoring Reflection Results:', results);
+            // Data is automatically saved to local storage in the component
+            setShowMentoringReflection(false);
+          }}
+          onClose={() => setShowMentoringReflection(false)}
+          // TODO: Pass prepData when we have mentoring prep data available for comparison
+        />
+      )}
+
+      {/* Role-Space Reflection Modal */}
+      {showRoleSpaceReflection && (
+        <RoleSpaceReflection
+          onComplete={(data) => {
+            console.log('Role-Space Reflection Results:', data);
+            // Data is automatically saved to Supabase in the component
+            setShowRoleSpaceReflection(false);
+          }}
+          onClose={() => setShowRoleSpaceReflection(false)}
+        />
+      )}
+
+      {/* Supporting Direct Communication Modal */}
+      {showDirectCommunicationReflection && (
+        <DirectCommunicationReflection
+          onComplete={(data) => {
+            console.log('Direct Communication Reflection Results:', data);
+            // Data is automatically saved to Supabase in the component
+            setShowDirectCommunicationReflection(false);
+          }}
+          onClose={() => setShowDirectCommunicationReflection(false)}
+        />
+      )}
+
+      {/* Wellness Check-In Modal */}
+      {showWellnessCheckIn && (
+        <WellnessCheckInAccessible
+          onComplete={(results) => {
+            // Save reflection with consistent entry_kind
+            saveReflection('wellness_checkin', results);
+            setShowWellnessCheckIn(false);
+          }}
+          onClose={() => setShowWellnessCheckIn(false)}
+        />
+      )}
+
+      {showInSessionSelfCheck && (
+        <InSessionSelfCheck
+          onComplete={(results) => {
+            // Save reflection
+            saveReflection('In-Session Self-Check', results);
+            setShowInSessionSelfCheck(false);
+          }}
+          onClose={() => setShowInSessionSelfCheck(false)}
+        />
+      )}
+
+      {showInSessionTeamSync && (
+        <InSessionTeamSync
+          onComplete={(results) => {
+            // Save reflection
+            saveReflection('In-Session Team Sync', results);
+            setShowInSessionTeamSync(false);
+          }}
+          onClose={() => setShowInSessionTeamSync(false)}
+        />
+      )}
+
+      {/* Values Alignment Check Modal */}
+      {showEthicsMeaningCheck && (
+        <EthicsMeaningCheckAccessible
+          onComplete={(results) => {
+            // Save reflection
+            saveReflection('Values Alignment Check-In', results);
+            setShowEthicsMeaningCheck(false);
+          }}
+          onClose={() => setShowEthicsMeaningCheck(false)}
+        />
+      )}
+
+      {/* Daily Burnout Gauge Modal */}
+
+    </main>
+  );
+
   if (!devMode && !user && !loading) {
     return (
       <Routes>
@@ -6381,6 +7676,14 @@ function App() {
           }}
         />
       )}
+
+
+
+
+    </div>
+        }
+      />
+    </Routes>
     
     {/* Why Professional Boundaries Matter Modal */}
     {showBoundariesWhyModal && (
@@ -6609,58 +7912,6 @@ function App() {
 
     {/* AgenticFlow Chat */}
     <AgenticFlowChat />
-
-    {/* Onboarding Flow Modal */}
-    {onboardingVisible && (
-      <OnboardingFlow 
-        onComplete={completeOnboarding}
-        onClose={hideOnboarding}
-      />
-    )}
-    
-    {/* Welcome Modal for First-Time Users */}
-    {showWelcomeModal && (
-      <WelcomeModal
-        onClose={() => {
-          setShowWelcomeModal(false);
-          localStorage.setItem('hasSeenWelcomeModal', 'true');
-        }}
-        onComplete={(recommendations) => {
-          setWelcomeRecommendations(recommendations);
-          setShowWelcomeModal(false);
-          localStorage.setItem('hasSeenWelcomeModal', 'true');
-          // Optionally auto-open the first recommended tool
-          if (recommendations.length > 0) {
-            const toolMap: Record<string, () => void> = {
-              'Pre-Assignment Prep': () => setShowPreAssignmentPrep(true),
-              'Post-Assignment Debrief': () => setShowPostAssignmentDebrief(true),
-              'Teaming Prep': () => setShowTeamingPrep(true),
-              'Mentoring Prep': () => setShowMentoringPrep(true),
-              'Wellness Check-in': () => setShowWellnessCheckIn(true),
-              '3-Minute Breathing Practice': () => setShowBreathingPractice(true),
-              'Stress Reset Tool': () => setSelectedTechnique('breathing'),
-              'Quick Stress Reset': () => setSelectedTechnique('breathing'),
-              'Emotion Mapping': () => setShowEmotionMapping(true),
-              'Body Check-In': () => setShowBodyCheckIn(true),
-              'Review Growth Insights': () => setActiveTab('insights'),
-            };
-            
-            // Find and execute the first available tool
-            for (const rec of recommendations) {
-              if (toolMap[rec]) {
-                setTimeout(() => toolMap[rec](), 500); // Small delay for smoother transition
-                break;
-              }
-            }
-          }
-        }}
-      />
-    )}
-    
-    </div>
-        }
-      />
-    </Routes>
     
     </>
   );

@@ -12,16 +12,12 @@ import {
   X, 
   ChevronRight, 
   ChevronLeft, 
-  Shield,
   Compass,
-  Heart,
-  Brain,
-  Users,
   AlertTriangle,
-  Target,
   Sparkles,
   Check
 } from 'lucide-react';
+import { SecureLockIcon, HeartPulseIcon, NotepadIcon, CommunityIcon, TargetIcon } from './CustomIcon';
 import { supabase } from '../lib/supabase';
 import { useAuth } from '../contexts/AuthContext';
 import { updateGrowthInsightsForUser } from '../services/growthInsightsService';
@@ -113,7 +109,7 @@ export const RoleSpaceReflection: React.FC<RoleSpaceReflectionProps> = ({ onClos
     },
     {
       title: "Professional Boundaries",
-      icon: <Shield className="w-5 h-5" style={{ color: '#6B8B60' }} />,
+      icon: <SecureLockIcon size={64} />,
       fields: [
         {
           id: 'boundary_pressure',
@@ -133,7 +129,7 @@ export const RoleSpaceReflection: React.FC<RoleSpaceReflectionProps> = ({ onClos
     },
     {
       title: "Emotional Intelligence",
-      icon: <Heart className="w-5 h-5" style={{ color: '#6B8B60' }} />,
+      icon: <HeartPulseIcon size={64} />,
       fields: [
         {
           id: 'emotional_awareness',
@@ -153,7 +149,7 @@ export const RoleSpaceReflection: React.FC<RoleSpaceReflectionProps> = ({ onClos
     },
     {
       title: "Values & Ethics Navigation",
-      icon: <Brain className="w-5 h-5" style={{ color: '#6B8B60' }} />,
+      icon: <NotepadIcon size={64} />,
       fields: [
         {
           id: 'values_tension',
@@ -173,7 +169,7 @@ export const RoleSpaceReflection: React.FC<RoleSpaceReflectionProps> = ({ onClos
     },
     {
       title: "Role Communication",
-      icon: <Users className="w-5 h-5" style={{ color: '#6B8B60' }} />,
+      icon: <CommunityIcon size={64} />,
       fields: [
         {
           id: 'role_communication',
@@ -193,7 +189,7 @@ export const RoleSpaceReflection: React.FC<RoleSpaceReflectionProps> = ({ onClos
     },
     {
       title: "Strategies & Skills",
-      icon: <Target className="w-5 h-5" style={{ color: '#6B8B60' }} />,
+      icon: <TargetIcon size={64} />,
       fields: [
         {
           id: 'strategies_used',
@@ -456,7 +452,7 @@ export const RoleSpaceReflection: React.FC<RoleSpaceReflectionProps> = ({ onClos
                   boxShadow: '0 2px 8px rgba(107, 139, 96, 0.3)'
                 }}
               >
-                <Shield className="w-6 h-6 text-white" />
+                <SecureLockIcon size={64} />
               </div>
               <div>
                 <h2 className="text-2xl font-bold" style={{ color: '#1A1A1A' }}>
@@ -521,7 +517,7 @@ export const RoleSpaceReflection: React.FC<RoleSpaceReflectionProps> = ({ onClos
               }}
             >
               <div className="flex items-start space-x-3">
-                <Heart className="w-5 h-5 mt-1 flex-shrink-0" style={{ color: '#6B8B60' }} />
+                <HeartPulseIcon size={20} />
                 <div>
                   <h4 className="font-semibold mb-2" style={{ color: '#2D5F3F' }}>
                     Affirmation
@@ -597,7 +593,7 @@ export const RoleSpaceReflection: React.FC<RoleSpaceReflectionProps> = ({ onClos
               style={{
                 background: isSubmitting 
                   ? '#CCCCCC' 
-                  : 'linear-gradient(145deg, #6B8B60 0%, #5F7F55 100%)',
+                  : 'linear-gradient(135deg, #1b5e20, #2e7d32)',
                 color: '#FFFFFF',
                 boxShadow: isSubmitting 
                   ? 'none' 

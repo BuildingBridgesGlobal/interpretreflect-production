@@ -11,18 +11,14 @@ import React, { useState, useRef, useEffect } from 'react';
 import { 
   ChevronRight, 
   ChevronLeft, 
-  Users,
-  Heart,
-  Brain,
-  Target,
   BookOpen,
   Compass,
-  Shield,
   Lightbulb,
   X,
   Check,
   Sparkles
 } from 'lucide-react';
+import { CommunityIcon, HeartPulseIcon, NotepadIcon, TargetIcon, SecureLockIcon } from './CustomIcon';
 import { supabase } from '../lib/supabase';
 import { useAuth } from '../contexts/AuthContext';
 import { updateGrowthInsightsForUser } from '../services/growthInsightsService';
@@ -293,7 +289,7 @@ SUMMARY: ${formData.one_word_summary}
   const sections = [
     {
       title: "Mentorship Context",
-      icon: <Users className="w-5 h-5" style={{ color: '#6B8B60' }} />,
+      icon: <CommunityIcon size={64} />,
       content: (
         <div className="space-y-6">
           <div 
@@ -404,7 +400,7 @@ SUMMARY: ${formData.one_word_summary}
     },
     {
       title: "Goals & Outcomes",
-      icon: <Target className="w-5 h-5" style={{ color: '#6B8B60' }} />,
+      icon: <TargetIcon size={64} />,
       content: (
         <div className="space-y-6">
           <div>
@@ -514,7 +510,7 @@ SUMMARY: ${formData.one_word_summary}
     },
     {
       title: "Communication & Relationship",
-      icon: <Heart className="w-5 h-5" style={{ color: '#6B8B60' }} />,
+      icon: <HeartPulseIcon size={64} />,
       content: (
         <div className="space-y-6">
           <div>
@@ -577,7 +573,7 @@ SUMMARY: ${formData.one_word_summary}
     },
     {
       title: "Challenges & Growth",
-      icon: <Shield className="w-5 h-5" style={{ color: '#6B8B60' }} />,
+      icon: <SecureLockIcon size={64} />,
       content: (
         <div className="space-y-6">
           <div>
@@ -733,7 +729,7 @@ SUMMARY: ${formData.one_word_summary}
     },
     {
       title: "Closing Reflection",
-      icon: <Brain className="w-5 h-5" style={{ color: '#6B8B60' }} />,
+      icon: <NotepadIcon size={64} />,
       content: (
         <div className="space-y-6">
           <div>
@@ -881,7 +877,7 @@ SUMMARY: ${formData.one_word_summary}
                   boxShadow: '0 2px 8px rgba(107, 139, 96, 0.3)'
                 }}
               >
-                <Users className="w-6 h-6 text-white" />
+                <CommunityIcon size={64} />
               </div>
               <div>
                 <h2 className="text-2xl font-bold" style={{ color: '#1A1A1A' }}>

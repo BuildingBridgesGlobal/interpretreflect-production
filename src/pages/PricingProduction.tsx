@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { StripePaymentButton } from '../components/StripePaymentButton';
 import { useAuth } from '../contexts/AuthContext';
 import { supabase } from '../lib/supabase';
+import { ChatBubbleIcon, SecureLockIcon, HeartPulseIcon, HourglassPersonIcon, CommunityIcon, TargetIcon } from '../components/CustomIcon';
 
 export function PricingProduction() {
   const navigate = useNavigate();
@@ -40,32 +41,32 @@ export function PricingProduction() {
 
   const features = [
     {
-      icon: <Brain className="w-5 h-5" />,
+      icon: <ChatBubbleIcon size={48} />,
       title: "AI Wellness Companion",
       description: "24/7 support from Elya, your personal wellness AI"
     },
     {
-      icon: <Shield className="w-5 h-5" />,
+      icon: <HeartPulseIcon size={48} />,
       title: "Burnout Prevention",
       description: "Daily assessments and early warning system"
     },
     {
-      icon: <Heart className="w-5 h-5" />,
+      icon: <HeartPulseIcon size={48} />,
       title: "Emotional Processing",
       description: "Guided reflection and trauma-informed tools"
     },
     {
-      icon: <Clock className="w-5 h-5" />,
+      icon: <HourglassPersonIcon size={48} />,
       title: "3-Minute Tools",
       description: "Quick exercises that fit between assignments"
     },
     {
-      icon: <Users className="w-5 h-5" />,
+      icon: <CommunityIcon size={48} />,
       title: "Community Support",
       description: "Connect with fellow interpreters"
     },
     {
-      icon: <Award className="w-5 h-5" />,
+      icon: <TargetIcon size={48} />,
       title: "Progress Tracking",
       description: "Insights and growth analytics"
     }
@@ -109,19 +110,19 @@ export function PricingProduction() {
           {/* Trust Badges */}
           <div className="flex justify-center gap-8 mb-12">
             <div className="flex items-center gap-2">
-              <Shield className="w-5 h-5" style={{ color: '#6B8B60' }} />
+              <SecureLockIcon size={28} />
               <span className="text-sm font-semibold" style={{ color: '#2D5F3F' }}>
                 SSL Secured
               </span>
             </div>
             <div className="flex items-center gap-2">
-              <Award className="w-5 h-5" style={{ color: '#6B8B60' }} />
+              <TargetIcon size={28} />
               <span className="text-sm font-semibold" style={{ color: '#2D5F3F' }}>
-                7-Day Free Trial
+                3-Day Free Trial
               </span>
             </div>
             <div className="flex items-center gap-2">
-              <Users className="w-5 h-5" style={{ color: '#6B8B60' }} />
+              <CommunityIcon size={28} />
               <span className="text-sm font-semibold" style={{ color: '#2D5F3F' }}>
                 2,000+ Members
               </span>
@@ -184,13 +185,8 @@ export function PricingProduction() {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
               {features.map((feature, index) => (
                 <div key={index} className="flex items-start gap-3">
-                  <div 
-                    className="w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0"
-                    style={{ backgroundColor: 'rgba(107, 139, 96, 0.1)' }}
-                  >
-                    <div style={{ color: '#6B8B60' }}>
-                      {feature.icon}
-                    </div>
+                  <div className="flex-shrink-0">
+                    {feature.icon}
                   </div>
                   <div>
                     <h4 className="font-semibold text-sm mb-1" style={{ color: '#2D5F3F' }}>
@@ -232,7 +228,7 @@ export function PricingProduction() {
                 <div className="space-y-4">
                   {user ? (
                     <StripePaymentButton 
-                      buttonText="Start Your 7-Day Free Trial"
+                      buttonText="Start Your 3-Day Free Trial"
                       className="w-full md:w-auto px-8 py-4 text-lg"
                       useDirectLink={true}
                     />
@@ -250,7 +246,7 @@ export function PricingProduction() {
                   )}
                   
                   <p className="text-xs" style={{ color: '#999' }}>
-                    Start with 7 days free, then $12.99/month. Cancel anytime.
+                    Start with 3 days free, then $12.99/month. Cancel anytime.
                   </p>
                 </div>
               )}
@@ -313,7 +309,7 @@ export function PricingProduction() {
               </span>
             </summary>
             <p className="px-4 pb-4 text-sm" style={{ color: '#666' }}>
-              You get full access to all features for 7 days. No credit card required upfront. 
+              You get full access to all features for 3 days. No credit card required upfront. 
               You'll only be charged if you decide to continue after the trial.
             </p>
           </details>

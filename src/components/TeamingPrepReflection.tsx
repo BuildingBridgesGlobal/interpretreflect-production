@@ -618,7 +618,7 @@ export const TeamingPrepReflection: React.FC<TeamingPrepReflectionProps> = ({
               style={{
                 background: isSaving 
                   ? 'linear-gradient(145deg, #9CA3AF 0%, #6B7280 100%)'
-                  : 'linear-gradient(145deg, #6B8B60 0%, #5F7F55 100%)',
+                  : 'linear-gradient(135deg, #1b5e20, #2e7d32)',
                 color: '#FFFFFF',
                 boxShadow: '0 2px 8px rgba(107, 139, 96, 0.3)',
                 cursor: isSaving ? 'not-allowed' : 'pointer'

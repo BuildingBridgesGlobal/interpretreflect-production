@@ -12,15 +12,12 @@ import {
   X, 
   ChevronRight, 
   ChevronLeft, 
-  MessageSquare,
-  Users,
-  Heart,
-  Target,
   ArrowRightLeft,
   Eye,
   Sparkles,
   Check
 } from 'lucide-react';
+import { ChatBubbleIcon, CommunityIcon, HeartPulseIcon, TargetIcon } from './CustomIcon';
 import { supabase } from '../lib/supabase';
 import { useAuth } from '../contexts/AuthContext';
 import { updateGrowthInsightsForUser } from '../services/growthInsightsService';
@@ -84,7 +81,7 @@ export const DirectCommunicationReflection: React.FC<DirectCommunicationReflecti
   const sections = [
     {
       title: "Creating Space for Expression",
-      icon: <MessageSquare className="w-5 h-5" style={{ color: '#6B8B60' }} />,
+      icon: <ChatBubbleIcon size={64} />,
       fields: [
         {
           id: 'opportunities_created',
@@ -124,7 +121,7 @@ export const DirectCommunicationReflection: React.FC<DirectCommunicationReflecti
     },
     {
       title: "Facilitating Direct Connection",
-      icon: <Users className="w-5 h-5" style={{ color: '#6B8B60' }} />,
+      icon: <CommunityIcon size={64} />,
       fields: [
         {
           id: 'direct_address',
@@ -164,7 +161,7 @@ export const DirectCommunicationReflection: React.FC<DirectCommunicationReflecti
     },
     {
       title: "Balance & Representation",
-      icon: <Heart className="w-5 h-5" style={{ color: '#6B8B60' }} />,
+      icon: <HeartPulseIcon size={64} />,
       fields: [
         {
           id: 'accuracy_balance',
@@ -184,7 +181,7 @@ export const DirectCommunicationReflection: React.FC<DirectCommunicationReflecti
     },
     {
       title: "Growth & Future Practice",
-      icon: <Target className="w-5 h-5" style={{ color: '#6B8B60' }} />,
+      icon: <TargetIcon size={64} />,
       fields: [
         {
           id: 'growth_action',
@@ -375,7 +372,7 @@ export const DirectCommunicationReflection: React.FC<DirectCommunicationReflecti
                   boxShadow: '0 2px 8px rgba(107, 139, 96, 0.3)'
                 }}
               >
-                <MessageSquare className="w-6 h-6 text-white" />
+                <ChatBubbleIcon size={64} />
               </div>
               <div>
                 <h2 className="text-2xl font-bold" style={{ color: '#1A1A1A' }}>
@@ -492,7 +489,7 @@ export const DirectCommunicationReflection: React.FC<DirectCommunicationReflecti
               style={{
                 background: isSubmitting 
                   ? '#CCCCCC' 
-                  : 'linear-gradient(145deg, #6B8B60 0%, #5F7F55 100%)',
+                  : 'linear-gradient(135deg, #1b5e20, #2e7d32)',
                 color: '#FFFFFF',
                 boxShadow: isSubmitting 
                   ? 'none' 

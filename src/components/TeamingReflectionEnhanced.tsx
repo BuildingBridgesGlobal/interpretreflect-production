@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import {
-  X, Users, ChevronRight, ChevronLeft, Check, Eye, Heart,
+  X, ChevronRight, ChevronLeft, Check, Eye,
   AlertTriangle, TrendingUp, MessageCircle, Share2, Download,
   ChevronDown, ChevronUp, CheckCircle, Copy
 } from 'lucide-react';
+import { CommunityIcon, HeartPulseIcon } from './CustomIcon';
 import { supabase, TeamingReflectionData, TeamingPrepData, TeamingPrepEnhancedData, ReflectionEntry } from '../lib/supabase';
 import { useAuth } from '../contexts/AuthContext';
 
@@ -476,7 +477,7 @@ export const TeamingReflectionEnhanced: React.FC<TeamingReflectionEnhancedProps>
     },
     {
       title: "Team Dynamics & Roles",
-      icon: <Users className="w-5 h-5" />,
+      icon: <CommunityIcon size={64} />,
       content: (
         <div className="space-y-6">
           <div>
@@ -650,7 +651,7 @@ export const TeamingReflectionEnhanced: React.FC<TeamingReflectionEnhancedProps>
     },
     {
       title: "Key Learnings",
-      icon: <Heart className="w-5 h-5" />,
+      icon: <HeartPulseIcon size={64} />,
       content: (
         <div className="space-y-6">
           <div>
@@ -938,7 +939,7 @@ export const TeamingReflectionEnhanced: React.FC<TeamingReflectionEnhancedProps>
                   boxShadow: '0 2px 8px rgba(107, 139, 96, 0.3)'
                 }}
               >
-                <Users className="w-6 h-6 text-white" />
+                <CommunityIcon size={64} />
               </div>
               <div>
                 <h2 className="text-2xl font-bold" style={{ color: '#1A1A1A' }}>

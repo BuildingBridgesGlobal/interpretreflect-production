@@ -41,9 +41,15 @@ interface WellnessStats {
 
 interface PersonalizedHomepageProps {
   onNavigate?: (tab: string) => void;
+  reflections?: Array<{
+    id: string;
+    type: string;
+    data: any;
+    timestamp: string;
+  }>;
 }
 
-export const PersonalizedHomepage: React.FC<PersonalizedHomepageProps> = ({ onNavigate }) => {
+export const PersonalizedHomepage: React.FC<PersonalizedHomepageProps> = ({ onNavigate, reflections = [] }) => {
   const [userName] = useState('Sarah');
   const [greeting, setGreeting] = useState('');
   const [dateString, setDateString] = useState('');
@@ -59,8 +65,30 @@ export const PersonalizedHomepage: React.FC<PersonalizedHomepageProps> = ({ onNa
     weeklyProgress: 65
   });
 
-  // In a real app, this would load from a database or local storage
-  const [recentReflections] = useState<RecentReflection[]>([]);
+  // Convert passed reflections to the format needed for display
+  const recentReflections = React.useMemo<RecentReflection[]>(() => {
+    console.log('PersonalizedHomepage - Raw reflections received:', reflections);
+    
+    if (!reflections || reflections.length === 0) {
+      console.log('PersonalizedHomepage - No reflections to display');
+      return [];
+    }
+    
+    const filtered = reflections
+      .filter(r => r.type && r.type !== 'burnout_assessment') // Filter out burnout assessments
+      .slice(0, 5) // Show only the 5 most recent
+      .map(reflection => ({
+        id: reflection.id,
+        date: new Date(reflection.timestamp),
+        title: getReflectionTitle(reflection.type),
+        preview: getReflectionPreview(reflection.data),
+        mood: getReflectionMood(reflection.data),
+        tags: getReflectionTags(reflection.type)
+      }));
+    
+    console.log('PersonalizedHomepage - Processed reflections for display:', filtered);
+    return filtered;
+  }, [reflections]);
 
   // Load saved burnout assessment on mount and check if it's from today
   useEffect(() => {
@@ -463,5 +491,87 @@ export const PersonalizedHomepage: React.FC<PersonalizedHomepageProps> = ({ onNa
     </div>
   );
 };
+
+// Helper functions for converting reflection data
+function getReflectionTitle(type: string): string {
+  const titleMap: Record<string, string> = {
+    'wellness_checkin': 'Wellness Check-in',
+    'post_assignment': 'Post-Assignment Debrief',
+    'pre_assignment': 'Pre-Assignment Prep',
+    'teaming_prep': 'Teaming Preparation',
+    'teaming_reflection': 'Teaming Reflection',
+    'mentoring_prep': 'Mentoring Preparation',
+    'mentoring_reflection': 'Mentoring Reflection',
+    'ethics_meaning': 'Ethics & Meaning Check',
+    'in_session_self': 'In-Session Self Check',
+    'in_session_team': 'In-Session Team Sync',
+    'role_space': 'Role Space Reflection',
+    'direct_communication': 'Direct Communication Reflection'
+  };
+  return titleMap[type] || 'Reflection';
+}
+
+function getReflectionPreview(data: any): string {
+  // Generate a preview based on the data
+  if (data?.notes && typeof data.notes === 'string') {
+    return data.notes.substring(0, 100) + (data.notes.length > 100 ? '...' : '');
+  }
+  if (data?.reflection && typeof data.reflection === 'string') {
+    return data.reflection.substring(0, 100) + (data.reflection.length > 100 ? '...' : '');
+  }
+  if (data?.thoughts && typeof data.thoughts === 'string') {
+    return data.thoughts.substring(0, 100) + (data.thoughts.length > 100 ? '...' : '');
+  }
+  if (data?.summary && typeof data.summary === 'string') {
+    return data.summary.substring(0, 100) + (data.summary.length > 100 ? '...' : '');
+  }
+  // Try to extract any text field from the data
+  if (data && typeof data === 'object') {
+    const textFields = Object.values(data).find(v => typeof v === 'string' && v.length > 0);
+    if (textFields && typeof textFields === 'string') {
+      return textFields.substring(0, 100) + (textFields.length > 100 ? '...' : '');
+    }
+  }
+  return 'Reflection completed';
+}
+
+function getReflectionMood(data: any): 'excellent' | 'good' | 'neutral' | 'challenging' | 'difficult' {
+  // Extract mood from data
+  if (data.mood) {
+    const moodValue = typeof data.mood === 'number' ? data.mood : parseInt(data.mood);
+    if (moodValue >= 8) return 'excellent';
+    if (moodValue >= 6) return 'good';
+    if (moodValue >= 4) return 'neutral';
+    if (moodValue >= 2) return 'challenging';
+    return 'difficult';
+  }
+  if (data.energyLevel) {
+    const energy = typeof data.energyLevel === 'number' ? data.energyLevel : parseInt(data.energyLevel);
+    if (energy >= 8) return 'excellent';
+    if (energy >= 6) return 'good';
+    if (energy >= 4) return 'neutral';
+    if (energy >= 2) return 'challenging';
+    return 'difficult';
+  }
+  return 'neutral';
+}
+
+function getReflectionTags(type: string): string[] {
+  const tagMap: Record<string, string[]> = {
+    'wellness_checkin': ['wellness', 'check-in'],
+    'post_assignment': ['assignment', 'debrief'],
+    'pre_assignment': ['assignment', 'preparation'],
+    'teaming_prep': ['team', 'preparation'],
+    'teaming_reflection': ['team', 'reflection'],
+    'mentoring_prep': ['mentoring', 'preparation'],
+    'mentoring_reflection': ['mentoring', 'reflection'],
+    'ethics_meaning': ['ethics', 'meaning'],
+    'in_session_self': ['in-session', 'self-check'],
+    'in_session_team': ['in-session', 'team'],
+    'role_space': ['role', 'space'],
+    'direct_communication': ['communication', 'reflection']
+  };
+  return tagMap[type] || ['reflection'];
+}
 
 export default PersonalizedHomepage;

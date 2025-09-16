@@ -5,7 +5,10 @@ import { PricingModal } from './components/PricingModal';
 import { WaitlistModal } from './components/WaitlistModal';
 import { Footer } from './components/Footer';
 import { useAuth } from './contexts/AuthContext';
+import { useConversionFlow } from './hooks/useConversionFlow';
+import { ConversionFlow } from './components/ConversionFlow';
 import { CheckCircle, Sparkles, Award, Users, Heart, Shield, Clock } from 'lucide-react';
+import { HeartPulseIcon, SecureLockIcon, CommunityIcon, TargetIcon, GrowthIcon, HourglassPersonIcon, NotepadIcon, ChatBubbleIcon } from './components/CustomIcon';
 
 interface LandingPageProps {
   onGetStarted: () => void;
@@ -52,6 +55,12 @@ const colors = {
 
 function LandingPageEnhanced({ onGetStarted }: LandingPageProps) {
   const { user } = useAuth();
+  const { 
+    isVisible: conversionVisible, 
+    trigger: conversionTrigger, 
+    hideConversionFlow, 
+    showConversionFlow 
+  } = useConversionFlow();
   const [authModalOpen, setAuthModalOpen] = useState(false);
   const [authMode, setAuthMode] = useState<'login' | 'signup'>('login');
   const [pricingModalOpen, setPricingModalOpen] = useState(false);
@@ -586,15 +595,15 @@ function LandingPageEnhanced({ onGetStarted }: LandingPageProps) {
                   
                   <ul className="space-y-3 mb-8">
                     <li className="flex items-center">
-                      <CheckCircle className="h-5 w-5 mr-2 text-green-500 flex-shrink-0" />
+                      <NotepadIcon size={32} className="mr-3 flex-shrink-0" />
                       <span className="text-sm text-gray-700">Daily reflection prompts</span>
                     </li>
                     <li className="flex items-center">
-                      <CheckCircle className="h-5 w-5 mr-2 text-green-500 flex-shrink-0" />
+                      <HourglassPersonIcon size={32} className="mr-3 flex-shrink-0" />
                       <span className="text-sm text-gray-700">Stress reset tools</span>
                     </li>
                     <li className="flex items-center">
-                      <CheckCircle className="h-5 w-5 mr-2 text-green-500 flex-shrink-0" />
+                      <TargetIcon size={32} className="mr-3 flex-shrink-0" />
                       <span className="text-sm text-gray-700">Progress tracking</span>
                     </li>
                     <li className="flex items-center">
@@ -602,7 +611,7 @@ function LandingPageEnhanced({ onGetStarted }: LandingPageProps) {
                       <span className="text-sm text-gray-700">Mobile responsive</span>
                     </li>
                     <li className="flex items-center">
-                      <CheckCircle className="h-5 w-5 mr-2 text-green-500 flex-shrink-0" />
+                      <SecureLockIcon size={32} className="mr-3 flex-shrink-0" />
                       <span className="text-sm text-gray-700">Private & secure</span>
                     </li>
                   </ul>
@@ -789,6 +798,14 @@ function LandingPageEnhanced({ onGetStarted }: LandingPageProps) {
           50% { opacity: .7; }
         }
       `}</style>
+
+      {/* Conversion Flow Modal */}
+      {conversionVisible && (
+        <ConversionFlow 
+          onClose={hideConversionFlow}
+          trigger={conversionTrigger}
+        />
+      )}
     </div>
   );
 }

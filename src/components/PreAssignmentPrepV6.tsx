@@ -800,7 +800,7 @@ FEELING: ${formData.feeling_word}
               style={{
                 background: isSaving 
                   ? '#CCCCCC' 
-                  : 'linear-gradient(145deg, #6B8B60 0%, #5F7F55 100%)',
+                  : 'linear-gradient(135deg, #1b5e20, #2e7d32)',
                 color: '#FFFFFF',
                 boxShadow: isSaving 
                   ? 'none' 

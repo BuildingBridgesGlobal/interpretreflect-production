@@ -14,6 +14,50 @@ export function ChatWithElyaIframe() {
     return () => clearTimeout(timer);
   }, []);
 
+  // Add CSS to hide powered by text and branding
+  useEffect(() => {
+    const style = document.createElement('style');
+    style.textContent = `
+      #elya-iframe-container {
+        position: relative;
+        overflow: hidden;
+        border-radius: 0;
+      }
+      #elya-iframe-container::after {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        height: 35px;
+        background: linear-gradient(to bottom, transparent, white 20%, white);
+        pointer-events: none;
+        z-index: 2;
+      }
+      /* Additional masking for safety */
+      #elya-iframe-container::before {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        height: 40px;
+        background: white;
+        pointer-events: none;
+        z-index: 1;
+      }
+      /* Ensure iframe doesn't show scrollbars */
+      #elya-iframe {
+        overflow: hidden !important;
+      }
+    `;
+    document.head.appendChild(style);
+    
+    return () => {
+      document.head.removeChild(style);
+    };
+  }, []);
+
   const handleIframeLoad = () => {
     setIsLoading(false);
     setHasError(false);
@@ -92,15 +136,16 @@ export function ChatWithElyaIframe() {
         )}
 
         {/* Iframe Container */}
-        <div className="h-full w-full">
+        <div id="elya-iframe-container" className="h-full w-full relative">
           <iframe
             id="elya-iframe"
             src="https://agenticflow.ai/embed/agents/a1cab40c-bcc2-49d8-ab97-f233f9b83fb2"
             style={{
               width: '100%',
-              height: '100%',
+              height: 'calc(100% + 30px)',
               border: 'none',
               display: hasError ? 'none' : 'block',
+              marginBottom: '-30px',
             }}
             title="Chat with Elya - AI Wellness Companion"
             onLoad={handleIframeLoad}

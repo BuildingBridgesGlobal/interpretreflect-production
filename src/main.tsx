@@ -13,6 +13,7 @@ import './styles/typography.css';
 import './styles/header.css';
 import './styles/accessibleColors.css';
 import './styles/yellowSelection.css';
+import './styles/icons.css';
 
 // Disable console logs in production for better performance and security
 if (import.meta.env.PROD) {

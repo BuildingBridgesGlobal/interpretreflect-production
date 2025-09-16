@@ -13,6 +13,16 @@ import {
   Shield,
   MessageSquare,
 } from 'lucide-react';
+import { 
+  NotepadIcon, 
+  HeartPulseIcon, 
+  CommunityIcon, 
+  TargetIcon, 
+  GrowthIcon, 
+  SecureLockIcon, 
+  ChatBubbleIcon,
+  HourglassPersonIcon 
+} from '../CustomIcon';
 
 interface ReflectionTool {
   icon: React.ElementType;
@@ -31,9 +41,9 @@ interface ReflectionToolsProps {
 export const ReflectionTools: React.FC<ReflectionToolsProps> = ({ onToolSelect }) => {
   const reflectionCards: ReflectionTool[] = [
     {
-      icon: ClipboardCheck,
-      iconColor: 'text-blue-400',
-      iconBg: 'bg-blue-500/20',
+      icon: NotepadIcon,
+      iconColor: 'text-green-600',
+      iconBg: 'bg-green-500/20',
       title: 'Pre-Assignment Prep',
       description: 'Prime attention, steady the nervous system, and set...',
       status: [
@@ -42,9 +52,9 @@ export const ReflectionTools: React.FC<ReflectionToolsProps> = ({ onToolSelect }
       ],
     },
     {
-      icon: Brain,
-      iconColor: 'text-blue-400',
-      iconBg: 'bg-blue-500/20',
+      icon: TargetIcon,
+      iconColor: 'text-green-600',
+      iconBg: 'bg-green-500/20',
       title: 'Post-Assignment Debrief',
       description: 'Consolidate learning, de-load stress, and turn...',
       status: [
@@ -53,7 +63,7 @@ export const ReflectionTools: React.FC<ReflectionToolsProps> = ({ onToolSelect }
       ],
     },
     {
-      icon: Users,
+      icon: CommunityIcon,
       iconColor: 'text-purple-400',
       iconBg: 'bg-purple-500/20',
       title: 'Teaming Prep',
@@ -64,7 +74,7 @@ export const ReflectionTools: React.FC<ReflectionToolsProps> = ({ onToolSelect }
       ],
     },
     {
-      icon: RefreshCw,
+      icon: CommunityIcon,
       iconColor: 'text-purple-400',
       iconBg: 'bg-purple-500/20',
       title: 'Teaming Reflection',
@@ -75,7 +85,7 @@ export const ReflectionTools: React.FC<ReflectionToolsProps> = ({ onToolSelect }
       ],
     },
     {
-      icon: GraduationCap,
+      icon: GrowthIcon,
       iconColor: 'text-purple-400',
       iconBg: 'bg-purple-500/20',
       title: 'Mentoring Prep',
@@ -86,7 +96,7 @@ export const ReflectionTools: React.FC<ReflectionToolsProps> = ({ onToolSelect }
       ],
     },
     {
-      icon: Lightbulb,
+      icon: GrowthIcon,
       iconColor: 'text-purple-400',
       iconBg: 'bg-purple-500/20',
       title: 'Mentoring Reflection',
@@ -97,7 +107,7 @@ export const ReflectionTools: React.FC<ReflectionToolsProps> = ({ onToolSelect }
       ],
     },
     {
-      icon: Heart,
+      icon: HeartPulseIcon,
       iconColor: 'text-purple-400',
       iconBg: 'bg-purple-500/20',
       title: 'Wellness Check-in',
@@ -108,7 +118,7 @@ export const ReflectionTools: React.FC<ReflectionToolsProps> = ({ onToolSelect }
       ],
     },
     {
-      icon: Compass,
+      icon: TargetIcon,
       iconColor: 'text-red-400',
       iconBg: 'bg-red-500/20',
       title: 'Values Alignment Check-In',
@@ -119,7 +129,7 @@ export const ReflectionTools: React.FC<ReflectionToolsProps> = ({ onToolSelect }
       ],
     },
     {
-      icon: Activity,
+      icon: HourglassPersonIcon,
       iconColor: 'text-orange-400',
       iconBg: 'bg-orange-500/20',
       title: 'In-Session Self-Check',
@@ -130,7 +140,7 @@ export const ReflectionTools: React.FC<ReflectionToolsProps> = ({ onToolSelect }
       ],
     },
     {
-      icon: Zap,
+      icon: CommunityIcon,
       iconColor: 'text-purple-400',
       iconBg: 'bg-purple-500/20',
       title: 'In-Session Team Sync',
@@ -141,7 +151,7 @@ export const ReflectionTools: React.FC<ReflectionToolsProps> = ({ onToolSelect }
       ],
     },
     {
-      icon: Shield,
+      icon: SecureLockIcon,
       iconColor: 'text-green-400',
       iconBg: 'bg-green-500/20',
       title: 'Role-Space Reflection',
@@ -152,9 +162,9 @@ export const ReflectionTools: React.FC<ReflectionToolsProps> = ({ onToolSelect }
       ],
     },
     {
-      icon: MessageSquare,
-      iconColor: 'text-blue-400',
-      iconBg: 'bg-blue-500/20',
+      icon: ChatBubbleIcon,
+      iconColor: 'text-green-600',
+      iconBg: 'bg-green-500/20',
       title: 'Supporting Direct Communication',
       description: 'Reflect on facilitating respectful, independent communication',
       status: [
@@ -200,8 +210,8 @@ export const ReflectionTools: React.FC<ReflectionToolsProps> = ({ onToolSelect }
           onClick={() => handleToolClick(card.title)}
         >
           <div className="flex items-start justify-between mb-4">
-            <div className={`p-3 rounded-lg ${card.iconBg}`}>
-              <card.icon className={`h-6 w-6 ${card.iconColor}`} />
+            <div>
+              <card.icon size={56} />
             </div>
             <span className="text-xs px-2 py-1 rounded-full bg-gray-100 text-gray-600">
               Ready

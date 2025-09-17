@@ -102,7 +102,11 @@
       "Bash(start wordpad elya_part2_final.sql)",
       "Bash(taskkill:*)",
       "Bash(start wordpad \"C:\\Users\\maddo\\Desktop\\boltV1IR\\elya_part2_final.sql\")",
-      "Bash(find:*)"
+      "Bash(find:*)",
+      "Bash(do sed -i \"s/linear-gradient(145deg, #6B8B60 0%, #5F7F55 100%)/linear-gradient(135deg, #1b5e20, #2e7d32)/g\" \"$file\")",
+      "Bash(git branch:*)",
+      "Bash(tasklist)",
+      "Bash(do sed -i \"s/info@buildingbridgeslearning.com/hello@huviatechnologies.com/g\" \"$file\")"
     ],
     "deny": [],
     "ask": []

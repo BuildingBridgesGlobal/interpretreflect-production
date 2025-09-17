@@ -1,0 +1,163 @@
+================================================================================
+                    INTERPRETREFLECT PLATFORM SETUP GUIDE
+================================================================================
+
+📋 COMPLETE SETUP STEPS FOR INTERPRETREFLECT
+
+================================================================================
+1. PREREQUISITES
+================================================================================
+- Node.js installed (v16 or higher)
+- Supabase account (free tier is fine)
+- Stripe account (for payments - optional initially)
+- Google Cloud Console access (for Google OAuth)
+- Apple Developer account (for Apple Sign-In - optional)
+
+================================================================================
+2. ENVIRONMENT SETUP
+================================================================================
+Create a .env file in the /project directory with these variables:
+
+VITE_SUPABASE_URL=your_supabase_project_url
+VITE_SUPABASE_ANON_KEY=your_supabase_anon_key
+VITE_STRIPE_PUBLISHABLE_KEY=your_stripe_publishable_key
+
+================================================================================
+3. SUPABASE CONFIGURATION
+================================================================================
+1. Go to your Supabase Dashboard
+2. Enable Authentication Providers:
+   - Navigate to Authentication → Providers
+   - Enable Email (for magic links)
+   - Enable Google OAuth:
+     - Add Google Client ID and Secret
+     - Set redirect URL: https://your-project.supabase.co/auth/v1/callback
+   - Enable Apple (if you have Apple Developer account)
+
+3. Configure Email Templates:
+   - Go to Authentication → Email Templates
+   - Customize the Magic Link template for your brand
+
+4. Run Database Migrations:
+   - Go to SQL Editor in Supabase
+   - Run these migration files in order:
+     1. user_profiles_schema.sql
+     2. growth_insights_tables_fixed.sql
+     3. subscriptions_schema.sql
+
+================================================================================
+4. GOOGLE OAUTH SETUP
+================================================================================
+1. Go to Google Cloud Console (https://console.cloud.google.com/)
+2. Create a new project or select existing
+3. Enable Google+ API
+4. Create OAuth 2.0 credentials:
+   - Add authorized redirect URIs:
+     - http://localhost:5173
+     - https://your-domain.com
+     - Your Supabase callback URL
+5. Copy Client ID and Secret to Supabase
+
+================================================================================
+5. LOCAL DEVELOPMENT
+================================================================================
+# Navigate to project directory
+cd C:\Users\maddo\Desktop\boltV1IR\project
+
+# Install dependencies
+npm install
+
+# Start development server
+npm run dev
+
+# Access at http://localhost:5173
+
+================================================================================
+6. TESTING THE AUTHENTICATION FLOW
+================================================================================
+1. Open the app at http://localhost:5173
+2. Click "Get Started" or "Sign In"
+3. Test each method:
+   - Google Sign-In: Click "Continue with Google"
+   - Magic Link: Enter email and click "Continue with Email"
+   - Toggle: Switch between Sign In/Sign Up modes
+
+================================================================================
+7. PRODUCTION DEPLOYMENT
+================================================================================
+# Build for production
+npm run build
+
+# Deploy to your hosting (Vercel, Netlify, etc.)
+# The dist folder contains your built app
+
+================================================================================
+8. VERCEL DEPLOYMENT (RECOMMENDED)
+================================================================================
+# Install Vercel CLI
+npm i -g vercel
+
+# Deploy
+vercel
+
+# Follow prompts to connect to your Vercel account
+# Set environment variables in Vercel dashboard
+
+================================================================================
+9. POST-DEPLOYMENT CHECKLIST
+================================================================================
+□ Update Supabase URL settings with your production domain
+□ Update Google OAuth redirect URIs
+□ Configure custom domain (if you have one)
+□ Set up SSL certificate (automatic with Vercel/Netlify)
+□ Test all authentication methods in production
+□ Configure Stripe webhooks (for payments)
+□ Set up email domain verification for better deliverability
+
+================================================================================
+10. CURRENT FEATURES WORKING
+================================================================================
+
+✅ AUTHENTICATION:
+- Google SSO
+- Apple SSO (if configured)
+- Magic Link (passwordless email)
+- Session management
+- Security logging
+
+✅ USER FEATURES:
+- Profile settings with credentials selector
+- Navigation without icons
+- Green gradient theme throughout
+- Growth Insights (with real data when authenticated)
+- Stress Reset tools
+- Reflection Studio (placeholder)
+
+✅ DATABASE:
+- User profiles
+- Reflection entries
+- Stress reset logs
+- Daily activity tracking
+- Burnout assessments
+
+================================================================================
+⚠️ IMPORTANT NOTES
+================================================================================
+1. Dev Mode: Currently running in dev mode bypasses auth. Remove dev mode for production.
+2. Magic Links: Will only work with proper email configuration in Supabase
+3. OAuth: Requires proper setup in both Google Console and Supabase
+4. Database: Ensure all migrations are run in Supabase before going live
+5. Payments: Stripe integration exists but needs webhook configuration for production
+
+================================================================================
+🚀 QUICK START COMMAND
+================================================================================
+# One command to start after setup
+cd project && npm install && npm run dev
+
+Your app should now be running at http://localhost:5173 with the modern
+authentication system fully functional!
+
+================================================================================
+                              END OF SETUP GUIDE
+================================================================================

@@ -1,0 +1,162 @@
+/* Import Design System - Core CSS Variables and Utilities */
+@import './styles/design-system.css';
+
+/* Import Search Box Component Styles */
+@import './styles/search-box.css';
+
+/* Import Help Widget Component Styles */
+@import './styles/help-widget.css';
+
+/* Import WCAG AA compliant color system */
+@import './styles/colors.css';
+
+/* Import typography system - WCAG AA compliant */
+@import './styles/typography.css';
+
+/* Import balanced accessibility improvements */
+@import './styles/balanced-accessibility.css';
+
+/* Import preferences styles */
+@import './styles/preferences.css';
+
+/* Import button visibility fixes */
+@import './styles/button-fixes.css';
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Base body styles - enhanced with typography system */
+body {
+  margin: 0;
+  padding: 0;
+  background: white;
+  min-height: 100vh;
+  /* Typography is now handled by typography.css */
+}
+
+#root {
+  min-height: 100vh;
+}
+
+/* Hide screen reader only text from visual display */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
+}
+
+/* Show when focused for keyboard users */
+.sr-only:focus,
+.focus\:not-sr-only:focus {
+  position: static;
+  width: auto;
+  height: auto;
+  padding: inherit;
+  margin: inherit;
+  overflow: visible;
+  clip: auto;
+  white-space: normal;
+}
+
+/* Skip to main content link */
+.skip-link {
+  position: absolute;
+  top: -40px;
+  left: 6px;
+  background: #000000;
+  color: #ffffff;
+  padding: 8px 16px;
+  text-decoration: none;
+  z-index: 1000;
+  border-radius: 0 0 4px 4px;
+  font-size: 14px;
+  font-weight: 500;
+  transition: top 0.2s ease;
+}
+
+.skip-link:focus {
+  top: 0;
+  outline: 2px solid #ffffff;
+  outline-offset: 2px;
+}
+
+/* Subtle pulse animation for premium buttons */
+@keyframes pulse-subtle {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.85;
+  }
+}
+
+.animate-pulse-subtle {
+  animation: pulse-subtle 2s ease-in-out infinite;
+}
+
+/* Accessibility Settings Classes */
+/* Larger Text */
+.larger-text {
+  font-size: 1.2em !important;
+}
+
+.larger-text * {
+  font-size: inherit;
+}
+
+.larger-text h1 { font-size: 2.4em !important; }
+.larger-text h2 { font-size: 2em !important; }
+.larger-text h3 { font-size: 1.7em !important; }
+.larger-text h4 { font-size: 1.4em !important; }
+.larger-text h5 { font-size: 1.2em !important; }
+.larger-text h6 { font-size: 1.1em !important; }
+
+/* High Contrast Mode */
+.high-contrast {
+  filter: contrast(1.2);
+}
+
+.high-contrast * {
+  border-color: #000 !important;
+}
+
+.high-contrast button,
+.high-contrast input,
+.high-contrast textarea,
+.high-contrast select {
+  border: 2px solid #000 !important;
+}
+
+.high-contrast a {
+  text-decoration: underline !important;
+}
+
+/* Reduce Motion */
+.reduce-motion * {
+  animation-duration: 0.01ms !important;
+  animation-iteration-count: 1 !important;
+  transition-duration: 0.01ms !important;
+  animation-delay: 0.01ms !important;
+  transition-delay: 0.01ms !important;
+}
+
+.reduce-motion *::before,
+.reduce-motion *::after {
+  animation-duration: 0.01ms !important;
+  animation-iteration-count: 1 !important;
+  transition-duration: 0.01ms !important;
+}
+
+/* Screen Reader Announcements */
+[role="status"],
+[role="alert"],
+[aria-live] {
+  position: relative;
+}

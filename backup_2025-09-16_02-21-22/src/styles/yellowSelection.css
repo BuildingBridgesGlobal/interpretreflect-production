@@ -1,0 +1,70 @@
+/**
+ * Soft Yellow Selection Styles for Better Readability
+ * Replaces light green with soft yellow across all components
+ */
+
+/* Tailwind-compatible yellow classes */
+.bg-yellow-50 {
+  background-color: #fff7dc !important; /* Soft yellow */
+}
+
+.bg-yellow-100 {
+  background-color: #fff3c4 !important;
+}
+
+/* Radio button selected states */
+.radio-selected {
+  background-color: #fff7dc !important;
+  border-color: #00695c !important;
+}
+
+/* Checkbox selected states */
+.checkbox-selected {
+  background-color: #fff7dc !important;
+  border-color: #00695c !important;
+}
+
+/* Multi-select selected states */
+.multiselect-selected {
+  background-color: #fff7dc !important;
+  border-color: #00695c !important;
+}
+
+/* Override any green selections */
+.bg-teal-50,
+.bg-green-50 {
+  background-color: #fff7dc !important; /* Soft yellow instead */
+}
+
+/* Selected list items */
+.selected-list-item {
+  background-color: #fff7dc !important;
+  border-left: 3px solid #00695c !important;
+}
+
+/* Focus states with yellow highlight */
+input[type="radio"]:checked + label,
+input[type="checkbox"]:checked + label {
+  background-color: #fff7dc !important;
+}
+
+/* Selected cards */
+.card-selected {
+  background-color: #fff7dc !important;
+  border: 2px solid #00695c !important;
+}
+
+/* Hover states */
+.hover\:bg-yellow-50:hover {
+  background-color: #fff7dc !important;
+}
+
+/* Dark mode adjustments */
+@media (prefers-color-scheme: dark) {
+  .bg-yellow-50,
+  .radio-selected,
+  .checkbox-selected,
+  .multiselect-selected {
+    background-color: #4a4a3a !important; /* Darker yellow for dark mode */
+  }
+}

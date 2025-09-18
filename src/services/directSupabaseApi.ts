@@ -7,6 +7,9 @@ const SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL;
 const SUPABASE_ANON_KEY = import.meta.env.VITE_SUPABASE_ANON_KEY;
 
 export async function directInsertReflection(data: any, accessToken?: string) {
+  console.log('directInsertReflection - Data being sent:', data);
+  console.log('directInsertReflection - entry_kind field:', data.entry_kind);
+
   try {
     const response = await fetch(`${SUPABASE_URL}/rest/v1/reflection_entries`, {
       method: 'POST',

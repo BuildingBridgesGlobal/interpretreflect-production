@@ -118,10 +118,8 @@ button {
   transition: all 0.2s ease;
 }
 
-button:hover:not(:disabled) {
-  background-color: #4A6B3E;
-  transform: translateY(-1px);
-}
+/* Removed global button hover that was forcing green background
+   Buttons should define their own hover states */
 
 button:disabled {
   opacity: 0.6;

@@ -68,6 +68,7 @@ export const AllReflectionsView: React.FC<AllReflectionsViewProps> = ({
       }
 
       const data = await response.json();
+      console.log('AllReflectionsView - Fetched reflections:', data);
       setReflections(data);
     } catch (error) {
       console.error('Error loading reflections:', error);
@@ -151,6 +152,7 @@ export const AllReflectionsView: React.FC<AllReflectionsViewProps> = ({
   };
 
   const getReflectionTitle = (kind: string, data?: any) => {
+    console.log('AllReflectionsView - getReflectionTitle called with kind:', kind, 'data:', data);
     // Use centralized function for consistent naming
     return getDisplayName(kind);
   };

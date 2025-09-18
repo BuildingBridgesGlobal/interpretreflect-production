@@ -107,6 +107,7 @@ export function getAllEntryKinds(): string[] {
 
 // Helper function to get display name from entry kind
 export function getDisplayName(entryKind: string | null | undefined): string {
+  console.log('getDisplayName called with:', entryKind); // Debug log
   if (!entryKind) return 'Personal Reflection';
 
   // Find the reflection type with matching entryKind

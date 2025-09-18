@@ -1,5 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { Routes, Route, useNavigate } from 'react-router-dom';
+import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 import type { BurnoutData, ViewMode } from './types';
 import LandingPageEnhanced from './LandingPageEnhanced';
 import { Header } from './components/layout/Header';
@@ -894,13 +895,64 @@ function App() {
                   );
                 }
                 
-                // TODO: Implement actual chart rendering when we have data
+                // Prepare data for the chart
+                const chartData = savedReflections
+                  .filter(r => r.data.stressLevel || r.data.energyLevel)
+                  .sort((a, b) => new Date(a.timestamp).getTime() - new Date(b.timestamp).getTime())
+                  .map(r => ({
+                    date: new Date(r.timestamp).toLocaleDateString('en-US', { month: 'short', day: 'numeric' }),
+                    stress: r.data.stressLevel || null,
+                    energy: r.data.energyLevel || null
+                  }));
+
                 return (
-                  <div className="text-center">
-                    <p className="text-sm" style={{ color: 'var(--text-tertiary)' }}>
-                      Chart visualization coming soon
-                    </p>
-                  </div>
+                  <ResponsiveContainer width="100%" height="100%">
+                    <LineChart
+                      data={chartData}
+                      margin={{ top: 5, right: 30, left: 20, bottom: 5 }}
+                    >
+                      <CartesianGrid strokeDasharray="3 3" stroke="#E8E5E0" />
+                      <XAxis
+                        dataKey="date"
+                        tick={{ fontSize: 11, fill: '#666' }}
+                        stroke="#E8E5E0"
+                      />
+                      <YAxis
+                        domain={[0, 10]}
+                        ticks={[0, 2, 4, 6, 8, 10]}
+                        tick={{ fontSize: 11, fill: '#666' }}
+                        stroke="#E8E5E0"
+                      />
+                      <Tooltip
+                        contentStyle={{
+                          backgroundColor: '#FAF9F6',
+                          border: '1px solid #6B8B60',
+                          borderRadius: '8px'
+                        }}
+                      />
+                      <Legend
+                        wrapperStyle={{ fontSize: '12px' }}
+                      />
+                      <Line
+                        type="monotone"
+                        dataKey="stress"
+                        stroke="#DC2626"
+                        strokeWidth={2}
+                        dot={{ r: 4 }}
+                        activeDot={{ r: 6 }}
+                        name="Stress Level"
+                      />
+                      <Line
+                        type="monotone"
+                        dataKey="energy"
+                        stroke="#6B8B60"
+                        strokeWidth={2}
+                        dot={{ r: 4 }}
+                        activeDot={{ r: 6 }}
+                        name="Energy Level"
+                      />
+                    </LineChart>
+                  </ResponsiveContainer>
                 );
               })()}
             </div>

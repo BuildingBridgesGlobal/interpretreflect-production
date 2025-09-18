@@ -435,8 +435,8 @@ OVERALL WELLNESS: ${formData.overall_wellness_rating}/10
               />
               <span className="text-2xl font-bold px-4 py-2 rounded-lg"
                 style={{
-                  backgroundColor: 'rgba(220, 38, 38, 0.1)',
-                  color: '#DC2626'
+                  backgroundColor: 'rgba(107, 139, 96, 0.1)',
+                  color: '#2D5F3F'
                 }}>
                 {formData.stressLevel}
               </span>

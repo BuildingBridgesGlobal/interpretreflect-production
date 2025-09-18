@@ -23,9 +23,9 @@ export const ReflectionDetailView: React.FC<ReflectionDetailViewProps> = ({ refl
     });
   };
 
-  const getReflectionTitle = (type: string): string => {
-    // Use centralized function for consistent naming
-    return getDisplayName(type);
+  const getReflectionTitle = (type: string, data?: any): string => {
+    // Use centralized function for consistent naming - pass data to infer type if needed
+    return getDisplayName(type, data);
   };
 
   const renderFieldValue = (value: any): string => {
@@ -63,7 +63,7 @@ export const ReflectionDetailView: React.FC<ReflectionDetailViewProps> = ({ refl
           <div className="flex items-center justify-between">
             <div>
               <h2 className="text-2xl font-bold text-gray-900">
-                {getReflectionTitle(reflection.type)}
+                {getReflectionTitle(reflection.type, reflection.data)}
               </h2>
               <div className="flex items-center gap-4 mt-2 text-sm text-gray-600">
                 <span className="flex items-center gap-1">

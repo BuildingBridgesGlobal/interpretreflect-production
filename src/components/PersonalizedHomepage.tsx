@@ -147,7 +147,7 @@ export const PersonalizedHomepage: React.FC<PersonalizedHomepageProps> = ({ onNa
       .map(reflection => ({
         id: reflection.id,
         date: new Date(reflection.timestamp),
-        title: getReflectionTitle(reflection.type),
+        title: getReflectionTitle(reflection.type, reflection.data),
         preview: getReflectionPreview(reflection.data),
         mood: getReflectionMood(reflection.data),
         tags: getReflectionTags(reflection.type)
@@ -621,9 +621,9 @@ export const PersonalizedHomepage: React.FC<PersonalizedHomepageProps> = ({ onNa
 };
 
 // Helper functions for converting reflection data
-function getReflectionTitle(type: string): string {
-  // Use centralized function for consistent naming
-  return getDisplayName(type);
+function getReflectionTitle(type: string, data?: any): string {
+  // Use centralized function for consistent naming - pass data to infer type if needed
+  return getDisplayName(type, data);
 }
 
 function getReflectionPreview(data: any): string {

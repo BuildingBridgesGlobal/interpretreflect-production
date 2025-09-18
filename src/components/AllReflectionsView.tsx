@@ -153,8 +153,8 @@ export const AllReflectionsView: React.FC<AllReflectionsViewProps> = ({
 
   const getReflectionTitle = (kind: string, data?: any) => {
     console.log('AllReflectionsView - getReflectionTitle called with kind:', kind, 'data:', data);
-    // Use centralized function for consistent naming
-    return getDisplayName(kind);
+    // Use centralized function for consistent naming - pass data to infer type if needed
+    return getDisplayName(kind, data);
   };
 
   const getReflectionPreview = (data: any) => {

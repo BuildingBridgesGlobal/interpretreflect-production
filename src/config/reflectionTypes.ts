@@ -105,9 +105,59 @@ export function getAllEntryKinds(): string[] {
   return Object.values(REFLECTION_TYPES).map(type => type.entryKind);
 }
 
-// Helper function to get display name from entry kind
-export function getDisplayName(entryKind: string | null | undefined): string {
-  console.log('getDisplayName called with:', entryKind); // Debug log
+// Helper function to get display name from entry kind or data
+export function getDisplayName(entryKind: string | null | undefined, data?: any): string {
+  console.log('getDisplayName called with:', entryKind, 'data:', data); // Debug log
+
+  // If no entry_kind, try to infer from data
+  if (!entryKind && data) {
+    // Check for Post-Assignment Debrief (has duration, nextSteps, boundaries)
+    if (data.duration && data.nextSteps && data.boundaries) {
+      return 'Post-Assignment Debrief';
+    }
+
+    // Check for Pre-Assignment Prep
+    if (data.context_background || data.materials_review || data.anticipated_demands) {
+      return 'Pre-Assignment Prep';
+    }
+
+    // Check for Wellness Check-in
+    if (data.current_feeling || data.wellness_score || data.stress_level) {
+      return 'Wellness Check-in';
+    }
+
+    // Check for Team reflections
+    if (data.team_context || data.team_dynamics) {
+      return 'Teaming Prep';
+    }
+    if (data.team_effectiveness || data.collaboration_success) {
+      return 'Teaming Reflection';
+    }
+
+    // Check for Mentoring reflections
+    if (data.mentoring_goals || data.mentoring_approach) {
+      return 'Mentoring Prep';
+    }
+    if (data.mentoring_outcomes || data.mentoring_insights) {
+      return 'Mentoring Reflection';
+    }
+
+    // Check for Role-Space
+    if (data.role_space) {
+      return 'Role-Space Reflection';
+    }
+
+    // Check for Values Alignment
+    if (data.values_reflection || data.ethical_considerations) {
+      return 'Values Alignment Check-In';
+    }
+
+    // Check for simple reflections
+    if (data.commitment) return 'Commitment Reflection';
+    if (data.gratitude) return 'Gratitude Practice';
+    if (data.affirmation) return 'Daily Affirmation';
+  }
+
   if (!entryKind) return 'Personal Reflection';
 
   // Find the reflection type with matching entryKind

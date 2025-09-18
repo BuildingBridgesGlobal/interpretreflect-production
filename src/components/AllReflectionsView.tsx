@@ -12,6 +12,7 @@ import {
 import { getSessionToken } from '../services/directSupabaseApi';
 import { getDisplayName } from '../config/reflectionTypes';
 import { ReflectionDetailView } from './ReflectionDetailView';
+import { ConfirmationModal } from './ConfirmationModal';
 
 interface Reflection {
   id: string;
@@ -40,6 +41,10 @@ export const AllReflectionsView: React.FC<AllReflectionsViewProps> = ({
   const [searchTerm, setSearchTerm] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
   const [selectedReflection, setSelectedReflection] = useState<any>(null);
+  const [confirmDelete, setConfirmDelete] = useState<{ isOpen: boolean; reflectionId: string | null }>({
+    isOpen: false,
+    reflectionId: null
+  });
   const itemsPerPage = 10;
 
   // Load all reflections
@@ -79,12 +84,13 @@ export const AllReflectionsView: React.FC<AllReflectionsViewProps> = ({
     }
   };
 
-  const handleDelete = async (reflectionId: string) => {
-    if (!confirm('Are you sure you want to delete this reflection?')) {
-      return;
-    }
+  const confirmDeleteReflection = async () => {
+    if (!confirmDelete.reflectionId) return;
 
+    const reflectionId = confirmDelete.reflectionId;
+    setConfirmDelete({ isOpen: false, reflectionId: null });
     setDeletingId(reflectionId);
+
     try {
       const accessToken = await getSessionToken();
       const SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL;
@@ -301,7 +307,7 @@ export const AllReflectionsView: React.FC<AllReflectionsViewProps> = ({
                         <Eye className="w-4 h-4" />
                       </button>
                       <button
-                        onClick={() => handleDelete(reflection.id)}
+                        onClick={() => setConfirmDelete({ isOpen: true, reflectionId: reflection.id })}
                         disabled={deletingId === reflection.id}
                         className={`p-2 text-white rounded-lg transition-all shadow-sm hover:shadow-md hover:opacity-90 ${
                           deletingId === reflection.id ? 'opacity-50 cursor-not-allowed' : ''
@@ -362,6 +368,18 @@ export const AllReflectionsView: React.FC<AllReflectionsViewProps> = ({
           onClose={() => setSelectedReflection(null)}
         />
       )}
+
+      {/* Delete Confirmation Modal */}
+      <ConfirmationModal
+        isOpen={confirmDelete.isOpen}
+        title="Delete Reflection"
+        message="Are you sure you want to delete this reflection? This action cannot be undone."
+        confirmText="Delete"
+        cancelText="Cancel"
+        onConfirm={confirmDeleteReflection}
+        onCancel={() => setConfirmDelete({ isOpen: false, reflectionId: null })}
+        isDanger={true}
+      />
     </div>
   );
 };

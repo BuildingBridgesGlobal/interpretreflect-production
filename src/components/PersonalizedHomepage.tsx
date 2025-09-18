@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { 
+import {
   Calendar,
   TrendingUp,
   Heart,
@@ -19,9 +19,15 @@ import {
   Brain,
   Shield,
   Gauge,
-  AlertCircle
+  AlertCircle,
+  Trash2
 } from 'lucide-react';
 import { DailyBurnoutGaugeAccessible } from './DailyBurnoutGaugeAccessible';
+import { getSessionToken } from '../services/directSupabaseApi';
+import { AllReflectionsView } from './AllReflectionsView';
+import { ReflectionDetailView } from './ReflectionDetailView';
+import { ConfirmationModal } from './ConfirmationModal';
+import { useAuth } from '../contexts/AuthContext';
 
 interface RecentReflection {
   id: string;
@@ -47,16 +53,26 @@ interface PersonalizedHomepageProps {
     data: any;
     timestamp: string;
   }>;
+  onReflectionDeleted?: (reflectionId: string) => void;
 }
 
-export const PersonalizedHomepage: React.FC<PersonalizedHomepageProps> = ({ onNavigate, reflections = [] }) => {
+export const PersonalizedHomepage: React.FC<PersonalizedHomepageProps> = ({ onNavigate, reflections = [], onReflectionDeleted }) => {
+  const { user } = useAuth();
   const [userName] = useState('Sarah');
   const [greeting, setGreeting] = useState('');
   const [dateString, setDateString] = useState('');
   const [showBurnoutGauge, setShowBurnoutGauge] = useState(false);
+  const [showAllReflections, setShowAllReflections] = useState(false);
   const [burnoutScore, setBurnoutScore] = useState<number | null>(null);
   const [burnoutLevel, setBurnoutLevel] = useState<'low' | 'moderate' | 'high' | 'severe' | null>(null);
   const [lastAssessmentDate, setLastAssessmentDate] = useState<string | null>(null);
+  const [deletingId, setDeletingId] = useState<string | null>(null);
+  const [selectedReflection, setSelectedReflection] = useState<any>(null);
+  const [confirmDelete, setConfirmDelete] = useState<{ isOpen: boolean; reflectionId: string | null }>({
+    isOpen: false,
+    reflectionId: null
+  });
+  const [localReflections, setLocalReflections] = useState(reflections);
   
   const [wellnessStats] = useState<WellnessStats>({
     mood: 4,
@@ -65,16 +81,66 @@ export const PersonalizedHomepage: React.FC<PersonalizedHomepageProps> = ({ onNa
     weeklyProgress: 65
   });
 
+  // Update local reflections when props change
+  useEffect(() => {
+    setLocalReflections(reflections);
+  }, [reflections]);
+
+  // Delete reflection function
+  const handleDeleteReflection = async () => {
+    if (!confirmDelete.reflectionId) return;
+
+    const reflectionId = confirmDelete.reflectionId;
+    setDeletingId(reflectionId);
+    setConfirmDelete({ isOpen: false, reflectionId: null });
+
+    try {
+      const accessToken = await getSessionToken();
+      const SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL;
+      const SUPABASE_ANON_KEY = import.meta.env.VITE_SUPABASE_ANON_KEY;
+
+      const response = await fetch(
+        `${SUPABASE_URL}/rest/v1/reflection_entries?id=eq.${reflectionId}`,
+        {
+          method: 'DELETE',
+          headers: {
+            'apikey': SUPABASE_ANON_KEY,
+            'Authorization': `Bearer ${accessToken || SUPABASE_ANON_KEY}`,
+          }
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error('Failed to delete reflection');
+      }
+
+      // Remove from local state without reloading
+      setLocalReflections(prev => prev.filter(r => r.id !== reflectionId));
+
+      // Also update parent state
+      if (onReflectionDeleted) {
+        onReflectionDeleted(reflectionId);
+      }
+
+      console.log('Reflection deleted successfully');
+    } catch (error) {
+      console.error('Error deleting reflection:', error);
+      // You could show an error modal here instead of alert
+    } finally {
+      setDeletingId(null);
+    }
+  };
+
   // Convert passed reflections to the format needed for display
   const recentReflections = React.useMemo<RecentReflection[]>(() => {
-    console.log('PersonalizedHomepage - Raw reflections received:', reflections);
-    
-    if (!reflections || reflections.length === 0) {
+    console.log('PersonalizedHomepage - Raw reflections received:', localReflections);
+
+    if (!localReflections || localReflections.length === 0) {
       console.log('PersonalizedHomepage - No reflections to display');
       return [];
     }
-    
-    const filtered = reflections
+
+    const filtered = localReflections
       .filter(r => r.type && r.type !== 'burnout_assessment') // Filter out burnout assessments
       .slice(0, 5) // Show only the 5 most recent
       .map(reflection => ({
@@ -85,10 +151,10 @@ export const PersonalizedHomepage: React.FC<PersonalizedHomepageProps> = ({ onNa
         mood: getReflectionMood(reflection.data),
         tags: getReflectionTags(reflection.type)
       }));
-    
+
     console.log('PersonalizedHomepage - Processed reflections for display:', filtered);
     return filtered;
-  }, [reflections]);
+  }, [localReflections]);
 
   // Load saved burnout assessment on mount and check if it's from today
   useEffect(() => {
@@ -171,15 +237,29 @@ export const PersonalizedHomepage: React.FC<PersonalizedHomepageProps> = ({ onNa
     const now = new Date();
     const diff = now.getTime() - date.getTime();
     const days = Math.floor(diff / (1000 * 60 * 60 * 24));
-    
+
     if (days === 0) {
       const hours = Math.floor(diff / (1000 * 60 * 60));
-      if (hours === 0) return 'Just now';
-      return `${hours} hour${hours > 1 ? 's' : ''} ago`;
+      if (hours === 0) {
+        const minutes = Math.floor(diff / (1000 * 60));
+        if (minutes < 5) return 'Just now';
+        return `${minutes} minutes ago`;
+      }
+      if (hours === 1) return '1 hour ago';
+      return `${hours} hours ago`;
     }
     if (days === 1) return 'Yesterday';
     if (days < 7) return `${days} days ago`;
-    return date.toLocaleDateString();
+
+    // Format as readable date for older reflections
+    return date.toLocaleDateString('en-US', {
+      month: 'short',
+      day: 'numeric',
+      year: date.getFullYear() !== now.getFullYear() ? 'numeric' : undefined,
+      hour: 'numeric',
+      minute: '2-digit',
+      hour12: true
+    });
   };
 
   return (
@@ -358,24 +438,27 @@ export const PersonalizedHomepage: React.FC<PersonalizedHomepageProps> = ({ onNa
               <div className="px-5 py-4 border-b border-gray-100">
                 <div className="flex items-center justify-between">
                   <h2 className="text-lg font-semibold text-gray-900">Recent Reflections</h2>
-                  <button 
+                  <button
                     onClick={() => {
-                      // In a real app, this would navigate to a dedicated "All Reflections" page
-                      // For now, we'll show an alert if there are reflections
-                      if (recentReflections.length > 0) {
-                        alert('All Reflections view coming soon!');
+                      if (recentReflections.length > 0 || localReflections.length > 0) {
+                        setShowAllReflections(true);
                       }
                     }}
                     disabled={recentReflections.length === 0}
-                    className={`text-sm font-medium flex items-center gap-1 transition-all ${
-                      recentReflections.length > 0 
-                        ? 'bg-gradient-to-r from-sage-500 to-green-500 bg-clip-text text-transparent hover:from-sage-600 hover:to-green-600 cursor-pointer' 
-                        : 'text-gray-400 cursor-not-allowed'
+                    className={`px-3 py-1.5 text-sm font-medium flex items-center gap-1 rounded-lg transition-all shadow-sm hover:shadow-md hover:opacity-90 ${
+                      recentReflections.length > 0
+                        ? 'text-white cursor-pointer'
+                        : 'text-gray-400 cursor-not-allowed opacity-50'
                     }`}
+                    style={{
+                      background: recentReflections.length > 0
+                        ? 'linear-gradient(135deg, #1b5e20, #2e7d32)'
+                        : '#e5e7eb'
+                    }}
                     title={recentReflections.length === 0 ? 'No reflections to view yet' : 'View all reflections'}
                   >
                     View all
-                    <ChevronRight className={`w-4 h-4 ${recentReflections.length > 0 ? 'text-sage-500' : 'text-gray-400'}`} />
+                    <ChevronRight className="w-4 h-4" />
                   </button>
                 </div>
               </div>
@@ -394,17 +477,20 @@ export const PersonalizedHomepage: React.FC<PersonalizedHomepageProps> = ({ onNa
                             <h3 className="font-medium text-gray-900 mb-1">
                               {reflection.title}
                             </h3>
-                            <p className="text-xs text-gray-500 flex items-center gap-1">
+                            <p className="text-xs text-gray-500 flex items-center gap-1.5 mt-1">
                               <Clock className="w-3 h-3" />
                               {formatRelativeTime(reflection.date)}
                             </p>
                           </div>
                         </div>
                         <div className="flex gap-2">
-                          <button 
+                          <button
                             onClick={() => {
-                              onNavigate?.('reflection');
-                              // In a real app, this would open the specific reflection
+                              // Find the full reflection data from localReflections
+                              const fullReflection = localReflections.find(r => r.id === reflection.id);
+                              if (fullReflection) {
+                                setSelectedReflection(fullReflection);
+                              }
                             }}
                             className="p-2 text-white rounded-lg transition-all shadow-sm hover:shadow-md hover:opacity-90"
                             style={{ background: 'linear-gradient(135deg, #1b5e20, #2e7d32)' }}
@@ -412,16 +498,16 @@ export const PersonalizedHomepage: React.FC<PersonalizedHomepageProps> = ({ onNa
                           >
                             <Eye className="w-3.5 h-3.5" />
                           </button>
-                          <button 
-                            onClick={() => {
-                              onNavigate?.('reflection');
-                              // In a real app, this would open the reflection in edit mode
-                            }}
-                            className="p-2 text-white rounded-lg transition-all shadow-sm hover:shadow-md hover:opacity-90"
-                            style={{ background: 'linear-gradient(135deg, #1b5e20, #2e7d32)' }}
-                            title="Edit reflection"
+                          <button
+                            onClick={() => setConfirmDelete({ isOpen: true, reflectionId: reflection.id })}
+                            disabled={deletingId === reflection.id}
+                            className={`p-2 text-white rounded-lg transition-all shadow-sm hover:shadow-md hover:opacity-90 ${
+                              deletingId === reflection.id ? 'opacity-50 cursor-not-allowed' : ''
+                            }`}
+                            style={{ background: 'linear-gradient(135deg, #d32f2f, #f44336)' }}
+                            title="Delete reflection"
                           >
-                            <Edit3 className="w-3.5 h-3.5" />
+                            <Trash2 className="w-3.5 h-3.5" />
                           </button>
                         </div>
                       </div>
@@ -429,12 +515,21 @@ export const PersonalizedHomepage: React.FC<PersonalizedHomepageProps> = ({ onNa
                       <p className="text-sm text-gray-600 mb-3 ml-5">
                         {reflection.preview}
                       </p>
-                      
+
                       <div className="flex flex-wrap gap-1.5 ml-5">
-                        {reflection.tags.map((tag) => (
-                          <span 
+                        {reflection.tags.filter(tag => {
+                          // Filter out any timestamps that might have snuck in
+                          const isTimestamp = /^\d{4}-\d{2}-\d{2}T/.test(tag);
+                          if (isTimestamp) {
+                            console.warn('Found timestamp in tags:', tag);
+                            return false;
+                          }
+                          return true;
+                        }).map((tag) => (
+                          <span
                             key={tag}
-                            className="px-2 py-1 text-xs rounded-full bg-gradient-to-r from-sage-500 to-green-500 from-sage-50 to-green-50 text-sage-700 border border-sage-200"
+                            className="px-2 py-1 text-xs rounded-full text-white border border-green-700"
+                            style={{ background: 'linear-gradient(135deg, #1b5e20, #2e7d32)' }}
                           >
                             {tag}
                           </span>
@@ -471,7 +566,7 @@ export const PersonalizedHomepage: React.FC<PersonalizedHomepageProps> = ({ onNa
           onComplete={(results) => {
             const scorePercentage = Math.round((results.totalScore / 25) * 100);
             const today = new Date().toISOString();
-            
+
             // Save to localStorage with today's date
             localStorage.setItem('dailyBurnoutAssessment', JSON.stringify({
               score: scorePercentage,
@@ -479,7 +574,7 @@ export const PersonalizedHomepage: React.FC<PersonalizedHomepageProps> = ({ onNa
               date: today,
               totalScore: results.totalScore
             }));
-            
+
             setBurnoutScore(scorePercentage);
             setBurnoutLevel(results.riskLevel);
             setLastAssessmentDate(today);
@@ -488,6 +583,38 @@ export const PersonalizedHomepage: React.FC<PersonalizedHomepageProps> = ({ onNa
           onClose={() => setShowBurnoutGauge(false)}
         />
       )}
+
+      {/* All Reflections View Modal */}
+      {showAllReflections && user && (
+        <AllReflectionsView
+          userId={user.id}
+          onClose={() => {
+            setShowAllReflections(false);
+            // No need to reload - state updates automatically
+          }}
+          initialReflections={localReflections as any}
+        />
+      )}
+
+      {/* Reflection Detail View Modal */}
+      {selectedReflection && (
+        <ReflectionDetailView
+          reflection={selectedReflection}
+          onClose={() => setSelectedReflection(null)}
+        />
+      )}
+
+      {/* Delete Confirmation Modal */}
+      <ConfirmationModal
+        isOpen={confirmDelete.isOpen}
+        title="Delete Reflection"
+        message="Are you sure you want to delete this reflection? This action cannot be undone."
+        confirmText="Delete"
+        cancelText="Cancel"
+        onConfirm={handleDeleteReflection}
+        onCancel={() => setConfirmDelete({ isOpen: false, reflectionId: null })}
+        isDanger={true}
+      />
     </div>
   );
 };
@@ -496,17 +623,32 @@ export const PersonalizedHomepage: React.FC<PersonalizedHomepageProps> = ({ onNa
 function getReflectionTitle(type: string): string {
   const titleMap: Record<string, string> = {
     'wellness_checkin': 'Wellness Check-in',
+    'wellness_check_in': 'Wellness Check-in',
     'post_assignment': 'Post-Assignment Debrief',
+    'post_assignment_debrief': 'Post-Assignment Debrief',
     'pre_assignment': 'Pre-Assignment Prep',
+    'pre_assignment_prep': 'Pre-Assignment Preparation',
     'teaming_prep': 'Teaming Preparation',
+    'teaming_prep_enhanced': 'Team Interpreting Preparation',
     'teaming_reflection': 'Teaming Reflection',
+    'teaming_reflection_enhanced': 'Team Interpreting Reflection',
     'mentoring_prep': 'Mentoring Preparation',
     'mentoring_reflection': 'Mentoring Reflection',
     'ethics_meaning': 'Ethics & Meaning Check',
     'in_session_self': 'In-Session Self Check',
     'in_session_team': 'In-Session Team Sync',
     'role_space': 'Role Space Reflection',
-    'direct_communication': 'Direct Communication Reflection'
+    'direct_communication': 'Direct Communication Reflection',
+    'direct_communication_reflection': 'Direct Communication Reflection',
+    'burnout_assessment': 'Burnout Assessment',
+    // Add the exact entry_kind values we're using
+    'insession_selfcheck': 'In-Session Self-Check',
+    'team_sync': 'In-Session Team Sync',
+    'role_space_reflection': 'Role-Space Reflection',
+    'values_alignment': 'Values Alignment Check-In',
+    'compass_check': 'Compass Check',
+    'breathing_practice': 'Breathing Practice',
+    'body_awareness': 'Body Awareness'
   };
   return titleMap[type] || 'Reflection';
 }
@@ -527,7 +669,15 @@ function getReflectionPreview(data: any): string {
   }
   // Try to extract any text field from the data
   if (data && typeof data === 'object') {
-    const textFields = Object.values(data).find(v => typeof v === 'string' && v.length > 0);
+    const textFields = Object.values(data).find(v => {
+      // Check if it's a string and not a timestamp
+      if (typeof v === 'string' && v.length > 0) {
+        // Skip if it looks like an ISO timestamp
+        const isTimestamp = /^\d{4}-\d{2}-\d{2}T/.test(v);
+        return !isTimestamp;
+      }
+      return false;
+    });
     if (textFields && typeof textFields === 'string') {
       return textFields.substring(0, 100) + (textFields.length > 100 ? '...' : '');
     }
@@ -559,17 +709,27 @@ function getReflectionMood(data: any): 'excellent' | 'good' | 'neutral' | 'chall
 function getReflectionTags(type: string): string[] {
   const tagMap: Record<string, string[]> = {
     'wellness_checkin': ['wellness', 'check-in'],
+    'wellness_check_in': ['wellness', 'check-in'],
     'post_assignment': ['assignment', 'debrief'],
+    'post_assignment_debrief': ['assignment', 'debrief'],
     'pre_assignment': ['assignment', 'preparation'],
+    'pre_assignment_prep': ['assignment', 'preparation'],
     'teaming_prep': ['team', 'preparation'],
+    'teaming_prep_enhanced': ['team', 'interpreting'],
     'teaming_reflection': ['team', 'reflection'],
+    'teaming_reflection_enhanced': ['team', 'reflection'],
     'mentoring_prep': ['mentoring', 'preparation'],
     'mentoring_reflection': ['mentoring', 'reflection'],
     'ethics_meaning': ['ethics', 'meaning'],
     'in_session_self': ['in-session', 'self-check'],
     'in_session_team': ['in-session', 'team'],
     'role_space': ['role', 'space'],
-    'direct_communication': ['communication', 'reflection']
+    'direct_communication': ['communication', 'reflection'],
+    'direct_communication_reflection': ['communication', 'reflection'],
+    'burnout_assessment': ['wellness', 'assessment'],
+    'compass_check': ['values', 'alignment'],
+    'breathing_practice': ['breathing', 'mindfulness'],
+    'body_awareness': ['body', 'awareness']
   };
   return tagMap[type] || ['reflection'];
 }

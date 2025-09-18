@@ -21,19 +21,11 @@ export function TermsOfService() {
             <div className="flex items-center">
               <button
                 onClick={() => navigate('/')}
-                className="flex items-center space-x-2 px-4 py-2 rounded-lg font-semibold transition-all"
+                className="flex items-center space-x-2 px-4 py-2 rounded-lg font-semibold transition-all hover:opacity-90"
                 style={{
-                  background: 'linear-gradient(135deg, rgb(27, 94, 32), rgb(46, 125, 50))',
+                  background: 'rgb(92, 127, 79)',
                   color: '#FFFFFF',
-                  boxShadow: '0 2px 8px rgba(27, 94, 32, 0.2)',
-                }}
-                onMouseEnter={(e) => {
-                  e.currentTarget.style.transform = 'translateY(-1px)';
-                  e.currentTarget.style.boxShadow = '0 4px 12px rgba(27, 94, 32, 0.3)';
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.transform = 'translateY(0)';
-                  e.currentTarget.style.boxShadow = '0 2px 8px rgba(27, 94, 32, 0.2)';
+                  boxShadow: '0 2px 8px rgba(92, 127, 79, 0.2)',
                 }}
               >
                 <ArrowLeft className="h-5 w-5" style={{ color: '#FFFFFF' }} />
@@ -120,7 +112,7 @@ export function TermsOfService() {
                   <p className="text-sm">Continuing education credits (Professional Plan)</p>
                 </div>
               </div>
-              <p className="mt-3 text-sm font-semibold" style={{ color: '#2D5F3F' }}>
+              <p className="mt-3 text-sm font-semibold" style={{ color: 'rgb(92, 127, 79)' }}>
                 InterpretReflect is not a provider of medical or psychological treatment.
               </p>
             </div>
@@ -152,7 +144,7 @@ export function TermsOfService() {
                 <p>• Not copy, redistribute, or otherwise misuse proprietary content, tools, or intellectual property</p>
                 <p>• Consult qualified professionals for any serious mental health concerns</p>
               </div>
-              <p className="mt-3 text-sm font-semibold" style={{ color: '#2D5F3F' }}>
+              <p className="mt-3 text-sm font-semibold" style={{ color: 'rgb(92, 127, 79)' }}>
                 The platform does not substitute professional medical, mental health, or therapeutic services.
               </p>
             </div>
@@ -264,7 +256,7 @@ export function TermsOfService() {
           <div 
             className="rounded-2xl p-6 text-center"
             style={{
-              background: 'linear-gradient(145deg, rgba(107, 139, 96, 0.05) 0%, rgba(92, 127, 79, 0.05) 100%)',
+              background: 'rgba(92, 127, 79, 0.05)',
               border: '2px solid rgba(92, 127, 79, 0.2)',
             }}
           >
@@ -274,12 +266,12 @@ export function TermsOfService() {
             <p className="mb-2 text-sm" style={{ color: '#3A3A3A' }}>
               For any questions or concerns related to these Terms, please email:
             </p>
-            <a 
-              href="mailto:info@buildingbridgeslearning.com" 
+            <a
+              href="mailto:hello@huviatechnologies.com"
               className="font-semibold text-base hover:underline"
-              style={{ color: '#2D5F3F' }}
+              style={{ color: 'rgb(92, 127, 79)' }}
             >
-              info@buildingbridgeslearning.com
+              hello@huviatechnologies.com
             </a>
           </div>
         </section>
@@ -291,17 +283,10 @@ export function TermsOfService() {
         >
           <button
             onClick={() => navigate('/')}
-            className="inline-flex items-center px-6 py-3 rounded-lg font-semibold transition-all"
+            className="inline-flex items-center px-6 py-3 rounded-lg font-semibold transition-all hover:opacity-90"
             style={{
-              backgroundColor: '#FFFFFF',
-              color: '#6B8B60',
-              border: '2px solid #6B8B60',
-            }}
-            onMouseEnter={(e) => {
-              e.currentTarget.style.backgroundColor = '#F8FBF6';
-            }}
-            onMouseLeave={(e) => {
-              e.currentTarget.style.backgroundColor = '#FFFFFF';
+              backgroundColor: 'rgb(92, 127, 79)',
+              color: '#FFFFFF',
             }}
           >
             <ArrowLeft className="h-5 w-5 mr-2" />

@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import {
+import { directInsertReflection } from '../services/directSupabaseApi';
   X,
   GraduationCap,
   Target,
@@ -213,9 +214,7 @@ const MentoringPrep: React.FC<MentoringPrepProps> = ({ onComplete, onClose }) =>
     };
 
     setShowChecklist(true);
-    setTimeout(() => {
-      onComplete(results);
-    }, 3000);
+    onComplete(formData);
   };
 
   const toggleEmotionalBoundary = (boundary: string) => {

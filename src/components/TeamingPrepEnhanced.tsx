@@ -7,6 +7,7 @@ import {
 import { CommunityIcon, HeartPulseIcon, TargetIcon } from './CustomIcon';
 import { supabase, TeamingPrepEnhancedData, ReflectionEntry } from '../lib/supabase';
 import { useAuth } from '../contexts/AuthContext';
+import { directInsertReflection, getSessionToken } from '../services/directSupabaseApi';
 
 interface TeamingPrepEnhancedProps {
   onClose: () => void;
@@ -176,12 +177,18 @@ export const TeamingPrepEnhanced: React.FC<TeamingPrepEnhancedProps> = ({
         created_at: new Date().toISOString()
       };
 
-      const { data, error } = await supabase
-        .from('reflection_entries')
-        .insert([entry])
-        .select()
-        .single();
+      // Get access token
+      const accessToken = await getSessionToken();
 
+      // Add reflection_id to the entry
+      const entryWithId = {
+        ...entry,
+        reflection_id: `teaming_prep_enhanced_${Date.now()}`,
+        updated_at: new Date().toISOString()
+      };
+
+      // Use direct API instead of Supabase client
+      const { data, error } = await directInsertReflection(entryWithId, accessToken || undefined);
       if (error) throw error;
 
       // Store the prep ID in localStorage for linking with reflection
@@ -190,6 +197,9 @@ export const TeamingPrepEnhanced: React.FC<TeamingPrepEnhancedProps> = ({
       }
 
       setShowSummary(true);
+      
+      setIsSaving(false);
+
       
       if (onComplete) {
         onComplete(finalData);

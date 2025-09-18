@@ -1,6 +1,4 @@
 import React from 'react';
-import { Home, BookOpen, RefreshCw, TrendingUp } from 'lucide-react';
-import { HeartPulseIcon, NotepadIcon, HourglassPersonIcon, TargetIcon } from '../CustomIcon';
 
 interface NavigationTabsProps {
   activeTab: string;
@@ -8,10 +6,10 @@ interface NavigationTabsProps {
 }
 
 const tabs = [
-  { id: 'home', label: 'Home', icon: HeartPulseIcon },
-  { id: 'reflection', label: 'Reflection Studio', icon: NotepadIcon },
-  { id: 'stress', label: 'Stress Reset', icon: HourglassPersonIcon },
-  { id: 'insights', label: 'Growth Insights', icon: TargetIcon },
+  { id: 'home', label: 'Home' },
+  { id: 'reflection', label: 'Reflection Studio' },
+  { id: 'stress', label: 'Stress Reset' },
+  { id: 'insights', label: 'Growth Insights' },
 ];
 
 export const NavigationTabs: React.FC<NavigationTabsProps> = ({ activeTab, setActiveTab }) => {
@@ -61,7 +59,6 @@ export const NavigationTabs: React.FC<NavigationTabsProps> = ({ activeTab, setAc
                   }
                 }}
               >
-                <tab.icon size={48} className="mr-2" />
                 {tab.label}
                 {tab.badge && (
                   <span

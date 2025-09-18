@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { ChevronRight, ChevronLeft, X, Heart, Activity, Brain, Users, Briefcase, TrendingUp, Copy, Check } from 'lucide-react';
 import { supabase, WellnessCheckInData } from '../lib/supabase';
 import { useAuth } from '../contexts/AuthContext';
+import { directInsertReflection } from '../services/directSupabaseApi';
 
 interface WellnessCheckInEnhancedProps {
   onComplete: (data: WellnessCheckInData) => void;

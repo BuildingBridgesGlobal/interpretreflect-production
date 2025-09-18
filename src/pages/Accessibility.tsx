@@ -269,11 +269,11 @@ export function Accessibility() {
               We are committed to accessibility for all interpreters. ASL video translations will be available in a future release.
               If you have requests or need ASL support before these are available, please contact us at{' '}
               <a 
-                href="mailto:info@buildingbridgeslearning.com" 
+                href="mailto:hello@huviatechnologies.com" 
                 className="font-semibold hover:underline"
                 style={{ color: '#6B8B60' }}
               >
-                info@buildingbridgeslearning.com
+                hello@huviatechnologies.com
               </a>.
             </p>
           </div>
@@ -360,7 +360,7 @@ export function Accessibility() {
               please don't hesitate to reach out.
             </p>
             <a 
-              href="mailto:info@buildingbridgeslearning.com" 
+              href="mailto:hello@huviatechnologies.com" 
               className="inline-flex items-center px-6 py-3 rounded-lg font-semibold transition-all"
               style={{
                 background: 'linear-gradient(135deg, rgb(27, 94, 32), rgb(46, 125, 50))',

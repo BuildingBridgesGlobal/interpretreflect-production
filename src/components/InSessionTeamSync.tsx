@@ -12,6 +12,7 @@ import {
 } from 'lucide-react';
 import { CommunityIcon, SecureLockIcon, TargetIcon, HeartPulseIcon } from './CustomIcon';
 import { supabase } from '../lib/supabase';
+import { directInsertReflection, directSelectReflections, getSessionToken } from '../services/directSupabaseApi';
 import { useAuth } from '../contexts/AuthContext';
 
 interface InSessionTeamSyncProps {
@@ -24,6 +25,7 @@ export const InSessionTeamSync: React.FC<InSessionTeamSyncProps> = ({ onClose, o
   const [currentSection, setCurrentSection] = useState(0);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [errors, setErrors] = useState<Record<string, string>>({});
+  const startTime = Date.now();
 
   // Form state for all fields
   const [formData, setFormData] = useState({
@@ -94,7 +96,7 @@ export const InSessionTeamSync: React.FC<InSessionTeamSyncProps> = ({ onClose, o
     },
     {
       title: "Role Management",
-      icon: <CommunityIcon size={64} />,
+      icon: <CommunityIcon className="w-5 h-5" style={{ color: '#6B8B60' }} />,
       fields: [
         {
           id: 'role_switching',
@@ -191,7 +193,7 @@ export const InSessionTeamSync: React.FC<InSessionTeamSyncProps> = ({ onClose, o
     },
     {
       title: "Professional Standards",
-      icon: <SecureLockIcon size={64} />,
+      icon: <SecureLockIcon className="w-5 h-5" style={{ color: '#6B8B60' }} />,
       fields: [
         {
           id: 'standards_check',
@@ -233,7 +235,7 @@ export const InSessionTeamSync: React.FC<InSessionTeamSyncProps> = ({ onClose, o
     },
     {
       title: "Collaboration Optimization",
-      icon: <TargetIcon size={64} />,
+      icon: <TargetIcon className="w-5 h-5" style={{ color: '#6B8B60' }} />,
       fields: [
         {
           id: 'optimization_ideas',
@@ -252,7 +254,7 @@ export const InSessionTeamSync: React.FC<InSessionTeamSyncProps> = ({ onClose, o
     },
     {
       title: "Team Effectiveness",
-      icon: <HeartPulseIcon size={64} />,
+      icon: <HeartPulseIcon className="w-5 h-5" style={{ color: '#6B8B60' }} />,
       fields: [
         {
           id: 'team_support',
@@ -316,44 +318,112 @@ export const InSessionTeamSync: React.FC<InSessionTeamSyncProps> = ({ onClose, o
   // Form submission
   const handleSubmit = async () => {
     if (!validateSection(currentSection)) return;
-    
+
+    if (!user) {
+      setErrors({ save: 'You must be logged in to save' });
+      return;
+    }
+
+    // Prevent double-submission
+    if (isSubmitting) {
+      console.log('InSessionTeamSync - Already saving, ignoring duplicate click');
+      return;
+    }
+
+    console.log('InSessionTeamSync - handleSubmit called');
+    console.log('InSessionTeamSync - User:', { id: user.id, email: user.email });
+
     setIsSubmitting(true);
-    
+
     try {
+      const sessionId = `team_sync_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+      const timeSpent = Math.floor((Date.now() - startTime) / 1000);
+      console.log('InSessionTeamSync - Starting save with sessionId:', sessionId);
+
+      // Get access token
+      const accessToken = await getSessionToken();
+      console.log('InSessionTeamSync - Got access token:', !!accessToken);
+
+      // Test database connection
+      console.log('InSessionTeamSync - Testing database connection...');
+      const { data: testData, error: testError } = await directSelectReflections(user.id, accessToken || undefined);
+      console.log('InSessionTeamSync - Test query result:', { testData, testError });
+
+      if (testError) {
+        console.error('InSessionTeamSync - Cannot read from database:', testError);
+        throw new Error(`Database connection issue: ${testError}`);
+      }
+
+      // Create reflection data for reflection_entries table
       const reflectionData = {
-        ...formData,
-        completed_at: new Date().toISOString(),
-        module_type: 'in_session_team_sync'
+        user_id: user.id,
+        reflection_id: sessionId,
+        entry_kind: 'team_sync',
+        data: {
+          ...formData,
+          timestamp: new Date().toISOString(),
+          time_spent_seconds: timeSpent,
+          module_type: 'in_session_team_sync'
+        }
       };
 
-      // Save to Supabase if authenticated
-      if (user) {
-        const { error } = await supabase
-          .from('interpreter_reflections')
-          .insert({
-            user_id: user.id,
-            reflection_type: 'in_session_team_sync',
-            reflection_data: reflectionData,
-            created_at: new Date().toISOString()
-          });
+      console.log('InSessionTeamSync - Data to save:', reflectionData);
+
+      try {
+        // Try Supabase client first with timeout
+        console.log('InSessionTeamSync - Trying Supabase client insert...');
+        const insertPromise = supabase
+          .from('reflection_entries')
+          .insert([reflectionData])
+          .select();
+
+        const timeoutPromise = new Promise((_, reject) =>
+          setTimeout(() => reject(new Error('Supabase client timeout')), 5000)
+        );
+
+        const { data: supabaseData, error: supabaseError } = await Promise.race([
+          insertPromise,
+          timeoutPromise
+        ]) as any;
+
+        if (!supabaseError && supabaseData) {
+          console.log('InSessionTeamSync - Supabase client insert successful!', supabaseData);
+        } else {
+          throw supabaseError || new Error('No data returned');
+        }
+      } catch (clientError) {
+        console.log('InSessionTeamSync - Supabase client failed, trying direct API...');
+
+        // Fall back to direct API
+        const { data, error } = await directInsertReflection(reflectionData, accessToken || undefined);
+        console.log('InSessionTeamSync - Direct API response:', { data, error });
 
         if (error) {
-          console.error('Error saving team sync:', error);
+          console.error('InSessionTeamSync - Error saving to database:', error);
+          throw error;
         }
+
+        console.log('InSessionTeamSync - Save successful via direct API!', data);
       }
 
+      // Set submitting to false immediately after successful save
+      setIsSubmitting(false);
+
       // Save to localStorage as well
-      localStorage.setItem('lastTeamSync', JSON.stringify(reflectionData));
-      
+      localStorage.setItem('lastTeamSync', JSON.stringify(reflectionData.data));
+
+      // Log successful save
+      console.log('Team Sync Results:', reflectionData.data);
+
       if (onComplete) {
-        onComplete(reflectionData);
+        onComplete(reflectionData.data);
       }
-      
+
       onClose();
     } catch (error) {
-      console.error('Error submitting team sync:', error);
-    } finally {
+      console.error('InSessionTeamSync - Error in handleSubmit:', error);
       setIsSubmitting(false);
+      setErrors({ save: error instanceof Error ? error.message : 'Failed to save team sync. Please try again.' });
     }
   };
 

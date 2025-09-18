@@ -40,11 +40,11 @@ export const UserDropdown: React.FC<UserDropdownProps> = ({
           }}
         >
           <span className="text-sm font-medium" style={{ color: '#FFFFFF' }}>
-            {user?.email?.charAt(0).toUpperCase() || 'U'}
+            {user?.user_metadata?.full_name?.charAt(0).toUpperCase() || user?.email?.charAt(0).toUpperCase() || 'U'}
           </span>
         </div>
         <span className="text-sm font-medium" style={{ color: '#1A3D26' }}>
-          {devMode ? 'Dev Mode' : user?.email?.split('@')[0] || 'User'}
+          {devMode ? 'Dev Mode' : user?.user_metadata?.full_name || user?.email?.split('@')[0] || 'User'}
         </span>
         <ChevronDown
           className={`h-4 w-4 transition-transform ${showUserDropdown ? 'rotate-180' : ''}`}
@@ -64,9 +64,9 @@ export const UserDropdown: React.FC<UserDropdownProps> = ({
           <div
             className="absolute right-0 top-full mt-2 w-72 rounded-lg shadow-lg z-20"
             style={{
-              backgroundColor: 'var(--bg-card)',
-              border: '1px solid rgba(92, 127, 79, 0.15)',
-              boxShadow: '0 4px 6px rgba(0, 0, 0, 0.07), 0 2px 4px rgba(0, 0, 0, 0.05)',
+              backgroundColor: 'white',
+              border: '2px solid rgb(92, 127, 79)',
+              boxShadow: '0 8px 16px rgba(0, 0, 0, 0.15), 0 4px 8px rgba(0, 0, 0, 0.1)',
             }}
           >
             {/* User Info */}
@@ -77,20 +77,10 @@ export const UserDropdown: React.FC<UserDropdownProps> = ({
                 backgroundColor: 'rgba(92, 127, 79, 0.03)',
               }}
             >
-              <div className="flex items-center space-x-3">
-                <div
-                  className="w-10 h-10 rounded-full flex items-center justify-center"
-                  style={{
-                    background: 'linear-gradient(135deg, rgb(27, 94, 32), rgb(46, 125, 50))',
-                  }}
-                >
-                  <span className="text-base font-medium" style={{ color: '#FFFFFF' }}>
-                    {user?.email?.charAt(0).toUpperCase() || 'U'}
-                  </span>
-                </div>
+              <div className="flex items-center">
                 <div>
                   <div className="font-medium text-base" style={{ color: '#000000' }}>
-                    {devMode ? 'Dev Mode' : user?.email?.split('@')[0] || 'User'}
+                    {devMode ? 'Dev Mode' : user?.user_metadata?.full_name || user?.email?.split('@')[0] || 'User'}
                   </div>
                   <div className="text-sm" style={{ color: '#333333' }}>
                     {devMode
@@ -108,7 +98,7 @@ export const UserDropdown: React.FC<UserDropdownProps> = ({
                   setShowUserDropdown(false);
                   navigate('/profile-settings');
                 }}
-                className="w-full flex items-center space-x-3 p-4 rounded-xl transition-all text-left group"
+                className="w-full flex items-center p-4 rounded-xl transition-all text-left group"
                 style={{
                   backgroundColor: 'transparent',
                 }}
@@ -119,12 +109,6 @@ export const UserDropdown: React.FC<UserDropdownProps> = ({
                   e.currentTarget.style.backgroundColor = 'transparent';
                 }}
               >
-                <div
-                  className="p-2 rounded-lg"
-                  style={{ backgroundColor: 'rgba(92, 127, 79, 0.15)' }}
-                >
-                  <User className="h-5 w-5" style={{ color: '#1A3D26' }} />
-                </div>
                 <div className="flex-grow">
                   <div className="font-medium" style={{ color: '#000000' }}>
                     Profile Settings
@@ -148,18 +132,37 @@ export const UserDropdown: React.FC<UserDropdownProps> = ({
               }}
             >
               <button
-                onClick={async () => {
+                onClick={(e) => {
+                  e.preventDefault();
+                  e.stopPropagation();
+
+                  // Close dropdown immediately
                   setShowUserDropdown(false);
-                  if (devMode) {
-                    setDevMode(false);
-                    // Clear any local storage
-                    localStorage.clear();
-                  } else {
-                    await signOut();
-                  }
-                  // Navigation will happen automatically as user state changes
+
+                  // Simple, direct sign out - no async, no waiting
+                  // Just clear everything and redirect
+                  setTimeout(() => {
+                    try {
+                      // Clear all storage
+                      localStorage.clear();
+                      sessionStorage.clear();
+
+                      // Clear cookies (in case any are set)
+                      document.cookie.split(";").forEach((c) => {
+                        document.cookie = c
+                          .replace(/^ +/, "")
+                          .replace(/=.*/, "=;expires=" + new Date().toUTCString() + ";path=/");
+                      });
+
+                      // Force reload to landing page
+                      window.location.replace('/');
+                    } catch (err) {
+                      // If anything fails, just force redirect
+                      window.location.replace('/');
+                    }
+                  }, 100); // Small delay to ensure dropdown closes first
                 }}
-                className="w-full flex items-center space-x-3 p-4 rounded-xl transition-all text-left"
+                className="w-full flex items-center p-4 rounded-xl transition-all text-left"
                 style={{
                   backgroundColor: 'transparent',
                 }}
@@ -170,12 +173,6 @@ export const UserDropdown: React.FC<UserDropdownProps> = ({
                   e.currentTarget.style.backgroundColor = 'transparent';
                 }}
               >
-                <div
-                  className="p-2 rounded-lg"
-                  style={{ backgroundColor: 'rgba(255, 100, 100, 0.15)' }}
-                >
-                  <Globe className="h-5 w-5" style={{ color: '#FF8A8A' }} />
-                </div>
                 <div className="font-medium" style={{ color: '#000000' }}>
                   Sign Out
                 </div>

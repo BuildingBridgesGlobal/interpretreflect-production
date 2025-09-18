@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { directInsertReflection } from '../services/directSupabaseApi';
 import {
   X, FileCheck, ChevronRight, ChevronLeft, Save, Heart, Brain,
   TrendingUp, AlertTriangle, Sparkles, Copy, CheckCircle, Activity,
@@ -20,11 +21,12 @@ const EMOTION_OPTIONS = [
   'Confident', 'Overwhelmed', 'Grateful', 'Uncertain', 'Empowered'
 ];
 
-export const PostAssignmentDebriefEnhanced: React.FC<PostAssignmentDebriefEnhancedProps> = ({ 
-  onComplete, 
+export const PostAssignmentDebriefEnhanced: React.FC<PostAssignmentDebriefEnhancedProps> = ({
+  onComplete,
   onClose,
-  prepDataId 
+  prepDataId
 }) => {
+  console.log('PostAssignmentDebriefEnhanced - Component rendering');
   const { user } = useAuth();
   const [currentSection, setCurrentSection] = useState(0);
   const [isSaving, setIsSaving] = useState(false);
@@ -37,6 +39,7 @@ export const PostAssignmentDebriefEnhanced: React.FC<PostAssignmentDebriefEnhanc
   const startTime = Date.now();
   
   // Form state for all fields
+  console.log('PostAssignmentDebriefEnhanced - Initializing state');
   const [formData, setFormData] = useState<PostAssignmentDebriefData>({
     linked_prep_id: prepDataId,
     
@@ -114,6 +117,7 @@ export const PostAssignmentDebriefEnhanced: React.FC<PostAssignmentDebriefEnhanc
 
   // Load prep data if available
   useEffect(() => {
+    console.log('PostAssignmentDebriefEnhanced - Component mounted');
     const loadPrepData = async () => {
       if (!user || !prepDataId) return;
       
@@ -306,16 +310,19 @@ Generated: ${new Date().toLocaleString()}`;
   };
 
   const handleSave = async () => {
+    console.log('PostAssignmentDebriefEnhanced - handleSave called');
     if (!validateSection(currentSection)) return;
-    
+
     setIsSaving(true);
     const endTime = Date.now();
     const duration = Math.round((endTime - startTime) / 1000);
-    
+
     try {
       if (!user) {
         throw new Error('User not authenticated');
       }
+
+      console.log('PostAssignmentDebriefEnhanced - User authenticated, preparing to save');
 
       // Determine analytics flags
       const highStressSuccess = prepData && 
@@ -333,19 +340,26 @@ Generated: ${new Date().toLocaleString()}`;
         emotion_patterns: formData.emotions_during
       };
 
-      const entry: ReflectionEntry = {
+      // Save to database using direct API
+      const accessToken = JSON.parse(localStorage.getItem('session') || '{}').access_token;
+
+      const reflectionData = {
         user_id: user.id,
-        reflection_id: `post_assignment_debrief_${Date.now()}`,
         entry_kind: 'post_assignment_debrief',
         data: finalData,
-        created_at: new Date().toISOString()
+        reflection_id: crypto.randomUUID()
       };
 
-      const { error } = await supabase
-        .from('reflection_entries')
-        .insert([entry]);
+      console.log('PostAssignmentDebriefEnhanced - Calling directInsertReflection with:', reflectionData);
+      const { data, error } = await directInsertReflection(reflectionData, accessToken);
+      console.log('PostAssignmentDebriefEnhanced - directInsertReflection response:', { data, error });
 
-      if (error) throw error;
+      if (error) {
+        console.error('PostAssignmentDebriefEnhanced - Error saving:', error);
+        throw error;
+      }
+
+      console.log('PostAssignmentDebriefEnhanced - Saved successfully:', data);
 
       // Generate summary
       generateSummary();
@@ -357,9 +371,15 @@ Generated: ${new Date().toLocaleString()}`;
         patterns: formData.pattern_recognition
       });
       
+      setIsSaving(false);
+
+      // Close immediately after successful save
       if (onComplete) {
         onComplete(finalData);
       }
+      setTimeout(() => {
+        onClose();
+      }, 100); // Small delay to ensure state updates
     } catch (error) {
       console.error('Error saving debrief:', error);
       setErrors({ save: 'Failed to save debrief. Please try again.' });
@@ -441,7 +461,7 @@ Generated: ${new Date().toLocaleString()}`;
                     value={formData.performance_satisfaction}
                     onChange={(e) => handleFieldChange('performance_satisfaction', Number(e.target.value))}
                     className="flex-1"
-                    style={{ accentColor: '#10B981' }}
+                    style={{ accentColor: '#2e7d32' }}
                   />
                   <span className="w-12 text-center font-semibold text-lg" style={{ color: '#1A1A1A' }}>
                     {formData.performance_satisfaction}
@@ -1122,7 +1142,7 @@ Generated: ${new Date().toLocaleString()}`;
                     value={formData.energy_level_post}
                     onChange={(e) => handleFieldChange('energy_level_post', Number(e.target.value))}
                     className="flex-1"
-                    style={{ accentColor: '#10B981' }}
+                    style={{ accentColor: '#2e7d32' }}
                   />
                   <span className="w-12 text-center font-semibold text-lg" style={{ color: '#1A1A1A' }}>
                     {formData.energy_level_post}
@@ -1147,7 +1167,7 @@ Generated: ${new Date().toLocaleString()}`;
                     value={formData.stress_level_post}
                     onChange={(e) => handleFieldChange('stress_level_post', Number(e.target.value))}
                     className="flex-1"
-                    style={{ accentColor: formData.stress_level_post >= 7 ? '#EF4444' : '#10B981' }}
+                    style={{ accentColor: formData.stress_level_post >= 7 ? '#EF4444' : '#2e7d32' }}
                   />
                   <span className="w-12 text-center font-semibold text-lg" style={{ 
                     color: formData.stress_level_post >= 7 ? '#EF4444' : '#1A1A1A' 
@@ -1174,7 +1194,7 @@ Generated: ${new Date().toLocaleString()}`;
                     value={formData.accomplishment_sense}
                     onChange={(e) => handleFieldChange('accomplishment_sense', Number(e.target.value))}
                     className="flex-1"
-                    style={{ accentColor: '#10B981' }}
+                    style={{ accentColor: '#2e7d32' }}
                   />
                   <span className="w-12 text-center font-semibold text-lg" style={{ color: '#1A1A1A' }}>
                     {formData.accomplishment_sense}
@@ -1194,7 +1214,7 @@ Generated: ${new Date().toLocaleString()}`;
                     value={formData.future_confidence}
                     onChange={(e) => handleFieldChange('future_confidence', Number(e.target.value))}
                     className="flex-1"
-                    style={{ accentColor: '#10B981' }}
+                    style={{ accentColor: '#2e7d32' }}
                   />
                   <span className="w-12 text-center font-semibold text-lg" style={{ color: '#1A1A1A' }}>
                     {formData.future_confidence}
@@ -1403,8 +1423,8 @@ Generated: ${new Date().toLocaleString()}`;
   return (
     <>
       <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-        <div 
-          className="bg-white rounded-2xl w-full max-w-4xl max-h-[90vh] overflow-hidden"
+        <div
+          className="bg-white rounded-2xl w-full max-w-4xl max-h-[90vh] overflow-hidden flex flex-col"
           style={{ backgroundColor: '#FAFAFA' }}
         >
           {/* Header */}
@@ -1420,7 +1440,7 @@ Generated: ${new Date().toLocaleString()}`;
                 <div 
                   className="w-12 h-12 rounded-xl flex items-center justify-center"
                   style={{
-                    background: 'linear-gradient(145deg, #10B981 0%, #059669 100%)',
+                    background: 'linear-gradient(135deg, #1b5e20, #2e7d32)',
                     boxShadow: '0 2px 8px rgba(16, 185, 129, 0.3)'
                   }}
                 >
@@ -1455,7 +1475,7 @@ Generated: ${new Date().toLocaleString()}`;
                       index <= currentSection ? 'opacity-100' : 'opacity-30'
                     }`}
                     style={{
-                      backgroundColor: index <= currentSection ? '#10B981' : '#E5E7EB',
+                      backgroundColor: index <= currentSection ? '#2e7d32' : '#E5E7EB',
                       minWidth: '30px'
                     }}
                   />
@@ -1468,7 +1488,7 @@ Generated: ${new Date().toLocaleString()}`;
           </div>
 
           {/* Content */}
-          <div className="p-6 overflow-y-auto" style={{ maxHeight: 'calc(90vh - 240px)' }}>
+          <div className="flex-1 p-6 overflow-y-auto">
             <div className="mb-4 flex items-center space-x-2">
               {currentSectionData.icon}
               <h3 className="text-xl font-semibold" style={{ color: '#1A1A1A' }}>
@@ -1490,8 +1510,8 @@ Generated: ${new Date().toLocaleString()}`;
                 className="px-6 py-2 rounded-lg flex items-center transition-colors"
                 style={{
                   backgroundColor: '#F3F4F6',
-                  color: '#10B981',
-                  border: '1px solid #10B981'
+                  color: '#1b5e20',
+                  border: '1px solid #1b5e20'
                 }}
               >
                 <ChevronLeft className="w-4 h-4 mr-1" />
@@ -1510,7 +1530,7 @@ Generated: ${new Date().toLocaleString()}`;
                 onClick={handleNext}
                 className="px-6 py-2 rounded-lg flex items-center transition-all"
                 style={{
-                  background: 'linear-gradient(145deg, #10B981 0%, #059669 100%)',
+                  background: 'linear-gradient(135deg, #1b5e20, #2e7d32)',
                   color: '#FFFFFF',
                   boxShadow: '0 2px 8px rgba(16, 185, 129, 0.3)'
                 }}
@@ -1526,7 +1546,7 @@ Generated: ${new Date().toLocaleString()}`;
                 style={{
                   background: isSaving 
                     ? 'linear-gradient(145deg, #9CA3AF 0%, #6B7280 100%)'
-                    : 'linear-gradient(145deg, #10B981 0%, #059669 100%)',
+                    : 'linear-gradient(135deg, #1b5e20, #2e7d32)',
                   color: '#FFFFFF',
                   boxShadow: '0 2px 8px rgba(16, 185, 129, 0.3)',
                   cursor: isSaving ? 'not-allowed' : 'pointer'
@@ -1559,7 +1579,7 @@ Generated: ${new Date().toLocaleString()}`;
                 }}
                 className="px-4 py-2 rounded-lg flex items-center transition-all"
                 style={{
-                  backgroundColor: copiedSummary ? '#10B981' : '#059669',
+                  backgroundColor: copiedSummary ? '#2e7d32' : '#1b5e20',
                   color: '#FFFFFF'
                 }}
               >
@@ -1589,7 +1609,7 @@ Generated: ${new Date().toLocaleString()}`;
                 }}
                 className="w-full px-6 py-3 rounded-lg transition-all"
                 style={{
-                  background: 'linear-gradient(145deg, #10B981 0%, #059669 100%)',
+                  background: 'linear-gradient(135deg, #1b5e20, #2e7d32)',
                   color: '#FFFFFF',
                   boxShadow: '0 2px 8px rgba(16, 185, 129, 0.3)'
                 }}

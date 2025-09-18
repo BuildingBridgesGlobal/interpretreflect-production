@@ -339,7 +339,7 @@ export const PricingNew: React.FC = () => {
                   <button
                     onClick={() => {
                       if (plan.name === 'Organizations') {
-                        window.location.href = 'mailto:info@buildingbridgeslearning.com?subject=InterpretReflect Organizations Plan';
+                        window.location.href = 'mailto:hello@huviatechnologies.com?subject=InterpretReflect Organizations Plan';
                       } else if (plan.name === 'Professional') {
                         // Do nothing for coming soon
                         return;

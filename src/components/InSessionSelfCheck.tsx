@@ -23,6 +23,7 @@ import {
 } from 'lucide-react';
 import { HeartPulseIcon, NotepadIcon, SecureLockIcon, CommunityIcon, TargetIcon } from './CustomIcon';
 import { supabase } from '../lib/supabase';
+import { directInsertReflection, directSelectReflections, getSessionToken } from '../services/directSupabaseApi';
 import { useAuth } from '../contexts/AuthContext';
 import { updateGrowthInsightsForUser } from '../services/growthInsightsService';
 
@@ -158,56 +159,107 @@ export const InSessionSelfCheck: React.FC<InSessionSelfCheckProps> = ({ onClose,
       return;
     }
 
+    // Prevent double-submission
+    if (isSaving) {
+      console.log('InSessionSelfCheck - Already saving, ignoring duplicate click');
+      return;
+    }
+
+    console.log('InSessionSelfCheck - handleSubmit called');
+    console.log('InSessionSelfCheck - User:', { id: user.id, email: user.email });
+
     setIsSaving(true);
     try {
-      const sessionId = `insession_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+      const sessionId = `insession_selfcheck_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
       const timeSpent = Math.floor((Date.now() - startTime) / 1000);
+      console.log('InSessionSelfCheck - Starting save with sessionId:', sessionId);
 
-      // Save to database
-      const { data, error } = await supabase
-        .from('in_session_self_checks')
-        .upsert({
-          user_id: user.id,
-          session_id: sessionId,
+      // Get access token
+      const accessToken = await getSessionToken();
+      console.log('InSessionSelfCheck - Got access token:', !!accessToken);
+
+      // Test database connection
+      console.log('InSessionSelfCheck - Testing database connection...');
+      const { data: testData, error: testError } = await directSelectReflections(user.id, accessToken || undefined);
+      console.log('InSessionSelfCheck - Test query result:', { testData, testError });
+
+      if (testError) {
+        console.error('InSessionSelfCheck - Cannot read from database:', testError);
+        throw new Error(`Database connection issue: ${testError}`);
+      }
+
+      // Create reflection data for reflection_entries table
+      const reflectionData = {
+        user_id: user.id,
+        reflection_id: sessionId,
+        entry_kind: 'insession_selfcheck',
+        data: {
           ...formData,
-          status: 'completed',
-          metadata: {
-            completion_time: new Date().toISOString(),
-            time_spent_seconds: timeSpent,
-            sections_completed: 10
-          },
-          completed_at: new Date().toISOString(),
-          updated_at: new Date().toISOString()
-        })
-        .select()
-        .single();
-
-      if (error) throw error;
-
-      // Update growth insights
-      const insights = {
-        in_session_monitoring: formData.immediate_action,
-        demand_management: formData.demand_management,
-        emotional_regulation: formData.emotional_response,
-        overall_performance: formData.overall_status
+          timestamp: new Date().toISOString(),
+          time_spent_seconds: timeSpent,
+          sections_completed: 10
+        }
       };
-      
-      await updateGrowthInsightsForUser(user.id, insights);
+
+      console.log('InSessionSelfCheck - Data to save:', reflectionData);
+
+      try {
+        // Try Supabase client first with timeout
+        console.log('InSessionSelfCheck - Trying Supabase client insert...');
+        const insertPromise = supabase
+          .from('reflection_entries')
+          .insert([reflectionData])
+          .select();
+
+        const timeoutPromise = new Promise((_, reject) =>
+          setTimeout(() => reject(new Error('Supabase client timeout')), 5000)
+        );
+
+        const { data: supabaseData, error: supabaseError } = await Promise.race([
+          insertPromise,
+          timeoutPromise
+        ]) as any;
+
+        if (!supabaseError && supabaseData) {
+          console.log('InSessionSelfCheck - Supabase client insert successful!', supabaseData);
+        } else {
+          throw supabaseError || new Error('No data returned');
+        }
+      } catch (clientError) {
+        console.log('InSessionSelfCheck - Supabase client failed, trying direct API...');
+
+        // Fall back to direct API
+        const { data, error } = await directInsertReflection(reflectionData, accessToken || undefined);
+        console.log('InSessionSelfCheck - Direct API response:', { data, error });
+
+        if (error) {
+          console.error('InSessionSelfCheck - Error saving to database:', error);
+          throw error;
+        }
+
+        console.log('InSessionSelfCheck - Save successful via direct API!', data);
+      }
+
+      // Set saving to false immediately after successful save
+      setIsSaving(false);
+
+      // Skip growth insights update - it hangs due to Supabase client
+      console.log('InSessionSelfCheck - Skipping growth insights update (uses hanging Supabase client)');
 
       // Show summary
       setShowSummary(true);
-      
+
+      // Log successful save
+      console.log('In-Session Self-Check Results:', reflectionData.data);
+
       // Call onComplete if provided
       if (onComplete) {
-        setTimeout(() => {
-          onComplete(formData);
-        }, 2000);
+        onComplete(formData);
       }
     } catch (error) {
-      console.error('Error saving in-session self-check:', error);
-      setErrors({ save: 'Failed to save check-in. Please try again.' });
-    } finally {
+      console.error('InSessionSelfCheck - Error in handleSubmit:', error);
       setIsSaving(false);
+      setErrors({ save: error instanceof Error ? error.message : 'Failed to save check-in. Please try again.' });
     }
   };
 

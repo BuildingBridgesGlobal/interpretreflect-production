@@ -196,7 +196,7 @@ export const ManageSubscription: React.FC = () => {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center" role="status" aria-live="polite">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-indigo-600 mx-auto"></div>
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2" style={{ borderColor: 'rgb(92, 127, 79)' }}></div>
           <p className="mt-4 text-gray-600">Loading subscription details...</p>
         </div>
       </div>
@@ -208,7 +208,7 @@ export const ManageSubscription: React.FC = () => {
   return (
     <div className="min-h-screen bg-gray-50 py-8">
       {/* Skip to main content link */}
-      <a href="#main-content" className="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 bg-indigo-600 text-white px-4 py-2 rounded">
+      <a href="#main-content" className="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 text-white px-4 py-2 rounded" style={{ backgroundColor: 'rgb(92, 127, 79)' }}>
         Skip to main content
       </a>
 
@@ -218,7 +218,7 @@ export const ManageSubscription: React.FC = () => {
           <div className="px-6 py-6 border-b border-gray-200">
             <div className="flex items-center justify-between">
               <div className="flex items-center">
-                <Package className="h-8 w-8 text-indigo-600 mr-3" aria-hidden="true" />
+                <Package className="h-8 w-8 mr-3" aria-hidden="true" style={{ color: 'rgb(92, 127, 79)' }} />
                 <div>
                   <h1 className="text-2xl font-bold text-gray-900">Manage Subscription</h1>
                   <p className="text-gray-600 mt-1">
@@ -335,9 +335,9 @@ export const ManageSubscription: React.FC = () => {
                   >
                     <div className="flex items-center">
                       {subscription.plan_name === 'free' ? (
-                        <ArrowUpRight className="h-5 w-5 text-indigo-600 mr-3" aria-hidden="true" />
+                        <ArrowUpRight className="h-5 w-5 text-green-700 mr-3" aria-hidden="true" />
                       ) : (
-                        <ArrowDownRight className="h-5 w-5 text-indigo-600 mr-3" aria-hidden="true" />
+                        <ArrowDownRight className="h-5 w-5 text-green-700 mr-3" aria-hidden="true" />
                       )}
                       <div className="text-left">
                         <p className="font-medium text-gray-900">
@@ -374,7 +374,7 @@ export const ManageSubscription: React.FC = () => {
                     aria-label="View and download invoices"
                   >
                     <div className="flex items-center">
-                      <Download className="h-5 w-5 text-indigo-600 mr-3" aria-hidden="true" />
+                      <Download className="h-5 w-5 text-green-700 mr-3" aria-hidden="true" />
                       <div className="text-left">
                         <p className="font-medium text-gray-900">Download Invoices</p>
                         <p className="text-sm text-gray-500">Billing history</p>
@@ -390,7 +390,7 @@ export const ManageSubscription: React.FC = () => {
           {/* Invoices Section */}
           <section id="invoices-section" className="px-6 py-6 border-b border-gray-200" aria-labelledby="invoices">
             <h2 id="invoices" className="text-lg font-semibold text-gray-900 mb-4">
-              <FileText className="inline h-5 w-5 mr-2 text-indigo-600" aria-hidden="true" />
+              <FileText className="inline h-5 w-5 mr-2 text-green-700" aria-hidden="true" />
               Billing History
             </h2>
             
@@ -441,7 +441,7 @@ export const ManageSubscription: React.FC = () => {
                           <a
                             href={invoice.invoice_pdf}
                             download={`invoice-${invoice.date}.pdf`}
-                            className="text-indigo-600 hover:text-indigo-900 flex items-center justify-end"
+                            className="text-green-700 hover:text-green-900 flex items-center justify-end"
                             aria-label={`Download invoice from ${formatDate(invoice.date)}`}
                           >
                             <Download className="h-4 w-4 mr-1" aria-hidden="true" />
@@ -461,7 +461,7 @@ export const ManageSubscription: React.FC = () => {
           {/* Policy Highlights */}
           <section className="px-6 py-6 border-b border-gray-200" aria-labelledby="policies">
             <h2 id="policies" className="text-lg font-semibold text-gray-900 mb-4">
-              <HelpCircle className="inline h-5 w-5 mr-2 text-indigo-600" aria-hidden="true" />
+              <HelpCircle className="inline h-5 w-5 mr-2 text-green-700" aria-hidden="true" />
               Policy Highlights
             </h2>
             
@@ -479,15 +479,15 @@ export const ManageSubscription: React.FC = () => {
                 <span className="text-gray-700">We'll notify you at least 30 days in advance about any price changes.</span>
               </li>
               <li className="flex items-start">
-                <Mail className="h-5 w-5 text-indigo-600 mt-0.5 mr-3 flex-shrink-0" aria-hidden="true" />
+                <Mail className="h-5 w-5 text-green-700 mt-0.5 mr-3 flex-shrink-0" aria-hidden="true" />
                 <span className="text-gray-700">
                   Support email for billing issues:{' '}
                   <a 
-                    href="mailto:info@buildingbridgeslearning.com" 
-                    className="text-indigo-600 hover:text-indigo-500 underline"
-                    aria-label="Email support at info@buildingbridgeslearning.com"
+                    href="mailto:hello@huviatechnologies.com" 
+                    className="text-green-700 hover:text-green-600 underline"
+                    aria-label="Email support at hello@huviatechnologies.com"
                   >
-                    info@buildingbridgeslearning.com
+                    hello@huviatechnologies.com
                   </a>
                 </span>
               </li>
@@ -497,7 +497,7 @@ export const ManageSubscription: React.FC = () => {
           {/* Security & Accessibility */}
           <section className="px-6 py-6" aria-labelledby="security">
             <h2 id="security" className="text-lg font-semibold text-gray-900 mb-4">
-              <Shield className="inline h-5 w-5 mr-2 text-indigo-600" aria-hidden="true" />
+              <Shield className="inline h-5 w-5 mr-2 text-green-700" aria-hidden="true" />
               Security & Accessibility
             </h2>
             

@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { X, ChevronRight, Heart, Sparkles } from 'lucide-react';
+import { directInsertReflection } from '../services/directSupabaseApi';
 
 interface BodyCheckInProps {
   onClose: () => void;

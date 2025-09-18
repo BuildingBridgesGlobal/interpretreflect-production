@@ -20,6 +20,7 @@ import {
 } from 'lucide-react';
 import { CommunityIcon, HeartPulseIcon, NotepadIcon, TargetIcon, SecureLockIcon } from './CustomIcon';
 import { supabase } from '../lib/supabase';
+import { directInsertReflection, getSessionToken } from '../services/directSupabaseApi';
 import { useAuth } from '../contexts/AuthContext';
 import { updateGrowthInsightsForUser } from '../services/growthInsightsService';
 
@@ -205,16 +206,21 @@ export const MentoringReflectionAccessible: React.FC<MentoringReflectionProps> =
 
     setIsSaving(true);
     try {
-      const sessionId = `session_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+      const sessionId = `mentoring_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
       const timeSpent = Math.floor((Date.now() - startTime) / 1000);
 
-      // Save to database
-      const { data, error } = await supabase
-        .from('mentoring_reflections')
-        .upsert({
-          user_id: user.id,
-          session_id: sessionId,
-          reflection_type: 'mentoring_reflection',
+      console.log('MentoringReflectionAccessible - Starting save process...');
+
+      // Get access token
+      const accessToken = await getSessionToken();
+      console.log('MentoringReflectionAccessible - Got access token:', !!accessToken);
+
+      // Prepare the entry matching Pre-Assignment Prep format
+      const reflectionData = {
+        user_id: user.id,
+        reflection_id: sessionId,
+        entry_kind: 'mentoring_reflection',
+        data: {
           ...formData,
           status: 'completed',
           metadata: {
@@ -223,32 +229,70 @@ export const MentoringReflectionAccessible: React.FC<MentoringReflectionProps> =
             sections_completed: 8
           },
           completed_at: new Date().toISOString(),
-          updated_at: new Date().toISOString()
-        })
-        .select()
-        .single();
-
-      if (error) throw error;
-
-      // Update growth insights
-      const insights = {
-        mentoring_reflection: formData.key_insights,
-        goals_achievement: formData.goals_achievement,
-        relationship_development: formData.relationship_dynamics,
-        growth_insights: formData.personal_growth_areas
+          time_spent_seconds: timeSpent
+        }
       };
-      
-      await updateGrowthInsightsForUser(user.id, insights);
 
-      // Show summary
-      setShowSummary(true);
-      
-      // Call onComplete if provided
-      if (onComplete) {
-        setTimeout(() => {
-          onComplete(formData);
-        }, 2000);
+      console.log('MentoringReflectionAccessible - Data to save:', reflectionData);
+
+      // Try using Supabase client first with timeout
+      try {
+        const insertPromise = supabase
+          .from('reflection_entries')
+          .insert([reflectionData])
+          .select();
+
+        const timeoutPromise = new Promise((_, reject) =>
+          setTimeout(() => reject(new Error('Supabase client timeout')), 5000)
+        );
+
+        const { data: supabaseData, error: supabaseError } = await Promise.race([
+          insertPromise,
+          timeoutPromise
+        ]) as any;
+
+        if (!supabaseError && supabaseData) {
+          console.log('MentoringReflectionAccessible - Supabase client insert successful!', supabaseData);
+          const data = supabaseData[0];
+
+          // Show summary
+          setShowSummary(true);
+          setIsSaving(false);
+
+          // Call onComplete if provided
+          if (onComplete) {
+            onComplete(data);
+          }
+        } else {
+          throw supabaseError || new Error('No data returned');
+        }
+      } catch (clientError) {
+        console.log('MentoringReflectionAccessible - Supabase client failed, trying direct API...');
+
+        // Fall back to direct API
+        const { data, error } = await directInsertReflection(reflectionData, accessToken || undefined);
+        console.log('MentoringReflectionAccessible - Direct API response:', { data, error });
+
+        if (error) {
+          console.error('MentoringReflectionAccessible - Error saving to database:', error);
+          throw error;
+        }
+
+        console.log('MentoringReflectionAccessible - Save successful via direct API!', data);
+
+        // Show summary
+        setShowSummary(true);
+        setIsSaving(false);
+
+        // Call onComplete if provided
+        if (onComplete) {
+          onComplete(data);
+        }
       }
+
+      // Skip growth insights update - it hangs due to Supabase client
+      console.log('MentoringReflectionAccessible - Skipping growth insights update (uses hanging Supabase client)');
+
     } catch (error) {
       console.error('Error saving mentoring reflection:', error);
       setErrors({ save: 'Failed to save reflection. Please try again.' });

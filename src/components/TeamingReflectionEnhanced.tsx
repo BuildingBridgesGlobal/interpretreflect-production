@@ -7,6 +7,7 @@ import {
 import { CommunityIcon, HeartPulseIcon } from './CustomIcon';
 import { supabase, TeamingReflectionData, TeamingPrepData, TeamingPrepEnhancedData, ReflectionEntry } from '../lib/supabase';
 import { useAuth } from '../contexts/AuthContext';
+import { directInsertReflection, getSessionToken } from '../services/directSupabaseApi';
 
 interface TeamingReflectionEnhancedProps {
   onComplete?: (data: TeamingReflectionData) => void;
@@ -27,7 +28,6 @@ export const TeamingReflectionEnhanced: React.FC<TeamingReflectionEnhancedProps>
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [completionTime, setCompletionTime] = useState<number>(0);
   const [showSuccessModal, setShowSuccessModal] = useState(false);
-  const [sharingLink, setSharingLink] = useState<string>('');
   const startTime = Date.now();
   
   // Form state for all fields
@@ -72,10 +72,7 @@ export const TeamingReflectionEnhanced: React.FC<TeamingReflectionEnhancedProps>
     three_strategies: [],
     // Post-Reflection Metrics
     confidence_rating: 5,
-    feeling_word: '',
-    // Sharing preferences
-    share_enabled: false,
-    shared_highlights: []
+    feeling_word: ''
   });
 
   // Load prep data if available
@@ -124,27 +121,56 @@ export const TeamingReflectionEnhanced: React.FC<TeamingReflectionEnhancedProps>
 
     switch (sectionIndex) {
       case 0: // Quick Insight
-        if (!formData.most_surprised.trim()) {
+        if (!formData.most_surprised?.trim() || formData.most_surprised.length <= 1) {
           newErrors.most_surprised = 'Please share what surprised you';
         }
         break;
       case 1: // Revisiting Predictions
-        if (!formData.expectations_accuracy.trim()) {
+        if (!formData.expectations_accuracy?.trim() || formData.expectations_accuracy.length <= 1) {
           newErrors.expectations_accuracy = 'Please reflect on your expectations';
         }
-        if (!formData.handoff_signal_practice.trim()) {
+        if (!formData.handoff_signal_practice?.trim() || formData.handoff_signal_practice.length <= 1) {
           newErrors.handoff_signal_practice = 'Please describe how your handoff signal worked';
         }
         break;
       case 2: // Team Dynamics
-        if (!formData.team_function_actual.trim()) {
+        if (!formData.team_function_actual?.trim() || formData.team_function_actual.length <= 1) {
           newErrors.team_function_actual = 'Please describe your team dynamics';
         }
-        if (!formData.exceptional_moment.trim()) {
+        if (!formData.exceptional_moment?.trim() || formData.exceptional_moment.length <= 1) {
           newErrors.exceptional_moment = 'Please share an exceptional moment';
         }
         break;
-      // Add more validation as needed
+      case 3: // Challenges & Growth
+        if (!formData.significant_challenge?.trim() || formData.significant_challenge.length <= 1) {
+          newErrors.significant_challenge = 'Please describe a significant challenge';
+        }
+        if (!formData.unexpected_skills?.trim() || formData.unexpected_skills.length <= 1) {
+          newErrors.unexpected_skills = 'Please describe unexpected skills you developed';
+        }
+        break;
+      case 4: // Key Learnings
+        if (!formData.learned_about_self?.trim() || formData.learned_about_self.length <= 1) {
+          newErrors.learned_about_self = 'Please share what you learned about yourself';
+        }
+        if (!formData.collaboration_insights?.trim() || formData.collaboration_insights.length <= 1) {
+          newErrors.collaboration_insights = 'Please share your collaboration insights';
+        }
+        break;
+      case 5: // Then vs. Now Comparison
+        if (!formData.then_thought_now_know?.trim() || formData.then_thought_now_know.length <= 1) {
+          newErrors.then_thought_now_know = 'Please complete the thought comparison';
+        }
+        if (!formData.then_planned_actually_worked?.trim() || formData.then_planned_actually_worked.length <= 1) {
+          newErrors.then_planned_actually_worked = 'Please compare your plans with what worked';
+        }
+        break;
+      case 6: // Closing & Integration
+        // Three strategies are optional, but feeling word is required
+        if (!formData.feeling_word?.trim() || formData.feeling_word.length <= 1) {
+          newErrors.feeling_word = 'Please enter a feeling word';
+        }
+        break;
     }
 
     setErrors(newErrors);
@@ -166,10 +192,16 @@ export const TeamingReflectionEnhanced: React.FC<TeamingReflectionEnhancedProps>
   };
 
   const handleSave = async () => {
+    // Validate the current section before saving
+    if (!validateSection(currentSection)) {
+      console.log('TeamingReflectionEnhanced - Validation failed for section:', currentSection);
+      return;
+    }
+
     setIsSaving(true);
     const endTime = Date.now();
     const duration = Math.round((endTime - startTime) / 1000); // in seconds
-    
+
     try {
       if (!user) {
         throw new Error('User not authenticated');
@@ -190,24 +222,38 @@ export const TeamingReflectionEnhanced: React.FC<TeamingReflectionEnhancedProps>
         created_at: new Date().toISOString()
       };
 
-      const { error } = await supabase
-        .from('reflection_entries')
-        .insert([entry]);
+      // Get access token
+      const accessToken = await getSessionToken();
 
-      if (error) throw error;
+      // Add reflection_id and updated_at to the entry
+      const entryWithId = {
+        ...entry,
+        reflection_id: `teaming_reflection_${Date.now()}`,
+        updated_at: new Date().toISOString()
+      };
 
-      // Generate sharing link if enabled
-      if (formData.share_enabled) {
-        const link = `${window.location.origin}/share/reflection/${entry.reflection_id}`;
-        setSharingLink(link);
+      // Use direct API instead of Supabase client
+      console.log('TeamingReflectionEnhanced - Saving reflection with entry:', entryWithId);
+      const { data, error } = await directInsertReflection(entryWithId, accessToken || undefined);
+
+      if (error) {
+        console.error('TeamingReflectionEnhanced - Error from directInsertReflection:', error);
+        throw error;
       }
-      
-      // Show success modal
-      setShowSuccessModal(true);
-      
+
+      console.log('TeamingReflectionEnhanced - Reflection saved successfully:', data);
+
+      // Close the reflection form directly without showing success modal
+      onClose();
+      console.log('TeamingReflectionEnhanced - Closing reflection form');
+
       if (onComplete) {
+        console.log('TeamingReflectionEnhanced - Calling onComplete callback');
         onComplete(finalData);
       }
+
+      // Don't close immediately - let user see success modal
+      console.log('TeamingReflectionEnhanced - Save complete, success modal should be visible');
     } catch (error) {
       console.error('Error saving reflection:', error);
       setErrors({ save: 'Failed to save reflection. Please try again.' });
@@ -491,11 +537,11 @@ export const TeamingReflectionEnhanced: React.FC<TeamingReflectionEnhancedProps>
               rows={3}
               className="w-full px-4 py-3 border rounded-lg resize-none focus:ring-2 focus:ring-sage-500"
               style={{
-                borderColor: errors.team_function_daily ? '#ef4444' : '#E8E5E0'
+                borderColor: errors.team_function_actual ? '#ef4444' : '#E8E5E0'
               }}
             />
-            {errors.team_function_daily && (
-              <p className="text-sm text-red-500 mt-1">{errors.team_function_daily}</p>
+            {errors.team_function_actual && (
+              <p className="text-sm text-red-500 mt-1">{errors.team_function_actual}</p>
             )}
           </div>
 
@@ -574,7 +620,13 @@ export const TeamingReflectionEnhanced: React.FC<TeamingReflectionEnhancedProps>
               placeholder="Share a difficult moment and your team's response..."
               rows={3}
               className="w-full px-4 py-3 border rounded-lg resize-none focus:ring-2 focus:ring-sage-500"
+              style={{
+                borderColor: errors.significant_challenge ? '#ef4444' : '#E8E5E0'
+              }}
             />
+            {errors.significant_challenge && (
+              <p className="text-sm text-red-500 mt-1">{errors.significant_challenge}</p>
+            )}
           </div>
 
           <div>
@@ -587,7 +639,13 @@ export const TeamingReflectionEnhanced: React.FC<TeamingReflectionEnhancedProps>
               placeholder="Identify abilities you didn't know you'd need or gain..."
               rows={3}
               className="w-full px-4 py-3 border rounded-lg resize-none focus:ring-2 focus:ring-sage-500"
+              style={{
+                borderColor: errors.unexpected_skills ? '#ef4444' : '#E8E5E0'
+              }}
             />
+            {errors.unexpected_skills && (
+              <p className="text-sm text-red-500 mt-1">{errors.unexpected_skills}</p>
+            )}
           </div>
 
           <div>
@@ -664,7 +722,13 @@ export const TeamingReflectionEnhanced: React.FC<TeamingReflectionEnhancedProps>
               placeholder="Identify your key self-discovery..."
               rows={3}
               className="w-full px-4 py-3 border rounded-lg resize-none focus:ring-2 focus:ring-sage-500"
+              style={{
+                borderColor: errors.learned_about_self ? '#ef4444' : '#E8E5E0'
+              }}
             />
+            {errors.learned_about_self && (
+              <p className="text-sm text-red-500 mt-1">{errors.learned_about_self}</p>
+            )}
           </div>
 
           <div>
@@ -677,7 +741,13 @@ export const TeamingReflectionEnhanced: React.FC<TeamingReflectionEnhancedProps>
               placeholder="Share wisdom about working with others..."
               rows={3}
               className="w-full px-4 py-3 border rounded-lg resize-none focus:ring-2 focus:ring-sage-500"
+              style={{
+                borderColor: errors.collaboration_insights ? '#ef4444' : '#E8E5E0'
+              }}
             />
+            {errors.collaboration_insights && (
+              <p className="text-sm text-red-500 mt-1">{errors.collaboration_insights}</p>
+            )}
           </div>
 
           <div>
@@ -736,7 +806,13 @@ export const TeamingReflectionEnhanced: React.FC<TeamingReflectionEnhancedProps>
               placeholder="Complete this comparison about your assumptions vs. reality..."
               rows={2}
               className="w-full px-4 py-3 border rounded-lg resize-none focus:ring-2 focus:ring-sage-500"
+              style={{
+                borderColor: errors.then_thought_now_know ? '#ef4444' : '#E8E5E0'
+              }}
             />
+            {errors.then_thought_now_know && (
+              <p className="text-sm text-red-500 mt-1">{errors.then_thought_now_know}</p>
+            )}
           </div>
 
           <div>
@@ -762,7 +838,13 @@ export const TeamingReflectionEnhanced: React.FC<TeamingReflectionEnhancedProps>
               placeholder="Compare your planned approach with what succeeded..."
               rows={2}
               className="w-full px-4 py-3 border rounded-lg resize-none focus:ring-2 focus:ring-sage-500"
+              style={{
+                borderColor: errors.then_planned_actually_worked ? '#ef4444' : '#E8E5E0'
+              }}
             />
+            {errors.then_planned_actually_worked && (
+              <p className="text-sm text-red-500 mt-1">{errors.then_planned_actually_worked}</p>
+            )}
           </div>
           
           <div>
@@ -877,37 +959,17 @@ export const TeamingReflectionEnhanced: React.FC<TeamingReflectionEnhancedProps>
                   placeholder="Enter one word..."
                   maxLength={30}
                   className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-sage-500"
+                  style={{
+                    borderColor: errors.feeling_word ? '#ef4444' : '#E8E5E0'
+                  }}
                 />
+                {errors.feeling_word && (
+                  <p className="text-sm text-red-500 mt-1">{errors.feeling_word}</p>
+                )}
               </div>
             </div>
           </div>
 
-          {/* Sharing Options */}
-          <div 
-            className="p-4 rounded-lg"
-            style={{
-              backgroundColor: 'rgba(107, 139, 96, 0.05)',
-              border: '1px solid rgba(107, 139, 96, 0.2)'
-            }}
-          >
-            <label className="flex items-center space-x-3">
-              <input
-                type="checkbox"
-                checked={formData.share_enabled || false}
-                onChange={(e) => handleFieldChange('share_enabled', e.target.checked)}
-                className="rounded"
-                style={{ accentColor: '#6B8B60' }}
-              />
-              <span className="text-sm font-medium" style={{ color: '#2D5F3F' }}>
-                Enable sharing of key insights with my team
-              </span>
-            </label>
-            {formData.share_enabled && (
-              <p className="text-xs mt-2" style={{ color: '#5A5A5A' }}>
-                You'll be able to select specific insights to share after saving
-              </p>
-            )}
-          </div>
         </div>
       )
     }
@@ -1049,19 +1111,6 @@ export const TeamingReflectionEnhanced: React.FC<TeamingReflectionEnhancedProps>
             </button>
           ) : (
             <div className="flex items-center space-x-3">
-              {formData.share_enabled && (
-                <button
-                  className="px-4 py-2 rounded-lg flex items-center"
-                  style={{
-                    backgroundColor: '#F8FBF6',
-                    color: '#6B8B60',
-                    border: '1px solid #6B8B60'
-                  }}
-                >
-                  <Share2 className="w-4 h-4 mr-2" />
-                  Share Insights
-                </button>
-              )}
               <button
                 onClick={handleSave}
                 disabled={isSaving}
@@ -1122,36 +1171,6 @@ export const TeamingReflectionEnhanced: React.FC<TeamingReflectionEnhancedProps>
                 Your insights have been saved and will help you grow as a collaborative interpreter.
               </p>
               
-              {formData.share_enabled && sharingLink && (
-                <div className="mb-6 p-4 rounded-lg" style={{ backgroundColor: 'rgba(107, 139, 96, 0.1)' }}>
-                  <p className="text-sm font-medium mb-2" style={{ color: '#2D5F3F' }}>
-                    Share your insights with your team:
-                  </p>
-                  <div className="flex items-center space-x-2">
-                    <input
-                      type="text"
-                      value={sharingLink}
-                      readOnly
-                      className="flex-1 px-3 py-2 text-sm border rounded-lg bg-white"
-                      style={{ borderColor: '#E8E5E0' }}
-                    />
-                    <button
-                      onClick={() => {
-                        navigator.clipboard.writeText(sharingLink);
-                        // Show copied feedback
-                      }}
-                      className="px-3 py-2 rounded-lg flex items-center"
-                      style={{
-                        background: 'linear-gradient(135deg, #1b5e20, #2e7d32)',
-                        color: '#FFFFFF'
-                      }}
-                    >
-                      <Copy className="w-4 h-4" />
-                    </button>
-                  </div>
-                </div>
-              )}
-              
               <div className="flex flex-col space-y-3">
                 <button
                   onClick={() => {
@@ -1168,22 +1187,6 @@ export const TeamingReflectionEnhanced: React.FC<TeamingReflectionEnhancedProps>
                   Continue to Dashboard
                 </button>
                 
-                {formData.share_enabled && (
-                  <button
-                    onClick={() => {
-                      // TODO: Implement team sharing feature
-                      setShowSuccessModal(false);
-                    }}
-                    className="px-6 py-2 rounded-lg transition-colors"
-                    style={{
-                      backgroundColor: '#F8FBF6',
-                      color: '#6B8B60',
-                      border: '1px solid #6B8B60'
-                    }}
-                  >
-                    Share Key Insights with Team
-                  </button>
-                )}
               </div>
             </div>
           </div>

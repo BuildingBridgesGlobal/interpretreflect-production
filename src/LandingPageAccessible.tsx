@@ -1139,12 +1139,12 @@ function LandingPageAccessible({ onGetStarted }: LandingPageProps) {
             >
               <strong>Questions?</strong> Email{' '}
               <a 
-                href="mailto:info@buildingbridgeslearning.com"
+                href="mailto:hello@huviatechnologies.com"
                 className="underline"
                 style={{ color: colors.sage[600] }}
-                aria-label="Email us at info@buildingbridgeslearning.com"
+                aria-label="Email us at hello@huviatechnologies.com"
               >
-                info@buildingbridgeslearning.com
+                hello@huviatechnologies.com
               </a>
             </p>
           </div>

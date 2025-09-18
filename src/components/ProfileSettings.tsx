@@ -78,18 +78,47 @@ const SUPPORTED_LANGUAGES = [
 ];
 
 const COMMON_CREDENTIALS = [
-  'RID CI/CT',
-  'NIC-Advanced',
+  // ASL Certifications
+  'RID CI/CT (Certificate of Interpretation/Certificate of Transliteration)',
+  'RID CDI (Certified Deaf Interpreter)',
+  'RID NIC (National Interpreter Certification)',
+  'RID NIC-Advanced',
+  'RID NIC-Master',
+  'RID SC:L (Specialist Certificate: Legal)',
+  'BEI Basic',
+  'BEI Advanced',
   'BEI Master',
-  'CHI™',
-  'CCHI',
-  'NAATI',
-  'AIIC',
-  'RID CDI',
-  'BEI Court',
+  'BEI Court Certified',
+  'EIPA Level 3',
+  'EIPA Level 4',
+  'EIPA Level 5',
+
+  // Spoken Language Certifications
+  'CHI™ (Certified Healthcare Interpreter)',
+  'CMI (Certified Medical Interpreter)',
+  'CCHI (Certification Commission for Healthcare Interpreters)',
+  'CoreCHI™',
+  'NAATI Certified Provisional',
+  'NAATI Certified',
+  'NAATI Certified Advanced',
+  'NAATI Certified Senior',
+  'AIIC Member',
+  'ATA Certified',
+
+  // Specialized Certifications
+  'Legal/Court Interpreter',
   'Medical Interpreter',
-  'Legal Interpreter',
-  'Conference Interpreter'
+  'Conference Interpreter',
+  'Educational Interpreter',
+  'Mental Health Interpreter',
+  'VRI/VRS Certified',
+  'Trilingual Interpreter',
+
+  // State-Specific (Dummy Examples)
+  'California Court Interpreter',
+  'New York State Certified',
+  'Texas BEI Certified',
+  'Florida Registry Approved'
 ];
 
 const SPECIALIZATIONS = [
@@ -143,7 +172,8 @@ export const ProfileSettings: React.FC<ProfileSettingsProps> = ({ devMode = fals
   const [successMessage, setSuccessMessage] = useState('');
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
   const [credentialInput, setCredentialInput] = useState('');
-  const [showCredentialSuggestions, setShowCredentialSuggestions] = useState(false);
+  const [showCredentialDropdown, setShowCredentialDropdown] = useState(false);
+  const [filteredCredentials, setFilteredCredentials] = useState<string[]>([]);
   const [notificationPrefs, setNotificationPrefs] = useState({
     email_reminders: true,
     weekly_insights: true,
@@ -221,15 +251,26 @@ export const ProfileSettings: React.FC<ProfileSettingsProps> = ({ devMode = fals
     try {
       setLoading(true);
       setErrors({});
-      
-      const { data, error } = await supabase
+
+      // Add timeout to prevent infinite loading
+      const timeoutPromise = new Promise((_, reject) =>
+        setTimeout(() => reject(new Error('Request timeout')), 5000)
+      );
+
+      const fetchPromise = supabase
         .from('user_profiles')
         .select('*')
         .eq('id', user?.id)
         .single();
 
+      const { data, error } = await Promise.race([fetchPromise, timeoutPromise]).catch(() => ({
+        data: null,
+        error: { code: 'TIMEOUT', message: 'Request timed out' }
+      }));
+
+      // If table doesn't exist or timeout, use default profile
       if (error && error.code !== 'PGRST116') {
-        throw error;
+        console.warn('Profile table may not exist, using default profile');
       }
 
       const profileData: UserProfile = data || {
@@ -554,9 +595,6 @@ export const ProfileSettings: React.FC<ProfileSettingsProps> = ({ devMode = fals
                 }
               }}
             >
-              {section === 'profile' && <User className="w-4 h-4 inline mr-2" />}
-              {section === 'accessibility' && <Eye className="w-4 h-4 inline mr-2" />}
-              {section === 'privacy' && <Shield className="w-4 h-4 inline mr-2" />}
               {section === 'privacy' ? 'Privacy & Data' : section}
             </button>
           ))}
@@ -673,28 +711,6 @@ export const ProfileSettings: React.FC<ProfileSettingsProps> = ({ devMode = fals
                     />
                   </div>
                 </div>
-
-                {/* Bio */}
-                <div className="mt-6">
-                  <label className="block text-sm font-medium mb-2" style={{ color: '#1A1A1A' }}>
-                    Professional Bio
-                  </label>
-                  <textarea
-                    value={profile.bio || ''}
-                    onChange={(e) => setProfile({ ...profile, bio: e.target.value })}
-                    rows={4}
-                    className="w-full px-4 py-3 rounded-xl border focus:outline-none focus:ring-2 resize-none"
-                    style={{
-                      borderColor: errors.bio ? '#EF4444' : '#E5E5E5',
-                      backgroundColor: '#FAF9F6'
-                    }}
-                    placeholder="Tell us about your professional background and interests..."
-                    maxLength={500}
-                  />
-                  <p className="text-xs mt-1 text-right" style={{ color: '#999999' }}>
-                    {profile.bio?.length || 0}/500 characters
-                  </p>
-                </div>
               </div>
 
               {/* Profile Photo */}
@@ -748,7 +764,7 @@ export const ProfileSettings: React.FC<ProfileSettingsProps> = ({ devMode = fals
                         onClick={() => fileInputRef.current?.click()}
                         className="px-4 py-2 rounded-lg font-medium flex items-center gap-2"
                         style={{
-                          backgroundColor: '#6B8B60',
+                          background: 'linear-gradient(135deg, rgb(27, 94, 32), rgb(46, 125, 50))',
                           color: '#FFFFFF'
                         }}
                       >
@@ -795,83 +811,176 @@ export const ProfileSettings: React.FC<ProfileSettingsProps> = ({ devMode = fals
                   <label className="block text-sm font-medium mb-3" style={{ color: '#1A1A1A' }}>
                     Credentials & Certifications
                   </label>
-                  
+
                   {profile.credentials && profile.credentials.length > 0 && (
                     <div className="flex flex-wrap gap-2 mb-3">
-                      {profile.credentials.map((cred, index) => (
-                        <div
-                          key={index}
-                          className="flex items-center gap-2 px-3 py-2 rounded-lg"
-                          style={{ backgroundColor: 'rgba(107, 139, 96, 0.1)' }}
-                        >
-                          <Award className="w-4 h-4" style={{ color: '#6B8B60' }} />
-                          <span style={{ color: '#1A1A1A' }}>{cred}</span>
-                          <button
-                            type="button"
-                            onClick={() => handleRemoveCredential(index)}
-                            className="hover:opacity-70"
+                      {profile.credentials.map((cred, index) => {
+                        // Extract just the acronym for display if it has a description
+                        const displayName = cred.includes('(') ? cred.split(' (')[0] : cred;
+                        return (
+                          <div
+                            key={index}
+                            className="flex items-center gap-2 px-3 py-2 rounded-lg"
+                            style={{ backgroundColor: 'rgba(107, 139, 96, 0.1)' }}
+                            title={cred} // Show full name on hover
                           >
-                            <X className="w-4 h-4" style={{ color: '#666666' }} />
-                          </button>
-                        </div>
-                      ))}
+                            <Award className="w-4 h-4" style={{ color: 'rgb(27, 94, 32)' }} />
+                            <span style={{ color: '#1A1A1A' }}>{displayName}</span>
+                            <button
+                              type="button"
+                              onClick={() => handleRemoveCredential(index)}
+                              style={{
+                                background: 'none',
+                                border: 'none',
+                                cursor: 'pointer',
+                                padding: 0,
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'center'
+                              }}
+                              onMouseEnter={(e) => {
+                                e.currentTarget.style.opacity = '0.7';
+                              }}
+                              onMouseLeave={(e) => {
+                                e.currentTarget.style.opacity = '1';
+                              }}
+                              aria-label={`Remove ${displayName}`}
+                            >
+                              <X className="w-4 h-4" style={{ color: 'rgb(27, 94, 32) !important', stroke: 'rgb(27, 94, 32) !important' }} />
+                            </button>
+                          </div>
+                        );
+                      })}
                     </div>
                   )}
-                  
-                  <div className="flex gap-2">
-                    <input
-                      type="text"
-                      value={credentialInput}
-                      onChange={(e) => setCredentialInput(e.target.value)}
-                      onKeyPress={(e) => {
-                        if (e.key === 'Enter') {
-                          e.preventDefault();
-                          handleAddCredential(credentialInput);
-                        }
-                      }}
-                      className="flex-1 px-4 py-2 rounded-lg border"
-                      style={{
-                        borderColor: '#E5E5E5',
-                        backgroundColor: '#FAF9F6'
-                      }}
-                      placeholder="Add a credential"
-                    />
-                    <button
-                      type="button"
-                      onClick={() => handleAddCredential(credentialInput)}
-                      className="px-4 py-2 rounded-lg font-medium"
-                      style={{
-                        backgroundColor: '#6B8B60',
-                        color: '#FFFFFF'
-                      }}
-                    >
-                      Add
-                    </button>
-                  </div>
-                  
-                  {showCredentialSuggestions && (
-                    <div className="mt-3 p-3 rounded-lg" style={{ backgroundColor: '#FAF9F6' }}>
-                      <p className="text-xs font-medium mb-2" style={{ color: '#666666' }}>
-                        Common credentials:
-                      </p>
-                      <div className="flex flex-wrap gap-1">
-                        {COMMON_CREDENTIALS.map(cred => (
-                          <button
-                            key={cred}
-                            type="button"
-                            onClick={() => handleAddCredential(cred)}
-                            className="text-xs px-2 py-1 rounded hover:opacity-80"
-                            style={{
-                              backgroundColor: 'rgba(107, 139, 96, 0.1)',
-                              color: '#6B8B60'
-                            }}
-                          >
-                            {cred}
-                          </button>
-                        ))}
+
+                  <div className="relative">
+                    <div className="flex gap-2">
+                      <div className="relative flex-1">
+                        <select
+                          value=""
+                          onChange={(e) => {
+                            if (e.target.value) {
+                              handleAddCredential(e.target.value);
+                              e.target.value = '';
+                            }
+                          }}
+                          className="w-full px-4 py-2 pr-8 rounded-lg border appearance-none cursor-pointer"
+                          style={{
+                            borderColor: '#E5E5E5',
+                            backgroundColor: '#FAF9F6'
+                          }}
+                        >
+                          <option value="" disabled>Select a credential...</option>
+
+                          <optgroup label="ASL Certifications">
+                            {COMMON_CREDENTIALS.filter(c => c.includes('RID') || c.includes('BEI') || c.includes('EIPA'))
+                              .filter(c => !profile.credentials?.includes(c))
+                              .map(cred => {
+                                const displayName = cred.includes('(') ? cred.split(' (')[0] : cred;
+                                return (
+                                  <option key={cred} value={cred}>
+                                    {displayName}
+                                  </option>
+                                );
+                              })}
+                          </optgroup>
+
+                          <optgroup label="Spoken Language Certifications">
+                            {COMMON_CREDENTIALS.filter(c =>
+                              (c.includes('CHI') || c.includes('CMI') || c.includes('CCHI') ||
+                               c.includes('NAATI') || c.includes('AIIC') || c.includes('ATA')) &&
+                              !profile.credentials?.includes(c)
+                            ).map(cred => {
+                              const displayName = cred.includes('(') ? cred.split(' (')[0] : cred;
+                              return (
+                                <option key={cred} value={cred}>
+                                  {displayName}
+                                </option>
+                              );
+                            })}
+                          </optgroup>
+
+                          <optgroup label="Specialized Certifications">
+                            {COMMON_CREDENTIALS.filter(c =>
+                              (c.includes('Legal') || c.includes('Medical') || c.includes('Conference') ||
+                               c.includes('Educational') || c.includes('Mental Health') || c.includes('VRI') ||
+                               c.includes('Trilingual')) &&
+                              !profile.credentials?.includes(c)
+                            ).map(cred => (
+                              <option key={cred} value={cred}>
+                                {cred}
+                              </option>
+                            ))}
+                          </optgroup>
+
+                          <optgroup label="State-Specific Certifications">
+                            {COMMON_CREDENTIALS.filter(c =>
+                              (c.includes('California') || c.includes('New York') ||
+                               c.includes('Texas') || c.includes('Florida')) &&
+                              !profile.credentials?.includes(c)
+                            ).map(cred => (
+                              <option key={cred} value={cred}>
+                                {cred}
+                              </option>
+                            ))}
+                          </optgroup>
+                        </select>
+
+                        {/* Dropdown arrow icon */}
+                        <ChevronDown
+                          className="absolute right-3 top-1/2 transform -translate-y-1/2 pointer-events-none"
+                          size={20}
+                          style={{ color: '#666666' }}
+                        />
+                      </div>
+
+                      {/* Optional: Allow custom input */}
+                      <div className="flex gap-2">
+                        <input
+                          type="text"
+                          value={credentialInput}
+                          onChange={(e) => setCredentialInput(e.target.value)}
+                          onKeyPress={(e) => {
+                            if (e.key === 'Enter') {
+                              e.preventDefault();
+                              if (credentialInput.trim()) {
+                                handleAddCredential(credentialInput);
+                              }
+                            }
+                          }}
+                          className="px-4 py-2 rounded-lg border"
+                          style={{
+                            borderColor: '#E5E5E5',
+                            backgroundColor: '#FAF9F6',
+                            minWidth: '200px'
+                          }}
+                          placeholder="Or enter custom..."
+                        />
+                        <button
+                          type="button"
+                          onClick={() => {
+                            if (credentialInput.trim()) {
+                              handleAddCredential(credentialInput);
+                            }
+                          }}
+                          className="px-4 py-2 rounded-lg font-medium"
+                          style={{
+                            background: 'linear-gradient(135deg, rgb(27, 94, 32), rgb(46, 125, 50))',
+                            color: '#FFFFFF'
+                          }}
+                        >
+                          Add
+                        </button>
                       </div>
                     </div>
-                  )}
+
+                    {errors.credentials && (
+                      <p className="text-sm mt-2" style={{ color: '#EF4444' }}>
+                        {errors.credentials}
+                      </p>
+                    )}
+                  </div>
                 </div>
 
                 {/* Specializations */}
@@ -894,13 +1003,13 @@ export const ProfileSettings: React.FC<ProfileSettingsProps> = ({ devMode = fals
                             : 'transparent'}`
                         }}
                       >
-                        <div 
+                        <div
                           className="w-5 h-5 rounded flex items-center justify-center"
                           style={{
-                            backgroundColor: profile.specializations?.includes(spec) 
-                              ? '#6B8B60' 
+                            background: profile.specializations?.includes(spec)
+                              ? 'linear-gradient(135deg, rgb(27, 94, 32), rgb(46, 125, 50))'
                               : '#FFFFFF',
-                            border: '2px solid #6B8B60'
+                            border: '2px solid rgb(27, 94, 32)'
                           }}
                         >
                           {profile.specializations?.includes(spec) && (
@@ -926,11 +1035,11 @@ export const ProfileSettings: React.FC<ProfileSettingsProps> = ({ devMode = fals
                   boxShadow: '0 4px 15px rgba(0, 0, 0, 0.05)'
                 }}
               >
-                <h2 className="text-xl font-bold mb-6" style={{ color: '#1A1A1A' }}>
+                <h2 className="text-lg font-bold mb-4" style={{ color: '#1A1A1A' }}>
                   Accessibility Settings
                 </h2>
 
-                <div className="space-y-4">
+                <div className="space-y-3">
                   {[
                     {
                       id: 'larger_text',
@@ -963,11 +1072,11 @@ export const ProfileSettings: React.FC<ProfileSettingsProps> = ({ devMode = fals
                   ].map(setting => (
                     <div
                       key={setting.id}
-                      className="p-4 rounded-xl"
+                      className="p-3 rounded-xl"
                       style={{ backgroundColor: '#FAF9F6' }}
                     >
-                      <label 
-                        className="flex items-start gap-3 cursor-pointer focus:outline-none" 
+                      <label
+                        className="flex items-start gap-3 cursor-pointer focus:outline-none"
                         style={{ outline: 'none' }}
                         onClick={() => setProfile({
                           ...profile,
@@ -981,8 +1090,8 @@ export const ProfileSettings: React.FC<ProfileSettingsProps> = ({ devMode = fals
                           <div
                             className="rounded transition-all duration-200 focus:outline-none"
                             style={{
-                              width: '20px',
-                              height: '20px',
+                              width: '18px',
+                              height: '18px',
                               backgroundColor: setting.enabled ? '#059669' : '#ffffff',
                               border: setting.enabled ? '2px solid #059669' : '2px solid #d1d5db',
                               outline: 'none'
@@ -1007,10 +1116,10 @@ export const ProfileSettings: React.FC<ProfileSettingsProps> = ({ devMode = fals
                           </div>
                         </div>
                         <div>
-                          <h3 className="font-medium" style={{ color: '#1A1A1A' }}>
+                          <h3 className="text-sm font-medium" style={{ color: '#1A1A1A' }}>
                             {setting.label}
                           </h3>
-                          <p className="text-sm mt-1" style={{ color: '#666666' }}>
+                          <p className="text-xs mt-0.5" style={{ color: '#666666' }}>
                             {setting.description}
                           </p>
                         </div>
@@ -1099,7 +1208,7 @@ export const ProfileSettings: React.FC<ProfileSettingsProps> = ({ devMode = fals
                           }}
                           className="px-4 py-2 rounded-lg font-medium transition-all hover:opacity-90"
                           style={{
-                            backgroundColor: '#6B8B60',
+                            background: 'linear-gradient(135deg, rgb(27, 94, 32), rgb(46, 125, 50))',
                             color: '#FFFFFF'
                           }}
                         >
@@ -1132,10 +1241,17 @@ export const ProfileSettings: React.FC<ProfileSettingsProps> = ({ devMode = fals
                               alert('Account deletion request submitted. You will receive a confirmation email.');
                             }
                           }}
-                          className="px-4 py-2 rounded-lg font-medium border transition-all hover:bg-red-50"
+                          className="px-4 py-2 rounded-lg font-medium transition-all"
                           style={{
-                            borderColor: '#EF4444',
-                            color: '#EF4444'
+                            background: 'linear-gradient(135deg, rgb(27, 94, 32), rgb(46, 125, 50))',
+                            color: '#EF4444',
+                            border: 'none'
+                          }}
+                          onMouseEnter={(e) => {
+                            e.currentTarget.style.opacity = '0.9';
+                          }}
+                          onMouseLeave={(e) => {
+                            e.currentTarget.style.opacity = '1';
                           }}
                         >
                           Delete
@@ -1240,7 +1356,7 @@ export const ProfileSettings: React.FC<ProfileSettingsProps> = ({ devMode = fals
               disabled={saving || !hasUnsavedChanges()}
               className="flex-1 px-6 py-3 rounded-xl font-medium transition-all flex items-center justify-center gap-2 shadow-md hover:shadow-lg"
               style={{
-                backgroundColor: saving || !hasUnsavedChanges() ? '#E5E5E5' : '#6B8B60',
+                background: saving || !hasUnsavedChanges() ? '#E5E5E5' : 'linear-gradient(135deg, rgb(27, 94, 32), rgb(46, 125, 50))',
                 color: saving || !hasUnsavedChanges() ? '#999999' : '#FFFFFF',
                 cursor: saving || !hasUnsavedChanges() ? 'not-allowed' : 'pointer',
                 minHeight: '48px'
@@ -1252,10 +1368,7 @@ export const ProfileSettings: React.FC<ProfileSettingsProps> = ({ devMode = fals
                   Saving...
                 </>
               ) : (
-                <>
-                  <Save className="w-5 h-5" />
-                  Save Changes
-                </>
+                'Save Changes'
               )}
             </button>
             

@@ -68,11 +68,11 @@ export function Contact() {
               <p className="font-semibold mb-2" style={{ color: '#1A1A1A' }}>
                 <strong>Email:</strong>{' '}
                 <a 
-                  href="mailto:info@buildingbridgeslearning.com"
+                  href="mailto:hello@huviatechnologies.com"
                   className="hover:underline"
                   style={{ color: '#6B8B60' }}
                 >
-                  info@buildingbridgeslearning.com
+                  hello@huviatechnologies.com
                 </a>
               </p>
               <p style={{ color: '#5A5A5A' }}>

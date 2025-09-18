@@ -1,4 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
+import { directInsertReflection } from '../services/directSupabaseApi';
+import { useAuth } from '../contexts/AuthContext';
 import {
   ChevronLeft,
   ChevronRight,
@@ -77,6 +79,7 @@ const steps = [
 ];
 
 export const PreAssignmentPrepAccessible: React.FC<PreAssignmentPrepProps> = ({ onClose, onComplete }) => {
+  const { user } = useAuth();
   const [currentStep, setCurrentStep] = useState(1);
   const [isReviewing, setIsReviewing] = useState(false);
   const [showComparison, setShowComparison] = useState(false);
@@ -149,22 +152,57 @@ export const PreAssignmentPrepAccessible: React.FC<PreAssignmentPrepProps> = ({ 
     setIsReviewing(false);
   };
 
-  const handleComplete = () => {
+  const handleComplete = async () => {
+    if (!user) {
+      console.error('No user logged in');
+      return;
+    }
+
+    setIsSaving(true);
+
     const completedData = {
       ...formData,
       timestamp: new Date().toISOString()
     };
-    
-    // Save to localStorage
-    localStorage.setItem('lastPreAssignmentPrep', JSON.stringify(completedData));
-    localStorage.removeItem('preAssignmentPrepDraft');
-    localStorage.removeItem('preAssignmentPrepStep');
-    
-    if (onComplete) {
-      onComplete(completedData);
+
+    try {
+      // Save to database using direct API
+      const accessToken = JSON.parse(localStorage.getItem('session') || '{}').access_token;
+
+      const reflectionData = {
+        user_id: user.id,
+        entry_kind: 'pre_assignment_prep',
+        data: completedData,
+        reflection_id: crypto.randomUUID()
+      };
+
+      console.log('PreAssignmentPrepAccessible - Calling directInsertReflection with:', reflectionData);
+      const { data, error } = await directInsertReflection(reflectionData, accessToken);
+      console.log('PreAssignmentPrepAccessible - directInsertReflection response:', { data, error });
+
+      if (error) {
+        console.error('PreAssignmentPrepAccessible - Error saving:', error);
+        throw error;
+      }
+
+      console.log('PreAssignmentPrepAccessible - Saved successfully:', data);
+
+      // Also save to localStorage for offline access
+      localStorage.setItem('lastPreAssignmentPrep', JSON.stringify(completedData));
+      localStorage.removeItem('preAssignmentPrepDraft');
+      localStorage.removeItem('preAssignmentPrepStep');
+
+      if (onComplete) {
+        onComplete(completedData);
+      }
+
+      onClose();
+    } catch (error) {
+      console.error('Error saving pre-assignment prep:', error);
+      alert('Failed to save reflection. Please try again.');
+    } finally {
+      setIsSaving(false);
     }
-    
-    onClose();
   };
 
   const handleDownloadChecklist = () => {

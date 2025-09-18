@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import {
+import { directInsertReflection } from '../services/directSupabaseApi';
   Activity,
   Wind,
   Heart,
@@ -154,7 +155,7 @@ const PostAssignmentDebrief: React.FC<PostAssignmentDebriefProps> = ({ onComplet
     setRedFlags((prev) => (prev.includes(flag) ? prev.filter((f) => f !== flag) : [...prev, flag]));
   };
 
-  const completeDebrief = () => {
+  const completeDebrief = async () => {
     const results: DebriefResults = {
       stressLevelBefore,
       stressLevelAfter,
@@ -171,6 +172,33 @@ const PostAssignmentDebrief: React.FC<PostAssignmentDebriefProps> = ({ onComplet
       redFlags,
       timestamp: new Date(),
     };
+
+    // Save to database
+    try {
+      const user = JSON.parse(localStorage.getItem('session') || '{}').user;
+      const accessToken = JSON.parse(localStorage.getItem('session') || '{}').access_token;
+
+      if (user?.id) {
+        const reflectionData = {
+          user_id: user.id,
+          entry_kind: 'post_assignment_debrief',
+          data: results,
+          reflection_id: crypto.randomUUID()
+        };
+
+        const { data, error } = await directInsertReflection(reflectionData, accessToken);
+
+        if (error) {
+          console.error('PostAssignmentDebrief - Error saving:', error);
+        } else {
+          console.log('PostAssignmentDebrief - Saved successfully:', data);
+        }
+      }
+    } catch (error) {
+      console.error('PostAssignmentDebrief - Error saving to database:', error);
+    }
+
+    // Call onComplete with results
     onComplete?.(results);
   };
 
@@ -1107,9 +1135,10 @@ const PostAssignmentDebrief: React.FC<PostAssignmentDebriefProps> = ({ onComplet
             </h1>
             <button
               onClick={onClose}
-              className="p-2 rounded-lg hover:bg-gray-100 transition-colors"
+              className="p-2 rounded-lg transition-colors text-white"
+              style={{ background: 'linear-gradient(135deg, rgb(27, 94, 32), rgb(46, 125, 50))' }}
             >
-              <ChevronRight className="h-5 w-5" style={{ color: '#6B7C6B' }} />
+              <ChevronRight className="h-5 w-5" />
             </button>
           </div>
 

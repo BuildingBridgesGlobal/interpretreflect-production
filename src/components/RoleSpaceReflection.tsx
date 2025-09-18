@@ -19,6 +19,7 @@ import {
 } from 'lucide-react';
 import { SecureLockIcon, HeartPulseIcon, NotepadIcon, CommunityIcon, TargetIcon } from './CustomIcon';
 import { supabase } from '../lib/supabase';
+import { directInsertReflection, directSelectReflections, getSessionToken } from '../services/directSupabaseApi';
 import { useAuth } from '../contexts/AuthContext';
 import { updateGrowthInsightsForUser } from '../services/growthInsightsService';
 
@@ -307,48 +308,123 @@ export const RoleSpaceReflection: React.FC<RoleSpaceReflectionProps> = ({ onClos
       return;
     }
 
+    // Prevent double-submission
+    if (isSubmitting) {
+      console.log('RoleSpaceReflection - Already saving, ignoring duplicate click');
+      return;
+    }
+
+    console.log('RoleSpaceReflection - handleSubmit called');
+    console.log('RoleSpaceReflection - User:', { id: user.id, email: user.email });
+
     setIsSubmitting(true);
     setErrors({});
 
     try {
       // Calculate time spent
       const timeSpent = Math.round((Date.now() - startTime) / 1000);
+      const sessionId = `role_space_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
 
-      // Save to Supabase
-      const { data, error } = await supabase
-        .from('reflections')
-        .insert({
-          user_id: user.id,
-          type: 'Role-Space Reflection',
-          data: {
-            ...formData,
-            completed_at: new Date().toISOString(),
-            time_spent_seconds: timeSpent
-          }
-        })
-        .select()
-        .single();
+      console.log('RoleSpaceReflection - Starting save with sessionId:', sessionId);
 
-      if (error) throw error;
+      // Get access token
+      const accessToken = await getSessionToken();
+      console.log('RoleSpaceReflection - Got access token:', !!accessToken);
 
-      // Update growth insights
-      await updateGrowthInsightsForUser(user.id, 'role_space_reflection');
+      // Test database connection
+      console.log('RoleSpaceReflection - Testing database connection...');
+      const { data: testData, error: testError } = await directSelectReflections(user.id, accessToken || undefined);
+      console.log('RoleSpaceReflection - Test query result:', { testData, testError });
 
-      // Show summary
-      setShowSummary(true);
+      if (testError) {
+        console.error('RoleSpaceReflection - Cannot read from database:', testError);
+        throw new Error(`Database connection issue: ${testError}`);
+      }
 
-      // Complete after delay
-      setTimeout(() => {
-        if (onComplete) {
-          onComplete(data);
+      // Prepare the entry matching Pre-Assignment Prep format
+      const reflectionData = {
+        user_id: user.id,
+        reflection_id: sessionId,
+        entry_kind: 'role_space_reflection',
+        data: {
+          ...formData,
+          completed_at: new Date().toISOString(),
+          time_spent_seconds: timeSpent
         }
-        onClose();
-      }, 2000);
-    } catch (error) {
-      console.error('Error saving reflection:', error);
-      setErrors({ save: 'Failed to save reflection. Please try again.' });
-    } finally {
+      };
+
+      console.log('RoleSpaceReflection - Data to save:', reflectionData);
+
+      // Try using Supabase client first with timeout
+      try {
+        const insertPromise = supabase
+          .from('reflection_entries')
+          .insert([reflectionData])
+          .select();
+
+        const timeoutPromise = new Promise((_, reject) =>
+          setTimeout(() => reject(new Error('Supabase client timeout')), 5000)
+        );
+
+        const { data: supabaseData, error: supabaseError } = await Promise.race([
+          insertPromise,
+          timeoutPromise
+        ]) as any;
+
+        if (!supabaseError && supabaseData) {
+          console.log('RoleSpaceReflection - Supabase client insert successful!', supabaseData);
+          const data = supabaseData[0];
+
+          // Show summary
+          setShowSummary(true);
+          console.log('Role-Space Reflection Results:', reflectionData.data);
+
+          // Complete after delay
+          setTimeout(() => {
+            if (onComplete) {
+              onComplete(reflectionData.data);
+            }
+            onClose();
+          }, 2000);
+        } else {
+          throw supabaseError || new Error('No data returned');
+        }
+      } catch (clientError) {
+        console.log('RoleSpaceReflection - Supabase client failed, trying direct API...');
+
+        // Fall back to direct API
+        const { data, error } = await directInsertReflection(reflectionData, accessToken || undefined);
+        console.log('RoleSpaceReflection - Direct API response:', { data, error });
+
+        if (error) {
+          console.error('RoleSpaceReflection - Error saving to database:', error);
+          throw error;
+        }
+
+        console.log('RoleSpaceReflection - Save successful via direct API!', data);
+
+        // Show summary
+        setShowSummary(true);
+
+        // Complete after delay
+        setTimeout(() => {
+          if (onComplete) {
+            onComplete(data);
+          }
+          onClose();
+        }, 2000);
+      }
+
+      // Set submitting to false immediately after successful save
       setIsSubmitting(false);
+
+      // Skip growth insights update - it hangs due to Supabase client
+      console.log('RoleSpaceReflection - Skipping growth insights update (uses hanging Supabase client)');
+
+    } catch (error) {
+      console.error('RoleSpaceReflection - Error in handleSubmit:', error);
+      setIsSubmitting(false);
+      setErrors({ save: error instanceof Error ? error.message : 'Failed to save reflection. Please try again.' });
     }
   };
 

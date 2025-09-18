@@ -162,7 +162,7 @@ export function PrivacyPolicy() {
             <div className="space-y-1.5 text-sm" style={{ color: '#3A3A3A' }}>
               <p>• <strong>Privacy First:</strong> We never sell or share your data with third parties for marketing.</p>
               <p>• <strong>Opt-In Research:</strong> We may use de-identified, aggregated data for research—but only with your explicit permission.</p>
-              <p>• <strong>Manage or Delete Data:</strong> To access or delete your data, email us at info@buildingbridgeslearning.com.</p>
+              <p>• <strong>Manage or Delete Data:</strong> To access or delete your data, email us at hello@huviatechnologies.com.</p>
               <p>• <strong>Features:</strong> Data export and two-factor authentication are in our roadmap.</p>
             </div>
           </div>
@@ -203,11 +203,11 @@ export function PrivacyPolicy() {
               Got questions about your data or privacy? Contact us at
             </p>
             <a 
-              href="mailto:info@buildingbridgeslearning.com" 
+              href="mailto:hello@huviatechnologies.com" 
               className="font-semibold text-base hover:underline"
               style={{ color: '#2D5F3F' }}
             >
-              info@buildingbridgeslearning.com
+              hello@huviatechnologies.com
             </a>
           </div>
         </section>

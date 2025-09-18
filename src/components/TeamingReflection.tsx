@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import {
+import { directInsertReflection } from '../services/directSupabaseApi';
   X,
   Users,
   Trophy,
@@ -266,9 +267,7 @@ const TeamingReflection: React.FC<TeamingReflectionProps> = ({ onComplete, onClo
     };
 
     setShowWisdomBank(true);
-    setTimeout(() => {
-      onComplete(results);
-    }, 3000);
+    onComplete(formData);
   };
 
   const toggleComfortable = (item: string) => {

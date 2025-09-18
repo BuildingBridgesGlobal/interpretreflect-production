@@ -57,6 +57,41 @@ class Analytics {
     });
   }
 
+  // Trial tracking
+  trackTrialStart() {
+    this.track({
+      event: 'trial_started',
+      category: 'trial',
+      label: '3_day_trial',
+      value: 1,
+      custom_parameters: {
+        trial_duration: 3,
+        trial_type: 'free'
+      }
+    });
+  }
+
+  trackTrialConversion(plan: string, amount: number) {
+    this.track({
+      event: 'trial_converted',
+      category: 'trial',
+      label: plan,
+      value: amount,
+      custom_parameters: {
+        plan,
+        conversion_value: amount
+      }
+    });
+  }
+
+  trackTrialExpired() {
+    this.track({
+      event: 'trial_expired',
+      category: 'trial',
+      label: 'no_conversion'
+    });
+  }
+
   // User journey tracking
   trackPageView(page: string, title?: string) {
     if (!this.isEnabled) return;

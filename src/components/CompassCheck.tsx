@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import {
+import { directInsertReflection } from '../services/directSupabaseApi';
   X,
   Compass,
   Heart,
@@ -285,9 +286,7 @@ const CompassCheck: React.FC<CompassCheckProps> = ({ onComplete, onClose }) => {
     };
 
     setShowWisdom(true);
-    setTimeout(() => {
-      onComplete(results);
-    }, 3000);
+    onComplete(formData);
   };
 
   const toggleChallengedValue = (value: string) => {

@@ -19,6 +19,7 @@ import {
 } from 'lucide-react';
 import { TargetIcon, HeartPulseIcon, NotepadIcon, CommunityIcon, SecureLockIcon } from './CustomIcon';
 import { supabase } from '../lib/supabase';
+import { directInsertReflection, directSelectReflections, getSessionToken } from '../services/directSupabaseApi';
 import { useAuth } from '../contexts/AuthContext';
 import { updateGrowthInsightsForUser } from '../services/growthInsightsService';
 
@@ -201,56 +202,107 @@ export const EthicsMeaningCheckAccessible: React.FC<EthicsMeaningCheckAccessible
       return;
     }
 
+    // Prevent double-submission
+    if (isSaving) {
+      console.log('ValuesAlignment - Already saving, ignoring duplicate click');
+      return;
+    }
+
+    console.log('ValuesAlignment - handleSubmit called');
+    console.log('ValuesAlignment - User:', { id: user.id, email: user.email });
+
     setIsSaving(true);
     try {
-      const sessionId = `values_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+      const sessionId = `values_alignment_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
       const timeSpent = Math.floor((Date.now() - startTime) / 1000);
+      console.log('ValuesAlignment - Starting save with sessionId:', sessionId);
 
-      // Save to database
-      const { data, error } = await supabase
-        .from('values_alignment_check_ins')
-        .upsert({
-          user_id: user.id,
-          session_id: sessionId,
+      // Get access token
+      const accessToken = await getSessionToken();
+      console.log('ValuesAlignment - Got access token:', !!accessToken);
+
+      // Test database connection
+      console.log('ValuesAlignment - Testing database connection...');
+      const { data: testData, error: testError } = await directSelectReflections(user.id, accessToken || undefined);
+      console.log('ValuesAlignment - Test query result:', { testData, testError });
+
+      if (testError) {
+        console.error('ValuesAlignment - Cannot read from database:', testError);
+        throw new Error(`Database connection issue: ${testError}`);
+      }
+
+      // Create reflection data for reflection_entries table
+      const reflectionData = {
+        user_id: user.id,
+        reflection_id: sessionId,
+        entry_kind: 'values_alignment',
+        data: {
           ...formData,
-          status: 'completed',
-          metadata: {
-            completion_time: new Date().toISOString(),
-            time_spent_seconds: timeSpent,
-            sections_completed: 8
-          },
-          completed_at: new Date().toISOString(),
-          updated_at: new Date().toISOString()
-        })
-        .select()
-        .single();
-
-      if (error) throw error;
-
-      // Update growth insights
-      const insights = {
-        ethical_reflection: formData.ethical_tensions,
-        boundary_awareness: formData.boundary_status,
-        purpose_alignment: formData.work_meaning,
-        resilience_level: formData.overall_resilience
+          timestamp: new Date().toISOString(),
+          time_spent_seconds: timeSpent,
+          sections_completed: 8
+        }
       };
-      
-      await updateGrowthInsightsForUser(user.id, insights);
+
+      console.log('ValuesAlignment - Data to save:', reflectionData);
+
+      try {
+        // Try Supabase client first with timeout
+        console.log('ValuesAlignment - Trying Supabase client insert...');
+        const insertPromise = supabase
+          .from('reflection_entries')
+          .insert([reflectionData])
+          .select();
+
+        const timeoutPromise = new Promise((_, reject) =>
+          setTimeout(() => reject(new Error('Supabase client timeout')), 5000)
+        );
+
+        const { data: supabaseData, error: supabaseError } = await Promise.race([
+          insertPromise,
+          timeoutPromise
+        ]) as any;
+
+        if (!supabaseError && supabaseData) {
+          console.log('ValuesAlignment - Supabase client insert successful!', supabaseData);
+        } else {
+          throw supabaseError || new Error('No data returned');
+        }
+      } catch (clientError) {
+        console.log('ValuesAlignment - Supabase client failed, trying direct API...');
+
+        // Fall back to direct API
+        const { data, error } = await directInsertReflection(reflectionData, accessToken || undefined);
+        console.log('ValuesAlignment - Direct API response:', { data, error });
+
+        if (error) {
+          console.error('ValuesAlignment - Error saving to database:', error);
+          throw error;
+        }
+
+        console.log('ValuesAlignment - Save successful via direct API!', data);
+      }
+
+      // Set saving to false immediately after successful save
+      setIsSaving(false);
+
+      // Skip growth insights update - it hangs due to Supabase client
+      console.log('ValuesAlignment - Skipping growth insights update (uses hanging Supabase client)');
 
       // Show summary
       setShowSummary(true);
-      
+
+      // Log successful save
+      console.log('Values Alignment Results:', reflectionData.data);
+
       // Call onComplete if provided
       if (onComplete) {
-        setTimeout(() => {
-          onComplete(formData);
-        }, 2000);
+        onComplete(formData);
       }
     } catch (error) {
-      console.error('Error saving values alignment check-in:', error);
-      setErrors({ save: 'Failed to save check-in. Please try again.' });
-    } finally {
+      console.error('ValuesAlignment - Error in handleSubmit:', error);
       setIsSaving(false);
+      setErrors({ save: error instanceof Error ? error.message : 'Failed to save check-in. Please try again.' });
     }
   };
 

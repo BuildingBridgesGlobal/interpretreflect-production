@@ -1,5 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { 
+import { directInsertReflection, directSelectReflections, getSessionToken } from '../services/directSupabaseApi';
+import { supabase } from '../lib/supabase';
+import { useAuth } from '../contexts/AuthContext';
+import {
   ArrowRight, 
   ArrowLeft, 
   CheckCircle, 
@@ -82,11 +85,14 @@ const steps = [
   { id: 7, title: 'Closing Commitment', icon: CheckCircle }
 ];
 
-export const MentoringPrepAccessible: React.FC<MentoringPrepProps> = ({ 
-  onComplete, 
-  onClose 
+export const MentoringPrepAccessible: React.FC<MentoringPrepProps> = ({
+  onComplete,
+  onClose
 }) => {
+  const { user } = useAuth();
   const [currentStep, setCurrentStep] = useState(1);
+  const [isSaving, setIsSaving] = useState(false);
+  const startTime = Date.now();
   const [formData, setFormData] = useState<MentoringPrepData>({
     mentoringContext: '',
     participants: '',
@@ -176,22 +182,113 @@ export const MentoringPrepAccessible: React.FC<MentoringPrepProps> = ({
     }
   };
 
-  const handleComplete = () => {
-    const completedData = {
-      ...formData,
-      timestamp: new Date().toISOString()
-    };
-    
-    if (onComplete) {
-      onComplete(completedData);
+  const handleComplete = async () => {
+    if (!user) {
+      alert('You must be logged in to save your preparation');
+      return;
     }
-    
-    // Clear draft
-    localStorage.removeItem('mentoringPrepDraft');
-    localStorage.removeItem('mentoringPrepStep');
-    
-    if (onClose) {
-      onClose();
+
+    if (isSaving) {
+      console.log('MentoringPrepAccessible - Already saving, ignoring duplicate click');
+      return;
+    }
+
+    console.log('MentoringPrepAccessible - handleComplete called');
+    console.log('MentoringPrepAccessible - User:', { id: user.id, email: user.email });
+
+    setIsSaving(true);
+    try {
+      const sessionId = `mentoring_prep_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+      const timeSpent = Math.floor((Date.now() - startTime) / 1000);
+      console.log('MentoringPrepAccessible - Starting save with sessionId:', sessionId);
+
+      // Get access token
+      const accessToken = await getSessionToken();
+      console.log('MentoringPrepAccessible - Got access token:', !!accessToken);
+
+      // Test database connection
+      console.log('MentoringPrepAccessible - Testing database connection...');
+      const { data: testData, error: testError } = await directSelectReflections(user.id, accessToken || undefined);
+      console.log('MentoringPrepAccessible - Test query result:', { testData, testError });
+
+      if (testError) {
+        console.error('MentoringPrepAccessible - Cannot read from database:', testError);
+        throw new Error(`Database connection issue: ${testError}`);
+      }
+
+      // Create reflection data
+      const reflectionData = {
+        user_id: user.id,
+        reflection_id: sessionId,
+        entry_kind: 'mentoring_prep',
+        data: {
+          ...formData,
+          timestamp: new Date().toISOString(),
+          time_spent_seconds: timeSpent
+        }
+      };
+
+      console.log('MentoringPrepAccessible - Data to save:', reflectionData);
+
+      try {
+        // Try Supabase client first
+        console.log('MentoringPrepAccessible - Trying Supabase client insert...');
+        const insertPromise = supabase
+          .from('reflection_entries')
+          .insert([reflectionData])
+          .select();
+
+        const timeoutPromise = new Promise((_, reject) =>
+          setTimeout(() => reject(new Error('Supabase client timeout')), 5000)
+        );
+
+        const { data: supabaseData, error: supabaseError } = await Promise.race([
+          insertPromise,
+          timeoutPromise
+        ]) as any;
+
+        if (!supabaseError && supabaseData) {
+          console.log('MentoringPrepAccessible - Supabase client insert successful!', supabaseData);
+        } else {
+          throw supabaseError || new Error('No data returned');
+        }
+      } catch (clientError) {
+        console.log('MentoringPrepAccessible - Supabase client failed, trying direct API...');
+
+        // Fall back to direct API
+        const { data, error } = await directInsertReflection(reflectionData, accessToken || undefined);
+        console.log('MentoringPrepAccessible - Direct API response:', { data, error });
+
+        if (error) {
+          console.error('MentoringPrepAccessible - Error saving to database:', error);
+          throw error;
+        }
+
+        console.log('MentoringPrepAccessible - Save successful via direct API!', data);
+      }
+
+      // Clear draft
+      localStorage.removeItem('mentoringPrepDraft');
+      localStorage.removeItem('mentoringPrepStep');
+
+      // Set saving to false immediately after successful save
+      setIsSaving(false);
+
+      // Log successful save for parent component
+      console.log('Mentoring Prep Results:', reflectionData.data);
+
+      // Close after successful save
+      if (onComplete) {
+        onComplete(reflectionData.data);
+      }
+      setTimeout(() => {
+        onClose();
+      }, 100);
+
+    } catch (error) {
+      console.error('MentoringPrepAccessible - Error in handleComplete:', error);
+      setIsSaving(false);
+      alert(error instanceof Error ? error.message : 'Failed to save preparation');
     }
   };
 
@@ -805,24 +902,6 @@ Current Feeling: ${formData.currentFeeling || 'Not provided'}
           onChange={(e) => handleInputChange('currentFeeling', e.target.value)}
         />
       </div>
-
-      <div className="flex gap-4 mt-6">
-        <button
-          onClick={handleDownloadSummary}
-          className="flex-1 flex items-center justify-center gap-2 px-6 py-3 bg-white text-green-700 border-2 border-green-700 rounded-lg font-medium hover:bg-green-50 transition-colors"
-        >
-          <Download className="h-5 w-5" />
-          Download Summary
-        </button>
-        
-        <button
-          onClick={handleEmailSummary}
-          className="flex-1 flex items-center justify-center gap-2 px-6 py-3 bg-white text-green-700 border-2 border-green-700 rounded-lg font-medium hover:bg-green-50 transition-colors"
-        >
-          <Mail className="h-5 w-5" />
-          Email Summary
-        </button>
-      </div>
     </div>
   );
 
@@ -877,13 +956,14 @@ Current Feeling: ${formData.currentFeeling || 'Not provided'}
       ) : (
         <button
           onClick={handleComplete}
-          className="flex items-center gap-2 px-6 py-4 font-semibold rounded-lg text-white transition-all hover:opacity-90"
+          disabled={isSaving}
+          className="flex items-center gap-2 px-6 py-4 font-semibold rounded-lg text-white transition-all hover:opacity-90 disabled:opacity-50 disabled:cursor-not-allowed"
           style={{
-            background: 'linear-gradient(135deg, #1b5e20, #2e7d32)'
+            background: isSaving ? 'linear-gradient(135deg, #9ca3af, #6b7280)' : 'linear-gradient(135deg, #1b5e20, #2e7d32)'
           }}
         >
           <CheckCircle className="h-5 w-5" />
-          Complete Preparation
+          {isSaving ? 'Saving...' : 'Complete Preparation'}
         </button>
       )}
     </div>

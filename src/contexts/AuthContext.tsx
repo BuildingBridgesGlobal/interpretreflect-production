@@ -18,6 +18,9 @@ interface AuthContextType {
   signIn: (email: string, password: string) => Promise<AuthResult>;
   signUp: (email: string, password: string) => Promise<AuthResult>;
   signOut: () => Promise<void>;
+  signInWithGoogle: () => Promise<AuthResult>;
+  signInWithApple: () => Promise<AuthResult>;
+  signInWithMagicLink: (email: string) => Promise<AuthResult>;
   hasPermission: (permission: string) => boolean;
   extendSession: () => void;
 }
@@ -232,17 +235,114 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
           userEmail: user.email || undefined,
         });
       }
-      
+
       const { error } = await supabase.auth.signOut();
       if (error) throw error;
-      
+
       // End session
       sessionManager.endSession('LOGOUT');
       setUser(null);
       setUserRole(SECURITY_CONFIG.rbac.defaultRole);
+
+      // Clear all local storage and session storage
+      localStorage.clear();
+      sessionStorage.clear();
+
+      // Force reload to completely reset the app state
+      window.location.href = '/';
     } catch (error) {
       console.error('Sign out error:', error);
-      throw error;
+      // Even if there's an error, try to clear state and redirect
+      localStorage.clear();
+      sessionStorage.clear();
+      window.location.href = '/';
+    }
+  };
+
+  const signInWithGoogle = async (): Promise<AuthResult> => {
+    try {
+      const { data, error } = await supabase.auth.signInWithOAuth({
+        provider: 'google',
+        options: {
+          redirectTo: `${window.location.origin}/dashboard`,
+          queryParams: {
+            access_type: 'offline',
+            prompt: 'consent'
+          }
+        }
+      });
+
+      if (error) {
+        AuditLogger.log({
+          action: 'GOOGLE_SSO_FAILED',
+          category: 'AUTH',
+          severity: 'WARN',
+          details: { error: error.message }
+        });
+        throw error;
+      }
+
+      return { user: data.session?.user || null, error: null };
+    } catch (error) {
+      return { user: null, error: error as AuthError };
+    }
+  };
+
+  const signInWithApple = async (): Promise<AuthResult> => {
+    try {
+      const { data, error } = await supabase.auth.signInWithOAuth({
+        provider: 'apple',
+        options: {
+          redirectTo: `${window.location.origin}/dashboard`
+        }
+      });
+
+      if (error) {
+        AuditLogger.log({
+          action: 'APPLE_SSO_FAILED',
+          category: 'AUTH',
+          severity: 'WARN',
+          details: { error: error.message }
+        });
+        throw error;
+      }
+
+      return { user: data.session?.user || null, error: null };
+    } catch (error) {
+      return { user: null, error: error as AuthError };
+    }
+  };
+
+  const signInWithMagicLink = async (email: string): Promise<AuthResult> => {
+    try {
+      const { data, error } = await supabase.auth.signInWithOtp({
+        email,
+        options: {
+          emailRedirectTo: `${window.location.origin}/dashboard`,
+          shouldCreateUser: true
+        }
+      });
+
+      if (error) {
+        AuditLogger.log({
+          action: 'MAGIC_LINK_FAILED',
+          category: 'AUTH',
+          severity: 'WARN',
+          details: { email, error: error.message }
+        });
+        throw error;
+      }
+
+      AuditLogger.log({
+        action: 'MAGIC_LINK_SENT',
+        category: 'AUTH',
+        severity: 'INFO',
+        details: { email }
+      });
+
+      return { user: null, error: null }; // User will be set after clicking link
+    } catch (error) {
+      return { user: null, error: error as AuthError };
     }
   };
 
@@ -271,7 +371,19 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   }, []);
 
   return (
-    <AuthContext.Provider value={{ user, loading, userRole, signIn, signUp, signOut, hasPermission, extendSession }}>
+    <AuthContext.Provider value={{
+      user,
+      loading,
+      userRole,
+      signIn,
+      signUp,
+      signOut,
+      signInWithGoogle,
+      signInWithApple,
+      signInWithMagicLink,
+      hasPermission,
+      extendSession
+    }}>
       {children}
     </AuthContext.Provider>
   );

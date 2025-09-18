@@ -1,12 +1,11 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Logo } from './components/Logo';
-import { AuthModal } from './components/AuthModal';
+import { ModernAuthModal } from './components/auth/ModernAuthModal';
 import { PricingModal } from './components/PricingModal';
 import { WaitlistModal } from './components/WaitlistModal';
 import { Footer } from './components/Footer';
 import { useAuth } from './contexts/AuthContext';
-import { useConversionFlow } from './hooks/useConversionFlow';
-import { ConversionFlow } from './components/ConversionFlow';
 import { CheckCircle, Sparkles, Award, Users, Heart, Shield, Clock } from 'lucide-react';
 import { HeartPulseIcon, SecureLockIcon, CommunityIcon, TargetIcon, GrowthIcon, HourglassPersonIcon, NotepadIcon, ChatBubbleIcon } from './components/CustomIcon';
 
@@ -18,8 +17,8 @@ interface LandingPageProps {
 const colors = {
   // Primary palette - earth tones and calming colors
   primary: {
-    sage: '#5C7F4F',      // Main brand color
-    mint: '#8FA881',      // Secondary green
+    sage: 'rgb(92, 127, 79)',      // Main brand color
+    mint: 'rgb(92, 127, 79)',      // Secondary green
     earth: '#8B7355',     // Warm earth tone
     ocean: '#5B8C94',     // Calming blue-green
     lavender: '#9B8AA3',  // Soft purple
@@ -28,7 +27,7 @@ const colors = {
   gradients: {
     hero: 'linear-gradient(135deg, #F7F5F2 0%, #E8EDE5 50%, #DDE5D9 100%)',
     card: 'linear-gradient(145deg, #FFFFFF 0%, #F9F8F6 100%)',
-    accent: 'linear-gradient(135deg, #5C7F4F 0%, #8FA881 100%)',
+    accent: 'linear-gradient(135deg, rgb(92, 127, 79) 0%, rgb(92, 127, 79) 100%)',
     ocean: 'linear-gradient(135deg, #5B8C94 0%, #7FA5AD 100%)',
   },
   // Neutral colors
@@ -54,13 +53,8 @@ const colors = {
 };
 
 function LandingPageEnhanced({ onGetStarted }: LandingPageProps) {
+  const navigate = useNavigate();
   const { user } = useAuth();
-  const { 
-    isVisible: conversionVisible, 
-    trigger: conversionTrigger, 
-    hideConversionFlow, 
-    showConversionFlow 
-  } = useConversionFlow();
   const [authModalOpen, setAuthModalOpen] = useState(false);
   const [authMode, setAuthMode] = useState<'login' | 'signup'>('login');
   const [pricingModalOpen, setPricingModalOpen] = useState(false);
@@ -68,33 +62,18 @@ function LandingPageEnhanced({ onGetStarted }: LandingPageProps) {
   const [waitlistPlan] = useState<'professional' | 'organizations'>('professional');
   const [showStripeMessage, setShowStripeMessage] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const [greeting, setGreeting] = useState('');
   const [announceMessage, setAnnounceMessage] = useState('');
 
-  // Personalized greeting based on time of day
-  useEffect(() => {
-    const hour = new Date().getHours();
-    if (hour < 12) setGreeting('Good morning');
-    else if (hour < 17) setGreeting('Good afternoon');
-    else setGreeting('Good evening');
-  }, []);
-
   const handleLogin = () => {
-    setAuthMode('login');
+    setAuthMode('signin');
     setAuthModalOpen(true);
   };
 
   const handleSignup = () => {
-    if (user) {
-      setShowStripeMessage(true);
-      setTimeout(() => {
-        setShowStripeMessage(false);
-      }, 3000);
-    } else {
-      setAuthMode('signup');
-      setAuthModalOpen(true);
-    }
+    // Redirect to seamless signup page
+    navigate('/signup');
   };
+
 
 
   const handleSelectPlan = () => {
@@ -120,22 +99,22 @@ function LandingPageEnhanced({ onGetStarted }: LandingPageProps) {
       <div className="sr-only focus-within:not-sr-only focus-within:absolute focus-within:top-0 focus-within:left-0 focus-within:right-0 focus-within:z-50 focus-within:bg-white focus-within:p-2 focus-within:shadow-lg">
         <a 
           href="#main" 
-          className="inline-block px-4 py-2 mr-2 bg-sage-600 text-white rounded-lg focus:ring-4 focus:ring-sage-400 focus:outline-none"
-          style={{ backgroundColor: colors.primary.sage }}
+          className="inline-block px-4 py-2 mr-2 text-white rounded-lg focus:ring-4 focus:outline-none"
+          style={{ backgroundColor: 'rgb(92, 127, 79)', '--tw-ring-color': 'rgba(92, 127, 79, 0.4)' } as React.CSSProperties}
         >
           Skip to main content
         </a>
         <a 
           href="#navigation" 
-          className="inline-block px-4 py-2 mr-2 bg-sage-600 text-white rounded-lg focus:ring-4 focus:ring-sage-400 focus:outline-none"
-          style={{ backgroundColor: colors.primary.sage }}
+          className="inline-block px-4 py-2 mr-2 text-white rounded-lg focus:ring-4 focus:outline-none"
+          style={{ backgroundColor: 'rgb(92, 127, 79)', '--tw-ring-color': 'rgba(92, 127, 79, 0.4)' } as React.CSSProperties}
         >
           Skip to navigation
         </a>
         <a 
           href="#footer" 
-          className="inline-block px-4 py-2 bg-sage-600 text-white rounded-lg focus:ring-4 focus:ring-sage-400 focus:outline-none"
-          style={{ backgroundColor: colors.primary.sage }}
+          className="inline-block px-4 py-2 text-white rounded-lg focus:ring-4 focus:outline-none"
+          style={{ backgroundColor: 'rgb(92, 127, 79)', '--tw-ring-color': 'rgba(92, 127, 79, 0.4)' } as React.CSSProperties}
         >
           Skip to footer
         </a>
@@ -152,56 +131,57 @@ function LandingPageEnhanced({ onGetStarted }: LandingPageProps) {
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16">
             {/* Logo with better visual hierarchy */}
-            <Logo 
-              size="md" 
+            <Logo
+              size="md"
               showTagline={true}
               variant="default"
+              linkToHome={false}
             />
 
-            {/* Desktop Navigation */}
-            <div className="hidden md:flex items-center space-x-8">
-              <button 
+            {/* Desktop Navigation - Compact Green Pills */}
+            <div className="hidden md:flex items-center gap-4">
+              <button
                 onClick={() => scrollToSection('how-it-works')}
-                className="px-4 py-2 text-base font-medium text-white rounded-lg transition-all hover:shadow-lg transform hover:-translate-y-0.5 focus:outline-none focus:ring-4 focus:ring-white"
-                style={{ background: colors.gradients.accent }}
+                className="px-4 py-1.5 text-xs font-semibold text-white rounded-full transition-all focus:outline-none focus:ring-2 focus:ring-offset-2"
+                style={{ backgroundColor: 'rgb(92, 127, 79)' }}
                 aria-label="Learn how interpreterRx works"
               >
                 How It Works
               </button>
-              <button 
+              <button
                 onClick={() => scrollToSection('pricing')}
-                className="px-4 py-2 text-base font-medium text-white rounded-lg transition-all hover:shadow-lg transform hover:-translate-y-0.5 focus:outline-none focus:ring-4 focus:ring-white"
-                style={{ background: colors.gradients.accent }}
+                className="px-4 py-1.5 text-xs font-semibold text-white rounded-full transition-all focus:outline-none focus:ring-2 focus:ring-offset-2"
+                style={{ backgroundColor: 'rgb(92, 127, 79)' }}
                 aria-label="View pricing plans"
               >
                 Pricing
               </button>
 
-              {/* Auth buttons with better visual hierarchy */}
+              {/* Auth buttons */}
               {!user ? (
                 <>
                   <button
-                    onClick={handleLogin}
-                    className="px-4 py-2 text-base font-medium text-white rounded-lg transition-all hover:shadow-lg transform hover:-translate-y-0.5 focus:outline-none focus:ring-4 focus:ring-white"
-                    style={{ background: colors.gradients.accent }}
-                    aria-label="Sign in to your account"
-                  >
-                    Sign In
-                  </button>
-                  <button
                     onClick={handleSignup}
-                    className="px-4 py-2 text-base font-medium text-white rounded-lg transition-all hover:shadow-lg transform hover:-translate-y-0.5 focus:outline-none focus:ring-4 focus:ring-white"
-                    style={{ background: colors.gradients.accent }}
+                    className="px-4 py-1.5 text-xs font-semibold text-white rounded-full transition-all focus:outline-none focus:ring-2 focus:ring-offset-2"
+                    style={{ backgroundColor: 'rgb(92, 127, 79)' }}
                     aria-label="Sign up for account"
                   >
                     Get Started
                   </button>
+                  <button
+                    onClick={handleLogin}
+                    className="px-4 py-1.5 text-xs font-semibold text-white rounded-full transition-all focus:outline-none focus:ring-2 focus:ring-offset-2"
+                    style={{ backgroundColor: 'rgb(92, 127, 79)' }}
+                    aria-label="Sign in to your account"
+                  >
+                    Sign In
+                  </button>
                 </>
               ) : (
                 <button
-                  onClick={onGetStarted}
-                  className="px-4 py-2 text-base font-medium text-white rounded-lg transition-all hover:shadow-lg focus:outline-none focus:ring-4 focus:ring-white"
-                  style={{ background: colors.gradients.accent }}
+                  onClick={handleSignup}
+                  className="px-4 py-1.5 text-xs font-semibold text-white rounded-full transition-all focus:outline-none focus:ring-2 focus:ring-offset-2"
+                  style={{ backgroundColor: 'rgb(92, 127, 79)' }}
                   aria-label="Go to your dashboard"
                 >
                   Go to Dashboard
@@ -215,7 +195,8 @@ function LandingPageEnhanced({ onGetStarted }: LandingPageProps) {
                 setMobileMenuOpen(!mobileMenuOpen);
                 setAnnounceMessage(mobileMenuOpen ? 'Menu closed' : 'Menu opened');
               }}
-              className="md:hidden px-3 py-2 rounded-lg hover:bg-gray-100 focus:outline-none focus:ring-4 focus:ring-sage-400 text-sm font-medium"
+              className="md:hidden px-3 py-2 rounded-lg hover:bg-gray-100 focus:outline-none focus:ring-4 text-sm font-medium"
+              style={{ '--tw-ring-color': 'rgba(92, 127, 79, 0.4)' } as React.CSSProperties}
               style={{ color: colors.neutral[600] }}
               aria-label={mobileMenuOpen ? 'Close menu' : 'Open menu'}
               aria-expanded={mobileMenuOpen}
@@ -235,42 +216,42 @@ function LandingPageEnhanced({ onGetStarted }: LandingPageProps) {
             role="navigation"
             aria-label="Mobile navigation"
           >
-            <div className="px-4 py-4 space-y-3">
-              <button 
+            <div className="px-4 py-4 space-y-2">
+              <button
                 onClick={() => {
                   scrollToSection('how-it-works');
                   setMobileMenuOpen(false);
                 }}
-                className="block w-full py-2 text-center text-sm font-medium text-white rounded-lg"
-                style={{ background: colors.gradients.accent }}
+                className="block w-full py-2 text-center text-xs font-semibold text-white rounded-full"
+                style={{ backgroundColor: 'rgb(92, 127, 79)' }}
               >
                 How It Works
               </button>
-              <button 
+              <button
                 onClick={() => {
                   scrollToSection('pricing');
                   setMobileMenuOpen(false);
                 }}
-                className="block w-full py-2 text-center text-sm font-medium text-white rounded-lg"
-                style={{ background: colors.gradients.accent }}
+                className="block w-full py-2 text-center text-xs font-semibold text-white rounded-full"
+                style={{ backgroundColor: 'rgb(92, 127, 79)' }}
               >
                 Pricing
               </button>
               {!user ? (
                 <div className="space-y-2 pt-4 border-t" style={{ borderColor: colors.neutral[100] }}>
-                  <button onClick={handleLogin} className="block w-full py-2 text-center text-sm font-medium text-white rounded-lg"
-                    style={{ background: colors.gradients.accent }}
-                  >
-                    Sign In
-                  </button>
-                  <button onClick={handleSignup} className="block w-full py-2 text-center text-sm font-medium text-white rounded-lg"
-                    style={{ background: colors.gradients.accent }}
+                  <button onClick={handleSignup} className="block w-full py-2 text-center text-xs font-semibold text-white rounded-full"
+                    style={{ backgroundColor: 'rgb(92, 127, 79)' }}
                   >
                     Get Started
                   </button>
+                  <button onClick={handleLogin} className="block w-full py-2 text-center text-xs font-semibold text-white rounded-full"
+                    style={{ backgroundColor: 'rgb(92, 127, 79)' }}
+                  >
+                    Sign In
+                  </button>
                 </div>
               ) : (
-                <button onClick={onGetStarted} className="block w-full py-2 text-center text-sm font-medium text-white rounded-lg"
+                <button onClick={handleSignup} className="block w-full py-2 text-center text-sm font-medium text-white rounded-lg"
                   style={{ background: colors.gradients.accent }}
                 >
                   Go to Dashboard
@@ -286,14 +267,6 @@ function LandingPageEnhanced({ onGetStarted }: LandingPageProps) {
         {/* Enhanced Hero Section with better visual hierarchy */}
         <section className="relative py-20 px-4" aria-labelledby="hero-heading">
           <div className="container mx-auto max-w-6xl">
-            {/* Personalized greeting */}
-            <div className="text-center mb-6 animate-fade-in">
-              <span className="text-sm font-medium px-4 py-2 rounded-full inline-block"
-                style={{ backgroundColor: colors.neutral[50], color: colors.primary.sage }}
-              >
-                {greeting}, interpreter
-              </span>
-            </div>
 
             {/* Main headline with emphasis on wellness */}
             <div className="text-center mb-12">
@@ -303,13 +276,8 @@ function LandingPageEnhanced({ onGetStarted }: LandingPageProps) {
                 style={{ color: colors.neutral[900] }}
               >
                 Prevent Burnout{' '}
-                <span className="relative">
-                  <span className="relative z-10" style={{ color: colors.primary.sage }}>
-                    Before
-                  </span>
-                  <span className="absolute -bottom-1 left-0 w-full h-3 opacity-20 rounded"
-                    style={{ background: colors.primary.mint }}
-                  />
+                <span style={{ color: colors.primary.sage }}>
+                  Before
                 </span>{' '}
                 It Starts
               </h1>
@@ -326,22 +294,32 @@ function LandingPageEnhanced({ onGetStarted }: LandingPageProps) {
               </p>
             </div>
 
-            {/* Primary CTA with microinteraction */}
-            <div className="flex justify-center mb-16">
+            {/* Primary CTA - Get Started */}
+            <div className="flex flex-col items-center gap-4 mb-16">
               <button
-                onClick={handleSignup}
-                className="group px-8 py-4 text-white font-semibold rounded-xl transition-all transform hover:scale-105 hover:shadow-xl focus:outline-none focus:ring-4 focus:ring-offset-2 focus:ring-sage-400"
-                style={{ background: colors.gradients.accent, fontSize: '1.125rem' }}
-                aria-label="Get started with your wellness journey"
+                onClick={() => {
+                  console.log('Get Started clicked');
+                  navigate('/signup');
+                }}
+                className="group px-10 py-5 text-white font-bold rounded-xl transition-all transform hover:scale-105 hover:shadow-2xl focus:outline-none focus:ring-4 focus:ring-offset-2 relative overflow-hidden"
+                style={{
+                  background: 'rgb(92, 127, 79)',
+                  fontSize: '1.25rem',
+                  color: 'white'
+                }}
+                aria-label="Get started with InterpretReflect"
               >
-                Get Started Today
+                <span className="relative z-10">Get Started</span>
               </button>
+              <p className="text-sm text-gray-600">
+                No credit card required • Cancel anytime
+              </p>
             </div>
 
             {/* Diverse interpreter illustrations/representation */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-16" role="region" aria-label="Interpreter specialization options">
               {/* Sign Language Interpreter */}
-              <article className="p-6 rounded-2xl bg-white shadow-lg hover:shadow-xl transition-all focus-within:ring-4 focus-within:ring-sage-400" tabIndex={0} aria-label="Sign language interpreter resources">
+              <article className="p-6 rounded-2xl bg-white shadow-lg hover:shadow-xl transition-all focus-within:ring-4" tabIndex={0} aria-label="Sign language interpreter resources" style={{ '--tw-ring-color': 'rgba(92, 127, 79, 0.4)' } as React.CSSProperties}>
                 <div className="mb-4">
                   <h3 className="font-semibold text-lg" style={{ color: colors.neutral[800] }}>
                     Sign Language
@@ -354,7 +332,7 @@ function LandingPageEnhanced({ onGetStarted }: LandingPageProps) {
               </article>
 
               {/* Spoken Language Interpreter */}
-              <article className="p-6 rounded-2xl bg-white shadow-lg hover:shadow-xl transition-all focus-within:ring-4 focus-within:ring-sage-400" tabIndex={0} aria-label="Spoken language interpreter resources">
+              <article className="p-6 rounded-2xl bg-white shadow-lg hover:shadow-xl transition-all focus-within:ring-4" tabIndex={0} aria-label="Spoken language interpreter resources" style={{ '--tw-ring-color': 'rgba(92, 127, 79, 0.4)' } as React.CSSProperties}>
                 <div className="mb-4">
                   <h3 className="font-semibold text-lg" style={{ color: colors.neutral[800] }}>
                     Spoken Language
@@ -367,7 +345,7 @@ function LandingPageEnhanced({ onGetStarted }: LandingPageProps) {
               </article>
 
               {/* Conference/Remote Interpreter */}
-              <article className="p-6 rounded-2xl bg-white shadow-lg hover:shadow-xl transition-all focus-within:ring-4 focus-within:ring-sage-400" tabIndex={0} aria-label="Remote and hybrid interpreter resources">
+              <article className="p-6 rounded-2xl bg-white shadow-lg hover:shadow-xl transition-all focus-within:ring-4" tabIndex={0} aria-label="Remote and hybrid interpreter resources" style={{ '--tw-ring-color': 'rgba(92, 127, 79, 0.4)' } as React.CSSProperties}>
                 <div className="mb-4">
                   <h3 className="font-semibold text-lg" style={{ color: colors.neutral[800] }}>
                     Remote & Hybrid
@@ -402,7 +380,7 @@ function LandingPageEnhanced({ onGetStarted }: LandingPageProps) {
         </section>
 
         {/* Modern Problems Section - NEW */}
-        <section id="how-it-works" className="py-20 px-4" style={{ backgroundColor: 'white' }}>
+        <section id="how-it-works" className="py-8 px-4" style={{ backgroundColor: 'white' }}>
           <div className="container mx-auto max-w-6xl">
             <div className="text-center mb-12">
               <span className="text-sm font-bold px-4 py-2 rounded-full inline-block mb-4"
@@ -420,7 +398,7 @@ function LandingPageEnhanced({ onGetStarted }: LandingPageProps) {
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
               {/* Vicarious Trauma */}
-              <div className="p-6 rounded-2xl border-2 border-orange-200 bg-orange-50 hover:shadow-xl transition-all">
+              <div className="p-6 rounded-2xl border-2 border-gray-200 bg-gray-50 hover:shadow-xl transition-all">
                 <h3 className="text-xl font-bold mb-2" style={{ color: colors.neutral[800] }}>
                   Vicarious Trauma
                 </h3>
@@ -436,7 +414,7 @@ function LandingPageEnhanced({ onGetStarted }: LandingPageProps) {
               </div>
 
               {/* Imposter Syndrome */}
-              <div className="p-6 rounded-2xl border-2 border-purple-200 bg-purple-50 hover:shadow-xl transition-all">
+              <div className="p-6 rounded-2xl border-2 border-gray-200 bg-gray-50 hover:shadow-xl transition-all">
                 <h3 className="text-xl font-bold mb-2" style={{ color: colors.neutral[800] }}>
                   Imposter Syndrome
                 </h3>
@@ -452,7 +430,7 @@ function LandingPageEnhanced({ onGetStarted }: LandingPageProps) {
               </div>
 
               {/* Professional Boundaries */}
-              <div className="p-6 rounded-2xl border-2 border-blue-200 bg-blue-50 hover:shadow-xl transition-all">
+              <div className="p-6 rounded-2xl border-2 border-gray-200 bg-gray-50 hover:shadow-xl transition-all">
                 <h3 className="text-xl font-bold mb-2" style={{ color: colors.neutral[800] }}>
                   Boundary Fatigue
                 </h3>
@@ -468,7 +446,7 @@ function LandingPageEnhanced({ onGetStarted }: LandingPageProps) {
               </div>
 
               {/* Technology Stress */}
-              <div className="p-6 rounded-2xl border-2 border-green-200 bg-green-50 hover:shadow-xl transition-all">
+              <div className="p-6 rounded-2xl border-2 border-gray-200 bg-gray-50 hover:shadow-xl transition-all">
                 <h3 className="text-xl font-bold mb-2" style={{ color: colors.neutral[800] }}>
                   Platform Fatigue
                 </h3>
@@ -485,7 +463,7 @@ function LandingPageEnhanced({ onGetStarted }: LandingPageProps) {
             </div>
 
             {/* Statistics Bar */}
-            <div className="mt-12 p-6 rounded-2xl" style={{ background: colors.gradients.accent }}>
+            <div className="mt-12 p-6 rounded-2xl" style={{ background: 'rgb(92, 127, 79)' }}>
               <div className="grid grid-cols-2 md:grid-cols-4 gap-6 text-center text-white">
                 <div>
                   <div className="text-3xl font-bold">24%</div>
@@ -526,27 +504,28 @@ function LandingPageEnhanced({ onGetStarted }: LandingPageProps) {
                 {
                   title: 'Stress Reset Tools',
                   description: 'Immediate techniques for between assignments or difficult sessions',
-                  color: colors.primary.ocean,
+                  color: 'rgb(92, 127, 79)',
                 },
                 {
                   title: 'AI Wellness Coach',
                   description: 'Personalized support that understands interpreter challenges',
-                  color: colors.primary.lavender,
+                  color: 'rgb(92, 127, 79)',
                 },
                 {
                   title: 'Reflection Studio',
                   description: 'Process vicarious trauma and challenging assignments safely',
-                  color: colors.primary.earth,
+                  color: 'rgb(92, 127, 79)',
                 },
                 {
                   title: 'Growth Insights',
                   description: 'Track patterns and celebrate your wellness progress',
-                  color: colors.primary.mint,
+                  color: 'rgb(92, 127, 79)',
                 },
               ].map((feature, index) => (
                 <article
                   key={index}
-                  className="group p-6 bg-white rounded-2xl shadow-sm hover:shadow-xl transition-all transform hover:-translate-y-1 focus-within:ring-4 focus-within:ring-sage-400"
+                  className="group p-6 bg-white rounded-2xl shadow-sm hover:shadow-xl transition-all transform hover:-translate-y-1 focus-within:ring-4"
+                  style={{ '--tw-ring-color': 'rgba(92, 127, 79, 0.4)' } as React.CSSProperties}
                   tabIndex={0}
                   role="listitem"
                   aria-label={`Feature: ${feature.title}`}
@@ -563,6 +542,7 @@ function LandingPageEnhanced({ onGetStarted }: LandingPageProps) {
           </div>
         </section>
 
+
         {/* Pricing Section */}
         <section id="pricing" className="py-20 px-4" style={{ backgroundColor: 'white' }} aria-labelledby="pricing-heading">
           <div className="container mx-auto max-w-6xl">
@@ -570,15 +550,15 @@ function LandingPageEnhanced({ onGetStarted }: LandingPageProps) {
               <h2 id="pricing-heading" className="text-3xl sm:text-4xl font-bold mb-4" style={{ color: colors.neutral[900] }}>
                 Simple, Transparent Pricing
               </h2>
-              <p className="text-xl" style={{ color: colors.neutral[600] }}>
+              <p className="text-xl mb-2" style={{ color: colors.neutral[600] }}>
                 Choose the plan that fits your wellness journey
               </p>
             </div>
 
-            <div className="grid md:grid-cols-3 gap-8">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
               {/* Essential Plan */}
-              <div className="rounded-xl border-2 border-sage-500 relative overflow-hidden bg-white shadow-lg hover:shadow-xl transition-shadow">
-                <div className="absolute top-0 left-0 right-0 bg-gradient-to-r from-sage-500 to-green-500 text-white text-center py-2 text-sm font-bold">
+              <div className="rounded-xl border-2 relative overflow-hidden bg-white shadow-lg hover:shadow-xl transition-shadow" style={{ borderColor: 'rgb(92, 127, 79)' }}>
+                <div className="absolute top-0 left-0 right-0 text-white text-center py-2 text-sm font-bold" style={{ background: 'rgb(92, 127, 79)' }}>
                   AVAILABLE NOW
                 </div>
                 
@@ -594,32 +574,18 @@ function LandingPageEnhanced({ onGetStarted }: LandingPageProps) {
                   </div>
                   
                   <ul className="space-y-3 mb-8">
-                    <li className="flex items-center">
-                      <NotepadIcon size={32} className="mr-3 flex-shrink-0" />
-                      <span className="text-sm text-gray-700">Daily reflection prompts</span>
-                    </li>
-                    <li className="flex items-center">
-                      <HourglassPersonIcon size={32} className="mr-3 flex-shrink-0" />
-                      <span className="text-sm text-gray-700">Stress reset tools</span>
-                    </li>
-                    <li className="flex items-center">
-                      <TargetIcon size={32} className="mr-3 flex-shrink-0" />
-                      <span className="text-sm text-gray-700">Progress tracking</span>
-                    </li>
-                    <li className="flex items-center">
-                      <CheckCircle className="h-5 w-5 mr-2 text-green-500 flex-shrink-0" />
-                      <span className="text-sm text-gray-700">Mobile responsive</span>
-                    </li>
-                    <li className="flex items-center">
-                      <SecureLockIcon size={32} className="mr-3 flex-shrink-0" />
-                      <span className="text-sm text-gray-700">Private & secure</span>
-                    </li>
+                    <li className="text-sm text-gray-700">Daily reflection prompts</li>
+                    <li className="text-sm text-gray-700">Stress reset tools</li>
+                    <li className="text-sm text-gray-700">Progress tracking</li>
+                    <li className="text-sm text-gray-700">Mobile responsive</li>
+                    <li className="text-sm text-gray-700">Private & secure</li>
                   </ul>
                   
                   <button
                     onClick={handleSignup}
-                    className="w-full py-3 rounded-lg font-semibold text-white transition-all hover:shadow-lg transform hover:-translate-y-0.5"
-                    style={{ background: colors.gradients.accent }}
+                    className="w-full py-3 rounded-lg font-semibold text-white transition-all focus:outline-none focus:ring-4 focus:ring-purple-500 focus:ring-opacity-50"
+                    style={{ background: 'rgb(92, 127, 79)' }}
+                    aria-label="Get started with Core plan"
                   >
                     Get Started
                   </button>
@@ -644,26 +610,11 @@ function LandingPageEnhanced({ onGetStarted }: LandingPageProps) {
                   </div>
                   
                   <ul className="space-y-3 mb-8">
-                    <li className="flex items-center text-gray-500">
-                      <Sparkles className="h-5 w-5 mr-2 flex-shrink-0" />
-                      <span className="text-sm">Everything in Essential</span>
-                    </li>
-                    <li className="flex items-center text-gray-500">
-                      <Award className="h-5 w-5 mr-2 flex-shrink-0" />
-                      <span className="text-sm">Advanced analytics</span>
-                    </li>
-                    <li className="flex items-center text-gray-500">
-                      <Users className="h-5 w-5 mr-2 flex-shrink-0" />
-                      <span className="text-sm">Peer mentoring</span>
-                    </li>
-                    <li className="flex items-center text-gray-500">
-                      <Heart className="h-5 w-5 mr-2 flex-shrink-0" />
-                      <span className="text-sm">Wellness workshops</span>
-                    </li>
-                    <li className="flex items-center text-gray-500">
-                      <Shield className="h-5 w-5 mr-2 flex-shrink-0" />
-                      <span className="text-sm">Priority support</span>
-                    </li>
+                    <li className="text-sm text-gray-500">Everything in Essential</li>
+                    <li className="text-sm text-gray-500">Advanced analytics</li>
+                    <li className="text-sm text-gray-500">Peer mentoring</li>
+                    <li className="text-sm text-gray-500">Wellness workshops</li>
+                    <li className="text-sm text-gray-500">Priority support</li>
                   </ul>
                   
                   <button
@@ -675,46 +626,31 @@ function LandingPageEnhanced({ onGetStarted }: LandingPageProps) {
                 </div>
               </div>
 
-              {/* Organizations Plan */}
+              {/* Enterprise Plan */}
               <div className="rounded-xl border-2 border-gray-300 relative overflow-hidden bg-white shadow-lg opacity-75">
                 <div className="absolute top-0 left-0 right-0 bg-gray-400 text-white text-center py-2 text-sm font-bold">
                   COMING SOON
                 </div>
-                
+
                 <div className="p-6 mt-10">
                   <h3 className="text-2xl font-bold mb-2" style={{ color: colors.neutral[900] }}>
-                    Organizations
+                    Enterprise
                   </h3>
-                  <p className="text-gray-600 mb-4">For agencies & teams</p>
-                  
+                  <p className="text-gray-600 mb-4">For agencies, VRS/VRI, and educational programs</p>
+
                   <div className="mb-6">
-                    <span className="text-4xl font-bold text-gray-400">Custom</span>
-                    <span className="text-gray-400">/pricing</span>
+                    <span className="text-3xl font-bold text-gray-400">Customized</span>
+                    <span className="text-gray-400"> Pricing</span>
                   </div>
-                  
+
                   <ul className="space-y-3 mb-8">
-                    <li className="flex items-center text-gray-500">
-                      <Sparkles className="h-5 w-5 mr-2 flex-shrink-0" />
-                      <span className="text-sm">Everything in Professional</span>
-                    </li>
-                    <li className="flex items-center text-gray-500">
-                      <Users className="h-5 w-5 mr-2 flex-shrink-0" />
-                      <span className="text-sm">Team management</span>
-                    </li>
-                    <li className="flex items-center text-gray-500">
-                      <Shield className="h-5 w-5 mr-2 flex-shrink-0" />
-                      <span className="text-sm">Admin dashboard</span>
-                    </li>
-                    <li className="flex items-center text-gray-500">
-                      <Award className="h-5 w-5 mr-2 flex-shrink-0" />
-                      <span className="text-sm">Custom training</span>
-                    </li>
-                    <li className="flex items-center text-gray-500">
-                      <Clock className="h-5 w-5 mr-2 flex-shrink-0" />
-                      <span className="text-sm">Dedicated support</span>
-                    </li>
+                    <li className="text-sm text-gray-500">Everything in Pro</li>
+                    <li className="text-sm text-gray-500">Executive dashboard</li>
+                    <li className="text-sm text-gray-500">Group access for staff, interpreters, and learners</li>
+                    <li className="text-sm text-gray-500">Administrative controls</li>
+                    <li className="text-sm text-gray-500">Organization-wide empowerment tools</li>
                   </ul>
-                  
+
                   <button
                     disabled
                     className="w-full py-3 rounded-lg font-semibold bg-gray-300 text-gray-500 cursor-not-allowed"
@@ -728,7 +664,7 @@ function LandingPageEnhanced({ onGetStarted }: LandingPageProps) {
         </section>
 
         {/* Final CTA */}
-        <section className="py-20 px-4" style={{ background: colors.gradients.accent }} aria-labelledby="cta-heading">
+        <section className="py-20 px-4" style={{ background: 'rgb(92, 127, 79)' }} aria-labelledby="cta-heading">
           <div className="container mx-auto max-w-4xl text-center">
             <h2 id="cta-heading" className="text-3xl sm:text-4xl font-bold text-white mb-6">
               Start Your Wellness Journey Today
@@ -738,8 +674,8 @@ function LandingPageEnhanced({ onGetStarted }: LandingPageProps) {
             </p>
             <button
               onClick={handleSignup}
-              className="px-8 py-4 bg-white font-semibold rounded-xl shadow-lg hover:shadow-xl transition-all transform hover:scale-105 focus:outline-none focus:ring-4 focus:ring-white focus:ring-offset-2 focus:ring-offset-sage-600"
-              style={{ color: colors.primary.sage, fontSize: '1.125rem' }}
+              className="px-8 py-4 font-semibold rounded-xl shadow-lg hover:shadow-xl transition-all transform hover:scale-105 focus:outline-none focus:ring-4 focus:ring-white focus:ring-opacity-50"
+              style={{ background: 'white', color: 'rgb(92, 127, 79)', fontSize: '1.125rem' }}
               aria-label="Start your wellness journey today"
             >
               Get Started Today
@@ -752,7 +688,15 @@ function LandingPageEnhanced({ onGetStarted }: LandingPageProps) {
       <Footer />
 
       {/* Modals */}
-      <AuthModal isOpen={authModalOpen} onClose={() => setAuthModalOpen(false)} mode={authMode} />
+      <ModernAuthModal
+        isOpen={authModalOpen}
+        onClose={() => setAuthModalOpen(false)}
+        defaultMode={authMode === 'signin' ? 'signin' : 'signup'}
+        onSuccess={() => {
+          setAuthModalOpen(false);
+          window.location.href = '/dashboard';
+        }}
+      />
       <PricingModal 
         isOpen={pricingModalOpen} 
         onClose={() => setPricingModalOpen(false)} 
@@ -799,13 +743,6 @@ function LandingPageEnhanced({ onGetStarted }: LandingPageProps) {
         }
       `}</style>
 
-      {/* Conversion Flow Modal */}
-      {conversionVisible && (
-        <ConversionFlow 
-          onClose={hideConversionFlow}
-          trigger={conversionTrigger}
-        />
-      )}
     </div>
   );
 }

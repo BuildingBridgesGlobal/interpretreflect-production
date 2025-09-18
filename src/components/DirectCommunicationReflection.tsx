@@ -19,6 +19,7 @@ import {
 } from 'lucide-react';
 import { ChatBubbleIcon, CommunityIcon, HeartPulseIcon, TargetIcon } from './CustomIcon';
 import { supabase } from '../lib/supabase';
+import { directInsertReflection, getSessionToken } from '../services/directSupabaseApi';
 import { useAuth } from '../contexts/AuthContext';
 import { updateGrowthInsightsForUser } from '../services/growthInsightsService';
 
@@ -253,11 +254,16 @@ export const DirectCommunicationReflection: React.FC<DirectCommunicationReflecti
 
   // Handle form submission
   const handleSubmit = async () => {
-    if (!validateSection(currentSection)) return;
+    console.log('DirectCommunication - handleSubmit called');
+    if (!validateSection(currentSection)) {
+      console.log('DirectCommunication - Validation failed');
+      return;
+    }
     if (!user) {
       console.error('No user logged in');
       return;
     }
+    console.log('DirectCommunication - Starting save for user:', user.id);
 
     setIsSubmitting(true);
     setErrors({});
@@ -265,26 +271,40 @@ export const DirectCommunicationReflection: React.FC<DirectCommunicationReflecti
     try {
       // Calculate time spent
       const timeSpent = Math.round((Date.now() - startTime) / 1000);
+      console.log('DirectCommunication - Saving to Supabase...');
 
-      // Save to Supabase
-      const { data, error } = await supabase
-        .from('reflections')
-        .insert({
-          user_id: user.id,
-          type: 'Direct Communication Reflection',
-          data: {
-            ...formData,
-            completed_at: new Date().toISOString(),
-            time_spent_seconds: timeSpent
-          }
-        })
-        .select()
-        .single();
+      // Get access token
+      const accessToken = await getSessionToken();
 
-      if (error) throw error;
+      // Prepare the entry
+      const entry = {
+        user_id: user.id,
+        reflection_id: `direct_comm_${Date.now()}`,
+        entry_kind: 'direct_communication_reflection',
+        data: {
+          ...formData,
+          completed_at: new Date().toISOString(),
+          time_spent_seconds: timeSpent
+        },
+        created_at: new Date().toISOString(),
+        updated_at: new Date().toISOString()
+      };
 
-      // Update growth insights
-      await updateGrowthInsightsForUser(user.id, 'direct_communication_reflection');
+      // Use direct API instead of Supabase client
+      const { data, error } = await directInsertReflection(entry, accessToken || undefined);
+
+      console.log('DirectCommunication - Supabase response:', { data, error });
+
+      if (error) {
+        console.error('DirectCommunication - Supabase error:', error);
+        throw error;
+      }
+
+      console.log('DirectCommunication - Save successful:', data);
+
+      // Skip growth insights update - it hangs due to Supabase client
+      // Just log for now
+      console.log('DirectCommunication - Skipping growth insights update (uses hanging Supabase client)');
 
       // Show summary
       setShowSummary(true);
@@ -483,7 +503,11 @@ export const DirectCommunicationReflection: React.FC<DirectCommunicationReflecti
             </button>
           ) : (
             <button
-              onClick={handleSubmit}
+              onClick={(e) => {
+                e.preventDefault();
+                console.log('BUTTON CLICKED - Direct Communication');
+                handleSubmit();
+              }}
               disabled={isSubmitting}
               className="px-6 py-2 rounded-lg flex items-center transition-all"
               style={{

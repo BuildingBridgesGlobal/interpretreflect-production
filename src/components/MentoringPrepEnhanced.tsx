@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import {
+import { directInsertReflection } from '../services/directSupabaseApi';
   X, Users, ChevronRight, ChevronLeft, Save, Target, HelpCircle,
   Heart, Shield, Zap, CheckCircle, Copy, MessageSquare
 } from 'lucide-react';
@@ -218,6 +219,16 @@ Generated: ${new Date().toLocaleString()}`;
 
     setSummaryText(summary);
     setShowSummary(true);
+
+      // Close immediately after successful save
+      setIsSaving(false);
+
+      if (onComplete) {
+        onComplete(formData || answers || data || {});
+      }
+      setTimeout(() => {
+        onClose();
+      }, 100); // Small delay to ensure state updates
   };
 
   const handleSave = async () => {
@@ -253,6 +264,9 @@ Generated: ${new Date().toLocaleString()}`;
 
       // Generate summary for user
       generateSummary();
+      
+      setIsSaving(false);
+
       
       if (onComplete) {
         onComplete(finalData);

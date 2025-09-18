@@ -29,7 +29,7 @@ export const PaymentSuccess: React.FC = () => {
     return (
       <div className="min-h-screen bg-gradient-to-br from-green-50 to-blue-100 flex items-center justify-center">
         <div className="text-center">
-          <Loader className="w-12 h-12 animate-spin mx-auto mb-4 text-indigo-600" />
+          <Loader className="w-12 h-12 animate-spin mx-auto mb-4" style={{ color: 'rgb(92, 127, 79)' }} />
           <p className="text-gray-600">Verifying your payment...</p>
         </div>
       </div>
@@ -41,7 +41,7 @@ export const PaymentSuccess: React.FC = () => {
       <div className="max-w-md w-full bg-white rounded-xl shadow-lg p-8 text-center">
         <div className="mb-6">
           <div className="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
-            <CheckCircle className="w-12 h-12 text-green-500" />
+            <CheckCircle className="w-12 h-12" style={{ color: 'rgb(92, 127, 79)' }} />
           </div>
           <h1 className="text-3xl font-bold text-gray-900 mb-2">
             Payment Successful!
@@ -60,39 +60,31 @@ export const PaymentSuccess: React.FC = () => {
           </p>
         </div>
 
-        <div className="space-y-3">
-          <button
-            onClick={() => navigate('/')}
-            className="w-full text-white font-semibold py-3 px-6 rounded-lg transition-all flex items-center justify-center"
-            style={{
-              background: 'linear-gradient(135deg, rgb(27, 94, 32), rgb(46, 125, 50))',
-            }}
-            onMouseEnter={(e) => {
-              e.currentTarget.style.transform = 'translateY(-2px)';
-              e.currentTarget.style.boxShadow = '0 8px 25px rgba(27, 94, 32, 0.3)';
-            }}
-            onMouseLeave={(e) => {
-              e.currentTarget.style.transform = 'translateY(0)';
-              e.currentTarget.style.boxShadow = 'none';
-            }}
-          >
-            Go to Dashboard
-            <ArrowRight className="w-5 h-5 ml-2" />
-          </button>
-          
-          <button
-            onClick={() => navigate('/account')}
-            className="w-full bg-gray-100 hover:bg-gray-200 text-gray-700 font-semibold py-3 px-6 rounded-lg transition-colors"
-          >
-            Manage Subscription
-          </button>
-        </div>
+        <button
+          onClick={() => navigate('/')}
+          className="w-full text-white font-semibold py-3 px-6 rounded-lg flex items-center justify-center"
+          style={{
+            background: 'rgb(92, 127, 79)',
+            cursor: 'pointer',
+          }}
+          onMouseEnter={(e) => {
+            e.currentTarget.style.background = 'rgb(92, 127, 79)';
+            e.currentTarget.style.opacity = '1';
+          }}
+          onMouseLeave={(e) => {
+            e.currentTarget.style.background = 'rgb(92, 127, 79)';
+            e.currentTarget.style.opacity = '1';
+          }}
+        >
+          Go to Dashboard
+          <ArrowRight className="w-5 h-5 ml-2" />
+        </button>
 
         <div className="mt-6 pt-6 border-t border-gray-200">
           <p className="text-sm text-gray-500">
             Need help? Contact our support team at{' '}
-            <a href="mailto:support@example.com" className="text-indigo-600 hover:underline">
-              support@example.com
+            <a href="mailto:hello@huviatechnologies.com" className="hover:underline" style={{ color: 'rgb(92, 127, 79)' }}>
+              hello@huviatechnologies.com
             </a>
           </p>
         </div>

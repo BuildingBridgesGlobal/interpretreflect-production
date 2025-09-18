@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { X, ChevronRight, Heart, Sparkles, Clock, CheckCircle } from 'lucide-react';
+import { directInsertReflection } from '../services/directSupabaseApi';
 
 interface BodyCheckInProps {
   mode?: string; // Optional mode prop from App.tsx

@@ -1,4 +1,5 @@
 import { supabase } from '../lib/supabase';
+import { getSessionToken } from './directSupabaseApi';
 
 /**
  * Service for managing all reflection-related data operations
@@ -206,24 +207,36 @@ class ReflectionService {
   ): Promise<ReflectionEntry[]> {
     try {
       console.log('ReflectionService - getUserReflections called for user:', userId);
-      
-      const query = supabase
-        .from('reflection_entries')
-        .select('*')
-        .eq('user_id', userId)
-        .order('created_at', { ascending: false });
 
+      // Use direct API instead of Supabase client
+      const accessToken = await getSessionToken();
+      const SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL;
+      const SUPABASE_ANON_KEY = import.meta.env.VITE_SUPABASE_ANON_KEY;
+
+      let url = `${SUPABASE_URL}/rest/v1/reflection_entries?user_id=eq.${userId}&order=created_at.desc`;
       if (limit) {
-        query.limit(limit);
+        url += `&limit=${limit}`;
       }
 
-      const { data, error } = await query;
+      console.log('ReflectionService - Fetching from URL:', url);
+      console.log('ReflectionService - Using token:', !!accessToken);
 
-      if (error) {
+      const response = await fetch(url, {
+        headers: {
+          'apikey': SUPABASE_ANON_KEY,
+          'Authorization': `Bearer ${accessToken || SUPABASE_ANON_KEY}`,
+        }
+      });
+
+      console.log('ReflectionService - Response status:', response.status);
+
+      if (!response.ok) {
+        const error = await response.text();
         console.error('ReflectionService - Error fetching reflections:', error);
         return [];
       }
 
+      const data = await response.json();
       console.log(`ReflectionService - Found ${data?.length || 0} reflections:`, data);
       return data || [];
     } catch (error) {

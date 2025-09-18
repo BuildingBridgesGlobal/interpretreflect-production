@@ -67,34 +67,6 @@ export const Header: React.FC<HeaderProps> = ({
 
             {/* Right side controls */}
             <div className="flex items-center space-x-4">
-              {/* Upgrade to Premium Button - Show only for non-premium users */}
-              {user && !devMode && (
-                <button
-                  onClick={() =>
-                    window.open('https://buy.stripe.com/3cIcN5fYa7Ry2bA9i1b7y03', '_blank')
-                  }
-                  className="hidden md:flex items-center gap-2 px-4 py-2 rounded-lg font-semibold text-sm transition-all animate-pulse-subtle"
-                  style={{
-                    background: 'linear-gradient(135deg, rgb(27, 94, 32), rgb(46, 125, 50))',
-                    color: '#FFFFFF',
-                    boxShadow: '0 2px 8px rgba(27, 94, 32, 0.2)',
-                  }}
-                  onMouseEnter={(e) => {
-                    e.currentTarget.style.transform = 'translateY(-1px)';
-                    e.currentTarget.style.boxShadow = '0 4px 12px rgba(27, 94, 32, 0.3)';
-                    e.currentTarget.classList.remove('animate-pulse-subtle');
-                  }}
-                  onMouseLeave={(e) => {
-                    e.currentTarget.style.transform = 'translateY(0)';
-                    e.currentTarget.style.boxShadow = '0 2px 8px rgba(27, 94, 32, 0.2)';
-                    e.currentTarget.classList.add('animate-pulse-subtle');
-                  }}
-                >
-                  <Sparkles size={16} />
-                  Upgrade to Premium
-                </button>
-              )}
-
               <UserDropdown
                 user={user}
                 devMode={devMode}

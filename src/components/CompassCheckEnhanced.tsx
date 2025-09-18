@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { ChevronRight, ChevronLeft, X, Compass, Shield, Heart, AlertCircle, Target, Copy, Check } from 'lucide-react';
 import { supabase, CompassCheckData } from '../lib/supabase';
 import { useAuth } from '../contexts/AuthContext';
+import { directInsertReflection } from '../services/directSupabaseApi';
 
 interface CompassCheckEnhancedProps {
   onComplete: (data: CompassCheckData) => void;

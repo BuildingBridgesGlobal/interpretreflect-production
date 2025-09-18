@@ -139,10 +139,11 @@ export const WelcomeModal: React.FC<WelcomeModalProps> = ({ onClose, onComplete 
             </div>
             <button
               onClick={onClose}
-              className="p-2 rounded-lg hover:bg-gray-100 transition-colors"
+              className="p-2 rounded-lg transition-colors text-white"
+              style={{ background: 'linear-gradient(135deg, rgb(27, 94, 32), rgb(46, 125, 50))' }}
               aria-label="Close"
             >
-              <X className="w-5 h-5" style={{ color: '#5A5A5A' }} />
+              <X className="w-5 h-5" />
             </button>
           </div>
 

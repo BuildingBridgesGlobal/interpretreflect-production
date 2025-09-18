@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import {
+import { directInsertReflection } from '../services/directSupabaseApi';
   X, Users, ChevronRight, ChevronLeft, Save, Heart, Brain,
   Target, MessageSquare, Zap, CheckCircle, TrendingUp,
   ChevronDown, ChevronUp, Sparkles

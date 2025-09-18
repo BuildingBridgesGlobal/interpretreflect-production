@@ -307,9 +307,10 @@ export const BurnoutAssessment: React.FC<AssessmentProps> = ({ isOpen, onClose, 
             </p>
             <button
               onClick={onClose}
-              className="p-2 rounded-lg hover:bg-gray-100 transition-colors"
+              className="p-2 rounded-lg transition-colors text-white"
+              style={{ background: 'linear-gradient(135deg, rgb(27, 94, 32), rgb(46, 125, 50))' }}
             >
-              <X className="h-5 w-5" style={{ color: '#1A1A1A' }} />
+              <X className="h-5 w-5" />
             </button>
           </div>
 

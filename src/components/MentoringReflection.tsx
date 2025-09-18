@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import {
+import { directInsertReflection } from '../services/directSupabaseApi';
   X,
   GraduationCap,
   Lightbulb,
@@ -364,9 +365,7 @@ const MentoringReflection: React.FC<MentoringReflectionProps> = ({ onComplete, o
     };
 
     setShowWisdomBank(true);
-    setTimeout(() => {
-      onComplete(results);
-    }, 3000);
+    onComplete(formData);
   };
 
   const toggleNeedsFor = (need: string) => {

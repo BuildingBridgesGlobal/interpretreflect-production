@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import {
+import { directInsertReflection } from '../services/directSupabaseApi';
   X, FileText, ChevronRight, ChevronLeft, Save, Heart, Brain,
   Target, AlertTriangle, Sparkles, Copy, CheckCircle, Activity,
   Globe, Users, MapPin, Settings, Shield
@@ -230,6 +231,16 @@ Generated: ${new Date().toLocaleString()}`;
 
     setSummaryText(summary);
     setShowSummary(true);
+
+      // Close immediately after successful save
+      setIsSaving(false);
+
+      if (onComplete) {
+        onComplete(formData || answers || data || {});
+      }
+      setTimeout(() => {
+        onClose();
+      }, 100); // Small delay to ensure state updates
   };
 
   const handleSave = async () => {
@@ -267,6 +278,9 @@ Generated: ${new Date().toLocaleString()}`;
 
       // Generate summary for user
       generateSummary();
+      
+      setIsSaving(false);
+
       
       if (onComplete) {
         onComplete(finalData);

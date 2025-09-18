@@ -74,12 +74,24 @@ export function StripePaymentButton({
       disabled={loading}
       className={`px-6 py-3 rounded-lg font-semibold transition-all ${className}`}
       style={{
-        background: loading 
+        background: loading
           ? '#ccc'
-          : 'linear-gradient(135deg, rgb(27, 94, 32), rgb(46, 125, 50))',
+          : 'rgb(92, 127, 79)',
         color: '#FFFFFF',
         cursor: loading ? 'not-allowed' : 'pointer',
         opacity: loading ? 0.7 : 1,
+      }}
+      onMouseEnter={(e) => {
+        if (!loading) {
+          e.currentTarget.style.background = '#F5F5DC';
+          e.currentTarget.style.color = 'rgb(92, 127, 79)';
+        }
+      }}
+      onMouseLeave={(e) => {
+        if (!loading) {
+          e.currentTarget.style.background = 'rgb(92, 127, 79)';
+          e.currentTarget.style.color = '#FFFFFF';
+        }
       }}
     >
       {loading ? 'Processing...' : buttonText}

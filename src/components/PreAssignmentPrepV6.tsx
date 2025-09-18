@@ -27,7 +27,8 @@ import {
 import { supabase } from '../lib/supabase';
 import { useAuth } from '../contexts/AuthContext';
 import { useNavigate } from 'react-router-dom';
-import { updateGrowthInsightsForUser } from '../services/growthInsightsService';
+// import { updateGrowthInsightsForUser } from '../services/growthInsightsService'; // Commented out - uses hanging Supabase client
+import { directInsertReflection, directSelectReflections, getSessionToken } from '../services/directSupabaseApi';
 
 interface PreAssignmentPrepV6Props {
   onClose: () => void;
@@ -201,10 +202,23 @@ export function PreAssignmentPrepV6({ onClose, onComplete }: PreAssignmentPrepV6
       return;
     }
 
+    // Prevent double-submission
+    if (isSaving) {
+      console.log('PreAssignmentPrepV6 - Already saving, ignoring duplicate click');
+      return;
+    }
+
+    console.log('PreAssignmentPrepV6 - handleSubmit called');
+    console.log('PreAssignmentPrepV6 - User details:', {
+      id: user.id,
+      email: user.email
+    });
+
     setIsSaving(true);
     try {
       const sessionId = `session_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
       const timeSpent = Math.floor((Date.now() - startTime) / 1000);
+      console.log('PreAssignmentPrepV6 - Starting save with sessionId:', sessionId);
 
       // Prepare answers object
       const answers = {
@@ -221,48 +235,98 @@ export function PreAssignmentPrepV6({ onClose, onComplete }: PreAssignmentPrepV6
         growth_goals: formData.growth_goals
       };
 
-      // Save to database
-      const { data, error } = await supabase
-        .from('pre_assignment_reflections')
-        .upsert({
-          user_id: user.id,
-          session_id: sessionId,
-          reflection_type: 'pre_assignment_prep',
-          answers,
-          status: 'completed',
-          metadata: {
-            questions_answered: Object.keys(answers).length,
-            total_questions: 11,
-            completion_time: new Date().toISOString(),
-            time_spent_seconds: timeSpent,
-            confidence_rating: formData.confidence_rating,
-            feeling_word: formData.feeling_word,
-            intention_statement: formData.intention_statement
-          },
-          completed_at: new Date().toISOString(),
-          updated_at: new Date().toISOString()
-        })
-        .select()
-        .single();
+      // Save to database using direct API
+      console.log('PreAssignmentPrepV6 - Attempting to save to reflection_entries table using direct API');
 
-      if (error) throw error;
+      // Get the session token
+      const accessToken = await getSessionToken();
+      console.log('PreAssignmentPrepV6 - Got access token:', !!accessToken);
 
-      // Update growth insights
-      await updateGrowthInsightsForUser(user.id, answers);
+      // First, test if we can read from the database (auth check)
+      console.log('PreAssignmentPrepV6 - Testing database connection with direct API...');
+      const { data: testData, error: testError } = await directSelectReflections(user.id, accessToken || undefined);
 
-      // Show summary
-      setShowSummary(true);
-      
-      // Call onComplete if provided
-      if (onComplete) {
-        setTimeout(() => {
-          onComplete(formData);
-        }, 2000);
+      console.log('PreAssignmentPrepV6 - Test query result:', { testData, testError });
+
+      if (testError) {
+        console.error('PreAssignmentPrepV6 - Cannot read from database:', testError);
+        throw new Error(`Database connection issue: ${testError}`);
       }
+
+      // Create a simpler data object
+      const reflectionData = {
+        user_id: user.id,
+        reflection_id: sessionId,
+        entry_kind: 'pre_assignment_prep',
+        data: formData // Just save the raw form data
+      };
+
+      console.log('PreAssignmentPrepV6 - Data to save:', reflectionData);
+      console.log('PreAssignmentPrepV6 - Starting insert with direct API...');
+
+      // Try using Supabase client for insert (it might work even if select doesn't)
+      console.log('PreAssignmentPrepV6 - Trying Supabase client insert...');
+
+      try {
+        // Set a short timeout for the Supabase client
+        const insertPromise = supabase
+          .from('reflection_entries')
+          .insert([reflectionData])
+          .select();
+
+        const timeoutPromise = new Promise((_, reject) =>
+          setTimeout(() => reject(new Error('Supabase client timeout')), 5000)
+        );
+
+        const { data: supabaseData, error: supabaseError } = await Promise.race([
+          insertPromise,
+          timeoutPromise
+        ]) as any;
+
+        if (!supabaseError && supabaseData) {
+          console.log('PreAssignmentPrepV6 - Supabase client insert successful!', supabaseData);
+          const data = supabaseData[0];
+          console.log('PreAssignmentPrepV6 - Save successful!', data);
+        } else {
+          throw supabaseError || new Error('No data returned');
+        }
+      } catch (clientError) {
+        console.log('PreAssignmentPrepV6 - Supabase client failed, trying direct API...');
+
+        // Fall back to direct API
+        const { data, error } = await directInsertReflection(reflectionData, accessToken || undefined);
+        console.log('PreAssignmentPrepV6 - Direct API response:', { data, error });
+
+        if (error) {
+          console.error('PreAssignmentPrepV6 - Error saving to database:', error);
+          throw error;
+        }
+
+        console.log('PreAssignmentPrepV6 - Save successful via direct API!', data);
+      }
+
+      // Set saving to false immediately after successful save
+      setIsSaving(false);
+
+      // Skip growth insights update - it hangs due to Supabase client
+      console.log('PreAssignmentPrepV6 - Skipping growth insights update (uses hanging Supabase client)');
+
+      // Close immediately after successful save
+      if (onComplete) {
+        onComplete(formData);
+      }
+      setTimeout(() => {
+        onClose();
+      }, 100); // Small delay to ensure state updates
+
     } catch (error) {
-      console.error('Error saving preparation:', error);
-      setErrors({ save: 'Failed to save preparation. Please try again.' });
+      console.error('PreAssignmentPrepV6 - Caught error in try/catch:', error);
+      const errorMessage = error instanceof Error ? error.message : 'Failed to save preparation';
+      console.error('PreAssignmentPrepV6 - Error message:', errorMessage);
+      setErrors({ save: errorMessage });
+      alert(`Error saving reflection: ${errorMessage}`); // Show alert to see the error
     } finally {
+      console.log('PreAssignmentPrepV6 - Finally block, setting isSaving to false');
       setIsSaving(false);
     }
   };
@@ -657,16 +721,17 @@ FEELING: ${formData.feeling_word}
   const isLastSection = currentSection === sections.length - 1;
 
   return (
-    <div 
-      className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4"
-      onClick={onClose}
-    >
-      <div 
-        ref={modalRef}
-        className="bg-white rounded-2xl w-full max-w-4xl max-h-[90vh] flex flex-col"
-        style={{ backgroundColor: '#FAF9F6' }}
-        onClick={(e) => e.stopPropagation()}
+    <>
+      <div
+        className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4"
+        onClick={onClose}
       >
+        <div
+          ref={modalRef}
+          className="bg-white rounded-2xl w-full max-w-4xl max-h-[90vh] flex flex-col"
+          style={{ backgroundColor: '#FAF9F6' }}
+          onClick={(e) => e.stopPropagation()}
+        >
         {/* Header */}
         <div 
           className="p-6 border-b"
@@ -841,6 +906,7 @@ FEELING: ${formData.feeling_word}
         </div>
       </div>
     </div>
+    </>
   );
 }
 

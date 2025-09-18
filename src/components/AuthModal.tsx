@@ -1,15 +1,19 @@
 import React, { useState } from 'react';
-import { X, Mail, Lock, Eye, EyeOff, Loader2 } from 'lucide-react';
+import { X, Mail, Lock, Eye, EyeOff, Loader2, Gift, Check } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
 import { SecureLockIcon } from './CustomIcon';
+import { enchargeService } from '../services/enchargeService';
+import { supabase } from '../lib/supabase';
 
 interface AuthModalProps {
   isOpen: boolean;
   onClose: () => void;
   mode: 'login' | 'signup';
+  onAuthSuccess?: () => void;
+  isTrialSignup?: boolean;
 }
 
-export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, mode: initialMode }) => {
+export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, mode: initialMode, onAuthSuccess, isTrialSignup = false }) => {
   const [mode, setMode] = useState(initialMode);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -39,10 +43,38 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, mode: ini
           return;
         }
         await signUp(email, password);
+
+        // Get the user after signup
+        const { data: { user } } = await supabase.auth.getUser();
+
+        if (user) {
+          // Start trial if this is a trial signup
+          if (isTrialSignup) {
+            await supabase.rpc('start_user_trial', { user_id: user.id });
+          }
+
+          // Add user to Encharge for email automation
+          await enchargeService.handleTrialSignup(email, user.id);
+        }
+
         // Show success message
         setError('Great! Please check your email to confirm your account and begin your wellness journey.');
+
+        // Call success callback if provided
+        if (onAuthSuccess) {
+          setTimeout(() => {
+            onAuthSuccess();
+            onClose();
+          }, 2000);
+        }
       } else {
         await signIn(email, password);
+
+        // Call success callback if provided
+        if (onAuthSuccess) {
+          onAuthSuccess();
+        }
+
         onClose();
       }
     } catch (err: unknown) {
@@ -217,8 +249,8 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, mode: ini
                 setMode(mode === 'login' ? 'signup' : 'login');
                 setError('');
               }}
-              className="font-semibold hover:underline"
-              style={{ color: '#5C7F4F' }}
+              className="ml-1 px-3 py-1 text-white rounded-md font-semibold transition-all"
+              style={{ background: 'rgb(92, 127, 79)' }}
             >
               {mode === 'login' ? 'Sign Up' : 'Sign In'}
             </button>

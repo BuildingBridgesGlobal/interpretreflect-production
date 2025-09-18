@@ -1429,7 +1429,7 @@ function LandingPage({ onGetStarted }: LandingPageProps) {
           </div>
 
           <p className="mt-12 text-base" style={{ color: '#5A5A5A' }}>
-            <strong>Questions?</strong> Email info@buildingbridgeslearning.com
+            <strong>Questions?</strong> Email hello@huviatechnologies.com
           </p>
         </div>
       </section>

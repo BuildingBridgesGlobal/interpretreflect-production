@@ -227,26 +227,39 @@ export function PricingProduction() {
               ) : (
                 <div className="space-y-4">
                   {user ? (
-                    <StripePaymentButton 
-                      buttonText="Start Your 3-Day Free Trial"
-                      className="w-full md:w-auto px-8 py-4 text-lg"
-                      useDirectLink={true}
-                    />
+                    <button
+                      onClick={() => navigate('/signup')}
+                      className="w-full md:w-auto px-8 py-4 text-lg rounded-lg font-semibold transition-all"
+                      style={{
+                        background: 'linear-gradient(135deg, rgb(92, 127, 79), rgb(107, 142, 94))',
+                        color: '#FFFFFF',
+                      }}
+                      onMouseEnter={(e) => {
+                        e.currentTarget.style.background = '#F5F5DC';
+                        e.currentTarget.style.color = 'rgb(92, 127, 79)';
+                      }}
+                      onMouseLeave={(e) => {
+                        e.currentTarget.style.background = 'linear-gradient(135deg, rgb(92, 127, 79), rgb(107, 142, 94))';
+                        e.currentTarget.style.color = '#FFFFFF';
+                      }}
+                    >
+                      Get Started Now
+                    </button>
                   ) : (
                     <button
-                      onClick={() => navigate('/auth')}
+                      onClick={() => navigate('/signup')}
                       className="w-full md:w-auto px-8 py-4 text-lg rounded-lg font-semibold transition-all"
                       style={{
                         background: 'linear-gradient(135deg, rgb(27, 94, 32), rgb(46, 125, 50))',
                         color: '#FFFFFF',
                       }}
                     >
-                      Sign Up to Start Free Trial
+                      Get Started
                     </button>
                   )}
                   
                   <p className="text-xs" style={{ color: '#999' }}>
-                    Start with 3 days free, then $12.99/month. Cancel anytime.
+                    $12.99/month. Cancel anytime.
                   </p>
                 </div>
               )}
@@ -368,11 +381,24 @@ export function PricingProduction() {
           </p>
           
           {!hasActiveSubscription && (
-            <StripePaymentButton 
-              buttonText="Get Started Now →"
-              className="px-8 py-4 text-lg"
-              useDirectLink={true}
-            />
+            <button
+              onClick={() => navigate('/signup')}
+              className="px-8 py-4 text-lg rounded-lg font-semibold transition-all"
+              style={{
+                background: 'linear-gradient(135deg, rgb(92, 127, 79), rgb(107, 142, 94))',
+                color: '#FFFFFF',
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.background = '#F5F5DC';
+                e.currentTarget.style.color = 'rgb(92, 127, 79)';
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.background = 'linear-gradient(135deg, rgb(92, 127, 79), rgb(107, 142, 94))';
+                e.currentTarget.style.color = '#FFFFFF';
+              }}
+            >
+              Get Started Now →
+            </button>
           )}
         </div>
       </div>

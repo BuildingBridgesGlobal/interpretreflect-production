@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { Routes, Route } from 'react-router-dom';
+import { Routes, Route, useNavigate } from 'react-router-dom';
 import type { BurnoutData, ViewMode } from './types';
 import LandingPageEnhanced from './LandingPageEnhanced';
 import { Header } from './components/layout/Header';
@@ -7,7 +7,8 @@ import { NavigationTabs } from './components/layout/NavigationTabs';
 import { useAuth } from './contexts/AuthContext';
 import { supabase } from './lib/supabase';
 import { PrivacyConsent } from './components/PrivacyConsent';
-import { SecurityBanner, SessionTimeoutModal } from './components/SecurityBanner';
+import { SubscriptionGate } from './components/SubscriptionGate';
+import { SecurityBanner } from './components/SecurityBanner';
 import { PrivacyPolicy } from './pages/PrivacyPolicy';
 import { TermsOfService } from './pages/TermsOfService';
 import { Contact } from './pages/Contact';
@@ -19,13 +20,14 @@ import { PricingProduction } from './pages/PricingProduction';
 import { AdminDashboard } from './pages/AdminDashboard';
 import { HeaderDemo } from './pages/HeaderDemo';
 import { PaymentSuccess } from './pages/PaymentSuccess';
+import { SeamlessSignup } from './pages/SeamlessSignup';
 import { AuthTest } from './pages/AuthTest';
 import { AgenticFlowChat } from './components/AgenticFlowChat';
 import { OnboardingFlow } from './components/OnboardingFlow';
 import { useOnboarding } from './hooks/useOnboarding';
 import { PreAssignmentPrepV5 } from './components/PreAssignmentPrepV5';
 import { PreAssignmentPrepV6 } from './components/PreAssignmentPrepV6';
-import { PostAssignmentDebriefAccessible as PostAssignmentDebriefEnhanced } from './components/PostAssignmentDebriefAccessible';
+import { PostAssignmentDebriefAccessible } from './components/PostAssignmentDebriefAccessible';
 import { TeamingPrepEnhanced } from './components/TeamingPrepEnhanced';
 import { TeamingReflectionEnhanced } from './components/TeamingReflectionEnhanced';
 import { WellnessCheckInAccessible } from './components/WellnessCheckInAccessible';
@@ -54,7 +56,6 @@ import { CustomizePreferences } from './components/CustomizePreferences';
 import { ManageSubscription } from './components/ManageSubscription';
 import { BillingPlanDetails } from './components/BillingPlanDetails';
 import { PersonalizedHomepage } from './components/PersonalizedHomepage';
-import { SyncStatusIndicator } from './components/SyncStatusIndicator';
 import { WelcomeModal } from './components/WelcomeModal';
 import { runDatabaseCheck } from './utils/checkDatabaseStatus';
 import {
@@ -84,18 +85,15 @@ import {
 } from 'lucide-react';
 
 function App() {
+  const navigate = useNavigate();
   const { user, loading, signOut, extendSession } = useAuth();
   const {
     isVisible: onboardingVisible,
     completeOnboarding,
     hideOnboarding
   } = useOnboarding();
-  // Automatically enable dev mode in development environment
-  const [devMode, setDevMode] = useState(
-    import.meta.env.DEV || // Vite development mode
-    window.location.hostname === 'localhost' || 
-    window.location.hostname === '127.0.0.1'
-  );
+  // Dev mode should only be enabled explicitly, not automatically
+  const [devMode, setDevMode] = useState(false);
   // Load saved tab preference or default to home
   const [activeTab, setActiveTab] = useState(() => {
     const savedTab = localStorage.getItem('preferredTab');
@@ -221,19 +219,18 @@ function App() {
   
   // Security state
   const [showPrivacyConsent, setShowPrivacyConsent] = useState(false);
-  const [showSessionWarning, setShowSessionWarning] = useState(false);
-  const [sessionTimeRemaining, setSessionTimeRemaining] = useState(0);
-  
+
   // Welcome modal state
   const [showWelcomeModal, setShowWelcomeModal] = useState(false);
 
   // Check if first-time user and show welcome modal
   React.useEffect(() => {
-    const hasSeenWelcome = localStorage.getItem('hasSeenWelcomeModal');
-    if (!hasSeenWelcome && activeTab === 'reflection') {
-      // Show welcome modal only on reflection tab for first-time users
-      setShowWelcomeModal(true);
-    }
+    // DISABLED: Welcome modal not needed right now
+    // const hasSeenWelcome = localStorage.getItem('hasSeenWelcomeModal');
+    // if (!hasSeenWelcome && activeTab === 'reflection') {
+    //   // Show welcome modal only on reflection tab for first-time users
+    //   setShowWelcomeModal(true);
+    // }
   }, [activeTab]); // Run when activeTab changes
   
   // Save tab preference when it changes
@@ -5252,6 +5249,7 @@ function App() {
                       if (card.title === 'Pre-Assignment Prep') {
                         setShowPreAssignmentPrep(true);
                       } else if (card.title === 'Post-Assignment Debrief') {
+                        console.log('App.tsx - Post-Assignment Debrief button clicked');
                         setShowPostAssignmentDebrief(true);
                       } else if (card.title === 'Teaming Prep') {
                         setShowTeamingPrep(true);
@@ -5522,22 +5520,53 @@ function App() {
       {/* Pre-Assignment Prep Modal */}
       {showPreAssignmentPrep && (
         <PreAssignmentPrepV6
-          onComplete={(data) => {
+          onComplete={async (data) => {
             console.log('Pre-Assignment Prep Results:', data);
             // Data is automatically saved to Supabase in the component
             setShowPreAssignmentPrep(false);
+
+            // Reload reflections to show the new one
+            if (user?.id) {
+              const { reflectionService } = await import('./services/reflectionService');
+              const reflections = await reflectionService.getUserReflections(user.id, 10);
+              if (reflections) {
+                const formattedReflections = reflections.map(r => ({
+                  id: r.id || Date.now().toString(),
+                  type: r.entry_kind || 'reflection',
+                  data: r.data || {},
+                  timestamp: r.created_at || new Date().toISOString()
+                }));
+                setSavedReflections(formattedReflections);
+              }
+            }
           }}
           onClose={() => setShowPreAssignmentPrep(false)}
         />
       )}
 
       {/* Post-Assignment Debrief Modal */}
+      {showPostAssignmentDebrief && console.log('App.tsx - showPostAssignmentDebrief is true, rendering component')}
       {showPostAssignmentDebrief && (
-        <PostAssignmentDebriefEnhanced
-          onComplete={(data) => {
+        <PostAssignmentDebriefAccessible
+          onComplete={async (data) => {
+            console.log('PostAssignmentDebriefAccessible - onComplete called with:', data);
             console.log('Post-Assignment Debrief Results:', data);
-            // Data is automatically saved to Supabase in the component
             setShowPostAssignmentDebrief(false);
+
+            // Reload reflections to show the new one
+            if (user?.id) {
+              const { reflectionService } = await import('./services/reflectionService');
+              const reflections = await reflectionService.getUserReflections(user.id, 10);
+              if (reflections) {
+                const formattedReflections = reflections.map(r => ({
+                  id: r.id || Date.now().toString(),
+                  type: r.entry_kind || 'reflection',
+                  data: r.data || {},
+                  timestamp: r.created_at || new Date().toISOString()
+                }));
+                setSavedReflections(formattedReflections);
+              }
+            }
           }}
           onClose={() => setShowPostAssignmentDebrief(false)}
         />
@@ -5546,10 +5575,25 @@ function App() {
       {/* Teaming Prep Modal */}
       {showTeamingPrep && (
         <TeamingPrepEnhanced
-          onComplete={(data) => {
+          onComplete={async (data) => {
             console.log('Team Prep Results:', data);
             // Data is automatically saved to Supabase in the component
             setShowTeamingPrep(false);
+
+            // Reload reflections to show the new one
+            if (user?.id) {
+              const { reflectionService } = await import('./services/reflectionService');
+              const reflections = await reflectionService.getUserReflections(user.id, 10);
+              if (reflections) {
+                const formattedReflections = reflections.map(r => ({
+                  id: r.id || Date.now().toString(),
+                  type: r.entry_kind || 'reflection',
+                  data: r.data || {},
+                  timestamp: r.created_at || new Date().toISOString()
+                }));
+                setSavedReflections(formattedReflections);
+              }
+            }
           }}
           onClose={() => setShowTeamingPrep(false)}
         />
@@ -5558,10 +5602,27 @@ function App() {
       {/* Teaming Reflection Modal */}
       {showTeamingReflection && (
         <TeamingReflectionEnhanced
-          onComplete={(data) => {
+          onComplete={async (data) => {
             console.log('Team Reflection Results:', data);
             // Data is automatically saved to Supabase in the component
-            setShowTeamingReflection(false);
+
+            // Reload reflections to show the new one
+            if (user?.id) {
+              const { reflectionService } = await import('./services/reflectionService');
+              const reflections = await reflectionService.getUserReflections(user.id, 10);
+              if (reflections) {
+                const formattedReflections = reflections.map(r => ({
+                  id: r.id || Date.now().toString(),
+                  type: r.entry_kind || 'reflection',
+                  data: r.data || {},
+                  created_at: r.created_at || new Date().toISOString()
+                }));
+                setRecentReflections(formattedReflections);
+              }
+            }
+
+            // Don't close immediately - let the success modal show
+            // The component will handle closing via onClose when user clicks Continue
           }}
           onClose={() => setShowTeamingReflection(false)}
         />
@@ -5570,10 +5631,24 @@ function App() {
       {/* Mentoring Prep Modal */}
       {showMentoringPrep && (
         <MentoringPrepAccessible
-          onComplete={(data) => {
+          onComplete={async (data) => {
             console.log('Mentoring Prep Results:', data);
-            // Data is automatically saved to Supabase in the component
             setShowMentoringPrep(false);
+
+            // Reload reflections to show the new one
+            if (user?.id) {
+              const { reflectionService } = await import('./services/reflectionService');
+              const reflections = await reflectionService.getUserReflections(user.id, 10);
+              if (reflections) {
+                const formattedReflections = reflections.map(r => ({
+                  id: r.id || Date.now().toString(),
+                  type: r.entry_kind || 'reflection',
+                  data: r.data || {},
+                  timestamp: r.created_at || new Date().toISOString()
+                }));
+                setSavedReflections(formattedReflections);
+              }
+            }
           }}
           onClose={() => setShowMentoringPrep(false)}
         />
@@ -5582,10 +5657,24 @@ function App() {
       {/* Mentoring Reflection Modal */}
       {showMentoringReflection && (
         <MentoringReflectionAccessible
-          onComplete={(results) => {
+          onComplete={async (results) => {
             console.log('Mentoring Reflection Results:', results);
-            // Data is automatically saved to local storage in the component
             setShowMentoringReflection(false);
+
+            // Reload reflections to show the new one
+            if (user?.id) {
+              const { reflectionService } = await import('./services/reflectionService');
+              const reflections = await reflectionService.getUserReflections(user.id, 10);
+              if (reflections) {
+                const formattedReflections = reflections.map(r => ({
+                  id: r.id || Date.now().toString(),
+                  type: r.entry_kind || 'reflection',
+                  data: r.data || {},
+                  timestamp: r.created_at || new Date().toISOString()
+                }));
+                setSavedReflections(formattedReflections);
+              }
+            }
           }}
           onClose={() => setShowMentoringReflection(false)}
         />
@@ -5594,10 +5683,24 @@ function App() {
       {/* Role-Space Reflection Modal */}
       {showRoleSpaceReflection && (
         <RoleSpaceReflection
-          onComplete={(data) => {
+          onComplete={async (data) => {
             console.log('Role-Space Reflection Results:', data);
-            // Data is automatically saved to Supabase in the component
             setShowRoleSpaceReflection(false);
+
+            // Reload reflections to show the new one
+            if (user?.id) {
+              const { reflectionService } = await import('./services/reflectionService');
+              const reflections = await reflectionService.getUserReflections(user.id, 10);
+              if (reflections) {
+                const formattedReflections = reflections.map(r => ({
+                  id: r.id || Date.now().toString(),
+                  type: r.entry_kind || 'reflection',
+                  data: r.data || {},
+                  timestamp: r.created_at || new Date().toISOString()
+                }));
+                setSavedReflections(formattedReflections);
+              }
+            }
           }}
           onClose={() => setShowRoleSpaceReflection(false)}
         />
@@ -5606,10 +5709,24 @@ function App() {
       {/* Supporting Direct Communication Modal */}
       {showDirectCommunicationReflection && (
         <DirectCommunicationReflection
-          onComplete={(data) => {
+          onComplete={async (data) => {
             console.log('Direct Communication Reflection Results:', data);
-            // Data is automatically saved to Supabase in the component
             setShowDirectCommunicationReflection(false);
+
+            // Reload reflections to show the new one
+            if (user?.id) {
+              const { reflectionService } = await import('./services/reflectionService');
+              const reflections = await reflectionService.getUserReflections(user.id, 10);
+              if (reflections) {
+                const formattedReflections = reflections.map(r => ({
+                  id: r.id || Date.now().toString(),
+                  type: r.entry_kind || 'reflection',
+                  data: r.data || {},
+                  timestamp: r.created_at || new Date().toISOString()
+                }));
+                setSavedReflections(formattedReflections);
+              }
+            }
           }}
           onClose={() => setShowDirectCommunicationReflection(false)}
         />
@@ -5618,10 +5735,25 @@ function App() {
       {/* Wellness Check-In Modal */}
       {showWellnessCheckIn && (
         <WellnessCheckInAccessible
-          onComplete={(results) => {
+          onComplete={async (results) => {
             // Save reflection with consistent entry_kind
             saveReflection('wellness_checkin', results);
             setShowWellnessCheckIn(false);
+
+            // Reload reflections to show the new one
+            if (user?.id) {
+              const { reflectionService } = await import('./services/reflectionService');
+              const reflections = await reflectionService.getUserReflections(user.id, 10);
+              if (reflections) {
+                const formattedReflections = reflections.map(r => ({
+                  id: r.id || Date.now().toString(),
+                  type: r.entry_kind || 'reflection',
+                  data: r.data || {},
+                  timestamp: r.created_at || new Date().toISOString()
+                }));
+                setSavedReflections(formattedReflections);
+              }
+            }
           }}
           onClose={() => setShowWellnessCheckIn(false)}
         />
@@ -5676,19 +5808,11 @@ function App() {
         <Route path="/about" element={<About />} />
         <Route path="/accessibility" element={<Accessibility />} />
         <Route path="/pricing" element={<PricingNew />} />
+        <Route path="/signup" element={<SeamlessSignup />} />
+        <Route path="/payment-success" element={<PaymentSuccess />} />
         <Route path="/landing" element={<LandingPageEnhanced onGetStarted={() => setDevMode(true)} />} />
         <Route path="*" element={
-          <>
-            <LandingPageEnhanced onGetStarted={() => setDevMode(true)} />
-            {/* Dev Mode Toggle for Testing */}
-            <button
-              onClick={() => setDevMode(true)}
-              className="fixed bottom-4 right-4 px-4 py-2 bg-red-600 text-white rounded-lg shadow-lg hover:bg-red-700 transition-colors text-sm font-medium z-50"
-              title="Skip authentication for development"
-            >
-              🛠️ Enable Dev Mode
-            </button>
-          </>
+          <LandingPageEnhanced onGetStarted={() => navigate('/signup')} />
         } />
       </Routes>
     );
@@ -5708,41 +5832,7 @@ function App() {
 
   // Show main app for authenticated users or dev mode
   return (
-    <>
-      {/* Data Sync Indicator */}
-      <SyncStatusIndicator />
-      
-      {/* Database Status Check Button - TEMPORARY for testing */}
-      {user && (
-        <button
-          onClick={async () => {
-            console.log('Checking database status...');
-            const status = await runDatabaseCheck();
-            if (status?.allMigrationsApplied) {
-              alert('✅ All database migrations are applied!');
-            } else if (status) {
-              alert(`⚠️ Missing ${status.missing} tables. Check console for details.`);
-            }
-          }}
-          style={{
-            position: 'fixed',
-            bottom: '60px',
-            right: '20px',
-            zIndex: 9999,
-            padding: '10px 20px',
-            background: 'linear-gradient(135deg, #1b5e20, #2e7d32)',
-            color: 'white',
-            border: 'none',
-            borderRadius: '8px',
-            cursor: 'pointer',
-            fontSize: '14px',
-            fontWeight: 'bold'
-          }}
-        >
-          Check DB Status
-        </button>
-      )}
-      
+    <SubscriptionGate>
       {/* Security Components */}
       <PrivacyConsent 
         isOpen={showPrivacyConsent} 
@@ -5750,29 +5840,14 @@ function App() {
         onDecline={() => setShowPrivacyConsent(false)}
       />
       
-      <SessionTimeoutModal 
-        isOpen={showSessionWarning}
-        timeRemaining={sessionTimeRemaining}
-        onExtend={() => {
-          extendSession();
-          setShowSessionWarning(false);
-        }}
-        onLogout={async () => {
-          await signOut();
-          setShowSessionWarning(false);
-        }}
-      />
-      
-      {/* Security Banner for authenticated users */}
-      {user && <SecurityBanner type="info" />}
-      
-      <Routes>
+<Routes>
       <Route path="/privacy" element={<PrivacyPolicy />} />
       <Route path="/terms" element={<TermsOfService />} />
       <Route path="/contact" element={<Contact />} />
       <Route path="/about" element={<About />} />
       <Route path="/accessibility" element={<Accessibility />} />
       <Route path="/pricing" element={<PricingProduction />} />
+      <Route path="/signup" element={<SeamlessSignup />} />
       <Route path="/pricing-old" element={<PricingNew />} />
       <Route path="/pricing-test" element={<PricingTest />} />
       <Route path="/admin" element={<AdminDashboard />} />
@@ -5818,57 +5893,20 @@ function App() {
 
       {/* Main content area with proper semantic structure */}
       <main id="main-content" role="main" className="flex-1">
-        {/* Premium Upgrade Banner - Show for free users */}
-        {user && !devMode && activeTab === 'home' && (
-          <div 
-            className="mx-4 mt-4 p-4 rounded-xl flex items-center justify-between"
-            style={{
-              background: 'linear-gradient(135deg, rgba(27, 94, 32, 0.05), rgba(46, 125, 50, 0.05))',
-              border: '1px solid rgba(27, 94, 32, 0.2)',
-            }}
-          >
-            <div className="flex items-center gap-4">
-              <div 
-                className="w-12 h-12 rounded-full flex items-center justify-center"
-                style={{
-                  background: 'linear-gradient(135deg, rgb(27, 94, 32), rgb(46, 125, 50))',
-                }}
-              >
-                <Sparkles className="text-white" size={24} />
-              </div>
-              <div>
-                <h3 className="font-semibold text-lg" style={{ color: '#1A1A1A' }}>
-                  Unlock Your Full Wellness Potential
-                </h3>
-                <p className="text-sm" style={{ color: '#666' }}>
-                  Get unlimited access to Elya AI, advanced insights, and premium tools for just $12.99/month
-                </p>
-              </div>
-            </div>
-            <button
-              onClick={() => window.open('https://buy.stripe.com/3cIcN5fYa7Ry2bA9i1b7y03', '_blank')}
-              className="px-6 py-2.5 rounded-lg font-semibold text-sm transition-all whitespace-nowrap"
-              style={{
-                background: 'linear-gradient(135deg, rgb(27, 94, 32), rgb(46, 125, 50))',
-                color: '#FFFFFF',
-              }}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.transform = 'scale(1.05)';
-                e.currentTarget.style.boxShadow = '0 4px 12px rgba(27, 94, 32, 0.3)';
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.transform = 'scale(1)';
-                e.currentTarget.style.boxShadow = 'none';
-              }}
-            >
-              Start Free Trial →
-            </button>
-          </div>
-        )}
-        
+
         <div role="tabpanel" id={`${activeTab}-panel`} aria-labelledby={activeTab}>
           {activeTab === 'reflection' && renderReflectionStudio()}
-          {activeTab === 'home' && <PersonalizedHomepage onNavigate={setActiveTab} reflections={savedReflections} />}
+          {activeTab === 'home' && (
+            <PersonalizedHomepage
+              onNavigate={setActiveTab}
+              reflections={savedReflections}
+              onReflectionDeleted={(reflectionId) => {
+                // Update the saved reflections in parent state
+                setSavedReflections(prev => prev.filter(r => r.id !== reflectionId));
+                console.log('Reflection deleted from parent state:', reflectionId);
+              }}
+            />
+          )}
           {activeTab === 'stress' && renderStressReset()}
           {activeTab === 'insights' && renderGrowthInsights()}
         </div>
@@ -6661,8 +6699,8 @@ function App() {
         }
       />
     </Routes>
-    
-    </>
+
+    </SubscriptionGate>
   );
 }
 

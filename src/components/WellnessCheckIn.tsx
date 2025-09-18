@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import {
+import { directInsertReflection } from '../services/directSupabaseApi';
   X,
   Heart,
   Brain,
@@ -287,9 +288,7 @@ const WellnessCheckIn: React.FC<WellnessCheckInProps> = ({ onComplete, onClose }
     }
 
     setShowSummary(true);
-    setTimeout(() => {
-      onComplete(results);
-    }, 3000);
+    onComplete(formData);
   };
 
   const toggleRedFlag = (flag: string) => {

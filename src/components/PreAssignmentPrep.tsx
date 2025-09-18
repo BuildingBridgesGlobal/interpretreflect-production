@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import {
+import { directInsertReflection } from '../services/directSupabaseApi';
   Activity,
   Brain,
   Heart,
@@ -834,9 +835,10 @@ const PreAssignmentPrep: React.FC<PreAssignmentPrepProps> = ({ onComplete, onClo
             </h1>
             <button
               onClick={onClose}
-              className="p-2 rounded-lg hover:bg-gray-100 transition-colors"
+              className="p-2 rounded-lg transition-colors text-white"
+              style={{ background: 'linear-gradient(135deg, rgb(27, 94, 32), rgb(46, 125, 50))' }}
             >
-              <ChevronRight className="h-5 w-5" style={{ color: '#6B7C6B' }} />
+              <ChevronRight className="h-5 w-5" />
             </button>
           </div>
 

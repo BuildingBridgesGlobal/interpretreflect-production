@@ -13,7 +13,8 @@
 
 import React, { useState, useEffect, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { 
+import { directInsertReflection } from '../services/directSupabaseApi';
+import {
   ChevronRight, 
   ChevronLeft, 
   BookOpen, 
@@ -315,7 +316,9 @@ export function PreAssignmentPrepV5({ onClose, onComplete }: PreAssignmentPrepV5
       if (error) throw error;
 
       // Step 2: Trigger Growth Insights/Analytics Update
-      const insightsResult = await updateGrowthInsightsForUser(user.id, answers);
+      const insightsResult = // // await updateGrowthInsightsForUser(user.id, answers); // Skipped - uses hanging Supabase client
+      console.log('Skipping growth insights update (uses hanging Supabase client)'); // Skipped - uses hanging Supabase client
+      console.log('Skipping growth insights update (uses hanging Supabase client)');
       
       if (insightsResult.success) {
         console.log('Growth insights updated successfully');
@@ -341,6 +344,8 @@ export function PreAssignmentPrepV5({ onClose, onComplete }: PreAssignmentPrepV5
       setShowSummary(true);
       
       // Call onComplete if provided
+      setIsSaving(false);
+
       if (onComplete) {
         onComplete({
           ...formData,
@@ -934,10 +939,11 @@ export function PreAssignmentPrepV5({ onClose, onComplete }: PreAssignmentPrepV5
             {onClose && (
               <button
                 onClick={onClose}
-                className="p-2 rounded-lg hover:bg-gray-100 transition-colors"
+                className="p-2 rounded-lg transition-colors text-white"
+                style={{ background: 'linear-gradient(135deg, rgb(27, 94, 32), rgb(46, 125, 50))' }}
                 aria-label="Close"
               >
-                <X className="w-5 h-5" style={{ color: '#6b7280' }} />
+                <X className="w-5 h-5" />
               </button>
             )}
           </div>

@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { X, ChevronRight } from 'lucide-react';
 import { supabase } from '../lib/supabase';
 import { useAuth } from '../contexts/AuthContext';
+import { directInsertReflection } from '../services/directSupabaseApi';
 
 interface BodyCheckInProps {
   onClose: () => void;

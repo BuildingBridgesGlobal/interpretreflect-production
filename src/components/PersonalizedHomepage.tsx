@@ -24,6 +24,7 @@ import {
 } from 'lucide-react';
 import { DailyBurnoutGaugeAccessible } from './DailyBurnoutGaugeAccessible';
 import { getSessionToken } from '../services/directSupabaseApi';
+import { getDisplayName } from '../config/reflectionTypes';
 import { AllReflectionsView } from './AllReflectionsView';
 import { ReflectionDetailView } from './ReflectionDetailView';
 import { ConfirmationModal } from './ConfirmationModal';
@@ -621,36 +622,8 @@ export const PersonalizedHomepage: React.FC<PersonalizedHomepageProps> = ({ onNa
 
 // Helper functions for converting reflection data
 function getReflectionTitle(type: string): string {
-  const titleMap: Record<string, string> = {
-    'wellness_checkin': 'Wellness Check-in',
-    'wellness_check_in': 'Wellness Check-in',
-    'post_assignment': 'Post-Assignment Debrief',
-    'post_assignment_debrief': 'Post-Assignment Debrief',
-    'pre_assignment': 'Pre-Assignment Prep',
-    'pre_assignment_prep': 'Pre-Assignment Preparation',
-    'teaming_prep': 'Teaming Preparation',
-    'teaming_prep_enhanced': 'Team Interpreting Preparation',
-    'teaming_reflection': 'Teaming Reflection',
-    'teaming_reflection_enhanced': 'Team Interpreting Reflection',
-    'mentoring_prep': 'Mentoring Preparation',
-    'mentoring_reflection': 'Mentoring Reflection',
-    'ethics_meaning': 'Ethics & Meaning Check',
-    'in_session_self': 'In-Session Self Check',
-    'in_session_team': 'In-Session Team Sync',
-    'role_space': 'Role Space Reflection',
-    'direct_communication': 'Direct Communication Reflection',
-    'direct_communication_reflection': 'Direct Communication Reflection',
-    'burnout_assessment': 'Burnout Assessment',
-    // Add the exact entry_kind values we're using
-    'insession_selfcheck': 'In-Session Self-Check',
-    'team_sync': 'In-Session Team Sync',
-    'role_space_reflection': 'Role-Space Reflection',
-    'values_alignment': 'Values Alignment Check-In',
-    'compass_check': 'Compass Check',
-    'breathing_practice': 'Breathing Practice',
-    'body_awareness': 'Body Awareness'
-  };
-  return titleMap[type] || 'Reflection';
+  // Use centralized function for consistent naming
+  return getDisplayName(type);
 }
 
 function getReflectionPreview(data: any): string {

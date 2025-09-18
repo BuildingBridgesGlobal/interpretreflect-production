@@ -10,6 +10,7 @@ import {
   ChevronRight
 } from 'lucide-react';
 import { getSessionToken } from '../services/directSupabaseApi';
+import { getDisplayName } from '../config/reflectionTypes';
 
 interface Reflection {
   id: string;
@@ -150,55 +151,8 @@ export const AllReflectionsView: React.FC<AllReflectionsViewProps> = ({
   };
 
   const getReflectionTitle = (kind: string, data?: any) => {
-    if (!kind) {
-      // Try to determine from data if kind is missing
-      if (data?.commitment) return 'Commitment Reflection';
-      if (data?.gratitude) return 'Gratitude Reflection';
-      if (data?.affirmation) return 'Affirmation';
-      return 'Personal Reflection';
-    }
-
-    const titles: Record<string, string> = {
-      // Snake case versions
-      'pre_assignment_prep': 'Pre-Assignment Prep',
-      'post_assignment_debrief': 'Post-Assignment Debrief',
-      'teaming_prep': 'Teaming Prep',
-      'teaming_reflection': 'Teaming Reflection',
-      'mentoring_prep': 'Mentoring Prep',
-      'mentoring_reflection': 'Mentoring Reflection',
-      'wellness_check_in': 'Wellness Check-in',
-      'wellness_checkin': 'Wellness Check-in',
-      'values_alignment': 'Values Alignment Check-In',
-      'insession_selfcheck': 'In-Session Self-Check',
-      'insession_self_check': 'In-Session Self-Check',
-      'team_sync': 'In-Session Team Sync',
-      'insession_team_sync': 'In-Session Team Sync',
-      'role_space_reflection': 'Role-Space Reflection',
-      'direct_communication': 'Supporting Direct Communication',
-      'direct_communication_reflection': 'Supporting Direct Communication',
-      'supporting_direct_communication': 'Supporting Direct Communication',
-      // Exact names as stored
-      'In-Session Self-Check': 'In-Session Self-Check',
-      'In-Session Team Sync': 'In-Session Team Sync',
-      'Values Alignment Check-In': 'Values Alignment Check-In',
-      'Wellness Check-in': 'Wellness Check-in',
-      'Pre-Assignment Prep': 'Pre-Assignment Prep',
-      'Post-Assignment Debrief': 'Post-Assignment Debrief',
-      'Teaming Prep': 'Teaming Prep',
-      'Teaming Reflection': 'Teaming Reflection',
-      'Mentoring Prep': 'Mentoring Prep',
-      'Mentoring Reflection': 'Mentoring Reflection',
-      'Role-Space Reflection': 'Role-Space Reflection',
-      'Supporting Direct Communication': 'Supporting Direct Communication',
-      // Other variations
-      'burnout_assessment': 'Burnout Assessment',
-      'compass_check': 'Values Compass Check',
-      'commitment': 'Commitment Reflection',
-      'gratitude': 'Gratitude Practice',
-      'affirmation': 'Daily Affirmation',
-      'migrated_reflection': 'Imported Reflection'
-    };
-    return titles[kind] || kind.replace(/_/g, ' ').replace(/\b\w/g, c => c.toUpperCase());
+    // Use centralized function for consistent naming
+    return getDisplayName(kind);
   };
 
   const getReflectionPreview = (data: any) => {

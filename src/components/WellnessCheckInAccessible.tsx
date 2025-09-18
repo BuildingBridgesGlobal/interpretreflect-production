@@ -63,6 +63,8 @@ export const WellnessCheckInAccessible: React.FC<WellnessCheckInProps> = ({ onCl
     // Section 1: Current State
     check_in_reason: 'routine',
     current_energy: 5,
+    stressLevel: 5,
+    energyLevel: 5,
     overall_feeling: '',
     
     // Section 2: Emotional Awareness
@@ -402,18 +404,45 @@ OVERALL WELLNESS: ${formData.overall_wellness_rating}/10
                 type="range"
                 min="1"
                 max="10"
-                value={formData.current_energy}
-                onChange={(e) => handleFieldChange('current_energy', parseInt(e.target.value))}
+                value={formData.energyLevel}
+                onChange={(e) => handleFieldChange('energyLevel', parseInt(e.target.value))}
                 className="flex-1"
                 style={{ accentColor: '#6B8B60' }}
               />
-              <span className="text-2xl font-bold px-4 py-2 rounded-lg" 
-                style={{ 
+              <span className="text-2xl font-bold px-4 py-2 rounded-lg"
+                style={{
                   backgroundColor: 'rgba(107, 139, 96, 0.1)',
                   color: '#2D5F3F'
                 }}>
-                {formData.current_energy}
+                {formData.energyLevel}
               </span>
+            </div>
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium mb-2" style={{ color: '#2D5F3F' }}>
+              Rate your current stress level (1-10)
+            </label>
+            <div className="flex items-center space-x-4">
+              <input
+                type="range"
+                min="1"
+                max="10"
+                value={formData.stressLevel}
+                onChange={(e) => handleFieldChange('stressLevel', parseInt(e.target.value))}
+                className="flex-1"
+                style={{ accentColor: '#DC2626' }}
+              />
+              <span className="text-2xl font-bold px-4 py-2 rounded-lg"
+                style={{
+                  backgroundColor: 'rgba(220, 38, 38, 0.1)',
+                  color: '#DC2626'
+                }}>
+                {formData.stressLevel}
+              </span>
+            </div>
+            <div className="mt-1 text-xs text-gray-500">
+              1 = Very relaxed, 10 = Extremely stressed
             </div>
           </div>
 

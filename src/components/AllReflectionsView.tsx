@@ -11,6 +11,7 @@ import {
 } from 'lucide-react';
 import { getSessionToken } from '../services/directSupabaseApi';
 import { getDisplayName } from '../config/reflectionTypes';
+import { ReflectionDetailView } from './ReflectionDetailView';
 
 interface Reflection {
   id: string;
@@ -38,6 +39,7 @@ export const AllReflectionsView: React.FC<AllReflectionsViewProps> = ({
   const [deletingId, setDeletingId] = useState<string | null>(null);
   const [searchTerm, setSearchTerm] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
+  const [selectedReflection, setSelectedReflection] = useState<any>(null);
   const itemsPerPage = 10;
 
   // Load all reflections
@@ -283,8 +285,14 @@ export const AllReflectionsView: React.FC<AllReflectionsViewProps> = ({
                     <div className="flex gap-2 ml-4">
                       <button
                         onClick={() => {
-                          // In a real app, this would open the reflection details
-                          console.log('View reflection:', reflection);
+                          // Format the reflection data to match what ReflectionDetailView expects
+                          const formattedReflection = {
+                            id: reflection.id,
+                            type: reflection.entry_kind || 'personal_reflection',
+                            data: reflection.data,
+                            timestamp: reflection.created_at
+                          };
+                          setSelectedReflection(formattedReflection);
                         }}
                         className="p-2 text-white rounded-lg transition-all shadow-sm hover:shadow-md hover:opacity-90"
                         style={{ background: 'linear-gradient(135deg, #1b5e20, #2e7d32)' }}
@@ -346,6 +354,14 @@ export const AllReflectionsView: React.FC<AllReflectionsViewProps> = ({
           </div>
         )}
       </div>
+
+      {/* Reflection Detail View Modal */}
+      {selectedReflection && (
+        <ReflectionDetailView
+          reflection={selectedReflection}
+          onClose={() => setSelectedReflection(null)}
+        />
+      )}
     </div>
   );
 };

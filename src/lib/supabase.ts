@@ -8,7 +8,54 @@ if (!import.meta.env.VITE_SUPABASE_URL || !import.meta.env.VITE_SUPABASE_ANON_KE
   console.warn('Missing Supabase credentials. Running in demo mode.');
 }
 
-export const supabase = createClient(supabaseUrl, supabaseAnonKey);
+// Create Supabase client with auto-refresh and retry logic
+export const supabase = createClient(supabaseUrl, supabaseAnonKey, {
+  auth: {
+    autoRefreshToken: true,
+    persistSession: true,
+    detectSessionInUrl: true,
+    storage: window.localStorage,
+    storageKey: 'supabase.auth.token',
+    flowType: 'pkce'
+  }
+});
+
+// Helper function to refresh session if needed
+export async function refreshSessionIfNeeded() {
+  try {
+    const { data: { session }, error } = await supabase.auth.getSession();
+
+    if (error) {
+      console.error('Session error:', error);
+      return null;
+    }
+
+    if (!session) {
+      console.log('No active session');
+      return null;
+    }
+
+    // Check if token is about to expire (within 5 minutes)
+    const expiresAt = session.expires_at;
+    if (expiresAt) {
+      const expiresIn = expiresAt * 1000 - Date.now();
+      if (expiresIn < 5 * 60 * 1000) { // Less than 5 minutes
+        console.log('Session expiring soon, refreshing...');
+        const { data: { session: newSession }, error: refreshError } = await supabase.auth.refreshSession();
+        if (refreshError) {
+          console.error('Failed to refresh session:', refreshError);
+          return null;
+        }
+        return newSession;
+      }
+    }
+
+    return session;
+  } catch (error) {
+    console.error('Error checking session:', error);
+    return null;
+  }
+}
 
 
 // Types for our database (you can expand these as needed)

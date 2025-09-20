@@ -31,11 +31,17 @@ export function useOnboarding() {
         .from('profiles')
         .select('onboarding_completed, subscription_status')
         .eq('id', user.id)
-        .single();
+        .maybeSingle();
 
-      if (error) throw error;
+      // Handle null defensively during first load
+      if (error) {
+        console.log('Error fetching profile:', error);
+        // Don't throw - just set defaults
+        setState({ isRequired: false, isVisible: false, loading: false });
+        return;
+      }
 
-      const needsOnboarding = !data?.onboarding_completed;
+      const needsOnboarding = data ? !data.onboarding_completed : false;
       const hasActiveSubscription = data?.subscription_status === 'active';
       
       // Show onboarding for new users with active subscriptions

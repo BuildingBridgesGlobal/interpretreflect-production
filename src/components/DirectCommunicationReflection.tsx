@@ -18,8 +18,8 @@ import {
   Check
 } from 'lucide-react';
 import { ChatBubbleIcon, CommunityIcon, HeartPulseIcon, TargetIcon } from './CustomIcon';
-import { supabase } from '../lib/supabase';
-import { directInsertReflection, getSessionToken } from '../services/directSupabaseApi';
+
+import { reflectionService } from '../services/reflectionService';
 import { useAuth } from '../contexts/AuthContext';
 import { updateGrowthInsightsForUser } from '../services/growthInsightsService';
 
@@ -32,6 +32,7 @@ export const DirectCommunicationReflection: React.FC<DirectCommunicationReflecti
   const { user } = useAuth();
   const [currentSection, setCurrentSection] = useState(0);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [hasSaved, setHasSaved] = useState(false);
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [showSummary, setShowSummary] = useState(false);
   const startTime = Date.now();
@@ -263,6 +264,12 @@ export const DirectCommunicationReflection: React.FC<DirectCommunicationReflecti
       console.error('No user logged in');
       return;
     }
+
+    // Prevent double-submission
+    if (isSubmitting || hasSaved) {
+      console.log('DirectCommunication - Already saving or saved, ignoring duplicate click');
+      return;
+    }
     console.log('DirectCommunication - Starting save for user:', user.id);
 
     setIsSubmitting(true);
@@ -271,36 +278,34 @@ export const DirectCommunicationReflection: React.FC<DirectCommunicationReflecti
     try {
       // Calculate time spent
       const timeSpent = Math.round((Date.now() - startTime) / 1000);
-      console.log('DirectCommunication - Saving to Supabase...');
+      console.log('DirectCommunication - Saving with reflectionService...');
 
-      // Get access token
-      const accessToken = await getSessionToken();
-
-      // Prepare the entry
-      const entry = {
-        user_id: user.id,
-        reflection_id: `direct_comm_${Date.now()}`,
-        entry_kind: 'direct_communication_reflection',
-        data: {
-          ...formData,
-          completed_at: new Date().toISOString(),
-          time_spent_seconds: timeSpent
-        },
-        created_at: new Date().toISOString(),
-        updated_at: new Date().toISOString()
+      // Prepare data to save
+      const dataToSave = {
+        ...formData,
+        completed_at: new Date().toISOString(),
+        time_spent_seconds: timeSpent,
+        // Add fields for getDisplayName fallback
+        communication_scenario: formData.scenario_description || formData.situation || 'Communication reflection completed',
+        direct_communication: formData.conversation_type || formData.communication_style || 'Direct communication',
+        communication_approach: formData.approach || formData.strategy || 'Supporting communication'
       };
 
-      // Use direct API instead of Supabase client
-      const { data, error } = await directInsertReflection(entry, accessToken || undefined);
+      const result = await reflectionService.saveReflection(
+        user.id,
+        'direct_communication_reflection',
+        dataToSave
+      );
 
-      console.log('DirectCommunication - Supabase response:', { data, error });
-
-      if (error) {
-        console.error('DirectCommunication - Supabase error:', error);
-        throw error;
+      if (!result.success) {
+        console.error('DirectCommunication - Error saving:', result.error);
+        throw new Error(result.error || 'Failed to save reflection');
       }
 
-      console.log('DirectCommunication - Save successful:', data);
+      console.log('DirectCommunication - Save successful');
+
+      // Mark as saved to prevent double-submission
+      setHasSaved(true);
 
       // Skip growth insights update - it hangs due to Supabase client
       // Just log for now
@@ -312,7 +317,7 @@ export const DirectCommunicationReflection: React.FC<DirectCommunicationReflecti
       // Complete after delay
       setTimeout(() => {
         if (onComplete) {
-          onComplete(data);
+          onComplete(dataToSave);
         }
         onClose();
       }, 2000);
@@ -508,26 +513,26 @@ export const DirectCommunicationReflection: React.FC<DirectCommunicationReflecti
                 console.log('BUTTON CLICKED - Direct Communication');
                 handleSubmit();
               }}
-              disabled={isSubmitting}
+              disabled={isSubmitting || hasSaved || showSummary}
               className="px-6 py-2 rounded-lg flex items-center transition-all"
               style={{
-                background: isSubmitting 
-                  ? '#CCCCCC' 
+                background: (isSubmitting || hasSaved || showSummary)
+                  ? '#CCCCCC'
                   : 'linear-gradient(135deg, #1b5e20, #2e7d32)',
                 color: '#FFFFFF',
-                boxShadow: isSubmitting 
-                  ? 'none' 
+                boxShadow: (isSubmitting || hasSaved || showSummary)
+                  ? 'none'
                   : '0 2px 8px rgba(107, 139, 96, 0.3)',
-                cursor: isSubmitting ? 'not-allowed' : 'pointer'
+                cursor: (isSubmitting || hasSaved || showSummary) ? 'not-allowed' : 'pointer'
               }}
               onMouseEnter={(e) => {
-                if (!isSubmitting) {
+                if (!isSubmitting && !hasSaved && !showSummary) {
                   e.currentTarget.style.transform = 'translateY(-1px)';
                   e.currentTarget.style.boxShadow = '0 4px 12px rgba(107, 139, 96, 0.4)';
                 }
               }}
               onMouseLeave={(e) => {
-                if (!isSubmitting) {
+                if (!isSubmitting && !hasSaved && !showSummary) {
                   e.currentTarget.style.transform = 'translateY(0)';
                   e.currentTarget.style.boxShadow = '0 2px 8px rgba(107, 139, 96, 0.3)';
                 }

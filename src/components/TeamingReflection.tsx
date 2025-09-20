@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
+import { useAuth } from '../contexts/AuthContext';
+import { reflectionService } from '../services/reflectionService';
 import {
-import { directInsertReflection } from '../services/directSupabaseApi';
   X,
   Users,
   Trophy,
@@ -90,6 +91,7 @@ interface TeamReflectionResults {
 }
 
 const TeamingReflection: React.FC<TeamingReflectionProps> = ({ onComplete, onClose }) => {
+  const { user } = useAuth();
   const [currentStep, setCurrentStep] = useState(1);
   const [nailed, setNailed] = useState('');
   const [smoothestHandoff, setSmoothestHandoff] = useState('');
@@ -141,9 +143,9 @@ const TeamingReflection: React.FC<TeamingReflectionProps> = ({ onComplete, onClo
     }
   };
 
-  const handleComplete = () => {
+  const handleComplete = async () => {
     // Calculate coordination score based on handoffs quality
-    const coordinationScore = 
+    const coordinationScore =
       handoffs === 'seamless' ? 10 :
       handoffs === 'smooth' ? 8 :
       handoffs === 'choppy' ? 5 :
@@ -153,7 +155,7 @@ const TeamingReflection: React.FC<TeamingReflectionProps> = ({ onComplete, onClo
     const loadBalanceEffective = plannedLoad === actualLoad || actualLoad === '50-50';
 
     // Calculate error count from errorsCaught string
-    const errorCount = 
+    const errorCount =
       errorsCaught === 'none' ? 0 :
       errorsCaught === '1-2-minor' ? 2 :
       errorsCaught === '3-5-minor' ? 4 :
@@ -161,14 +163,14 @@ const TeamingReflection: React.FC<TeamingReflectionProps> = ({ onComplete, onClo
       errorsCaught === 'several-major' ? 5 : 0;
 
     // Calculate recovery rate based on recovery success
-    const recoveryRate = 
+    const recoveryRate =
       recoverySuccess === 'smooth' ? 100 :
       recoverySuccess === 'adequate' ? 75 :
       recoverySuccess === 'struggled' ? 40 :
       recoverySuccess === 'failed' ? 0 : 50;
 
     // Calculate trust score based on partner seemed and comfortable items
-    const trustScore = 
+    const trustScore =
       partnerSeemed === 'supportive' ? 10 :
       partnerSeemed === 'professional' ? 8 :
       partnerSeemed === 'critical' ? 5 :
@@ -191,7 +193,7 @@ const TeamingReflection: React.FC<TeamingReflectionProps> = ({ onComplete, onClo
     const improvementGoals = [tryDifferently, prepareBetter, improvedSignal, selfWorkOn, selfPractice].filter(Boolean).length;
 
     // Calculate overall team effectiveness score
-    const teamEffectivenessScore = 
+    const teamEffectivenessScore =
       overallRating === 'exceptional' ? 10 :
       overallRating === 'strong' ? 8 :
       overallRating === 'good' ? 6 :
@@ -261,13 +263,33 @@ const TeamingReflection: React.FC<TeamingReflectionProps> = ({ onComplete, onClo
       patterns: teamPatterns,
       overallRating,
       teamEffectivenessScore,
+      team_effectiveness: teamEffectivenessScore, // Add field for getDisplayName fallback
       stressLevel,
       energyLevel,
       timestamp: new Date(),
     };
 
+    // Save to database using reflectionService
+    if (user?.id) {
+      console.log('TeamingReflection - Saving with reflectionService');
+
+      const result = await reflectionService.saveReflection(
+        user.id,
+        'teaming_reflection',
+        results
+      );
+
+      if (!result.success) {
+        console.error('TeamingReflection - Error saving:', result.error);
+      } else {
+        console.log('TeamingReflection - Saved successfully');
+      }
+    } else {
+      console.error('TeamingReflection - No user found');
+    }
+
     setShowWisdomBank(true);
-    onComplete(formData);
+    onComplete(results);
   };
 
   const toggleComfortable = (item: string) => {

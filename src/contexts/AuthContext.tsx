@@ -58,9 +58,10 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
           return;
         }
         
-        // Session-first approach: check for existing session before calling getUser
+        // Just get current session - don't manually refresh
+        // Supabase client will auto-refresh when needed
         const { data: { session }, error: sessionError } = await supabase.auth.getSession();
-        
+
         if (sessionError) {
           // Only log if it's not an expected error
           if (sessionError.name !== 'AuthSessionMissingError') {
@@ -105,18 +106,27 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     if (!isDevMode) {
       // Listen for changes on auth state (sign in, sign out, etc.)
       const { data: authListener } = supabase.auth.onAuthStateChange(async (event, session) => {
+        console.log('Auth state changed:', event, session?.user?.email);
+
+        // Handle token refresh events
+        if (event === 'TOKEN_REFRESHED' && session) {
+          console.log('Token refreshed successfully');
+          setUser(session.user);
+          return;
+        }
+
         setUser(session?.user ?? null);
         setLoading(false);
-        
+
         if (event === 'SIGNED_IN' && session?.user) {
           sessionManager.startSession();
           const role = session.user.email?.includes('admin') ? 'admin' : 'user';
           RoleManager.setUserRole(session.user.id, role);
           setUserRole(role);
-          
+
           // Load user data from Supabase first
           await UserDataLoader.loadUserData(session.user.id);
-          
+
           // Then trigger data sync to ensure everything is up to date
           dataSyncService.triggerManualSync().then(() => {
             console.log('Initial data sync completed after sign in');
@@ -124,6 +134,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         } else if (event === 'SIGNED_OUT') {
           sessionManager.endSession('LOGOUT');
           setUserRole(SECURITY_CONFIG.rbac.defaultRole);
+        } else if (event === 'USER_UPDATED' && session?.user) {
+          // Handle user updates
+          setUser(session.user);
         }
       });
 

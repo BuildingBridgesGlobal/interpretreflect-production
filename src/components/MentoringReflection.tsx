@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
+import { useAuth } from '../contexts/AuthContext';
+import { reflectionService } from '../services/reflectionService';
 import {
-import { directInsertReflection } from '../services/directSupabaseApi';
   X,
   GraduationCap,
   Lightbulb,
@@ -108,6 +109,7 @@ interface MentoringReflectionResults {
 }
 
 const MentoringReflection: React.FC<MentoringReflectionProps> = ({ onComplete, onClose }) => {
+  const { user } = useAuth();
   const [currentStep, setCurrentStep] = useState(1);
 
   // Step 1: Immediate Capture
@@ -183,7 +185,7 @@ const MentoringReflection: React.FC<MentoringReflectionProps> = ({ onComplete, o
     }
   };
 
-  const handleComplete = () => {
+  const handleComplete = async () => {
     // Calculate insights captured count
     const insightsCaptured = [valuableHeard, surprisingAdvice, challengedThinking, neededValidation].filter(Boolean).length;
 
@@ -362,10 +364,31 @@ const MentoringReflection: React.FC<MentoringReflectionProps> = ({ onComplete, o
       stressLevel,
       energyLevel,
       timestamp: new Date(),
+      // Add field for getDisplayName fallback
+      mentoring_insights: insightsCaptured || learnedSelf || 'Mentoring reflection completed'
     };
 
+    // Save to database using reflectionService
+    if (user?.id) {
+      console.log('MentoringReflection - Saving with reflectionService');
+
+      const saveResult = await reflectionService.saveReflection(
+        user.id,
+        'mentoring_reflection',
+        results
+      );
+
+      if (!saveResult.success) {
+        console.error('MentoringReflection - Error saving:', saveResult.error);
+      } else {
+        console.log('MentoringReflection - Saved successfully');
+      }
+    } else {
+      console.error('MentoringReflection - No user found');
+    }
+
     setShowWisdomBank(true);
-    onComplete(formData);
+    onComplete(results);
   };
 
   const toggleNeedsFor = (need: string) => {

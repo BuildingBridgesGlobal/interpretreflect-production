@@ -75,7 +75,15 @@ export const AllReflectionsView: React.FC<AllReflectionsViewProps> = ({
       }
 
       const data = await response.json();
-      console.log('AllReflectionsView - Fetched reflections:', data);
+      console.log('AllReflectionsView - Fetched reflections count:', data?.length);
+      console.log('AllReflectionsView - Sample reflection:', data?.[0]);
+      // Log teaming prep reflections specifically
+      const teamingPreps = data?.filter((r: any) =>
+        r.entry_kind?.includes('teaming') ||
+        r.data?.team_context ||
+        r.data?.context?.includes?.('team')
+      );
+      console.log('AllReflectionsView - Teaming reflections found:', teamingPreps);
       setReflections(data);
     } catch (error) {
       console.error('Error loading reflections:', error);
@@ -160,9 +168,11 @@ export const AllReflectionsView: React.FC<AllReflectionsViewProps> = ({
   };
 
   const getReflectionTitle = (kind: string, data?: any) => {
-    console.log('AllReflectionsView - getReflectionTitle called with kind:', kind, 'data:', data);
+    console.log('AllReflectionsView - getReflectionTitle called with kind:', kind, 'data keys:', data ? Object.keys(data) : 'no data');
     // Use centralized function for consistent naming - pass data to infer type if needed
-    return getDisplayName(kind, data);
+    const displayName = getDisplayName(kind, data);
+    console.log('AllReflectionsView - getDisplayName returned:', displayName);
+    return displayName;
   };
 
   const getReflectionPreview = (data: any) => {

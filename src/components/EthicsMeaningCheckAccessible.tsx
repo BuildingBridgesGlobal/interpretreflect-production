@@ -18,10 +18,8 @@ import {
   Check
 } from 'lucide-react';
 import { TargetIcon, HeartPulseIcon, NotepadIcon, CommunityIcon, SecureLockIcon } from './CustomIcon';
-import { supabase } from '../lib/supabase';
-import { directInsertReflection, directSelectReflections, getSessionToken } from '../services/directSupabaseApi';
 import { useAuth } from '../contexts/AuthContext';
-import { updateGrowthInsightsForUser } from '../services/growthInsightsService';
+import { reflectionService } from '../services/reflectionService';
 
 interface EthicsMeaningCheckAccessibleProps {
   onClose: () => void;
@@ -35,6 +33,7 @@ export const EthicsMeaningCheckAccessible: React.FC<EthicsMeaningCheckAccessible
   const { user } = useAuth();
   const [currentSection, setCurrentSection] = useState(0);
   const [isSaving, setIsSaving] = useState(false);
+  const [hasSaved, setHasSaved] = useState(false);
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [showSummary, setShowSummary] = useState(false);
   const startTime = Date.now();
@@ -203,8 +202,8 @@ export const EthicsMeaningCheckAccessible: React.FC<EthicsMeaningCheckAccessible
     }
 
     // Prevent double-submission
-    if (isSaving) {
-      console.log('ValuesAlignment - Already saving, ignoring duplicate click');
+    if (isSaving || hasSaved) {
+      console.log('ValuesAlignment - Already saving or saved, ignoring duplicate click');
       return;
     }
 
@@ -213,91 +212,50 @@ export const EthicsMeaningCheckAccessible: React.FC<EthicsMeaningCheckAccessible
 
     setIsSaving(true);
     try {
-      const sessionId = `values_alignment_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
       const timeSpent = Math.floor((Date.now() - startTime) / 1000);
-      console.log('ValuesAlignment - Starting save with sessionId:', sessionId);
+      console.log('ValuesAlignment - Starting save...');
 
-      // Get access token
-      const accessToken = await getSessionToken();
-      console.log('ValuesAlignment - Got access token:', !!accessToken);
-
-      // Test database connection
-      console.log('ValuesAlignment - Testing database connection...');
-      const { data: testData, error: testError } = await directSelectReflections(user.id, accessToken || undefined);
-      console.log('ValuesAlignment - Test query result:', { testData, testError });
-
-      if (testError) {
-        console.error('ValuesAlignment - Cannot read from database:', testError);
-        throw new Error(`Database connection issue: ${testError}`);
-      }
-
-      // Create reflection data for reflection_entries table
-      const reflectionData = {
-        user_id: user.id,
-        reflection_id: sessionId,
-        entry_kind: 'values_alignment',
-        data: {
-          ...formData,
-          timestamp: new Date().toISOString(),
-          time_spent_seconds: timeSpent,
-          sections_completed: 8
-        }
+      // Prepare data with all fields
+      const dataToSave = {
+        ...formData,
+        timestamp: new Date().toISOString(),
+        time_spent_seconds: timeSpent,
+        sections_completed: 8,
+        // Add fields for getDisplayName fallback
+        values_reflection: formData.values_tension || formData.values_alignment || 'Values alignment completed',
+        ethical_considerations: formData.ethical_tensions || formData.impact_alignment || 'Values check completed'
       };
 
-      console.log('ValuesAlignment - Data to save:', reflectionData);
+      console.log('ValuesAlignment - Data to save:', dataToSave);
 
-      try {
-        // Try Supabase client first with timeout
-        console.log('ValuesAlignment - Trying Supabase client insert...');
-        const insertPromise = supabase
-          .from('reflection_entries')
-          .insert([reflectionData])
-          .select();
+      // Use reflectionService to save
+      const result = await reflectionService.saveReflection(
+        user.id,
+        'values_alignment',
+        dataToSave
+      );
 
-        const timeoutPromise = new Promise((_, reject) =>
-          setTimeout(() => reject(new Error('Supabase client timeout')), 5000)
-        );
-
-        const { data: supabaseData, error: supabaseError } = await Promise.race([
-          insertPromise,
-          timeoutPromise
-        ]) as any;
-
-        if (!supabaseError && supabaseData) {
-          console.log('ValuesAlignment - Supabase client insert successful!', supabaseData);
-        } else {
-          throw supabaseError || new Error('No data returned');
-        }
-      } catch (clientError) {
-        console.log('ValuesAlignment - Supabase client failed, trying direct API...');
-
-        // Fall back to direct API
-        const { data, error } = await directInsertReflection(reflectionData, accessToken || undefined);
-        console.log('ValuesAlignment - Direct API response:', { data, error });
-
-        if (error) {
-          console.error('ValuesAlignment - Error saving to database:', error);
-          throw error;
-        }
-
-        console.log('ValuesAlignment - Save successful via direct API!', data);
+      if (!result.success) {
+        throw new Error(result.error || 'Failed to save values alignment check-in');
       }
+
+      console.log('ValuesAlignment - Save successful!', result);
+
+      // Mark as saved to prevent double-submission
+      setHasSaved(true);
 
       // Set saving to false immediately after successful save
       setIsSaving(false);
-
-      // Skip growth insights update - it hangs due to Supabase client
-      console.log('ValuesAlignment - Skipping growth insights update (uses hanging Supabase client)');
 
       // Show summary
       setShowSummary(true);
 
       // Log successful save
-      console.log('Values Alignment Results:', reflectionData.data);
+      console.log('Values Alignment Results:', dataToSave);
 
       // Call onComplete if provided
       if (onComplete) {
-        onComplete(formData);
+        onComplete(dataToSave);
       }
     } catch (error) {
       console.error('ValuesAlignment - Error in handleSubmit:', error);
@@ -1022,26 +980,26 @@ OVERALL RESILIENCE: ${formData.overall_resilience}/10
           ) : (
             <button
               onClick={handleSubmit}
-              disabled={isSaving}
+              disabled={isSaving || hasSaved || showSummary}
               className="px-6 py-2 rounded-lg flex items-center transition-all"
               style={{
-                background: isSaving 
-                  ? '#CCCCCC' 
+                background: (isSaving || hasSaved || showSummary)
+                  ? '#CCCCCC'
                   : 'linear-gradient(135deg, #1b5e20, #2e7d32)',
                 color: '#FFFFFF',
-                boxShadow: isSaving 
-                  ? 'none' 
+                boxShadow: (isSaving || hasSaved || showSummary)
+                  ? 'none'
                   : '0 2px 8px rgba(107, 139, 96, 0.3)',
-                cursor: isSaving ? 'not-allowed' : 'pointer'
+                cursor: (isSaving || hasSaved || showSummary) ? 'not-allowed' : 'pointer'
               }}
               onMouseEnter={(e) => {
-                if (!isSaving) {
+                if (!isSaving && !hasSaved && !showSummary) {
                   e.currentTarget.style.transform = 'translateY(-1px)';
                   e.currentTarget.style.boxShadow = '0 4px 12px rgba(107, 139, 96, 0.4)';
                 }
               }}
               onMouseLeave={(e) => {
-                if (!isSaving) {
+                if (!isSaving && !hasSaved && !showSummary) {
                   e.currentTarget.style.transform = 'translateY(0)';
                   e.currentTarget.style.boxShadow = '0 2px 8px rgba(107, 139, 96, 0.3)';
                 }

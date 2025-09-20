@@ -32,10 +32,16 @@ export const useSubscription = (): SubscriptionStatus => {
         .select('*')
         .eq('user_id', user.id)
         .eq('status', 'active')
-        .single();
+        .order('created_at', { ascending: false })
+        .limit(1)
+        .maybeSingle();
 
-      if (error && error.code !== 'PGRST116') { // PGRST116 = no rows returned
-        console.error('Error checking subscription:', error);
+      if (error) {
+        console.log('Error checking subscription:', error);
+        // Don't throw - just set defaults
+        setHasActiveSubscription(false);
+        setSubscription(null);
+        return;
       }
 
       if (data) {

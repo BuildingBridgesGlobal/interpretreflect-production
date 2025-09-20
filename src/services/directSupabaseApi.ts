@@ -63,12 +63,15 @@ export async function directSelectReflections(userId: string, accessToken?: stri
 export async function getSessionToken(): Promise<string | null> {
   try {
     // Try to get token from localStorage (where Supabase stores it)
-    const storageKey = `sb-${SUPABASE_URL.split('//')[1].split('.')[0]}-auth-token`;
+    const storageKey = 'supabase.auth.token';
     const storedData = localStorage.getItem(storageKey);
 
     if (storedData) {
       const parsed = JSON.parse(storedData);
-      return parsed.access_token || null;
+      // Check multiple possible locations for the token
+      return parsed?.currentSession?.access_token ||
+             parsed?.access_token ||
+             null;
     }
   } catch (error) {
     console.error('Failed to get session token:', error);

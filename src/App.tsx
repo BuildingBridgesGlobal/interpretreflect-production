@@ -7,6 +7,7 @@ import { Header } from './components/layout/Header';
 import { NavigationTabs } from './components/layout/NavigationTabs';
 import { useAuth } from './contexts/AuthContext';
 import { supabase } from './lib/supabase';
+import { growthInsightsApi } from './services/growthInsightsApi';
 import { PrivacyConsent } from './components/PrivacyConsent';
 import { SubscriptionGate } from './components/SubscriptionGate';
 import { SecurityBanner } from './components/SecurityBanner';
@@ -116,6 +117,12 @@ function App() {
   const [bodyPart, setBodyPart] = useState(0); // For body release
   const [bodyAwarenessTime, setBodyAwarenessTime] = useState(60); // Default 1 minute in seconds
   const [bodyAwarenessMethod, setBodyAwarenessMethod] = useState<'move' | 'picture' | 'breathe' | 'touch' | 'still'>('still');
+
+  // Growth Insights state
+  const [growthInsightsSummary, setGrowthInsightsSummary] = useState<any>(null);
+  const [latestInsights, setLatestInsights] = useState<any>(null);
+  const [resetToolkitData, setResetToolkitData] = useState<any>(null);
+  const [insightsLoading, setInsightsLoading] = useState(false);
   const [senseCount, setSenseCount] = useState(0); // For sensory reset
   const [expansionLevel, setExpansionLevel] = useState(0); // For expansion practice
   const intervalRef = useRef<NodeJS.Timeout | null>(null); // Store interval reference
@@ -189,7 +196,34 @@ function App() {
   const [recoveryHabits, setRecoveryHabits] = useState<Record<string, unknown>[]>([]);
   const [burnoutData, setBurnoutData] = useState<BurnoutData[]>([]);
   const [showSummaryView, setShowSummaryView] = useState<ViewMode>('daily');
-  
+
+  // Fetch Growth Insights data when user is authenticated and on insights tab
+  useEffect(() => {
+    const fetchGrowthInsights = async () => {
+      if (!user || activeTab !== 'insights') return;
+
+      setInsightsLoading(true);
+      try {
+        // Fetch all data in parallel
+        const [summary, latest, toolkit] = await Promise.all([
+          growthInsightsApi.getSummary('30d'),
+          growthInsightsApi.getLatestInsights(),
+          growthInsightsApi.getResetToolkitData()
+        ]);
+
+        setGrowthInsightsSummary(summary);
+        setLatestInsights(latest);
+        setResetToolkitData(toolkit);
+      } catch (error) {
+        console.error('Error fetching growth insights:', error);
+      } finally {
+        setInsightsLoading(false);
+      }
+    };
+
+    fetchGrowthInsights();
+  }, [user, activeTab]);
+
   // Helper to check if any modal is open
   const isAnyModalOpen = () => {
     return showBreathingPractice || 
@@ -375,11 +409,50 @@ function App() {
     };
     loadRecoveryHabits();
     
-    // Load body check-in data
-    const loadBodyCheckInData = () => {
-      const storedData = localStorage.getItem('bodyCheckInData');
-      if (storedData) {
-        setBodyCheckInData(JSON.parse(storedData));
+    // Load body check-in data from Supabase
+    const loadBodyCheckInData = async () => {
+      if (user) {
+        try {
+          const { data, error } = await supabase
+            .from('body_checkins')
+            .select('*')
+            .eq('user_id', user.id)
+            .order('created_at', { ascending: false })
+            .limit(100);
+
+          if (error) {
+            console.error('Error loading body check-ins:', error);
+            // Fall back to localStorage
+            const storedData = localStorage.getItem('bodyCheckInData');
+            if (storedData) {
+              setBodyCheckInData(JSON.parse(storedData));
+            }
+          } else if (data) {
+            // Transform Supabase data to match the interface
+            const transformedData = data.map(item => ({
+              tensionLevel: item.tension_level || 5,
+              energyLevel: item.energy_level || 5,
+              overallFeeling: item.overall_feeling || 5,
+              timestamp: item.created_at,
+              notes: item.notes,
+              body_areas: item.body_areas
+            }));
+            setBodyCheckInData(transformedData);
+          }
+        } catch (err) {
+          console.error('Error loading body check-ins:', err);
+          // Fall back to localStorage
+          const storedData = localStorage.getItem('bodyCheckInData');
+          if (storedData) {
+            setBodyCheckInData(JSON.parse(storedData));
+          }
+        }
+      } else {
+        // Not logged in, use localStorage
+        const storedData = localStorage.getItem('bodyCheckInData');
+        if (storedData) {
+          setBodyCheckInData(JSON.parse(storedData));
+        }
       }
     };
     loadBodyCheckInData();
@@ -729,12 +802,12 @@ function App() {
               <h2
                 id="growth-insights-heading"
                 className="text-4xl font-bold mb-2"
-                style={{ color: 'var(--text-primary)', letterSpacing: '-0.5px' }}
+                style={{ color: '#000000', letterSpacing: '-0.5px' }}
               >
                 Growth Insights
               </h2>
-              <p className="text-base" style={{ color: 'var(--text-secondary)' }}>
-                Past Month: {savedReflections.length} total reflections
+              <p className="text-base" style={{ color: '#000000' }}>
+                Past Month: {growthInsightsSummary?.totalReflections || savedReflections.length} total reflections
               </p>
             </div>
 
@@ -838,24 +911,6 @@ function App() {
             >
               Your Stress & Energy Over Time
             </h2>
-            <button
-              className="text-sm font-medium flex items-center px-4 py-2 rounded-lg transition-all focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-sage-600"
-              aria-label="View stress and energy data by assignment"
-              style={{
-                color: '#5C7F4F',
-                backgroundColor: 'rgba(34, 197, 94, 0.1)',
-              }}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.backgroundColor = 'rgba(34, 197, 94, 0.25)';
-                e.currentTarget.style.color = '#2D5F3F';
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.backgroundColor = 'rgba(34, 197, 94, 0.1)';
-                e.currentTarget.style.color = '#5C7F4F';
-              }}
-            >
-              View by assignment →
-            </button>
           </div>
 
           {/* Chart area with mock data visualization */}
@@ -878,8 +933,8 @@ function App() {
             {/* Chart content area */}
             <div className="ml-8 mr-4 h-full flex items-center justify-center relative">
               {(() => {
-                const reflectionsWithStress = savedReflections.filter(r => r.data.stressLevel || r.data.stressLevelBefore || r.data.stressLevelAfter);
-                const reflectionsWithEnergy = savedReflections.filter(r => r.data.energyLevel);
+                const reflectionsWithStress = savedReflections.filter(r => r.data.stress_level || r.data.stressLevel || r.data.stressLevelBefore || r.data.stressLevelAfter);
+                const reflectionsWithEnergy = savedReflections.filter(r => r.data.energy_level || r.data.energyLevel || r.data.physical_energy);
                 
                 if (reflectionsWithStress.length === 0 && reflectionsWithEnergy.length === 0) {
                   return (
@@ -897,12 +952,12 @@ function App() {
                 
                 // Prepare data for the chart
                 const chartData = savedReflections
-                  .filter(r => r.data.stressLevel || r.data.energyLevel)
+                  .filter(r => r.data.stress_level || r.data.stressLevel || r.data.energy_level || r.data.energyLevel || r.data.physical_energy)
                   .sort((a, b) => new Date(a.timestamp).getTime() - new Date(b.timestamp).getTime())
                   .map(r => ({
                     date: new Date(r.timestamp).toLocaleDateString('en-US', { month: 'short', day: 'numeric' }),
-                    stress: r.data.stressLevel || null,
-                    energy: r.data.energyLevel || null
+                    stress: r.data.stress_level || r.data.stressLevel || null,
+                    energy: r.data.energy_level || r.data.energyLevel || r.data.physical_energy || null
                   }));
 
                 return (
@@ -1432,16 +1487,17 @@ function App() {
                 Most Effective
               </div>
               <div className="text-2xl font-bold mb-1" style={{ color: '#0D3A14' }}>
-                {techniqueUsage.length > 0 
-                  ? (() => {
-                      const counts = techniqueUsage.reduce((acc, u) => {
-                        acc[u.technique] = (acc[u.technique] || 0) + 1;
-                        return acc;
-                      }, {} as Record<string, number>);
-                      const mostUsed = Object.entries(counts).sort((a, b) => b[1] - a[1])[0];
-                      return mostUsed ? mostUsed[0].replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase()) : 'None yet';
-                    })()
-                  : 'None yet'}
+                {resetToolkitData?.mostEffective ||
+                  (techniqueUsage.length > 0
+                    ? (() => {
+                        const counts = techniqueUsage.reduce((acc, u) => {
+                          acc[u.technique] = (acc[u.technique] || 0) + 1;
+                          return acc;
+                        }, {} as Record<string, number>);
+                        const mostUsed = Object.entries(counts).sort((a, b) => b[1] - a[1])[0];
+                        return mostUsed ? mostUsed[0].replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase()) : 'None yet';
+                      })()
+                    : 'None yet')}
               </div>
               <div className="text-sm" style={{ color: '#0D3A14' }}>
                 {techniqueUsage.length > 0 ? 'Most used technique' : 'Start using techniques'}
@@ -1468,9 +1524,10 @@ function App() {
                 Overall Completion
               </div>
               <div className="text-2xl font-bold mb-1" style={{ color: '#0D3A14' }}>
-                {techniqueUsage.length > 0 
-                  ? Math.round((techniqueUsage.filter(u => u.completed).length / techniqueUsage.length) * 100) 
-                  : 0}%
+                {resetToolkitData?.completionRate ||
+                  (techniqueUsage.length > 0
+                    ? Math.round((techniqueUsage.filter(u => u.completed).length / techniqueUsage.length) * 100)
+                    : 0)}%
               </div>
               <div className="text-sm" style={{ color: '#4682B4' }}>
                 {techniqueUsage.length > 0 ? 'across all techniques' : 'No stress reset data yet'}
@@ -1524,16 +1581,17 @@ function App() {
                 Try Next
               </div>
               <div className="text-2xl font-bold mb-1" style={{ color: '#0D3A14' }}>
-                {(() => {
-                  const techniques = ['box-breathing', 'body-release', 'temperature-shift', 'sensory-reset', 'expansion-practice', 'tech-fatigue-reset'];
-                  const counts = techniqueUsage.reduce((acc, u) => {
-                    acc[u.technique] = (acc[u.technique] || 0) + 1;
-                    return acc;
-                  }, {} as Record<string, number>);
-                  const leastUsed = techniques.find(t => !counts[t]) || 
-                    techniques.sort((a, b) => (counts[a] || 0) - (counts[b] || 0))[0];
-                  return leastUsed ? leastUsed.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase()) : 'Box Breathing';
-                })()}
+                {resetToolkitData?.tryNext ||
+                  (() => {
+                    const techniques = ['box-breathing', 'body-release', 'temperature-shift', 'sensory-reset', 'expansion-practice', 'tech-fatigue-reset'];
+                    const counts = techniqueUsage.reduce((acc, u) => {
+                      acc[u.technique] = (acc[u.technique] || 0) + 1;
+                      return acc;
+                    }, {} as Record<string, number>);
+                    const leastUsed = techniques.find(t => !counts[t]) ||
+                      techniques.sort((a, b) => (counts[a] || 0) - (counts[b] || 0))[0];
+                    return leastUsed ? leastUsed.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase()) : 'Box Breathing';
+                  })()}
               </div>
               <div className="text-sm" style={{ color: '#D2691E' }}>
                 {techniqueUsage.length > 0 ? 'Try something new' : 'Start here'}
@@ -1713,14 +1771,14 @@ function App() {
               <div className="flex justify-between text-sm mb-3">
                 <span style={{ color: '#525252' }}>Agreements Fidelity</span>
                 <span className="font-bold" style={{ color: '#0D3A14' }}>
-                  88%
+                  {latestInsights?.teamwork?.agreementsFidelity || 88}%
                 </span>
               </div>
               <div className="w-full rounded-full h-2.5" style={{ backgroundColor: '#F0EDE8' }}>
                 <div
                   className="h-2.5 rounded-full"
                   style={{
-                    width: '88%',
+                    width: `${latestInsights?.teamwork?.agreementsFidelity || 88}%`,
                     background: 'linear-gradient(90deg, #6B8B60 0%, #2e7d32 100%)',
                   }}
                 ></div>
@@ -1740,7 +1798,7 @@ function App() {
                   aria-hidden="true"
                   style={{ color: '#F4A460' }}
                 />
-                <span style={{ color: '#3A3A3A' }}>Turn-taking balance</span>
+                <span style={{ color: '#3A3A3A' }}>{latestInsights?.teamwork?.topDriftArea || 'Turn-taking balance'}</span>
               </div>
             </div>
           </section>
@@ -1772,7 +1830,7 @@ function App() {
                 style={{ backgroundColor: 'rgba(255, 182, 193, 0.08)' }}
               >
                 <Heart className="h-4 w-4 mr-2" aria-hidden="true" style={{ color: '#F08080' }} />
-                <span style={{ color: '#3A3A3A' }}>Advocacy for client</span>
+                <span style={{ color: '#3A3A3A' }}>{latestInsights?.values?.topActiveValue || 'Advocacy for client'}</span>
               </div>
             </div>
 
@@ -1785,7 +1843,7 @@ function App() {
                 style={{ backgroundColor: 'rgba(200, 184, 219, 0.08)' }}
               >
                 <Clock className="h-4 w-4 mr-2" aria-hidden="true" style={{ color: '#C8B8DB' }} />
-                <span style={{ color: '#3A3A3A' }}>Role boundaries with family</span>
+                <span style={{ color: '#3A3A3A' }}>{latestInsights?.values?.grayZoneFocus || 'Role boundaries with family'}</span>
               </div>
             </div>
           </section>
@@ -5788,8 +5846,8 @@ function App() {
       {showWellnessCheckIn && (
         <WellnessCheckInAccessible
           onComplete={async (results) => {
-            // Save reflection with consistent entry_kind
-            saveReflection('wellness_checkin', results);
+            // WellnessCheckInAccessible already saves internally, no need to save again
+            // Just close the modal and reload reflections
             setShowWellnessCheckIn(false);
 
             // Reload reflections to show the new one
@@ -5814,8 +5872,7 @@ function App() {
       {showInSessionSelfCheck && (
         <InSessionSelfCheck
           onComplete={(results) => {
-            // Save reflection
-            saveReflection('In-Session Self-Check', results);
+            // InSessionSelfCheck already saves internally, no need to save again
             setShowInSessionSelfCheck(false);
           }}
           onClose={() => setShowInSessionSelfCheck(false)}
@@ -5825,8 +5882,7 @@ function App() {
       {showInSessionTeamSync && (
         <InSessionTeamSync
           onComplete={(results) => {
-            // Save reflection
-            saveReflection('In-Session Team Sync', results);
+            // InSessionTeamSync already saves internally, no need to save again
             setShowInSessionTeamSync(false);
           }}
           onClose={() => setShowInSessionTeamSync(false)}
@@ -5837,8 +5893,7 @@ function App() {
       {showEthicsMeaningCheck && (
         <EthicsMeaningCheckAccessible
           onComplete={(results) => {
-            // Save reflection
-            saveReflection('Values Alignment Check-In', results);
+            // EthicsMeaningCheckAccessible already saves internally, no need to save again
             setShowEthicsMeaningCheck(false);
           }}
           onClose={() => setShowEthicsMeaningCheck(false)}

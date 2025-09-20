@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { directInsertReflection, directSelectReflections, getSessionToken } from '../services/directSupabaseApi';
-import { supabase } from '../lib/supabase';
+import { reflectionService } from '../services/reflectionService';
+
 import { useAuth } from '../contexts/AuthContext';
 import {
   ArrowRight, 
@@ -198,73 +198,31 @@ export const MentoringPrepAccessible: React.FC<MentoringPrepProps> = ({
 
     setIsSaving(true);
     try {
-      const sessionId = `mentoring_prep_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
       const timeSpent = Math.floor((Date.now() - startTime) / 1000);
-      console.log('MentoringPrepAccessible - Starting save with sessionId:', sessionId);
+      console.log('MentoringPrepAccessible - Starting save...');
 
-      // Get access token
-      const accessToken = await getSessionToken();
-      console.log('MentoringPrepAccessible - Got access token:', !!accessToken);
-
-      // Test database connection
-      console.log('MentoringPrepAccessible - Testing database connection...');
-      const { data: testData, error: testError } = await directSelectReflections(user.id, accessToken || undefined);
-      console.log('MentoringPrepAccessible - Test query result:', { testData, testError });
-
-      if (testError) {
-        console.error('MentoringPrepAccessible - Cannot read from database:', testError);
-        throw new Error(`Database connection issue: ${testError}`);
-      }
-
-      // Create reflection data
-      const reflectionData = {
-        user_id: user.id,
-        reflection_id: sessionId,
-        entry_kind: 'mentoring_prep',
-        data: {
-          ...formData,
-          timestamp: new Date().toISOString(),
-          time_spent_seconds: timeSpent
-        }
+      // Prepare data to save
+      const dataToSave = {
+        ...formData,
+        timestamp: new Date().toISOString(),
+        time_spent_seconds: timeSpent,
+        // Add field for getDisplayName fallback
+        mentoring_goals: formData.goals || formData.specific_ask || 'Mentoring preparation completed'
       };
 
-      console.log('MentoringPrepAccessible - Data to save:', reflectionData);
+      console.log('MentoringPrepAccessible - Saving with reflectionService');
 
-      try {
-        // Try Supabase client first
-        console.log('MentoringPrepAccessible - Trying Supabase client insert...');
-        const insertPromise = supabase
-          .from('reflection_entries')
-          .insert([reflectionData])
-          .select();
+      const result = await reflectionService.saveReflection(
+        user.id,
+        'mentoring_prep',
+        dataToSave
+      );
 
-        const timeoutPromise = new Promise((_, reject) =>
-          setTimeout(() => reject(new Error('Supabase client timeout')), 5000)
-        );
-
-        const { data: supabaseData, error: supabaseError } = await Promise.race([
-          insertPromise,
-          timeoutPromise
-        ]) as any;
-
-        if (!supabaseError && supabaseData) {
-          console.log('MentoringPrepAccessible - Supabase client insert successful!', supabaseData);
-        } else {
-          throw supabaseError || new Error('No data returned');
-        }
-      } catch (clientError) {
-        console.log('MentoringPrepAccessible - Supabase client failed, trying direct API...');
-
-        // Fall back to direct API
-        const { data, error } = await directInsertReflection(reflectionData, accessToken || undefined);
-        console.log('MentoringPrepAccessible - Direct API response:', { data, error });
-
-        if (error) {
-          console.error('MentoringPrepAccessible - Error saving to database:', error);
-          throw error;
-        }
-
-        console.log('MentoringPrepAccessible - Save successful via direct API!', data);
+      if (!result.success) {
+        console.error('MentoringPrepAccessible - Error saving:', result.error);
+        throw new Error(result.error || 'Failed to save reflection');
+      } else {
+        console.log('MentoringPrepAccessible - Saved successfully');
       }
 
       // Clear draft
@@ -275,11 +233,11 @@ export const MentoringPrepAccessible: React.FC<MentoringPrepProps> = ({
       setIsSaving(false);
 
       // Log successful save for parent component
-      console.log('Mentoring Prep Results:', reflectionData.data);
+      console.log('Mentoring Prep Results:', dataToSave);
 
       // Close after successful save
       if (onComplete) {
-        onComplete(reflectionData.data);
+        onComplete(dataToSave);
       }
       setTimeout(() => {
         onClose();

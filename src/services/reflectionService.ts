@@ -1,5 +1,6 @@
 import { supabase } from '../lib/supabase';
 import { getSessionToken } from './directSupabaseApi';
+import { saveWellnessMetrics } from './wellnessMetricsService';
 
 /**
  * Service for managing all reflection-related data operations
@@ -45,52 +46,121 @@ class ReflectionService {
     data: Record<string, any>
   ): Promise<{ success: boolean; error?: string; id?: string }> {
     try {
-      console.log('ReflectionService - saveReflection called:', { userId, entryKind, data });
-      
+      console.log('ReflectionService - saveReflection called with entryKind:', entryKind);
+      console.log('ReflectionService - Data keys being saved:', Object.keys(data).slice(0, 10));
+
       if (!userId) {
         throw new Error('User ID is required for saving reflections');
       }
 
-      const entry: ReflectionEntry = {
+      const entry = {
         user_id: userId,
         entry_kind: entryKind,
-        data: data,
-        created_at: new Date().toISOString(),
-        updated_at: new Date().toISOString()
+        data: data
       };
 
       console.log('ReflectionService - Attempting to insert:', entry);
 
-      const { data: savedEntry, error } = await supabase
-        .from('reflection_entries')
-        .insert([entry])
-        .select()
-        .single();
+      // Use direct REST API since Supabase client is hanging
+      try {
+        const SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL;
+        const SUPABASE_ANON_KEY = import.meta.env.VITE_SUPABASE_ANON_KEY;
 
-      if (error) {
-        console.error('ReflectionService - Error saving reflection:', error);
-        // If table doesn't exist, provide helpful error
-        if (error.code === '42P01') {
-          return { 
-            success: false, 
-            error: 'Database tables not set up. Please run the SQL migrations first.' 
-          };
+        console.log('ReflectionService - Supabase URL:', SUPABASE_URL);
+        console.log('ReflectionService - Has Anon Key:', !!SUPABASE_ANON_KEY);
+
+        // Try to get token from localStorage since Supabase client is broken
+        console.log('ReflectionService - Getting session from localStorage...');
+        let accessToken: string | null = null;
+
+        try {
+          // Look for the Supabase auth token in localStorage
+          const storageKey = 'supabase.auth.token';
+          const storedData = localStorage.getItem(storageKey);
+
+          if (storedData) {
+            const parsed = JSON.parse(storedData);
+            accessToken = parsed?.currentSession?.access_token || parsed?.access_token || null;
+            console.log('ReflectionService - Found token in localStorage');
+          } else {
+            console.log('ReflectionService - No stored session found');
+          }
+        } catch (e) {
+          console.log('ReflectionService - Error reading localStorage:', e);
         }
-        return { success: false, error: error.message };
+
+        console.log('ReflectionService - Using direct API, token available:', !!accessToken);
+
+        const url = `${SUPABASE_URL}/rest/v1/reflection_entries`;
+        console.log('ReflectionService - Full URL:', url);
+        console.log('ReflectionService - Payload:', JSON.stringify(entry));
+
+        console.log('ReflectionService - Starting fetch...');
+        const fetchPromise = fetch(url, {
+          method: 'POST',
+          headers: {
+            'apikey': SUPABASE_ANON_KEY,
+            'Authorization': `Bearer ${accessToken || SUPABASE_ANON_KEY}`,
+            'Content-Type': 'application/json',
+            'Prefer': 'return=minimal' // Don't wait for response data
+          },
+          body: JSON.stringify(entry)
+        });
+
+        // Add timeout to fetch
+        const timeoutPromise = new Promise((_, reject) => {
+          setTimeout(() => reject(new Error('Fetch timed out after 5 seconds')), 5000);
+        });
+
+        console.log('ReflectionService - Waiting for response...');
+        const response = await Promise.race([fetchPromise, timeoutPromise]) as Response;
+
+        console.log('ReflectionService - API response status:', response.status);
+
+        if (!response.ok) {
+          const errorText = await response.text();
+          console.error('ReflectionService - API error:', errorText);
+
+          if (errorText.includes('JWT') || response.status === 401) {
+            return { success: false, error: 'Session expired. Please refresh the page and try again.' };
+          }
+
+          return { success: false, error: errorText };
+        }
+
+        console.log('ReflectionService - Direct API insert successful');
+      } catch (error) {
+        console.error('ReflectionService - Direct API error:', error);
+        return {
+          success: false,
+          error: error instanceof Error ? error.message : 'Failed to save reflection'
+        };
       }
 
-      console.log('ReflectionService - Saved successfully:', savedEntry);
+      console.log('ReflectionService - Saved successfully (no data returned with minimal mode)');
 
-      // Also update daily activity to track streaks
-      await this.updateDailyActivity(userId);
+      // Save wellness metrics and daily activity in background (non-blocking)
+      // These use the broken Supabase client so we don't await them
+      Promise.all([
+        saveWellnessMetrics(userId, entryKind, data).catch(err =>
+          console.log('Wellness metrics save failed (non-critical):', err)
+        ),
+        this.updateDailyActivity(userId).catch(err =>
+          console.log('Daily activity update failed (non-critical):', err)
+        )
+      ]).then(() => {
+        console.log('Background updates completed');
+      }).catch(() => {
+        console.log('Background updates failed (non-critical)');
+      });
 
       console.log(`ReflectionService - Reflection saved successfully for user ${userId}:`, entryKind);
-      return { success: true, id: savedEntry.id };
+      return { success: true }; // No ID returned with minimal mode
     } catch (error) {
       console.error('Error in saveReflection:', error);
-      return { 
-        success: false, 
-        error: error instanceof Error ? error.message : 'Failed to save reflection' 
+      return {
+        success: false,
+        error: error instanceof Error ? error.message : 'Failed to save reflection'
       };
     }
   }
@@ -136,6 +206,15 @@ class ReflectionService {
           };
         }
         return { success: false, error: error.message };
+      }
+
+      // Save wellness metrics if we have stress data
+      if (data.stressLevelAfter !== undefined || data.stressLevelBefore !== undefined) {
+        await saveWellnessMetrics(userId, 'stress_reset', {
+          stressLevel: data.stressLevelAfter ?? data.stressLevelBefore,
+          stressLevelBefore: data.stressLevelBefore,
+          stressLevelAfter: data.stressLevelAfter
+        });
       }
 
       // Update daily activity
@@ -208,10 +287,21 @@ class ReflectionService {
     try {
       console.log('ReflectionService - getUserReflections called for user:', userId);
 
-      // Use direct API instead of Supabase client
-      const accessToken = await getSessionToken();
       const SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL;
       const SUPABASE_ANON_KEY = import.meta.env.VITE_SUPABASE_ANON_KEY;
+
+      // Get token from localStorage since Supabase client is broken
+      let accessToken: string | null = null;
+      try {
+        const storageKey = 'supabase.auth.token';
+        const storedData = localStorage.getItem(storageKey);
+        if (storedData) {
+          const parsed = JSON.parse(storedData);
+          accessToken = parsed?.currentSession?.access_token || parsed?.access_token || null;
+        }
+      } catch (e) {
+        console.log('ReflectionService - Could not get token from localStorage');
+      }
 
       let url = `${SUPABASE_URL}/rest/v1/reflection_entries?user_id=eq.${userId}&order=created_at.desc`;
       if (limit) {
@@ -232,6 +322,14 @@ class ReflectionService {
 
       if (!response.ok) {
         const error = await response.text();
+
+        // Check if it's a JWT error
+        if (error.includes('JWT') || error.includes('PGRST303')) {
+          console.log('ReflectionService - JWT expired, clearing session and returning empty');
+          // Don't throw error on initial load - just return empty
+          return [];
+        }
+
         console.error('ReflectionService - Error fetching reflections:', error);
         return [];
       }

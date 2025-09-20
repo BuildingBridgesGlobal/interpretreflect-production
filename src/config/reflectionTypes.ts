@@ -58,7 +58,7 @@ export const REFLECTION_TYPES: Record<string, ReflectionType> = {
     shortName: 'Self-Check'
   },
   IN_SESSION_TEAM: {
-    entryKind: 'insession_team_sync',
+    entryKind: 'team_sync',
     displayName: 'In-Session Team Sync',
     shortName: 'Team Sync'
   },
@@ -107,10 +107,12 @@ export function getAllEntryKinds(): string[] {
 
 // Helper function to get display name from entry kind or data
 export function getDisplayName(entryKind: string | null | undefined, data?: any): string {
-  console.log('getDisplayName called with:', entryKind, 'data:', data); // Debug log
+  console.log('getDisplayName called with entryKind:', entryKind);
+  console.log('getDisplayName data keys:', data ? Object.keys(data).slice(0, 10) : 'no data');
 
   // If no entry_kind, try to infer from data
   if (!entryKind && data) {
+    console.log('No entryKind, checking data fields for type inference...');
     // Check for Post-Assignment Debrief (has duration, nextSteps, boundaries)
     if (data.duration && data.nextSteps && data.boundaries) {
       return 'Post-Assignment Debrief';
@@ -152,13 +154,29 @@ export function getDisplayName(entryKind: string | null | undefined, data?: any)
       return 'Values Alignment Check-In';
     }
 
+    // Check for In-Session checks
+    if (data.self_check || data.energy_check || data.focus_check) {
+      return 'In-Session Self-Check';
+    }
+    if (data.team_sync || data.sync_status || data.team_alignment) {
+      return 'In-Session Team Sync';
+    }
+
+    // Check for Direct Communication
+    if (data.communication_scenario || data.direct_communication || data.communication_approach) {
+      return 'Supporting Direct Communication';
+    }
+
     // Check for simple reflections
     if (data.commitment) return 'Commitment Reflection';
     if (data.gratitude) return 'Gratitude Practice';
     if (data.affirmation) return 'Daily Affirmation';
   }
 
-  if (!entryKind) return 'Personal Reflection';
+  if (!entryKind) {
+    console.log('No entryKind at all, returning Personal Reflection');
+    return 'Personal Reflection';
+  }
 
   // Find the reflection type with matching entryKind
   const reflectionType = Object.values(REFLECTION_TYPES).find(
@@ -166,8 +184,11 @@ export function getDisplayName(entryKind: string | null | undefined, data?: any)
   );
 
   if (reflectionType) {
+    console.log('Found matching reflectionType:', reflectionType.displayName);
     return reflectionType.displayName;
   }
+
+  console.log('No matching reflectionType found for entryKind:', entryKind);
 
   // Handle legacy or alternate formats
   const legacyMappings: Record<string, string> = {
@@ -176,8 +197,16 @@ export function getDisplayName(entryKind: string | null | undefined, data?: any)
     'role_space': 'Role-Space Reflection',
     'in_session_self': 'In-Session Self-Check',
     'in_session_team': 'In-Session Team Sync',
+    'team_sync': 'In-Session Team Sync',
+    'insession_selfcheck': 'In-Session Self-Check',
+    'insession_team_sync': 'In-Session Team Sync',
     'direct_communication': 'Supporting Direct Communication',
     'values_compass': 'Values Compass Check',
+    'values_alignment_checkin': 'Values Alignment Check-In',
+    'teaming_prep_enhanced': 'Teaming Prep',
+    'teaming_reflection_enhanced': 'Teaming Reflection',
+    'mentoring_prep_enhanced': 'Mentoring Prep',
+    'mentoring_reflection_enhanced': 'Mentoring Reflection',
 
     // Handle variations with different cases
     'In-Session Self-Check': 'In-Session Self-Check',

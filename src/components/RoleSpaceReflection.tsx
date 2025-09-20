@@ -18,9 +18,8 @@ import {
   Check
 } from 'lucide-react';
 import { SecureLockIcon, HeartPulseIcon, NotepadIcon, CommunityIcon, TargetIcon } from './CustomIcon';
-import { supabase } from '../lib/supabase';
-import { directInsertReflection, directSelectReflections, getSessionToken } from '../services/directSupabaseApi';
 import { useAuth } from '../contexts/AuthContext';
+import { reflectionService } from '../services/reflectionService';
 import { updateGrowthInsightsForUser } from '../services/growthInsightsService';
 
 interface RoleSpaceReflectionProps {
@@ -32,6 +31,7 @@ export const RoleSpaceReflection: React.FC<RoleSpaceReflectionProps> = ({ onClos
   const { user } = useAuth();
   const [currentSection, setCurrentSection] = useState(0);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [hasSaved, setHasSaved] = useState(false);
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [showSummary, setShowSummary] = useState(false);
   const startTime = Date.now();
@@ -309,8 +309,8 @@ export const RoleSpaceReflection: React.FC<RoleSpaceReflectionProps> = ({ onClos
     }
 
     // Prevent double-submission
-    if (isSubmitting) {
-      console.log('RoleSpaceReflection - Already saving, ignoring duplicate click');
+    if (isSubmitting || hasSaved) {
+      console.log('RoleSpaceReflection - Already saving or saved, ignoring duplicate click');
       return;
     }
 
@@ -323,93 +323,43 @@ export const RoleSpaceReflection: React.FC<RoleSpaceReflectionProps> = ({ onClos
     try {
       // Calculate time spent
       const timeSpent = Math.round((Date.now() - startTime) / 1000);
-      const sessionId = `role_space_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
 
-      console.log('RoleSpaceReflection - Starting save with sessionId:', sessionId);
+      console.log('RoleSpaceReflection - Starting save...');
 
-      // Get access token
-      const accessToken = await getSessionToken();
-      console.log('RoleSpaceReflection - Got access token:', !!accessToken);
-
-      // Test database connection
-      console.log('RoleSpaceReflection - Testing database connection...');
-      const { data: testData, error: testError } = await directSelectReflections(user.id, accessToken || undefined);
-      console.log('RoleSpaceReflection - Test query result:', { testData, testError });
-
-      if (testError) {
-        console.error('RoleSpaceReflection - Cannot read from database:', testError);
-        throw new Error(`Database connection issue: ${testError}`);
-      }
-
-      // Prepare the entry matching Pre-Assignment Prep format
-      const reflectionData = {
-        user_id: user.id,
-        reflection_id: sessionId,
-        entry_kind: 'role_space_reflection',
-        data: {
-          ...formData,
-          completed_at: new Date().toISOString(),
-          time_spent_seconds: timeSpent
-        }
+      // Prepare data to save
+      const dataToSave = {
+        ...formData,
+        completed_at: new Date().toISOString(),
+        time_spent_seconds: timeSpent,
+        // Add field for getDisplayName fallback (matches what's checked in reflectionTypes.ts)
+        role_space: formData.current_role || formData.role_clarity || 'Role-space reflection completed'
       };
 
-      console.log('RoleSpaceReflection - Data to save:', reflectionData);
+      console.log('RoleSpaceReflection - Saving with reflectionService');
 
-      // Try using Supabase client first with timeout
-      try {
-        const insertPromise = supabase
-          .from('reflection_entries')
-          .insert([reflectionData])
-          .select();
+      const result = await reflectionService.saveReflection(
+        user.id,
+        'role_space_reflection',
+        dataToSave
+      );
 
-        const timeoutPromise = new Promise((_, reject) =>
-          setTimeout(() => reject(new Error('Supabase client timeout')), 5000)
-        );
+      if (!result.success) {
+        console.error('RoleSpaceReflection - Error saving:', result.error);
+        throw new Error(result.error || 'Failed to save reflection');
+      } else {
+        console.log('RoleSpaceReflection - Saved successfully');
 
-        const { data: supabaseData, error: supabaseError } = await Promise.race([
-          insertPromise,
-          timeoutPromise
-        ]) as any;
-
-        if (!supabaseError && supabaseData) {
-          console.log('RoleSpaceReflection - Supabase client insert successful!', supabaseData);
-          const data = supabaseData[0];
-
-          // Show summary
-          setShowSummary(true);
-          console.log('Role-Space Reflection Results:', reflectionData.data);
-
-          // Complete after delay
-          setTimeout(() => {
-            if (onComplete) {
-              onComplete(reflectionData.data);
-            }
-            onClose();
-          }, 2000);
-        } else {
-          throw supabaseError || new Error('No data returned');
-        }
-      } catch (clientError) {
-        console.log('RoleSpaceReflection - Supabase client failed, trying direct API...');
-
-        // Fall back to direct API
-        const { data, error } = await directInsertReflection(reflectionData, accessToken || undefined);
-        console.log('RoleSpaceReflection - Direct API response:', { data, error });
-
-        if (error) {
-          console.error('RoleSpaceReflection - Error saving to database:', error);
-          throw error;
-        }
-
-        console.log('RoleSpaceReflection - Save successful via direct API!', data);
+        // Mark as saved to prevent double-submission
+        setHasSaved(true);
 
         // Show summary
         setShowSummary(true);
+        console.log('Role-Space Reflection Results:', dataToSave);
 
         // Complete after delay
         setTimeout(() => {
           if (onComplete) {
-            onComplete(data);
+            onComplete(dataToSave);
           }
           onClose();
         }, 2000);
@@ -664,26 +614,26 @@ export const RoleSpaceReflection: React.FC<RoleSpaceReflectionProps> = ({ onClos
           ) : (
             <button
               onClick={handleSubmit}
-              disabled={isSubmitting}
+              disabled={isSubmitting || hasSaved || showSummary}
               className="px-6 py-2 rounded-lg flex items-center transition-all"
               style={{
-                background: isSubmitting 
-                  ? '#CCCCCC' 
+                background: (isSubmitting || hasSaved || showSummary)
+                  ? '#CCCCCC'
                   : 'linear-gradient(135deg, #1b5e20, #2e7d32)',
                 color: '#FFFFFF',
-                boxShadow: isSubmitting 
-                  ? 'none' 
+                boxShadow: (isSubmitting || hasSaved || showSummary)
+                  ? 'none'
                   : '0 2px 8px rgba(107, 139, 96, 0.3)',
-                cursor: isSubmitting ? 'not-allowed' : 'pointer'
+                cursor: (isSubmitting || hasSaved || showSummary) ? 'not-allowed' : 'pointer'
               }}
               onMouseEnter={(e) => {
-                if (!isSubmitting) {
+                if (!isSubmitting && !hasSaved && !showSummary) {
                   e.currentTarget.style.transform = 'translateY(-1px)';
                   e.currentTarget.style.boxShadow = '0 4px 12px rgba(107, 139, 96, 0.4)';
                 }
               }}
               onMouseLeave={(e) => {
-                if (!isSubmitting) {
+                if (!isSubmitting && !hasSaved && !showSummary) {
                   e.currentTarget.style.transform = 'translateY(0)';
                   e.currentTarget.style.boxShadow = '0 2px 8px rgba(107, 139, 96, 0.3)';
                 }

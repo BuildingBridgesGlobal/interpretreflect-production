@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
+import { useAuth } from '../contexts/AuthContext';
+import { reflectionService } from '../services/reflectionService';
 import {
-import { directInsertReflection } from '../services/directSupabaseApi';
   X,
   Users,
   AlertCircle,
@@ -50,6 +51,7 @@ interface TeamPrepResults {
 }
 
 const TeamingPrep: React.FC<TeamingPrepProps> = ({ onComplete, onClose }) => {
+  const { user } = useAuth();
   const [currentStep, setCurrentStep] = useState(1);
   const [partnerType, setPartnerType] = useState('');
   const [stressLevel] = useState(5);
@@ -85,10 +87,11 @@ const TeamingPrep: React.FC<TeamingPrepProps> = ({ onComplete, onClose }) => {
     }
   };
 
-  const handleComplete = () => {
+  const handleComplete = async () => {
     const results: TeamPrepResults = {
       partnerType,
       context,
+      team_context: context, // Add field for getDisplayName fallback
       leadAssignments: {
         technical: leadTechnical,
         numbers: leadNumbers,
@@ -116,6 +119,25 @@ const TeamingPrep: React.FC<TeamingPrepProps> = ({ onComplete, onClose }) => {
       energyLevel,
       timestamp: new Date(),
     };
+
+    // Save to database using reflectionService
+    if (user?.id) {
+      console.log('TeamingPrep - Saving with reflectionService');
+
+      const result = await reflectionService.saveReflection(
+        user.id,
+        'teaming_prep',
+        results
+      );
+
+      if (!result.success) {
+        console.error('TeamingPrep - Error saving:', result.error);
+      } else {
+        console.log('TeamingPrep - Saved successfully');
+      }
+    } else {
+      console.error('TeamingPrep - No user found');
+    }
 
     setShowQuickReference(true);
     setTimeout(() => {

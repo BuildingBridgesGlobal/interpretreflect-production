@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
 import {
-import { directInsertReflection } from '../services/directSupabaseApi';
   X, Users, ChevronRight, ChevronLeft, Save, Target, HelpCircle,
   Heart, Shield, Zap, CheckCircle, Copy, MessageSquare
 } from 'lucide-react';
 import { supabase, MentoringPrepData, ReflectionEntry } from '../lib/supabase';
 import { useAuth } from '../contexts/AuthContext';
+import { reflectionService } from '../services/reflectionService';
 
 interface MentoringPrepEnhancedProps {
   onComplete?: (data: MentoringPrepData) => void;
@@ -19,6 +19,7 @@ export const MentoringPrepEnhanced: React.FC<MentoringPrepEnhancedProps> = ({
   const { user } = useAuth();
   const [currentSection, setCurrentSection] = useState(0);
   const [isSaving, setIsSaving] = useState(false);
+  const [hasSaved, setHasSaved] = useState(false);
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [showSummary, setShowSummary] = useState(false);
   const [summaryText, setSummaryText] = useState('');
@@ -233,11 +234,12 @@ Generated: ${new Date().toLocaleString()}`;
 
   const handleSave = async () => {
     if (!validateSection(currentSection)) return;
-    
+    if (hasSaved) return; // Prevent double-save
+
     setIsSaving(true);
     const endTime = Date.now();
     const duration = Math.round((endTime - startTime) / 1000);
-    
+
     try {
       if (!user) {
         throw new Error('User not authenticated');
@@ -245,22 +247,23 @@ Generated: ${new Date().toLocaleString()}`;
 
       const finalData = {
         ...formData,
-        completion_time: duration
+        completion_time: duration,
+        // Add field for getDisplayName fallback
+        mentoring_goals: formData.goals || formData.primary_goal || 'Mentoring preparation completed'
       };
 
-      const entry: ReflectionEntry = {
-        user_id: user.id,
-        reflection_id: `mentoring_prep_${Date.now()}`,
-        entry_kind: 'mentoring_prep',
-        data: finalData,
-        created_at: new Date().toISOString()
-      };
+      console.log('MentoringPrepEnhanced - Saving with reflectionService');
+      const result = await reflectionService.saveReflection(
+        user.id,
+        'mentoring_prep',
+        finalData
+      );
 
-      const { error } = await supabase
-        .from('reflection_entries')
-        .insert([entry]);
+      if (!result.success) {
+        throw new Error(result.error || 'Failed to save mentoring prep');
+      }
 
-      if (error) throw error;
+      setHasSaved(true);
 
       // Generate summary for user
       generateSummary();
@@ -1109,7 +1112,7 @@ Generated: ${new Date().toLocaleString()}`;
             ) : (
               <button
                 onClick={handleSave}
-                disabled={isSaving}
+                disabled={isSaving || hasSaved}
                 className="px-6 py-2 rounded-lg flex items-center transition-all"
                 style={{
                   background: isSaving 

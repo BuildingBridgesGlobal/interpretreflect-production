@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
+import { useAuth } from '../contexts/AuthContext';
+import { reflectionService } from '../services/reflectionService';
 import {
-import { directInsertReflection } from '../services/directSupabaseApi';
   Activity,
   Wind,
   Heart,
@@ -43,6 +44,7 @@ interface DebriefResults {
 }
 
 const PostAssignmentDebrief: React.FC<PostAssignmentDebriefProps> = ({ onComplete, onClose }) => {
+  const { user } = useAuth();
   const [currentStep, setCurrentStep] = useState(0);
   const [shakeTimer, setShakeTimer] = useState(20);
   const [isShaking, setIsShaking] = useState(false);
@@ -173,26 +175,24 @@ const PostAssignmentDebrief: React.FC<PostAssignmentDebriefProps> = ({ onComplet
       timestamp: new Date(),
     };
 
-    // Save to database
+    // Save to database using reflectionService
     try {
-      const user = JSON.parse(localStorage.getItem('session') || '{}').user;
-      const accessToken = JSON.parse(localStorage.getItem('session') || '{}').access_token;
-
       if (user?.id) {
-        const reflectionData = {
-          user_id: user.id,
-          entry_kind: 'post_assignment_debrief',
-          data: results,
-          reflection_id: crypto.randomUUID()
-        };
+        console.log('PostAssignmentDebrief - Saving with reflectionService');
 
-        const { data, error } = await directInsertReflection(reflectionData, accessToken);
+        const result = await reflectionService.saveReflection(
+          user.id,
+          'post_assignment_debrief',
+          results
+        );
 
-        if (error) {
-          console.error('PostAssignmentDebrief - Error saving:', error);
+        if (!result.success) {
+          console.error('PostAssignmentDebrief - Error saving:', result.error);
         } else {
-          console.log('PostAssignmentDebrief - Saved successfully:', data);
+          console.log('PostAssignmentDebrief - Saved successfully');
         }
+      } else {
+        console.error('PostAssignmentDebrief - No user found');
       }
     } catch (error) {
       console.error('PostAssignmentDebrief - Error saving to database:', error);

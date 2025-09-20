@@ -22,9 +22,8 @@ import {
   Sparkles
 } from 'lucide-react';
 import { HeartPulseIcon, NotepadIcon, SecureLockIcon, CommunityIcon, TargetIcon } from './CustomIcon';
-import { supabase } from '../lib/supabase';
-import { directInsertReflection, directSelectReflections, getSessionToken } from '../services/directSupabaseApi';
 import { useAuth } from '../contexts/AuthContext';
+import { reflectionService } from '../services/reflectionService';
 import { updateGrowthInsightsForUser } from '../services/growthInsightsService';
 
 interface InSessionSelfCheckProps {
@@ -40,6 +39,7 @@ export const InSessionSelfCheck: React.FC<InSessionSelfCheckProps> = ({ onClose,
   const { user } = useAuth();
   const [currentSection, setCurrentSection] = useState(0);
   const [isSaving, setIsSaving] = useState(false);
+  const [hasSaved, setHasSaved] = useState(false);
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [showSummary, setShowSummary] = useState(false);
   const startTime = Date.now();
@@ -160,8 +160,8 @@ export const InSessionSelfCheck: React.FC<InSessionSelfCheckProps> = ({ onClose,
     }
 
     // Prevent double-submission
-    if (isSaving) {
-      console.log('InSessionSelfCheck - Already saving, ignoring duplicate click');
+    if (isSaving || hasSaved) {
+      console.log('InSessionSelfCheck - Already saving or saved, ignoring duplicate click');
       return;
     }
 
@@ -170,75 +170,38 @@ export const InSessionSelfCheck: React.FC<InSessionSelfCheckProps> = ({ onClose,
 
     setIsSaving(true);
     try {
-      const sessionId = `insession_selfcheck_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
       const timeSpent = Math.floor((Date.now() - startTime) / 1000);
-      console.log('InSessionSelfCheck - Starting save with sessionId:', sessionId);
+      console.log('InSessionSelfCheck - Starting save...');
 
-      // Get access token
-      const accessToken = await getSessionToken();
-      console.log('InSessionSelfCheck - Got access token:', !!accessToken);
-
-      // Test database connection
-      console.log('InSessionSelfCheck - Testing database connection...');
-      const { data: testData, error: testError } = await directSelectReflections(user.id, accessToken || undefined);
-      console.log('InSessionSelfCheck - Test query result:', { testData, testError });
-
-      if (testError) {
-        console.error('InSessionSelfCheck - Cannot read from database:', testError);
-        throw new Error(`Database connection issue: ${testError}`);
-      }
-
-      // Create reflection data for reflection_entries table
-      const reflectionData = {
-        user_id: user.id,
-        reflection_id: sessionId,
-        entry_kind: 'insession_selfcheck',
-        data: {
-          ...formData,
-          timestamp: new Date().toISOString(),
-          time_spent_seconds: timeSpent,
-          sections_completed: 10
-        }
+      // Prepare data to save
+      const dataToSave = {
+        ...formData,
+        timestamp: new Date().toISOString(),
+        time_spent_seconds: timeSpent,
+        sections_completed: 10,
+        // Add fields for getDisplayName fallback
+        self_check: formData.current_state || formData.physical_check || 'Self-check completed',
+        energy_check: formData.energy_level || formData.energy_assessment,
+        focus_check: formData.focus_level || formData.attention_state
       };
 
-      console.log('InSessionSelfCheck - Data to save:', reflectionData);
+      console.log('InSessionSelfCheck - Saving with reflectionService');
 
-      try {
-        // Try Supabase client first with timeout
-        console.log('InSessionSelfCheck - Trying Supabase client insert...');
-        const insertPromise = supabase
-          .from('reflection_entries')
-          .insert([reflectionData])
-          .select();
+      const result = await reflectionService.saveReflection(
+        user.id,
+        'insession_selfcheck',
+        dataToSave
+      );
 
-        const timeoutPromise = new Promise((_, reject) =>
-          setTimeout(() => reject(new Error('Supabase client timeout')), 5000)
-        );
-
-        const { data: supabaseData, error: supabaseError } = await Promise.race([
-          insertPromise,
-          timeoutPromise
-        ]) as any;
-
-        if (!supabaseError && supabaseData) {
-          console.log('InSessionSelfCheck - Supabase client insert successful!', supabaseData);
-        } else {
-          throw supabaseError || new Error('No data returned');
-        }
-      } catch (clientError) {
-        console.log('InSessionSelfCheck - Supabase client failed, trying direct API...');
-
-        // Fall back to direct API
-        const { data, error } = await directInsertReflection(reflectionData, accessToken || undefined);
-        console.log('InSessionSelfCheck - Direct API response:', { data, error });
-
-        if (error) {
-          console.error('InSessionSelfCheck - Error saving to database:', error);
-          throw error;
-        }
-
-        console.log('InSessionSelfCheck - Save successful via direct API!', data);
+      if (!result.success) {
+        console.error('InSessionSelfCheck - Error saving:', result.error);
+        throw new Error(result.error || 'Failed to save reflection');
+      } else {
+        console.log('InSessionSelfCheck - Saved successfully');
       }
+
+      // Mark as saved to prevent double-submission
+      setHasSaved(true);
 
       // Set saving to false immediately after successful save
       setIsSaving(false);
@@ -250,11 +213,11 @@ export const InSessionSelfCheck: React.FC<InSessionSelfCheckProps> = ({ onClose,
       setShowSummary(true);
 
       // Log successful save
-      console.log('In-Session Self-Check Results:', reflectionData.data);
+      console.log('In-Session Self-Check Results:', dataToSave);
 
       // Call onComplete if provided
       if (onComplete) {
-        onComplete(formData);
+        onComplete(dataToSave);
       }
     } catch (error) {
       console.error('InSessionSelfCheck - Error in handleSubmit:', error);
@@ -932,26 +895,26 @@ OVERALL STATUS: ${formData.overall_status}/10
           ) : (
             <button
               onClick={handleSubmit}
-              disabled={isSaving}
+              disabled={isSaving || hasSaved || showSummary}
               className="px-6 py-2 rounded-lg flex items-center transition-all"
               style={{
-                background: isSaving 
-                  ? '#CCCCCC' 
+                background: (isSaving || hasSaved || showSummary)
+                  ? '#CCCCCC'
                   : 'linear-gradient(135deg, #1b5e20, #2e7d32)',
                 color: '#FFFFFF',
-                boxShadow: isSaving 
-                  ? 'none' 
+                boxShadow: (isSaving || hasSaved || showSummary)
+                  ? 'none'
                   : '0 2px 8px rgba(107, 139, 96, 0.3)',
-                cursor: isSaving ? 'not-allowed' : 'pointer'
+                cursor: (isSaving || hasSaved || showSummary) ? 'not-allowed' : 'pointer'
               }}
               onMouseEnter={(e) => {
-                if (!isSaving) {
+                if (!isSaving && !hasSaved && !showSummary) {
                   e.currentTarget.style.transform = 'translateY(-1px)';
                   e.currentTarget.style.boxShadow = '0 4px 12px rgba(107, 139, 96, 0.4)';
                 }
               }}
               onMouseLeave={(e) => {
-                if (!isSaving) {
+                if (!isSaving && !hasSaved && !showSummary) {
                   e.currentTarget.style.transform = 'translateY(0)';
                   e.currentTarget.style.boxShadow = '0 2px 8px rgba(107, 139, 96, 0.3)';
                 }

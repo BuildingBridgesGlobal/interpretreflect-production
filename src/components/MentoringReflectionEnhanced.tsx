@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import {
-import { directInsertReflection } from '../services/directSupabaseApi';
   X, Users, ChevronRight, ChevronLeft, Save, Heart, Brain,
   Target, MessageSquare, Zap, CheckCircle, TrendingUp,
   ChevronDown, ChevronUp, Sparkles
 } from 'lucide-react';
 import { supabase, MentoringReflectionData, MentoringPrepData, ReflectionEntry } from '../lib/supabase';
 import { useAuth } from '../contexts/AuthContext';
+import { reflectionService } from '../services/reflectionService';
 
 interface MentoringReflectionEnhancedProps {
   onComplete?: (data: MentoringReflectionData) => void;
@@ -22,6 +22,7 @@ export const MentoringReflectionEnhanced: React.FC<MentoringReflectionEnhancedPr
   const { user } = useAuth();
   const [currentSection, setCurrentSection] = useState(0);
   const [isSaving, setIsSaving] = useState(false);
+  const [hasSaved, setHasSaved] = useState(false);
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [prepData, setPrepData] = useState<MentoringPrepData | null>(null);
   const [showPrepData, setShowPrepData] = useState(false);
@@ -226,11 +227,12 @@ export const MentoringReflectionEnhanced: React.FC<MentoringReflectionEnhancedPr
 
   const handleSave = async () => {
     if (!validateSection(currentSection)) return;
-    
+    if (hasSaved) return; // Prevent double-save
+
     setIsSaving(true);
     const endTime = Date.now();
     const duration = Math.round((endTime - startTime) / 1000);
-    
+
     try {
       if (!user) {
         throw new Error('User not authenticated');
@@ -238,29 +240,30 @@ export const MentoringReflectionEnhanced: React.FC<MentoringReflectionEnhancedPr
 
       const finalData = {
         ...formData,
-        completion_time: duration
+        completion_time: duration,
+        // Add field for getDisplayName fallback
+        mentoring_insights: formData.three_important_things?.[0] || formData.new_perspectives || 'Mentoring reflection completed'
       };
 
-      const entry: ReflectionEntry = {
-        user_id: user.id,
-        reflection_id: `mentoring_reflection_${Date.now()}`,
-        entry_kind: 'mentoring_reflection',
-        data: finalData,
-        created_at: new Date().toISOString()
-      };
+      console.log('MentoringReflectionEnhanced - Saving with reflectionService');
+      const result = await reflectionService.saveReflection(
+        user.id,
+        'mentoring_reflection',
+        finalData
+      );
 
-      const { error } = await supabase
-        .from('reflection_entries')
-        .insert([entry]);
+      if (!result.success) {
+        throw new Error(result.error || 'Failed to save reflection');
+      }
 
-      if (error) throw error;
-      
+      setHasSaved(true);
+
       if (onComplete) {
         onComplete(finalData);
       }
     } catch (error) {
       console.error('Error saving mentoring reflection:', error);
-      setErrors({ save: 'Failed to save reflection. Please try again.' });
+      setErrors({ save: error instanceof Error ? error.message : 'Failed to save reflection. Please try again.' });
     } finally {
       setIsSaving(false);
     }
@@ -1227,7 +1230,7 @@ export const MentoringReflectionEnhanced: React.FC<MentoringReflectionEnhancedPr
           ) : (
             <button
               onClick={handleSave}
-              disabled={isSaving}
+              disabled={isSaving || hasSaved}
               className="px-6 py-2 rounded-lg flex items-center transition-all"
               style={{
                 background: isSaving 

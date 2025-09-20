@@ -7,7 +7,7 @@ import {
 import { CommunityIcon, HeartPulseIcon, TargetIcon } from './CustomIcon';
 import { supabase, TeamingPrepEnhancedData, ReflectionEntry } from '../lib/supabase';
 import { useAuth } from '../contexts/AuthContext';
-import { directInsertReflection, getSessionToken } from '../services/directSupabaseApi';
+import { reflectionService } from '../services/reflectionService';
 
 interface TeamingPrepEnhancedProps {
   onClose: () => void;
@@ -21,6 +21,7 @@ export const TeamingPrepEnhanced: React.FC<TeamingPrepEnhancedProps> = ({
   const { user } = useAuth();
   const [currentSection, setCurrentSection] = useState(0);
   const [isSaving, setIsSaving] = useState(false);
+  const [hasSaved, setHasSaved] = useState(false);
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [showSummary, setShowSummary] = useState(false);
   const startTime = Date.now();
@@ -153,10 +154,12 @@ export const TeamingPrepEnhanced: React.FC<TeamingPrepEnhancedProps> = ({
   };
 
   const handleSave = async () => {
+    if (hasSaved) return; // Prevent double-save
+
     setIsSaving(true);
     const endTime = Date.now();
     const duration = Math.round((endTime - startTime) / 1000);
-    
+
     try {
       if (!user) {
         throw new Error('User not authenticated');
@@ -164,40 +167,25 @@ export const TeamingPrepEnhanced: React.FC<TeamingPrepEnhancedProps> = ({
 
       const finalData = {
         ...formData,
-        completion_time: duration
+        completion_time: duration,
+        // Add team_context field for getDisplayName fallback
+        team_context: formData.context || formData.assignment_context || 'Team preparation'
       };
 
-      const entry: ReflectionEntry = {
-        user_id: user.id,
-        reflection_id: 'teaming_prep_enhanced',
-        entry_kind: 'teaming_prep_enhanced',
-        team_id: undefined,
-        session_id: undefined,
-        data: finalData,
-        created_at: new Date().toISOString()
-      };
+      console.log('TeamingPrepEnhanced - Saving with reflectionService');
+      const result = await reflectionService.saveReflection(
+        user.id,
+        'teaming_prep', // Use standard entry_kind that matches reflectionTypes.ts
+        finalData
+      );
 
-      // Get access token
-      const accessToken = await getSessionToken();
-
-      // Add reflection_id to the entry
-      const entryWithId = {
-        ...entry,
-        reflection_id: `teaming_prep_enhanced_${Date.now()}`,
-        updated_at: new Date().toISOString()
-      };
-
-      // Use direct API instead of Supabase client
-      const { data, error } = await directInsertReflection(entryWithId, accessToken || undefined);
-      if (error) throw error;
-
-      // Store the prep ID in localStorage for linking with reflection
-      if (data) {
-        localStorage.setItem('latest_teaming_prep_id', data.id);
+      if (!result.success) {
+        throw new Error(result.error || 'Failed to save teaming prep');
       }
 
+      setHasSaved(true);
       setShowSummary(true);
-      
+
       setIsSaving(false);
 
       
@@ -1075,7 +1063,7 @@ ${formData.support_needs}
           ) : (
             <button
               onClick={handleSave}
-              disabled={isSaving || showSummary}
+              disabled={isSaving || hasSaved || showSummary}
               className="px-6 py-2 rounded-lg flex items-center transition-all"
               style={{
                 background: isSaving || showSummary

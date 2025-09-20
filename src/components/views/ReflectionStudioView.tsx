@@ -220,12 +220,11 @@ export const ReflectionStudioView: React.FC<ReflectionStudioViewProps> = ({
       )}
       
       {showWellnessCheck && (
-        <WellnessCheckInAccessible 
+        <WellnessCheckInAccessible
           onClose={() => setShowWellnessCheck(false)}
           onComplete={(data) => {
-            if (saveReflection) {
-              saveReflection('wellness_checkin', data);
-            }
+            // WellnessCheckInAccessible already saves internally using reflectionService
+            // No need to call saveReflection here to avoid double-saving
             setShowWellnessCheck(false);
           }}
         />

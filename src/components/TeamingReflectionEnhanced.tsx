@@ -7,7 +7,7 @@ import {
 import { CommunityIcon, HeartPulseIcon } from './CustomIcon';
 import { supabase, TeamingReflectionData, TeamingPrepData, TeamingPrepEnhancedData, ReflectionEntry } from '../lib/supabase';
 import { useAuth } from '../contexts/AuthContext';
-import { directInsertReflection, getSessionToken } from '../services/directSupabaseApi';
+import { reflectionService } from '../services/reflectionService';
 
 interface TeamingReflectionEnhancedProps {
   onComplete?: (data: TeamingReflectionData) => void;
@@ -209,39 +209,26 @@ export const TeamingReflectionEnhanced: React.FC<TeamingReflectionEnhancedProps>
 
       const finalData = {
         ...formData,
-        completion_time: duration
+        completion_time: duration,
+        // Add field for getDisplayName fallback
+        collaboration_success: formData.collaboration_insights || formData.collaboration_solutions || 'Team reflection completed'
       };
 
-      const entry: ReflectionEntry = {
-        user_id: user.id,
-        reflection_id: 'teaming_reflection_enhanced',
-        entry_kind: 'teaming_reflection',
-        team_id: undefined,
-        session_id: undefined,
-        data: finalData,
-        created_at: new Date().toISOString()
-      };
+      // Use reflectionService instead of direct API
+      console.log('TeamingReflectionEnhanced - Saving with reflectionService');
 
-      // Get access token
-      const accessToken = await getSessionToken();
+      const result = await reflectionService.saveReflection(
+        user.id,
+        'teaming_reflection',
+        finalData
+      );
 
-      // Add reflection_id and updated_at to the entry
-      const entryWithId = {
-        ...entry,
-        reflection_id: `teaming_reflection_${Date.now()}`,
-        updated_at: new Date().toISOString()
-      };
-
-      // Use direct API instead of Supabase client
-      console.log('TeamingReflectionEnhanced - Saving reflection with entry:', entryWithId);
-      const { data, error } = await directInsertReflection(entryWithId, accessToken || undefined);
-
-      if (error) {
-        console.error('TeamingReflectionEnhanced - Error from directInsertReflection:', error);
-        throw error;
+      if (!result.success) {
+        console.error('TeamingReflectionEnhanced - Error saving:', result.error);
+        throw new Error(result.error || 'Failed to save reflection');
       }
 
-      console.log('TeamingReflectionEnhanced - Reflection saved successfully:', data);
+      console.log('TeamingReflectionEnhanced - Reflection saved successfully');
 
       // Close the reflection form directly without showing success modal
       onClose();

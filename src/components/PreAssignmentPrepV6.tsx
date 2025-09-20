@@ -27,8 +27,7 @@ import {
 import { supabase } from '../lib/supabase';
 import { useAuth } from '../contexts/AuthContext';
 import { useNavigate } from 'react-router-dom';
-// import { updateGrowthInsightsForUser } from '../services/growthInsightsService'; // Commented out - uses hanging Supabase client
-import { directInsertReflection, directSelectReflections, getSessionToken } from '../services/directSupabaseApi';
+import { reflectionService } from '../services/reflectionService';
 
 interface PreAssignmentPrepV6Props {
   onClose: () => void;
@@ -235,75 +234,32 @@ export function PreAssignmentPrepV6({ onClose, onComplete }: PreAssignmentPrepV6
         growth_goals: formData.growth_goals
       };
 
-      // Save to database using direct API
-      console.log('PreAssignmentPrepV6 - Attempting to save to reflection_entries table using direct API');
+      // Save to database using reflection service
+      console.log('PreAssignmentPrepV6 - Attempting to save using reflection service');
 
-      // Get the session token
-      const accessToken = await getSessionToken();
-      console.log('PreAssignmentPrepV6 - Got access token:', !!accessToken);
-
-      // First, test if we can read from the database (auth check)
-      console.log('PreAssignmentPrepV6 - Testing database connection with direct API...');
-      const { data: testData, error: testError } = await directSelectReflections(user.id, accessToken || undefined);
-
-      console.log('PreAssignmentPrepV6 - Test query result:', { testData, testError });
-
-      if (testError) {
-        console.error('PreAssignmentPrepV6 - Cannot read from database:', testError);
-        throw new Error(`Database connection issue: ${testError}`);
-      }
-
-      // Create a simpler data object
-      const reflectionData = {
-        user_id: user.id,
-        reflection_id: sessionId,
-        entry_kind: 'pre_assignment_prep',
-        data: formData // Just save the raw form data
+      // Prepare data to save with all form data plus metadata
+      const dataToSave = {
+        ...formData,
+        answers, // Include structured answers
+        sessionId,
+        timestamp: new Date().toISOString(),
+        time_spent_seconds: timeSpent
       };
 
-      console.log('PreAssignmentPrepV6 - Data to save:', reflectionData);
-      console.log('PreAssignmentPrepV6 - Starting insert with direct API...');
+      console.log('PreAssignmentPrepV6 - Data to save:', dataToSave);
 
-      // Try using Supabase client for insert (it might work even if select doesn't)
-      console.log('PreAssignmentPrepV6 - Trying Supabase client insert...');
+      // Use reflection service to save (without timeout to see actual error)
+      const result = await reflectionService.saveReflection(
+        user.id,
+        'pre_assignment_prep',
+        dataToSave
+      );
 
-      try {
-        // Set a short timeout for the Supabase client
-        const insertPromise = supabase
-          .from('reflection_entries')
-          .insert([reflectionData])
-          .select();
-
-        const timeoutPromise = new Promise((_, reject) =>
-          setTimeout(() => reject(new Error('Supabase client timeout')), 5000)
-        );
-
-        const { data: supabaseData, error: supabaseError } = await Promise.race([
-          insertPromise,
-          timeoutPromise
-        ]) as any;
-
-        if (!supabaseError && supabaseData) {
-          console.log('PreAssignmentPrepV6 - Supabase client insert successful!', supabaseData);
-          const data = supabaseData[0];
-          console.log('PreAssignmentPrepV6 - Save successful!', data);
-        } else {
-          throw supabaseError || new Error('No data returned');
-        }
-      } catch (clientError) {
-        console.log('PreAssignmentPrepV6 - Supabase client failed, trying direct API...');
-
-        // Fall back to direct API
-        const { data, error } = await directInsertReflection(reflectionData, accessToken || undefined);
-        console.log('PreAssignmentPrepV6 - Direct API response:', { data, error });
-
-        if (error) {
-          console.error('PreAssignmentPrepV6 - Error saving to database:', error);
-          throw error;
-        }
-
-        console.log('PreAssignmentPrepV6 - Save successful via direct API!', data);
+      if (!result || !result.success) {
+        throw new Error(result?.error || 'Failed to save Pre-Assignment Prep');
       }
+
+      console.log('PreAssignmentPrepV6 - Save successful!', result);
 
       // Set saving to false immediately after successful save
       setIsSaving(false);

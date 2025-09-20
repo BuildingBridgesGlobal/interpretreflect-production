@@ -11,9 +11,8 @@ import {
   Eye
 } from 'lucide-react';
 import { CommunityIcon, SecureLockIcon, TargetIcon, HeartPulseIcon } from './CustomIcon';
-import { supabase } from '../lib/supabase';
-import { directInsertReflection, directSelectReflections, getSessionToken } from '../services/directSupabaseApi';
 import { useAuth } from '../contexts/AuthContext';
+import { reflectionService } from '../services/reflectionService';
 
 interface InSessionTeamSyncProps {
   onClose: () => void;
@@ -24,6 +23,8 @@ export const InSessionTeamSync: React.FC<InSessionTeamSyncProps> = ({ onClose, o
   const { user } = useAuth();
   const [currentSection, setCurrentSection] = useState(0);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [hasSaved, setHasSaved] = useState(false);
+  const [showSummary, setShowSummary] = useState(false);
   const [errors, setErrors] = useState<Record<string, string>>({});
   const startTime = Date.now();
 
@@ -325,8 +326,8 @@ export const InSessionTeamSync: React.FC<InSessionTeamSyncProps> = ({ onClose, o
     }
 
     // Prevent double-submission
-    if (isSubmitting) {
-      console.log('InSessionTeamSync - Already saving, ignoring duplicate click');
+    if (isSubmitting || hasSaved) {
+      console.log('InSessionTeamSync - Already saving or saved, ignoring duplicate click');
       return;
     }
 
@@ -336,87 +337,53 @@ export const InSessionTeamSync: React.FC<InSessionTeamSyncProps> = ({ onClose, o
     setIsSubmitting(true);
 
     try {
-      const sessionId = `team_sync_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
       const timeSpent = Math.floor((Date.now() - startTime) / 1000);
-      console.log('InSessionTeamSync - Starting save with sessionId:', sessionId);
+      console.log('InSessionTeamSync - Starting save...');
 
-      // Get access token
-      const accessToken = await getSessionToken();
-      console.log('InSessionTeamSync - Got access token:', !!accessToken);
-
-      // Test database connection
-      console.log('InSessionTeamSync - Testing database connection...');
-      const { data: testData, error: testError } = await directSelectReflections(user.id, accessToken || undefined);
-      console.log('InSessionTeamSync - Test query result:', { testData, testError });
-
-      if (testError) {
-        console.error('InSessionTeamSync - Cannot read from database:', testError);
-        throw new Error(`Database connection issue: ${testError}`);
-      }
-
-      // Create reflection data for reflection_entries table
-      const reflectionData = {
-        user_id: user.id,
-        reflection_id: sessionId,
-        entry_kind: 'team_sync',
-        data: {
-          ...formData,
-          timestamp: new Date().toISOString(),
-          time_spent_seconds: timeSpent,
-          module_type: 'in_session_team_sync'
-        }
+      // Prepare data to save
+      const dataToSave = {
+        ...formData,
+        timestamp: new Date().toISOString(),
+        time_spent_seconds: timeSpent,
+        module_type: 'in_session_team_sync',
+        // Add fields for getDisplayName fallback
+        team_sync: formData.sync_check || formData.team_status || 'Team sync completed',
+        sync_status: formData.alignment_rating || formData.sync_rating,
+        team_alignment: formData.team_cohesion || formData.alignment_level
       };
 
-      console.log('InSessionTeamSync - Data to save:', reflectionData);
+      console.log('InSessionTeamSync - Saving with reflectionService');
 
-      try {
-        // Try Supabase client first with timeout
-        console.log('InSessionTeamSync - Trying Supabase client insert...');
-        const insertPromise = supabase
-          .from('reflection_entries')
-          .insert([reflectionData])
-          .select();
+      const result = await reflectionService.saveReflection(
+        user.id,
+        'team_sync',
+        dataToSave
+      );
 
-        const timeoutPromise = new Promise((_, reject) =>
-          setTimeout(() => reject(new Error('Supabase client timeout')), 5000)
-        );
-
-        const { data: supabaseData, error: supabaseError } = await Promise.race([
-          insertPromise,
-          timeoutPromise
-        ]) as any;
-
-        if (!supabaseError && supabaseData) {
-          console.log('InSessionTeamSync - Supabase client insert successful!', supabaseData);
-        } else {
-          throw supabaseError || new Error('No data returned');
-        }
-      } catch (clientError) {
-        console.log('InSessionTeamSync - Supabase client failed, trying direct API...');
-
-        // Fall back to direct API
-        const { data, error } = await directInsertReflection(reflectionData, accessToken || undefined);
-        console.log('InSessionTeamSync - Direct API response:', { data, error });
-
-        if (error) {
-          console.error('InSessionTeamSync - Error saving to database:', error);
-          throw error;
-        }
-
-        console.log('InSessionTeamSync - Save successful via direct API!', data);
+      if (!result.success) {
+        console.error('InSessionTeamSync - Error saving:', result.error);
+        throw new Error(result.error || 'Failed to save reflection');
+      } else {
+        console.log('InSessionTeamSync - Saved successfully');
       }
+
+      // Mark as saved to prevent double-submission
+      setHasSaved(true);
 
       // Set submitting to false immediately after successful save
       setIsSubmitting(false);
 
+      // Show summary
+      setShowSummary(true);
+
       // Save to localStorage as well
-      localStorage.setItem('lastTeamSync', JSON.stringify(reflectionData.data));
+      localStorage.setItem('lastTeamSync', JSON.stringify(dataToSave));
 
       // Log successful save
-      console.log('Team Sync Results:', reflectionData.data);
+      console.log('Team Sync Results:', dataToSave);
 
       if (onComplete) {
-        onComplete(reflectionData.data);
+        onComplete(dataToSave);
       }
 
       onClose();
@@ -653,11 +620,12 @@ export const InSessionTeamSync: React.FC<InSessionTeamSyncProps> = ({ onClose, o
 
             <button
               onClick={handleNext}
-              disabled={isSubmitting}
+              disabled={isSubmitting || hasSaved || showSummary}
               className="px-6 py-2 rounded-lg font-medium text-white transition-all flex items-center hover:opacity-90"
-              style={{ 
-                background: isSubmitting ? '#CCCCCC' : 'linear-gradient(135deg, #1b5e20, #2e7d32)',
-                opacity: isSubmitting ? 0.5 : 1
+              style={{
+                background: (isSubmitting || hasSaved || showSummary) ? '#CCCCCC' : 'linear-gradient(135deg, #1b5e20, #2e7d32)',
+                opacity: (isSubmitting || hasSaved || showSummary) ? 0.5 : 1,
+                cursor: (isSubmitting || hasSaved || showSummary) ? 'not-allowed' : 'pointer'
               }}
             >
               {isSubmitting ? (

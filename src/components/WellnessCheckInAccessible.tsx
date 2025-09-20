@@ -22,10 +22,8 @@ import {
   X,
   Check
 } from 'lucide-react';
-import { supabase } from '../lib/supabase';
-import { directInsertReflection, directSelectReflections, getSessionToken } from '../services/directSupabaseApi';
 import { useAuth } from '../contexts/AuthContext';
-import { updateGrowthInsightsForUser } from '../services/growthInsightsService';
+import { reflectionService } from '../services/reflectionService';
 
 interface WellnessCheckInProps {
   onClose: () => void;
@@ -216,75 +214,38 @@ export const WellnessCheckInAccessible: React.FC<WellnessCheckInProps> = ({ onCl
 
     setIsSaving(true);
     try {
-      const sessionId = `wellness_checkin_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
       const timeSpent = Math.floor((Date.now() - startTime) / 1000);
-      console.log('WellnessCheckIn - Starting save with sessionId:', sessionId);
+      console.log('WellnessCheckIn - Starting save...');
 
-      // Get access token
-      const accessToken = await getSessionToken();
-      console.log('WellnessCheckIn - Got access token:', !!accessToken);
-
-      // Test database connection
-      console.log('WellnessCheckIn - Testing database connection...');
-      const { data: testData, error: testError } = await directSelectReflections(user.id, accessToken || undefined);
-      console.log('WellnessCheckIn - Test query result:', { testData, testError });
-
-      if (testError) {
-        console.error('WellnessCheckIn - Cannot read from database:', testError);
-        throw new Error(`Database connection issue: ${testError}`);
-      }
-
-      // Create reflection data for reflection_entries table
-      const reflectionData = {
-        user_id: user.id,
-        reflection_id: sessionId,
-        entry_kind: 'wellness_checkin',
-        data: {
-          ...formData,
-          timestamp: new Date().toISOString(),
-          time_spent_seconds: timeSpent,
-          sections_completed: 8
-        }
+      // Prepare the data with all the required fields including stress and energy levels
+      const dataToSave = {
+        ...formData,
+        timestamp: new Date().toISOString(),
+        time_spent_seconds: timeSpent,
+        sections_completed: 8,
+        // Add stress and energy levels if they exist in formData
+        stressLevel: formData.stressLevel || 5,
+        energyLevel: formData.energyLevel || 5,
+        // Add fields for getDisplayName fallback
+        current_feeling: formData.overall_feeling || formData.primary_emotions || 'Wellness check completed',
+        wellness_score: formData.wellness_rating || 7,
+        stress_level: formData.stressLevel || 5
       };
 
-      console.log('WellnessCheckIn - Data to save:', reflectionData);
+      console.log('WellnessCheckIn - Data to save:', dataToSave);
 
-      try {
-        // Try Supabase client first with timeout
-        console.log('WellnessCheckIn - Trying Supabase client insert...');
-        const insertPromise = supabase
-          .from('reflection_entries')
-          .insert([reflectionData])
-          .select();
+      // Use the reflection service which handles auth properly
+      const result = await reflectionService.saveReflection(
+        user.id,
+        'wellness_checkin',
+        dataToSave
+      );
 
-        const timeoutPromise = new Promise((_, reject) =>
-          setTimeout(() => reject(new Error('Supabase client timeout')), 5000)
-        );
-
-        const { data: supabaseData, error: supabaseError } = await Promise.race([
-          insertPromise,
-          timeoutPromise
-        ]) as any;
-
-        if (!supabaseError && supabaseData) {
-          console.log('WellnessCheckIn - Supabase client insert successful!', supabaseData);
-        } else {
-          throw supabaseError || new Error('No data returned');
-        }
-      } catch (clientError) {
-        console.log('WellnessCheckIn - Supabase client failed, trying direct API...');
-
-        // Fall back to direct API
-        const { data, error } = await directInsertReflection(reflectionData, accessToken || undefined);
-        console.log('WellnessCheckIn - Direct API response:', { data, error });
-
-        if (error) {
-          console.error('WellnessCheckIn - Error saving to database:', error);
-          throw error;
-        }
-
-        console.log('WellnessCheckIn - Save successful via direct API!', data);
+      if (!result.success) {
+        throw new Error(result.error || 'Failed to save wellness check-in');
       }
+
+      console.log('WellnessCheckIn - Save successful!', result);
 
       // Set saving to false immediately after successful save
       setIsSaving(false);
@@ -296,11 +257,11 @@ export const WellnessCheckInAccessible: React.FC<WellnessCheckInProps> = ({ onCl
       setShowSummary(true);
 
       // Log successful save
-      console.log('Wellness Check-In Results:', reflectionData.data);
+      console.log('Wellness Check-In Results:', dataToSave);
 
       // Call onComplete if provided
       if (onComplete) {
-        onComplete(formData);
+        onComplete(dataToSave);
       }
     } catch (error) {
       console.error('WellnessCheckIn - Error in handleSubmit:', error);
@@ -1079,26 +1040,26 @@ OVERALL WELLNESS: ${formData.overall_wellness_rating}/10
           ) : (
             <button
               onClick={handleSubmit}
-              disabled={isSaving}
+              disabled={isSaving || showSummary}
               className="px-6 py-2 rounded-lg flex items-center transition-all"
               style={{
-                background: isSaving 
-                  ? '#CCCCCC' 
+                background: (isSaving || showSummary)
+                  ? '#CCCCCC'
                   : 'linear-gradient(135deg, #1b5e20, #2e7d32)',
                 color: '#FFFFFF',
-                boxShadow: isSaving 
-                  ? 'none' 
+                boxShadow: (isSaving || showSummary)
+                  ? 'none'
                   : '0 2px 8px rgba(107, 139, 96, 0.3)',
-                cursor: isSaving ? 'not-allowed' : 'pointer'
+                cursor: (isSaving || showSummary) ? 'not-allowed' : 'pointer'
               }}
               onMouseEnter={(e) => {
-                if (!isSaving) {
+                if (!isSaving && !showSummary) {
                   e.currentTarget.style.transform = 'translateY(-1px)';
                   e.currentTarget.style.boxShadow = '0 4px 12px rgba(107, 139, 96, 0.4)';
                 }
               }}
               onMouseLeave={(e) => {
-                if (!isSaving) {
+                if (!isSaving && !showSummary) {
                   e.currentTarget.style.transform = 'translateY(0)';
                   e.currentTarget.style.boxShadow = '0 2px 8px rgba(107, 139, 96, 0.3)';
                 }

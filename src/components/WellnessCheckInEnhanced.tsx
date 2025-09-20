@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { ChevronRight, ChevronLeft, X, Heart, Activity, Brain, Users, Briefcase, TrendingUp, Copy, Check } from 'lucide-react';
+import { ChevronRight, ChevronLeft, X, Heart, Activity, Brain, Users, Briefcase, TrendingUp, Copy, Check, AlertTriangle } from 'lucide-react';
 import { supabase, WellnessCheckInData } from '../lib/supabase';
 import { useAuth } from '../contexts/AuthContext';
-import { directInsertReflection } from '../services/directSupabaseApi';
+import { reflectionService } from '../services/reflectionService';
 
 interface WellnessCheckInEnhancedProps {
   onComplete: (data: WellnessCheckInData) => void;
@@ -24,6 +24,7 @@ export const WellnessCheckInEnhanced: React.FC<WellnessCheckInEnhancedProps> = (
   const [startTime] = useState(Date.now());
   const [copiedToClipboard, setCopiedToClipboard] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [hasSaved, setHasSaved] = useState(false);
 
   const [formData, setFormData] = useState<WellnessCheckInData>({
     // Quick Insight Capture
@@ -75,6 +76,8 @@ export const WellnessCheckInEnhanced: React.FC<WellnessCheckInEnhancedProps> = (
     social_connection: 5,
     professional_satisfaction: 5,
     overall_wellbeing: 5,
+    stress_level: 5,
+    energy_level: 5,
     
     // Closing
     self_care_commitment: '',
@@ -119,8 +122,7 @@ export const WellnessCheckInEnhanced: React.FC<WellnessCheckInEnhancedProps> = (
                formData.strongest_emotion.trim() !== '' &&
                formData.emotion_message.trim() !== '';
       case 2: // Physical Awareness
-        return formData.body_scan.trim() !== '' &&
-               formData.energy_level.trim() !== '';
+        return formData.body_scan.trim() !== '';
       case 3: // Professional Wellbeing
         return formData.energizing_aspects.trim() !== '' &&
                formData.draining_aspects.trim() !== '';
@@ -171,9 +173,10 @@ Strongest: ${formData.strongest_emotion}
 ${formData.emotion_message}
 
 🏃 PHYSICAL STATE
-Energy level: ${formData.physical_energy}/10
+Energy level: ${formData.energy_level}/10
+Stress level: ${formData.stress_level}/10
+Physical energy: ${formData.physical_energy}/10
 ${formData.body_scan}
-${formData.energy_level}
 
 💼 PROFESSIONAL WELLBEING
 Workload sustainability: ${formData.workload_sustainability}/10
@@ -212,33 +215,39 @@ Completed: ${new Date().toLocaleString()}`;
 
   const handleSubmit = async () => {
     if (!validateSection(7)) return;
-    
+    if (hasSaved) return; // Prevent double-save
+
     setIsSubmitting(true);
-    
+
     const completionTime = Math.round((Date.now() - startTime) / 1000);
     const finalData = {
       ...formData,
       completion_time: completionTime,
       timestamp: new Date().toISOString(),
       concerning_patterns: formData.overall_wellbeing <= 3 || formData.physical_energy <= 3 || formData.emotional_balance <= 3,
-      needs_followup: formData.overall_wellbeing <= 4
+      needs_followup: formData.overall_wellbeing <= 4,
+      // Add fields for getDisplayName fallback
+      current_feeling: formData.primary_emotion || formData.check_in_reason || 'Wellness check completed',
+      wellness_score: formData.overall_wellbeing,
+      stress_level: formData.stress_level,
+      energy_level: formData.energy_level
     };
 
     try {
       if (user) {
-        const { error } = await supabase
-          .from('reflection_entries')
-          .insert({
-            user_id: user.id,
-            reflection_id: `wellness-checkin-${Date.now()}`,
-            entry_kind: 'wellness-checkin',
-            data: finalData,
-            created_at: new Date().toISOString()
-          });
+        console.log('WellnessCheckInEnhanced - Saving with reflectionService');
+        const result = await reflectionService.saveReflection(
+          user.id,
+          'wellness_checkin', // Use correct entry_kind without hyphen
+          finalData
+        );
 
-        if (error) {
-          console.error('Error saving wellness check-in:', error);
+        if (!result.success) {
+          console.error('Error saving wellness check-in:', result.error);
+          throw new Error(result.error || 'Failed to save wellness check-in');
         }
+
+        setHasSaved(true);
       }
 
       onComplete(finalData);
@@ -680,6 +689,50 @@ Completed: ${new Date().toLocaleString()}`;
 
       <div>
         <label className="block text-sm font-medium text-gray-700 mb-2">
+          <Activity className="inline w-4 h-4 mr-1" /> Rate your current energy level (1-10)
+        </label>
+        <div className="flex items-center space-x-4">
+          <span className="text-sm">1</span>
+          <input
+            type="range"
+            min="1"
+            max="10"
+            value={formData.energy_level}
+            onChange={(e) => handleInputChange('energy_level', parseInt(e.target.value))}
+            className="flex-1"
+            style={{ accentColor: '#6B8B60' }}
+          />
+          <span className="text-sm">10</span>
+          <span className="ml-4 font-medium text-sage-700 min-w-[2ch]">
+            {formData.energy_level}
+          </span>
+        </div>
+      </div>
+
+      <div>
+        <label className="block text-sm font-medium text-gray-700 mb-2">
+          <AlertTriangle className="inline w-4 h-4 mr-1" /> Rate your current stress level (1-10)
+        </label>
+        <div className="flex items-center space-x-4">
+          <span className="text-sm">1</span>
+          <input
+            type="range"
+            min="1"
+            max="10"
+            value={formData.stress_level}
+            onChange={(e) => handleInputChange('stress_level', parseInt(e.target.value))}
+            className="flex-1"
+            style={{ accentColor: '#DC2626' }}
+          />
+          <span className="text-sm">10</span>
+          <span className="ml-4 font-medium text-sage-700 min-w-[2ch]">
+            {formData.stress_level}
+          </span>
+        </div>
+      </div>
+
+      <div>
+        <label className="block text-sm font-medium text-gray-700 mb-2">
           <Activity className="inline w-4 h-4 mr-1" /> Physical Energy
         </label>
         <div className="flex items-center space-x-4">
@@ -865,7 +918,7 @@ Completed: ${new Date().toLocaleString()}`;
 
         <button
           onClick={handleSubmit}
-          disabled={isSubmitting}
+          disabled={isSubmitting || hasSaved}
           className="px-6 py-2 bg-sage-600 text-white rounded-lg hover:bg-sage-700 transition-colors disabled:opacity-50"
         >
           {isSubmitting ? 'Saving...' : 'Complete Check-In'}

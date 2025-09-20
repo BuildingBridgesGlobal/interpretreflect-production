@@ -694,7 +694,7 @@ function LandingPageEnhanced({ onGetStarted }: LandingPageProps) {
         defaultMode={authMode === 'signin' ? 'signin' : 'signup'}
         onSuccess={() => {
           setAuthModalOpen(false);
-          window.location.href = '/dashboard';
+          navigate('/dashboard');
         }}
       />
       <PricingModal 
@@ -714,7 +714,7 @@ function LandingPageEnhanced({ onGetStarted }: LandingPageProps) {
       )}
 
       {/* Add CSS animations */}
-      <style jsx>{`
+      <style>{`
         @keyframes fade-in {
           from { opacity: 0; transform: translateY(10px); }
           to { opacity: 1; transform: translateY(0); }

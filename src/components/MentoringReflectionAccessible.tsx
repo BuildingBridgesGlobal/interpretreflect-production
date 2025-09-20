@@ -19,8 +19,8 @@ import {
   Sparkles
 } from 'lucide-react';
 import { CommunityIcon, HeartPulseIcon, NotepadIcon, TargetIcon, SecureLockIcon } from './CustomIcon';
-import { supabase } from '../lib/supabase';
-import { directInsertReflection, getSessionToken } from '../services/directSupabaseApi';
+
+import { reflectionService } from '../services/reflectionService';
 import { useAuth } from '../contexts/AuthContext';
 import { updateGrowthInsightsForUser } from '../services/growthInsightsService';
 
@@ -206,79 +206,38 @@ export const MentoringReflectionAccessible: React.FC<MentoringReflectionProps> =
 
     setIsSaving(true);
     try {
-      const sessionId = `mentoring_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
       const timeSpent = Math.floor((Date.now() - startTime) / 1000);
 
       console.log('MentoringReflectionAccessible - Starting save process...');
 
-      // Get access token
-      const accessToken = await getSessionToken();
-      console.log('MentoringReflectionAccessible - Got access token:', !!accessToken);
-
-      // Prepare the entry matching Pre-Assignment Prep format
-      const reflectionData = {
-        user_id: user.id,
-        reflection_id: sessionId,
-        entry_kind: 'mentoring_reflection',
-        data: {
-          ...formData,
-          status: 'completed',
-          metadata: {
-            completion_time: new Date().toISOString(),
-            time_spent_seconds: timeSpent,
-            sections_completed: 8
-          },
-          completed_at: new Date().toISOString(),
-          time_spent_seconds: timeSpent
-        }
+      // Prepare data to save
+      const dataToSave = {
+        ...formData,
+        status: 'completed',
+        metadata: {
+          completion_time: new Date().toISOString(),
+          time_spent_seconds: timeSpent,
+          sections_completed: 8
+        },
+        completed_at: new Date().toISOString(),
+        time_spent_seconds: timeSpent,
+        // Add field for getDisplayName fallback
+        mentoring_insights: formData.key_insight || formData.immediate_insight || 'Mentoring reflection completed'
       };
 
-      console.log('MentoringReflectionAccessible - Data to save:', reflectionData);
+      console.log('MentoringReflectionAccessible - Saving with reflectionService');
 
-      // Try using Supabase client first with timeout
-      try {
-        const insertPromise = supabase
-          .from('reflection_entries')
-          .insert([reflectionData])
-          .select();
+      const result = await reflectionService.saveReflection(
+        user.id,
+        'mentoring_reflection',
+        dataToSave
+      );
 
-        const timeoutPromise = new Promise((_, reject) =>
-          setTimeout(() => reject(new Error('Supabase client timeout')), 5000)
-        );
-
-        const { data: supabaseData, error: supabaseError } = await Promise.race([
-          insertPromise,
-          timeoutPromise
-        ]) as any;
-
-        if (!supabaseError && supabaseData) {
-          console.log('MentoringReflectionAccessible - Supabase client insert successful!', supabaseData);
-          const data = supabaseData[0];
-
-          // Show summary
-          setShowSummary(true);
-          setIsSaving(false);
-
-          // Call onComplete if provided
-          if (onComplete) {
-            onComplete(data);
-          }
-        } else {
-          throw supabaseError || new Error('No data returned');
-        }
-      } catch (clientError) {
-        console.log('MentoringReflectionAccessible - Supabase client failed, trying direct API...');
-
-        // Fall back to direct API
-        const { data, error } = await directInsertReflection(reflectionData, accessToken || undefined);
-        console.log('MentoringReflectionAccessible - Direct API response:', { data, error });
-
-        if (error) {
-          console.error('MentoringReflectionAccessible - Error saving to database:', error);
-          throw error;
-        }
-
-        console.log('MentoringReflectionAccessible - Save successful via direct API!', data);
+      if (!result.success) {
+        console.error('MentoringReflectionAccessible - Error saving:', result.error);
+        throw new Error(result.error || 'Failed to save reflection');
+      } else {
+        console.log('MentoringReflectionAccessible - Saved successfully');
 
         // Show summary
         setShowSummary(true);
@@ -286,7 +245,7 @@ export const MentoringReflectionAccessible: React.FC<MentoringReflectionProps> =
 
         // Call onComplete if provided
         if (onComplete) {
-          onComplete(data);
+          onComplete(dataToSave);
         }
       }
 

@@ -172,7 +172,7 @@ export class UserDataLoader {
         .from('affirmation_favorites')
         .select('*')
         .eq('user_id', userId)
-        .single();
+        .maybeSingle(); // Use maybeSingle() instead of single()
 
       if (!favError && favorites) {
         localStorage.setItem('affirmationFavorites', JSON.stringify(favorites.favorites));

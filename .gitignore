@@ -45,4 +45,4 @@ coverage/
 .netlify/
 
 # Security - Never commit deployment scripts with secrets
-scripts/deploy-stripe-secrets.sh
+scripts/deploy-stripe-secrets.shproject/

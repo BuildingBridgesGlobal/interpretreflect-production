@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Clear Post-Assignment Draft</title>
+</head>
+<body>
+    <h1>Clear Post-Assignment Draft</h1>
+    <button onclick="clearDraft()">Clear Draft</button>
+    <p id="result"></p>
+    
+    <script>
+        function clearDraft() {
+            // Remove the draft from localStorage
+            localStorage.removeItem('postAssignmentDebriefDraft');
+            localStorage.removeItem('postAssignmentDebriefStep');
+            document.getElementById('result').innerText = 'Draft cleared successfully! You can now close this page.';
+        }
+        
+        // Show current draft if exists
+        const draft = localStorage.getItem('postAssignmentDebriefDraft');
+        if (draft) {
+            const data = JSON.parse(draft);
+            console.log('Current draft:', data);
+            if (data.proudestMoment) {
+                document.getElementById('result').innerText = 'Found draft with proudestMoment: "' + data.proudestMoment + '"';
+            }
+        }
+    </script>
+</body>
+</html>

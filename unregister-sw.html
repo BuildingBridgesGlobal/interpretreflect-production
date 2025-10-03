@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Unregister Service Worker</title>
+</head>
+<body>
+    <h1>Service Worker Cleanup</h1>
+    <p id="status">Checking for service workers...</p>
+    <button onclick="clearEverything()">Clear All Site Data</button>
+    
+    <script>
+        // Unregister all service workers
+        async function unregisterAll() {
+            if ('serviceWorker' in navigator) {
+                const registrations = await navigator.serviceWorker.getRegistrations();
+                for (let registration of registrations) {
+                    await registration.unregister();
+                    console.log('Unregistered:', registration.scope);
+                }
+                document.getElementById('status').textContent = `Unregistered ${registrations.length} service worker(s). Please close this tab and refresh your app.`;
+            } else {
+                document.getElementById('status').textContent = 'No service worker support detected.';
+            }
+        }
+        
+        // Clear all caches
+        async function clearCaches() {
+            if ('caches' in window) {
+                const names = await caches.keys();
+                await Promise.all(names.map(name => caches.delete(name)));
+                console.log('Cleared all caches');
+            }
+        }
+        
+        // Clear everything
+        async function clearEverything() {
+            await unregisterAll();
+            await clearCaches();
+            localStorage.clear();
+            sessionStorage.clear();
+            document.getElementById('status').textContent = 'All site data cleared! Close this tab and refresh your app.';
+        }
+        
+        // Auto-run on load
+        unregisterAll();
+        clearCaches();
+    </script>
+</body>
+</html>

@@ -1,0 +1,99 @@
+<!doctype html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="UTF-8" />
+
+    <!-- Favicon configuration -->
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="alternate icon" type="image/x-icon" href="/favicon.ico" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+    <link rel="manifest" href="/site.webmanifest" />
+    
+    <!-- Meta tags -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes, viewport-fit=cover" />
+    <meta name="description" content="InterpretReflect - The wellness platform for interpreters. Prevent burnout, manage vicarious trauma, and maintain healthy boundaries with evidence-based tools." />
+    <meta name="keywords" content="interpreter wellness, burnout prevention, vicarious trauma, professional boundaries, mental health, interpreting, translation" />
+    <meta name="author" content="InterpretReflect" />
+    <meta name="theme-color" content="#5C7F4F" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+    
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://interpretreflect.com/" />
+    <meta property="og:title" content="InterpretReflect - Wellness Platform for Interpreters" />
+    <meta property="og:description" content="Prevent burnout, manage vicarious trauma, and maintain healthy boundaries with evidence-based wellness tools designed specifically for interpreters." />
+    <meta property="og:image" content="https://interpretreflect.com/og-image.png" />
+    <meta property="og:locale" content="en_US" />
+    <meta property="og:site_name" content="InterpretReflect" />
+    
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:url" content="https://interpretreflect.com/" />
+    <meta name="twitter:title" content="InterpretReflect - Wellness Platform for Interpreters" />
+    <meta name="twitter:description" content="Prevent burnout, manage vicarious trauma, and maintain healthy boundaries with evidence-based wellness tools." />
+    <meta name="twitter:image" content="https://interpretreflect.com/twitter-image.png" />
+    
+    <title>InterpretReflect - Wellness Platform for Interpreters</title>
+    
+    <!-- Preload critical fonts for better performance -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    
+    <!-- CSS for better accessibility defaults -->
+    <style>
+      /* Ensure focus is always visible */
+      :focus-visible {
+        outline: 3px solid #5C7F4F !important;
+        outline-offset: 2px !important;
+      }
+      
+      /* Ensure smooth scrolling but respect user preference */
+      @media (prefers-reduced-motion: no-preference) {
+        html {
+          scroll-behavior: smooth;
+        }
+      }
+      
+      /* Ensure text remains visible during font load */
+      .font-fallback {
+        font-display: swap;
+      }
+      
+      /* Minimum touch target size for mobile */
+      button, a, input, textarea, select {
+        min-height: 44px;
+        min-width: 44px;
+      }
+      
+      /* High contrast mode support */
+      @media (prefers-contrast: high) {
+        * {
+          border-color: currentColor !important;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Skip to main content link for screen readers -->
+    <a href="#root" class="sr-only focus:not-sr-only focus:absolute focus:top-0 focus:left-0 focus:z-50 focus:p-4 focus:bg-white focus:text-black">
+      Skip to main content
+    </a>
+    
+    <!-- Main app container with proper ARIA label -->
+    <div id="root" role="application" aria-label="InterpretReflect Wellness Platform"></div>
+    
+    <!-- No-JavaScript fallback -->
+    <noscript>
+      <div style="padding: 20px; text-align: center; font-family: system-ui, sans-serif;">
+        <h1>JavaScript Required</h1>
+        <p>InterpretReflect requires JavaScript to be enabled for full functionality.</p>
+        <p>Please enable JavaScript in your browser settings to use this application.</p>
+      </div>
+    </noscript>
+    
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>

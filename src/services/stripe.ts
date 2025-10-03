@@ -1,58 +1,78 @@
-import { supabase } from '../lib/supabase'
+import { supabase } from "../lib/supabase";
 
 export const stripeService = {
-  async createCheckoutSession(priceId: string) {
-    const { data, error } = await supabase.functions.invoke('create-checkout-session', {
-      body: { priceId },
-    })
+	async createCheckoutSession(priceId: string, promotionCode?: string) {
+		const {
+			data: { user },
+		} = await supabase.auth.getUser();
 
-    if (error) throw error
-    return data
-  },
+		const { data, error } = await supabase.functions.invoke(
+			"create-checkout-session",
+			{
+				body: {
+					priceId,
+					promotionCode: promotionCode || undefined,
+					userId: user?.id,
+					userEmail: user?.email,
+					successUrl: `${window.location.origin}/success`,
+					cancelUrl: `${window.location.origin}/pricing`,
+				},
+			},
+		);
 
-  async createPortalSession() {
-    const { data, error } = await supabase.functions.invoke('create-portal-session')
+		if (error) throw error;
+		return data;
+	},
 
-    if (error) throw error
-    return data
-  },
+	async createPortalSession() {
+		const { data, error } = await supabase.functions.invoke(
+			"create-portal-session",
+		);
 
-  async getSubscriptionStatus() {
-    const { data: { user } } = await supabase.auth.getUser()
-    
-    if (!user) return null
+		if (error) throw error;
+		return data;
+	},
 
-    const { data, error } = await supabase
-      .from('profiles')
-      .select('subscription_status, subscription_tier')
-      .eq('id', user.id)
-      .single()
+	async getSubscriptionStatus() {
+		const {
+			data: { user },
+		} = await supabase.auth.getUser();
 
-    if (error) {
-      console.error('Error fetching subscription status:', error)
-      return null
-    }
+		if (!user) return null;
 
-    return data
-  },
+		const { data, error } = await supabase
+			.from("profiles")
+			.select("subscription_status, subscription_tier")
+			.eq("id", user.id)
+			.single();
 
-  async getSubscriptionDetails() {
-    const { data: { user } } = await supabase.auth.getUser()
-    
-    if (!user) return null
+		if (error) {
+			console.error("Error fetching subscription status:", error);
+			return null;
+		}
 
-    const { data, error } = await supabase
-      .from('subscriptions')
-      .select('*')
-      .eq('user_id', user.id)
-      .eq('status', 'active')
-      .single()
+		return data;
+	},
 
-    if (error) {
-      console.error('Error fetching subscription details:', error)
-      return null
-    }
+	async getSubscriptionDetails() {
+		const {
+			data: { user },
+		} = await supabase.auth.getUser();
 
-    return data
-  }
-}
+		if (!user) return null;
+
+		const { data, error } = await supabase
+			.from("subscriptions")
+			.select("*")
+			.eq("user_id", user.id)
+			.eq("status", "active")
+			.single();
+
+		if (error) {
+			console.error("Error fetching subscription details:", error);
+			return null;
+		}
+
+		return data;
+	},
+};

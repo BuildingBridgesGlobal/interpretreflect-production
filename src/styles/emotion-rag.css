@@ -5,92 +5,221 @@
 
 /* Emotion Theme Variables */
 :root {
-  /* Calm - Light Green */
-  --emotion-calm-primary: #E8F5E9;
-  --emotion-calm-secondary: #C8E6C9;
-  --emotion-calm-tertiary: #A5D6A7;
-  --emotion-calm-text: #1B5E20;
-  --emotion-calm-gradient: linear-gradient(135deg, #E8F5E9 0%, #C8E6C9 50%, #A5D6A7 100%);
-  --emotion-calm-radial: radial-gradient(circle at 30% 50%, #E8F5E9 0%, transparent 60%);
-  --emotion-calm-pattern: repeating-linear-gradient(45deg, transparent, transparent 35px, rgba(200, 230, 201, 0.1) 35px, rgba(200, 230, 201, 0.1) 70px);
-  
-  /* Anxious - Light Orange */
-  --emotion-anxious-primary: #FFF3E0;
-  --emotion-anxious-secondary: #FFE0B2;
-  --emotion-anxious-tertiary: #FFCC80;
-  --emotion-anxious-text: #E65100;
-  --emotion-anxious-gradient: linear-gradient(135deg, #FFF3E0 0%, #FFE0B2 50%, #FFCC80 100%);
-  --emotion-anxious-radial: radial-gradient(circle at 70% 30%, #FFF3E0 0%, transparent 60%);
-  --emotion-anxious-pattern: repeating-linear-gradient(-45deg, transparent, transparent 30px, rgba(255, 224, 178, 0.1) 30px, rgba(255, 224, 178, 0.1) 60px);
-  
-  /* Stressed - Light Red */
-  --emotion-stressed-primary: #FFEBEE;
-  --emotion-stressed-secondary: #FFCDD2;
-  --emotion-stressed-tertiary: #EF9A9A;
-  --emotion-stressed-text: #C62828;
-  --emotion-stressed-gradient: linear-gradient(135deg, #FFEBEE 0%, #FFCDD2 50%, #EF9A9A 100%);
-  --emotion-stressed-radial: radial-gradient(circle at 50% 50%, #FFEBEE 0%, transparent 70%);
-  --emotion-stressed-pattern: repeating-linear-gradient(90deg, transparent, transparent 40px, rgba(255, 205, 210, 0.1) 40px, rgba(255, 205, 210, 0.1) 80px);
-  
-  /* Energized - Light Blue */
-  --emotion-energized-primary: #E3F2FD;
-  --emotion-energized-secondary: #BBDEFB;
-  --emotion-energized-tertiary: #90CAF9;
-  --emotion-energized-text: #0D47A1;
-  --emotion-energized-gradient: linear-gradient(135deg, #E3F2FD 0%, #BBDEFB 50%, #90CAF9 100%);
-  --emotion-energized-radial: radial-gradient(circle at 20% 80%, #E3F2FD 0%, transparent 60%);
-  --emotion-energized-pattern: repeating-linear-gradient(120deg, transparent, transparent 25px, rgba(187, 222, 251, 0.1) 25px, rgba(187, 222, 251, 0.1) 50px);
-  
-  /* Exhausted - Light Purple */
-  --emotion-exhausted-primary: #F3E5F5;
-  --emotion-exhausted-secondary: #E1BEE7;
-  --emotion-exhausted-tertiary: #CE93D8;
-  --emotion-exhausted-text: #6A1B9A;
-  --emotion-exhausted-gradient: linear-gradient(135deg, #F3E5F5 0%, #E1BEE7 50%, #CE93D8 100%);
-  --emotion-exhausted-radial: radial-gradient(circle at 80% 20%, #F3E5F5 0%, transparent 60%);
-  --emotion-exhausted-pattern: repeating-linear-gradient(180deg, transparent, transparent 45px, rgba(225, 190, 231, 0.1) 45px, rgba(225, 190, 231, 0.1) 90px);
-  
-  /* Focused - Light Teal */
-  --emotion-focused-primary: #E0F2F1;
-  --emotion-focused-secondary: #B2DFDB;
-  --emotion-focused-tertiary: #80CBC4;
-  --emotion-focused-text: #00695C;
-  --emotion-focused-gradient: linear-gradient(135deg, #E0F2F1 0%, #B2DFDB 50%, #80CBC4 100%);
-  --emotion-focused-radial: radial-gradient(circle at 40% 60%, #E0F2F1 0%, transparent 60%);
-  --emotion-focused-pattern: repeating-linear-gradient(60deg, transparent, transparent 32px, rgba(178, 223, 219, 0.1) 32px, rgba(178, 223, 219, 0.1) 64px);
-  
-  /* Overwhelmed - Light Coral */
-  --emotion-overwhelmed-primary: #FBE9E7;
-  --emotion-overwhelmed-secondary: #FFCCBC;
-  --emotion-overwhelmed-tertiary: #FFAB91;
-  --emotion-overwhelmed-text: #D84315;
-  --emotion-overwhelmed-gradient: linear-gradient(135deg, #FBE9E7 0%, #FFCCBC 50%, #FFAB91 100%);
-  --emotion-overwhelmed-radial: radial-gradient(circle at 60% 40%, #FBE9E7 0%, transparent 70%);
-  --emotion-overwhelmed-pattern: repeating-linear-gradient(135deg, transparent, transparent 38px, rgba(255, 204, 188, 0.1) 38px, rgba(255, 204, 188, 0.1) 76px);
-  
-  /* Accomplished - Light Yellow-Green */
-  --emotion-accomplished-primary: #F1F8E9;
-  --emotion-accomplished-secondary: #DCEDC8;
-  --emotion-accomplished-tertiary: #AED581;
-  --emotion-accomplished-text: #558B2F;
-  --emotion-accomplished-gradient: linear-gradient(135deg, #F1F8E9 0%, #DCEDC8 50%, #AED581 100%);
-  --emotion-accomplished-radial: radial-gradient(circle at 25% 75%, #F1F8E9 0%, transparent 60%);
-  --emotion-accomplished-pattern: repeating-linear-gradient(270deg, transparent, transparent 42px, rgba(220, 237, 200, 0.1) 42px, rgba(220, 237, 200, 0.1) 84px);
-  
-  /* Neutral - Light Gray */
-  --emotion-neutral-primary: #FAFAFA;
-  --emotion-neutral-secondary: #F5F5F5;
-  --emotion-neutral-tertiary: #EEEEEE;
-  --emotion-neutral-text: #424242;
-  --emotion-neutral-gradient: linear-gradient(135deg, #FAFAFA 0%, #F5F5F5 50%, #EEEEEE 100%);
-  --emotion-neutral-radial: radial-gradient(circle at 50% 50%, #FAFAFA 0%, transparent 60%);
-  --emotion-neutral-pattern: none;
-  
-  /* Animation speeds */
-  --emotion-transition-slow: 3s;
-  --emotion-transition-medium: 1.5s;
-  --emotion-transition-fast: 0.5s;
-  --emotion-transition-none: 0s;
+	/* Calm - Light Green */
+	--emotion-calm-primary: #e8f5e9;
+	--emotion-calm-secondary: #c8e6c9;
+	--emotion-calm-tertiary: #a5d6a7;
+	--emotion-calm-text: #1b5e20;
+	--emotion-calm-gradient: linear-gradient(
+		135deg,
+		#e8f5e9 0%,
+		#c8e6c9 50%,
+		#a5d6a7 100%
+	);
+	--emotion-calm-radial: radial-gradient(
+		circle at 30% 50%,
+		#e8f5e9 0%,
+		transparent 60%
+	);
+	--emotion-calm-pattern: repeating-linear-gradient(
+		45deg,
+		transparent,
+		transparent 35px,
+		rgba(200, 230, 201, 0.1) 35px,
+		rgba(200, 230, 201, 0.1) 70px
+	);
+
+	/* Anxious - Light Orange */
+	--emotion-anxious-primary: #fff3e0;
+	--emotion-anxious-secondary: #ffe0b2;
+	--emotion-anxious-tertiary: #ffcc80;
+	--emotion-anxious-text: #e65100;
+	--emotion-anxious-gradient: linear-gradient(
+		135deg,
+		#fff3e0 0%,
+		#ffe0b2 50%,
+		#ffcc80 100%
+	);
+	--emotion-anxious-radial: radial-gradient(
+		circle at 70% 30%,
+		#fff3e0 0%,
+		transparent 60%
+	);
+	--emotion-anxious-pattern: repeating-linear-gradient(
+		-45deg,
+		transparent,
+		transparent 30px,
+		rgba(255, 224, 178, 0.1) 30px,
+		rgba(255, 224, 178, 0.1) 60px
+	);
+
+	/* Stressed - Light Red */
+	--emotion-stressed-primary: #ffebee;
+	--emotion-stressed-secondary: #ffcdd2;
+	--emotion-stressed-tertiary: #ef9a9a;
+	--emotion-stressed-text: #c62828;
+	--emotion-stressed-gradient: linear-gradient(
+		135deg,
+		#ffebee 0%,
+		#ffcdd2 50%,
+		#ef9a9a 100%
+	);
+	--emotion-stressed-radial: radial-gradient(
+		circle at 50% 50%,
+		#ffebee 0%,
+		transparent 70%
+	);
+	--emotion-stressed-pattern: repeating-linear-gradient(
+		90deg,
+		transparent,
+		transparent 40px,
+		rgba(255, 205, 210, 0.1) 40px,
+		rgba(255, 205, 210, 0.1) 80px
+	);
+
+	/* Energized - Light Blue */
+	--emotion-energized-primary: #e3f2fd;
+	--emotion-energized-secondary: #bbdefb;
+	--emotion-energized-tertiary: #90caf9;
+	--emotion-energized-text: #0d47a1;
+	--emotion-energized-gradient: linear-gradient(
+		135deg,
+		#e3f2fd 0%,
+		#bbdefb 50%,
+		#90caf9 100%
+	);
+	--emotion-energized-radial: radial-gradient(
+		circle at 20% 80%,
+		#e3f2fd 0%,
+		transparent 60%
+	);
+	--emotion-energized-pattern: repeating-linear-gradient(
+		120deg,
+		transparent,
+		transparent 25px,
+		rgba(187, 222, 251, 0.1) 25px,
+		rgba(187, 222, 251, 0.1) 50px
+	);
+
+	/* Exhausted - Light Purple */
+	--emotion-exhausted-primary: #f3e5f5;
+	--emotion-exhausted-secondary: #e1bee7;
+	--emotion-exhausted-tertiary: #ce93d8;
+	--emotion-exhausted-text: #6a1b9a;
+	--emotion-exhausted-gradient: linear-gradient(
+		135deg,
+		#f3e5f5 0%,
+		#e1bee7 50%,
+		#ce93d8 100%
+	);
+	--emotion-exhausted-radial: radial-gradient(
+		circle at 80% 20%,
+		#f3e5f5 0%,
+		transparent 60%
+	);
+	--emotion-exhausted-pattern: repeating-linear-gradient(
+		180deg,
+		transparent,
+		transparent 45px,
+		rgba(225, 190, 231, 0.1) 45px,
+		rgba(225, 190, 231, 0.1) 90px
+	);
+
+	/* Focused - Light Teal */
+	--emotion-focused-primary: #e0f2f1;
+	--emotion-focused-secondary: #b2dfdb;
+	--emotion-focused-tertiary: #80cbc4;
+	--emotion-focused-text: #00695c;
+	--emotion-focused-gradient: linear-gradient(
+		135deg,
+		#e0f2f1 0%,
+		#b2dfdb 50%,
+		#80cbc4 100%
+	);
+	--emotion-focused-radial: radial-gradient(
+		circle at 40% 60%,
+		#e0f2f1 0%,
+		transparent 60%
+	);
+	--emotion-focused-pattern: repeating-linear-gradient(
+		60deg,
+		transparent,
+		transparent 32px,
+		rgba(178, 223, 219, 0.1) 32px,
+		rgba(178, 223, 219, 0.1) 64px
+	);
+
+	/* Overwhelmed - Light Coral */
+	--emotion-overwhelmed-primary: #fbe9e7;
+	--emotion-overwhelmed-secondary: #ffccbc;
+	--emotion-overwhelmed-tertiary: #ffab91;
+	--emotion-overwhelmed-text: #d84315;
+	--emotion-overwhelmed-gradient: linear-gradient(
+		135deg,
+		#fbe9e7 0%,
+		#ffccbc 50%,
+		#ffab91 100%
+	);
+	--emotion-overwhelmed-radial: radial-gradient(
+		circle at 60% 40%,
+		#fbe9e7 0%,
+		transparent 70%
+	);
+	--emotion-overwhelmed-pattern: repeating-linear-gradient(
+		135deg,
+		transparent,
+		transparent 38px,
+		rgba(255, 204, 188, 0.1) 38px,
+		rgba(255, 204, 188, 0.1) 76px
+	);
+
+	/* Accomplished - Light Yellow-Green */
+	--emotion-accomplished-primary: #f1f8e9;
+	--emotion-accomplished-secondary: #dcedc8;
+	--emotion-accomplished-tertiary: #aed581;
+	--emotion-accomplished-text: #558b2f;
+	--emotion-accomplished-gradient: linear-gradient(
+		135deg,
+		#f1f8e9 0%,
+		#dcedc8 50%,
+		#aed581 100%
+	);
+	--emotion-accomplished-radial: radial-gradient(
+		circle at 25% 75%,
+		#f1f8e9 0%,
+		transparent 60%
+	);
+	--emotion-accomplished-pattern: repeating-linear-gradient(
+		270deg,
+		transparent,
+		transparent 42px,
+		rgba(220, 237, 200, 0.1) 42px,
+		rgba(220, 237, 200, 0.1) 84px
+	);
+
+	/* Neutral - Light Gray */
+	--emotion-neutral-primary: #fafafa;
+	--emotion-neutral-secondary: #f5f5f5;
+	--emotion-neutral-tertiary: #eeeeee;
+	--emotion-neutral-text: #424242;
+	--emotion-neutral-gradient: linear-gradient(
+		135deg,
+		#fafafa 0%,
+		#f5f5f5 50%,
+		#eeeeee 100%
+	);
+	--emotion-neutral-radial: radial-gradient(
+		circle at 50% 50%,
+		#fafafa 0%,
+		transparent 60%
+	);
+	--emotion-neutral-pattern: none;
+
+	/* Animation speeds */
+	--emotion-transition-slow: 3s;
+	--emotion-transition-medium: 1.5s;
+	--emotion-transition-fast: 0.5s;
+	--emotion-transition-none: 0s;
 }
 
 /* ==========================================================================
@@ -98,50 +227,50 @@
    ========================================================================== */
 
 .emotion-rag-container {
-  position: relative;
-  min-height: 100vh;
-  transition: background var(--emotion-transition-medium) ease-in-out;
+	position: relative;
+	min-height: 100vh;
+	transition: background var(--emotion-transition-medium) ease-in-out;
 }
 
 .emotion-rag-container[data-emotion="calm"] {
-  background: var(--emotion-calm-gradient);
+	background: var(--emotion-calm-gradient);
 }
 
 .emotion-rag-container[data-emotion="anxious"] {
-  background: var(--emotion-anxious-gradient);
+	background: var(--emotion-anxious-gradient);
 }
 
 .emotion-rag-container[data-emotion="stressed"] {
-  background: var(--emotion-stressed-gradient);
+	background: var(--emotion-stressed-gradient);
 }
 
 .emotion-rag-container[data-emotion="energized"] {
-  background: var(--emotion-energized-gradient);
+	background: var(--emotion-energized-gradient);
 }
 
 .emotion-rag-container[data-emotion="exhausted"] {
-  background: var(--emotion-exhausted-gradient);
+	background: var(--emotion-exhausted-gradient);
 }
 
 .emotion-rag-container[data-emotion="focused"] {
-  background: var(--emotion-focused-gradient);
+	background: var(--emotion-focused-gradient);
 }
 
 .emotion-rag-container[data-emotion="overwhelmed"] {
-  background: var(--emotion-overwhelmed-gradient);
+	background: var(--emotion-overwhelmed-gradient);
 }
 
 .emotion-rag-container[data-emotion="accomplished"] {
-  background: var(--emotion-accomplished-gradient);
+	background: var(--emotion-accomplished-gradient);
 }
 
 .emotion-rag-container[data-emotion="neutral"] {
-  background: var(--emotion-neutral-gradient);
+	background: var(--emotion-neutral-gradient);
 }
 
 /* Disabled state */
 .emotion-rag-container[data-enabled="false"] {
-  background: var(--bg-primary) !important;
+	background: var(--bg-primary) !important;
 }
 
 /* ==========================================================================
@@ -150,90 +279,90 @@
 
 .emotion-overlay-1,
 .emotion-overlay-2 {
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-  transition: opacity var(--emotion-transition-medium) ease-in-out;
+	position: absolute;
+	inset: 0;
+	pointer-events: none;
+	transition: opacity var(--emotion-transition-medium) ease-in-out;
 }
 
 .emotion-overlay-1 {
-  opacity: 0.6;
-  mix-blend-mode: multiply;
+	opacity: 0.6;
+	mix-blend-mode: multiply;
 }
 
 .emotion-overlay-2 {
-  opacity: 0.3;
+	opacity: 0.3;
 }
 
 /* Radial overlays for each emotion */
 [data-emotion="calm"] .emotion-overlay-1 {
-  background: var(--emotion-calm-radial);
+	background: var(--emotion-calm-radial);
 }
 
 [data-emotion="anxious"] .emotion-overlay-1 {
-  background: var(--emotion-anxious-radial);
+	background: var(--emotion-anxious-radial);
 }
 
 [data-emotion="stressed"] .emotion-overlay-1 {
-  background: var(--emotion-stressed-radial);
+	background: var(--emotion-stressed-radial);
 }
 
 [data-emotion="energized"] .emotion-overlay-1 {
-  background: var(--emotion-energized-radial);
+	background: var(--emotion-energized-radial);
 }
 
 [data-emotion="exhausted"] .emotion-overlay-1 {
-  background: var(--emotion-exhausted-radial);
+	background: var(--emotion-exhausted-radial);
 }
 
 [data-emotion="focused"] .emotion-overlay-1 {
-  background: var(--emotion-focused-radial);
+	background: var(--emotion-focused-radial);
 }
 
 [data-emotion="overwhelmed"] .emotion-overlay-1 {
-  background: var(--emotion-overwhelmed-radial);
+	background: var(--emotion-overwhelmed-radial);
 }
 
 [data-emotion="accomplished"] .emotion-overlay-1 {
-  background: var(--emotion-accomplished-radial);
+	background: var(--emotion-accomplished-radial);
 }
 
 /* Pattern overlays for each emotion */
 [data-emotion="calm"] .emotion-overlay-2 {
-  background: var(--emotion-calm-pattern);
+	background: var(--emotion-calm-pattern);
 }
 
 [data-emotion="anxious"] .emotion-overlay-2 {
-  background: var(--emotion-anxious-pattern);
+	background: var(--emotion-anxious-pattern);
 }
 
 [data-emotion="stressed"] .emotion-overlay-2 {
-  background: var(--emotion-stressed-pattern);
+	background: var(--emotion-stressed-pattern);
 }
 
 [data-emotion="energized"] .emotion-overlay-2 {
-  background: var(--emotion-energized-pattern);
+	background: var(--emotion-energized-pattern);
 }
 
 [data-emotion="exhausted"] .emotion-overlay-2 {
-  background: var(--emotion-exhausted-pattern);
+	background: var(--emotion-exhausted-pattern);
 }
 
 [data-emotion="focused"] .emotion-overlay-2 {
-  background: var(--emotion-focused-pattern);
+	background: var(--emotion-focused-pattern);
 }
 
 [data-emotion="overwhelmed"] .emotion-overlay-2 {
-  background: var(--emotion-overwhelmed-pattern);
+	background: var(--emotion-overwhelmed-pattern);
 }
 
 [data-emotion="accomplished"] .emotion-overlay-2 {
-  background: var(--emotion-accomplished-pattern);
+	background: var(--emotion-accomplished-pattern);
 }
 
 /* Hide patterns when disabled */
 [data-pattern="false"] .emotion-overlay-2 {
-  display: none;
+	display: none;
 }
 
 /* ==========================================================================
@@ -241,149 +370,149 @@
    ========================================================================== */
 
 .emotion-indicator {
-  position: fixed;
-  top: 1rem;
-  right: 1rem;
-  z-index: 50;
+	position: fixed;
+	top: 1rem;
+	right: 1rem;
+	z-index: 50;
 }
 
 .emotion-indicator-button {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  padding: 0.75rem 1rem;
-  background-color: var(--bg-card);
-  border: 2px solid rgba(0, 0, 0, 0.1);
-  border-radius: 2rem;
-  box-shadow: var(--shadow-lg);
-  cursor: pointer;
-  transition: all 0.3s ease;
-  font-weight: 500;
+	display: flex;
+	align-items: center;
+	gap: 0.5rem;
+	padding: 0.75rem 1rem;
+	background-color: var(--bg-card);
+	border: 2px solid rgba(0, 0, 0, 0.1);
+	border-radius: 2rem;
+	box-shadow: var(--shadow-lg);
+	cursor: pointer;
+	transition: all 0.3s ease;
+	font-weight: 500;
 }
 
 .emotion-indicator-button:hover {
-  transform: translateY(-2px);
-  box-shadow: var(--shadow-xl);
+	transform: translateY(-2px);
+	box-shadow: var(--shadow-xl);
 }
 
 .emotion-indicator-button[aria-expanded="true"] {
-  border-radius: 1rem 1rem 0 0;
+	border-radius: 1rem 1rem 0 0;
 }
 
 .emotion-indicator-icon {
-  width: 20px;
-  height: 20px;
+	width: 20px;
+	height: 20px;
 }
 
 .emotion-indicator-label {
-  font-weight: 500;
+	font-weight: 500;
 }
 
 /* Emotion-specific indicator colors */
 [data-emotion="calm"] .emotion-indicator-button {
-  border-color: var(--emotion-calm-text)20;
+	border-color: var(--emotion-calm-text) 20;
 }
 
 [data-emotion="calm"] .emotion-indicator-label {
-  color: var(--emotion-calm-text);
+	color: var(--emotion-calm-text);
 }
 
 [data-emotion="anxious"] .emotion-indicator-button {
-  border-color: var(--emotion-anxious-text)20;
+	border-color: var(--emotion-anxious-text) 20;
 }
 
 [data-emotion="anxious"] .emotion-indicator-label {
-  color: var(--emotion-anxious-text);
+	color: var(--emotion-anxious-text);
 }
 
 [data-emotion="stressed"] .emotion-indicator-button {
-  border-color: var(--emotion-stressed-text)20;
+	border-color: var(--emotion-stressed-text) 20;
 }
 
 [data-emotion="stressed"] .emotion-indicator-label {
-  color: var(--emotion-stressed-text);
+	color: var(--emotion-stressed-text);
 }
 
 [data-emotion="energized"] .emotion-indicator-button {
-  border-color: var(--emotion-energized-text)20;
+	border-color: var(--emotion-energized-text) 20;
 }
 
 [data-emotion="energized"] .emotion-indicator-label {
-  color: var(--emotion-energized-text);
+	color: var(--emotion-energized-text);
 }
 
 [data-emotion="exhausted"] .emotion-indicator-button {
-  border-color: var(--emotion-exhausted-text)20;
+	border-color: var(--emotion-exhausted-text) 20;
 }
 
 [data-emotion="exhausted"] .emotion-indicator-label {
-  color: var(--emotion-exhausted-text);
+	color: var(--emotion-exhausted-text);
 }
 
 [data-emotion="focused"] .emotion-indicator-button {
-  border-color: var(--emotion-focused-text)20;
+	border-color: var(--emotion-focused-text) 20;
 }
 
 [data-emotion="focused"] .emotion-indicator-label {
-  color: var(--emotion-focused-text);
+	color: var(--emotion-focused-text);
 }
 
 [data-emotion="overwhelmed"] .emotion-indicator-button {
-  border-color: var(--emotion-overwhelmed-text)20;
+	border-color: var(--emotion-overwhelmed-text) 20;
 }
 
 [data-emotion="overwhelmed"] .emotion-indicator-label {
-  color: var(--emotion-overwhelmed-text);
+	color: var(--emotion-overwhelmed-text);
 }
 
 [data-emotion="accomplished"] .emotion-indicator-button {
-  border-color: var(--emotion-accomplished-text)20;
+	border-color: var(--emotion-accomplished-text) 20;
 }
 
 [data-emotion="accomplished"] .emotion-indicator-label {
-  color: var(--emotion-accomplished-text);
+	color: var(--emotion-accomplished-text);
 }
 
 /* Emotion Details Panel */
 .emotion-details {
-  position: absolute;
-  top: 100%;
-  right: 0;
-  background-color: var(--bg-card);
-  border: 2px solid rgba(0, 0, 0, 0.1);
-  border-top: none;
-  border-radius: 0 0 1rem 1rem;
-  padding: 1rem;
-  min-width: 250px;
-  box-shadow: var(--shadow-lg);
-  animation: slideDown 0.3s ease;
+	position: absolute;
+	top: 100%;
+	right: 0;
+	background-color: var(--bg-card);
+	border: 2px solid rgba(0, 0, 0, 0.1);
+	border-top: none;
+	border-radius: 0 0 1rem 1rem;
+	padding: 1rem;
+	min-width: 250px;
+	box-shadow: var(--shadow-lg);
+	animation: slideDown 0.3s ease;
 }
 
 @keyframes slideDown {
-  from {
-    opacity: 0;
-    transform: translateY(-10px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+	from {
+		opacity: 0;
+		transform: translateY(-10px);
+	}
+	to {
+		opacity: 1;
+		transform: translateY(0);
+	}
 }
 
 .emotion-color-preview {
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-  padding: 0.75rem;
-  border-radius: 0.5rem;
-  margin-bottom: 0.75rem;
+	display: flex;
+	align-items: center;
+	gap: 0.75rem;
+	padding: 0.75rem;
+	border-radius: 0.5rem;
+	margin-bottom: 0.75rem;
 }
 
 .emotion-color-swatch {
-  width: 3rem;
-  height: 3rem;
-  border-radius: 50%;
-  border: 2px solid rgba(0, 0, 0, 0.1);
+	width: 3rem;
+	height: 3rem;
+	border-radius: 50%;
+	border: 2px solid rgba(0, 0, 0, 0.1);
 }
 
 /* ==========================================================================
@@ -391,123 +520,123 @@
    ========================================================================== */
 
 .emotion-controls {
-  position: fixed;
-  bottom: 1rem;
-  left: 1rem;
-  z-index: 50;
+	position: fixed;
+	bottom: 1rem;
+	left: 1rem;
+	z-index: 50;
 }
 
 .emotion-controls-toggle {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  padding: 0.5rem 0.75rem;
-  background-color: var(--bg-card);
-  border: 2px solid var(--border-default);
-  border-radius: 0.5rem;
-  box-shadow: var(--shadow-md);
-  cursor: pointer;
-  font-size: 0.875rem;
-  transition: all 0.3s ease;
+	display: flex;
+	align-items: center;
+	gap: 0.5rem;
+	padding: 0.5rem 0.75rem;
+	background-color: var(--bg-card);
+	border: 2px solid var(--border-default);
+	border-radius: 0.5rem;
+	box-shadow: var(--shadow-md);
+	cursor: pointer;
+	font-size: 0.875rem;
+	transition: all 0.3s ease;
 }
 
 .emotion-controls-toggle:hover {
-  transform: translateY(-2px);
-  box-shadow: var(--shadow-lg);
+	transform: translateY(-2px);
+	box-shadow: var(--shadow-lg);
 }
 
 .emotion-controls-panel {
-  position: absolute;
-  bottom: 100%;
-  left: 0;
-  margin-bottom: 0.5rem;
-  background-color: var(--bg-card);
-  border: 2px solid var(--border-default);
-  border-radius: 0.75rem;
-  padding: 1rem;
-  min-width: 280px;
-  box-shadow: var(--shadow-lg);
-  animation: slideUp 0.3s ease;
+	position: absolute;
+	bottom: 100%;
+	left: 0;
+	margin-bottom: 0.5rem;
+	background-color: var(--bg-card);
+	border: 2px solid var(--border-default);
+	border-radius: 0.75rem;
+	padding: 1rem;
+	min-width: 280px;
+	box-shadow: var(--shadow-lg);
+	animation: slideUp 0.3s ease;
 }
 
 @keyframes slideUp {
-  from {
-    opacity: 0;
-    transform: translateY(10px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+	from {
+		opacity: 0;
+		transform: translateY(10px);
+	}
+	to {
+		opacity: 1;
+		transform: translateY(0);
+	}
 }
 
 .emotion-control-group {
-  margin-bottom: 0.75rem;
+	margin-bottom: 0.75rem;
 }
 
 .emotion-control-label {
-  display: block;
-  font-size: 0.75rem;
-  color: var(--text-secondary);
-  margin-bottom: 0.25rem;
+	display: block;
+	font-size: 0.75rem;
+	color: var(--text-secondary);
+	margin-bottom: 0.25rem;
 }
 
 .emotion-control-buttons {
-  display: flex;
-  gap: 0.25rem;
+	display: flex;
+	gap: 0.25rem;
 }
 
 .emotion-control-button {
-  flex: 1;
-  padding: 0.375rem;
-  font-size: 0.75rem;
-  background-color: var(--bg-secondary);
-  color: var(--text-primary);
-  border: 1px solid var(--border-default);
-  border-radius: 0.25rem;
-  cursor: pointer;
-  text-transform: capitalize;
-  transition: all 0.2s ease;
+	flex: 1;
+	padding: 0.375rem;
+	font-size: 0.75rem;
+	background-color: var(--bg-secondary);
+	color: var(--text-primary);
+	border: 1px solid var(--border-default);
+	border-radius: 0.25rem;
+	cursor: pointer;
+	text-transform: capitalize;
+	transition: all 0.2s ease;
 }
 
 .emotion-control-button:hover {
-  background-color: var(--primary-100);
+	background-color: var(--primary-100);
 }
 
 .emotion-control-button[aria-pressed="true"] {
-  background-color: var(--primary-600);
-  color: white;
-  border-color: var(--primary-600);
+	background-color: var(--primary-600);
+	color: white;
+	border-color: var(--primary-600);
 }
 
 .emotion-toggle-button {
-  width: 100%;
-  padding: 0.5rem;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  background-color: var(--bg-secondary);
-  border: 1px solid var(--border-default);
-  border-radius: 0.5rem;
-  cursor: pointer;
-  transition: all 0.2s ease;
+	width: 100%;
+	padding: 0.5rem;
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	background-color: var(--bg-secondary);
+	border: 1px solid var(--border-default);
+	border-radius: 0.5rem;
+	cursor: pointer;
+	transition: all 0.2s ease;
 }
 
 .emotion-toggle-button:hover {
-  background-color: var(--primary-50);
+	background-color: var(--primary-50);
 }
 
 .emotion-toggle-status {
-  padding: 0.25rem 0.5rem;
-  background-color: var(--neutral-400);
-  color: white;
-  border-radius: 0.25rem;
-  font-size: 0.75rem;
-  font-weight: 500;
+	padding: 0.25rem 0.5rem;
+	background-color: var(--neutral-400);
+	color: white;
+	border-radius: 0.25rem;
+	font-size: 0.75rem;
+	font-weight: 500;
 }
 
 .emotion-toggle-button[aria-pressed="true"] .emotion-toggle-status {
-  background-color: var(--success-600);
+	background-color: var(--success-600);
 }
 
 /* ==========================================================================
@@ -515,39 +644,39 @@
    ========================================================================== */
 
 .emotion-rag-container[data-speed="slow"] {
-  transition-duration: var(--emotion-transition-slow);
+	transition-duration: var(--emotion-transition-slow);
 }
 
 .emotion-rag-container[data-speed="medium"] {
-  transition-duration: var(--emotion-transition-medium);
+	transition-duration: var(--emotion-transition-medium);
 }
 
 .emotion-rag-container[data-speed="fast"] {
-  transition-duration: var(--emotion-transition-fast);
+	transition-duration: var(--emotion-transition-fast);
 }
 
 .emotion-rag-container[data-speed="none"] {
-  transition-duration: var(--emotion-transition-none);
+	transition-duration: var(--emotion-transition-none);
 }
 
 [data-speed="slow"] .emotion-overlay-1,
 [data-speed="slow"] .emotion-overlay-2 {
-  transition-duration: var(--emotion-transition-slow);
+	transition-duration: var(--emotion-transition-slow);
 }
 
 [data-speed="medium"] .emotion-overlay-1,
 [data-speed="medium"] .emotion-overlay-2 {
-  transition-duration: var(--emotion-transition-medium);
+	transition-duration: var(--emotion-transition-medium);
 }
 
 [data-speed="fast"] .emotion-overlay-1,
 [data-speed="fast"] .emotion-overlay-2 {
-  transition-duration: var(--emotion-transition-fast);
+	transition-duration: var(--emotion-transition-fast);
 }
 
 [data-speed="none"] .emotion-overlay-1,
 [data-speed="none"] .emotion-overlay-2 {
-  transition-duration: var(--emotion-transition-none);
+	transition-duration: var(--emotion-transition-none);
 }
 
 /* ==========================================================================
@@ -555,29 +684,29 @@
    ========================================================================== */
 
 @media (max-width: 640px) {
-  .emotion-indicator {
-    top: 0.5rem;
-    right: 0.5rem;
-  }
-  
-  .emotion-indicator-button {
-    padding: 0.5rem 0.75rem;
-    font-size: 0.875rem;
-  }
-  
-  .emotion-details {
-    min-width: 200px;
-    padding: 0.75rem;
-  }
-  
-  .emotion-controls {
-    bottom: 0.5rem;
-    left: 0.5rem;
-  }
-  
-  .emotion-controls-panel {
-    min-width: 240px;
-  }
+	.emotion-indicator {
+		top: 0.5rem;
+		right: 0.5rem;
+	}
+
+	.emotion-indicator-button {
+		padding: 0.5rem 0.75rem;
+		font-size: 0.875rem;
+	}
+
+	.emotion-details {
+		min-width: 200px;
+		padding: 0.75rem;
+	}
+
+	.emotion-controls {
+		bottom: 0.5rem;
+		left: 0.5rem;
+	}
+
+	.emotion-controls-panel {
+		min-width: 240px;
+	}
 }
 
 /* ==========================================================================
@@ -585,16 +714,16 @@
    ========================================================================== */
 
 @media print {
-  .emotion-rag-container {
-    background: white !important;
-  }
-  
-  .emotion-overlay-1,
-  .emotion-overlay-2,
-  .emotion-indicator,
-  .emotion-controls {
-    display: none !important;
-  }
+	.emotion-rag-container {
+		background: white !important;
+	}
+
+	.emotion-overlay-1,
+	.emotion-overlay-2,
+	.emotion-indicator,
+	.emotion-controls {
+		display: none !important;
+	}
 }
 
 /* ==========================================================================
@@ -602,12 +731,12 @@
    ========================================================================== */
 
 @media (prefers-reduced-motion: reduce) {
-  .emotion-rag-container,
-  .emotion-overlay-1,
-  .emotion-overlay-2 {
-    transition: none !important;
-    animation: none !important;
-  }
+	.emotion-rag-container,
+	.emotion-overlay-1,
+	.emotion-overlay-2 {
+		transition: none !important;
+		animation: none !important;
+	}
 }
 
 /* ==========================================================================
@@ -615,18 +744,18 @@
    ========================================================================== */
 
 @media (prefers-contrast: high) {
-  .emotion-rag-container {
-    background: var(--bg-primary) !important;
-  }
-  
-  .emotion-overlay-1,
-  .emotion-overlay-2 {
-    display: none !important;
-  }
-  
-  .emotion-indicator-button,
-  .emotion-details,
-  .emotion-controls-panel {
-    border-width: 3px;
-  }
+	.emotion-rag-container {
+		background: var(--bg-primary) !important;
+	}
+
+	.emotion-overlay-1,
+	.emotion-overlay-2 {
+		display: none !important;
+	}
+
+	.emotion-indicator-button,
+	.emotion-details,
+	.emotion-controls-panel {
+		border-width: 3px;
+	}
 }

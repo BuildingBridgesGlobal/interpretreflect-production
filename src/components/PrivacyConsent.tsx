@@ -1,266 +1,310 @@
-import React, { useState, useEffect } from 'react';
-import { Shield, Lock, Eye, Database, Clock, AlertCircle, Check, X } from 'lucide-react';
-import { SECURITY_CONFIG, SECURITY_MESSAGES } from '../config/security';
-import { AuditLogger } from '../utils/security';
+import type React from "react";
+import { useState } from "react";
+
+import { SECURITY_CONFIG } from "../config/security";
+import { AuditLogger } from "../utils/security";
+import { supabase } from "../lib/supabase";
 
 interface PrivacyConsentProps {
-  isOpen: boolean;
-  onAccept: () => void;
-  onDecline?: () => void;
-  required?: boolean;
+	isOpen: boolean;
+	onAccept: () => void;
+	onDecline?: () => void;
+	required?: boolean;
+	userId?: string;
 }
 
-export const PrivacyConsent: React.FC<PrivacyConsentProps> = ({
-  isOpen,
-  onAccept,
-  onDecline,
-  required = true,
+const PrivacyConsent: React.FC<PrivacyConsentProps> = ({
+	isOpen,
+	onAccept,
+	onDecline,
+	required = true,
+	userId,
 }) => {
-  const [showDetails, setShowDetails] = useState(false);
-  const [consentGiven, setConsentGiven] = useState(false);
+	const [showDetails, setShowDetails] = useState(false);
 
-  useEffect(() => {
-    // Check if consent was previously given
-    const previousConsent = localStorage.getItem('privacyConsent');
-    if (previousConsent) {
-      const consentData = JSON.parse(previousConsent);
-      const daysSinceConsent = (Date.now() - consentData.timestamp) / (1000 * 60 * 60 * 24);
-      
-      // Re-ask for consent every 90 days
-      if (daysSinceConsent < 90) {
-        setConsentGiven(true);
-      }
-    }
-  }, []);
+	if (!isOpen) return null;
 
-  if (!isOpen || consentGiven) return null;
+	const handleAccept = async () => {
+		const consentData = {
+			timestamp: Date.now(),
+			version: "1.0",
+			gdpr: SECURITY_CONFIG.privacy.gdprCompliant,
+			hipaa: SECURITY_CONFIG.privacy.hipaaCompliant,
+		};
 
-  const handleAccept = () => {
-    const consentData = {
-      timestamp: Date.now(),
-      version: '1.0',
-      gdpr: SECURITY_CONFIG.privacy.gdprCompliant,
-      hipaa: SECURITY_CONFIG.privacy.hipaaCompliant,
-    };
-    
-    localStorage.setItem('privacyConsent', JSON.stringify(consentData));
-    setConsentGiven(true);
-    
-    // Log consent
-    AuditLogger.log({
-      action: 'PRIVACY_CONSENT_ACCEPTED',
-      category: 'DATA',
-      severity: 'INFO',
-      details: consentData,
-    });
-    
-    onAccept();
-  };
+		// Save to localStorage as fallback
+		localStorage.setItem("privacyConsent", JSON.stringify(consentData));
 
-  const handleDecline = () => {
-    AuditLogger.log({
-      action: 'PRIVACY_CONSENT_DECLINED',
-      category: 'DATA',
-      severity: 'INFO',
-    });
-    
-    if (onDecline) {
-      onDecline();
-    }
-  };
+		// Save to Supabase if userId is available
+		if (userId) {
+			try {
+				const { error } = await supabase
+					.from("user_profiles")
+					.upsert(
+						{
+							user_id: userId,
+							privacy_consent_accepted_at: new Date().toISOString(),
+						},
+						{
+							onConflict: "user_id",
+						}
+					);
 
-  return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-      <div className="bg-white rounded-2xl w-full max-w-2xl max-h-[90vh] overflow-y-auto shadow-2xl">
-        <div className="p-6 border-b border-gray-200 bg-gradient-to-r from-green-50 to-blue-50">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center space-x-3">
-              <div className="p-2 bg-green-100 rounded-lg">
-                <Shield className="h-6 w-6 text-green-600" />
-              </div>
-              <div>
-                <h2 className="text-2xl font-bold text-gray-900">Privacy & Security Notice</h2>
-                <p className="text-sm text-gray-600 mt-1">Your data protection is our priority</p>
-              </div>
-            </div>
-            {!required && (
-              <button
-                onClick={handleDecline}
-                className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
-                aria-label="Close"
-              >
-                <X className="h-5 w-5 text-gray-500" />
-              </button>
-            )}
-          </div>
-        </div>
+				if (error) {
+					console.error("Failed to save consent to database:", error);
+				} else {
+					console.log("✅ Privacy consent saved to database");
+				}
+			} catch (error) {
+				console.error("Error saving consent:", error);
+			}
+		}
 
-        <div className="p-6">
-          {/* Key Privacy Points */}
-          <div className="space-y-4 mb-6">
-            <div className="flex items-start space-x-3">
-              <Lock className="h-5 w-5 text-green-600 mt-1 flex-shrink-0" />
-              <div>
-                <h3 className="font-semibold text-gray-900">End-to-End Encryption</h3>
-                <p className="text-sm text-gray-600 mt-1">
-                  Your wellness data is encrypted both in transit (when sending) and at rest (when stored). 
-                  Only you have access to your personal information.
-                </p>
-              </div>
-            </div>
+		// Log consent
+		AuditLogger.log({
+			action: "PRIVACY_CONSENT_ACCEPTED",
+			category: "DATA",
+			severity: "INFO",
+			details: consentData,
+		});
 
-            <div className="flex items-start space-x-3">
-              <Eye className="h-5 w-5 text-blue-600 mt-1 flex-shrink-0" />
-              <div>
-                <h3 className="font-semibold text-gray-900">HIPAA Compliant</h3>
-                <p className="text-sm text-gray-600 mt-1">
-                  We follow strict HIPAA guidelines to protect your health information. 
-                  Your data is treated with the same confidentiality as medical records.
-                </p>
-              </div>
-            </div>
+		onAccept();
+	};
 
-            <div className="flex items-start space-x-3">
-              <Database className="h-5 w-5 text-purple-600 mt-1 flex-shrink-0" />
-              <div>
-                <h3 className="font-semibold text-gray-900">You Own Your Data</h3>
-                <p className="text-sm text-gray-600 mt-1">
-                  You can export, download, or delete your data at any time. 
-                  We never sell or share your information with third parties.
-                </p>
-              </div>
-            </div>
+	const handleDecline = () => {
+		AuditLogger.log({
+			action: "PRIVACY_CONSENT_DECLINED",
+			category: "DATA",
+			severity: "INFO",
+		});
 
-            <div className="flex items-start space-x-3">
-              <Clock className="h-5 w-5 text-orange-600 mt-1 flex-shrink-0" />
-              <div>
-                <h3 className="font-semibold text-gray-900">Auto Session Timeout</h3>
-                <p className="text-sm text-gray-600 mt-1">
-                  For your security, sessions automatically end after 30 minutes of inactivity. 
-                  You'll receive a warning before timeout.
-                </p>
-              </div>
-            </div>
-          </div>
+		if (onDecline) {
+			onDecline();
+		}
+	};
 
-          {/* Expandable Details */}
-          <button
-            onClick={() => setShowDetails(!showDetails)}
-            className="w-full text-left p-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors mb-4"
-          >
-            <div className="flex items-center justify-between">
-              <span className="text-sm font-medium text-gray-700">
-                {showDetails ? 'Hide' : 'Show'} Detailed Privacy Information
-              </span>
-              <AlertCircle className="h-4 w-4 text-gray-500" />
-            </div>
-          </button>
+	return (
+		<div className="fixed inset-0 flex items-center justify-center z-50 p-4" style={{ backgroundColor: "rgba(0, 0, 0, 0.4)" }}>
+			<div
+				className="rounded-2xl w-full max-w-3xl max-h-[90vh] overflow-y-auto"
+				style={{
+					backgroundColor: "#FFFFFF",
+					boxShadow: "0 25px 60px rgba(0, 0, 0, 0.15)",
+				}}
+			>
+				<div className="p-8 border-b" style={{ borderColor: "rgba(0, 0, 0, 0.05)", backgroundColor: "#FAFAF8" }}>
+					<div className="flex items-center justify-between">
+						<div>
+							<h2 className="text-2xl font-bold mb-2" style={{ color: "#1A1A1A" }}>
+								Your Privacy & Security
+							</h2>
+							<p className="text-sm" style={{ color: "#525252" }}>
+								We're committed to protecting your reflections and maintaining trust
+							</p>
+						</div>
+						{!required && (
+							<button
+								onClick={handleDecline}
+								className="p-2 rounded-lg hover:bg-gray-100 transition-colors"
+								aria-label="Close"
+							>
+								<svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+									<path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+								</svg>
+							</button>
+						)}
+					</div>
+				</div>
 
-          {showDetails && (
-            <div className="bg-gray-50 rounded-lg p-4 mb-6 text-sm text-gray-600 space-y-3">
-              <div>
-                <strong>What We Collect:</strong>
-                <ul className="list-disc ml-5 mt-1 space-y-1">
-                  <li>Wellness assessment responses (encrypted)</li>
-                  <li>Usage patterns to improve the platform</li>
-                  <li>Technical data for security (IP address, browser type)</li>
-                  <li>Optional: Profile information you choose to provide</li>
-                </ul>
-              </div>
-              
-              <div>
-                <strong>What We DON'T Collect:</strong>
-                <ul className="list-disc ml-5 mt-1 space-y-1">
-                  <li>Personal health records without consent</li>
-                  <li>Location tracking data</li>
-                  <li>Third-party cookies for advertising</li>
-                  <li>Biometric data</li>
-                </ul>
-              </div>
+				<div className="p-8">
+					{/* Quick Data Usage Summary */}
+					<div className="p-4 rounded-lg mb-6" style={{ backgroundColor: "#F0F9FF", border: "1px solid #E0F2FE" }}>
+						<h3 className="font-semibold mb-3" style={{ color: "#1A1A1A" }}>
+							Your Data at a Glance
+						</h3>
+						<ul className="text-sm space-y-2" style={{ color: "#2A2A2A" }}>
+							<li>• <strong>Your Reflections:</strong> Encrypted and private - only you can access them</li>
+							<li>• <strong>Your Progress:</strong> Used to personalize your wellness journey</li>
+							<li>• <strong>Your Privacy:</strong> Never sold, never shared without your explicit consent</li>
+							<li>• <strong>Your Control:</strong> Export, delete, or modify your data anytime</li>
+						</ul>
+					</div>
 
-              <div>
-                <strong>Your Rights:</strong>
-                <ul className="list-disc ml-5 mt-1 space-y-1">
-                  <li>Access your data anytime</li>
-                  <li>Request data correction or deletion</li>
-                  <li>Opt-out of non-essential data collection</li>
-                  <li>Receive notification of any data breaches</li>
-                  <li>Transfer your data to another service</li>
-                </ul>
-              </div>
+					{/* Key Privacy Points */}
+					<div className="space-y-4 mb-6">
+						<div className="p-4 rounded-lg" style={{ backgroundColor: "#FAFAF8", border: "1px solid rgba(0, 0, 0, 0.05)" }}>
+							<h3 className="font-semibold text-sm mb-2" style={{ color: "#1A1A1A" }}>
+								Your Reflections, Your Privacy
+							</h3>
+							<p className="text-sm" style={{ color: "#525252", lineHeight: "1.6" }}>
+								Your personal reflections are encrypted and private.
+								This space for your wellness journey remains yours alone.
+								We believe privacy is essential for authentic self-care.
+							</p>
+						</div>
 
-              <div>
-                <strong>Security Measures:</strong>
-                <ul className="list-disc ml-5 mt-1 space-y-1">
-                  <li>256-bit AES encryption</li>
-                  <li>Regular security audits</li>
-                  <li>Role-based access controls</li>
-                  <li>Audit logs for all data access</li>
-                  <li>Automatic data anonymization after {SECURITY_CONFIG.privacy.anonymizeAfterDays} days</li>
-                </ul>
-              </div>
-            </div>
-          )}
+						<div className="p-4 rounded-lg" style={{ backgroundColor: "#FAFAF8", border: "1px solid rgba(0, 0, 0, 0.05)" }}>
+							<h3 className="font-semibold text-sm mb-2" style={{ color: "#1A1A1A" }}>
+								Secure Protection
+							</h3>
+							<p className="text-sm" style={{ color: "#525252", lineHeight: "1.6" }}>
+								Your wellness data receives enterprise-level protection.
+								We follow strict privacy guidelines and notify you of any changes
+								that could affect your data.
+							</p>
+						</div>
 
-          {/* Consent Actions */}
-          <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-6">
-            <div className="flex items-start">
-              <AlertCircle className="h-5 w-5 text-blue-600 mt-0.5 mr-3 flex-shrink-0" />
-              <div className="text-sm text-blue-900">
-                <strong>By continuing, you acknowledge that:</strong>
-                <ul className="list-disc ml-5 mt-2 space-y-1">
-                  <li>You've read and understood our privacy practices</li>
-                  <li>Your data will be encrypted and protected</li>
-                  <li>You can modify your consent anytime in Settings</li>
-                  <li>We'll notify you of any privacy policy changes</li>
-                </ul>
-              </div>
-            </div>
-          </div>
+						<div className="p-4 rounded-lg" style={{ backgroundColor: "#FAFAF8", border: "1px solid rgba(0, 0, 0, 0.05)" }}>
+							<h3 className="font-semibold text-sm mb-2" style={{ color: "#1A1A1A" }}>
+								You're In Control
+							</h3>
+							<p className="text-sm" style={{ color: "#525252", lineHeight: "1.6" }}>
+								Download, export, or delete your data anytime.
+								Your information belongs to you - we're just the trusted guardians.
+							</p>
+						</div>
+					</div>
 
-          {/* Action Buttons */}
-          <div className="flex flex-col sm:flex-row gap-3">
-            <button
-              onClick={handleAccept}
-              className="flex-1 px-6 py-3 bg-green-600 text-white font-semibold rounded-lg hover:bg-green-700 transition-colors flex items-center justify-center space-x-2"
-            >
-              <Check className="h-5 w-5" />
-              <span>I Accept - Protect My Data</span>
-            </button>
-            
-            {!required && (
-              <button
-                onClick={handleDecline}
-                className="flex-1 px-6 py-3 bg-gray-200 text-gray-700 font-semibold rounded-lg hover:bg-gray-300 transition-colors"
-              >
-                Maybe Later
-              </button>
-            )}
-          </div>
 
-          {/* Trust Badges */}
-          <div className="flex flex-wrap items-center justify-center gap-4 mt-6 pt-6 border-t border-gray-200">
-            <div className="flex items-center space-x-2 text-xs text-gray-600">
-              <Shield className="h-4 w-4" />
-              <span>HIPAA Compliant</span>
-            </div>
-            <div className="flex items-center space-x-2 text-xs text-gray-600">
-              <Lock className="h-4 w-4" />
-              <span>256-bit Encryption</span>
-            </div>
-            <div className="flex items-center space-x-2 text-xs text-gray-600">
-              <Database className="h-4 w-4" />
-              <span>GDPR Ready</span>
-            </div>
-            <div className="flex items-center space-x-2 text-xs text-gray-600">
-              <Clock className="h-4 w-4" />
-              <span>Auto-Logout Protection</span>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  );
+					{/* Expandable Details */}
+					<button
+						onClick={() => setShowDetails(!showDetails)}
+						className="w-full text-left p-3 rounded-lg hover:bg-gray-50 transition-colors mb-4"
+						style={{ backgroundColor: "#FAFAF8", border: "1px solid rgba(0, 0, 0, 0.05)" }}
+					>
+						<div className="flex items-center justify-between">
+							<span className="text-sm font-medium" style={{ color: "#1A1A1A" }}>
+								{showDetails ? "Hide" : "Learn More About"} Data Protection
+							</span>
+							<span style={{ color: "#525252" }}>{showDetails ? "−" : "+"}</span>
+						</div>
+					</button>
+
+					{showDetails && (
+						<div className="bg-gray-50 rounded-lg p-4 mb-6 text-sm text-gray-600 space-y-3">
+							<div>
+								<strong>Your Data Collection:</strong>
+								<ul className="list-disc ml-5 mt-1 space-y-1">
+									<li>Your wellness reflections (encrypted just for you)</li>
+									<li>Your progress patterns (to improve your experience)</li>
+									<li>Technical essentials for your security</li>
+									<li>Only the profile details you choose to share</li>
+								</ul>
+							</div>
+
+							<div>
+								<strong>What We Never Touch:</strong>
+								<ul className="list-disc ml-5 mt-1 space-y-1">
+									<li>Your location or movements</li>
+									<li>Third-party tracking cookies</li>
+									<li>Your biometric data</li>
+									<li>External health records without your explicit permission</li>
+								</ul>
+							</div>
+
+							<div>
+								<strong>Your Rights & Control:</strong>
+								<ul className="list-disc ml-5 mt-1 space-y-1">
+									<li>Access all your data instantly</li>
+									<li>Correct or delete anything, anytime</li>
+									<li>Opt-out of optional features</li>
+									<li>Get notified within 72 hours if anything affects your data</li>
+									<li>Move your data wherever you want</li>
+								</ul>
+							</div>
+
+							<div>
+								<strong>How We Keep You Safe:</strong>
+								<ul className="list-disc ml-5 mt-1 space-y-1">
+									<li>Military-grade 256-bit AES encryption</li>
+									<li>Regular independent security audits</li>
+									<li>Strict access controls with full audit trails</li>
+									<li>24/7 monitoring for your protection</li>
+									<li>Automatic data anonymization after {SECURITY_CONFIG.privacy.anonymizeAfterDays} days</li>
+								</ul>
+							</div>
+						</div>
+					)}
+
+					{/* Consent Actions */}
+					<div className="p-4 rounded-lg mb-6" style={{ backgroundColor: "#FAFAF8", border: "1px solid rgba(0, 0, 0, 0.05)" }}>
+						<div className="text-sm" style={{ color: "#2A2A2A" }}>
+							<strong>By continuing, you acknowledge:</strong>
+							<ul className="list-disc ml-5 mt-2 space-y-1">
+								<li>You understand how we protect your privacy</li>
+								<li>Your reflections will be encrypted and secured</li>
+								<li>You can change your privacy settings anytime</li>
+							</ul>
+						</div>
+					</div>
+
+
+					{/* Action Buttons */}
+					<div className="flex flex-col sm:flex-row gap-3">
+						<button
+							onClick={handleAccept}
+							className="flex-1 px-6 py-3 rounded-lg font-medium text-white transition-all hover:scale-105"
+							style={{
+								background: "linear-gradient(135deg, #2D5F3F, #5B9378)",
+								boxShadow: "0 4px 15px rgba(27, 94, 32, 0.3)",
+							}}
+						>
+							I Understand and Accept
+						</button>
+
+						{!required && (
+							<button
+								onClick={handleDecline}
+								className="flex-1 px-6 py-3 rounded-lg font-medium transition-colors"
+								style={{
+									backgroundColor: "#FFFFFF",
+									border: "2px solid #E5E7EB",
+									color: "#525252",
+								}}
+							>
+								I Need More Time
+							</button>
+						)}
+					</div>
+
+					{/* Quick Support Access */}
+					<div className="text-center mt-6 text-sm" style={{ color: "#525252" }}>
+						<p>
+							Questions? View our <a href="/privacy" className="underline" style={{ color: "#2D5F3F" }}>Privacy Policy</a> or <a href="/terms" className="underline" style={{ color: "#2D5F3F" }}>Terms of Service</a>
+						</p>
+					</div>
+
+					{/* Trust Badges */}
+					<div className="flex flex-wrap items-center justify-center gap-6 mt-6 pt-6 border-t border-gray-200">
+						<div className="text-center">
+							<span className="text-xs text-gray-600 font-medium uppercase tracking-wide block">
+								HIPAA Aligned
+							</span>
+							<span className="text-xs text-gray-500">Medical-grade protection</span>
+						</div>
+						<div className="text-center">
+							<span className="text-xs text-gray-600 font-medium uppercase tracking-wide block">
+								256-bit Encryption
+							</span>
+							<span className="text-xs text-gray-500">Military-grade security</span>
+						</div>
+						<div className="text-center">
+							<span className="text-xs text-gray-600 font-medium uppercase tracking-wide block">
+								GDPR Compliant
+							</span>
+							<span className="text-xs text-gray-500">Your rights protected</span>
+						</div>
+						<div className="text-center">
+							<span className="text-xs text-gray-600 font-medium uppercase tracking-wide block">
+								Auto-Logout
+							</span>
+							<span className="text-xs text-gray-500">Always secure</span>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	);
 };
 
 export default PrivacyConsent;

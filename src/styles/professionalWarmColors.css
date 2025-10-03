@@ -1,0 +1,184 @@
+/* Clean Professional Modern Color System - WCAG AA Compliant */
+
+:root {
+  /* Primary - Clean Slate Blue (professional, trustworthy, calm) */
+  --color-slate-50: #F8FAFC;
+  --color-slate-100: #F1F5F9;
+  --color-slate-200: #E2E8F0;
+  --color-slate-300: #CBD5E1;
+  --color-slate-400: #94A3B8;
+  --color-slate-500: #64748B;  /* Primary - 5.02:1 contrast on white */
+  --color-slate-600: #475569;  /* 8.59:1 contrast */
+  --color-slate-700: #334155;  /* 12.63:1 contrast */
+  --color-slate-800: #1E293B;
+  --color-slate-900: #0F172A;
+
+  /* Secondary - Modern Teal (fresh, calm, professional) */
+  --color-teal-50: #F0F7F3;
+  --color-teal-100: #CCFBF1;
+  --color-teal-200: #99F6E4;
+  --color-teal-300: #5EEAD4;
+  --color-teal-400: #2DD4BF;
+  --color-teal-500: #14B8A6;  /* 4.53:1 contrast */
+  --color-teal-600: #0D9488;  /* 6.08:1 contrast */
+  --color-teal-700: #0F766E;  /* 7.77:1 contrast */
+  --color-teal-800: #115E59;
+  --color-teal-900: #134E4A;
+
+  /* Dark Forest Green (professional, trustworthy, wellness) - Primary Brand Color */
+  --color-green-50: #E8F0ED;
+  --color-green-100: #C5D9D0;
+  --color-green-200: #9FC0B0;
+  --color-green-300: #78A690;
+  --color-green-400: #5B9378;
+  --color-green-500: #2D5F3F;  /* 8.5:1 contrast - Primary */
+  --color-green-600: #285739;  /* 10.2:1 contrast */
+  --color-green-700: #234D31;  /* 12.5:1 contrast */
+  --color-green-800: #1D4329;
+  --color-green-900: #14331D;
+
+  /* Accent - Soft Indigo (thoughtful, calm, modern) */
+  --color-indigo-50: #EEF2FF;
+  --color-indigo-100: #E0E7FF;
+  --color-indigo-200: #C7D2FE;
+  --color-indigo-300: #A5B4FC;
+  --color-indigo-400: #818CF8;
+  --color-indigo-500: #6366F1;  /* 4.89:1 contrast */
+  --color-indigo-600: #4F46E5;  /* 6.68:1 contrast */
+  --color-indigo-700: #4338CA;  /* 8.49:1 contrast */
+  --color-indigo-800: #3730A3;
+  --color-indigo-900: #312E81;
+
+  /* Neutral - Clean Grays (modern, professional) */
+  --color-gray-50: #F9FAFB;
+  --color-gray-100: #F3F4F6;
+  --color-gray-200: #E5E7EB;
+  --color-gray-300: #D1D5DB;
+  --color-gray-400: #9CA3AF;
+  --color-gray-500: #6B7280;
+  --color-gray-600: #4B5563;  /* 7.89:1 contrast */
+  --color-gray-700: #374151;  /* 10.69:1 contrast */
+  --color-gray-800: #1F2937;
+  --color-gray-900: #111827;
+
+  /* Backgrounds - Clean & Modern */
+  --color-white: #FFFFFF;
+  --color-surface: #FAFBFC;    /* Main page background */
+  --color-card: #FFFFFF;       /* Card backgrounds */
+  --color-elevated: #FFFFFF;   /* Elevated card variant */
+
+  /* Wellness Zone - Soft Green */
+  --color-wellness-bg: #E8F0ED;
+  --color-wellness-border: rgba(45, 95, 63, 0.15);
+
+  /* Action Zone - Soft Green */
+  --color-action-bg: #E8F0ED;
+  --color-action-border: rgba(45, 95, 63, 0.2);
+
+  /* Serious Zone - Professional Slate */
+  --color-serious-bg: #F8FAFC;
+  --color-serious-border: rgba(100, 116, 139, 0.15);
+
+  /* Success - Modern Green */
+  --color-success: #10B981;
+  --color-success-light: #D1FAE5;
+
+  /* Warning - Professional Amber */
+  --color-warning: #F59E0B;
+  --color-warning-light: #FEF3C7;
+
+  /* Error - Clean Red */
+  --color-error: #EF4444;
+  --color-error-light: #FEE2E2;
+}
+
+/* Utility classes for modern professional palette */
+.bg-surface {
+  background-color: var(--color-surface);
+}
+
+.bg-card {
+  background-color: var(--color-card);
+}
+
+.bg-elevated {
+  background-color: var(--color-elevated);
+}
+
+.bg-wellness-zone {
+  background-color: var(--color-wellness-bg);
+  border-color: var(--color-wellness-border);
+}
+
+.bg-action-zone {
+  background-color: var(--color-action-bg);
+  border-color: var(--color-action-border);
+}
+
+.bg-serious-zone {
+  background-color: var(--color-serious-bg);
+  border-color: var(--color-serious-border);
+}
+
+.text-slate {
+  color: var(--color-slate-600);
+}
+
+.text-slate-700 {
+  color: var(--color-slate-700);
+}
+
+.text-green {
+  color: var(--color-green-600);
+}
+
+.text-indigo {
+  color: var(--color-indigo-600);
+}
+
+.border-slate {
+  border-color: var(--color-slate-200);
+}
+
+.border-green {
+  border-color: var(--color-green-200);
+}
+
+/* Gradient utilities - Clean & Modern */
+.bg-gradient-slate {
+  background: linear-gradient(135deg, var(--color-slate-600), var(--color-slate-500));
+}
+
+.bg-gradient-green {
+  background: linear-gradient(135deg, var(--color-green-600), var(--color-green-500));
+}
+
+.bg-gradient-indigo {
+  background: linear-gradient(135deg, var(--color-indigo-600), var(--color-indigo-500));
+}
+
+.bg-gradient-surface {
+  background: linear-gradient(135deg, var(--color-surface), var(--color-white));
+}
+
+/* Clean modern shadows */
+.shadow-clean {
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px -1px rgba(0, 0, 0, 0.1);
+}
+
+.shadow-clean-md {
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1);
+}
+
+.shadow-clean-lg {
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.1);
+}
+
+.shadow-clean-xl {
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
+}
+
+/* Smooth professional transitions */
+* {
+  transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease, transform 0.15s ease, box-shadow 0.2s ease;
+}

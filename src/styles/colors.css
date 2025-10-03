@@ -4,107 +4,107 @@
    ========================================================================== */
 
 :root {
-  /* ==========================================================================
+	/* ==========================================================================
      Primary Brand Colors - Deep Forest Green
      ========================================================================== */
-  
-  --primary-900: #0A2A1B;    /* Darkest - Headers (16.2:1 on white) */
-  --primary-800: #0F3D26;    /* Dark - Primary buttons (10.8:1 on white) */
-  --primary-700: #145231;    /* Medium dark - Hover states (8.1:1 on white) */
-  --primary-600: #1B6B3F;    /* Medium - Active elements (5.7:1 on white) */
-  --primary-500: #228B49;    /* Base Primary - Brand color (4.5:1 on white) */
-  --primary-400: #3CAA68;    /* Light - Secondary actions */
-  --primary-300: #5BC885;    /* Lighter - Badges */
-  --primary-200: #8DDAA8;    /* Very light - Tints */
-  --primary-100: #C3EDD4;    /* Lightest - Subtle backgrounds */
-  --primary-50:  #E8F7ED;    /* Ultra light - Minimal backgrounds */
 
-  /* ==========================================================================
+	--primary-900: #0a2a1b; /* Darkest - Headers (16.2:1 on white) */
+	--primary-800: #0f3d26; /* Dark - Primary buttons (10.8:1 on white) */
+	--primary-700: #145231; /* Medium dark - Hover states (8.1:1 on white) */
+	--primary-600: #1b6b3f; /* Medium - Active elements (5.7:1 on white) */
+	--primary-500: #228b49; /* Base Primary - Brand color (4.5:1 on white) */
+	--primary-400: #3caa68; /* Light - Secondary actions */
+	--primary-300: #5bc885; /* Lighter - Badges */
+	--primary-200: #8ddaa8; /* Very light - Tints */
+	--primary-100: #c3edd4; /* Lightest - Subtle backgrounds */
+	--primary-50: #e8f7ed; /* Ultra light - Minimal backgrounds */
+
+	/* ==========================================================================
      Accent Colors - Warm Gold
      ========================================================================== */
-  
-  --accent-900: #5C3D0F;     /* Darkest (9.2:1 on white) */
-  --accent-700: #8B5A00;     /* Dark (6.2:1 on white) */
-  --accent-500: #D4A017;     /* Base Accent - CTAs (3.2:1 - large text only) */
-  --accent-400: #E6B333;     /* Light */
-  --accent-200: #F4DC9B;     /* Very light */
-  --accent-100: #FBF0D4;     /* Lightest - Backgrounds */
 
-  /* ==========================================================================
+	--accent-900: #5c3d0f; /* Darkest (9.2:1 on white) */
+	--accent-700: #8b5a00; /* Dark (6.2:1 on white) */
+	--accent-500: #d4a017; /* Base Accent - CTAs (3.2:1 - large text only) */
+	--accent-400: #e6b333; /* Light */
+	--accent-200: #f4dc9b; /* Very light */
+	--accent-100: #fbf0d4; /* Lightest - Backgrounds */
+
+	/* ==========================================================================
      Neutral Colors
      ========================================================================== */
-  
-  --neutral-900: #0F0F0F;    /* Near black (18.1:1 on white) */
-  --neutral-800: #1A1A1A;    /* Dark - Primary text (15.3:1 on white) */
-  --neutral-700: #2D2D2D;    /* Headers (11.5:1 on white) */
-  --neutral-600: #404040;    /* Subheadings (7.8:1 on white) */
-  --neutral-500: #595959;    /* Body text (5.5:1 on white) */
-  --neutral-400: #737373;    /* Secondary text (4.0:1 - UI elements) */
-  --neutral-300: #A6A6A6;    /* Disabled text (2.6:1 - decorative) */
-  --neutral-200: #D9D9D9;    /* Borders */
-  --neutral-100: #F0F0F0;    /* Light backgrounds */
-  --neutral-50:  #FAFAFA;    /* White backgrounds */
-  --white:       #FFFFFF;    /* Pure white */
 
-  /* ==========================================================================
+	--neutral-900: #0f0f0f; /* Near black (18.1:1 on white) */
+	--neutral-800: #1a1a1a; /* Dark - Primary text (15.3:1 on white) */
+	--neutral-700: #2d2d2d; /* Headers (11.5:1 on white) */
+	--neutral-600: #404040; /* Subheadings (7.8:1 on white) */
+	--neutral-500: #595959; /* Body text (5.5:1 on white) */
+	--neutral-400: #737373; /* Secondary text (4.0:1 - UI elements) */
+	--neutral-300: #a6a6a6; /* Disabled text (2.6:1 - decorative) */
+	--neutral-200: #d9d9d9; /* Borders */
+	--neutral-100: #f0f0f0; /* Light backgrounds */
+	--neutral-50: #fafafa; /* White backgrounds */
+	--white: #ffffff; /* Pure white */
+
+	/* ==========================================================================
      Semantic Colors
      ========================================================================== */
-  
-  --success-600: #059669;    /* Success dark (4.9:1 on white) */
-  --success-500: #10B981;    /* Success base (3.5:1 - large text) */
-  --success-100: #D1FAE5;    /* Success light bg */
-  
-  --warning-600: #D97706;    /* Warning dark (4.5:1 on white) */
-  --warning-500: #F59E0B;    /* Warning base (3.0:1 - large text) */
-  --warning-100: #FEF3C7;    /* Warning light bg */
-  
-  --error-600: #DC2626;      /* Error dark (4.5:1 on white) */
-  --error-500: #EF4444;      /* Error base (3.3:1 - large text) */
-  --error-100: #FEE2E2;      /* Error light bg */
-  
-  --info-600: #0284C7;       /* Info dark (4.5:1 on white) */
-  --info-500: #0EA5E9;       /* Info base (3.2:1 - large text) */
-  --info-100: #DBEAFE;       /* Info light bg */
 
-  /* ==========================================================================
+	--success-600: #059669; /* Success dark (4.9:1 on white) */
+	--success-500: #10b981; /* Success base (3.5:1 - large text) */
+	--success-100: #d1fae5; /* Success light bg */
+
+	--warning-600: #d97706; /* Warning dark (4.5:1 on white) */
+	--warning-500: #f59e0b; /* Warning base (3.0:1 - large text) */
+	--warning-100: #fef3c7; /* Warning light bg */
+
+	--error-600: #dc2626; /* Error dark (4.5:1 on white) */
+	--error-500: #ef4444; /* Error base (3.3:1 - large text) */
+	--error-100: #fee2e2; /* Error light bg */
+
+	--info-600: #0284c7; /* Info dark (4.5:1 on white) */
+	--info-500: #0ea5e9; /* Info base (3.2:1 - large text) */
+	--info-100: #dbeafe; /* Info light bg */
+
+	/* ==========================================================================
      Functional Mappings
      ========================================================================== */
-  
-  /* Backgrounds */
-  --bg-primary: var(--white);
-  --bg-secondary: var(--neutral-50);
-  --bg-tertiary: var(--neutral-100);
-  --bg-card: var(--white);
-  --bg-modal: var(--white);
-  --bg-nav: var(--white);
-  --bg-footer: var(--neutral-50);
-  
-  /* Text */
-  --text-primary: var(--neutral-800);
-  --text-secondary: var(--neutral-600);
-  --text-tertiary: var(--neutral-500);
-  --text-disabled: var(--neutral-400);
-  --text-inverse: var(--white);
-  --text-link: var(--primary-700);
-  --text-link-hover: var(--primary-800);
-  
-  /* Borders */
-  --border-default: var(--neutral-200);
-  --border-hover: var(--primary-400);
-  --border-focus: var(--primary-600);
-  --border-error: var(--error-600);
-  --border-success: var(--success-600);
-  
-  /* Shadows */
-  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
-  --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.07);
-  --shadow-lg: 0 10px 25px rgba(0, 0, 0, 0.1);
-  --shadow-xl: 0 20px 40px rgba(0, 0, 0, 0.15);
-  --shadow-focus: 0 0 0 3px rgba(34, 139, 73, 0.25);
-  
-  /* Overlays */
-  --overlay-dark: rgba(0, 0, 0, 0.5);
-  --overlay-light: rgba(255, 255, 255, 0.9);
+
+	/* Backgrounds */
+	--bg-primary: var(--white);
+	--bg-secondary: var(--neutral-50);
+	--bg-tertiary: var(--neutral-100);
+	--bg-card: var(--white);
+	--bg-modal: var(--white);
+	--bg-nav: var(--white);
+	--bg-footer: var(--neutral-50);
+
+	/* Text */
+	--text-primary: var(--neutral-800);
+	--text-secondary: var(--neutral-600);
+	--text-tertiary: var(--neutral-500);
+	--text-disabled: var(--neutral-400);
+	--text-inverse: var(--white);
+	--text-link: var(--primary-700);
+	--text-link-hover: var(--primary-800);
+
+	/* Borders */
+	--border-default: var(--neutral-200);
+	--border-hover: var(--primary-400);
+	--border-focus: var(--primary-600);
+	--border-error: var(--error-600);
+	--border-success: var(--success-600);
+
+	/* Shadows */
+	--shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
+	--shadow-md: 0 4px 6px rgba(0, 0, 0, 0.07);
+	--shadow-lg: 0 10px 25px rgba(0, 0, 0, 0.1);
+	--shadow-xl: 0 20px 40px rgba(0, 0, 0, 0.15);
+	--shadow-focus: 0 0 0 3px rgba(34, 139, 73, 0.25);
+
+	/* Overlays */
+	--overlay-dark: rgba(0, 0, 0, 0.5);
+	--overlay-light: rgba(255, 255, 255, 0.9);
 }
 
 /* ==========================================================================
@@ -113,178 +113,202 @@
 
 /* Buttons */
 .btn-primary {
-  background: var(--primary-800);
-  color: var(--white);
-  border: 2px solid var(--primary-800);
+	background: var(--primary-800);
+	color: var(--white);
+	border: 2px solid var(--primary-800);
 }
 
 .btn-primary:hover {
-  background: var(--primary-700);
-  border-color: var(--primary-700);
+	background: var(--primary-700);
+	border-color: var(--primary-700);
 }
 
 .btn-primary:active {
-  background: var(--primary-900);
-  border-color: var(--primary-900);
+	background: var(--primary-900);
+	border-color: var(--primary-900);
 }
 
 .btn-primary:focus-visible {
-  outline: none;
-  box-shadow: var(--shadow-focus);
+	outline: none;
+	box-shadow: var(--shadow-focus);
 }
 
 .btn-secondary {
-  background: var(--white);
-  color: var(--primary-800);
-  border: 2px solid var(--primary-600);
+	background: var(--white);
+	color: var(--primary-800);
+	border: 2px solid var(--primary-600);
 }
 
 .btn-secondary:hover {
-  background: var(--primary-50);
-  border-color: var(--primary-700);
+	background: var(--primary-50);
+	border-color: var(--primary-700);
 }
 
 .btn-accent {
-  background: var(--accent-700);
-  color: var(--white);
-  border: 2px solid var(--accent-700);
+	background: var(--accent-700);
+	color: var(--white);
+	border: 2px solid var(--accent-700);
 }
 
 .btn-accent:hover {
-  background: var(--accent-900);
-  border-color: var(--accent-900);
+	background: var(--accent-900);
+	border-color: var(--accent-900);
 }
 
 /* Cards */
 .card {
-  background: var(--bg-card);
-  border: 1px solid var(--border-default);
-  box-shadow: var(--shadow-md);
+	background: var(--bg-card);
+	border: 1px solid var(--border-default);
+	box-shadow: var(--shadow-md);
 }
 
 .card:hover {
-  border-color: var(--border-hover);
-  box-shadow: var(--shadow-lg);
+	border-color: var(--border-hover);
+	box-shadow: var(--shadow-lg);
 }
 
 /* Navigation */
 .nav {
-  background: var(--bg-nav);
-  border-bottom: 1px solid var(--border-default);
+	background: var(--bg-nav);
+	border-bottom: 1px solid var(--border-default);
 }
 
 .nav-link {
-  color: var(--text-secondary);
+	color: var(--text-secondary);
 }
 
 .nav-link:hover {
-  color: var(--primary-700);
-  background: var(--primary-50);
+	color: var(--primary-700);
+	background: var(--primary-50);
 }
 
 .nav-link.active {
-  color: var(--primary-800);
-  background: var(--primary-100);
+	color: var(--primary-800);
+	background: var(--primary-100);
 }
 
 /* Forms */
 .form-input {
-  background: var(--bg-primary);
-  border: 2px solid var(--border-default);
-  color: var(--text-primary);
+	background: var(--bg-primary);
+	border: 2px solid var(--border-default);
+	color: var(--text-primary);
 }
 
 .form-input:hover {
-  border-color: var(--border-hover);
+	border-color: var(--border-hover);
 }
 
 .form-input:focus {
-  outline: none;
-  border-color: var(--border-focus);
-  box-shadow: var(--shadow-focus);
+	outline: none;
+	border-color: var(--border-focus);
+	box-shadow: var(--shadow-focus);
 }
 
 .form-input::placeholder {
-  color: var(--text-tertiary);
+	color: var(--text-tertiary);
 }
 
 /* Alerts */
 .alert-success {
-  background: var(--success-100);
-  border: 1px solid var(--success-600);
-  color: var(--success-600);
+	background: var(--success-100);
+	border: 1px solid var(--success-600);
+	color: var(--success-600);
 }
 
 .alert-warning {
-  background: var(--warning-100);
-  border: 1px solid var(--warning-600);
-  color: var(--warning-600);
+	background: var(--warning-100);
+	border: 1px solid var(--warning-600);
+	color: var(--warning-600);
 }
 
 .alert-error {
-  background: var(--error-100);
-  border: 1px solid var(--error-600);
-  color: var(--error-600);
+	background: var(--error-100);
+	border: 1px solid var(--error-600);
+	color: var(--error-600);
 }
 
 .alert-info {
-  background: var(--info-100);
-  border: 1px solid var(--info-600);
-  color: var(--info-600);
+	background: var(--info-100);
+	border: 1px solid var(--info-600);
+	color: var(--info-600);
 }
 
 /* Modals */
 .modal-backdrop {
-  background: var(--overlay-dark);
+	background: var(--overlay-dark);
 }
 
 .modal {
-  background: var(--bg-modal);
-  box-shadow: var(--shadow-xl);
+	background: var(--bg-modal);
+	box-shadow: var(--shadow-xl);
 }
 
 .modal-close {
-  background: var(--white);
-  border: 2px solid var(--neutral-200);
-  color: var(--neutral-700);
+	background: var(--white);
+	border: 2px solid var(--neutral-200);
+	color: var(--neutral-700);
 }
 
 .modal-close:hover {
-  background: var(--neutral-100);
-  border-color: var(--neutral-400);
-  color: var(--neutral-900);
+	background: var(--neutral-100);
+	border-color: var(--neutral-400);
+	color: var(--neutral-900);
 }
 
 /* ==========================================================================
    Typography with New Colors
    ========================================================================== */
 
-h1, .h1 { color: var(--primary-900); }
-h2, .h2 { color: var(--primary-800); }
-h3, .h3 { color: var(--neutral-700); }
-h4, .h4 { color: var(--neutral-600); }
-h5, .h5 { color: var(--neutral-600); }
-h6, .h6 { color: var(--neutral-500); }
+h1,
+.h1 {
+	color: var(--primary-900);
+}
+h2,
+.h2 {
+	color: var(--primary-800);
+}
+h3,
+.h3 {
+	color: var(--neutral-700);
+}
+h4,
+.h4 {
+	color: var(--neutral-600);
+}
+h5,
+.h5 {
+	color: var(--neutral-600);
+}
+h6,
+.h6 {
+	color: var(--neutral-500);
+}
 
-p { color: var(--text-primary); }
-.text-secondary { color: var(--text-secondary); }
-.text-tertiary { color: var(--text-tertiary); }
+p {
+	color: var(--text-primary);
+}
+.text-secondary {
+	color: var(--text-secondary);
+}
+.text-tertiary {
+	color: var(--text-tertiary);
+}
 
 a {
-  color: var(--text-link);
-  text-decoration: none;
-  transition: color 0.2s;
+	color: var(--text-link);
+	text-decoration: none;
+	transition: color 0.2s;
 }
 
 a:hover {
-  color: var(--text-link-hover);
-  text-decoration: underline;
+	color: var(--text-link-hover);
+	text-decoration: underline;
 }
 
 a:focus-visible {
-  outline: none;
-  box-shadow: var(--shadow-focus);
-  border-radius: 2px;
+	outline: none;
+	box-shadow: var(--shadow-focus);
+	border-radius: 2px;
 }
 
 /* ==========================================================================
@@ -292,42 +316,98 @@ a:focus-visible {
    ========================================================================== */
 
 /* Text Colors */
-.text-primary-900 { color: var(--primary-900); }
-.text-primary-800 { color: var(--primary-800); }
-.text-primary-700 { color: var(--primary-700); }
-.text-primary-600 { color: var(--primary-600); }
-.text-primary-500 { color: var(--primary-500); }
+.text-primary-900 {
+	color: var(--primary-900);
+}
+.text-primary-800 {
+	color: var(--primary-800);
+}
+.text-primary-700 {
+	color: var(--primary-700);
+}
+.text-primary-600 {
+	color: var(--primary-600);
+}
+.text-primary-500 {
+	color: var(--primary-500);
+}
 
-.text-accent-700 { color: var(--accent-700); }
-.text-accent-900 { color: var(--accent-900); }
+.text-accent-700 {
+	color: var(--accent-700);
+}
+.text-accent-900 {
+	color: var(--accent-900);
+}
 
-.text-success { color: var(--success-600); }
-.text-warning { color: var(--warning-600); }
-.text-error { color: var(--error-600); }
-.text-info { color: var(--info-600); }
+.text-success {
+	color: var(--success-600);
+}
+.text-warning {
+	color: var(--warning-600);
+}
+.text-error {
+	color: var(--error-600);
+}
+.text-info {
+	color: var(--info-600);
+}
 
 /* Background Colors */
-.bg-primary-50 { background-color: var(--primary-50); }
-.bg-primary-100 { background-color: var(--primary-100); }
-.bg-primary-200 { background-color: var(--primary-200); }
-.bg-primary-800 { background-color: var(--primary-800); }
-.bg-primary-900 { background-color: var(--primary-900); }
+.bg-primary-50 {
+	background-color: var(--primary-50);
+}
+.bg-primary-100 {
+	background-color: var(--primary-100);
+}
+.bg-primary-200 {
+	background-color: var(--primary-200);
+}
+.bg-primary-800 {
+	background-color: var(--primary-800);
+}
+.bg-primary-900 {
+	background-color: var(--primary-900);
+}
 
-.bg-accent-100 { background-color: var(--accent-100); }
-.bg-accent-700 { background-color: var(--accent-700); }
+.bg-accent-100 {
+	background-color: var(--accent-100);
+}
+.bg-accent-700 {
+	background-color: var(--accent-700);
+}
 
-.bg-neutral-50 { background-color: var(--neutral-50); }
-.bg-neutral-100 { background-color: var(--neutral-100); }
-.bg-neutral-800 { background-color: var(--neutral-800); }
-.bg-neutral-900 { background-color: var(--neutral-900); }
+.bg-neutral-50 {
+	background-color: var(--neutral-50);
+}
+.bg-neutral-100 {
+	background-color: var(--neutral-100);
+}
+.bg-neutral-800 {
+	background-color: var(--neutral-800);
+}
+.bg-neutral-900 {
+	background-color: var(--neutral-900);
+}
 
 /* Border Colors */
-.border-primary { border-color: var(--primary-600); }
-.border-accent { border-color: var(--accent-700); }
-.border-neutral { border-color: var(--neutral-200); }
-.border-success { border-color: var(--success-600); }
-.border-warning { border-color: var(--warning-600); }
-.border-error { border-color: var(--error-600); }
+.border-primary {
+	border-color: var(--primary-600);
+}
+.border-accent {
+	border-color: var(--accent-700);
+}
+.border-neutral {
+	border-color: var(--neutral-200);
+}
+.border-success {
+	border-color: var(--success-600);
+}
+.border-warning {
+	border-color: var(--warning-600);
+}
+.border-error {
+	border-color: var(--error-600);
+}
 
 /* ==========================================================================
    WCAG Compliance Documentation

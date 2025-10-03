@@ -1,34 +1,34 @@
 {
-  "name": "InterpretReflect",
-  "short_name": "InterpretReflect",
-  "description": "The wellness platform for interpreters. Prevent burnout, manage vicarious trauma, and maintain healthy boundaries.",
-  "icons": [
-    {
-      "src": "/favicon.svg",
-      "sizes": "any",
-      "type": "image/svg+xml",
-      "purpose": "any"
-    },
-    {
-      "src": "/favicon-192x192.png",
-      "sizes": "192x192",
-      "type": "image/png",
-      "purpose": "any maskable"
-    },
-    {
-      "src": "/favicon-512x512.png",
-      "sizes": "512x512",
-      "type": "image/png",
-      "purpose": "any maskable"
-    }
-  ],
-  "theme_color": "#5C7F4F",
-  "background_color": "#FAF9F6",
-  "display": "standalone",
-  "scope": "/",
-  "start_url": "/",
-  "orientation": "portrait-primary",
-  "categories": ["health", "wellness", "productivity"],
-  "lang": "en-US",
-  "dir": "ltr"
+	"name": "InterpretReflect",
+	"short_name": "InterpretReflect",
+	"description": "The wellness platform for interpreters. Prevent burnout, manage vicarious trauma, and maintain healthy boundaries.",
+	"icons": [
+		{
+			"src": "/favicon.svg",
+			"sizes": "any",
+			"type": "image/svg+xml",
+			"purpose": "any"
+		},
+		{
+			"src": "/favicon-192x192.png",
+			"sizes": "192x192",
+			"type": "image/png",
+			"purpose": "any maskable"
+		},
+		{
+			"src": "/favicon-512x512.png",
+			"sizes": "512x512",
+			"type": "image/png",
+			"purpose": "any maskable"
+		}
+	],
+	"theme_color": "#5C7F4F",
+	"background_color": "#FAF9F6",
+	"display": "standalone",
+	"scope": "/",
+	"start_url": "/",
+	"orientation": "portrait-primary",
+	"categories": ["health", "wellness", "productivity"],
+	"lang": "en-US",
+	"dir": "ltr"
 }

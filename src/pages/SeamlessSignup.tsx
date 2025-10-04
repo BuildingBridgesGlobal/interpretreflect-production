@@ -1,11 +1,4 @@
 import {
-	CardElement,
-	Elements,
-	useElements,
-	useStripe,
-} from "@stripe/react-stripe-js";
-import { loadStripe } from "@stripe/stripe-js";
-import {
 	AlertCircle,
 	ArrowLeft,
 	ArrowRight,
@@ -25,9 +18,6 @@ import { ModernAuthModal } from "../components/auth/ModernAuthModal";
 import { useAuth } from "../contexts/AuthContext";
 import { supabase } from "../lib/supabase";
 import { analytics } from "../utils/analytics";
-
-// Initialize Stripe
-const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY);
 
 // Step indicator component
 const StepIndicator: React.FC<{ currentStep: number; steps: string[] }> = ({
@@ -89,73 +79,53 @@ const StepIndicator: React.FC<{ currentStep: number; steps: string[] }> = ({
 	);
 };
 
-// Payment form component
+// Payment form component - Now uses Stripe Checkout (hosted payment page)
 const PaymentForm: React.FC<{
 	plan: string;
 	email: string;
 	name: string;
 	password: string;
+	userId?: string;
 	onSuccess: () => void;
 	onBack: () => void;
-}> = ({ plan, email, name, password, onSuccess, onBack }) => {
-	const stripe = useStripe();
-	const elements = useElements();
+}> = ({ plan, email, name, password, userId, onSuccess, onBack }) => {
 	const [error, setError] = useState<string>("");
 	const [processing, setProcessing] = useState(false);
-	const [cardComplete, setCardComplete] = useState(false);
 
 	const handleSubmit = async (e: React.FormEvent) => {
 		e.preventDefault();
-
-		if (!stripe || !elements) return;
 
 		setProcessing(true);
 		setError("");
 
 		try {
-			// Create payment method first
-			const cardElement = elements.getElement(CardElement);
-			if (!cardElement) {
-				throw new Error("Card element not found");
-			}
+			// First, create the user account
+			let finalUserId = userId;
 
-			const { error: pmError, paymentMethod } =
-				await stripe.createPaymentMethod({
-					type: "card",
-					card: cardElement,
-					billing_details: {
-						email,
-						name,
-					},
-				});
-
-			if (pmError) {
-				throw pmError;
-			}
-
-			// For now, simulate successful payment (in production, you'd verify with Stripe)
-			console.log("Payment method created:", paymentMethod.id);
-
-			// NOW create the account after successful payment
-			const { data: signupData, error: signupError } =
-				await supabase.auth.signUp({
-					email: email.toLowerCase().trim(),
-					password: password, // Use the password passed from step 1
-					options: {
-						data: {
-							full_name: name,
-							stripe_payment_method_id: paymentMethod.id,
-							subscription_plan: plan,
+			if (!finalUserId) {
+				const { data: signupData, error: signupError } =
+					await supabase.auth.signUp({
+						email: email.toLowerCase().trim(),
+						password: password,
+						options: {
+							data: {
+								full_name: name,
+								subscription_plan: plan,
+							},
 						},
-					},
-				});
+					});
 
-			if (signupError) {
-				throw new Error(`Failed to create account: ${signupError.message}`);
-			}
+				if (signupError) {
+					throw new Error(`Failed to create account: ${signupError.message}`);
+				}
 
-			// Sign them in immediately
-			if (signupData?.user) {
+				if (!signupData?.user) {
+					throw new Error("Failed to create account");
+				}
+
+				finalUserId = signupData.user.id;
+
+				// Sign them in immediately
 				const { error: signInError } = await supabase.auth.signInWithPassword({
 					email: email.toLowerCase().trim(),
 					password: password,
@@ -166,7 +136,34 @@ const PaymentForm: React.FC<{
 				}
 			}
 
-			// Track successful conversion
+			// Get the Stripe Price ID for the selected plan
+			const STRIPE_PRICE_ID = import.meta.env.VITE_STRIPE_PRICE_ID_ESSENTIAL || 'price_1234'; // Replace with your actual price ID
+
+			// Call the Supabase Edge Function to create a Stripe Checkout session
+			const { data, error: functionError } = await supabase.functions.invoke(
+				'create-checkout-session',
+				{
+					body: {
+						priceId: STRIPE_PRICE_ID,
+						email: email,
+						userId: finalUserId,
+						metadata: {
+							plan: plan,
+							full_name: name,
+						},
+					},
+				}
+			);
+
+			if (functionError) {
+				throw new Error(`Payment setup failed: ${functionError.message}`);
+			}
+
+			if (!data?.url) {
+				throw new Error("Failed to create checkout session");
+			}
+
+			// Track checkout initiation
 			if (analytics.trackSubscriptionSuccess) {
 				analytics.trackSubscriptionSuccess(plan, 12.99);
 			}
@@ -181,7 +178,9 @@ const PaymentForm: React.FC<{
 			};
 			localStorage.setItem("privacyConsent", JSON.stringify(consentData));
 
-			onSuccess();
+			// Redirect to Stripe Checkout
+			window.location.href = data.url;
+
 		} catch (err: any) {
 			setError(err.message || "Payment failed. Please try again.");
 			setProcessing(false);
@@ -190,34 +189,11 @@ const PaymentForm: React.FC<{
 
 	return (
 		<form onSubmit={handleSubmit} className="space-y-6">
-			<div>
-				<label className="block text-sm font-medium text-gray-700 mb-2">
-					Card Information
-				</label>
-				<div
-					className="p-4 border rounded-lg focus-within:ring-2 focus-within:border-transparent transition-all"
-					style={
-						{ "--tw-ring-color": "#2D5F3F" } as React.CSSProperties
-					}
-				>
-					<CardElement
-						options={{
-							style: {
-								base: {
-									fontSize: "16px",
-									color: "#424770",
-									"::placeholder": {
-										color: "#aab7c4",
-									},
-								},
-								invalid: {
-									color: "#9e2146",
-								},
-							},
-						}}
-						onChange={(e) => setCardComplete(e.complete)}
-					/>
-				</div>
+			{/* Info Box */}
+			<div className="p-4 bg-blue-50 border border-blue-200 rounded-lg">
+				<p className="text-sm text-blue-800">
+					You'll be redirected to Stripe's secure checkout page to complete your payment.
+				</p>
 			</div>
 
 			{/* Security badges */}
@@ -257,11 +233,11 @@ const PaymentForm: React.FC<{
 
 				<button
 					type="submit"
-					disabled={!stripe || processing || !cardComplete}
+					disabled={processing}
 					className="flex-1 px-6 py-3 rounded-lg font-semibold text-white transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
 					style={{
 						background:
-							processing || !cardComplete
+							processing
 								? "#ccc"
 								: "linear-gradient(135deg, #2D5F3F, rgb(107, 142, 94))",
 					}}
@@ -269,11 +245,11 @@ const PaymentForm: React.FC<{
 					{processing ? (
 						<>
 							<Loader2 className="w-5 h-5 animate-spin" />
-							Processing...
+							Creating account...
 						</>
 					) : (
 						<>
-							Complete Sign Up
+							Continue to Payment
 							<ArrowRight className="w-5 h-5" />
 						</>
 					)}
@@ -824,16 +800,15 @@ export const SeamlessSignup: React.FC = () => {
 									</div>
 								</div>
 
-								<Elements stripe={stripePromise}>
-									<PaymentForm
-										plan={formData.plan}
-										email={formData.email || user?.email || ""}
-										name={formData.name || user?.user_metadata?.full_name || ""}
-										password={formData.password}
-										onSuccess={handleSuccess}
-										onBack={handleBack}
-									/>
-								</Elements>
+								<PaymentForm
+									plan={formData.plan}
+									email={formData.email || user?.email || ""}
+									name={formData.name || user?.user_metadata?.full_name || ""}
+									password={formData.password}
+									userId={user?.id}
+									onSuccess={handleSuccess}
+									onBack={handleBack}
+								/>
 							</div>
 						)}
 					</div>

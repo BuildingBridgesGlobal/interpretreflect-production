@@ -548,6 +548,21 @@ export const SeamlessSignup: React.FC = () => {
 				<div className="max-w-2xl mx-auto mt-12">
 					<div className="bg-white rounded-2xl shadow-xl p-8">
 
+						{/* Show loading spinner while user is loading for Google SSO */}
+						{currentStep === 3 && !user && urlStep === 'payment' && sso === 'google' && (
+							<div className="space-y-6 text-center py-12">
+								<div className="flex justify-center mb-4">
+									<div className="animate-spin rounded-full h-16 w-16 border-b-4 border-green-600"></div>
+								</div>
+								<h2 className="text-2xl font-bold text-gray-900">
+									Loading your account...
+								</h2>
+								<p className="text-gray-600">
+									Please wait while we prepare your payment options
+								</p>
+							</div>
+						)}
+
 						{/* If user is logged in but on step 1, show a message */}
 						{currentStep === 1 && user && (
 							<div className="space-y-6 text-center">

@@ -356,6 +356,18 @@ export const SeamlessSignup: React.FC = () => {
 
 	const steps = ["Account", "Plan", "Payment"];
 
+	// Force step 3 immediately if URL has payment params (BEFORE user loads)
+	useEffect(() => {
+		const params = new URLSearchParams(window.location.search);
+		const step = params.get('step');
+		const sso = params.get('sso');
+
+		if (step === 'payment' && sso === 'google') {
+			console.log('Google SSO payment URL detected, forcing step to 3');
+			setCurrentStep(3);
+		}
+	}, []); // Run once on mount
+
 	// Update form data when user loads (for Google SSO)
 	useEffect(() => {
 		if (user && urlStep === 'payment' && sso === 'google') {

@@ -55,7 +55,6 @@ import ProfileSettings from "./components/ProfileSettings";
 import { SubscriptionGate } from "./components/SubscriptionGate";
 import { TemperatureExploration } from "./components/TemperatureExploration";
 import { WelcomeModal } from "./components/WelcomeModal";
-import { TermsAcceptanceMonitor } from "./components/TermsAcceptanceMonitor";
 
 // Lazy load large reflection components for better code splitting
 const DirectCommunicationReflection = lazy(() => import("./components/DirectCommunicationReflection"));
@@ -344,18 +343,6 @@ function App() {
 	};
 
 
-	// Welcome modal state
-	const [showWelcomeModal, setShowWelcomeModal] = useState(false);
-
-	// Check if first-time user and show welcome modal
-	React.useEffect(() => {
-		// DISABLED: Welcome modal not needed right now
-		// const hasSeenWelcome = localStorage.getItem('hasSeenWelcomeModal');
-		// if (!hasSeenWelcome && activeTab === 'reflection') {
-		//   // Show welcome modal only on reflection tab for first-time users
-		//   setShowWelcomeModal(true);
-		// }
-	}, [activeTab]); // Run when activeTab changes
 
 	// Save tab preference when it changes
 	React.useEffect(() => {
@@ -9694,9 +9681,6 @@ function App() {
 	return (
 		<SubscriptionGate>
 
-			{/* Terms Acceptance Monitor */}
-			<TermsAcceptanceMonitor />
-
 			<Routes>
 				<Route path="/privacy" element={<PrivacyPolicy />} />
 				<Route path="/terms" element={<TermsOfService />} />
@@ -11197,50 +11181,6 @@ function App() {
 							<AgenticFlowChat />
 
 
-							{/* Welcome Modal for First-Time Users */}
-							{showWelcomeModal && (
-								<WelcomeModal
-									onClose={() => {
-										setShowWelcomeModal(false);
-										localStorage.setItem("hasSeenWelcomeModal", "true");
-									}}
-									onComplete={(recommendations) => {
-										setWelcomeRecommendations(recommendations);
-										setShowWelcomeModal(false);
-										localStorage.setItem("hasSeenWelcomeModal", "true");
-										// Optionally auto-open the first recommended tool
-										if (recommendations.length > 0) {
-											const toolMap: Record<string, () => void> = {
-												"Pre-Assignment Prep": () =>
-													startTransition(() => setShowPreAssignmentPrep(true)),
-												"Post-Assignment Debrief": () =>
-													startTransition(() => setShowPostAssignmentDebrief(true)),
-												"Teaming Prep": () => startTransition(() => setShowTeamingPrep(true)),
-												"Mentoring Prep": () => startTransition(() => setShowMentoringPrep(true)),
-												"Wellness Check-in": () => startTransition(() => setShowWellnessCheckIn(true)),
-												"3-Minute Breathing Practice": () =>
-													setShowBreathingPractice(true),
-												"Stress Reset Tool": () =>
-													setSelectedTechnique("breathing"),
-												"Quick Stress Reset": () =>
-													setSelectedTechnique("breathing"),
-												"Emotion Mapping": () => setShowEmotionMapping(true),
-												"Body Check-In": () => setShowBodyCheckIn(true),
-												"Review Growth Insights": () =>
-													setActiveTab("insights"),
-											};
-
-											// Find and execute the first available tool
-											for (const rec of recommendations) {
-												if (toolMap[rec]) {
-													setTimeout(() => toolMap[rec](), 500); // Small delay for smoother transition
-													break;
-												}
-											}
-										}
-									}}
-								/>
-							)}
 						</div>
 					}
 				/>

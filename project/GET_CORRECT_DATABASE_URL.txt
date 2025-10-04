@@ -1,0 +1,85 @@
+GET YOUR CORRECT DATABASE URL
+==============================
+
+Docker is working! ✅
+The issue is with your database URL - the ${enc} needs to be replaced with your actual password.
+
+STEP 1: GET YOUR REAL DATABASE URL
+===================================
+
+Go to Supabase Dashboard:
+1. Visit: https://supabase.com/dashboard/project/kvguxuxanpynwdffpssm/settings/database
+2. Look for "Connection string" section
+3. Find the "URI" tab (not "PSQL" or "JDBC")
+4. You'll see something like:
+   postgresql://postgres:[YOUR-PASSWORD]@db.kvguxuxanpynwdffpssm.supabase.co:5432/postgres
+
+5. Click "Reveal password" or enter your database password
+6. Copy the COMPLETE URL with your actual password
+
+STEP 2: SET THE CORRECT URL IN POWERSHELL
+==========================================
+
+Replace the entire URL with your actual one:
+
+$env:SUPABASE_DB_URL = "postgresql://postgres:YOUR_ACTUAL_PASSWORD_HERE@db.kvguxuxanpynwdffpssm.supabase.co:5432/postgres"
+
+Example (with fake password):
+$env:SUPABASE_DB_URL = "postgresql://postgres:MySecretPass123@db.kvguxuxanpynwdffpssm.supabase.co:5432/postgres"
+
+IMPORTANT:
+- Don't use ${enc} - use your actual password
+- Don't include ?sslmode=require at the end for the dump command
+
+STEP 3: RUN THE BACKUP COMMAND AGAIN
+=====================================
+
+cd C:\Users\maddo\Desktop\boltV1IR\project
+$ts = Get-Date -Format "yyyyMMdd_HHmmss"
+$file = ".\backups\pre_migration_$ts.sql"
+npx supabase db dump -f $file --db-url "$env:SUPABASE_DB_URL"
+
+ALTERNATIVE: CHECK YOUR .ENV FILE
+==================================
+
+If you have a .env file in your project, check for:
+SUPABASE_DB_URL=...
+or
+DATABASE_URL=...
+
+Use that value if it exists.
+
+TROUBLESHOOTING DNS ERROR
+=========================
+
+If you still get "could not translate host name" error:
+
+1. Try using the direct IP instead:
+   - In Supabase Dashboard, look for the database host IP
+   - Replace db.kvguxuxanpynwdffpssm.supabase.co with the IP
+
+2. Or try adding the port explicitly:
+   postgresql://postgres:PASSWORD@db.kvguxuxanpynwdffpssm.supabase.co:5432/postgres
+
+3. Check your internet connection and firewall
+
+QUICK TEST
+==========
+
+Test your connection with:
+npx supabase db dump -f test.sql --db-url "postgresql://postgres:YOUR_PASSWORD@db.kvguxuxanpynwdffpssm.supabase.co:5432/postgres" --debug
+
+The --debug flag will show more details about what's happening.
+
+IF ALL ELSE FAILS - USE DASHBOARD
+==================================
+
+1. Go to: https://supabase.com/dashboard/project/kvguxuxanpynwdffpssm/sql
+2. Run this to backup your data:
+
+   -- Create a backup of reflection_entries
+   SELECT * FROM reflection_entries;
+
+   -- Export results as CSV
+
+3. Then apply your migration directly in SQL Editor

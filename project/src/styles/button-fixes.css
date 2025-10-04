@@ -1,0 +1,88 @@
+/* ==========================================================================
+   BUTTON VISIBILITY FIXES
+   Explicit styles to ensure buttons are always visible
+   ========================================================================== */
+
+/* Primary Button - Ensure visibility */
+.btn-primary {
+	background-color: #2d5a3d !important; /* Deep Forest Green */
+	color: #ffffff !important;
+	border: 2px solid #2d5a3d !important;
+	box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1) !important;
+	padding: 0.75rem 1.5rem;
+	font-weight: 600;
+	font-size: 1rem;
+	border-radius: 6px;
+	cursor: pointer;
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	text-decoration: none;
+	transition: all 0.2s ease;
+}
+
+.btn-primary:hover {
+	background-color: #234831 !important;
+	border-color: #234831 !important;
+	transform: translateY(-1px);
+	box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15) !important;
+}
+
+/* Secondary Button - Ensure visibility */
+.btn-secondary {
+	background-color: #ffffff !important;
+	color: #2d5a3d !important;
+	border: 2px solid #2d5a3d !important;
+	box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08) !important;
+	padding: 0.75rem 1.5rem;
+	font-weight: 600;
+	font-size: 1rem;
+	border-radius: 6px;
+	cursor: pointer;
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	text-decoration: none;
+	transition: all 0.2s ease;
+}
+
+.btn-secondary:hover {
+	background-color: #f4f6f5 !important;
+	transform: translateY(-1px);
+	box-shadow: 0 3px 6px rgba(0, 0, 0, 0.12) !important;
+}
+
+/* All buttons - ensure minimum touch target */
+button,
+.btn,
+[class*="btn-"],
+a[class*="btn"] {
+	min-height: 44px;
+	min-width: 44px;
+}
+
+/* Fix for button links in cards */
+.card-spacing {
+	padding: 1.25rem !important;
+}
+
+/* Ensure icons in buttons are visible */
+.btn-primary svg,
+.btn-secondary svg {
+	width: 1.5rem;
+	height: 1.5rem;
+	flex-shrink: 0;
+}
+
+/* Fix link styles that might hide buttons */
+a.btn-primary,
+a.btn-secondary {
+	text-decoration: none !important;
+}
+
+/* Focus styles for accessibility */
+.btn-primary:focus-visible,
+.btn-secondary:focus-visible {
+	outline: 3px solid #3b6b7c !important;
+	outline-offset: 2px;
+}

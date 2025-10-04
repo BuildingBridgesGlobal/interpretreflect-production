@@ -1,0 +1,20 @@
+gi_teamwork view columns - Information Schema
+
+column_name             | data_type                  | is_nullable | column_default
+------------------------|----------------------------|-------------|---------------
+user_id                 | uuid                       | YES         | NULL
+created_at              | timestamp with time zone   | YES         | NULL
+entry_kind              | text                       | YES         | NULL
+agreements_fidelity     | integer                    | YES         | NULL
+top_drift_area          | text                       | YES         | NULL
+team_effectiveness      | integer                    | YES         | NULL
+rn                      | bigint                     | YES         | NULL
+
+Data type details:
+- user_id: uuid (references the user)
+- created_at: timestamp with time zone (when reflection was created)
+- entry_kind: text (values: 'team_sync', 'insession_team_sync', 'teaming_reflection', 'teaming_prep')
+- agreements_fidelity: integer (range: 0-100, percentage score)
+- top_drift_area: text (example values: 'Turn-taking balance', 'Communication gaps', 'Role clarity')
+- team_effectiveness: integer (range: 0-100, percentage score)
+- rn: bigint (row number, always 1 for latest record per user)

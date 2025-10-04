@@ -1,0 +1,92 @@
+SUPABASE CLI INSTALLATION FOR WINDOWS
+======================================
+
+The Supabase CLI is not installed. Here are your options:
+
+OPTION 1: INSTALL WITH NPM (EASIEST IF YOU HAVE NODE.JS)
+=========================================================
+
+In PowerShell, run:
+npm install -g supabase
+
+Then verify installation:
+supabase --version
+
+----------------------------------------
+
+OPTION 2: INSTALL WITH SCOOP (PACKAGE MANAGER)
+===============================================
+
+1. First install Scoop (if not already installed):
+   Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser
+   Invoke-RestMethod -Uri https://get.scoop.sh | Invoke-Expression
+
+2. Install Supabase CLI:
+   scoop bucket add supabase https://github.com/supabase/scoop-bucket.git
+   scoop install supabase
+
+3. Verify installation:
+   supabase --version
+
+----------------------------------------
+
+OPTION 3: DIRECT DOWNLOAD (MANUAL)
+===================================
+
+1. Download the latest Windows binary:
+   https://github.com/supabase/cli/releases/latest
+
+2. Look for: supabase_windows_amd64.tar.gz
+
+3. Extract the file to a folder (e.g., C:\supabase)
+
+4. Add to PATH:
+   - Press Win + X, select "System"
+   - Click "Advanced system settings"
+   - Click "Environment Variables"
+   - Under "User variables", select "Path" and click "Edit"
+   - Click "New" and add: C:\supabase
+   - Click OK on all windows
+
+5. Restart PowerShell and verify:
+   supabase --version
+
+----------------------------------------
+
+QUICKEST FIX (NPM)
+==================
+
+Since you already have Node.js installed (for the React project), run this:
+
+npm install -g supabase
+
+This will install Supabase CLI globally.
+
+----------------------------------------
+
+AFTER INSTALLATION
+==================
+
+Once installed, return to creating your backup:
+
+cd C:\Users\maddo\Desktop\boltV1IR\project
+$ts = Get-Date -Format "yyyyMMdd_HHmmss"
+$file = ".\backups\pre_migration_$ts.sql"
+supabase db dump -f $file --db-url "$env:SUPABASE_DB_URL"
+
+----------------------------------------
+
+ALTERNATIVE: USE SUPABASE DASHBOARD
+====================================
+
+If you prefer not to install the CLI, you can:
+
+1. Go to your Supabase Dashboard
+2. Navigate to Settings > Database
+3. Look for "Backups" section
+4. Create a manual backup from there
+
+Then proceed with the migration:
+supabase db push
+
+(Note: db push will also need the CLI, so you may need to apply migrations manually through the SQL Editor in the dashboard)

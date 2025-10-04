@@ -1,0 +1,141 @@
+GI_TEAMWORK VIEW DEFINITION - FIXED (No soft-delete column)
+============================================================
+
+UNDERLYING SOURCE TABLE:
+------------------------
+public.reflection_entries
+
+CORRECTED VIEW LOGIC (WITHOUT deleted_at):
+-------------------------------------------
+CREATE OR REPLACE VIEW public.gi_teamwork AS
+SELECT
+    re.user_id,
+    re.created_at,
+    re.entry_kind,
+
+    -- agreements_fidelity column mapping
+    COALESCE(
+        (re.data->>'agreements_fidelity')::integer,
+        CASE
+            WHEN re.data->>'team_alignment' = 'excellent' THEN 95
+            WHEN re.data->>'team_alignment' = 'good' THEN 85
+            WHEN re.data->>'team_alignment' = 'fair' THEN 70
+            WHEN re.data->>'sync_status' = 'aligned' THEN 90
+            WHEN re.data->>'sync_status' = 'partial' THEN 75
+            ELSE 80
+        END
+    ) AS agreements_fidelity,
+
+    -- top_drift_area column mapping
+    COALESCE(
+        re.data->>'drift_area',
+        re.data->>'top_drift_area',
+        CASE
+            WHEN re.data->>'communication_gaps' IS NOT NULL THEN 'Communication gaps'
+            WHEN re.data->>'role_clarity' = 'unclear' THEN 'Role clarity'
+            WHEN re.data->>'turn_taking_issues' = 'true' THEN 'Turn-taking balance'
+            ELSE 'Turn-taking balance'
+        END
+    ) AS top_drift_area,
+
+    -- team_effectiveness column mapping
+    COALESCE(
+        (re.data->>'team_effectiveness')::integer,
+        (re.data->>'collaboration_success')::integer,
+        80
+    ) AS team_effectiveness,
+
+    -- Row number logic
+    ROW_NUMBER() OVER (
+        PARTITION BY re.user_id
+        ORDER BY re.created_at DESC
+    ) AS rn
+
+FROM
+    public.reflection_entries re
+WHERE
+    re.entry_kind IN ('team_sync', 'insession_team_sync', 'teaming_reflection', 'teaming_prep');
+
+-- Alternative versions depending on your soft-delete implementation:
+
+-- Version 1: If you have archived_at column
+-- WHERE
+--     re.entry_kind IN ('team_sync', 'insession_team_sync', 'teaming_reflection', 'teaming_prep')
+--     AND re.archived_at IS NULL;
+
+-- Version 2: If you have is_deleted boolean column
+-- WHERE
+--     re.entry_kind IN ('team_sync', 'insession_team_sync', 'teaming_reflection', 'teaming_prep')
+--     AND COALESCE(re.is_deleted, false) = false;
+
+-- Version 3: If you have status column
+-- WHERE
+--     re.entry_kind IN ('team_sync', 'insession_team_sync', 'teaming_reflection', 'teaming_prep')
+--     AND re.status <> 'deleted';
+
+-- Version 4: If deletion flag is in JSON data
+-- WHERE
+--     re.entry_kind IN ('team_sync', 'insession_team_sync', 'teaming_reflection', 'teaming_prep')
+--     AND COALESCE((re.data->>'deleted')::boolean, false) = false;
+
+COLUMN MAPPINGS (UNCHANGED):
+-----------------------------
+
+1. user_id:
+   - Direct mapping from: reflection_entries.user_id
+   - Type: uuid
+
+2. created_at:
+   - Direct mapping from: reflection_entries.created_at
+   - Type: timestamp with time zone
+
+3. entry_kind:
+   - Direct mapping from: reflection_entries.entry_kind
+   - Filtered values: 'team_sync', 'insession_team_sync', 'teaming_reflection', 'teaming_prep'
+   - Type: text
+
+4. agreements_fidelity:
+   - Primary source: reflection_entries.data->>'agreements_fidelity' (cast to integer)
+   - Fallback sources in order:
+     * If data->>'team_alignment' = 'excellent' → 95
+     * If data->>'team_alignment' = 'good' → 85
+     * If data->>'team_alignment' = 'fair' → 70
+     * If data->>'sync_status' = 'aligned' → 90
+     * If data->>'sync_status' = 'partial' → 75
+     * Default: 80
+   - Type: integer (0-100 range)
+
+5. top_drift_area:
+   - Primary source: reflection_entries.data->>'drift_area'
+   - Secondary source: reflection_entries.data->>'top_drift_area'
+   - Fallback logic:
+     * If data->>'communication_gaps' exists → 'Communication gaps'
+     * If data->>'role_clarity' = 'unclear' → 'Role clarity'
+     * If data->>'turn_taking_issues' = 'true' → 'Turn-taking balance'
+     * Default: 'Turn-taking balance'
+   - Type: text
+
+6. team_effectiveness:
+   - Primary source: reflection_entries.data->>'team_effectiveness' (cast to integer)
+   - Secondary source: reflection_entries.data->>'collaboration_success' (cast to integer)
+   - Default: 80
+   - Type: integer (0-100 range)
+
+7. rn (row number):
+   - Logic: ROW_NUMBER() OVER (PARTITION BY re.user_id ORDER BY re.created_at DESC)
+   - Purpose: Assigns 1 to the most recent reflection per user, 2 to second most recent, etc.
+   - Type: bigint
+
+FILTER CONDITIONS (UPDATED):
+-----------------------------
+- entry_kind must be one of: 'team_sync', 'insession_team_sync', 'teaming_reflection', 'teaming_prep'
+- No soft-delete filter (removed deleted_at reference)
+
+To check if you have any soft-delete columns, run this query:
+--------------------------------------------------------------
+SELECT column_name, data_type
+FROM information_schema.columns
+WHERE table_schema = 'public'
+AND table_name = 'reflection_entries'
+AND column_name IN ('deleted_at', 'archived_at', 'is_deleted', 'status')
+ORDER BY ordinal_position;

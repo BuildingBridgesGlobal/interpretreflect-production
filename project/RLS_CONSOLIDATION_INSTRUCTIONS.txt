@@ -1,0 +1,97 @@
+RLS POLICY CONSOLIDATION INSTRUCTIONS
+======================================
+
+WHAT THIS DOES:
+---------------
+Consolidates redundant Row Level Security (RLS) policies to improve database performance.
+Changes from multiple policies per table to ONE policy per action (SELECT, INSERT, UPDATE, DELETE).
+
+BENEFITS:
+---------
+✅ Improved query performance (less policy evaluation overhead)
+✅ Clearer policy naming convention
+✅ Easier to maintain and audit
+✅ Consistent security model across all tables
+
+MIGRATION FILE:
+---------------
+📄 supabase/migrations/20250920_consolidate_rls_policies.sql
+
+TABLES AFFECTED:
+----------------
+1. reflection_entries - Core table for all reflections
+2. user_profiles - User profile data
+3. technique_usage - Stress reset technique tracking (if exists)
+4. affirmations - User affirmations (if exists)
+5. subscriptions - User subscriptions (if exists)
+
+NEW POLICY NAMING CONVENTION:
+------------------------------
+Format: [tablename]_[action]_own
+
+Examples:
+- reflection_entries_select_own (users can SELECT their own records)
+- reflection_entries_insert_own (users can INSERT their own records)
+- reflection_entries_update_own (users can UPDATE their own records)
+- reflection_entries_delete_own (users can DELETE their own records)
+
+HOW TO APPLY:
+-------------
+1. BACKUP FIRST (recommended):
+   - Go to Supabase Dashboard > Settings > Backups
+   - Create a backup before applying this migration
+
+2. Apply the migration:
+   cd C:\Users\maddo\Desktop\boltV1IR\project
+   supabase db push
+
+3. Verify the consolidation worked:
+   - Go to Supabase Dashboard > SQL Editor
+   - Run the verification query below
+
+VERIFICATION QUERY:
+-------------------
+SELECT
+    schemaname,
+    tablename,
+    policyname,
+    cmd
+FROM pg_policies
+WHERE schemaname = 'public'
+AND tablename IN ('reflection_entries', 'user_profiles', 'technique_usage', 'affirmations', 'subscriptions')
+ORDER BY tablename, cmd;
+
+EXPECTED RESULT:
+----------------
+You should see ONE policy per action (SELECT, INSERT, UPDATE, DELETE) per table.
+Example for reflection_entries:
+- reflection_entries_select_own (SELECT)
+- reflection_entries_insert_own (INSERT)
+- reflection_entries_update_own (UPDATE)
+- reflection_entries_delete_own (DELETE)
+
+ROLLBACK PLAN:
+--------------
+If issues occur, you can restore from the backup created in step 1.
+The migration uses IF EXISTS clauses, so it's safe to run multiple times.
+
+IMPORTANT NOTES:
+----------------
+⚠️ This is a destructive change to policies (drops and recreates them)
+⚠️ The new policies maintain the same security model (users can only access their own data)
+⚠️ All policies use auth.uid() = user_id for consistency
+⚠️ The migration handles tables that may not exist using conditional logic
+
+NEXT STEPS:
+-----------
+After this consolidation:
+A) Monitor performance improvements
+B) Consider function hardening migration (if you have custom functions)
+C) Review unused indexes after a week of production use
+
+SUPABASE RECOMMENDATION:
+------------------------
+This consolidation follows Supabase's best practice:
+"One policy per action per role per table"
+
+This reduces the overhead of policy evaluation and improves query performance.

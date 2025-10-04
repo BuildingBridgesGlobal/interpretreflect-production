@@ -1,0 +1,82 @@
+FIX DOCKER DESKTOP - LINGERING PROCESSES
+=========================================
+
+Docker has multiple instances running. Here's how to fix it:
+
+SOLUTION 1: KILL ALL DOCKER PROCESSES (QUICKEST)
+=================================================
+
+In PowerShell (Run as Administrator):
+
+# Stop all Docker processes
+Get-Process "Docker Desktop" -ErrorAction SilentlyContinue | Stop-Process -Force
+Get-Process "com.docker.*" -ErrorAction SilentlyContinue | Stop-Process -Force
+Get-Process "docker" -ErrorAction SilentlyContinue | Stop-Process -Force
+
+# Wait a moment
+Start-Sleep -Seconds 5
+
+# Start Docker Desktop fresh
+Start-Process "C:\Program Files\Docker\Docker\Docker Desktop.exe"
+
+SOLUTION 2: USE TASK MANAGER
+=============================
+
+1. Press Ctrl + Shift + Esc to open Task Manager
+2. Go to "Processes" tab
+3. Find ALL "Docker Desktop.exe" processes
+4. Right-click each one and select "End Task"
+5. After all are closed, start Docker Desktop fresh from Start Menu
+
+SOLUTION 3: RESTART YOUR COMPUTER (CLEANEST)
+=============================================
+
+1. Save any work
+2. Restart Windows
+3. After restart, start Docker Desktop
+4. Wait for it to fully start (2-3 minutes)
+
+HOW TO KNOW DOCKER IS RUNNING PROPERLY:
+========================================
+
+1. Look for Docker icon in system tray (bottom-right)
+   - White whale = Starting up
+   - Green = Running
+   - Red = Error
+
+2. Test in PowerShell:
+   docker --version
+   docker ps
+
+   Should show version and no errors
+
+3. Docker Desktop window should show:
+   "Docker Desktop is running"
+
+AFTER DOCKER IS RUNNING:
+========================
+
+Run your backup command:
+
+cd C:\Users\maddo\Desktop\boltV1IR\project
+$ts = Get-Date -Format "yyyyMMdd_HHmmss"
+$file = ".\backups\pre_migration_$ts.sql"
+npx supabase db dump -f $file --db-url "$env:SUPABASE_DB_URL"
+
+IF DOCKER KEEPS HAVING ISSUES:
+===============================
+
+Skip Docker and use Supabase Dashboard instead:
+
+1. Go to: https://supabase.com/dashboard/project/kvguxuxanpynwdffpssm
+2. SQL Editor
+3. Copy your migration content
+4. Paste and run directly
+
+QUICK FIX COMMANDS (COPY & PASTE):
+===================================
+
+# In PowerShell as Administrator:
+Get-Process "Docker Desktop" -ErrorAction SilentlyContinue | Stop-Process -Force
+Start-Sleep -Seconds 5
+Start-Process "C:\Program Files\Docker\Docker\Docker Desktop.exe"

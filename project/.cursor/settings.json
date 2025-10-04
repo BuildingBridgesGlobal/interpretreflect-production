@@ -1,0 +1,12 @@
+{
+	"workbench.colorTheme": "Default Dark+",
+	"editor.fontSize": 14,
+	"editor.tabSize": 2,
+	"editor.insertSpaces": true,
+	"files.autoSave": "afterDelay",
+	"git.enableSmartCommit": true,
+	"git.confirmSync": false,
+	"typescript.updateImportsOnFileMove.enabled": "always",
+	"eslint.workingDirectories": ["./"],
+	"prettier.requireConfig": true
+}

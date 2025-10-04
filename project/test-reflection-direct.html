@@ -1,0 +1,63 @@
+<!doctype html>
+<html>
+  <head>
+    <title>Test Reflection Direct Insert</title>
+  </head>
+  <body>
+    <h1>Test Direct Supabase Insert</h1>
+    <button id="testBtn">Test Insert to reflection_entries</button>
+    <div id="result"></div>
+
+    <script>
+      document.getElementById('testBtn').addEventListener('click', async () => {
+        const SUPABASE_URL = 'https://pyfysatkmchtlqxpibkk.supabase.co';
+        const SUPABASE_ANON_KEY =
+          'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InB5ZnlzYXRrbWNodGxxeHBpYmtrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MzQ0NzU3MjQsImV4cCI6MjA1MDA1MTcyNH0.isBbcNJvQergCQQRscC0aXqKqUbm5kBTwqSrYaIA5Hs';
+
+        const testData = {
+          user_id: '6be736bc-2ec2-487d-8f5f-f8eaacb053c5',
+          entry_kind: 'test_insert',
+          data: { test: 'Testing direct insert' },
+          created_at: new Date().toISOString(),
+          updated_at: new Date().toISOString(),
+        };
+
+        try {
+          console.log('Sending test insert...');
+          const response = await fetch(`${SUPABASE_URL}/rest/v1/reflection_entries`, {
+            method: 'POST',
+            headers: {
+              apikey: SUPABASE_ANON_KEY,
+              Authorization: `Bearer ${SUPABASE_ANON_KEY}`,
+              'Content-Type': 'application/json',
+              Prefer: 'return=representation',
+            },
+            body: JSON.stringify(testData),
+          });
+
+          const result = await response.text();
+          document.getElementById('result').innerHTML = `
+                    <p>Status: ${response.status}</p>
+                    <p>Response: ${result}</p>
+                `;
+
+          if (!response.ok) {
+            console.error('Error:', result);
+
+            // Check common RLS errors
+            if (result.includes('row-level security') || result.includes('RLS')) {
+              alert('RLS is blocking inserts! Check if RLS is enabled with no policies.');
+            } else if (result.includes('JWT') || result.includes('PGRST303')) {
+              alert('JWT/Auth issue - but this is using anon key, so RLS might be the issue');
+            }
+          } else {
+            alert('Success! The insert worked. The issue is with the Supabase JS client.');
+          }
+        } catch (error) {
+          document.getElementById('result').innerHTML = `Error: ${error.message}`;
+          console.error('Error:', error);
+        }
+      });
+    </script>
+  </body>
+</html>

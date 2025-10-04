@@ -1,0 +1,78 @@
+HOW TO GET YOUR ACTUAL DATABASE URL FROM SUPABASE
+==================================================
+
+The error shows you're using placeholder text. You need your REAL database URL!
+
+STEP 1: GET YOUR DATABASE URL FROM SUPABASE
+============================================
+
+1. Go to: https://supabase.com/dashboard
+2. Select your project
+3. Click on "Settings" (gear icon) in the left sidebar
+4. Click on "Database"
+5. Look for "Connection string" section
+6. Find the connection string that looks like:
+
+   postgresql://postgres:YOUR_ACTUAL_PASSWORD@db.YOUR_PROJECT_ID.supabase.co:5432/postgres
+
+   Example (not real):
+   postgresql://postgres:MySecretPass123@db.abcdefghijklmnop.supabase.co:5432/postgres
+
+7. Click the "Copy" button next to it
+
+STEP 2: SET THE ENVIRONMENT VARIABLE WITH YOUR REAL URL
+========================================================
+
+In PowerShell, paste YOUR actual URL (the one you copied):
+
+$env:SUPABASE_DB_URL = "YOUR_ACTUAL_CONNECTION_STRING_HERE"
+
+Example (with fake values):
+$env:SUPABASE_DB_URL = "postgresql://postgres:MySecretPass123@db.abcdefghijklmnop.supabase.co:5432/postgres"
+
+STEP 3: RUN THE BACKUP COMMAND
+===============================
+
+Now run the backup with npx:
+
+cd C:\Users\maddo\Desktop\boltV1IR\project
+$ts = Get-Date -Format "yyyyMMdd_HHmmss"
+$file = ".\backups\pre_migration_$ts.sql"
+npx supabase db dump -f $file --db-url "$env:SUPABASE_DB_URL"
+
+ALTERNATIVE: DIRECT CONNECTION STRING
+======================================
+
+If you can't find the connection string, you can build it:
+
+1. Find these in Supabase Dashboard > Settings > Database:
+   - Host: db.YOUR_PROJECT_ID.supabase.co
+   - Database name: postgres
+   - Port: 5432
+   - User: postgres
+   - Password: (you set this when creating the project)
+
+2. Build the URL:
+   postgresql://postgres:YOUR_PASSWORD@db.YOUR_PROJECT_ID.supabase.co:5432/postgres
+
+SECURITY NOTE
+=============
+
+⚠️ Never share your database URL publicly!
+⚠️ It contains your password
+⚠️ Anyone with this URL can access your database
+
+TROUBLESHOOTING
+===============
+
+If you forgot your database password:
+1. Go to Supabase Dashboard > Settings > Database
+2. Click "Reset database password"
+3. Set a new password
+4. Use the new password in your connection string
+
+Make sure the password doesn't contain special characters like @ or :
+If it does, you need to URL-encode them:
+- @ becomes %40
+- : becomes %3A
+- # becomes %23

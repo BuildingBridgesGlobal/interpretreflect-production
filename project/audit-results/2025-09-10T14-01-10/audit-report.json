@@ -1,0 +1,213 @@
+{
+	"url": "http://localhost:5173/",
+	"timestamp": "2025-09-10T14:01:10.188Z",
+	"score": 70,
+	"complianceLevel": "Needs Improvement",
+	"summary": {
+		"passed": 16,
+		"warnings": 1,
+		"failed": 6
+	},
+	"categories": {
+		"Document": [
+			{
+				"name": "HTML lang attribute",
+				"wcag": "3.1.1",
+				"level": "A",
+				"status": "passed"
+			},
+			{
+				"name": "Viewport meta tag",
+				"wcag": "N/A",
+				"level": "N/A",
+				"status": "passed"
+			}
+		],
+		"SEO": [
+			{
+				"name": "Meta description",
+				"wcag": "N/A",
+				"level": "N/A",
+				"status": "passed"
+			},
+			{
+				"name": "Title tag",
+				"wcag": "2.4.2",
+				"level": "A",
+				"status": "passed"
+			}
+		],
+		"Accessibility": [
+			{
+				"name": "Skip to main content link",
+				"wcag": "2.4.1",
+				"level": "A",
+				"status": "passed"
+			},
+			{
+				"name": "Main landmark",
+				"wcag": "1.3.1",
+				"level": "A",
+				"status": "failed"
+			},
+			{
+				"name": "Navigation landmark",
+				"wcag": "1.3.1",
+				"level": "A",
+				"status": "failed"
+			},
+			{
+				"name": "Header landmark",
+				"wcag": "1.3.1",
+				"level": "A",
+				"status": "failed"
+			},
+			{
+				"name": "Footer landmark",
+				"wcag": "1.3.1",
+				"level": "A",
+				"status": "failed"
+			},
+			{
+				"name": "ARIA labels",
+				"wcag": "4.1.2",
+				"level": "A",
+				"status": "passed"
+			},
+			{
+				"name": "Focus indicators",
+				"wcag": "2.4.7",
+				"level": "AA",
+				"status": "passed"
+			}
+		],
+		"Components": [
+			{
+				"name": "Search functionality",
+				"wcag": "N/A",
+				"level": "N/A",
+				"status": "failed"
+			},
+			{
+				"name": "Help widget",
+				"wcag": "N/A",
+				"level": "N/A",
+				"status": "failed"
+			}
+		],
+		"Branding": [
+			{
+				"name": "Favicon SVG",
+				"wcag": "N/A",
+				"level": "N/A",
+				"status": "passed"
+			},
+			{
+				"name": "Apple touch icon",
+				"wcag": "N/A",
+				"level": "N/A",
+				"status": "passed"
+			}
+		],
+		"PWA": [
+			{
+				"name": "Web manifest",
+				"wcag": "N/A",
+				"level": "N/A",
+				"status": "passed"
+			},
+			{
+				"name": "Theme color",
+				"wcag": "N/A",
+				"level": "N/A",
+				"status": "passed"
+			}
+		],
+		"Social": [
+			{
+				"name": "Open Graph title",
+				"wcag": "N/A",
+				"level": "N/A",
+				"status": "passed"
+			},
+			{
+				"name": "Open Graph description",
+				"wcag": "N/A",
+				"level": "N/A",
+				"status": "passed"
+			},
+			{
+				"name": "Twitter card",
+				"wcag": "N/A",
+				"level": "N/A",
+				"status": "passed"
+			}
+		],
+		"Performance": [
+			{
+				"name": "CSS variables for theming",
+				"wcag": "N/A",
+				"level": "N/A",
+				"status": "passed"
+			},
+			{
+				"name": "Responsive design",
+				"wcag": "N/A",
+				"level": "N/A",
+				"status": "passed"
+			}
+		],
+		"Security": [
+			{
+				"name": "HTTPS recommendation",
+				"wcag": "N/A",
+				"level": "N/A",
+				"status": "warning"
+			}
+		]
+	},
+	"issues": [
+		{
+			"level": "A",
+			"wcag": "1.3.1",
+			"issue": "Main landmark",
+			"severity": "error"
+		},
+		{
+			"level": "A",
+			"wcag": "1.3.1",
+			"issue": "Navigation landmark",
+			"severity": "error"
+		},
+		{
+			"level": "A",
+			"wcag": "1.3.1",
+			"issue": "Header landmark",
+			"severity": "error"
+		},
+		{
+			"level": "A",
+			"wcag": "1.3.1",
+			"issue": "Footer landmark",
+			"severity": "error"
+		},
+		{
+			"level": "N/A",
+			"wcag": "N/A",
+			"issue": "Search functionality",
+			"severity": "error"
+		},
+		{
+			"level": "N/A",
+			"wcag": "N/A",
+			"issue": "Help widget",
+			"severity": "error"
+		},
+		{
+			"level": "N/A",
+			"wcag": "N/A",
+			"issue": "HTTPS recommendation",
+			"severity": "warning"
+		}
+	]
+}

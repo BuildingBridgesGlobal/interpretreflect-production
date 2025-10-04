@@ -95,9 +95,11 @@ const PaymentForm: React.FC<{
 	email: string;
 	name: string;
 	password: string;
+	userId?: string;
+	isGoogleSSO?: boolean;
 	onSuccess: () => void;
 	onBack: () => void;
-}> = ({ plan, email, name, password, onSuccess, onBack }) => {
+}> = ({ plan, email, name, password, userId, isGoogleSSO, onSuccess, onBack }) => {
 	const stripe = useStripe();
 	const elements = useElements();
 	const [error, setError] = useState<string>("");
@@ -136,33 +138,78 @@ const PaymentForm: React.FC<{
 			// For now, simulate successful payment (in production, you'd verify with Stripe)
 			console.log("Payment method created:", paymentMethod.id);
 
-			// NOW create the account after successful payment
-			const { data: signupData, error: signupError } =
-				await supabase.auth.signUp({
-					email: email.toLowerCase().trim(),
-					password: password, // Use the password passed from step 1
-					options: {
-						data: {
-							full_name: name,
-							stripe_payment_method_id: paymentMethod.id,
-							subscription_plan: plan,
-						},
+			// If user already exists (Google SSO), just update their subscription status
+			if (isGoogleSSO && userId) {
+				// Update user metadata with payment info
+				const { error: updateError } = await supabase.auth.updateUser({
+					data: {
+						stripe_payment_method_id: paymentMethod.id,
+						subscription_plan: plan,
+						subscription_status: 'active',
 					},
 				});
 
-			if (signupError) {
-				throw new Error(`Failed to create account: ${signupError.message}`);
-			}
+				if (updateError) {
+					throw new Error(`Failed to update subscription: ${updateError.message}`);
+				}
 
-			// Sign them in immediately
-			if (signupData?.user) {
-				const { error: signInError } = await supabase.auth.signInWithPassword({
-					email: email.toLowerCase().trim(),
-					password: password,
-				});
+				// Create subscription record in database
+				const { error: subError } = await supabase
+					.from('subscriptions')
+					.insert({
+						user_id: userId,
+						status: 'active',
+						plan: plan,
+						stripe_payment_method_id: paymentMethod.id,
+					});
 
-				if (signInError) {
-					console.error("Could not auto sign in:", signInError);
+				if (subError) {
+					console.error('Failed to create subscription record:', subError);
+				}
+			} else {
+				// Email signup - create the account after successful payment
+				const { data: signupData, error: signupError } =
+					await supabase.auth.signUp({
+						email: email.toLowerCase().trim(),
+						password: password, // Use the password passed from step 1
+						options: {
+							data: {
+								full_name: name,
+								stripe_payment_method_id: paymentMethod.id,
+								subscription_plan: plan,
+								subscription_status: 'active',
+							},
+						},
+					});
+
+				if (signupError) {
+					throw new Error(`Failed to create account: ${signupError.message}`);
+				}
+
+				// Sign them in immediately
+				if (signupData?.user) {
+					const { error: signInError } = await supabase.auth.signInWithPassword({
+						email: email.toLowerCase().trim(),
+						password: password,
+					});
+
+					if (signInError) {
+						console.error("Could not auto sign in:", signInError);
+					}
+
+					// Create subscription record
+					const { error: subError } = await supabase
+						.from('subscriptions')
+						.insert({
+							user_id: signupData.user.id,
+							status: 'active',
+							plan: plan,
+							stripe_payment_method_id: paymentMethod.id,
+						});
+
+					if (subError) {
+						console.error('Failed to create subscription record:', subError);
+					}
 				}
 			}
 
@@ -308,36 +355,46 @@ export const SeamlessSignup: React.FC = () => {
 
 		const checkSubscriptionAndRedirect = async () => {
 			if (user) {
-				// Check if user already has a subscription
-				const { data: profile } = await supabase
-					.from('profiles')
-					.select('subscription_status, subscription_tier')
-					.eq('id', user.id)
-					.single();
+				console.log('User detected:', user.email, 'Step param:', step, 'SSO param:', sso);
 
-				if (profile?.subscription_status === 'active') {
-					// User already has subscription - go to dashboard
-					navigate('/dashboard');
-					return;
+				// Check if user already has a subscription
+				try {
+					const { data: subscriptions } = await supabase
+						.from('subscriptions')
+						.select('status')
+						.eq('user_id', user.id)
+						.eq('status', 'active')
+						.limit(1);
+
+					if (subscriptions && subscriptions.length > 0) {
+						console.log('Active subscription found, redirecting to dashboard');
+						navigate('/dashboard');
+						return;
+					}
+				} catch (error) {
+					console.error('Error checking subscription:', error);
+					// Continue to payment if check fails
 				}
 
 				// New Google SSO user needs to pay
 				if (step === 'payment' && sso === 'google') {
+					console.log('Setting current step to 3 for Google SSO payment');
 					setCurrentStep(3);
 					setFormData(prev => ({
 						...prev,
 						email: user.email || '',
 						name: user.user_metadata?.full_name || user.user_metadata?.name || '',
 					}));
-				} else if (currentStep === 1) {
-					// Regular logged in user without subscription
+				} else if (currentStep === 1 && user) {
+					// Regular logged in user without subscription - skip to plan selection
+					console.log('Logged in user, skipping to step 2');
 					setCurrentStep(2);
 				}
 			}
 		};
 
 		checkSubscriptionAndRedirect();
-	}, [user, currentStep, navigate]);
+	}, [user, navigate]);
 
 	const validateStep = (step: number): boolean => {
 		switch (step) {
@@ -475,6 +532,16 @@ export const SeamlessSignup: React.FC = () => {
 				{/* Form Container */}
 				<div className="max-w-2xl mx-auto mt-12">
 					<div className="bg-white rounded-2xl shadow-xl p-8">
+						{/* Debug info - ALWAYS SHOW */}
+						<div className="mb-4 p-3 bg-yellow-100 border border-yellow-300 rounded text-sm">
+							<p><strong>Debug Info:</strong></p>
+							<p>Current Step: {currentStep}</p>
+							<p>User: {user ? user.email : 'Not logged in'}</p>
+							<p>URL: {window.location.search}</p>
+							<p>Form Data Email: {formData.email}</p>
+							<p>Form Data Name: {formData.name}</p>
+						</div>
+
 						{/* Step 1: Account Creation */}
 						{currentStep === 1 && !user && (
 							<div className="space-y-6">
@@ -873,6 +940,8 @@ export const SeamlessSignup: React.FC = () => {
 										email={formData.email || user?.email || ""}
 										name={formData.name || user?.user_metadata?.full_name || ""}
 										password={formData.password}
+										userId={user?.id}
+										isGoogleSSO={!!user && !formData.password}
 										onSuccess={handleSuccess}
 										onBack={handleBack}
 									/>

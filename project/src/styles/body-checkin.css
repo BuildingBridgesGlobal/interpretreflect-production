@@ -1,0 +1,129 @@
+/* Body Check-In Slider Styles */
+.comfort-slider {
+	-webkit-appearance: none;
+	appearance: none;
+	width: 100%;
+	height: 2px;
+	background: #e2e8f0;
+	border-radius: 1px;
+	outline: none;
+	transition: background 0.2s ease;
+}
+
+.comfort-slider::-webkit-slider-thumb {
+	-webkit-appearance: none;
+	appearance: none;
+	width: 16px;
+	height: 16px;
+	background: #4a90e2;
+	border-radius: 50%;
+	cursor: pointer;
+	box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+	transition: all 0.2s ease;
+}
+
+.comfort-slider::-webkit-slider-thumb:hover {
+	transform: scale(1.1);
+	box-shadow: 0 3px 6px rgba(0, 0, 0, 0.15);
+}
+
+.comfort-slider::-moz-range-thumb {
+	width: 16px;
+	height: 16px;
+	background: #4a90e2;
+	border-radius: 50%;
+	cursor: pointer;
+	box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+	transition: all 0.2s ease;
+	border: none;
+}
+
+.comfort-slider::-moz-range-thumb:hover {
+	transform: scale(1.1);
+	box-shadow: 0 3px 6px rgba(0, 0, 0, 0.15);
+}
+
+/* Selected option styling */
+.option-selected {
+	background-color: #ebf8ff;
+	border: 2px solid #4a90e2;
+	border-radius: 8px;
+	padding: 12px;
+	transition: all 0.2s ease;
+}
+
+/* Radio button custom styling */
+.custom-radio {
+	width: 20px;
+	height: 20px;
+	border-radius: 50%;
+	border: 2px solid #cbd5e0;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	transition: all 0.2s ease;
+}
+
+.custom-radio.selected {
+	border-color: #4a90e2;
+	background-color: #4a90e2;
+}
+
+.custom-radio-dot {
+	width: 8px;
+	height: 8px;
+	background-color: white;
+	border-radius: 50%;
+}
+
+/* Button hover states */
+.btn-primary {
+	background-color: #2563eb;
+	color: white;
+	padding: 12px 24px;
+	border-radius: 8px;
+	font-weight: 500;
+	transition: all 0.2s ease;
+	box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.btn-primary:hover {
+	background-color: #1d4ed8;
+	box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15);
+	transform: translateY(-1px);
+}
+
+.btn-secondary {
+	background-color: #f3f4f6;
+	color: #374151;
+	padding: 12px 24px;
+	border-radius: 8px;
+	font-weight: 500;
+	transition: all 0.2s ease;
+}
+
+.btn-secondary:hover {
+	background-color: #e5e7eb;
+}
+
+/* Insight box styling */
+.insight-box {
+	background-color: #ebf8ff;
+	border-radius: 12px;
+	padding: 16px;
+	border-left: 3px solid #4a90e2;
+}
+
+/* Smooth transitions for all interactive elements */
+.transition-smooth {
+	transition: all 0.2s ease;
+}
+
+/* Ensure minimum tap target size for accessibility */
+.tap-target {
+	min-height: 44px;
+	min-width: 44px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}

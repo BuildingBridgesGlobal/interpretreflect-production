@@ -1,0 +1,199 @@
+/* ========================================================================
+   Responsive Button Sizing - Normal and Large Text Modes
+   ======================================================================== */
+
+/* Default button sizes - appropriate for regular context */
+button,
+[role="button"] {
+	/* Reset the minimum sizes from accessibility.css for inline buttons */
+	min-height: auto;
+	min-width: auto;
+	padding: 0.5rem 1rem; /* Smaller default padding */
+	font-size: 0.875rem; /* 14px */
+	line-height: 1.5;
+}
+
+/* Specific sizing for different button types */
+button.btn-sm,
+[role="button"].btn-sm {
+	padding: 0.375rem 0.75rem;
+	font-size: 0.8125rem; /* 13px */
+}
+
+button.btn-md,
+[role="button"].btn-md {
+	padding: 0.5rem 1rem;
+	font-size: 0.875rem; /* 14px */
+}
+
+button.btn-lg,
+[role="button"].btn-lg {
+	padding: 0.75rem 1.5rem;
+	font-size: 1rem; /* 16px */
+}
+
+/* Primary action buttons in reflections and forms */
+button[class*="px-6"],
+button[class*="px-8"],
+[role="button"][class*="px-6"],
+[role="button"][class*="px-8"] {
+	padding-top: 0.625rem; /* 10px */
+	padding-bottom: 0.625rem; /* 10px */
+	font-size: 0.875rem; /* 14px */
+}
+
+/* Navigation and tab buttons */
+button[role="tab"],
+[role="button"][role="tab"] {
+	padding: 0.5rem 1rem;
+	font-size: 0.875rem;
+	min-height: 36px;
+}
+
+/* Icon-only buttons */
+button:not(:has(span)):not(:has(div)),
+button[aria-label]:not(:has(span)):not(:has(div)) {
+	min-width: 36px;
+	min-height: 36px;
+	padding: 0.5rem;
+}
+
+/* ========================================================================
+   Large Text Mode - Accessibility Enhancement
+   ======================================================================== */
+
+/* When user enables large text mode, increase all button sizes */
+.text-large button,
+.text-large [role="button"] {
+	min-height: 44px; /* WCAG touch target */
+	min-width: 44px;
+	padding: 0.75rem 1.5rem; /* Increased padding */
+	font-size: 1.125rem; /* 18px */
+	line-height: 1.5;
+}
+
+.text-large button.btn-sm,
+.text-large [role="button"].btn-sm {
+	padding: 0.625rem 1.125rem;
+	font-size: 1rem; /* 16px */
+	min-height: 40px;
+}
+
+.text-large button.btn-md,
+.text-large [role="button"].btn-md {
+	padding: 0.75rem 1.5rem;
+	font-size: 1.125rem; /* 18px */
+	min-height: 44px;
+}
+
+.text-large button.btn-lg,
+.text-large [role="button"].btn-lg {
+	padding: 1rem 2rem;
+	font-size: 1.25rem; /* 20px */
+	min-height: 48px;
+}
+
+.text-large button[class*="px-6"],
+.text-large button[class*="px-8"],
+.text-large [role="button"][class*="px-6"],
+.text-large [role="button"][class*="px-8"] {
+	padding-top: 0.875rem; /* 14px */
+	padding-bottom: 0.875rem; /* 14px */
+	font-size: 1.125rem; /* 18px */
+}
+
+.text-large button[role="tab"],
+.text-large [role="button"][role="tab"] {
+	padding: 0.75rem 1.5rem;
+	font-size: 1.125rem;
+	min-height: 44px;
+}
+
+/* Icon-only buttons in large text mode */
+.text-large button:not(:has(span)):not(:has(div)),
+.text-large button[aria-label]:not(:has(span)):not(:has(div)) {
+	min-width: 44px;
+	min-height: 44px;
+	padding: 0.75rem;
+}
+
+/* ========================================================================
+   Reflection Component Buttons - Specific Overrides
+   ======================================================================== */
+
+/* Previous/Next buttons in multi-step forms */
+button[class*="Previous"],
+button[class*="Next"],
+button:has(svg[class*="chevron"]),
+button:has(svg[class*="arrow"]) {
+	padding: 0.625rem 1.25rem;
+	font-size: 0.875rem;
+	min-height: 38px;
+}
+
+.text-large button[class*="Previous"],
+.text-large button[class*="Next"],
+.text-large button:has(svg[class*="chevron"]),
+.text-large button:has(svg[class*="arrow"]) {
+	padding: 0.875rem 1.75rem;
+	font-size: 1.125rem;
+	min-height: 44px;
+}
+
+/* Complete/Submit buttons */
+button[class*="Complete"],
+button[class*="Submit"],
+button[type="submit"] {
+	padding: 0.75rem 1.5rem;
+	font-size: 0.9375rem; /* 15px */
+	min-height: 40px;
+	font-weight: 600;
+}
+
+.text-large button[class*="Complete"],
+.text-large button[class*="Submit"],
+.text-large button[type="submit"] {
+	padding: 1rem 2rem;
+	font-size: 1.25rem; /* 20px */
+	min-height: 48px;
+}
+
+/* ========================================================================
+   Maintain Touch Targets for Critical Interactive Elements
+   ======================================================================== */
+
+/* Ensure critical buttons always meet minimum touch target */
+button[class*="Start"],
+button[class*="Begin"],
+button[class*="Create"],
+a[role="button"] {
+	min-height: 40px;
+	min-width: 40px;
+}
+
+.text-large button[class*="Start"],
+.text-large button[class*="Begin"],
+.text-large button[class*="Create"],
+.text-large a[role="button"] {
+	min-height: 48px;
+	min-width: 48px;
+}
+
+/* ========================================================================
+   Day Selection Buttons (Affirmations)
+   ======================================================================== */
+
+/* Day buttons in affirmations view */
+button[class*="Day"] {
+	padding: 0.625rem;
+	font-size: 0.8125rem; /* 13px */
+	min-height: 36px;
+	min-width: 64px;
+}
+
+.text-large button[class*="Day"] {
+	padding: 0.875rem;
+	font-size: 1rem; /* 16px */
+	min-height: 44px;
+	min-width: 80px;
+}

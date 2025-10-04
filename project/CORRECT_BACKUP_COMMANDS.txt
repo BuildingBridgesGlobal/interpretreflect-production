@@ -1,0 +1,55 @@
+CORRECT BACKUP COMMANDS - MUST USE "npx" PREFIX!
+=================================================
+
+⚠️ IMPORTANT: You MUST type "npx" before "supabase" ⚠️
+
+WRONG ❌: supabase db dump ...
+RIGHT ✅: npx supabase db dump ...
+
+COPY AND PASTE THESE EXACT COMMANDS:
+=====================================
+
+STEP 1: Set your database URL (replace with your actual URL)
+--------------------------------------------------------------
+$env:SUPABASE_DB_URL = "postgresql://postgres:[YOUR-PASSWORD]@db.[YOUR-PROJECT-REF].supabase.co:5432/postgres"
+
+
+STEP 2: Create the backup (COPY THIS EXACTLY)
+----------------------------------------------
+cd C:\Users\maddo\Desktop\boltV1IR\project
+$ts = Get-Date -Format "yyyyMMdd_HHmmss"
+$file = ".\backups\pre_migration_$ts.sql"
+npx supabase db dump -f $file --db-url "$env:SUPABASE_DB_URL"
+
+👆 NOTE THE "npx" AT THE BEGINNING! 👆
+
+
+ALTERNATIVE - RUN THIS SCRIPT:
+-------------------------------
+.\backup_with_npx.ps1
+
+
+WHAT HAPPENS:
+-------------
+1. npx will download Supabase CLI temporarily (first time only)
+2. It will create your backup in the .\backups folder
+3. No installation required!
+
+
+IF IT STILL DOESN'T WORK:
+-------------------------
+Make sure you have Node.js installed by typing:
+node --version
+npm --version
+npx --version
+
+All three should show version numbers.
+
+
+REMEMBER:
+---------
+ALWAYS use "npx supabase" not just "supabase"
+- npx supabase db dump ... ✅
+- npx supabase db push ... ✅
+- supabase db dump ... ❌ (won't work!)
+- supabase db push ... ❌ (won't work!)

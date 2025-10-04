@@ -1,0 +1,81 @@
+BACKUP WITHOUT DOCKER - ALTERNATIVE SOLUTIONS
+==============================================
+
+Your database URL is correct: postgresql://postgres:${enc}@db.kvguxuxanpynwdffpssm.supabase.co:5432/postgres
+
+The issue: Supabase CLI needs Docker Desktop, which you don't have.
+
+SOLUTION 1: USE SUPABASE DASHBOARD (EASIEST!)
+==============================================
+
+Since the Supabase CLI isn't working without Docker, use the Dashboard:
+
+1. Go to: https://supabase.com/dashboard/project/kvguxuxanpynwdffpssm
+2. Navigate to: Settings → Database → Backups
+3. Click "Download backup" or "Create backup"
+4. Save the backup file to your backups folder
+
+Then apply migrations directly in SQL Editor:
+1. Go to SQL Editor in Supabase Dashboard
+2. Copy the content from your migration files:
+   - 20250920_consolidate_rls_policies.sql
+   - 20250920_drop_idx_body_checkins_user.sql
+   - etc.
+3. Paste and run each migration in SQL Editor
+
+SOLUTION 2: USE PSQL/PG_DUMP DIRECTLY (IF INSTALLED)
+=====================================================
+
+If you have PostgreSQL installed locally:
+
+$env:PGPASSWORD = "YOUR_PASSWORD_HERE"
+pg_dump "postgresql://postgres:YOUR_PASSWORD@db.kvguxuxanpynwdffpssm.supabase.co:5432/postgres?sslmode=require" > ".\backups\backup_$(Get-Date -Format 'yyyyMMdd_HHmmss').sql"
+
+SOLUTION 3: INSTALL DOCKER DESKTOP (HEAVY OPTION)
+==================================================
+
+If you want to use Supabase CLI as intended:
+
+1. Download Docker Desktop: https://docs.docker.com/desktop/install/windows-install/
+2. Install and restart your computer
+3. Start Docker Desktop
+4. Then your original command will work:
+   npx supabase db dump -f $file --db-url "$env:SUPABASE_DB_URL"
+
+RECOMMENDED: USE DASHBOARD (SOLUTION 1)
+========================================
+
+Since you just need to:
+1. Create a backup
+2. Apply RLS consolidation migration
+
+The Dashboard approach is simplest:
+- No Docker needed
+- No CLI tools needed
+- Direct SQL execution
+- Immediate results
+
+APPLYING MIGRATIONS VIA DASHBOARD
+==================================
+
+1. Go to SQL Editor: https://supabase.com/dashboard/project/kvguxuxanpynwdffpssm/sql
+2. Create new query
+3. Copy content from: C:\Users\maddo\Desktop\boltV1IR\project\supabase\migrations\20250920_consolidate_rls_policies.sql
+4. Paste and click "Run"
+5. Repeat for other migration files if needed
+
+VERIFICATION AFTER MIGRATION
+=============================
+
+In SQL Editor, run:
+
+SELECT
+    tablename,
+    policyname,
+    cmd
+FROM pg_policies
+WHERE schemaname = 'public'
+AND tablename = 'reflection_entries'
+ORDER BY cmd;
+
+You should see one policy per action (SELECT, INSERT, UPDATE, DELETE).

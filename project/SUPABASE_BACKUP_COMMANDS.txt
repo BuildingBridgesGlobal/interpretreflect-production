@@ -1,0 +1,82 @@
+SUPABASE BACKUP COMMANDS - USING NPX (NO INSTALLATION REQUIRED)
+================================================================
+
+SOLUTION - Use npx instead of installing Supabase CLI
+------------------------------------------------------
+
+Since NPM global install doesn't work for Supabase CLI, use npx which runs it directly without installation.
+
+STEP 1: SET YOUR DATABASE URL
+==============================
+
+First, you need to set the SUPABASE_DB_URL environment variable:
+
+$env:SUPABASE_DB_URL = "postgresql://postgres:[YOUR-PASSWORD]@db.[YOUR-PROJECT-REF].supabase.co:5432/postgres"
+
+To find this URL:
+1. Go to Supabase Dashboard → Settings → Database
+2. Look for "Connection string" or "Database URL"
+3. Copy the connection string
+4. Replace [YOUR-PASSWORD] and [YOUR-PROJECT-REF] with your actual values
+
+STEP 2: CREATE THE BACKUP
+==========================
+
+Run these commands in PowerShell:
+
+cd C:\Users\maddo\Desktop\boltV1IR\project
+$ts = Get-Date -Format "yyyyMMdd_HHmmss"
+$file = ".\backups\pre_migration_$ts.sql"
+npx supabase db dump -f $file --db-url "$env:SUPABASE_DB_URL"
+
+OR use the automated script:
+.\backup_with_npx.ps1
+
+STEP 3: APPLY MIGRATIONS
+=========================
+
+After backup is complete, apply your migrations:
+
+npx supabase db push
+
+WHAT NPX DOES
+=============
+- Runs Supabase CLI without installing it globally
+- Downloads it temporarily on first use
+- Works immediately without any installation issues
+- No permission errors or installation conflicts
+
+RESTORE FROM BACKUP (IF NEEDED)
+================================
+
+To restore your database from backup:
+
+psql -d "$env:SUPABASE_DB_URL" -f ".\backups\pre_migration_[timestamp].sql"
+
+Replace [timestamp] with the actual timestamp from your backup file.
+
+VERIFICATION
+============
+
+After applying migrations, verify in Supabase Dashboard:
+1. Check that RLS policies are consolidated
+2. Test your application
+3. Monitor performance improvements
+
+TROUBLESHOOTING
+===============
+
+If npx command fails:
+1. Ensure Node.js is installed: node --version
+2. Check npm is working: npm --version
+3. Verify SUPABASE_DB_URL is set: echo $env:SUPABASE_DB_URL
+4. Check internet connection (npx needs to download Supabase CLI)
+
+BACKUP FILE LOCATION
+====================
+
+Your backups are saved in:
+C:\Users\maddo\Desktop\boltV1IR\project\backups\
+
+Files are named with timestamps like:
+pre_migration_20250920_211923.sql

@@ -1,0 +1,50 @@
+/* Custom Icon Styles for Crisp Rendering */
+
+.custom-icon {
+	/* Use auto for best quality at different sizes */
+	image-rendering: auto;
+	image-rendering: optimizeQuality;
+	image-rendering: -webkit-optimize-contrast;
+
+	/* Prevent blurring on transform */
+	-webkit-backface-visibility: hidden;
+	-moz-backface-visibility: hidden;
+	backface-visibility: hidden;
+
+	/* Force GPU acceleration for sharper rendering */
+	-webkit-transform: translateZ(0);
+	-moz-transform: translateZ(0);
+	transform: translateZ(0);
+
+	/* Ensure sharp edges */
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
+
+	/* Prevent image dragging */
+	-webkit-user-drag: none;
+	user-drag: none;
+
+	/* Ensure proper display */
+	display: inline-block;
+	vertical-align: middle;
+}
+
+/* High DPI screen optimization */
+@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+	.custom-icon {
+		image-rendering: -webkit-optimize-contrast;
+		image-rendering: crisp-edges;
+	}
+}
+
+/* Hover state for interactive icons */
+.custom-icon:hover {
+	filter: contrast(1.1) saturate(1.15) brightness(1.05);
+	transition: filter 0.2s ease;
+}
+
+/* Active state */
+.custom-icon:active {
+	transform: translateZ(0) scale(0.98);
+	transition: transform 0.1s ease;
+}

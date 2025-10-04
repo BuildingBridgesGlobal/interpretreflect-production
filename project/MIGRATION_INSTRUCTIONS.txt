@@ -1,0 +1,48 @@
+SUPABASE INDEX CLEANUP - MIGRATION INSTRUCTIONS
+================================================
+
+WHAT THIS DOES:
+---------------
+Drops 5 unused indexes from tables that no longer exist, cleaning up your database.
+
+MIGRATION FILES CREATED:
+------------------------
+✅ supabase/migrations/20250920_drop_idx_body_checkins_user.sql
+✅ supabase/migrations/20250920_drop_idx_daily_activity_user_id.sql
+✅ supabase/migrations/20250920_drop_idx_reflection_user_id.sql
+✅ supabase/migrations/20250920_drop_idx_stress_user_id.sql
+✅ supabase/migrations/20250920_drop_ux_wellness_metrics_user_week.sql
+✅ supabase/migrations/verify_index_removal.sql (for verification only)
+
+HOW TO APPLY:
+-------------
+1. Open terminal in project root directory (C:\Users\maddo\Desktop\boltV1IR\project)
+
+2. Run the migration command:
+   supabase db push
+
+3. The migrations will run automatically and drop the unused indexes
+
+VERIFICATION:
+-------------
+After running migrations, verify the indexes were removed:
+
+1. Go to Supabase Dashboard > SQL Editor
+2. Run the query from verify_index_removal.sql
+3. You should see 0 rows returned (meaning all indexes were successfully removed)
+
+NOTES:
+------
+- Each migration uses DROP INDEX CONCURRENTLY to avoid locking tables
+- The IF EXISTS clause ensures migrations are safe to run multiple times
+- The -- migrate:transaction: disable comment allows CONCURRENTLY to work properly
+
+ROLLBACK (if needed):
+---------------------
+These indexes were on non-existent tables, so no rollback should be needed.
+However, if you need to track what was removed, the index names were:
+- idx_body_checkins_user (was on body_checkins table)
+- idx_daily_activity_user_id (was on daily_activity table)
+- idx_reflection_user_id (was on reflections table)
+- idx_stress_user_id (was on stress_management table)
+- ux_wellness_metrics_user_week (was on wellness_metrics table)

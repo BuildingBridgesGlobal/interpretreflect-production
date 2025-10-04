@@ -1,0 +1,67 @@
+BACKUP WITH DOCKER INSTALLED - QUICK COMMANDS
+==============================================
+
+Great! Now that Docker is installed, the original commands will work!
+
+STEP 1: MAKE SURE DOCKER DESKTOP IS RUNNING
+============================================
+1. Start Docker Desktop application
+2. Wait for it to fully start (icon in system tray should be steady)
+
+STEP 2: RUN THE BACKUP COMMAND
+===============================
+
+In PowerShell, run these commands:
+
+cd C:\Users\maddo\Desktop\boltV1IR\project
+$ts = Get-Date -Format "yyyyMMdd_HHmmss"
+$file = ".\backups\pre_migration_$ts.sql"
+npx supabase db dump -f $file --db-url "$env:SUPABASE_DB_URL"
+
+Your database URL is already set correctly:
+$env:SUPABASE_DB_URL = "postgresql://postgres:${enc}@db.kvguxuxanpynwdffpssm.supabase.co:5432/postgres?sslmode=require"
+
+WHAT WILL HAPPEN:
+=================
+1. Supabase CLI will pull a Docker image (first time only)
+2. It will connect to your database
+3. Create a complete backup in .\backups folder
+4. Show "Dump completed" message
+
+STEP 3: APPLY MIGRATIONS
+========================
+
+After backup is complete:
+
+npx supabase db push
+
+This will apply all migrations in your supabase/migrations folder.
+
+VERIFICATION:
+=============
+
+Check that backup file was created:
+dir .\backups\
+
+You should see: pre_migration_[timestamp].sql
+
+RESTORE IF NEEDED:
+==================
+
+To restore from backup:
+psql -d "$env:SUPABASE_DB_URL" -f ".\backups\pre_migration_[timestamp].sql"
+
+TROUBLESHOOTING:
+================
+
+If it still fails:
+1. Make sure Docker Desktop is fully started
+2. Try restarting PowerShell
+3. Check Docker is running: docker --version
+4. Try the command again
+
+NEXT STEPS:
+===========
+1. ✅ Create backup (using command above)
+2. ✅ Apply RLS consolidation: npx supabase db push
+3. ✅ Verify in Supabase Dashboard

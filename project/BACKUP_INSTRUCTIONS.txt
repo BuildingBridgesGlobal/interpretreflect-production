@@ -1,0 +1,123 @@
+SUPABASE DATABASE BACKUP INSTRUCTIONS
+======================================
+
+BEFORE APPLYING MIGRATIONS - CREATE A BACKUP!
+----------------------------------------------
+
+OPTION 1: AUTOMATED BACKUP (RECOMMENDED)
+=========================================
+
+I've created a PowerShell script that will create all backups for you.
+
+Steps:
+------
+1. Open PowerShell as Administrator
+2. Navigate to project directory:
+   cd C:\Users\maddo\Desktop\boltV1IR\project
+
+3. Run the backup script:
+   .\create_backup.ps1
+
+This will create THREE backup files:
+- Full backup (schema + data)
+- Schema-only backup
+- Data-only backup
+
+The script will show you the exact filenames with timestamps.
+
+----------------------------------------
+
+OPTION 2: MANUAL BACKUP COMMANDS
+=================================
+
+If you prefer to run commands manually:
+
+1. Open PowerShell
+2. Navigate to project:
+   cd C:\Users\maddo\Desktop\boltV1IR\project
+
+3. Create backups folder:
+   mkdir -Force .\backups
+
+4. Create timestamp variable:
+   $ts = Get-Date -Format "yyyyMMdd_HHmmss"
+
+5. Create full backup:
+   $file = ".\backups\pre_migration_$ts.sql"
+   supabase db dump -f $file --db-url "$env:SUPABASE_DB_URL"
+
+6. (Optional) Create schema-only backup:
+   supabase db dump -f ".\backups\schema_$ts.sql" --db-url "$env:SUPABASE_DB_URL" --schema-only
+
+7. (Optional) Create data-only backup:
+   supabase db dump -f ".\backups\data_$ts.sql" --db-url "$env:SUPABASE_DB_URL" --data-only --schema public
+
+----------------------------------------
+
+HOW TO RESTORE FROM BACKUP
+===========================
+
+If you need to restore after migration:
+
+1. Find your backup file in the .\backups folder
+2. Run restore command:
+   psql -d "$env:SUPABASE_DB_URL" -f ".\backups\pre_migration_YYYYMMDD_HHMMSS.sql"
+
+Replace YYYYMMDD_HHMMSS with the actual timestamp from your backup file.
+
+----------------------------------------
+
+AFTER BACKUP IS COMPLETE
+========================
+
+Once backup is done, you can safely apply migrations:
+
+1. Apply the RLS consolidation:
+   supabase db push
+
+2. Verify the migration worked:
+   - Check Supabase Dashboard
+   - Run verification queries
+   - Test your application
+
+----------------------------------------
+
+BACKUP FILE LOCATIONS
+=====================
+
+All backups are stored in:
+C:\Users\maddo\Desktop\boltV1IR\project\backups\
+
+Files are named with timestamps:
+- pre_migration_20250920_143022.sql (full backup)
+- schema_20250920_143022.sql (schema only)
+- data_20250920_143022.sql (data only)
+
+----------------------------------------
+
+IMPORTANT NOTES
+===============
+
+⚠️ ALWAYS create a backup before migrations
+⚠️ Keep backups for at least 30 days
+⚠️ Test restore process periodically
+⚠️ The SUPABASE_DB_URL environment variable must be set
+
+----------------------------------------
+
+TROUBLESHOOTING
+===============
+
+If backup fails:
+1. Check SUPABASE_DB_URL is set:
+   echo $env:SUPABASE_DB_URL
+
+2. Ensure Supabase CLI is installed:
+   supabase --version
+
+3. Check network connection to Supabase
+
+If restore fails:
+1. Ensure psql is installed
+2. Check database connection string
+3. Verify backup file isn't corrupted

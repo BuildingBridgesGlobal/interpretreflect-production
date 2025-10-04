@@ -1,0 +1,208 @@
+-- Predictive Burnout Algorithm (PBA) Database Function
+-- This function analyzes user reflection patterns to predict burnout risk
+-- It needs to be run in your Supabase SQL Editor
+
+-- First, create the function with the corrected table name
+CREATE OR REPLACE FUNCTION predict_burnout_risk(p_user_id uuid)
+RETURNS json AS $$
+DECLARE
+  v_risk_score numeric;
+  v_factors json;
+  v_weeks_until_burnout integer;
+  v_trend text;
+BEGIN
+  -- Analyze patterns from reflection_entries table
+  WITH patterns AS (
+    SELECT
+      -- Energy metrics
+      AVG(COALESCE((data->>'energy_level')::numeric, 5)) AS avg_energy,
+      STDDEV(COALESCE((data->>'energy_level')::numeric, 5)) AS energy_variance,
+      COUNT(*) FILTER (WHERE COALESCE((data->>'energy_level')::numeric, 5) < 4) AS low_energy_days,
+
+      -- Stress metrics
+      AVG(COALESCE((data->>'stress_level')::numeric, 5)) AS avg_stress,
+      COUNT(*) FILTER (WHERE COALESCE((data->>'stress_level')::numeric, 5) > 7) AS high_stress_days,
+
+      -- Burnout specific metrics
+      AVG(COALESCE((data->>'burnout_score')::numeric, 0)) AS avg_burnout,
+      MAX(COALESCE((data->>'burnout_score')::numeric, 0)) AS peak_burnout,
+
+      -- Engagement metrics
+      COUNT(DISTINCT entry_kind) AS activity_variety,
+      COUNT(*) AS total_reflections,
+      DATE_PART('day', MAX(created_at) - MIN(created_at)) AS timespan_days,
+      MAX(created_at) AS last_check_in
+
+    FROM reflection_entries
+    WHERE user_id = p_user_id
+      AND created_at > NOW() - INTERVAL '14 days'
+  ),
+  trend_analysis AS (
+    -- Compare current week vs previous week
+    SELECT
+      AVG(CASE
+        WHEN created_at > NOW() - INTERVAL '7 days'
+        THEN COALESCE((data->>'energy_level')::numeric, 5)
+      END) AS current_week_energy,
+      AVG(CASE
+        WHEN created_at <= NOW() - INTERVAL '7 days'
+        AND created_at > NOW() - INTERVAL '14 days'
+        THEN COALESCE((data->>'energy_level')::numeric, 5)
+      END) AS previous_week_energy,
+      AVG(CASE
+        WHEN created_at > NOW() - INTERVAL '7 days'
+        THEN COALESCE((data->>'stress_level')::numeric, 5)
+      END) AS current_week_stress,
+      AVG(CASE
+        WHEN created_at <= NOW() - INTERVAL '7 days'
+        AND created_at > NOW() - INTERVAL '14 days'
+        THEN COALESCE((data->>'stress_level')::numeric, 5)
+      END) AS previous_week_stress
+    FROM reflection_entries
+    WHERE user_id = p_user_id
+      AND created_at > NOW() - INTERVAL '14 days'
+  )
+  SELECT
+    -- Calculate comprehensive risk score (0-10 scale)
+    LEAST(10, GREATEST(0,
+      (10 - COALESCE(p.avg_energy, 5)) * 0.25 +           -- Lower energy = higher risk
+      COALESCE(p.energy_variance, 0) * 0.15 +             -- Instability = higher risk
+      COALESCE(p.low_energy_days, 0) * 0.15 +             -- Frequency of bad days
+      COALESCE(p.avg_stress, 5) * 0.15 +                  -- High stress
+      COALESCE(p.high_stress_days, 0) * 0.1 +             -- Frequent high stress
+      COALESCE(p.avg_burnout, 0) * 0.1 +                  -- Current burnout level
+      (CASE
+        WHEN p.activity_variety < 3 THEN 2               -- Low engagement variety
+        WHEN p.total_reflections < 3 THEN 3              -- Low engagement frequency
+        ELSE 0
+      END) * 0.1
+    )),
+    json_build_object(
+      'energy_trend', COALESCE(p.avg_energy, 5),
+      'energy_stability', COALESCE(p.energy_variance, 0),
+      'low_energy_frequency', COALESCE(p.low_energy_days, 0),
+      'stress_level', COALESCE(p.avg_stress, 5),
+      'high_stress_frequency', COALESCE(p.high_stress_days, 0),
+      'burnout_current', COALESCE(p.avg_burnout, 0),
+      'burnout_peak', COALESCE(p.peak_burnout, 0),
+      'engagement_variety', COALESCE(p.activity_variety, 0),
+      'engagement_days', COALESCE(p.total_reflections, 0),
+      'timespan_days', COALESCE(p.timespan_days, 0),
+      'last_check_in', COALESCE(p.last_check_in::text, NOW()::text),
+      'chronic_stress_detected', COALESCE(p.high_stress_days, 0) >= 5,
+      'recovery_needed', COALESCE(p.avg_energy, 5) < 4 AND COALESCE(p.avg_stress, 5) > 6,
+      'confidence_level', CASE
+        WHEN p.total_reflections >= 7 THEN 0.9
+        WHEN p.total_reflections >= 4 THEN 0.7
+        WHEN p.total_reflections >= 2 THEN 0.5
+        ELSE 0.3
+      END,
+      'trend_direction', CASE
+        WHEN t.current_week_energy > t.previous_week_energy + 0.5 THEN 'improving'
+        WHEN t.current_week_energy < t.previous_week_energy - 0.5 THEN 'worsening'
+        ELSE 'stable'
+      END
+    )
+  INTO v_risk_score, v_factors
+  FROM patterns p
+  CROSS JOIN trend_analysis t;
+
+  -- Calculate weeks until potential burnout based on trend
+  v_weeks_until_burnout := CASE
+    WHEN v_risk_score >= 8 THEN 1  -- Already at critical risk
+    WHEN v_risk_score >= 6 THEN 2  -- High risk, burnout imminent
+    WHEN v_risk_score >= 4 AND (v_factors->>'trend_direction')::text = 'worsening' THEN 3
+    WHEN v_risk_score >= 3 AND (v_factors->>'trend_direction')::text = 'worsening' THEN 4
+    ELSE NULL  -- Risk too low to predict
+  END;
+
+  -- Determine trend
+  v_trend := COALESCE((v_factors->>'trend_direction')::text, 'stable');
+
+  RETURN json_build_object(
+    'risk_score', ROUND(v_risk_score, 1),
+    'risk_level', CASE
+      WHEN v_risk_score >= 8 THEN 'critical'
+      WHEN v_risk_score >= 6 THEN 'high'
+      WHEN v_risk_score >= 4 THEN 'moderate'
+      WHEN v_risk_score >= 2 THEN 'low'
+      ELSE 'minimal'
+    END,
+    'trend', v_trend,
+    'weeks_until_burnout', v_weeks_until_burnout,
+    'intervention_urgency', CASE
+      WHEN v_risk_score >= 8 THEN 'immediate'
+      WHEN v_risk_score >= 6 THEN 'urgent'
+      WHEN v_risk_score >= 4 THEN 'recommended'
+      ELSE 'monitoring'
+    END,
+    'factors', v_factors,
+    'recommended_actions', CASE
+      WHEN v_risk_score >= 8 THEN
+        ARRAY['Take immediate wellness break', 'Schedule supervisor check-in', 'Access crisis support']
+      WHEN v_risk_score >= 6 THEN
+        ARRAY['Review and adjust workload', 'Implement daily stress reduction', 'Connect with peer support']
+      WHEN v_risk_score >= 4 THEN
+        ARRAY['Establish weekly reflection practice', 'Build resilience skills', 'Monitor stress patterns']
+      ELSE
+        ARRAY['Maintain current wellness practices', 'Continue regular check-ins']
+    END,
+    'assessment_date', NOW()::text
+  );
+END;
+$$ LANGUAGE plpgsql;
+
+-- Create a zero-knowledge version that uses hashed user IDs
+CREATE OR REPLACE FUNCTION predict_burnout_risk_zkwv(p_user_hash text)
+RETURNS json AS $$
+DECLARE
+  v_user_id uuid;
+BEGIN
+  -- For now, this is a placeholder that would need proper hash mapping
+  -- In production, you'd maintain a secure mapping table
+  -- For testing, we'll just return a sample response
+
+  -- You could also modify this to accept the actual user_id
+  -- and do the hashing internally if needed
+
+  RETURN json_build_object(
+    'risk_score', 5.5,
+    'risk_level', 'moderate',
+    'trend', 'stable',
+    'weeks_until_burnout', NULL,
+    'intervention_urgency', 'recommended',
+    'factors', json_build_object(
+      'energy_trend', 5,
+      'energy_stability', 1.2,
+      'low_energy_frequency', 2,
+      'stress_level', 6,
+      'high_stress_frequency', 1,
+      'burnout_current', 5,
+      'burnout_peak', 6,
+      'chronic_stress_detected', false,
+      'recovery_needed', false,
+      'confidence_level', 0.7,
+      'engagement_days', 5,
+      'last_check_in', NOW()::text,
+      'trend_direction', 'stable'
+    ),
+    'recommended_actions', ARRAY[
+      'Establish weekly reflection practice',
+      'Build resilience skills',
+      'Monitor stress patterns'
+    ],
+    'assessment_date', NOW()::text
+  );
+END;
+$$ LANGUAGE plpgsql;
+
+-- Grant execute permissions
+GRANT EXECUTE ON FUNCTION predict_burnout_risk(uuid) TO authenticated;
+GRANT EXECUTE ON FUNCTION predict_burnout_risk_zkwv(text) TO authenticated;
+
+-- Create an index to speed up the function
+CREATE INDEX IF NOT EXISTS idx_reflection_entries_user_created
+ON reflection_entries(user_id, created_at DESC);
+
+-- Test the function (replace with an actual user_id from your database)
+-- SELECT predict_burnout_risk('your-user-id-here'::uuid);

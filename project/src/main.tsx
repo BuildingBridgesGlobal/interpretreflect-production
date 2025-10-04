@@ -7,6 +7,7 @@ import { testBurnoutComplete } from "./utils/testBurnoutComplete";
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import { BrowserRouter } from "react-router-dom";
+import { SpeedInsights } from "@vercel/speed-insights/react";
 
 import App from "./App.tsx";
 import { ErrorBoundary } from "./components/ErrorBoundary";
@@ -37,6 +38,7 @@ if (rootElement) {
 				<BrowserRouter>
 					<AuthProvider>
 						<App />
+						<SpeedInsights />
 					</AuthProvider>
 				</BrowserRouter>
 			</ErrorBoundary>

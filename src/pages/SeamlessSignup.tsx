@@ -124,16 +124,6 @@ const PaymentForm: React.FC<{
 				}
 
 				finalUserId = signupData.user.id;
-
-				// Sign them in immediately
-				const { error: signInError } = await supabase.auth.signInWithPassword({
-					email: email.toLowerCase().trim(),
-					password: password,
-				});
-
-				if (signInError) {
-					console.error("Could not auto sign in:", signInError);
-				}
 			}
 
 			// Get the Stripe Price ID for the selected plan

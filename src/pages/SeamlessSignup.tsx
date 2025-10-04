@@ -337,7 +337,8 @@ export const SeamlessSignup: React.FC = () => {
 		};
 
 		checkSubscriptionAndRedirect();
-	}, [user, currentStep, navigate]);
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [user, navigate]);
 
 	const validateStep = (step: number): boolean => {
 		switch (step) {

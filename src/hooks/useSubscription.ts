@@ -27,12 +27,12 @@ export const useSubscription = (): SubscriptionStatus => {
 		}
 
 		try {
-			// Check for active subscription in database
+			// Check for active or past_due subscription (grace period)
 			const { data, error } = await supabase
 				.from("subscriptions")
 				.select("*")
 				.eq("user_id", user.id)
-				.eq("status", "active")
+				.in("status", ["active", "past_due"])
 				.order("created_at", { ascending: false })
 				.limit(1)
 				.maybeSingle();

@@ -333,12 +333,21 @@ const PaymentForm: React.FC<{
 export const SeamlessSignup: React.FC = () => {
 	const navigate = useNavigate();
 	const { user, signInWithGoogle, signInWithApple } = useAuth();
-	const [currentStep, setCurrentStep] = useState(1);
+
+	// Check URL immediately for Google SSO payment redirect
+	const params = new URLSearchParams(window.location.search);
+	const urlStep = params.get('step');
+	const sso = params.get('sso');
+	const initialStep = (urlStep === 'payment' && sso === 'google') ? 3 : 1;
+
+	const [currentStep, setCurrentStep] = useState(initialStep);
 	const [showSignInModal, setShowSignInModal] = useState(false);
+
+	// If Google SSO, pre-populate user data
 	const [formData, setFormData] = useState({
-		email: "",
+		email: (urlStep === 'payment' && sso === 'google' && user?.email) ? user.email : "",
 		password: "",
-		name: "",
+		name: (urlStep === 'payment' && sso === 'google' && user?.user_metadata?.full_name) ? user.user_metadata.full_name : "",
 		plan: "essential",
 	});
 	const [loading, setLoading] = useState(false);
@@ -541,6 +550,21 @@ export const SeamlessSignup: React.FC = () => {
 							<p>Form Data Email: {formData.email}</p>
 							<p>Form Data Name: {formData.name}</p>
 						</div>
+
+						{/* If user is logged in but on step 1, show a message */}
+						{currentStep === 1 && user && (
+							<div className="space-y-6 text-center">
+								<h2 className="text-2xl font-bold text-gray-900 mb-4">
+									Welcome, {user.email}!
+								</h2>
+								<p className="text-gray-600 mb-6">
+									Loading your subscription options...
+								</p>
+								<div className="flex justify-center">
+									<div className="animate-spin rounded-full h-12 w-12 border-b-2 border-green-600"></div>
+								</div>
+							</div>
+						)}
 
 						{/* Step 1: Account Creation */}
 						{currentStep === 1 && !user && (

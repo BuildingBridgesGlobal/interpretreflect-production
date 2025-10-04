@@ -28,7 +28,8 @@
       "Bash(tasklist)",
       "Bash(taskkill:*)",
       "Bash(timeout 5 npm run dev)",
-      "Bash(grep:*)"
+      "Bash(grep:*)",
+      "Bash(npx supabase:*)"
     ],
     "deny": [],
     "ask": []

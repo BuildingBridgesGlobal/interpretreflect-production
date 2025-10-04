@@ -559,7 +559,7 @@ export const SeamlessSignup: React.FC = () => {
 										id="terms"
 										checked={formData.acceptedTerms || false}
 										onChange={(e) => setFormData({ ...formData, acceptedTerms: e.target.checked })}
-										className="mt-1 w-4 h-4 rounded border-gray-300"
+										className="mt-0.5 w-3.5 h-3.5 rounded border-gray-300 flex-shrink-0"
 										style={{ accentColor: "#2D5F3F" }}
 									/>
 									<label htmlFor="terms" className="text-sm text-gray-700">

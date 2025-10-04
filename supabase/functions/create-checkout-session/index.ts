@@ -54,12 +54,14 @@ serve(async (req) => {
 
       // Save customer ID to profile if user exists
       if (userId) {
-        await supabaseClient
+        const { error: updateError } = await supabaseClient
           .from('profiles')
-          .upsert({
-            id: userId,
-            stripe_customer_id: customerId,
-          })
+          .update({ stripe_customer_id: customerId })
+          .eq('id', userId)
+
+        if (updateError) {
+          console.error('Failed to save stripe_customer_id:', updateError)
+        }
       }
     }
 

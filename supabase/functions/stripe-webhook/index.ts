@@ -21,22 +21,43 @@ serve(async (req) => {
 
   try {
     const body = await req.text()
-    const event = stripe.webhooks.constructEvent(body, signature, webhookSecret)
+    const event = await stripe.webhooks.constructEventAsync(body, signature, webhookSecret)
 
     switch (event.type) {
       case 'checkout.session.completed': {
         const session = event.data.object as Stripe.Checkout.Session
-        
+
         const subscription = await stripe.subscriptions.retrieve(
           session.subscription as string
         )
 
         const customerId = session.customer as string
-        const { data: profile } = await supabaseAdmin
+
+        // Try to find profile by stripe_customer_id first
+        let { data: profile } = await supabaseAdmin
           .from('profiles')
           .select('id')
           .eq('stripe_customer_id', customerId)
           .single()
+
+        // If not found, try to find by user_id in subscription metadata
+        if (!profile && subscription.metadata?.user_id) {
+          const result = await supabaseAdmin
+            .from('profiles')
+            .select('id')
+            .eq('id', subscription.metadata.user_id)
+            .single()
+
+          profile = result.data
+
+          // Update the profile with the customer ID for future lookups
+          if (profile) {
+            await supabaseAdmin
+              .from('profiles')
+              .update({ stripe_customer_id: customerId })
+              .eq('id', profile.id)
+          }
+        }
 
         if (profile) {
           await supabaseAdmin
@@ -58,6 +79,7 @@ serve(async (req) => {
             .update({
               subscription_status: subscription.status,
               subscription_tier: subscription.items.data[0].price.nickname || 'pro',
+              stripe_customer_id: customerId,
               updated_at: new Date().toISOString(),
             })
             .eq('id', profile.id)
@@ -106,11 +128,31 @@ serve(async (req) => {
         const subscription = event.data.object as Stripe.Subscription
         const customerId = subscription.customer as string
 
-        const { data: profile } = await supabaseAdmin
+        // Try to find profile by stripe_customer_id first
+        let { data: profile } = await supabaseAdmin
           .from('profiles')
           .select('id')
           .eq('stripe_customer_id', customerId)
           .single()
+
+        // If not found, try to find by user_id in subscription metadata
+        if (!profile && subscription.metadata?.user_id) {
+          const result = await supabaseAdmin
+            .from('profiles')
+            .select('id')
+            .eq('id', subscription.metadata.user_id)
+            .single()
+
+          profile = result.data
+
+          // Update the profile with the customer ID
+          if (profile) {
+            await supabaseAdmin
+              .from('profiles')
+              .update({ stripe_customer_id: customerId })
+              .eq('id', profile.id)
+          }
+        }
 
         if (profile) {
           await supabaseAdmin

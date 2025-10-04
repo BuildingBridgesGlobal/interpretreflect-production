@@ -92,7 +92,7 @@ export const PaymentSuccess: React.FC = () => {
 					</div>
 
 					<button
-						onClick={() => navigate("/signup")}
+						onClick={() => navigate("/")}
 						className="w-full text-white font-semibold py-3 px-6 rounded-lg flex items-center justify-center"
 						style={{
 							background: "#2D5F3F",

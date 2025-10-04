@@ -51,7 +51,6 @@ import { NavigationTabs } from "./components/layout/NavigationTabs";
 import { ManageSubscription } from "./components/ManageSubscription";
 import PersonalizedHomepage from "./components/PersonalizedHomepage";
 import { AffirmationsView } from "./components/views/AffirmationsView";
-import PrivacyConsent from "./components/PrivacyConsent";
 import ProfileSettings from "./components/ProfileSettings";
 import { SubscriptionGate } from "./components/SubscriptionGate";
 import { TemperatureExploration } from "./components/TemperatureExploration";
@@ -344,8 +343,6 @@ function App() {
 		);
 	};
 
-	// Security state
-	const [showPrivacyConsent, setShowPrivacyConsent] = useState(false);
 
 	// Welcome modal state
 	const [showWelcomeModal, setShowWelcomeModal] = useState(false);
@@ -1184,49 +1181,6 @@ function App() {
 		loadBodyCheckInData();
 	}, [user]); // Reload when user changes
 
-	// Check for privacy consent on mount
-	useEffect(() => {
-		const checkPrivacyConsent = async () => {
-			if (!user) return;
-
-			// Check database first for cross-device persistence
-			try {
-				const { data, error } = await supabase
-					.from("user_profiles")
-					.select("privacy_consent_accepted_at")
-					.eq("user_id", user.id)
-					.maybeSingle();
-
-				if (error) {
-					console.error("Error checking privacy consent:", error);
-					// Fall back to localStorage check
-					const consent = localStorage.getItem("privacyConsent");
-					if (!consent) {
-						setShowPrivacyConsent(true);
-					}
-					return;
-				}
-
-				// If no database record or no consent timestamp, show modal
-				if (!data || !data.privacy_consent_accepted_at) {
-					setShowPrivacyConsent(true);
-				} else {
-					console.log("✅ Privacy consent found in database");
-					// Update localStorage as cache
-					localStorage.setItem(
-						"privacyConsent",
-						JSON.stringify({
-							timestamp: new Date(data.privacy_consent_accepted_at).getTime(),
-							version: "1.0",
-						})
-					);
-				}
-			} catch (error) {
-				console.error("Error checking consent:", error);
-			}
-		};
-		checkPrivacyConsent();
-	}, [user]);
 
 	// Listen for session warning events
 	useEffect(() => {
@@ -9739,13 +9693,6 @@ function App() {
 	// Show main app for authenticated users or dev mode
 	return (
 		<SubscriptionGate>
-			{/* Security Components */}
-			<PrivacyConsent
-				isOpen={showPrivacyConsent}
-				onAccept={() => setShowPrivacyConsent(false)}
-				onDecline={() => setShowPrivacyConsent(false)}
-				userId={user?.id}
-			/>
 
 			{/* Terms Acceptance Monitor */}
 			<TermsAcceptanceMonitor />

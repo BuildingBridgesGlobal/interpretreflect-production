@@ -263,6 +263,7 @@ export const SeamlessSignup: React.FC = () => {
 		password: "",
 		name: "",
 		plan: "essential",
+		acceptedTerms: false,
 	});
 	const [loading, setLoading] = useState(false);
 	const [error, setError] = useState("");
@@ -551,13 +552,36 @@ export const SeamlessSignup: React.FC = () => {
 									</div>
 								)}
 
+								{/* Terms and Privacy Checkbox */}
+								<div className="flex items-start gap-3 mt-6 p-4 bg-gray-50 rounded-lg">
+									<input
+										type="checkbox"
+										id="terms"
+										checked={formData.acceptedTerms || false}
+										onChange={(e) => setFormData({ ...formData, acceptedTerms: e.target.checked })}
+										className="mt-1 w-4 h-4 rounded border-gray-300"
+										style={{ accentColor: "#2D5F3F" }}
+									/>
+									<label htmlFor="terms" className="text-sm text-gray-700">
+										I agree to the{" "}
+										<a href="/terms" target="_blank" className="text-[#2D5F3F] underline hover:text-[#1f4229]">
+											Terms of Service
+										</a>{" "}
+										and{" "}
+										<a href="/privacy" target="_blank" className="text-[#2D5F3F] underline hover:text-[#1f4229]">
+											Privacy Policy
+										</a>
+									</label>
+								</div>
+
 								<button
 									onClick={handleNext}
 									disabled={
 										loading ||
 										!formData.email ||
 										!formData.password ||
-										!formData.name
+										!formData.name ||
+										!formData.acceptedTerms
 									}
 									className="w-full px-6 py-3 rounded-lg font-semibold text-white transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
 									style={{
@@ -565,7 +589,8 @@ export const SeamlessSignup: React.FC = () => {
 											loading ||
 											!formData.email ||
 											!formData.password ||
-											!formData.name
+											!formData.name ||
+											!formData.acceptedTerms
 												? "#ccc"
 												: "linear-gradient(135deg, #2D5F3F, rgb(107, 142, 94))",
 									}}

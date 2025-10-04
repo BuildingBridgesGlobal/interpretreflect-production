@@ -553,16 +553,16 @@ export const SeamlessSignup: React.FC = () => {
 								)}
 
 								{/* Terms and Privacy Checkbox */}
-								<div className="flex items-start gap-3 mt-6 p-4 bg-gray-50 rounded-lg">
+								<div className="flex items-center gap-2 mt-6 p-4 bg-gray-50 rounded-lg">
 									<input
 										type="checkbox"
 										id="terms"
 										checked={formData.acceptedTerms || false}
 										onChange={(e) => setFormData({ ...formData, acceptedTerms: e.target.checked })}
-										className="mt-0.5 w-3.5 h-3.5 rounded border-gray-300 flex-shrink-0"
+										className="w-3 h-3 rounded border-gray-300 flex-shrink-0"
 										style={{ accentColor: "#2D5F3F" }}
 									/>
-									<label htmlFor="terms" className="text-sm text-gray-700">
+									<label htmlFor="terms" className="text-sm text-gray-700 leading-tight">
 										I agree to the{" "}
 										<a href="/terms" target="_blank" className="text-[#2D5F3F] underline hover:text-[#1f4229]">
 											Terms of Service

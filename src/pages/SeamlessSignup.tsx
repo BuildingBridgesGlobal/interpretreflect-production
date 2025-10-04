@@ -300,12 +300,44 @@ export const SeamlessSignup: React.FC = () => {
 
 	const steps = ["Account", "Plan", "Payment"];
 
-	// Redirect if already logged in
+	// Check URL params for SSO and payment step
 	useEffect(() => {
-		if (user && currentStep === 1) {
-			setCurrentStep(2);
-		}
-	}, [user, currentStep]);
+		const params = new URLSearchParams(window.location.search);
+		const step = params.get('step');
+		const sso = params.get('sso');
+
+		const checkSubscriptionAndRedirect = async () => {
+			if (user) {
+				// Check if user already has a subscription
+				const { data: profile } = await supabase
+					.from('profiles')
+					.select('subscription_status, subscription_tier')
+					.eq('id', user.id)
+					.single();
+
+				if (profile?.subscription_status === 'active') {
+					// User already has subscription - go to dashboard
+					navigate('/dashboard');
+					return;
+				}
+
+				// New Google SSO user needs to pay
+				if (step === 'payment' && sso === 'google') {
+					setCurrentStep(3);
+					setFormData(prev => ({
+						...prev,
+						email: user.email || '',
+						name: user.user_metadata?.full_name || user.user_metadata?.name || '',
+					}));
+				} else if (currentStep === 1) {
+					// Regular logged in user without subscription
+					setCurrentStep(2);
+				}
+			}
+		};
+
+		checkSubscriptionAndRedirect();
+	}, [user, currentStep, navigate]);
 
 	const validateStep = (step: number): boolean => {
 		switch (step) {
@@ -812,22 +844,6 @@ export const SeamlessSignup: React.FC = () => {
 								<h2 className="text-2xl font-bold text-gray-900 text-center mb-8">
 									Complete Your Purchase
 								</h2>
-
-								{!user && (
-									<div
-										className="p-4 rounded-lg"
-										style={{
-											background:
-												"linear-gradient(135deg, #2D5F3F, rgb(107, 142, 94))",
-											border: "1px solid rgba(45, 95, 63, 0.3)",
-										}}
-									>
-										<p className="text-sm text-white">
-											Setting up your account... If this takes too long, please
-											refresh the page.
-										</p>
-									</div>
-								)}
 
 								{/* Order Summary */}
 								<div className="bg-gray-50 rounded-xl p-4 mb-6">

@@ -1928,15 +1928,22 @@ function App() {
 															"5",
 													),
 												}))
-										: [
-												{ date: "Mon", stress: 4, energy: 7 },
-												{ date: "Tue", stress: 5, energy: 6 },
-												{ date: "Wed", stress: 3, energy: 8 },
-												{ date: "Thu", stress: 6, energy: 5 },
-												{ date: "Fri", stress: 4, energy: 7 },
-												{ date: "Sat", stress: 2, energy: 9 },
-												{ date: "Sun", stress: 3, energy: 8 },
-											];
+										: [];
+
+								// Show empty state if no data
+								if (chartData.length === 0) {
+									return (
+										<div className="flex items-center justify-center h-full">
+											<div className="text-center">
+												<div className="mb-4">
+													<div className="text-4xl mb-2">📊</div>
+													<p className="text-lg font-medium text-gray-700">No Data Yet</p>
+												</div>
+												<p className="text-gray-500">Complete a Wellness Check-In to see your stress & energy trends</p>
+											</div>
+										</div>
+									);
+								}
 
 								return (
 									<svg

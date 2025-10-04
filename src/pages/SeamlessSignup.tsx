@@ -163,6 +163,9 @@ const PaymentForm: React.FC<{
 				throw new Error("Failed to create checkout session");
 			}
 
+			// Store email in localStorage for the payment success page
+			localStorage.setItem('signup_email', email);
+
 			// Track checkout initiation
 			if (analytics.trackSubscriptionSuccess) {
 				analytics.trackSubscriptionSuccess(plan, 12.99);

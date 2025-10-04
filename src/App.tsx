@@ -49,7 +49,6 @@ import GrowthInsightsDashboard from "./components/GrowthInsightsDashboard";
 import { Header } from "./components/layout/Header";
 import { NavigationTabs } from "./components/layout/NavigationTabs";
 import { ManageSubscription } from "./components/ManageSubscription";
-import { OnboardingFlow } from "./components/OnboardingFlow";
 import PersonalizedHomepage from "./components/PersonalizedHomepage";
 import { AffirmationsView } from "./components/views/AffirmationsView";
 import PrivacyConsent from "./components/PrivacyConsent";
@@ -110,11 +109,6 @@ function App() {
 	const { user, loading, signOut } = useAuth();
 
 	console.log("App Component - User:", user, "Loading:", loading);
-	const {
-		isVisible: onboardingVisible,
-		completeOnboarding,
-		hideOnboarding,
-	} = useOnboarding();
 	// Load saved tab preference or default to home
 	const [activeTab, setActiveTab] = useState(() => {
 		const savedTab = localStorage.getItem("preferredTab");
@@ -11255,13 +11249,6 @@ function App() {
 							{/* AgenticFlow Chat */}
 							<AgenticFlowChat />
 
-							{/* Onboarding Flow Modal */}
-							{onboardingVisible && (
-								<OnboardingFlow
-									onComplete={completeOnboarding}
-									onClose={hideOnboarding}
-								/>
-							)}
 
 							{/* Welcome Modal for First-Time Users */}
 							{showWelcomeModal && (

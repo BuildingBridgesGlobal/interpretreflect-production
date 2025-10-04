@@ -20,12 +20,13 @@ import "./styles/accessibleColors.css";
 import "./styles/yellowSelection.css";
 import "./styles/icons.css";
 
-// Disable console logs in production for better performance and security
-if (import.meta.env.PROD) {
-	console.log = () => {};
-	console.warn = () => {};
-	// Keep console.error for critical issues
-}
+// TEMPORARILY ENABLE console logs in production for debugging
+// TODO: Re-enable this after fixing Google SSO issue
+// if (import.meta.env.PROD) {
+// 	console.log = () => {};
+// 	console.warn = () => {};
+// 	// Keep console.error for critical issues
+// }
 
 console.log("Main.tsx is loading...");
 const rootElement = document.getElementById("root");

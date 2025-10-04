@@ -108,6 +108,7 @@ const PaymentForm: React.FC<{
 						email: email.toLowerCase().trim(),
 						password: password,
 						options: {
+							emailRedirectTo: `${window.location.origin}/`,
 							data: {
 								full_name: name,
 								subscription_plan: plan,

@@ -729,7 +729,7 @@ export const SeamlessSignup: React.FC = () => {
 												</li>
 												<li className="flex items-center gap-2 text-sm text-gray-600">
 													<Check className="w-4 h-4 text-gray-400" />
-													<span>Team management</span>
+													<span>Earn CEUs</span>
 												</li>
 												<li className="flex items-center gap-2 text-sm text-gray-600">
 													<Check className="w-4 h-4 text-gray-400" />

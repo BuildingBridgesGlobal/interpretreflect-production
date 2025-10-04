@@ -356,6 +356,18 @@ export const SeamlessSignup: React.FC = () => {
 
 	const steps = ["Account", "Plan", "Payment"];
 
+	// Update form data when user loads (for Google SSO)
+	useEffect(() => {
+		if (user && urlStep === 'payment' && sso === 'google') {
+			console.log('Google SSO user loaded, populating form data:', user.email);
+			setFormData(prev => ({
+				...prev,
+				email: user.email || '',
+				name: user.user_metadata?.full_name || user.user_metadata?.name || '',
+			}));
+		}
+	}, [user, urlStep, sso]);
+
 	// Check URL params for SSO and payment step
 	useEffect(() => {
 		const params = new URLSearchParams(window.location.search);
@@ -385,15 +397,9 @@ export const SeamlessSignup: React.FC = () => {
 					// Continue to payment if check fails
 				}
 
-				// New Google SSO user needs to pay
+				// New Google SSO user needs to pay - step should already be 3 from initialStep
 				if (step === 'payment' && sso === 'google') {
-					console.log('Setting current step to 3 for Google SSO payment');
-					setCurrentStep(3);
-					setFormData(prev => ({
-						...prev,
-						email: user.email || '',
-						name: user.user_metadata?.full_name || user.user_metadata?.name || '',
-					}));
+					console.log('Google SSO payment flow confirmed, step is:', currentStep);
 				} else if (currentStep === 1 && user) {
 					// Regular logged in user without subscription - skip to plan selection
 					console.log('Logged in user, skipping to step 2');
@@ -403,7 +409,7 @@ export const SeamlessSignup: React.FC = () => {
 		};
 
 		checkSubscriptionAndRedirect();
-	}, [user, navigate]);
+	}, [user, navigate, currentStep]);
 
 	const validateStep = (step: number): boolean => {
 		switch (step) {
@@ -541,15 +547,6 @@ export const SeamlessSignup: React.FC = () => {
 				{/* Form Container */}
 				<div className="max-w-2xl mx-auto mt-12">
 					<div className="bg-white rounded-2xl shadow-xl p-8">
-						{/* Debug info - ALWAYS SHOW */}
-						<div className="mb-4 p-3 bg-yellow-100 border border-yellow-300 rounded text-sm">
-							<p><strong>Debug Info:</strong></p>
-							<p>Current Step: {currentStep}</p>
-							<p>User: {user ? user.email : 'Not logged in'}</p>
-							<p>URL: {window.location.search}</p>
-							<p>Form Data Email: {formData.email}</p>
-							<p>Form Data Name: {formData.name}</p>
-						</div>
 
 						{/* If user is logged in but on step 1, show a message */}
 						{currentStep === 1 && user && (

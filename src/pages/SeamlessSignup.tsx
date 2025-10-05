@@ -850,7 +850,7 @@ export const SeamlessSignup: React.FC = () => {
 								className="w-4 h-4"
 								style={{ color: "#5C7F4F" }}
 							/>
-							<span>256-bit Encryption</span>
+							<span>Cancel Anytime</span>
 						</div>
 					</div>
 				</div>

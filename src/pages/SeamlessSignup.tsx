@@ -835,13 +835,6 @@ export const SeamlessSignup: React.FC = () => {
 					{/* Trust badges */}
 					<div className="mt-8 flex justify-center items-center gap-6 text-xs text-gray-500">
 						<div className="flex items-center gap-1">
-							<Shield
-								className="w-4 h-4"
-								style={{ color: "#5C7F4F" }}
-							/>
-							<span>SSL Secured</span>
-						</div>
-						<div className="flex items-center gap-1">
 							<Lock className="w-4 h-4" style={{ color: "#5C7F4F" }} />
 							<span>256-bit Encryption</span>
 						</div>

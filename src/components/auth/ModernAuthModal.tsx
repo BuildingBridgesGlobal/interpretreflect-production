@@ -451,15 +451,8 @@ export const ModernAuthModal: React.FC<ModernAuthModalProps> = ({
 										Sign up
 									</button>
 								</p>
-// BETA: 								<button
-// BETA: 									type="button"
-// BETA: 									onClick={() => setMode("forgot-password")}
-// BETA: 									className="px-3 py-1 text-sm text-white rounded-md font-semibold transition-all"
-// BETA: 									style={{ background: "#5C7F4F" }}
-// BETA: 								>
-// BETA: 									Forgot password?
-// BETA: 								</button>
-												<p className="text-xs text-gray-500 mt-2">Need help? Email hello@huviatechnologies.com</p>
+												{/* BETA: Forgot password button temporarily disabled */}
+							<p className="text-xs text-gray-500 mt-2">Need help? Email hello@huviatechnologies.com</p>
 							</div>
 
 							{/* Terms notice */}

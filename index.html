@@ -58,43 +58,6 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
 
-    <!-- CSS for better accessibility defaults -->
-    <style>
-      /* Ensure focus is always visible */
-      :focus-visible {
-        outline: 3px solid #5c7f4f !important;
-        outline-offset: 2px !important;
-      }
-
-      /* Ensure smooth scrolling but respect user preference */
-      @media (prefers-reduced-motion: no-preference) {
-        html {
-          scroll-behavior: smooth;
-        }
-      }
-
-      /* Ensure text remains visible during font load */
-      .font-fallback {
-        font-display: swap;
-      }
-
-      /* Minimum touch target size for mobile */
-      button,
-      a,
-      input,
-      textarea,
-      select {
-        min-height: 44px;
-        min-width: 44px;
-      }
-
-      /* High contrast mode support */
-      @media (prefers-contrast: high) {
-        * {
-          border-color: currentColor !important;
-        }
-      }
-    </style>
   </head>
   <body>
     <!-- Skip to main content link for screen readers -->

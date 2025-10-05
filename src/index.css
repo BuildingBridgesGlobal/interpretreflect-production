@@ -1,290 +1,36 @@
-/* Import Design System - Core CSS Variables and Utilities */
-@import "./styles/design-system.css";
+/* Accessibility and UX defaults */
 
-/* Import Professional + Warm Color System */
-@import "./styles/professionalWarmColors.css";
-
-/* Import Search Box Component Styles */
-@import "./styles/search-box.css";
-
-/* Import Help Widget Component Styles */
-@import "./styles/help-widget.css";
-
-/* Import WCAG AA compliant color system */
-@import "./styles/colors.css";
-
-/* Import typography system - WCAG AA compliant */
-@import "./styles/typography.css";
-
-/* Import balanced accessibility improvements */
-@import "./styles/balanced-accessibility.css";
-
-/* Import preferences styles */
-@import "./styles/preferences.css";
-
-/* Import button visibility fixes */
-@import "./styles/button-fixes.css";
-
-/* Import responsive button sizing */
-@import "./styles/button-responsive.css";
-
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
-
-/* Progress bar slide-in animation */
-@keyframes slideIn {
-	from {
-		width: 0%;
-	}
-	to {
-		width: var(--target-width);
-	}
+/* Ensure focus is always visible */
+:focus-visible {
+  outline: 3px solid #5c7f4f !important;
+  outline-offset: 2px !important;
 }
 
-/* Base body styles - enhanced with typography system */
-body {
-	margin: 0;
-	padding: 0;
-	background: white;
-	min-height: 100vh;
-	/* Typography is now handled by typography.css */
+/* Ensure smooth scrolling but respect user preference */
+@media (prefers-reduced-motion: no-preference) {
+  html {
+    scroll-behavior: smooth;
+  }
 }
 
-#root {
-	min-height: 100vh;
+/* Ensure text remains visible during font load */
+.font-fallback {
+  font-display: swap;
 }
 
-/* Hide screen reader only text from visual display */
-.sr-only {
-	position: absolute;
-	width: 1px;
-	height: 1px;
-	padding: 0;
-	margin: -1px;
-	overflow: hidden;
-	clip: rect(0, 0, 0, 0);
-	white-space: nowrap;
-	border-width: 0;
+/* Minimum touch target size for mobile */
+button,
+a,
+input,
+textarea,
+select {
+  min-height: 44px;
+  min-width: 44px;
 }
 
-/* Show when focused for keyboard users */
-.sr-only:focus,
-.focus\:not-sr-only:focus {
-	position: static;
-	width: auto;
-	height: auto;
-	padding: inherit;
-	margin: inherit;
-	overflow: visible;
-	clip: auto;
-	white-space: normal;
-}
-
-/* Skip to main content link */
-.skip-link {
-	position: absolute;
-	top: -40px;
-	left: 6px;
-	background: #000000;
-	color: #ffffff;
-	padding: 8px 16px;
-	text-decoration: none;
-	z-index: 1000;
-	border-radius: 0 0 4px 4px;
-	font-size: 14px;
-	font-weight: 500;
-	transition: top 0.2s ease;
-}
-
-.skip-link:focus {
-	top: 0;
-	outline: 2px solid #ffffff;
-	outline-offset: 2px;
-}
-
-/* Subtle pulse animation for premium buttons */
-@keyframes pulse-subtle {
-	0%,
-	100% {
-		opacity: 1;
-	}
-	50% {
-		opacity: 0.85;
-	}
-}
-
-.animate-pulse-subtle {
-	animation: pulse-subtle 2s ease-in-out infinite;
-}
-
-/* Accessibility Settings Classes */
-/* Larger Text */
-.larger-text {
-	font-size: 1.2em !important;
-}
-
-.larger-text * {
-	font-size: inherit;
-}
-
-.larger-text h1 {
-	font-size: 2.4em !important;
-}
-.larger-text h2 {
-	font-size: 2em !important;
-}
-.larger-text h3 {
-	font-size: 1.7em !important;
-}
-.larger-text h4 {
-	font-size: 1.4em !important;
-}
-.larger-text h5 {
-	font-size: 1.2em !important;
-}
-.larger-text h6 {
-	font-size: 1.1em !important;
-}
-
-/* High Contrast Mode */
-.high-contrast {
-	filter: contrast(1.2);
-}
-
-.high-contrast * {
-	border-color: #000 !important;
-}
-
-.high-contrast button,
-.high-contrast input,
-.high-contrast textarea,
-.high-contrast select {
-	border: 2px solid #000 !important;
-}
-
-/* Reduce Motion Mode */
-.reduce-motion,
-.reduce-motion * {
-	animation-duration: 0.01ms !important;
-	animation-iteration-count: 1 !important;
-	transition-duration: 0.01ms !important;
-}
-
-.reduce-motion *:before,
-.reduce-motion *:after {
-	animation-duration: 0.01ms !important;
-	animation-iteration-count: 1 !important;
-	transition-duration: 0.01ms !important;
-}
-
-/* Also respect system preference */
-@media (prefers-reduced-motion: reduce) {
-	*,
-	*:before,
-	*:after {
-		animation-duration: 0.01ms !important;
-		animation-iteration-count: 1 !important;
-		transition-duration: 0.01ms !important;
-		scroll-behavior: auto !important;
-	}
-}
-
-/* Screen Reader Support - Hide decorative elements */
-.sr-only {
-	position: absolute;
-	width: 1px;
-	height: 1px;
-	padding: 0;
-	margin: -1px;
-	overflow: hidden;
-	clip: rect(0, 0, 0, 0);
-	white-space: nowrap;
-	border-width: 0;
-}
-
-/* Focus indicators for keyboard navigation */
-.high-contrast *:focus,
-.larger-text *:focus {
-	outline: 3px solid #0066cc !important;
-	outline-offset: 2px !important;
-}
-
-/* Skip to content link for screen readers */
-.skip-to-content {
-	position: absolute;
-	left: -9999px;
-	z-index: 999;
-	padding: 1em;
-	background-color: #000;
-	color: #fff;
-	text-decoration: none;
-}
-
-.skip-to-content:focus {
-	left: 50%;
-	transform: translateX(-50%);
-	top: 10px;
-}
-
-/* Screen Reader Mode Enhancements */
-.screen-reader-mode img:not([alt]) {
-	border: 3px solid red !important;
-}
-
-.screen-reader-mode button:not([aria-label]),
-.screen-reader-mode a:not([aria-label]) {
-	position: relative;
-}
-
-.screen-reader-mode button:not([aria-label])::after,
-.screen-reader-mode a:not([aria-label])::after {
-	content: "Missing label";
-	position: absolute;
-	top: -20px;
-	left: 0;
-	background: red;
-	color: white;
-	padding: 2px 4px;
-	font-size: 10px;
-	display: none;
-}
-
-.screen-reader-mode:hover button:not([aria-label])::after,
-.screen-reader-mode:hover a:not([aria-label])::after {
-	display: block;
-}
-
-/* Ensure focus is always visible in screen reader mode */
-.screen-reader-mode *:focus {
-	outline: 3px solid #ff0000 !important;
-	outline-offset: 2px !important;
-	box-shadow: 0 0 0 4px rgba(255, 0, 0, 0.2) !important;
-}
-
-.high-contrast a {
-	text-decoration: underline !important;
-}
-
-/* Reduce Motion */
-.reduce-motion * {
-	animation-duration: 0.01ms !important;
-	animation-iteration-count: 1 !important;
-	transition-duration: 0.01ms !important;
-	animation-delay: 0.01ms !important;
-	transition-delay: 0.01ms !important;
-}
-
-.reduce-motion *::before,
-.reduce-motion *::after {
-	animation-duration: 0.01ms !important;
-	animation-iteration-count: 1 !important;
-	transition-duration: 0.01ms !important;
-}
-
-/* Screen Reader Announcements */
-[role="status"],
-[role="alert"],
-[aria-live] {
-	position: relative;
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+  * {
+    border-color: currentColor !important;
+  }
 }

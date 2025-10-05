@@ -850,7 +850,7 @@ export const SeamlessSignup: React.FC = () => {
 								className="w-4 h-4"
 								style={{ color: "#2D5F3F" }}
 							/>
-							<span>HIPAA Compliant</span>
+							<span>256-bit Encryption</span>
 						</div>
 					</div>
 				</div>

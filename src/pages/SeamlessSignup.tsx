@@ -131,6 +131,7 @@ const PaymentForm: React.FC<{
 			const STRIPE_PRICE_ID = import.meta.env.VITE_STRIPE_PRICE_ID_ESSENTIAL || 'price_1234'; // Replace with your actual price ID
 
 			// Call the Supabase Edge Function to create a Stripe Checkout session
+			console.log('Creating checkout session with priceId:', STRIPE_PRICE_ID);
 			const { data, error: functionError } = await supabase.functions.invoke(
 				'create-checkout-session',
 				{
@@ -146,9 +147,12 @@ const PaymentForm: React.FC<{
 				}
 			);
 
+			console.log('Edge function response:', { data, error: functionError });
 			if (functionError) {
 				throw new Error(`Payment setup failed: ${functionError.message}`);
 			}
+			
+			if (data?.error) { console.error('Stripe error:', data.error); throw new Error(`Stripe error: ${data.error}`); }
 
 			if (!data?.url) {
 				throw new Error("Failed to create checkout session");

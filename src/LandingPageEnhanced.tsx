@@ -472,7 +472,7 @@ function LandingPageEnhanced({ onGetStarted }: LandingPageProps) {
 									className="text-base font-medium"
 									style={{ color: colors.neutral[700] }}
 								>
-									HIPAA Compliant
+									Trauma-Informed Design
 								</span>
 							</div>
 							<div
@@ -483,7 +483,7 @@ function LandingPageEnhanced({ onGetStarted }: LandingPageProps) {
 									className="text-base font-medium"
 									style={{ color: colors.neutral[700] }}
 								>
-									Evidence-Based
+									Privacy-First
 								</span>
 							</div>
 							<div
@@ -494,7 +494,7 @@ function LandingPageEnhanced({ onGetStarted }: LandingPageProps) {
 									className="text-base font-medium"
 									style={{ color: colors.neutral[700] }}
 								>
-									Built with Love
+									Research-Backed
 								</span>
 							</div>
 						</div>

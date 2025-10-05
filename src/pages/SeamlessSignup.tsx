@@ -717,7 +717,7 @@ export const SeamlessSignup: React.FC = () => {
 									{/* Professional Plan (Coming Soon) */}
 									<div className="opacity-50">
 										<div className="border-2 border-gray-200 rounded-xl p-6 relative">
-											<div className="absolute top-3 right-3">
+											<div className="absolute top-3 left-3">
 												<span className="px-3 py-1 bg-gray-100 text-gray-600 text-xs font-semibold rounded-full">
 													Coming Soon
 												</span>

@@ -101,7 +101,7 @@ export function Contact() {
 				>
 					<h3
 						className="text-lg font-semibold mb-2"
-						style={{ color: "#2D5F3F" }}
+						style={{ color: "#5C7F4F" }}
 					>
 						Communication Accessibility
 					</h3>
@@ -185,7 +185,7 @@ export function Contact() {
 					</h2>
 
 					<div>
-						<h3 className="font-semibold mb-3" style={{ color: "#2D5F3F" }}>
+						<h3 className="font-semibold mb-3" style={{ color: "#5C7F4F" }}>
 							Common Topics:
 						</h3>
 						<ul className="space-y-2" style={{ color: "#5A5A5A" }}>

@@ -199,7 +199,7 @@ export const NeurodivergentInterpreterReflection: React.FC<
 						<div>
 							<label
 								className="block text-sm font-medium mb-2"
-								style={{ color: "#2D5F3F" }}
+								style={{ color: "#5C7F4F" }}
 							>
 								Where do you feel sensation in your body right now?
 							</label>
@@ -220,7 +220,7 @@ export const NeurodivergentInterpreterReflection: React.FC<
 						<div>
 							<label
 								className="block text-sm font-medium mb-2"
-								style={{ color: "#2D5F3F" }}
+								style={{ color: "#5C7F4F" }}
 							>
 								Nervous system state (1-10)
 							</label>
@@ -246,7 +246,7 @@ export const NeurodivergentInterpreterReflection: React.FC<
 								className="text-center mt-2 text-2xl font-semibold px-4 py-2 rounded-lg"
 								style={{
 									backgroundColor: "rgba(107, 139, 96, 0.1)",
-									color: "#2D5F3F",
+									color: "#5C7F4F",
 								}}
 							>
 								{formData.nervous_system_state || 5}/10
@@ -257,7 +257,7 @@ export const NeurodivergentInterpreterReflection: React.FC<
 						<div>
 							<label
 								className="block text-sm font-medium mb-3"
-								style={{ color: "#2D5F3F" }}
+								style={{ color: "#5C7F4F" }}
 							>
 								Sensory state (Select all that apply)
 							</label>
@@ -291,7 +291,7 @@ export const NeurodivergentInterpreterReflection: React.FC<
 						<div>
 							<label
 								className="block text-sm font-medium mb-3"
-								style={{ color: "#2D5F3F" }}
+								style={{ color: "#5C7F4F" }}
 							>
 								Specific sensory challenges (Select all that apply)
 							</label>
@@ -328,7 +328,7 @@ export const NeurodivergentInterpreterReflection: React.FC<
 						<div>
 							<label
 								className="block text-sm font-medium mb-2"
-								style={{ color: "#2D5F3F" }}
+								style={{ color: "#5C7F4F" }}
 							>
 								What sensory supports would have helped?
 							</label>
@@ -351,7 +351,7 @@ export const NeurodivergentInterpreterReflection: React.FC<
 						<div>
 							<label
 								className="block text-sm font-medium mb-2"
-								style={{ color: "#2D5F3F" }}
+								style={{ color: "#5C7F4F" }}
 							>
 								Energy level (1-10)
 							</label>
@@ -376,7 +376,7 @@ export const NeurodivergentInterpreterReflection: React.FC<
 								className="text-center mt-2 text-2xl font-semibold px-4 py-2 rounded-lg"
 								style={{
 									backgroundColor: "rgba(107, 139, 96, 0.1)",
-									color: "#2D5F3F",
+									color: "#5C7F4F",
 								}}
 							>
 								{formData.energy_level || 5}/10
@@ -392,7 +392,7 @@ export const NeurodivergentInterpreterReflection: React.FC<
 						<div>
 							<label
 								className="block text-sm font-medium mb-2"
-								style={{ color: "#2D5F3F" }}
+								style={{ color: "#5C7F4F" }}
 							>
 								Describe the interpreting assignment{" "}
 								<span className="text-red-500">*</span>
@@ -417,7 +417,7 @@ export const NeurodivergentInterpreterReflection: React.FC<
 						<div>
 							<label
 								className="block text-sm font-medium mb-3"
-								style={{ color: "#2D5F3F" }}
+								style={{ color: "#5C7F4F" }}
 							>
 								Environmental factors (Select all that apply)
 							</label>
@@ -459,7 +459,7 @@ export const NeurodivergentInterpreterReflection: React.FC<
 						<div>
 							<label
 								className="block text-sm font-medium mb-2"
-								style={{ color: "#2D5F3F" }}
+								style={{ color: "#5C7F4F" }}
 							>
 								Cognitive load rating (1-10)
 							</label>
@@ -484,7 +484,7 @@ export const NeurodivergentInterpreterReflection: React.FC<
 								className="text-center mt-2 text-2xl font-semibold px-4 py-2 rounded-lg"
 								style={{
 									backgroundColor: "rgba(107, 139, 96, 0.1)",
-									color: "#2D5F3F",
+									color: "#5C7F4F",
 								}}
 							>
 								{formData.cognitive_load || 5}/10
@@ -495,7 +495,7 @@ export const NeurodivergentInterpreterReflection: React.FC<
 						<div>
 							<label
 								className="block text-sm font-medium mb-3"
-								style={{ color: "#2D5F3F" }}
+								style={{ color: "#5C7F4F" }}
 							>
 								Executive function challenges (Select all that apply)
 							</label>
@@ -536,7 +536,7 @@ export const NeurodivergentInterpreterReflection: React.FC<
 						<div>
 							<label
 								className="block text-sm font-medium mb-2"
-								style={{ color: "#2D5F3F" }}
+								style={{ color: "#5C7F4F" }}
 							>
 								What accommodations or supports did you have?
 							</label>
@@ -559,7 +559,7 @@ export const NeurodivergentInterpreterReflection: React.FC<
 						<div>
 							<label
 								className="block text-sm font-medium mb-2"
-								style={{ color: "#2D5F3F" }}
+								style={{ color: "#5C7F4F" }}
 							>
 								What would have helped but wasn't available?
 							</label>
@@ -587,7 +587,7 @@ export const NeurodivergentInterpreterReflection: React.FC<
 						<div>
 							<label
 								className="block text-sm font-medium mb-2"
-								style={{ color: "#2D5F3F" }}
+								style={{ color: "#5C7F4F" }}
 							>
 								Masking/Camouflaging level (1-10)
 							</label>
@@ -612,7 +612,7 @@ export const NeurodivergentInterpreterReflection: React.FC<
 								className="text-center mt-2 text-2xl font-semibold px-4 py-2 rounded-lg"
 								style={{
 									backgroundColor: "rgba(107, 139, 96, 0.1)",
-									color: "#2D5F3F",
+									color: "#5C7F4F",
 								}}
 							>
 								{formData.masking_level || 5}/10
@@ -623,7 +623,7 @@ export const NeurodivergentInterpreterReflection: React.FC<
 						<div>
 							<label
 								className="block text-sm font-medium mb-2"
-								style={{ color: "#2D5F3F" }}
+								style={{ color: "#5C7F4F" }}
 							>
 								What did masking cost you?
 							</label>
@@ -647,7 +647,7 @@ export const NeurodivergentInterpreterReflection: React.FC<
 						<div>
 							<label
 								className="block text-sm font-medium mb-2"
-								style={{ color: "#2D5F3F" }}
+								style={{ color: "#5C7F4F" }}
 							>
 								Internalized ableism (1-10)
 							</label>
@@ -675,7 +675,7 @@ export const NeurodivergentInterpreterReflection: React.FC<
 								className="text-center mt-2 text-2xl font-semibold px-4 py-2 rounded-lg"
 								style={{
 									backgroundColor: "rgba(107, 139, 96, 0.1)",
-									color: "#2D5F3F",
+									color: "#5C7F4F",
 								}}
 							>
 								{formData.internalized_ableism || 5}/10
@@ -686,7 +686,7 @@ export const NeurodivergentInterpreterReflection: React.FC<
 						<div>
 							<label
 								className="block text-sm font-medium mb-2"
-								style={{ color: "#2D5F3F" }}
+								style={{ color: "#5C7F4F" }}
 							>
 								Self-advocacy (1-10)
 							</label>
@@ -714,7 +714,7 @@ export const NeurodivergentInterpreterReflection: React.FC<
 								className="text-center mt-2 text-2xl font-semibold px-4 py-2 rounded-lg"
 								style={{
 									backgroundColor: "rgba(107, 139, 96, 0.1)",
-									color: "#2D5F3F",
+									color: "#5C7F4F",
 								}}
 							>
 								{formData.self_advocacy || 5}/10
@@ -730,7 +730,7 @@ export const NeurodivergentInterpreterReflection: React.FC<
 						<div>
 							<label
 								className="block text-sm font-medium mb-3"
-								style={{ color: "#2D5F3F" }}
+								style={{ color: "#5C7F4F" }}
 							>
 								Attention state (Select all that apply)
 							</label>
@@ -764,7 +764,7 @@ export const NeurodivergentInterpreterReflection: React.FC<
 						<div>
 							<label
 								className="block text-sm font-medium mb-3"
-								style={{ color: "#2D5F3F" }}
+								style={{ color: "#5C7F4F" }}
 							>
 								Processing speed challenges (Select all that apply)
 							</label>
@@ -798,7 +798,7 @@ export const NeurodivergentInterpreterReflection: React.FC<
 						<div>
 							<label
 								className="block text-sm font-medium mb-3"
-								style={{ color: "#2D5F3F" }}
+								style={{ color: "#5C7F4F" }}
 							>
 								Working memory challenges (Select all that apply)
 							</label>
@@ -830,7 +830,7 @@ export const NeurodivergentInterpreterReflection: React.FC<
 						<div>
 							<label
 								className="block text-sm font-medium mb-2"
-								style={{ color: "#2D5F3F" }}
+								style={{ color: "#5C7F4F" }}
 							>
 								How did neurodivergent traits show up in your work?
 							</label>
@@ -853,7 +853,7 @@ export const NeurodivergentInterpreterReflection: React.FC<
 						<div>
 							<label
 								className="block text-sm font-medium mb-2"
-								style={{ color: "#2D5F3F" }}
+								style={{ color: "#5C7F4F" }}
 							>
 								Cognitive fatigue (1-10)
 							</label>
@@ -880,7 +880,7 @@ export const NeurodivergentInterpreterReflection: React.FC<
 								className="text-center mt-2 text-2xl font-semibold px-4 py-2 rounded-lg"
 								style={{
 									backgroundColor: "rgba(107, 139, 96, 0.1)",
-									color: "#2D5F3F",
+									color: "#5C7F4F",
 								}}
 							>
 								{formData.cognitive_fatigue || 5}/10
@@ -896,7 +896,7 @@ export const NeurodivergentInterpreterReflection: React.FC<
 						<div>
 							<label
 								className="block text-sm font-medium mb-3"
-								style={{ color: "#2D5F3F" }}
+								style={{ color: "#5C7F4F" }}
 							>
 								Emotions present (Select all that apply)
 							</label>
@@ -937,7 +937,7 @@ export const NeurodivergentInterpreterReflection: React.FC<
 						<div>
 							<label
 								className="block text-sm font-medium mb-3"
-								style={{ color: "#2D5F3F" }}
+								style={{ color: "#5C7F4F" }}
 							>
 								Regulation strategies used (Select all that apply)
 							</label>
@@ -978,7 +978,7 @@ export const NeurodivergentInterpreterReflection: React.FC<
 						<div>
 							<label
 								className="block text-sm font-medium mb-2"
-								style={{ color: "#2D5F3F" }}
+								style={{ color: "#5C7F4F" }}
 							>
 								Stimming/Self-regulation
 							</label>
@@ -1004,7 +1004,7 @@ export const NeurodivergentInterpreterReflection: React.FC<
 						<div>
 							<label
 								className="block text-sm font-medium mb-2"
-								style={{ color: "#2D5F3F" }}
+								style={{ color: "#5C7F4F" }}
 							>
 								Meltdown/Shutdown risk (1-10)
 							</label>
@@ -1029,7 +1029,7 @@ export const NeurodivergentInterpreterReflection: React.FC<
 								className="text-center mt-2 text-2xl font-semibold px-4 py-2 rounded-lg"
 								style={{
 									backgroundColor: "rgba(107, 139, 96, 0.1)",
-									color: "#2D5F3F",
+									color: "#5C7F4F",
 								}}
 							>
 								{formData.meltdown_risk || 5}/10
@@ -1040,7 +1040,7 @@ export const NeurodivergentInterpreterReflection: React.FC<
 						<div>
 							<label
 								className="block text-sm font-medium mb-2"
-								style={{ color: "#2D5F3F" }}
+								style={{ color: "#5C7F4F" }}
 							>
 								Recovery time needed
 							</label>
@@ -1069,7 +1069,7 @@ export const NeurodivergentInterpreterReflection: React.FC<
 						<div>
 							<label
 								className="block text-sm font-medium mb-3"
-								style={{ color: "#2D5F3F" }}
+								style={{ color: "#5C7F4F" }}
 							>
 								Neurodivergent strengths you used (Select all that apply)
 							</label>
@@ -1109,7 +1109,7 @@ export const NeurodivergentInterpreterReflection: React.FC<
 						<div>
 							<label
 								className="block text-sm font-medium mb-2"
-								style={{ color: "#2D5F3F" }}
+								style={{ color: "#5C7F4F" }}
 							>
 								How did your neurodivergent brain enhance your work?
 							</label>
@@ -1132,7 +1132,7 @@ export const NeurodivergentInterpreterReflection: React.FC<
 						<div>
 							<label
 								className="block text-sm font-medium mb-2"
-								style={{ color: "#2D5F3F" }}
+								style={{ color: "#5C7F4F" }}
 							>
 								What unique perspective did you bring?
 							</label>
@@ -1155,7 +1155,7 @@ export const NeurodivergentInterpreterReflection: React.FC<
 						<div>
 							<label
 								className="block text-sm font-medium mb-2"
-								style={{ color: "#2D5F3F" }}
+								style={{ color: "#5C7F4F" }}
 							>
 								Moments of flow or ease
 							</label>
@@ -1184,7 +1184,7 @@ export const NeurodivergentInterpreterReflection: React.FC<
 						<div>
 							<label
 								className="block text-sm font-medium mb-2"
-								style={{ color: "#2D5F3F" }}
+								style={{ color: "#5C7F4F" }}
 							>
 								Patterns you noticed
 							</label>
@@ -1208,7 +1208,7 @@ export const NeurodivergentInterpreterReflection: React.FC<
 						<div>
 							<label
 								className="block text-sm font-medium mb-2"
-								style={{ color: "#2D5F3F" }}
+								style={{ color: "#5C7F4F" }}
 							>
 								Triggers identified
 							</label>
@@ -1234,7 +1234,7 @@ export const NeurodivergentInterpreterReflection: React.FC<
 						<div>
 							<label
 								className="block text-sm font-medium mb-3"
-								style={{ color: "#2D5F3F" }}
+								style={{ color: "#5C7F4F" }}
 							>
 								Unmet needs (Select all that apply)
 							</label>
@@ -1274,7 +1274,7 @@ export const NeurodivergentInterpreterReflection: React.FC<
 						<div>
 							<label
 								className="block text-sm font-medium mb-2"
-								style={{ color: "#2D5F3F" }}
+								style={{ color: "#5C7F4F" }}
 							>
 								Impact on relationship with yourself
 							</label>
@@ -1298,7 +1298,7 @@ export const NeurodivergentInterpreterReflection: React.FC<
 						<div>
 							<label
 								className="block text-sm font-medium mb-2"
-								style={{ color: "#2D5F3F" }}
+								style={{ color: "#5C7F4F" }}
 							>
 								Impact on relationships with others
 							</label>
@@ -1323,7 +1323,7 @@ export const NeurodivergentInterpreterReflection: React.FC<
 						<div>
 							<label
 								className="block text-sm font-medium mb-2"
-								style={{ color: "#2D5F3F" }}
+								style={{ color: "#5C7F4F" }}
 							>
 								Self-compassion access (1-10)
 							</label>
@@ -1348,7 +1348,7 @@ export const NeurodivergentInterpreterReflection: React.FC<
 								className="text-center mt-2 text-2xl font-semibold px-4 py-2 rounded-lg"
 								style={{
 									backgroundColor: "rgba(107, 139, 96, 0.1)",
-									color: "#2D5F3F",
+									color: "#5C7F4F",
 								}}
 							>
 								{formData.self_compassion || 5}/10
@@ -1364,7 +1364,7 @@ export const NeurodivergentInterpreterReflection: React.FC<
 						<div>
 							<label
 								className="block text-sm font-medium mb-2"
-								style={{ color: "#2D5F3F" }}
+								style={{ color: "#5C7F4F" }}
 							>
 								Key insights
 							</label>
@@ -1388,7 +1388,7 @@ export const NeurodivergentInterpreterReflection: React.FC<
 						<div>
 							<label
 								className="block text-sm font-medium mb-2"
-								style={{ color: "#2D5F3F" }}
+								style={{ color: "#5C7F4F" }}
 							>
 								Boundary needs going forward
 							</label>
@@ -1412,7 +1412,7 @@ export const NeurodivergentInterpreterReflection: React.FC<
 						<div>
 							<label
 								className="block text-sm font-medium mb-2"
-								style={{ color: "#2D5F3F" }}
+								style={{ color: "#5C7F4F" }}
 							>
 								Accommodations to request
 							</label>
@@ -1438,7 +1438,7 @@ export const NeurodivergentInterpreterReflection: React.FC<
 						<div>
 							<label
 								className="block text-sm font-medium mb-2"
-								style={{ color: "#2D5F3F" }}
+								style={{ color: "#5C7F4F" }}
 							>
 								Neurodivergent community connection (1-10)
 							</label>
@@ -1465,7 +1465,7 @@ export const NeurodivergentInterpreterReflection: React.FC<
 								className="text-center mt-2 text-2xl font-semibold px-4 py-2 rounded-lg"
 								style={{
 									backgroundColor: "rgba(107, 139, 96, 0.1)",
-									color: "#2D5F3F",
+									color: "#5C7F4F",
 								}}
 							>
 								{formData.community_connection || 5}/10
@@ -1476,7 +1476,7 @@ export const NeurodivergentInterpreterReflection: React.FC<
 						<div>
 							<label
 								className="block text-sm font-medium mb-2"
-								style={{ color: "#2D5F3F" }}
+								style={{ color: "#5C7F4F" }}
 							>
 								Celebration of neurodivergent identity
 							</label>
@@ -1500,7 +1500,7 @@ export const NeurodivergentInterpreterReflection: React.FC<
 						<div>
 							<label
 								className="block text-sm font-medium mb-2"
-								style={{ color: "#2D5F3F" }}
+								style={{ color: "#5C7F4F" }}
 							>
 								Self-affirmation
 							</label>
@@ -1524,7 +1524,7 @@ export const NeurodivergentInterpreterReflection: React.FC<
 						<div>
 							<label
 								className="block text-sm font-medium mb-2"
-								style={{ color: "#2D5F3F" }}
+								style={{ color: "#5C7F4F" }}
 							>
 								Commitment to yourself <span className="text-red-500">*</span>
 							</label>
@@ -1549,7 +1549,7 @@ export const NeurodivergentInterpreterReflection: React.FC<
 						<div>
 							<label
 								className="block text-sm font-medium mb-2"
-								style={{ color: "#2D5F3F" }}
+								style={{ color: "#5C7F4F" }}
 							>
 								Overall wellbeing (1-10)
 							</label>
@@ -1574,7 +1574,7 @@ export const NeurodivergentInterpreterReflection: React.FC<
 								className="text-center mt-2 text-2xl font-semibold px-4 py-2 rounded-lg"
 								style={{
 									backgroundColor: "rgba(107, 139, 96, 0.1)",
-									color: "#2D5F3F",
+									color: "#5C7F4F",
 								}}
 							>
 								{formData.overall_wellbeing || 5}/10
@@ -1619,7 +1619,7 @@ export const NeurodivergentInterpreterReflection: React.FC<
 						<div
 							className="w-12 h-12 rounded-xl flex items-center justify-center"
 							style={{
-								background: "linear-gradient(135deg, #2D5F3F, #5B9378)",
+								background: "linear-gradient(135deg, #5C7F4F, #5B9378)",
 								boxShadow: "0 2px 8px rgba(107, 139, 96, 0.3)",
 							}}
 						>
@@ -1642,7 +1642,7 @@ export const NeurodivergentInterpreterReflection: React.FC<
 						onClick={onClose}
 						className="p-2 rounded-lg transition-all hover:opacity-90"
 						style={{
-							background: "linear-gradient(135deg, #2D5F3F, #5B9378)",
+							background: "linear-gradient(135deg, #5C7F4F, #5B9378)",
 						}}
 						aria-label="Close dialog"
 					>
@@ -1676,7 +1676,7 @@ export const NeurodivergentInterpreterReflection: React.FC<
 					className="px-8 py-6"
 					style={{ background: "rgba(107, 139, 96, 0.05)" }}
 				>
-					<h3 className="text-xl font-bold" style={{ color: "#2D5F3F" }}>
+					<h3 className="text-xl font-bold" style={{ color: "#5C7F4F" }}>
 						{sections[currentSection].title}
 					</h3>
 					<p className="text-sm mt-1" style={{ color: "#5A5A5A" }}>
@@ -1695,7 +1695,7 @@ export const NeurodivergentInterpreterReflection: React.FC<
 						border: "1px solid rgba(107, 139, 96, 0.2)",
 					}}
 				>
-					<p className="text-sm" style={{ color: "#2D5F3F" }}>
+					<p className="text-sm" style={{ color: "#5C7F4F" }}>
 						<strong>Remember:</strong> Your sensory needs are valid. Executive
 						function challenges are real, not character flaws. Masking is exhausting
 						- you deserve to unmask. Your neurodivergent brain brings unique
@@ -1740,7 +1740,7 @@ export const NeurodivergentInterpreterReflection: React.FC<
 						style={{
 							background: isSaving
 								? "#CCCCCC"
-								: "linear-gradient(135deg, #2D5F3F, #5B9378)",
+								: "linear-gradient(135deg, #5C7F4F, #5B9378)",
 							boxShadow: isSaving
 								? "none"
 								: "0 4px 12px rgba(45, 95, 63, 0.25)",

@@ -52,13 +52,13 @@ export const NavigationTabs: React.FC<NavigationTabsProps> = ({
 								aria-controls={`${tab.id}-panel`}
 								aria-current={activeTab === tab.id ? "page" : undefined}
 								style={{
-									color: activeTab === tab.id ? "#2D5F3F" : "#4A5568",
+									color: activeTab === tab.id ? "#5C7F4F" : "#4A5568",
 									fontWeight: activeTab === tab.id ? "600" : "400",
 									background: "transparent",
 								}}
 								onMouseEnter={(e) => {
 									if (activeTab !== tab.id) {
-										e.currentTarget.style.color = "#2D5F3F";
+										e.currentTarget.style.color = "#5C7F4F";
 										e.currentTarget.style.transform = "translateY(-2px)";
 									}
 								}}

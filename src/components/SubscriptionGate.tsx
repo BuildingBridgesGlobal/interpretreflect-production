@@ -42,7 +42,7 @@ export const SubscriptionGate: React.FC<SubscriptionGateProps> = ({
 			<div className="min-h-screen flex items-center justify-center">
 				<Loader2
 					className="w-8 h-8 animate-spin"
-					style={{ color: "#2D5F3F" }}
+					style={{ color: "#5C7F4F" }}
 				/>
 			</div>
 		);
@@ -82,7 +82,7 @@ export const SubscriptionGate: React.FC<SubscriptionGateProps> = ({
 						className="w-full px-6 py-3 rounded-lg font-semibold text-white transition-all flex items-center justify-center gap-2"
 						style={{
 							background:
-								"linear-gradient(135deg, #2D5F3F, rgb(107, 142, 94))",
+								"linear-gradient(135deg, #5C7F4F, rgb(107, 142, 94))",
 						}}
 					>
 						<CreditCard className="w-5 h-5" />

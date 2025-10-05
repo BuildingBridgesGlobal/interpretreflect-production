@@ -125,7 +125,7 @@ export const EmotionMappingAccessible: React.FC<EmotionMappingProps> = ({
 	const getStepContent = () => {
 		const steps = {
 			body: {
-				icon: <Heart className="w-8 h-8" style={{ color: "#2D5F3F" }} />,
+				icon: <Heart className="w-8 h-8" style={{ color: "#5C7F4F" }} />,
 				title: "Body Scan",
 				question: "Where do you notice something in your body?",
 				prompts: [
@@ -137,7 +137,7 @@ export const EmotionMappingAccessible: React.FC<EmotionMappingProps> = ({
 				encouragement: "Just notice, no judgment.",
 			},
 			name: {
-				icon: <Brain className="w-8 h-8" style={{ color: "#2D5F3F" }} />,
+				icon: <Brain className="w-8 h-8" style={{ color: "#5C7F4F" }} />,
 				title: "Name It",
 				question: "What emotion is present?",
 				prompts: [
@@ -151,7 +151,7 @@ export const EmotionMappingAccessible: React.FC<EmotionMappingProps> = ({
 				encouragement: "It's okay to feel this.",
 			},
 			pattern: {
-				icon: <Eye className="w-8 h-8" style={{ color: "#2D5F3F" }} />,
+				icon: <Eye className="w-8 h-8" style={{ color: "#5C7F4F" }} />,
 				title: "Notice Patterns",
 				question: "What triggered this feeling?",
 				prompts: [
@@ -163,7 +163,7 @@ export const EmotionMappingAccessible: React.FC<EmotionMappingProps> = ({
 				encouragement: "Understanding helps.",
 			},
 			strategy: {
-				icon: <Sparkles className="w-8 h-8" style={{ color: "#2D5F3F" }} />,
+				icon: <Sparkles className="w-8 h-8" style={{ color: "#5C7F4F" }} />,
 				title: "Reset Strategy",
 				question: "What helps you regulate?",
 				prompts: [
@@ -194,7 +194,7 @@ export const EmotionMappingAccessible: React.FC<EmotionMappingProps> = ({
 									className="p-2 rounded-xl"
 									style={{ backgroundColor: "#F0F5ED" }}
 								>
-									<Brain className="w-6 h-6" style={{ color: "#2D5F3F" }} />
+									<Brain className="w-6 h-6" style={{ color: "#5C7F4F" }} />
 								</div>
 								<div>
 									<h2
@@ -214,7 +214,7 @@ export const EmotionMappingAccessible: React.FC<EmotionMappingProps> = ({
 								onClick={onClose}
 								className="p-2 rounded-xl transition-all hover:scale-105"
 								style={{
-									background: "linear-gradient(135deg, #2D5F3F, #5B9378)",
+									background: "linear-gradient(135deg, #5C7F4F, #5B9378)",
 								}}
 								aria-label="Close emotion mapping"
 							>
@@ -322,8 +322,8 @@ export const EmotionMappingAccessible: React.FC<EmotionMappingProps> = ({
 							onClick={handleStart}
 							className="w-full py-3 text-white rounded-xl font-medium hover:opacity-90 transition-all focus:outline-none focus:ring-2 focus:ring-offset-2"
 							style={{
-								background: "linear-gradient(135deg, #2D5F3F, #5B9378)",
-								focusRingColor: "#2D5F3F",
+								background: "linear-gradient(135deg, #5C7F4F, #5B9378)",
+								focusRingColor: "#5C7F4F",
 							}}
 							aria-label="Begin Emotion Mapping"
 						>
@@ -362,7 +362,7 @@ export const EmotionMappingAccessible: React.FC<EmotionMappingProps> = ({
 								onClick={onClose}
 								className="p-2 rounded-xl transition-all hover:scale-105"
 								style={{
-									background: "linear-gradient(135deg, #2D5F3F, #5B9378)",
+									background: "linear-gradient(135deg, #5C7F4F, #5B9378)",
 								}}
 								aria-label="Close practice"
 							>
@@ -454,7 +454,7 @@ export const EmotionMappingAccessible: React.FC<EmotionMappingProps> = ({
 								</ul>
 							</div>
 
-							<p className="font-medium" style={{ color: "#2D5F3F" }}>
+							<p className="font-medium" style={{ color: "#5C7F4F" }}>
 								{stepContent.encouragement}
 							</p>
 						</div>
@@ -463,8 +463,8 @@ export const EmotionMappingAccessible: React.FC<EmotionMappingProps> = ({
 							onClick={handleContinue}
 							className="w-full mt-8 py-3 text-white rounded-xl font-medium hover:opacity-90 transition-all flex items-center justify-center gap-2 focus:outline-none focus:ring-2 focus:ring-offset-2"
 							style={{
-								background: "linear-gradient(135deg, #2D5F3F, #5B9378)",
-								focusRingColor: "#2D5F3F",
+								background: "linear-gradient(135deg, #5C7F4F, #5B9378)",
+								focusRingColor: "#5C7F4F",
 							}}
 							aria-label={
 								currentStep === "strategy"
@@ -505,7 +505,7 @@ export const EmotionMappingAccessible: React.FC<EmotionMappingProps> = ({
 								onClick={onClose}
 								className="p-2 rounded-xl transition-all hover:scale-105"
 								style={{
-									background: "linear-gradient(135deg, #2D5F3F, #5B9378)",
+									background: "linear-gradient(135deg, #5C7F4F, #5B9378)",
 								}}
 								aria-label="Close reflection"
 							>
@@ -532,12 +532,12 @@ export const EmotionMappingAccessible: React.FC<EmotionMappingProps> = ({
 										style={{
 											background:
 												feelingClearer === option
-													? "linear-gradient(135deg, #2D5F3F, #5B9378)"
+													? "linear-gradient(135deg, #5C7F4F, #5B9378)"
 													: undefined,
 											backgroundColor:
 												feelingClearer === option ? undefined : "#F0F5ED",
 											color: feelingClearer === option ? "white" : "#4A5568",
-											focusRingColor: "#2D5F3F",
+											focusRingColor: "#5C7F4F",
 										}}
 										onMouseEnter={(e) => {
 											if (feelingClearer !== option) {
@@ -586,12 +586,12 @@ export const EmotionMappingAccessible: React.FC<EmotionMappingProps> = ({
 										style={{
 											background:
 												mostHelpful === option
-													? "linear-gradient(135deg, #2D5F3F, #5B9378)"
+													? "linear-gradient(135deg, #5C7F4F, #5B9378)"
 													: undefined,
 											backgroundColor:
 												mostHelpful === option ? undefined : "#F0F5ED",
 											color: mostHelpful === option ? "white" : "#4A5568",
-											focusRingColor: "#2D5F3F",
+											focusRingColor: "#5C7F4F",
 										}}
 										onMouseEnter={(e) => {
 											if (mostHelpful !== option) {
@@ -632,12 +632,12 @@ export const EmotionMappingAccessible: React.FC<EmotionMappingProps> = ({
 										style={{
 											background:
 												needSupport === option
-													? "linear-gradient(135deg, #2D5F3F, #5B9378)"
+													? "linear-gradient(135deg, #5C7F4F, #5B9378)"
 													: undefined,
 											backgroundColor:
 												needSupport === option ? undefined : "#F0F5ED",
 											color: needSupport === option ? "white" : "#4A5568",
-											focusRingColor: "#2D5F3F",
+											focusRingColor: "#5C7F4F",
 										}}
 										onMouseEnter={(e) => {
 											if (needSupport !== option) {
@@ -685,8 +685,8 @@ export const EmotionMappingAccessible: React.FC<EmotionMappingProps> = ({
 							onClick={handleSubmit}
 							className="w-full py-3 text-white rounded-xl font-medium hover:opacity-90 transition-all focus:outline-none focus:ring-2 focus:ring-offset-2"
 							style={{
-								background: "linear-gradient(135deg, #2D5F3F, #5B9378)",
-								focusRingColor: "#2D5F3F",
+								background: "linear-gradient(135deg, #5C7F4F, #5B9378)",
+								focusRingColor: "#5C7F4F",
 							}}
 							aria-label="Complete emotion mapping and close"
 						>
@@ -709,7 +709,7 @@ export const EmotionMappingAccessible: React.FC<EmotionMappingProps> = ({
 									onClick={() => setShowWhyModal(false)}
 									className="p-2 rounded-lg transition-all hover:opacity-90"
 									style={{
-										background: "linear-gradient(135deg, #2D5F3F, #5B9378)",
+										background: "linear-gradient(135deg, #5C7F4F, #5B9378)",
 									}}
 									aria-label="Close why modal"
 								>
@@ -803,7 +803,7 @@ export const EmotionMappingAccessible: React.FC<EmotionMappingProps> = ({
 								onClick={() => setShowWhyModal(false)}
 								className="mt-6 w-full py-3 text-white rounded-lg font-medium hover:opacity-90 transition-all"
 								style={{
-									background: "linear-gradient(135deg, #2D5F3F, #5B9378)",
+									background: "linear-gradient(135deg, #5C7F4F, #5B9378)",
 								}}
 							>
 								Got it

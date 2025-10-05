@@ -572,7 +572,7 @@ const PreAssignmentPrep: React.FC<PreAssignmentPrepProps> = ({ onComplete, onClo
             </div>
 
             <div className="p-4 rounded-xl" style={{ backgroundColor: 'rgba(92, 127, 79, 0.1)' }}>
-              <p className="text-sm" style={{ color: '#2D5F3F' }}>
+              <p className="text-sm" style={{ color: '#5C7F4F' }}>
                 <strong>Impact:</strong> Reduces anticipatory stress by 35% (Norris et al., 2018)
               </p>
             </div>
@@ -760,7 +760,7 @@ const PreAssignmentPrep: React.FC<PreAssignmentPrepProps> = ({ onComplete, onClo
                   className="p-4 rounded-xl"
                   style={{ backgroundColor: 'rgba(92, 127, 79, 0.1)' }}
                 >
-                  <h3 className="font-semibold mb-3" style={{ color: '#2D5F3F' }}>
+                  <h3 className="font-semibold mb-3" style={{ color: '#5C7F4F' }}>
                     Visualize Your Protective Bubble:
                   </h3>
                   <ul className="space-y-2 text-sm text-left max-w-xs mx-auto">
@@ -803,7 +803,7 @@ const PreAssignmentPrep: React.FC<PreAssignmentPrepProps> = ({ onComplete, onClo
                       border: '2px solid #5C7F4F',
                     }}
                   >
-                    <p className="text-lg font-semibold mb-2" style={{ color: '#2D5F3F' }}>
+                    <p className="text-lg font-semibold mb-2" style={{ color: '#5C7F4F' }}>
                       "I am the conduit, not the container."
                     </p>
                     <p className="text-sm" style={{ color: '#6B7C6B' }}>

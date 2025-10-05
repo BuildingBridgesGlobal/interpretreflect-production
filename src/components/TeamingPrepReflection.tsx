@@ -184,7 +184,7 @@ export const TeamingPrepReflection: React.FC<TeamingPrepReflectionProps> = ({
               <div key={field.id} className="space-y-2">
                 {field.type === 'slider' && (
                   <>
-                    <label className="text-sm font-medium" style={{ color: '#2D5F3F' }}>
+                    <label className="text-sm font-medium" style={{ color: '#5C7F4F' }}>
                       {field.label}
                     </label>
                     <div className="flex items-center space-x-4">
@@ -209,7 +209,7 @@ export const TeamingPrepReflection: React.FC<TeamingPrepReflectionProps> = ({
                 
                 {field.type === 'text' && (
                   <>
-                    <label className="text-sm font-medium" style={{ color: '#2D5F3F' }}>
+                    <label className="text-sm font-medium" style={{ color: '#5C7F4F' }}>
                       {field.label}
                     </label>
                     <input
@@ -256,7 +256,7 @@ export const TeamingPrepReflection: React.FC<TeamingPrepReflectionProps> = ({
               <div key={field.id} className="space-y-2">
                 {field.type === 'select' && (
                   <>
-                    <label className="text-sm font-medium" style={{ color: '#2D5F3F' }}>
+                    <label className="text-sm font-medium" style={{ color: '#5C7F4F' }}>
                       {field.label}
                     </label>
                     <select
@@ -280,7 +280,7 @@ export const TeamingPrepReflection: React.FC<TeamingPrepReflectionProps> = ({
                 
                 {field.type === 'text' && formData.signal_type === 'Other' && (
                   <>
-                    <label className="text-sm font-medium" style={{ color: '#2D5F3F' }}>
+                    <label className="text-sm font-medium" style={{ color: '#5C7F4F' }}>
                       {field.label}
                     </label>
                     <input
@@ -312,7 +312,7 @@ export const TeamingPrepReflection: React.FC<TeamingPrepReflectionProps> = ({
             
             {section.checklist && (
               <div className="space-y-3">
-                <label className="text-sm font-medium" style={{ color: '#2D5F3F' }}>
+                <label className="text-sm font-medium" style={{ color: '#5C7F4F' }}>
                   {section.checklist.label}
                 </label>
                 <div className="grid grid-cols-2 gap-3">
@@ -341,7 +341,7 @@ export const TeamingPrepReflection: React.FC<TeamingPrepReflectionProps> = ({
             
             {section.fallbackPlan && (
               <div className="space-y-3">
-                <label className="text-sm font-medium" style={{ color: '#2D5F3F' }}>
+                <label className="text-sm font-medium" style={{ color: '#5C7F4F' }}>
                   {section.fallbackPlan.label}
                 </label>
                 <div className="space-y-2">
@@ -435,7 +435,7 @@ export const TeamingPrepReflection: React.FC<TeamingPrepReflectionProps> = ({
             </p>
             
             {section.stem && (
-              <p className="text-lg font-semibold" style={{ color: '#2D5F3F' }}>
+              <p className="text-lg font-semibold" style={{ color: '#5C7F4F' }}>
                 {section.stem}
               </p>
             )}
@@ -464,7 +464,7 @@ export const TeamingPrepReflection: React.FC<TeamingPrepReflectionProps> = ({
                 }}
               >
                 <Heart className="h-5 w-5 mb-2" style={{ color: '#6B8B60' }} />
-                <p className="text-sm italic" style={{ color: '#2D5F3F' }}>
+                <p className="text-sm italic" style={{ color: '#5C7F4F' }}>
                   {section.affirmation}
                 </p>
               </div>

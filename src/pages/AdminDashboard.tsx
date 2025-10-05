@@ -260,7 +260,7 @@ export function AdminDashboard() {
 								className="w-12 h-12 rounded-lg flex items-center justify-center"
 								style={{ backgroundColor: "rgba(27, 94, 32, 0.1)" }}
 							>
-								<DollarSign className="w-6 h-6" style={{ color: "#2D5F3F" }} />
+								<DollarSign className="w-6 h-6" style={{ color: "#5C7F4F" }} />
 							</div>
 							<span
 								className="text-xs font-semibold"

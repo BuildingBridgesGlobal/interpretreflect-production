@@ -363,7 +363,7 @@ FEELING: ${formData.feeling_word}
 					>
 						<h3
 							className="text-lg font-semibold mb-4"
-							style={{ color: "#2D5F3F" }}
+							style={{ color: "#5C7F4F" }}
 						>
 							Setting Your Foundation
 						</h3>
@@ -378,7 +378,7 @@ FEELING: ${formData.feeling_word}
 					<div>
 						<label
 							className="block text-sm font-medium mb-2"
-							style={{ color: "#2D5F3F" }}
+							style={{ color: "#5C7F4F" }}
 						>
 							What is the assignment context and participants' backgrounds?
 						</label>
@@ -404,7 +404,7 @@ FEELING: ${formData.feeling_word}
 					<div>
 						<label
 							className="block text-sm font-medium mb-2"
-							style={{ color: "#2D5F3F" }}
+							style={{ color: "#5C7F4F" }}
 						>
 							Which materials, documents, or terminology should you review?
 						</label>
@@ -437,7 +437,7 @@ FEELING: ${formData.feeling_word}
 					<div>
 						<label
 							className="block text-sm font-medium mb-2"
-							style={{ color: "#2D5F3F" }}
+							style={{ color: "#5C7F4F" }}
 						>
 							What are your emotional and physical readiness levels?
 						</label>
@@ -463,7 +463,7 @@ FEELING: ${formData.feeling_word}
 					<div>
 						<label
 							className="block text-sm font-medium mb-2"
-							style={{ color: "#2D5F3F" }}
+							style={{ color: "#5C7F4F" }}
 						>
 							Which demands do you anticipate?
 						</label>
@@ -496,7 +496,7 @@ FEELING: ${formData.feeling_word}
 					<div>
 						<label
 							className="block text-sm font-medium mb-2"
-							style={{ color: "#2D5F3F" }}
+							style={{ color: "#5C7F4F" }}
 						>
 							What control strategies do you have for anticipated demands?
 						</label>
@@ -522,7 +522,7 @@ FEELING: ${formData.feeling_word}
 					<div>
 						<label
 							className="block text-sm font-medium mb-2"
-							style={{ color: "#2D5F3F" }}
+							style={{ color: "#5C7F4F" }}
 						>
 							What backup plans do you have for unexpected challenges?
 						</label>
@@ -553,7 +553,7 @@ FEELING: ${formData.feeling_word}
 					<div>
 						<label
 							className="block text-sm font-medium mb-2"
-							style={{ color: "#2D5F3F" }}
+							style={{ color: "#5C7F4F" }}
 						>
 							How do your role, alignment, and interaction management show up in
 							this assignment?
@@ -583,7 +583,7 @@ FEELING: ${formData.feeling_word}
 					<div>
 						<label
 							className="block text-sm font-medium mb-2"
-							style={{ color: "#2D5F3F" }}
+							style={{ color: "#5C7F4F" }}
 						>
 							What practices will you use for focus and regulation?
 						</label>
@@ -611,7 +611,7 @@ FEELING: ${formData.feeling_word}
 					<div>
 						<label
 							className="block text-sm font-medium mb-2"
-							style={{ color: "#2D5F3F" }}
+							style={{ color: "#5C7F4F" }}
 						>
 							What are your triggers or vulnerabilities and how will you manage
 							them?
@@ -647,7 +647,7 @@ FEELING: ${formData.feeling_word}
 					<div>
 						<label
 							className="block text-sm font-medium mb-2"
-							style={{ color: "#2D5F3F" }}
+							style={{ color: "#5C7F4F" }}
 						>
 							Are you prepared for the cultural context and potential ethical
 							dilemmas?
@@ -681,7 +681,7 @@ FEELING: ${formData.feeling_word}
 					<div>
 						<label
 							className="block text-sm font-medium mb-2"
-							style={{ color: "#2D5F3F" }}
+							style={{ color: "#5C7F4F" }}
 						>
 							What goals do you have for professional growth in this assignment?
 						</label>
@@ -705,7 +705,7 @@ FEELING: ${formData.feeling_word}
 					<div>
 						<label
 							className="block text-sm font-medium mb-2"
-							style={{ color: "#2D5F3F" }}
+							style={{ color: "#5C7F4F" }}
 						>
 							Craft a one-sentence intention for this assignment
 						</label>
@@ -731,7 +731,7 @@ FEELING: ${formData.feeling_word}
 					<div>
 						<label
 							className="block text-sm font-medium mb-2"
-							style={{ color: "#2D5F3F" }}
+							style={{ color: "#5C7F4F" }}
 						>
 							Rate your confidence level (1-10)
 						</label>
@@ -754,7 +754,7 @@ FEELING: ${formData.feeling_word}
 								className="text-2xl font-bold px-4 py-2 rounded-lg"
 								style={{
 									backgroundColor: "rgba(107, 139, 96, 0.1)",
-									color: "#2D5F3F",
+									color: "#5C7F4F",
 								}}
 							>
 								{formData.confidence_rating}
@@ -765,7 +765,7 @@ FEELING: ${formData.feeling_word}
 					<div>
 						<label
 							className="block text-sm font-medium mb-2"
-							style={{ color: "#2D5F3F" }}
+							style={{ color: "#5C7F4F" }}
 						>
 							How are you feeling right now? (one word)
 						</label>
@@ -790,7 +790,7 @@ FEELING: ${formData.feeling_word}
 						<div className="mt-8">
 							<p
 								className="text-sm font-medium mb-4"
-								style={{ color: "#2D5F3F" }}
+								style={{ color: "#5C7F4F" }}
 							>
 								Your preparation has been saved! Here's your summary:
 							</p>
@@ -841,7 +841,7 @@ FEELING: ${formData.feeling_word}
 								<div
 									className="w-12 h-12 rounded-xl flex items-center justify-center"
 									style={{
-										background: "linear-gradient(135deg, #2D5F3F, #5B9378)",
+										background: "linear-gradient(135deg, #5C7F4F, #5B9378)",
 										boxShadow: "0 2px 8px rgba(107, 139, 96, 0.3)",
 									}}
 								>
@@ -863,7 +863,7 @@ FEELING: ${formData.feeling_word}
 								onClick={onClose}
 								className="p-2 rounded-lg transition-all hover:opacity-90"
 								style={{
-									background: "linear-gradient(135deg, #2D5F3F, #5B9378)",
+									background: "linear-gradient(135deg, #5C7F4F, #5B9378)",
 								}}
 								aria-label="Close"
 							>
@@ -946,7 +946,7 @@ FEELING: ${formData.feeling_word}
 								onClick={handleNext}
 								className="px-6 py-2 rounded-lg flex items-center transition-all"
 								style={{
-									background: "linear-gradient(135deg, #2D5F3F, #5B9378)",
+									background: "linear-gradient(135deg, #5C7F4F, #5B9378)",
 									color: "#FFFFFF",
 									boxShadow: "0 2px 8px rgba(107, 139, 96, 0.3)",
 								}}
@@ -972,7 +972,7 @@ FEELING: ${formData.feeling_word}
 								style={{
 									background: isSaving
 										? "#CCCCCC"
-										: "linear-gradient(135deg, #2D5F3F, #5B9378)",
+										: "linear-gradient(135deg, #5C7F4F, #5B9378)",
 									color: "#FFFFFF",
 									boxShadow: isSaving
 										? "none"

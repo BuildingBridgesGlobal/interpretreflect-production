@@ -103,7 +103,7 @@ export const BreatheProtocolAccessible: React.FC<BreatheProtocolProps> = ({
 								className="p-2 rounded-xl"
 								style={{ backgroundColor: "#F0F5ED" }}
 							>
-								<Brain className="w-6 h-6" style={{ color: "#2D5F3F" }} />
+								<Brain className="w-6 h-6" style={{ color: "#5C7F4F" }} />
 							</div>
 							<div>
 								<h2
@@ -122,7 +122,7 @@ export const BreatheProtocolAccessible: React.FC<BreatheProtocolProps> = ({
 							onClick={onClose}
 							className="p-2 rounded-xl transition-all hover:scale-105"
 							style={{
-								background: "linear-gradient(135deg, #2D5F3F, #5B9378)",
+								background: "linear-gradient(135deg, #5C7F4F, #5B9378)",
 							}}
 							aria-label="Close BREATHE Protocol"
 						>
@@ -148,7 +148,7 @@ export const BreatheProtocolAccessible: React.FC<BreatheProtocolProps> = ({
 								className="h-full rounded-full transition-all duration-300"
 								style={{
 									width: `${progress}%`,
-									background: "linear-gradient(90deg, #2D5F3F, #5B9378)",
+									background: "linear-gradient(90deg, #5C7F4F, #5B9378)",
 								}}
 							/>
 						</div>
@@ -161,7 +161,7 @@ export const BreatheProtocolAccessible: React.FC<BreatheProtocolProps> = ({
 								className="w-12 h-12 rounded-full flex items-center justify-center text-2xl font-bold"
 								style={{
 									backgroundColor: "#F0F5ED",
-									color: "#2D5F3F",
+									color: "#5C7F4F",
 								}}
 							>
 								{step.letter}
@@ -182,7 +182,7 @@ export const BreatheProtocolAccessible: React.FC<BreatheProtocolProps> = ({
 								{step.guidance}
 							</p>
 							{step.practice && (
-								<p className="text-base font-semibold mt-3" style={{ color: "#2D5F3F" }}>
+								<p className="text-base font-semibold mt-3" style={{ color: "#5C7F4F" }}>
 									{step.practice}
 								</p>
 							)}
@@ -215,7 +215,7 @@ export const BreatheProtocolAccessible: React.FC<BreatheProtocolProps> = ({
 							}`}
 							style={{
 								backgroundColor: currentStep === 0 ? "#E2E8F0" : "#F0F5ED",
-								color: currentStep === 0 ? "#94A3B8" : "#2D5F3F",
+								color: currentStep === 0 ? "#94A3B8" : "#5C7F4F",
 							}}
 							aria-label="Go to previous step"
 						>
@@ -227,7 +227,7 @@ export const BreatheProtocolAccessible: React.FC<BreatheProtocolProps> = ({
 							onClick={handleNext}
 							className="flex items-center gap-2 px-6 py-3 text-white rounded-xl font-medium transition-all hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-offset-2"
 							style={{
-								background: "linear-gradient(135deg, #2D5F3F, #5B9378)",
+								background: "linear-gradient(135deg, #5C7F4F, #5B9378)",
 							}}
 							aria-label={
 								currentStep === BREATHE_STEPS.length - 1

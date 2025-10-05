@@ -245,7 +245,7 @@ const PrivacyConsent: React.FC<PrivacyConsentProps> = ({
 							onClick={handleAccept}
 							className="flex-1 px-6 py-3 rounded-lg font-medium text-white transition-all hover:scale-105"
 							style={{
-								background: "linear-gradient(135deg, #2D5F3F, #5B9378)",
+								background: "linear-gradient(135deg, #5C7F4F, #5B9378)",
 								boxShadow: "0 4px 15px rgba(27, 94, 32, 0.3)",
 							}}
 						>
@@ -270,7 +270,7 @@ const PrivacyConsent: React.FC<PrivacyConsentProps> = ({
 					{/* Quick Support Access */}
 					<div className="text-center mt-6 text-sm" style={{ color: "#525252" }}>
 						<p>
-							Questions? View our <a href="/privacy" className="underline" style={{ color: "#2D5F3F" }}>Privacy Policy</a> or <a href="/terms" className="underline" style={{ color: "#2D5F3F" }}>Terms of Service</a>
+							Questions? View our <a href="/privacy" className="underline" style={{ color: "#5C7F4F" }}>Privacy Policy</a> or <a href="/terms" className="underline" style={{ color: "#5C7F4F" }}>Terms of Service</a>
 						</p>
 					</div>
 

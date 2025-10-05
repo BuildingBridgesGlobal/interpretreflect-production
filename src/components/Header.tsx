@@ -65,7 +65,7 @@ const Header: React.FC<HeaderProps> = ({
 					top: "0.5rem",
 					zIndex: 9999,
 					padding: "1rem 1.5rem",
-					backgroundColor: "#2D5F3F",
+					backgroundColor: "#5C7F4F",
 					color: "#FFFFFF",
 					textDecoration: "none",
 					borderRadius: "0.5rem",
@@ -167,7 +167,7 @@ const Header: React.FC<HeaderProps> = ({
 													padding: "0.75rem 1.25rem",
 													fontSize: "1.125rem",
 													fontWeight: active ? 600 : 500,
-													color: active ? "#2D5F3F" : "#2D3A31",
+													color: active ? "#5C7F4F" : "#2D3A31",
 													backgroundColor: active
 														? "rgba(92, 127, 79, 0.1)"
 														: "transparent",
@@ -181,7 +181,7 @@ const Header: React.FC<HeaderProps> = ({
 													if (!active) {
 														e.currentTarget.style.backgroundColor =
 															"rgba(92, 127, 79, 0.05)";
-														e.currentTarget.style.color = "#2D5F3F";
+														e.currentTarget.style.color = "#5C7F4F";
 														e.currentTarget.style.transform =
 															"translateY(-2px)";
 													}
@@ -195,7 +195,7 @@ const Header: React.FC<HeaderProps> = ({
 													}
 												}}
 												onFocus={(e) => {
-													e.currentTarget.style.outline = "3px solid #2D5F3F";
+													e.currentTarget.style.outline = "3px solid #5C7F4F";
 													e.currentTarget.style.outlineOffset = "2px";
 												}}
 												onBlur={(e) => {
@@ -228,7 +228,7 @@ const Header: React.FC<HeaderProps> = ({
 											fontWeight: 600,
 											color: "#FFFFFF",
 											background:
-												"linear-gradient(135deg, #2D5F3F 0%, #4A6B3E 100%)",
+												"linear-gradient(135deg, #5C7F4F 0%, #4A6B3E 100%)",
 											border: "none",
 											borderRadius: "0.5rem",
 											textDecoration: "none",
@@ -248,7 +248,7 @@ const Header: React.FC<HeaderProps> = ({
 												"0 4px 12px rgba(45, 95, 63, 0.3)";
 										}}
 										onFocus={(e) => {
-											e.currentTarget.style.outline = "3px solid #2D5F3F";
+											e.currentTarget.style.outline = "3px solid #5C7F4F";
 											e.currentTarget.style.outlineOffset = "2px";
 										}}
 										onBlur={(e) => {
@@ -307,9 +307,9 @@ const Header: React.FC<HeaderProps> = ({
 											padding: "0.75rem 1.5rem",
 											fontSize: "1.125rem",
 											fontWeight: 500,
-											color: "#2D5F3F",
+											color: "#5C7F4F",
 											backgroundColor: "transparent",
-											border: "2px solid #2D5F3F",
+											border: "2px solid #5C7F4F",
 											borderRadius: "0.5rem",
 											textDecoration: "none",
 											transition: "all 0.2s ease",
@@ -323,7 +323,7 @@ const Header: React.FC<HeaderProps> = ({
 											e.currentTarget.style.backgroundColor = "transparent";
 										}}
 										onFocus={(e) => {
-											e.currentTarget.style.outline = "3px solid #2D5F3F";
+											e.currentTarget.style.outline = "3px solid #5C7F4F";
 											e.currentTarget.style.outlineOffset = "2px";
 										}}
 										onBlur={(e) => {
@@ -339,8 +339,8 @@ const Header: React.FC<HeaderProps> = ({
 											fontSize: "1.125rem",
 											fontWeight: 600,
 											color: "#FFFFFF",
-											backgroundColor: "#2D5F3F",
-											border: "2px solid #2D5F3F",
+											backgroundColor: "#5C7F4F",
+											border: "2px solid #5C7F4F",
 											borderRadius: "0.5rem",
 											textDecoration: "none",
 											transition: "all 0.2s ease",
@@ -351,11 +351,11 @@ const Header: React.FC<HeaderProps> = ({
 											e.currentTarget.style.transform = "translateY(-1px)";
 										}}
 										onMouseLeave={(e) => {
-											e.currentTarget.style.backgroundColor = "#2D5F3F";
+											e.currentTarget.style.backgroundColor = "#5C7F4F";
 											e.currentTarget.style.transform = "translateY(0)";
 										}}
 										onFocus={(e) => {
-											e.currentTarget.style.outline = "3px solid #2D5F3F";
+											e.currentTarget.style.outline = "3px solid #5C7F4F";
 											e.currentTarget.style.outlineOffset = "2px";
 										}}
 										onBlur={(e) => {
@@ -387,13 +387,13 @@ const Header: React.FC<HeaderProps> = ({
 								height: "3rem",
 								color: "#2D3A31",
 								backgroundColor: "transparent",
-								border: "2px solid #2D5F3F",
+								border: "2px solid #5C7F4F",
 								borderRadius: "0.5rem",
 								cursor: "pointer",
 								transition: "all 0.2s ease",
 							}}
 							onFocus={(e) => {
-								e.currentTarget.style.outline = "3px solid #2D5F3F";
+								e.currentTarget.style.outline = "3px solid #5C7F4F";
 								e.currentTarget.style.outlineOffset = "2px";
 							}}
 							onBlur={(e) => {
@@ -452,7 +452,7 @@ const Header: React.FC<HeaderProps> = ({
 												padding: "1rem",
 												fontSize: "1.125rem",
 												fontWeight: active ? 600 : 500,
-												color: active ? "#2D5F3F" : "#2D3A31",
+												color: active ? "#5C7F4F" : "#2D3A31",
 												backgroundColor: active
 													? "rgba(92, 127, 79, 0.1)"
 													: "transparent",
@@ -490,7 +490,7 @@ const Header: React.FC<HeaderProps> = ({
 										fontWeight: 600,
 										color: "#FFFFFF",
 										background:
-											"linear-gradient(135deg, #2D5F3F 0%, #4A6B3E 100%)",
+											"linear-gradient(135deg, #5C7F4F 0%, #4A6B3E 100%)",
 										border: "none",
 										borderRadius: "0.5rem",
 										textDecoration: "none",

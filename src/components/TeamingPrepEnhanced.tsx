@@ -272,7 +272,7 @@ ${formData.support_needs}
 					>
 						<h3
 							className="text-lg font-semibold mb-4"
-							style={{ color: "#2D5F3F" }}
+							style={{ color: "#5C7F4F" }}
 						>
 							Opening Context
 						</h3>
@@ -287,7 +287,7 @@ ${formData.support_needs}
 					<div>
 						<label
 							className="block text-sm font-medium mb-2"
-							style={{ color: "#2D5F3F" }}
+							style={{ color: "#5C7F4F" }}
 						>
 							What excites you most about this upcoming team interpreting
 							assignment?
@@ -313,7 +313,7 @@ ${formData.support_needs}
 					<div>
 						<label
 							className="block text-sm font-medium mb-2"
-							style={{ color: "#2D5F3F" }}
+							style={{ color: "#5C7F4F" }}
 						>
 							What concerns you most about working in a team interpreting
 							context?
@@ -341,7 +341,7 @@ ${formData.support_needs}
 					<div>
 						<label
 							className="block text-sm font-medium mb-2"
-							style={{ color: "#2D5F3F" }}
+							style={{ color: "#5C7F4F" }}
 						>
 							Will this be a virtual or in-person assignment?
 						</label>
@@ -388,7 +388,7 @@ ${formData.support_needs}
 					<div>
 						<label
 							className="block text-sm font-medium mb-2"
-							style={{ color: "#2D5F3F" }}
+							style={{ color: "#5C7F4F" }}
 						>
 							How do you typically prefer to work in interpreting teams?
 							Describe your ideal team dynamic.
@@ -415,7 +415,7 @@ ${formData.support_needs}
 					<div>
 						<label
 							className="block text-sm font-medium mb-2"
-							style={{ color: "#2D5F3F" }}
+							style={{ color: "#5C7F4F" }}
 						>
 							What role do you naturally gravitate toward in team interpreting
 							settings?
@@ -440,7 +440,7 @@ ${formData.support_needs}
 					<div>
 						<label
 							className="block text-sm font-medium mb-2"
-							style={{ color: "#2D5F3F" }}
+							style={{ color: "#5C7F4F" }}
 						>
 							What past team interpreting experience (positive or negative) is
 							influencing how you approach this assignment?
@@ -459,7 +459,7 @@ ${formData.support_needs}
 					<div>
 						<label
 							className="block text-sm font-medium mb-2"
-							style={{ color: "#2D5F3F" }}
+							style={{ color: "#5C7F4F" }}
 						>
 							What specific outcomes do you hope to achieve through this team
 							interpreting assignment?
@@ -485,7 +485,7 @@ ${formData.support_needs}
 					<div>
 						<label
 							className="block text-sm font-medium mb-2"
-							style={{ color: "#2D5F3F" }}
+							style={{ color: "#5C7F4F" }}
 						>
 							How will you signal when you need help or want to hand off during
 							the interpretation?
@@ -514,7 +514,7 @@ ${formData.support_needs}
 						<div>
 							<label
 								className="block text-sm font-medium mb-2"
-								style={{ color: "#2D5F3F" }}
+								style={{ color: "#5C7F4F" }}
 							>
 								For virtual: How will you manage handoffs and support without
 								visual cues?
@@ -546,7 +546,7 @@ ${formData.support_needs}
 						<div>
 							<label
 								className="block text-sm font-medium mb-2"
-								style={{ color: "#2D5F3F" }}
+								style={{ color: "#5C7F4F" }}
 							>
 								For in-person: What physical or visual cues will you use with
 								your team?
@@ -574,7 +574,7 @@ ${formData.support_needs}
 					<div>
 						<label
 							className="block text-sm font-medium mb-2"
-							style={{ color: "#2D5F3F" }}
+							style={{ color: "#5C7F4F" }}
 						>
 							What communication style works best for you in interpreting teams?
 						</label>
@@ -592,7 +592,7 @@ ${formData.support_needs}
 					<div>
 						<label
 							className="block text-sm font-medium mb-2"
-							style={{ color: "#2D5F3F" }}
+							style={{ color: "#5C7F4F" }}
 						>
 							How do you prefer to give and receive feedback during and after
 							assignments?
@@ -611,7 +611,7 @@ ${formData.support_needs}
 					<div>
 						<label
 							className="block text-sm font-medium mb-2"
-							style={{ color: "#2D5F3F" }}
+							style={{ color: "#5C7F4F" }}
 						>
 							What boundaries or working preferences do you want to establish?
 						</label>
@@ -629,7 +629,7 @@ ${formData.support_needs}
 					<div>
 						<label
 							className="block text-sm font-medium mb-2"
-							style={{ color: "#2D5F3F" }}
+							style={{ color: "#5C7F4F" }}
 						>
 							Team Debriefing Plan
 						</label>
@@ -654,7 +654,7 @@ ${formData.support_needs}
 					<div>
 						<label
 							className="block text-sm font-medium mb-2"
-							style={{ color: "#2D5F3F" }}
+							style={{ color: "#5C7F4F" }}
 						>
 							What aspect of team interpreting typically stresses you most?
 						</label>
@@ -672,7 +672,7 @@ ${formData.support_needs}
 					<div>
 						<label
 							className="block text-sm font-medium mb-2"
-							style={{ color: "#2D5F3F" }}
+							style={{ color: "#5C7F4F" }}
 						>
 							How do you plan to manage this stress?
 						</label>
@@ -692,7 +692,7 @@ ${formData.support_needs}
 						<div>
 							<label
 								className="block text-sm font-medium mb-2"
-								style={{ color: "#2D5F3F" }}
+								style={{ color: "#5C7F4F" }}
 							>
 								For virtual: What technical or communication challenges do you
 								anticipate?
@@ -714,7 +714,7 @@ ${formData.support_needs}
 						<div>
 							<label
 								className="block text-sm font-medium mb-2"
-								style={{ color: "#2D5F3F" }}
+								style={{ color: "#5C7F4F" }}
 							>
 								For in-person: What environmental or positioning challenges
 								might arise?
@@ -734,7 +734,7 @@ ${formData.support_needs}
 					<div>
 						<label
 							className="block text-sm font-medium mb-2"
-							style={{ color: "#2D5F3F" }}
+							style={{ color: "#5C7F4F" }}
 						>
 							What potential conflicts or obstacles do you anticipate during the
 							assignment?
@@ -753,7 +753,7 @@ ${formData.support_needs}
 					<div>
 						<label
 							className="block text-sm font-medium mb-2"
-							style={{ color: "#2D5F3F" }}
+							style={{ color: "#5C7F4F" }}
 						>
 							What specific interpreting skills do you want to develop through
 							this team experience?
@@ -772,7 +772,7 @@ ${formData.support_needs}
 					<div>
 						<label
 							className="block text-sm font-medium mb-2"
-							style={{ color: "#2D5F3F" }}
+							style={{ color: "#5C7F4F" }}
 						>
 							How will you know if your interpreting team is functioning well?
 						</label>
@@ -790,7 +790,7 @@ ${formData.support_needs}
 					<div>
 						<label
 							className="block text-sm font-medium mb-2"
-							style={{ color: "#2D5F3F" }}
+							style={{ color: "#5C7F4F" }}
 						>
 							Addressing Disagreements or Conflicts
 						</label>
@@ -815,7 +815,7 @@ ${formData.support_needs}
 					<div>
 						<label
 							className="block text-sm font-medium mb-2"
-							style={{ color: "#2D5F3F" }}
+							style={{ color: "#5C7F4F" }}
 						>
 							What unique strengths will you bring to this interpreting team?
 						</label>
@@ -833,7 +833,7 @@ ${formData.support_needs}
 					<div>
 						<label
 							className="block text-sm font-medium mb-2"
-							style={{ color: "#2D5F3F" }}
+							style={{ color: "#5C7F4F" }}
 						>
 							Where might you need support from your team interpreter(s)?
 						</label>
@@ -851,7 +851,7 @@ ${formData.support_needs}
 					<div>
 						<label
 							className="block text-sm font-medium mb-2"
-							style={{ color: "#2D5F3F" }}
+							style={{ color: "#5C7F4F" }}
 						>
 							How will you ensure smooth transitions and maintain message
 							accuracy?
@@ -870,7 +870,7 @@ ${formData.support_needs}
 					<div>
 						<label
 							className="block text-sm font-medium mb-2"
-							style={{ color: "#2D5F3F" }}
+							style={{ color: "#5C7F4F" }}
 						>
 							What will you do if the team dynamic isn't working during the
 							assignment?
@@ -889,7 +889,7 @@ ${formData.support_needs}
 					<div>
 						<label
 							className="block text-sm font-medium mb-2"
-							style={{ color: "#2D5F3F" }}
+							style={{ color: "#5C7F4F" }}
 						>
 							How will you handle corrections or clarifications as a team?
 						</label>
@@ -907,7 +907,7 @@ ${formData.support_needs}
 					<div>
 						<label
 							className="block text-sm font-medium mb-2"
-							style={{ color: "#2D5F3F" }}
+							style={{ color: "#5C7F4F" }}
 						>
 							Roles and Responsibilities
 						</label>
@@ -932,7 +932,7 @@ ${formData.support_needs}
 					<div>
 						<label
 							className="block text-sm font-medium mb-2"
-							style={{ color: "#2D5F3F" }}
+							style={{ color: "#5C7F4F" }}
 						>
 							Describe what successful team interpreting looks like to you
 						</label>
@@ -950,7 +950,7 @@ ${formData.support_needs}
 					<div>
 						<label
 							className="block text-sm font-medium mb-2"
-							style={{ color: "#2D5F3F" }}
+							style={{ color: "#5C7F4F" }}
 						>
 							What would make you rate this interpreting assignment a 10/10?
 						</label>
@@ -968,7 +968,7 @@ ${formData.support_needs}
 					<div>
 						<label
 							className="block text-sm font-medium mb-2"
-							style={{ color: "#2D5F3F" }}
+							style={{ color: "#5C7F4F" }}
 						>
 							What specific behaviors or practices will you commit to during the
 							assignment?
@@ -987,7 +987,7 @@ ${formData.support_needs}
 					<div>
 						<label
 							className="block text-sm font-medium mb-2"
-							style={{ color: "#2D5F3F" }}
+							style={{ color: "#5C7F4F" }}
 						>
 							How do you want your interpreting partner(s) to remember your
 							contribution?
@@ -1006,7 +1006,7 @@ ${formData.support_needs}
 					<div>
 						<label
 							className="block text-sm font-medium mb-2"
-							style={{ color: "#2D5F3F" }}
+							style={{ color: "#5C7F4F" }}
 						>
 							How will you support each other if fatigue or challenges arise?
 						</label>
@@ -1038,7 +1038,7 @@ ${formData.support_needs}
 					>
 						<h3
 							className="text-lg font-semibold mb-4"
-							style={{ color: "#2D5F3F" }}
+							style={{ color: "#5C7F4F" }}
 						>
 							Your Commitment
 						</h3>
@@ -1075,7 +1075,7 @@ ${formData.support_needs}
 					>
 						<h3
 							className="text-lg font-semibold mb-4"
-							style={{ color: "#2D5F3F" }}
+							style={{ color: "#5C7F4F" }}
 						>
 							Pre-Assignment Confidence Check
 						</h3>
@@ -1084,7 +1084,7 @@ ${formData.support_needs}
 							<div>
 								<label
 									className="block text-sm font-medium mb-2"
-									style={{ color: "#2D5F3F" }}
+									style={{ color: "#5C7F4F" }}
 								>
 									How confident do you feel about the upcoming team interpreting
 									assignment? (1-10)
@@ -1116,7 +1116,7 @@ ${formData.support_needs}
 							<div>
 								<label
 									className="block text-sm font-medium mb-2"
-									style={{ color: "#2D5F3F" }}
+									style={{ color: "#5C7F4F" }}
 								>
 									In one word, how are you feeling about starting this team
 									interpreting experience?
@@ -1147,7 +1147,7 @@ ${formData.support_needs}
 							<div className="flex items-center justify-between mb-4">
 								<h3
 									className="text-lg font-semibold"
-									style={{ color: "#2D5F3F" }}
+									style={{ color: "#5C7F4F" }}
 								>
 									✅ Preparation Complete!
 								</h3>
@@ -1218,7 +1218,7 @@ ${formData.support_needs}
 							<div
 								className="w-12 h-12 rounded-xl flex items-center justify-center"
 								style={{
-									background: "linear-gradient(135deg, #2D5F3F, #5B9378)",
+									background: "linear-gradient(135deg, #5C7F4F, #5B9378)",
 									boxShadow: "0 2px 8px rgba(107, 139, 96, 0.3)",
 								}}
 							>
@@ -1237,7 +1237,7 @@ ${formData.support_needs}
 							onClick={onClose}
 							className="p-2 rounded-lg transition-all hover:opacity-90"
 							style={{
-								background: "linear-gradient(135deg, #2D5F3F, #5B9378)",
+								background: "linear-gradient(135deg, #5C7F4F, #5B9378)",
 							}}
 							aria-label="Close"
 						>
@@ -1317,7 +1317,7 @@ ${formData.support_needs}
 							onClick={handleNext}
 							className="px-6 py-2 rounded-lg flex items-center transition-all"
 							style={{
-								background: "linear-gradient(135deg, #2D5F3F, #5B9378)",
+								background: "linear-gradient(135deg, #5C7F4F, #5B9378)",
 								color: "#FFFFFF",
 								boxShadow: "0 2px 8px rgba(107, 139, 96, 0.3)",
 							}}
@@ -1344,7 +1344,7 @@ ${formData.support_needs}
 								background:
 									isSaving || showSummary
 										? "linear-gradient(145deg, #9CA3AF 0%, #6B7280 100%)"
-										: "linear-gradient(135deg, #2D5F3F, #5B9378)",
+										: "linear-gradient(135deg, #5C7F4F, #5B9378)",
 								color: "#FFFFFF",
 								boxShadow: "0 2px 8px rgba(107, 139, 96, 0.3)",
 								cursor: isSaving || showSummary ? "not-allowed" : "pointer",

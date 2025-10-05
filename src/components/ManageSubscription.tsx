@@ -223,7 +223,7 @@ export const ManageSubscription: React.FC = () => {
 				<div className="text-center">
 					<div
 						className="animate-spin rounded-full h-12 w-12 border-b-2"
-						style={{ borderColor: "#2D5F3F" }}
+						style={{ borderColor: "#5C7F4F" }}
 					></div>
 					<p className="mt-4 text-gray-600">Loading subscription details...</p>
 				</div>
@@ -241,7 +241,7 @@ export const ManageSubscription: React.FC = () => {
 			<a
 				href="#main-content"
 				className="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 text-white px-4 py-2 rounded"
-				style={{ backgroundColor: "#2D5F3F" }}
+				style={{ backgroundColor: "#5C7F4F" }}
 			>
 				Skip to main content
 			</a>
@@ -255,7 +255,7 @@ export const ManageSubscription: React.FC = () => {
 								<Package
 									className="h-8 w-8 mr-3"
 									aria-hidden="true"
-									style={{ color: "#2D5F3F" }}
+									style={{ color: "#5C7F4F" }}
 								/>
 								<div>
 									<h1 className="text-2xl font-bold text-gray-900">

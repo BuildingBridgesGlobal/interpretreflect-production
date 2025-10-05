@@ -229,7 +229,7 @@ export const WelcomeModal: React.FC<WelcomeModalProps> = ({
 								key={index}
 								className="h-1 flex-1 rounded-full transition-all"
 								style={{
-									backgroundColor: index <= currentStep ? "#2D5F3F" : "#E5E5E5",
+									backgroundColor: index <= currentStep ? "#5C7F4F" : "#E5E5E5",
 								}}
 							/>
 						))}
@@ -254,7 +254,7 @@ export const WelcomeModal: React.FC<WelcomeModalProps> = ({
 								style={{
 									borderColor:
 										answers[currentQuestion.id] === option.value
-											? "#2D5F3F"
+											? "#5C7F4F"
 											: "#E5E5E5",
 									backgroundColor:
 										answers[currentQuestion.id] === option.value
@@ -275,7 +275,7 @@ export const WelcomeModal: React.FC<WelcomeModalProps> = ({
 								}}
 							>
 								<div className="flex items-center gap-3">
-									<div style={{ color: "#2D5F3F" }}>{option.icon}</div>
+									<div style={{ color: "#5C7F4F" }}>{option.icon}</div>
 									<span className="font-medium" style={{ color: "#1A1A1A" }}>
 										{option.label}
 									</span>

@@ -165,7 +165,7 @@ export const DecideFrameworkReflection: React.FC<
 						<div
 							className="w-12 h-12 rounded-xl flex items-center justify-center"
 							style={{
-								background: "linear-gradient(135deg, #2D5F3F, #5B9378)",
+								background: "linear-gradient(135deg, #5C7F4F, #5B9378)",
 								boxShadow: "0 2px 8px rgba(107, 139, 96, 0.3)",
 							}}
 						>
@@ -188,7 +188,7 @@ export const DecideFrameworkReflection: React.FC<
 						onClick={onClose}
 						className="p-2 rounded-lg transition-all hover:opacity-90"
 						style={{
-							background: "linear-gradient(135deg, #2D5F3F, #5B9378)",
+							background: "linear-gradient(135deg, #5C7F4F, #5B9378)",
 						}}
 						aria-label="Close dialog"
 					>
@@ -234,7 +234,7 @@ export const DecideFrameworkReflection: React.FC<
 							>
 								<span
 									className="text-2xl font-bold"
-									style={{ color: "#2D5F3F" }}
+									style={{ color: "#5C7F4F" }}
 								>
 									{currentStepData.letter}
 								</span>
@@ -261,7 +261,7 @@ export const DecideFrameworkReflection: React.FC<
 						>
 							<p
 								className="text-sm leading-relaxed"
-								style={{ color: "#2D5F3F", lineHeight: "1.7" }}
+								style={{ color: "#5C7F4F", lineHeight: "1.7" }}
 							>
 								{currentStepData.question}
 							</p>
@@ -271,7 +271,7 @@ export const DecideFrameworkReflection: React.FC<
 							<label
 								htmlFor={`response-${currentStep}`}
 								className="block text-sm font-medium mb-2"
-								style={{ color: "#2D5F3F" }}
+								style={{ color: "#5C7F4F" }}
 							>
 								Your Reflection
 							</label>
@@ -312,7 +312,7 @@ export const DecideFrameworkReflection: React.FC<
 							border: "1px solid rgba(107, 139, 96, 0.2)",
 						}}
 					>
-						<p className="text-sm" style={{ color: "#2D5F3F" }}>
+						<p className="text-sm" style={{ color: "#5C7F4F" }}>
 							<strong>Why this matters:</strong>{" "}
 							{currentStep === 0 &&
 								"Detecting emotional content helps you prepare for and respond to the human elements that influence communication."}
@@ -365,7 +365,7 @@ export const DecideFrameworkReflection: React.FC<
 								background:
 									isSubmitting || hasSaved
 										? "#CCCCCC"
-										: "linear-gradient(135deg, #2D5F3F, #5B9378)",
+										: "linear-gradient(135deg, #5C7F4F, #5B9378)",
 								boxShadow:
 									isSubmitting || hasSaved
 										? "none"

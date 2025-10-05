@@ -39,11 +39,11 @@ const StepIndicator: React.FC<{ currentStep: number; steps: string[] }> = ({
 							}`}
 							style={{
 								backgroundColor:
-									index + 1 < currentStep ? "#2D5F3F" : undefined,
+									index + 1 < currentStep ? "#5C7F4F" : undefined,
 								borderColor:
-									index + 1 === currentStep ? "#2D5F3F" : undefined,
+									index + 1 === currentStep ? "#5C7F4F" : undefined,
 								color:
-									index + 1 === currentStep ? "#2D5F3F" : undefined,
+									index + 1 === currentStep ? "#5C7F4F" : undefined,
 							}}
 						>
 							{index + 1 < currentStep ? (
@@ -69,7 +69,7 @@ const StepIndicator: React.FC<{ currentStep: number; steps: string[] }> = ({
 							}`}
 							style={{
 								backgroundColor:
-									index + 1 < currentStep ? "#2D5F3F" : undefined,
+									index + 1 < currentStep ? "#5C7F4F" : undefined,
 							}}
 						/>
 					)}
@@ -193,11 +193,11 @@ const PaymentForm: React.FC<{
 			{/* Security badges */}
 			<div className="flex items-center justify-center gap-4 py-4 bg-gray-50 rounded-lg">
 				<div className="flex items-center gap-1 text-sm text-gray-600">
-					<Shield className="w-4 h-4" style={{ color: "#2D5F3F" }} />
+					<Shield className="w-4 h-4" style={{ color: "#5C7F4F" }} />
 					<span>SSL Secured</span>
 				</div>
 				<div className="flex items-center gap-1 text-sm text-gray-600">
-					<Lock className="w-4 h-4" style={{ color: "#2D5F3F" }} />
+					<Lock className="w-4 h-4" style={{ color: "#5C7F4F" }} />
 					<span>PCI Compliant</span>
 				</div>
 			</div>
@@ -218,7 +218,7 @@ const PaymentForm: React.FC<{
 					style={{
 						background: processing
 							? "#ccc"
-							: "linear-gradient(135deg, #2D5F3F, rgb(107, 142, 94))",
+							: "linear-gradient(135deg, #5C7F4F, rgb(107, 142, 94))",
 					}}
 				>
 					<ArrowLeft className="w-5 h-5" />
@@ -233,7 +233,7 @@ const PaymentForm: React.FC<{
 						background:
 							processing
 								? "#ccc"
-								: "linear-gradient(135deg, #2D5F3F, rgb(107, 142, 94))",
+								: "linear-gradient(135deg, #5C7F4F, rgb(107, 142, 94))",
 					}}
 				>
 					{processing ? (
@@ -415,7 +415,7 @@ export const SeamlessSignup: React.FC = () => {
           box-shadow: none !important;
         }
         input:focus-visible {
-          outline-color: #2D5F3F !important;
+          outline-color: #5C7F4F !important;
         }
       `}</style>
 			{/* Back to Landing Button */}
@@ -423,7 +423,7 @@ export const SeamlessSignup: React.FC = () => {
 				<button
 					onClick={() => navigate("/")}
 					className="flex items-center gap-2 px-4 py-2 text-white rounded-lg shadow-md transition-all font-medium"
-					style={{ backgroundColor: "#2D5F3F" }}
+					style={{ backgroundColor: "#5C7F4F" }}
 				>
 					<ArrowLeft className="w-5 h-5" />
 					<span>Back to Home</span>
@@ -471,7 +471,7 @@ export const SeamlessSignup: React.FC = () => {
 											className="w-full px-4 py-3 border rounded-xl focus:ring-2 focus:border-transparent transition-all"
 											style={
 												{
-													"--tw-ring-color": "#2D5F3F",
+													"--tw-ring-color": "#5C7F4F",
 												} as React.CSSProperties
 											}
 											placeholder="John Doe"
@@ -494,7 +494,7 @@ export const SeamlessSignup: React.FC = () => {
 											className="w-full px-4 py-3 border rounded-xl focus:ring-2 focus:border-transparent transition-all"
 											style={
 												{
-													"--tw-ring-color": "#2D5F3F",
+													"--tw-ring-color": "#5C7F4F",
 												} as React.CSSProperties
 											}
 											placeholder="john@example.com"
@@ -523,7 +523,7 @@ export const SeamlessSignup: React.FC = () => {
 											}`}
 											style={
 												{
-													"--tw-ring-color": "#2D5F3F",
+													"--tw-ring-color": "#5C7F4F",
 												} as React.CSSProperties
 											}
 											placeholder="••••••••"
@@ -560,15 +560,15 @@ export const SeamlessSignup: React.FC = () => {
 										checked={formData.acceptedTerms || false}
 										onChange={(e) => setFormData({ ...formData, acceptedTerms: e.target.checked })}
 										className="w-4 h-4 rounded border-gray-300 flex-shrink-0"
-										style={{ accentColor: "#2D5F3F" }}
+										style={{ accentColor: "#5C7F4F" }}
 									/>
 									<label htmlFor="terms" className="text-xs text-gray-600">
 										I agree to the{" "}
-										<a href="/terms" target="_blank" className="text-[#2D5F3F] underline hover:text-[#1f4229]">
+										<a href="/terms" target="_blank" className="text-[#5C7F4F] underline hover:text-[#4A6A3F]">
 											Terms of Service
 										</a>{" "}
 										and{" "}
-										<a href="/privacy" target="_blank" className="text-[#2D5F3F] underline hover:text-[#1f4229]">
+										<a href="/privacy" target="_blank" className="text-[#5C7F4F] underline hover:text-[#4A6A3F]">
 											Privacy Policy
 										</a>
 									</label>
@@ -592,7 +592,7 @@ export const SeamlessSignup: React.FC = () => {
 											!formData.name ||
 											!formData.acceptedTerms
 												? "#ccc"
-												: "linear-gradient(135deg, #2D5F3F, rgb(107, 142, 94))",
+												: "linear-gradient(135deg, #5C7F4F, rgb(107, 142, 94))",
 									}}
 								>
 									{loading ? (
@@ -615,7 +615,7 @@ export const SeamlessSignup: React.FC = () => {
 										<button
 											onClick={() => setShowSignInModal(true)}
 											className="ml-1 px-3 py-1 text-white rounded-md font-semibold transition-all"
-											style={{ background: "#2D5F3F" }}
+											style={{ background: "#5C7F4F" }}
 										>
 											Sign In
 										</button>
@@ -645,7 +645,7 @@ export const SeamlessSignup: React.FC = () => {
 										style={{
 											borderColor:
 												formData.plan === "essential"
-													? "#2D5F3F"
+													? "#5C7F4F"
 													: undefined,
 										}}
 										role="button"
@@ -669,7 +669,7 @@ export const SeamlessSignup: React.FC = () => {
 											<div className="text-right">
 												<p
 													className="text-2xl font-bold"
-													style={{ color: "#2D5F3F" }}
+													style={{ color: "#5C7F4F" }}
 												>
 													$12.99
 												</p>
@@ -680,7 +680,7 @@ export const SeamlessSignup: React.FC = () => {
 											<li className="flex items-center gap-2 text-sm">
 												<Check
 													className="w-4 h-4"
-													style={{ color: "#2D5F3F" }}
+													style={{ color: "#5C7F4F" }}
 												/>
 												<span className="text-black">
 													All wellness exercises
@@ -689,7 +689,7 @@ export const SeamlessSignup: React.FC = () => {
 											<li className="flex items-center gap-2 text-sm">
 												<Check
 													className="w-4 h-4"
-													style={{ color: "#2D5F3F" }}
+													style={{ color: "#5C7F4F" }}
 												/>
 												<span className="text-black">
 													Elya AI companion included
@@ -698,14 +698,14 @@ export const SeamlessSignup: React.FC = () => {
 											<li className="flex items-center gap-2 text-sm">
 												<Check
 													className="w-4 h-4"
-													style={{ color: "#2D5F3F" }}
+													style={{ color: "#5C7F4F" }}
 												/>
 												<span className="text-black">Progress tracking</span>
 											</li>
 											<li className="flex items-center gap-2 text-sm">
 												<Check
 													className="w-4 h-4"
-													style={{ color: "#2D5F3F" }}
+													style={{ color: "#5C7F4F" }}
 												/>
 												<span className="text-black">
 													Mobile & desktop access
@@ -766,7 +766,7 @@ export const SeamlessSignup: React.FC = () => {
 										className="px-6 py-3 rounded-lg font-semibold text-white transition-all flex items-center justify-center gap-2"
 										style={{
 											background:
-												"linear-gradient(135deg, #2D5F3F, rgb(107, 142, 94))",
+												"linear-gradient(135deg, #5C7F4F, rgb(107, 142, 94))",
 										}}
 									>
 										<ArrowLeft className="w-5 h-5" />
@@ -780,7 +780,7 @@ export const SeamlessSignup: React.FC = () => {
 										style={{
 											background: !formData.plan
 												? "#ccc"
-												: "linear-gradient(135deg, #2D5F3F, rgb(107, 142, 94))",
+												: "linear-gradient(135deg, #5C7F4F, rgb(107, 142, 94))",
 										}}
 									>
 										Continue to Payment
@@ -811,7 +811,7 @@ export const SeamlessSignup: React.FC = () => {
 											<span className="font-semibold text-gray-900">Total</span>
 											<span
 												className="font-bold text-lg"
-												style={{ color: "#2D5F3F" }}
+												style={{ color: "#5C7F4F" }}
 											>
 												$12.99/month
 											</span>
@@ -837,18 +837,18 @@ export const SeamlessSignup: React.FC = () => {
 						<div className="flex items-center gap-1">
 							<Shield
 								className="w-4 h-4"
-								style={{ color: "#2D5F3F" }}
+								style={{ color: "#5C7F4F" }}
 							/>
 							<span>SSL Secured</span>
 						</div>
 						<div className="flex items-center gap-1">
-							<Lock className="w-4 h-4" style={{ color: "#2D5F3F" }} />
+							<Lock className="w-4 h-4" style={{ color: "#5C7F4F" }} />
 							<span>256-bit Encryption</span>
 						</div>
 						<div className="flex items-center gap-1">
 							<CheckCircle
 								className="w-4 h-4"
-								style={{ color: "#2D5F3F" }}
+								style={{ color: "#5C7F4F" }}
 							/>
 							<span>256-bit Encryption</span>
 						</div>

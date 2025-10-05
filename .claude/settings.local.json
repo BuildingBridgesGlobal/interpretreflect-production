@@ -29,7 +29,10 @@
       "Bash(taskkill:*)",
       "Bash(timeout 5 npm run dev)",
       "Bash(grep:*)",
-      "Bash(npx supabase:*)"
+      "Bash(npx supabase:*)",
+      "Bash(https://kvguxuxanpynwdffpssm.functions.supabase.co/delete-auth-user)",
+      "Bash(echo \"Run these commands to update Supabase secrets (replace with your actual live keys):\n\n# Update Stripe Secret Key\nnpx supabase secrets set STRIPE_SECRET_KEY=sk_live_YOUR_KEY_HERE --project-ref kvguxuxanpynwdffpssm\n\n# Update Stripe Webhook Secret  \nnpx supabase secrets set STRIPE_WEBHOOK_SECRET=whsec_YOUR_WEBHOOK_SECRET_HERE --project-ref kvguxuxanpynwdffpssm\")",
+      "Bash(find:*)"
     ],
     "deny": [],
     "ask": []

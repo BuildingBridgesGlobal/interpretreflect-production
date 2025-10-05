@@ -4,6 +4,30 @@ export default {
 	theme: {
 		extend: {
 			colors: {
+				// InterpretReflect Brand Colors - WCAG AAA Compliant
+				brand: {
+					// Primary Green (Logo) - Growth & Renewal
+					primary: "#5C7F4F",
+					"primary-hover": "#4A6A3F",
+					"primary-light": "#E8F3E5",
+
+					// Calm Blue - Clarity & Trust (Data/Insights)
+					blue: "#4A7C9B",
+					"blue-light": "#E8F1F7",
+
+					// Warm Taupe - Grounding & Humanity
+					taupe: "#6B5B4A",
+					"taupe-light": "#F5F3F1",
+
+					// Functional Colors
+					warning: "#C07A3B",
+					"warning-light": "#FEF3E8",
+					error: "#B94A48",
+					"error-light": "#FDEEED",
+					success: "#5C7F4F",
+					"success-light": "#E8F3E5",
+				},
+				// Legacy sage colors (keeping for backwards compatibility)
 				sage: {
 					50: "#f6f7f4",
 					100: "#e8ebe3",

@@ -246,7 +246,7 @@ const getRiskLevelDetails = (level: "low" | "moderate" | "high" | "severe") => {
 				title: "Healthy Balance",
 				description: "You're managing well with good energy reserves",
 				icon: CheckCircle,
-				color: "#2D5F3F",
+				color: "#5C7F4F",
 				bgColor: "#F0F5ED",
 				borderColor: "#7A9B6E",
 			};
@@ -605,7 +605,7 @@ const DailyBurnoutGaugeAccessible: React.FC<DailyBurnoutGaugeProps> = ({
 								onClick={onClose}
 								className="p-2 rounded-lg transition-all text-white hover:opacity-90"
 								style={{
-									background: "linear-gradient(135deg, #2D5F3F, #5B9378)",
+									background: "linear-gradient(135deg, #5C7F4F, #5B9378)",
 								}}
 								aria-label="Close assessment results"
 							>
@@ -671,7 +671,7 @@ const DailyBurnoutGaugeAccessible: React.FC<DailyBurnoutGaugeProps> = ({
 											<div className="flex items-center gap-3">
 												<Icon
 													className="h-5 w-5"
-													style={{ color: "#2D5F3F" }}
+													style={{ color: "#5C7F4F" }}
 												/>
 												<span
 													className="font-medium"
@@ -683,7 +683,7 @@ const DailyBurnoutGaugeAccessible: React.FC<DailyBurnoutGaugeProps> = ({
 											<div className="flex items-center gap-2">
 												<span
 													className="font-bold"
-													style={{ color: value >= 3 ? "#2D5F3F" : "#C87137" }}
+													style={{ color: value >= 3 ? "#5C7F4F" : "#C87137" }}
 												>
 													{value}/5
 												</span>
@@ -718,7 +718,7 @@ const DailyBurnoutGaugeAccessible: React.FC<DailyBurnoutGaugeProps> = ({
 									<li key={index} className="flex items-start gap-2">
 										<CheckCircle
 											className="h-5 w-5 mt-0.5 flex-shrink-0"
-											style={{ color: "#2D5F3F" }}
+											style={{ color: "#5C7F4F" }}
 										/>
 										<span className="text-sm" style={{ color: "#4A5568" }}>
 											{rec}
@@ -738,7 +738,7 @@ const DailyBurnoutGaugeAccessible: React.FC<DailyBurnoutGaugeProps> = ({
 								className="flex-1 py-3 px-4 rounded-xl font-medium transition-all"
 								style={{
 									backgroundColor: "#F0F5ED",
-									color: "#2D5F3F",
+									color: "#5C7F4F",
 									border: "2px solid #7A9B6E",
 								}}
 								aria-label="Add context about today"
@@ -748,7 +748,7 @@ const DailyBurnoutGaugeAccessible: React.FC<DailyBurnoutGaugeProps> = ({
 							<button
 								onClick={onClose}
 								className="flex-1 py-3 px-4 rounded-xl font-medium text-white transition-all"
-								style={{ backgroundColor: "#2D5F3F" }}
+								style={{ backgroundColor: "#5C7F4F" }}
 								aria-label="Try a resilience reset"
 							>
 								Try a Reset Tool
@@ -780,7 +780,7 @@ const DailyBurnoutGaugeAccessible: React.FC<DailyBurnoutGaugeProps> = ({
 						<button
 							type="submit"
 							className="w-full py-3 rounded-xl font-medium text-white transition-all"
-							style={{ backgroundColor: "#2D5F3F" }}
+							style={{ backgroundColor: "#5C7F4F" }}
 						>
 							Save & Close
 						</button>
@@ -814,7 +814,7 @@ const DailyBurnoutGaugeAccessible: React.FC<DailyBurnoutGaugeProps> = ({
 							onClick={onClose}
 							className="p-2 rounded-lg transition-all text-white hover:opacity-90"
 							style={{
-								background: "linear-gradient(135deg, #2D5F3F, #5B9378)",
+								background: "linear-gradient(135deg, #5C7F4F, #5B9378)",
 							}}
 							aria-label="Close daily burnout gauge"
 						>
@@ -855,7 +855,7 @@ const DailyBurnoutGaugeAccessible: React.FC<DailyBurnoutGaugeProps> = ({
 								className="h-full transition-all duration-300"
 								style={{
 									width: `${progress}%`,
-									backgroundColor: "#2D5F3F",
+									backgroundColor: "#5C7F4F",
 								}}
 								role="progressbar"
 								aria-valuenow={progress}
@@ -872,7 +872,7 @@ const DailyBurnoutGaugeAccessible: React.FC<DailyBurnoutGaugeProps> = ({
 							className="flex items-center gap-3 text-lg font-semibold mb-3"
 							style={{ color: "#2D3748" }}
 						>
-							<currentQ.icon className="h-6 w-6" style={{ color: "#2D5F3F" }} />
+							<currentQ.icon className="h-6 w-6" style={{ color: "#5C7F4F" }} />
 							{currentQ.question}
 						</legend>
 
@@ -894,7 +894,7 @@ const DailyBurnoutGaugeAccessible: React.FC<DailyBurnoutGaugeProps> = ({
 											option.value
 												? "#F0F5ED"
 												: "#FFFFFF",
-										border: `2px solid ${answers[currentQ.id as keyof typeof answers] === option.value ? "#2D5F3F" : "#E2E8F0"}`,
+										border: `2px solid ${answers[currentQ.id as keyof typeof answers] === option.value ? "#5C7F4F" : "#E2E8F0"}`,
 									}}
 								>
 									<input
@@ -912,7 +912,7 @@ const DailyBurnoutGaugeAccessible: React.FC<DailyBurnoutGaugeProps> = ({
 											borderColor:
 												answers[currentQ.id as keyof typeof answers] ===
 												option.value
-													? "#2D5F3F"
+													? "#5C7F4F"
 													: "#CBD5E0",
 										}}
 									>
@@ -920,7 +920,7 @@ const DailyBurnoutGaugeAccessible: React.FC<DailyBurnoutGaugeProps> = ({
 											option.value && (
 											<div
 												className="w-3 h-3 rounded-full"
-												style={{ backgroundColor: "#2D5F3F" }}
+												style={{ backgroundColor: "#5C7F4F" }}
 											/>
 										)}
 									</div>
@@ -947,7 +947,7 @@ const DailyBurnoutGaugeAccessible: React.FC<DailyBurnoutGaugeProps> = ({
 														: "#FFF5EE",
 											color:
 												option.value >= 4
-													? "#2D5F3F"
+													? "#5C7F4F"
 													: option.value >= 3
 														? "#8B7355"
 														: "#C87137",
@@ -969,7 +969,7 @@ const DailyBurnoutGaugeAccessible: React.FC<DailyBurnoutGaugeProps> = ({
 								className="px-6 py-3 rounded-xl font-medium transition-all"
 								style={{
 									backgroundColor: "#F0F5ED",
-									color: "#2D5F3F",
+									color: "#5C7F4F",
 									border: "2px solid #7A9B6E",
 								}}
 								aria-label="Go to previous question"
@@ -985,7 +985,7 @@ const DailyBurnoutGaugeAccessible: React.FC<DailyBurnoutGaugeProps> = ({
 								background:
 									answers[currentQ.id as keyof typeof answers] === 0
 										? "#A0AEC0"
-										: "linear-gradient(135deg, #2D5F3F, #5B9378)",
+										: "linear-gradient(135deg, #5C7F4F, #5B9378)",
 							}}
 							disabled={answers[currentQ.id as keyof typeof answers] === 0}
 							aria-label={

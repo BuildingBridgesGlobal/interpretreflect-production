@@ -55,7 +55,7 @@ export const WCAG_COLORS = {
 	backgrounds: {
 		white: "#FFFFFF",
 		light: "#F5F7F5",
-		sage: "#2D5F3F", // Can use white text (5.2:1)
+		sage: "#5C7F4F", // Can use white text (5.2:1)
 		darkSage: "#4A6B3E", // Can use white text (7.1:1)
 		error: "#B91C1C", // Can use white text (6.0:1)
 		warning: "#92400E", // Can use white text (8.9:1)
@@ -66,16 +66,16 @@ export const WCAG_COLORS = {
 	// Button combinations (all meet WCAG AA)
 	buttons: {
 		primary: {
-			bg: "#2D5F3F",
+			bg: "#5C7F4F",
 			text: "#FFFFFF",
 			hover: "#4A6B3E",
 			focus: "#3A5A2E",
 		},
 		secondary: {
 			bg: "#FFFFFF",
-			text: "#2D5F3F",
+			text: "#5C7F4F",
 			hover: "#F5F7F5",
-			border: "#2D5F3F",
+			border: "#5C7F4F",
 		},
 		danger: {
 			bg: "#B91C1C",

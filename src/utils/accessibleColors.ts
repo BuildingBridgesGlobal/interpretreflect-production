@@ -5,7 +5,7 @@ export const colors = {
 	// Primary Greens (WCAG AA Compliant for normal text on white)
 	primary: {
 		forest: "#4A6B3E", // 7.02:1 contrast - Headers, primary buttons
-		sage: "#2D5F3F", // 4.92:1 contrast - Secondary buttons, nav
+		sage: "#5C7F4F", // 4.92:1 contrast - Secondary buttons, nav
 		deepForest: "#3D5A33", // 9.42:1 contrast - Text, strong emphasis
 		darkText: "#2A3F26", // 13.5:1 contrast - Body text alternative
 	},
@@ -40,7 +40,7 @@ export const colors = {
 // Gradient definitions
 export const gradients = {
 	// Header gradient (accessible)
-	header: "linear-gradient(135deg, #4A6B3E 0%, #2D5F3F 100%)",
+	header: "linear-gradient(135deg, #4A6B3E 0%, #5C7F4F 100%)",
 
 	// Button gradient (accessible)
 	button: "linear-gradient(145deg, #5F7F55 0%, #4A6B3E 100%)",
@@ -49,7 +49,7 @@ export const gradients = {
 	background: "linear-gradient(180deg, #FAF9F6 0%, #F0EDE8 100%)",
 
 	// Card hover gradient
-	cardHover: "linear-gradient(135deg, #2D5F3F 0%, #5B9378 100%)",
+	cardHover: "linear-gradient(135deg, #5C7F4F 0%, #5B9378 100%)",
 };
 
 // Helper function to get RGBA with opacity
@@ -65,7 +65,7 @@ export const colorReplacements = {
 	"#A8C09A": colors.primary.sage,
 	"#B5CCA8": colors.secondary.mutedSage,
 	"#C8D5C8": colors.secondary.lightTint,
-	"rgba(168, 192, 154,": `rgba(92, 127, 79,`, // #2D5F3F in RGB
+	"rgba(168, 192, 154,": `rgba(92, 127, 79,`, // #5C7F4F in RGB
 	"rgba(181, 204, 168,": `rgba(122, 155, 110,`, // #7A9B6E in RGB
 	"rgba(200, 213, 200,": `rgba(232, 240, 228,`, // #E8F0E4 in RGB
 };

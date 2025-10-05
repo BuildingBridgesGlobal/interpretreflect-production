@@ -262,7 +262,7 @@ export const HeaderDemo: React.FC = () => {
 								fontSize: "1.125rem",
 								fontWeight: 600,
 								color: "#FFFFFF",
-								backgroundColor: "#2D5F3F",
+								backgroundColor: "#5C7F4F",
 								border: "none",
 								borderRadius: "0.5rem",
 								cursor: "pointer",

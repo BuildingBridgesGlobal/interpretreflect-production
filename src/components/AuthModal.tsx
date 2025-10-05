@@ -157,7 +157,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({
 							<div className="relative">
 								<Mail
 									className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4"
-									style={{ color: "#2D5F3F" }}
+									style={{ color: "#5C7F4F" }}
 								/>
 								<input
 									type="email"
@@ -185,7 +185,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({
 							<div className="relative">
 								<Lock
 									className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4"
-									style={{ color: "#2D5F3F" }}
+									style={{ color: "#5C7F4F" }}
 								/>
 								<input
 									type={showPassword ? "text" : "password"}
@@ -225,7 +225,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({
 								<div className="relative">
 									<Lock
 										className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4"
-										style={{ color: "#2D5F3F" }}
+										style={{ color: "#5C7F4F" }}
 									/>
 									<input
 										type={showPassword ? "text" : "password"}
@@ -252,7 +252,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({
 						style={{
 							background: loading
 								? "#6B7C6B"
-								: "linear-gradient(135deg, #2D5F3F 0%, #8FA881 100%)",
+								: "linear-gradient(135deg, #5C7F4F 0%, #8FA881 100%)",
 							boxShadow: "0 4px 15px rgba(45, 95, 63, 0.3)",
 						}}
 					>
@@ -280,7 +280,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({
 								setError("");
 							}}
 							className="ml-1 px-3 py-1 text-white rounded-md font-semibold transition-all"
-							style={{ background: "#2D5F3F" }}
+							style={{ background: "#5C7F4F" }}
 						>
 							{mode === "login" ? "Sign Up" : "Sign In"}
 						</button>

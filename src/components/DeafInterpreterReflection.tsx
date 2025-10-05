@@ -259,7 +259,7 @@ const DeafInterpreterReflection: React.FC<DeafInterpreterReflectionProps> = ({
 			fields: (
 				<div className="space-y-6">
 					<div>
-						<label className="block text-sm font-medium mb-2" style={{ color: "#2D5F3F" }}>
+						<label className="block text-sm font-medium mb-2" style={{ color: "#5C7F4F" }}>
 							As you begin, what sensations do you notice in your body?
 						</label>
 						<textarea
@@ -273,7 +273,7 @@ const DeafInterpreterReflection: React.FC<DeafInterpreterReflectionProps> = ({
 					</div>
 
 					<div>
-						<label className="block text-sm font-medium mb-3" style={{ color: "#2D5F3F" }}>
+						<label className="block text-sm font-medium mb-3" style={{ color: "#5C7F4F" }}>
 							Where is your nervous system right now? {formData.nervous_system_state}/10
 						</label>
 						<input
@@ -295,7 +295,7 @@ const DeafInterpreterReflection: React.FC<DeafInterpreterReflectionProps> = ({
 					</div>
 
 					<div>
-						<label className="block text-sm font-medium mb-3" style={{ color: "#2D5F3F" }}>
+						<label className="block text-sm font-medium mb-3" style={{ color: "#5C7F4F" }}>
 							What emotions are present for you right now? (Select all that apply)
 						</label>
 						<div className="grid grid-cols-2 gap-2">
@@ -343,7 +343,7 @@ const DeafInterpreterReflection: React.FC<DeafInterpreterReflectionProps> = ({
 					</div>
 
 					<div>
-						<label className="block text-sm font-medium mb-3" style={{ color: "#2D5F3F" }}>
+						<label className="block text-sm font-medium mb-3" style={{ color: "#5C7F4F" }}>
 							How clear or foggy do these emotions feel? {formData.emotional_clarity}/10
 						</label>
 						<input
@@ -362,7 +362,7 @@ const DeafInterpreterReflection: React.FC<DeafInterpreterReflectionProps> = ({
 					</div>
 
 					<div>
-						<label className="block text-sm font-medium mb-3" style={{ color: "#2D5F3F" }}>
+						<label className="block text-sm font-medium mb-3" style={{ color: "#5C7F4F" }}>
 							How is your visual-linguistic processing energy? {formData.visual_linguistic_energy}
 							/10
 						</label>
@@ -392,7 +392,7 @@ const DeafInterpreterReflection: React.FC<DeafInterpreterReflectionProps> = ({
 			fields: (
 				<div className="space-y-6">
 					<div>
-						<label className="block text-sm font-medium mb-2" style={{ color: "#2D5F3F" }}>
+						<label className="block text-sm font-medium mb-2" style={{ color: "#5C7F4F" }}>
 							Describe the interpreting assignment
 						</label>
 						<textarea
@@ -413,7 +413,7 @@ const DeafInterpreterReflection: React.FC<DeafInterpreterReflectionProps> = ({
 					</div>
 
 					<div>
-						<label className="block text-sm font-medium mb-3" style={{ color: "#2D5F3F" }}>
+						<label className="block text-sm font-medium mb-3" style={{ color: "#5C7F4F" }}>
 							What language modalities were used? (Select all that apply)
 						</label>
 						<div className="space-y-2">
@@ -460,7 +460,7 @@ const DeafInterpreterReflection: React.FC<DeafInterpreterReflectionProps> = ({
 					</div>
 
 					<div>
-						<label className="block text-sm font-medium mb-3" style={{ color: "#2D5F3F" }}>
+						<label className="block text-sm font-medium mb-3" style={{ color: "#5C7F4F" }}>
 							How linguistically complex was this assignment? {formData.linguistic_complexity}/10
 						</label>
 						<input
@@ -481,7 +481,7 @@ const DeafInterpreterReflection: React.FC<DeafInterpreterReflectionProps> = ({
 					</div>
 
 					<div>
-						<label className="block text-sm font-medium mb-3" style={{ color: "#2D5F3F" }}>
+						<label className="block text-sm font-medium mb-3" style={{ color: "#5C7F4F" }}>
 							How was the visual environment (lighting, sightlines, visual noise)?{" "}
 							{formData.visual_environment}/10
 						</label>
@@ -501,7 +501,7 @@ const DeafInterpreterReflection: React.FC<DeafInterpreterReflectionProps> = ({
 					</div>
 
 					<div>
-						<label className="block text-sm font-medium mb-3" style={{ color: "#2D5F3F" }}>
+						<label className="block text-sm font-medium mb-3" style={{ color: "#5C7F4F" }}>
 							What was your overall sensory processing load? {formData.sensory_load}/10
 						</label>
 						<input
@@ -520,7 +520,7 @@ const DeafInterpreterReflection: React.FC<DeafInterpreterReflectionProps> = ({
 					</div>
 
 					<div>
-						<label className="block text-sm font-medium mb-3" style={{ color: "#2D5F3F" }}>
+						<label className="block text-sm font-medium mb-3" style={{ color: "#5C7F4F" }}>
 							How demanding was the cognitive processing? {formData.cognitive_load}/10
 						</label>
 						<input
@@ -554,14 +554,14 @@ const DeafInterpreterReflection: React.FC<DeafInterpreterReflectionProps> = ({
 							border: "1px solid rgba(107, 139, 96, 0.2)",
 						}}
 					>
-						<p className="text-sm" style={{ color: "#2D5F3F" }}>
+						<p className="text-sm" style={{ color: "#5C7F4F" }}>
 							<strong>Note:</strong> DI/CDI work is inherently collaborative. Co-regulation and
 							team attunement are essential for wellbeing.
 						</p>
 					</div>
 
 					<div>
-						<label className="block text-sm font-medium mb-2" style={{ color: "#2D5F3F" }}>
+						<label className="block text-sm font-medium mb-2" style={{ color: "#5C7F4F" }}>
 							Who did you team with? (Optional name/description)
 						</label>
 						<input
@@ -575,7 +575,7 @@ const DeafInterpreterReflection: React.FC<DeafInterpreterReflectionProps> = ({
 					</div>
 
 					<div>
-						<label className="block text-sm font-medium mb-3" style={{ color: "#2D5F3F" }}>
+						<label className="block text-sm font-medium mb-3" style={{ color: "#5C7F4F" }}>
 							How well did you and your team prepare together? {formData.pre_assignment_preparation}
 							/10
 						</label>
@@ -597,7 +597,7 @@ const DeafInterpreterReflection: React.FC<DeafInterpreterReflectionProps> = ({
 					</div>
 
 					<div>
-						<label className="block text-sm font-medium mb-3" style={{ color: "#2D5F3F" }}>
+						<label className="block text-sm font-medium mb-3" style={{ color: "#5C7F4F" }}>
 							How attuned did you feel to your team interpreter(s)? {formData.relational_attunement}
 							/10
 						</label>
@@ -619,7 +619,7 @@ const DeafInterpreterReflection: React.FC<DeafInterpreterReflectionProps> = ({
 					</div>
 
 					<div>
-						<label className="block text-sm font-medium mb-3" style={{ color: "#2D5F3F" }}>
+						<label className="block text-sm font-medium mb-3" style={{ color: "#5C7F4F" }}>
 							Could you co-regulate with your team (read each other's stress, support each other)?
 						</label>
 						<div className="space-y-2">
@@ -635,7 +635,7 @@ const DeafInterpreterReflection: React.FC<DeafInterpreterReflectionProps> = ({
 									className="flex items-center p-3 rounded-lg border cursor-pointer hover:bg-gray-50 transition-colors"
 									style={{
 										borderColor:
-											formData.co_regulation_experience === option ? "#2D5F3F" : "#D1D5DB",
+											formData.co_regulation_experience === option ? "#5C7F4F" : "#D1D5DB",
 										backgroundColor:
 											formData.co_regulation_experience === option
 												? "rgba(45, 95, 63, 0.05)"
@@ -660,7 +660,7 @@ const DeafInterpreterReflection: React.FC<DeafInterpreterReflectionProps> = ({
 					</div>
 
 					<div>
-						<label className="block text-sm font-medium mb-3" style={{ color: "#2D5F3F" }}>
+						<label className="block text-sm font-medium mb-3" style={{ color: "#5C7F4F" }}>
 							How clear and effective was team communication? {formData.communication_clarity}/10
 						</label>
 						<input
@@ -681,7 +681,7 @@ const DeafInterpreterReflection: React.FC<DeafInterpreterReflectionProps> = ({
 					</div>
 
 					<div>
-						<label className="block text-sm font-medium mb-3" style={{ color: "#2D5F3F" }}>
+						<label className="block text-sm font-medium mb-3" style={{ color: "#5C7F4F" }}>
 							How smooth and supportive were the handoffs/transitions? {formData.handoff_quality}
 							/10
 						</label>
@@ -701,7 +701,7 @@ const DeafInterpreterReflection: React.FC<DeafInterpreterReflectionProps> = ({
 					</div>
 
 					<div>
-						<label className="block text-sm font-medium mb-2" style={{ color: "#2D5F3F" }}>
+						<label className="block text-sm font-medium mb-2" style={{ color: "#5C7F4F" }}>
 							What challenges arose in teaming? (Optional)
 						</label>
 						<textarea
@@ -715,7 +715,7 @@ const DeafInterpreterReflection: React.FC<DeafInterpreterReflectionProps> = ({
 					</div>
 
 					<div>
-						<label className="block text-sm font-medium mb-2" style={{ color: "#2D5F3F" }}>
+						<label className="block text-sm font-medium mb-2" style={{ color: "#5C7F4F" }}>
 							What worked well in the team dynamic? (Optional)
 						</label>
 						<textarea
@@ -744,14 +744,14 @@ const DeafInterpreterReflection: React.FC<DeafInterpreterReflectionProps> = ({
 							border: "1px solid rgba(107, 139, 96, 0.2)",
 						}}
 					>
-						<p className="text-sm" style={{ color: "#2D5F3F" }}>
+						<p className="text-sm" style={{ color: "#5C7F4F" }}>
 							<strong>Note:</strong> Deaf Interpreters bring specialized expertise. You deserve
 							full professional recognition. Audism is about systems, not your competence.
 						</p>
 					</div>
 
 					<div>
-						<label className="block text-sm font-medium mb-3" style={{ color: "#2D5F3F" }}>
+						<label className="block text-sm font-medium mb-3" style={{ color: "#5C7F4F" }}>
 							How respected did you feel as a professional? {formData.professional_respect}/10
 						</label>
 						<input
@@ -772,7 +772,7 @@ const DeafInterpreterReflection: React.FC<DeafInterpreterReflectionProps> = ({
 					</div>
 
 					<div>
-						<label className="block text-sm font-medium mb-3" style={{ color: "#2D5F3F" }}>
+						<label className="block text-sm font-medium mb-3" style={{ color: "#5C7F4F" }}>
 							Was your specific DI/CDI expertise recognized and valued?
 						</label>
 						<div className="space-y-2">
@@ -788,7 +788,7 @@ const DeafInterpreterReflection: React.FC<DeafInterpreterReflectionProps> = ({
 									className="flex items-center p-3 rounded-lg border cursor-pointer hover:bg-gray-50 transition-colors"
 									style={{
 										borderColor:
-											formData.di_cdi_expertise_valued === option ? "#2D5F3F" : "#D1D5DB",
+											formData.di_cdi_expertise_valued === option ? "#5C7F4F" : "#D1D5DB",
 										backgroundColor:
 											formData.di_cdi_expertise_valued === option
 												? "rgba(45, 95, 63, 0.05)"
@@ -813,7 +813,7 @@ const DeafInterpreterReflection: React.FC<DeafInterpreterReflectionProps> = ({
 					</div>
 
 					<div>
-						<label className="block text-sm font-medium mb-2" style={{ color: "#2D5F3F" }}>
+						<label className="block text-sm font-medium mb-2" style={{ color: "#5C7F4F" }}>
 							What audism or audist assumptions did you encounter? (Optional)
 						</label>
 						<textarea
@@ -827,7 +827,7 @@ const DeafInterpreterReflection: React.FC<DeafInterpreterReflectionProps> = ({
 					</div>
 
 					<div>
-						<label className="block text-sm font-medium mb-3" style={{ color: "#2D5F3F" }}>
+						<label className="block text-sm font-medium mb-3" style={{ color: "#5C7F4F" }}>
 							How did audism affect you physically? (Select all that apply)
 						</label>
 						<div className="grid grid-cols-2 gap-2">
@@ -873,7 +873,7 @@ const DeafInterpreterReflection: React.FC<DeafInterpreterReflectionProps> = ({
 					</div>
 
 					<div>
-						<label className="block text-sm font-medium mb-3" style={{ color: "#2D5F3F" }}>
+						<label className="block text-sm font-medium mb-3" style={{ color: "#5C7F4F" }}>
 							Did you experience threat to your professional or Deaf identity? {formData.identity_threat}
 							/10
 						</label>
@@ -893,7 +893,7 @@ const DeafInterpreterReflection: React.FC<DeafInterpreterReflectionProps> = ({
 					</div>
 
 					<div>
-						<label className="block text-sm font-medium mb-3" style={{ color: "#2D5F3F" }}>
+						<label className="block text-sm font-medium mb-3" style={{ color: "#5C7F4F" }}>
 							Did this experience trigger professional self-doubt? {formData.self_doubt_triggered}/10
 						</label>
 						<input
@@ -914,7 +914,7 @@ const DeafInterpreterReflection: React.FC<DeafInterpreterReflectionProps> = ({
 					</div>
 
 					<div>
-						<label className="block text-sm font-medium mb-2" style={{ color: "#2D5F3F" }}>
+						<label className="block text-sm font-medium mb-2" style={{ color: "#5C7F4F" }}>
 							Reminder: Your DI/CDI expertise is invaluable. Audism is about systems, not your
 							competence. How does this land for you? (Optional)
 						</label>
@@ -939,7 +939,7 @@ const DeafInterpreterReflection: React.FC<DeafInterpreterReflectionProps> = ({
 			fields: (
 				<div className="space-y-6">
 					<div>
-						<label className="block text-sm font-medium mb-2" style={{ color: "#2D5F3F" }}>
+						<label className="block text-sm font-medium mb-2" style={{ color: "#5C7F4F" }}>
 							What linguistic nuances did you navigate? (Optional)
 						</label>
 						<textarea
@@ -953,7 +953,7 @@ const DeafInterpreterReflection: React.FC<DeafInterpreterReflectionProps> = ({
 					</div>
 
 					<div>
-						<label className="block text-sm font-medium mb-2" style={{ color: "#2D5F3F" }}>
+						<label className="block text-sm font-medium mb-2" style={{ color: "#5C7F4F" }}>
 							What cultural mediation or bridging was needed? (Optional)
 						</label>
 						<textarea
@@ -967,7 +967,7 @@ const DeafInterpreterReflection: React.FC<DeafInterpreterReflectionProps> = ({
 					</div>
 
 					<div>
-						<label className="block text-sm font-medium mb-2" style={{ color: "#2D5F3F" }}>
+						<label className="block text-sm font-medium mb-2" style={{ color: "#5C7F4F" }}>
 							How did you draw on Deaf cultural knowledge? (Optional)
 						</label>
 						<textarea
@@ -981,7 +981,7 @@ const DeafInterpreterReflection: React.FC<DeafInterpreterReflectionProps> = ({
 					</div>
 
 					<div>
-						<label className="block text-sm font-medium mb-2" style={{ color: "#2D5F3F" }}>
+						<label className="block text-sm font-medium mb-2" style={{ color: "#5C7F4F" }}>
 							Were there communication breakdowns? What happened? (Optional)
 						</label>
 						<textarea
@@ -995,7 +995,7 @@ const DeafInterpreterReflection: React.FC<DeafInterpreterReflectionProps> = ({
 					</div>
 
 					<div>
-						<label className="block text-sm font-medium mb-3" style={{ color: "#2D5F3F" }}>
+						<label className="block text-sm font-medium mb-3" style={{ color: "#5C7F4F" }}>
 							What emotional labor did you carry in the linguistic/cultural work?{" "}
 							{formData.emotional_labor}/10
 						</label>
@@ -1015,7 +1015,7 @@ const DeafInterpreterReflection: React.FC<DeafInterpreterReflectionProps> = ({
 					</div>
 
 					<div>
-						<label className="block text-sm font-medium mb-3" style={{ color: "#2D5F3F" }}>
+						<label className="block text-sm font-medium mb-3" style={{ color: "#5C7F4F" }}>
 							How would you rate the overall language access provided?{" "}
 							{formData.language_access_quality}/10
 						</label>
@@ -1045,7 +1045,7 @@ const DeafInterpreterReflection: React.FC<DeafInterpreterReflectionProps> = ({
 			fields: (
 				<div className="space-y-6">
 					<div>
-						<label className="block text-sm font-medium mb-3" style={{ color: "#2D5F3F" }}>
+						<label className="block text-sm font-medium mb-3" style={{ color: "#5C7F4F" }}>
 							What did you do to regulate your emotions during/after? (Select all that apply)
 						</label>
 						<div className="space-y-2">
@@ -1091,7 +1091,7 @@ const DeafInterpreterReflection: React.FC<DeafInterpreterReflectionProps> = ({
 					</div>
 
 					<div>
-						<label className="block text-sm font-medium mb-3" style={{ color: "#2D5F3F" }}>
+						<label className="block text-sm font-medium mb-3" style={{ color: "#5C7F4F" }}>
 							How well could you maintain professional boundaries? {formData.boundary_maintenance}
 							/10
 						</label>
@@ -1113,7 +1113,7 @@ const DeafInterpreterReflection: React.FC<DeafInterpreterReflectionProps> = ({
 					</div>
 
 					<div>
-						<label className="block text-sm font-medium mb-3" style={{ color: "#2D5F3F" }}>
+						<label className="block text-sm font-medium mb-3" style={{ color: "#5C7F4F" }}>
 							Did work emotions spill into personal life? {formData.emotional_spillover}/10
 						</label>
 						<input
@@ -1134,7 +1134,7 @@ const DeafInterpreterReflection: React.FC<DeafInterpreterReflectionProps> = ({
 					</div>
 
 					<div>
-						<label className="block text-sm font-medium mb-2" style={{ color: "#2D5F3F" }}>
+						<label className="block text-sm font-medium mb-2" style={{ color: "#5C7F4F" }}>
 							Were you exposed to traumatic content? How did it affect you? (Optional)
 						</label>
 						<textarea
@@ -1148,7 +1148,7 @@ const DeafInterpreterReflection: React.FC<DeafInterpreterReflectionProps> = ({
 					</div>
 
 					<div>
-						<label className="block text-sm font-medium mb-3" style={{ color: "#2D5F3F" }}>
+						<label className="block text-sm font-medium mb-3" style={{ color: "#5C7F4F" }}>
 							How much time do you need to recover from this work?
 						</label>
 						<div className="space-y-2">
@@ -1165,7 +1165,7 @@ const DeafInterpreterReflection: React.FC<DeafInterpreterReflectionProps> = ({
 									className="flex items-center p-3 rounded-lg border cursor-pointer hover:bg-gray-50 transition-colors"
 									style={{
 										borderColor:
-											formData.recovery_time_needed === option ? "#2D5F3F" : "#D1D5DB",
+											formData.recovery_time_needed === option ? "#5C7F4F" : "#D1D5DB",
 										backgroundColor:
 											formData.recovery_time_needed === option
 												? "rgba(45, 95, 63, 0.05)"
@@ -1198,7 +1198,7 @@ const DeafInterpreterReflection: React.FC<DeafInterpreterReflectionProps> = ({
 			fields: (
 				<div className="space-y-6">
 					<div>
-						<label className="block text-sm font-medium mb-2" style={{ color: "#2D5F3F" }}>
+						<label className="block text-sm font-medium mb-2" style={{ color: "#5C7F4F" }}>
 							Does this experience connect to patterns in your DI/CDI work? (Optional)
 						</label>
 						<textarea
@@ -1212,7 +1212,7 @@ const DeafInterpreterReflection: React.FC<DeafInterpreterReflectionProps> = ({
 					</div>
 
 					<div>
-						<label className="block text-sm font-medium mb-2" style={{ color: "#2D5F3F" }}>
+						<label className="block text-sm font-medium mb-2" style={{ color: "#5C7F4F" }}>
 							What specifically triggered the strongest reaction? (Optional)
 						</label>
 						<textarea
@@ -1226,7 +1226,7 @@ const DeafInterpreterReflection: React.FC<DeafInterpreterReflectionProps> = ({
 					</div>
 
 					<div>
-						<label className="block text-sm font-medium mb-3" style={{ color: "#2D5F3F" }}>
+						<label className="block text-sm font-medium mb-3" style={{ color: "#5C7F4F" }}>
 							What needs went unmet? (Select all that apply)
 						</label>
 						<div className="grid grid-cols-2 gap-2">
@@ -1246,7 +1246,7 @@ const DeafInterpreterReflection: React.FC<DeafInterpreterReflectionProps> = ({
 									key={need}
 									className="flex items-center p-3 rounded-lg border cursor-pointer transition-colors"
 									style={{
-										borderColor: formData.unmet_needs.includes(need) ? "#2D5F3F" : "#D1D5DB",
+										borderColor: formData.unmet_needs.includes(need) ? "#5C7F4F" : "#D1D5DB",
 										backgroundColor: formData.unmet_needs.includes(need)
 											? "rgba(107, 139, 96, 0.1)"
 											: "#FFFFFF",
@@ -1270,7 +1270,7 @@ const DeafInterpreterReflection: React.FC<DeafInterpreterReflectionProps> = ({
 					</div>
 
 					<div>
-						<label className="block text-sm font-medium mb-2" style={{ color: "#2D5F3F" }}>
+						<label className="block text-sm font-medium mb-2" style={{ color: "#5C7F4F" }}>
 							How did this affect your relationship with yourself? (Optional)
 						</label>
 						<textarea
@@ -1284,7 +1284,7 @@ const DeafInterpreterReflection: React.FC<DeafInterpreterReflectionProps> = ({
 					</div>
 
 					<div>
-						<label className="block text-sm font-medium mb-2" style={{ color: "#2D5F3F" }}>
+						<label className="block text-sm font-medium mb-2" style={{ color: "#5C7F4F" }}>
 							How did this impact your relationships with others? (Optional)
 						</label>
 						<textarea
@@ -1300,7 +1300,7 @@ const DeafInterpreterReflection: React.FC<DeafInterpreterReflectionProps> = ({
 					</div>
 
 					<div>
-						<label className="block text-sm font-medium mb-3" style={{ color: "#2D5F3F" }}>
+						<label className="block text-sm font-medium mb-3" style={{ color: "#5C7F4F" }}>
 							How integrated or fragmented do your Deaf and professional identities feel?{" "}
 							{formData.identity_integration}/10
 						</label>
@@ -1337,14 +1337,14 @@ const DeafInterpreterReflection: React.FC<DeafInterpreterReflectionProps> = ({
 							border: "1px solid rgba(107, 139, 96, 0.2)",
 						}}
 					>
-						<p className="text-sm" style={{ color: "#2D5F3F" }}>
+						<p className="text-sm" style={{ color: "#5C7F4F" }}>
 							<strong>Reflection:</strong> This space honors your journey as a DI/CDI. Your
 							insights and restoration matter.
 						</p>
 					</div>
 
 					<div>
-						<label className="block text-sm font-medium mb-2" style={{ color: "#2D5F3F" }}>
+						<label className="block text-sm font-medium mb-2" style={{ color: "#5C7F4F" }}>
 							What did you learn about yourself as a DI/CDI? (Optional)
 						</label>
 						<textarea
@@ -1358,7 +1358,7 @@ const DeafInterpreterReflection: React.FC<DeafInterpreterReflectionProps> = ({
 					</div>
 
 					<div>
-						<label className="block text-sm font-medium mb-2" style={{ color: "#2D5F3F" }}>
+						<label className="block text-sm font-medium mb-2" style={{ color: "#5C7F4F" }}>
 							What growth opportunity is this experience showing you? (Optional)
 						</label>
 						<textarea
@@ -1372,7 +1372,7 @@ const DeafInterpreterReflection: React.FC<DeafInterpreterReflectionProps> = ({
 					</div>
 
 					<div>
-						<label className="block text-sm font-medium mb-2" style={{ color: "#2D5F3F" }}>
+						<label className="block text-sm font-medium mb-2" style={{ color: "#5C7F4F" }}>
 							What boundaries do you need for future work? (Optional)
 						</label>
 						<textarea
@@ -1386,7 +1386,7 @@ const DeafInterpreterReflection: React.FC<DeafInterpreterReflectionProps> = ({
 					</div>
 
 					<div>
-						<label className="block text-sm font-medium mb-3" style={{ color: "#2D5F3F" }}>
+						<label className="block text-sm font-medium mb-3" style={{ color: "#5C7F4F" }}>
 							How connected do you feel to Deaf community right now?{" "}
 							{formData.deaf_community_connection}/10
 						</label>
@@ -1408,7 +1408,7 @@ const DeafInterpreterReflection: React.FC<DeafInterpreterReflectionProps> = ({
 					</div>
 
 					<div>
-						<label className="block text-sm font-medium mb-2" style={{ color: "#2D5F3F" }}>
+						<label className="block text-sm font-medium mb-2" style={{ color: "#5C7F4F" }}>
 							What would help restore your nervous system and spirit? (Optional)
 						</label>
 						<textarea
@@ -1422,7 +1422,7 @@ const DeafInterpreterReflection: React.FC<DeafInterpreterReflectionProps> = ({
 					</div>
 
 					<div>
-						<label className="block text-sm font-medium mb-2" style={{ color: "#2D5F3F" }}>
+						<label className="block text-sm font-medium mb-2" style={{ color: "#5C7F4F" }}>
 							What cultural or spiritual practices support you? (Optional)
 						</label>
 						<textarea
@@ -1436,7 +1436,7 @@ const DeafInterpreterReflection: React.FC<DeafInterpreterReflectionProps> = ({
 					</div>
 
 					<div>
-						<label className="block text-sm font-medium mb-2" style={{ color: "#2D5F3F" }}>
+						<label className="block text-sm font-medium mb-2" style={{ color: "#5C7F4F" }}>
 							What truth about your DI/CDI identity do you need to affirm? (Optional)
 						</label>
 						<textarea
@@ -1450,7 +1450,7 @@ const DeafInterpreterReflection: React.FC<DeafInterpreterReflectionProps> = ({
 					</div>
 
 					<div>
-						<label className="block text-sm font-medium mb-2" style={{ color: "#2D5F3F" }}>
+						<label className="block text-sm font-medium mb-2" style={{ color: "#5C7F4F" }}>
 							What is one way you'll care for yourself after this reflection?
 						</label>
 						<textarea
@@ -1471,7 +1471,7 @@ const DeafInterpreterReflection: React.FC<DeafInterpreterReflectionProps> = ({
 					</div>
 
 					<div>
-						<label className="block text-sm font-medium mb-3" style={{ color: "#2D5F3F" }}>
+						<label className="block text-sm font-medium mb-3" style={{ color: "#5C7F4F" }}>
 							After this reflection, where is your wellbeing? {formData.overall_wellbeing}/10
 						</label>
 						<input
@@ -1521,7 +1521,7 @@ const DeafInterpreterReflection: React.FC<DeafInterpreterReflectionProps> = ({
 							<div
 								className="w-12 h-12 rounded-xl flex items-center justify-center"
 								style={{
-									background: "linear-gradient(135deg, #2D5F3F, #5B9378)",
+									background: "linear-gradient(135deg, #5C7F4F, #5B9378)",
 									boxShadow: "0 2px 8px rgba(107, 139, 96, 0.3)",
 								}}
 							>
@@ -1540,7 +1540,7 @@ const DeafInterpreterReflection: React.FC<DeafInterpreterReflectionProps> = ({
 							onClick={onClose}
 							className="p-2 rounded-lg transition-all hover:opacity-90"
 							style={{
-								background: "linear-gradient(135deg, #2D5F3F, #5B9378)",
+								background: "linear-gradient(135deg, #5C7F4F, #5B9378)",
 							}}
 							aria-label="Close"
 						>
@@ -1597,7 +1597,7 @@ const DeafInterpreterReflection: React.FC<DeafInterpreterReflectionProps> = ({
 										"linear-gradient(135deg, rgba(107, 139, 96, 0.1) 0%, rgba(92, 127, 79, 0.05) 100%)",
 								}}
 							>
-								<Check size={32} style={{ color: "#2D5F3F" }} />
+								<Check size={32} style={{ color: "#5C7F4F" }} />
 							</div>
 							<h3 className="text-2xl font-bold mb-2" style={{ color: "#1A1A1A" }}>
 								Ready to Save Your Reflection
@@ -1615,13 +1615,13 @@ const DeafInterpreterReflection: React.FC<DeafInterpreterReflectionProps> = ({
 								border: "1px solid rgba(107, 139, 96, 0.2)",
 							}}
 						>
-							<h4 className="font-semibold mb-4" style={{ color: "#2D5F3F" }}>
+							<h4 className="font-semibold mb-4" style={{ color: "#5C7F4F" }}>
 								Reflection Summary
 							</h4>
 							<div className="space-y-3 text-sm">
 								{formData.assignment_description && (
 									<div>
-										<span className="font-medium" style={{ color: "#2D5F3F" }}>
+										<span className="font-medium" style={{ color: "#5C7F4F" }}>
 											Assignment:{" "}
 										</span>
 										<span style={{ color: "#5A5A5A" }}>
@@ -1631,7 +1631,7 @@ const DeafInterpreterReflection: React.FC<DeafInterpreterReflectionProps> = ({
 								)}
 								<div className="grid grid-cols-2 gap-4 pt-2">
 									<div>
-										<span className="font-medium" style={{ color: "#2D5F3F" }}>
+										<span className="font-medium" style={{ color: "#5C7F4F" }}>
 											Nervous System:{" "}
 										</span>
 										<span style={{ color: "#5A5A5A" }}>
@@ -1639,7 +1639,7 @@ const DeafInterpreterReflection: React.FC<DeafInterpreterReflectionProps> = ({
 										</span>
 									</div>
 									<div>
-										<span className="font-medium" style={{ color: "#2D5F3F" }}>
+										<span className="font-medium" style={{ color: "#5C7F4F" }}>
 											Professional Respect:{" "}
 										</span>
 										<span style={{ color: "#5A5A5A" }}>
@@ -1647,7 +1647,7 @@ const DeafInterpreterReflection: React.FC<DeafInterpreterReflectionProps> = ({
 										</span>
 									</div>
 									<div>
-										<span className="font-medium" style={{ color: "#2D5F3F" }}>
+										<span className="font-medium" style={{ color: "#5C7F4F" }}>
 											Identity Integration:{" "}
 										</span>
 										<span style={{ color: "#5A5A5A" }}>
@@ -1655,7 +1655,7 @@ const DeafInterpreterReflection: React.FC<DeafInterpreterReflectionProps> = ({
 										</span>
 									</div>
 									<div>
-										<span className="font-medium" style={{ color: "#2D5F3F" }}>
+										<span className="font-medium" style={{ color: "#5C7F4F" }}>
 											Overall Wellbeing:{" "}
 										</span>
 										<span style={{ color: "#5A5A5A" }}>{formData.overall_wellbeing}/10</span>
@@ -1690,7 +1690,7 @@ const DeafInterpreterReflection: React.FC<DeafInterpreterReflectionProps> = ({
 								style={{
 									background: isSaving
 										? "#CCCCCC"
-										: "linear-gradient(135deg, #2D5F3F, #5B9378)",
+										: "linear-gradient(135deg, #5C7F4F, #5B9378)",
 									color: "#FFFFFF",
 									boxShadow: isSaving
 										? "none"
@@ -1751,7 +1751,7 @@ const DeafInterpreterReflection: React.FC<DeafInterpreterReflectionProps> = ({
 							onClick={handleNext}
 							className="px-6 py-2 rounded-lg flex items-center transition-all"
 							style={{
-								background: "linear-gradient(135deg, #2D5F3F, #5B9378)",
+								background: "linear-gradient(135deg, #5C7F4F, #5B9378)",
 								color: "#FFFFFF",
 								boxShadow: "0 2px 8px rgba(107, 139, 96, 0.3)",
 							}}

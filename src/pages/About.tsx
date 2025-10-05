@@ -104,7 +104,7 @@ export function About() {
 
 						<p
 							className="text-lg font-semibold mb-4"
-							style={{ color: "#2D5F3F" }}
+							style={{ color: "#5C7F4F" }}
 						>
 							InterpretReflect provides tools that:
 						</p>
@@ -144,7 +144,7 @@ export function About() {
 							className="p-4 rounded-lg"
 							style={{ backgroundColor: "rgba(92, 127, 79, 0.05)" }}
 						>
-							<p className="text-base font-medium" style={{ color: "#2D5F3F" }}>
+							<p className="text-base font-medium" style={{ color: "#5C7F4F" }}>
 								When interpreters are supported, Deaf, DeafBlind, hard-of-hearing, immigrant, and multilingual communities benefit. Conversations become clearer, interactions feel safer, and access becomes more equitable.
 							</p>
 						</div>
@@ -177,7 +177,7 @@ export function About() {
 							>
 								<p
 									className="text-base font-semibold"
-									style={{ color: "#2D5F3F" }}
+									style={{ color: "#5C7F4F" }}
 								>
 									3-minute decompression exercises
 								</p>
@@ -192,7 +192,7 @@ export function About() {
 							>
 								<p
 									className="text-base font-semibold"
-									style={{ color: "#2D5F3F" }}
+									style={{ color: "#5C7F4F" }}
 								>
 									Confidential journaling prompts
 								</p>
@@ -207,7 +207,7 @@ export function About() {
 							>
 								<p
 									className="text-base font-semibold"
-									style={{ color: "#2D5F3F" }}
+									style={{ color: "#5C7F4F" }}
 								>
 									Grounding techniques
 								</p>
@@ -222,7 +222,7 @@ export function About() {
 							>
 								<p
 									className="text-base font-semibold"
-									style={{ color: "#2D5F3F" }}
+									style={{ color: "#5C7F4F" }}
 								>
 									Reflection guidance
 								</p>
@@ -373,7 +373,7 @@ export function About() {
 								boxShadow: "0 4px 15px rgba(0, 0, 0, 0.05)",
 							}}
 						>
-							<p className="font-semibold mb-2" style={{ color: "#2D5F3F" }}>
+							<p className="font-semibold mb-2" style={{ color: "#5C7F4F" }}>
 								No time?
 							</p>
 							<p className="text-sm" style={{ color: "#5A5A5A" }}>
@@ -388,7 +388,7 @@ export function About() {
 								boxShadow: "0 4px 15px rgba(0, 0, 0, 0.05)",
 							}}
 						>
-							<p className="font-semibold mb-2" style={{ color: "#2D5F3F" }}>
+							<p className="font-semibold mb-2" style={{ color: "#5C7F4F" }}>
 								Privacy worried?
 							</p>
 							<p className="text-sm" style={{ color: "#5A5A5A" }}>
@@ -404,7 +404,7 @@ export function About() {
 								boxShadow: "0 4px 15px rgba(0, 0, 0, 0.05)",
 							}}
 						>
-							<p className="font-semibold mb-2" style={{ color: "#2D5F3F" }}>
+							<p className="font-semibold mb-2" style={{ color: "#5C7F4F" }}>
 								Not tech-savvy?
 							</p>
 							<p className="text-sm" style={{ color: "#5A5A5A" }}>
@@ -419,7 +419,7 @@ export function About() {
 								boxShadow: "0 4px 15px rgba(0, 0, 0, 0.05)",
 							}}
 						>
-							<p className="font-semibold mb-2" style={{ color: "#2D5F3F" }}>
+							<p className="font-semibold mb-2" style={{ color: "#5C7F4F" }}>
 								Cost concerns?
 							</p>
 							<p className="text-sm" style={{ color: "#5A5A5A" }}>
@@ -463,7 +463,7 @@ export function About() {
 								borderLeft: "4px solid #5B9378",
 							}}
 						>
-							<p className="text-base font-medium" style={{ color: "#2D5F3F" }}>
+							<p className="text-base font-medium" style={{ color: "#5C7F4F" }}>
 								InterpretReflect™ exists so interpreters can care for their nervous systems, strengthen emotional awareness, and sustain the energy required to serve in ways that honor both their humanity and the humanity of the people they work with.
 							</p>
 						</div>
@@ -483,7 +483,7 @@ export function About() {
 							border: "2px solid rgba(45, 95, 63, 0.2)",
 						}}
 					>
-						<p className="text-lg font-medium" style={{ color: "#2D5F3F" }}>
+						<p className="text-lg font-medium" style={{ color: "#5C7F4F" }}>
 							Every day interpreters support communication in high-stakes and everyday interactions alike. InterpretReflect is here to support interpreters, so the communities they serve can thrive too.
 						</p>
 					</div>
@@ -551,7 +551,7 @@ export function About() {
 						</p>
 						<p
 							className="text-base font-semibold"
-							style={{ color: "#2D5F3F" }}
+							style={{ color: "#5C7F4F" }}
 						>
 							—Sarah Wheeler, M.Ed., MS, NIC Advanced<br />
 							Founder, InterpretReflect™

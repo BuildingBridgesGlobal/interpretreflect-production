@@ -17,7 +17,7 @@ const colors = {
 	// Primary palette - professional and trustworthy
 	primary: {
 		slate: "#475569", // Clean slate - professional, trustworthy
-		green: "#2D5F3F", // Dark forest green - professional, wellness
+		green: "#5C7F4F", // Dark forest green - professional, wellness
 		indigo: "#4F46E5", // Soft indigo - thoughtful, modern
 	},
 	// Background gradients - professional and clean
@@ -25,7 +25,7 @@ const colors = {
 		hero: "linear-gradient(135deg, #FAFBFC 0%, #F8FAFC 50%, #F1F5F9 100%)",
 		card: "linear-gradient(145deg, #FFFFFF 0%, #FAFBFC 100%)",
 		slate: "linear-gradient(135deg, #475569 0%, #64748B 100%)",
-		green: "linear-gradient(135deg, #2D5F3F 0%, #5B9378 100%)",
+		green: "linear-gradient(135deg, #5C7F4F 0%, #5B9378 100%)",
 		indigo: "linear-gradient(135deg, #4F46E5 0%, #6366F1 100%)",
 	},
 	// Neutral colors - clean grays
@@ -613,7 +613,7 @@ function LandingPageEnhanced({ onGetStarted }: LandingPageProps) {
 						{/* Statistics Bar */}
 						<div
 							className="mt-12 p-8 rounded-2xl"
-							style={{ background: "#2D5F3F" }}
+							style={{ background: "#5C7F4F" }}
 						>
 							<div className="text-center mb-6">
 								<h3 className="text-2xl font-bold text-white mb-2">THE RESEARCH IS CLEAR</h3>
@@ -683,25 +683,25 @@ function LandingPageEnhanced({ onGetStarted }: LandingPageProps) {
 									title: "Stress Reset Protocols",
 									description:
 										"Immediate nervous system regulation techniques for between assignments. Based on polyvagal theory and performance psychology research.",
-									color: "#2D5F3F",
+									color: "#5C7F4F",
 								},
 								{
 									title: "AI Wellness Coach",
 									description:
 										"Personalized support trained on interpreter-specific challenges and evidence-based interventions. Not generic advice.",
-									color: "#2D5F3F",
+									color: "#5C7F4F",
 								},
 								{
 									title: "Reflection Studio",
 									description:
 										"Structured processing protocols for vicarious trauma and challenging assignments. Create psychological closure at the end of difficult work.",
-									color: "#2D5F3F",
+									color: "#5C7F4F",
 								},
 								{
 									title: "Pattern Recognition",
 									description:
 										"Track your data over time. Identify what supports your performance and what depletes you. Make informed decisions about your practice.",
-									color: "#2D5F3F",
+									color: "#5C7F4F",
 								},
 							].map((feature, index) => (
 								<article
@@ -762,11 +762,11 @@ function LandingPageEnhanced({ onGetStarted }: LandingPageProps) {
 							{/* Essential Plan */}
 							<div
 								className="rounded-xl border-2 relative overflow-hidden bg-white shadow-lg hover:shadow-xl transition-shadow"
-								style={{ borderColor: "#2D5F3F" }}
+								style={{ borderColor: "#5C7F4F" }}
 							>
 								<div
 									className="absolute top-0 left-0 right-0 text-white text-center py-2 text-sm font-bold"
-									style={{ background: "#2D5F3F" }}
+									style={{ background: "#5C7F4F" }}
 								>
 									AVAILABLE NOW
 								</div>
@@ -917,7 +917,7 @@ function LandingPageEnhanced({ onGetStarted }: LandingPageProps) {
 				{/* Final CTA */}
 				<section
 					className="py-20 px-4"
-					style={{ background: "#2D5F3F" }}
+					style={{ background: "#5C7F4F" }}
 					aria-labelledby="cta-heading"
 				>
 					<div className="container mx-auto max-w-4xl text-center">
@@ -935,7 +935,7 @@ function LandingPageEnhanced({ onGetStarted }: LandingPageProps) {
 							className="px-8 py-4 font-semibold rounded-xl shadow-lg hover:shadow-xl transition-all transform hover:scale-105 focus:outline-none focus:ring-4 focus:ring-white focus:ring-opacity-50"
 							style={{
 								background: "white",
-								color: "#2D5F3F",
+								color: "#5C7F4F",
 								fontSize: "1.125rem",
 							}}
 							aria-label="Start your wellness journey today"

@@ -168,7 +168,7 @@ export const AssignmentResetAccessible: React.FC<AssignmentResetProps> = ({
 									className="p-2 rounded-xl"
 									style={{ backgroundColor: "#F0F5ED" }}
 								>
-									<RefreshCw className="w-6 h-6" style={{ color: "#2D5F3F" }} />
+									<RefreshCw className="w-6 h-6" style={{ color: "#5C7F4F" }} />
 								</div>
 								<div>
 									<h2
@@ -187,7 +187,7 @@ export const AssignmentResetAccessible: React.FC<AssignmentResetProps> = ({
 								onClick={onClose}
 								className="p-2 rounded-xl transition-all hover:scale-105"
 								style={{
-									background: "linear-gradient(135deg, #2D5F3F, #5B9378)",
+									background: "linear-gradient(135deg, #5C7F4F, #5B9378)",
 								}}
 								aria-label="Close assignment reset"
 							>
@@ -218,13 +218,13 @@ export const AssignmentResetAccessible: React.FC<AssignmentResetProps> = ({
 													selectedMethod === key ? "#F0F5ED" : "#F9FAFB",
 												borderColor:
 													selectedMethod === key ? "#7A9B6E" : undefined,
-												focusRingColor: "#2D5F3F",
+												focusRingColor: "#5C7F4F",
 											}}
 											aria-label={`${method.title}: ${method.description}`}
 											aria-pressed={selectedMethod === key}
 										>
 											<div className="flex items-start gap-2">
-												<span style={{ color: "#2D5F3F" }}>{method.icon}</span>
+												<span style={{ color: "#5C7F4F" }}>{method.icon}</span>
 												<div>
 													<p
 														className="font-medium text-sm"
@@ -259,8 +259,8 @@ export const AssignmentResetAccessible: React.FC<AssignmentResetProps> = ({
 							onClick={handleStart}
 							className="w-full py-3 text-white rounded-xl font-medium transition-all hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-offset-2"
 							style={{
-								background: "linear-gradient(135deg, #2D5F3F, #5B9378)",
-								focusRingColor: "#2D5F3F",
+								background: "linear-gradient(135deg, #5C7F4F, #5B9378)",
+								focusRingColor: "#5C7F4F",
 							}}
 							aria-label="Start Assignment Reset"
 						>
@@ -297,7 +297,7 @@ export const AssignmentResetAccessible: React.FC<AssignmentResetProps> = ({
 								onClick={onClose}
 								className="p-2 rounded-xl transition-all hover:scale-105"
 								style={{
-									background: "linear-gradient(135deg, #2D5F3F, #5B9378)",
+									background: "linear-gradient(135deg, #5C7F4F, #5B9378)",
 								}}
 								aria-label="Close practice"
 							>
@@ -351,7 +351,7 @@ export const AssignmentResetAccessible: React.FC<AssignmentResetProps> = ({
 								>
 									{React.cloneElement(method.icon as React.ReactElement, {
 										className: "w-8 h-8",
-										style: { color: "#2D5F3F" },
+										style: { color: "#5C7F4F" },
 									})}
 								</div>
 							</div>
@@ -415,7 +415,7 @@ export const AssignmentResetAccessible: React.FC<AssignmentResetProps> = ({
 							className="w-16 h-16 mx-auto rounded-full flex items-center justify-center"
 							style={{ backgroundColor: "#F0F5ED" }}
 						>
-							<RefreshCw className="w-8 h-8" style={{ color: "#2D5F3F" }} />
+							<RefreshCw className="w-8 h-8" style={{ color: "#5C7F4F" }} />
 						</div>
 					</div>
 

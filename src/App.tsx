@@ -4117,7 +4117,7 @@ function App() {
 		},
 		{
 			icon: GrowthIcon,
-			iconColor: "#2D5F3F",
+			iconColor: "#5C7F4F",
 			iconBg: "rgba(45, 95, 63, 0.2)",
 			title: "Neurodivergent Interpreter Wellness",
 			description:
@@ -4217,7 +4217,7 @@ function App() {
 							style={{
 								backgroundColor: "#F1F8F4",
 								color: "var(--primary-800)",
-								border: "2px solid #2D5F3F",
+								border: "2px solid #5C7F4F",
 							}}
 							aria-label="Learn why breathing works"
 						>
@@ -4330,7 +4330,7 @@ function App() {
 							style={{
 								backgroundColor: "#F1F8F4",
 								color: "var(--primary-800)",
-								border: "2px solid #2D5F3F",
+								border: "2px solid #5C7F4F",
 							}}
 							aria-label="Learn why body check-ins work"
 						>
@@ -4433,7 +4433,7 @@ function App() {
 							style={{
 								backgroundColor: "#F1F8F4",
 								color: "var(--primary-800)",
-								border: "2px solid #2D5F3F",
+								border: "2px solid #5C7F4F",
 							}}
 							aria-label="Learn why emotion mapping works"
 						>
@@ -4552,7 +4552,7 @@ function App() {
 							style={{
 								backgroundColor: "#F1F8F4",
 								color: "var(--primary-800)",
-								border: "2px solid #2D5F3F",
+								border: "2px solid #5C7F4F",
 							}}
 							aria-label="Learn why professional boundaries matter"
 						>
@@ -4667,7 +4667,7 @@ function App() {
 							style={{
 								backgroundColor: "#F1F8F4",
 								color: "var(--primary-800)",
-								border: "2px solid #2D5F3F",
+								border: "2px solid #5C7F4F",
 							}}
 							aria-label="Learn why the Assignment Reset works"
 						>
@@ -4772,7 +4772,7 @@ function App() {
 							style={{
 								backgroundColor: "#F1F8F4",
 								color: "var(--primary-800)",
-								border: "2px solid #2D5F3F",
+								border: "2px solid #5C7F4F",
 							}}
 							aria-label="Learn why these five zones help with technology fatigue"
 						>
@@ -4878,7 +4878,7 @@ function App() {
 							style={{
 								backgroundColor: "#F1F8F4",
 								color: "var(--primary-800)",
-								border: "2px solid #2D5F3F",
+								border: "2px solid #5C7F4F",
 							}}
 						>
 							Why this works?
@@ -5104,7 +5104,7 @@ function App() {
 									}}
 									className="w-full px-6 py-3 rounded-lg font-medium transition-all hover:scale-105"
 									style={{
-										background: "linear-gradient(135deg, #2D5F3F, #5B9378)",
+										background: "linear-gradient(135deg, #5C7F4F, #5B9378)",
 										color: "#FFFFFF",
 									}}
 									aria-label="Begin tech fatigue reset practice"
@@ -5628,7 +5628,7 @@ function App() {
 									}}
 									className="w-full px-6 py-3 rounded-lg font-medium transition-all hover:scale-105"
 									style={{
-										background: "linear-gradient(135deg, #2D5F3F, #5B9378)",
+										background: "linear-gradient(135deg, #5C7F4F, #5B9378)",
 										color: "#FFFFFF",
 									}}
 									aria-label="Begin emotion mapping practice"
@@ -5858,7 +5858,7 @@ function App() {
 													className="absolute inset-0 rounded-full transition-all duration-[4000ms] ease-in-out"
 													style={{
 														backgroundColor: "rgba(45, 95, 63, 0.2)",
-														border: "3px solid #2D5F3F",
+														border: "3px solid #5C7F4F",
 														transform: isTimerActive
 															? breathPhase === "inhale"
 																? "scale(1.2)"
@@ -5970,7 +5970,7 @@ function App() {
 															width: isTimerActive
 																? `${((breathCycle % 16) / 16) * 100}%`
 																: "0%",
-															backgroundColor: "#2D5F3F",
+															backgroundColor: "#5C7F4F",
 														}}
 													/>
 												</div>
@@ -6125,15 +6125,15 @@ function App() {
 																			style={{
 																				backgroundColor:
 																					bodyAwarenessTime === seconds
-																						? "#2D5F3F"
+																						? "#5C7F4F"
 																						: "rgba(92, 127, 79, 0.1)",
 																				color:
 																					bodyAwarenessTime === seconds
 																						? "#FFFFFF"
-																						: "#2D5F3F",
+																						: "#5C7F4F",
 																				border:
 																					bodyAwarenessTime === seconds
-																						? "2px solid #2D5F3F"
+																						? "2px solid #5C7F4F"
 																						: "2px solid transparent",
 																			}}
 																		>
@@ -6205,7 +6205,7 @@ function App() {
 																						: "rgba(92, 127, 79, 0.05)",
 																				border:
 																					bodyAwarenessMethod === method.id
-																						? "2px solid #2D5F3F"
+																						? "2px solid #5C7F4F"
 																						: "2px solid transparent",
 																			}}
 																		>
@@ -6369,7 +6369,7 @@ function App() {
 																		className="h-full transition-all duration-1000"
 																		style={{
 																			width: `${techniqueProgress}%`,
-																			backgroundColor: "#2D5F3F",
+																			backgroundColor: "#5C7F4F",
 																		}}
 																	/>
 																</div>
@@ -7123,14 +7123,14 @@ function App() {
 																	cy="125"
 																	r="40"
 																	fill="white"
-																	stroke="#2D5F3F"
+																	stroke="#5C7F4F"
 																	strokeWidth="3"
 																/>
 																<text
 																	x="125"
 																	y="125"
 																	textAnchor="middle"
-																	fill="#2D5F3F"
+																	fill="#5C7F4F"
 																	fontSize="24"
 																	fontWeight="bold"
 																	dy=".3em"
@@ -7148,7 +7148,7 @@ function App() {
 																			y1="85"
 																			x2="125"
 																			y2="85"
-																			stroke="#2D5F3F"
+																			stroke="#5C7F4F"
 																			strokeWidth="2"
 																			opacity={senseCount >= 1 ? 1 : 0.3}
 																		/>
@@ -7157,7 +7157,7 @@ function App() {
 																			y1="125"
 																			x2="175"
 																			y2="125"
-																			stroke="#2D5F3F"
+																			stroke="#5C7F4F"
 																			strokeWidth="2"
 																			opacity={senseCount >= 2 ? 1 : 0.3}
 																		/>
@@ -7166,7 +7166,7 @@ function App() {
 																			y1="125"
 																			x2="75"
 																			y2="125"
-																			stroke="#2D5F3F"
+																			stroke="#5C7F4F"
 																			strokeWidth="2"
 																			opacity={senseCount >= 3 ? 1 : 0.3}
 																		/>
@@ -7175,7 +7175,7 @@ function App() {
 																			y1="165"
 																			x2="125"
 																			y2="165"
-																			stroke="#2D5F3F"
+																			stroke="#5C7F4F"
 																			strokeWidth="2"
 																			opacity={senseCount >= 4 ? 1 : 0.3}
 																		/>
@@ -7190,7 +7190,7 @@ function App() {
 																		className="h-full transition-all duration-1000"
 																		style={{
 																			width: `${techniqueProgress}%`,
-																			backgroundColor: "#2D5F3F",
+																			backgroundColor: "#5C7F4F",
 																		}}
 																	/>
 																</div>
@@ -7385,7 +7385,7 @@ function App() {
 																		cy="125"
 																		r={30 * ring}
 																		fill="none"
-																		stroke="#2D5F3F"
+																		stroke="#5C7F4F"
 																		strokeWidth={5 - ring}
 																		opacity={
 																			isTimerActive
@@ -7409,7 +7409,7 @@ function App() {
 																		cx="0"
 																		cy="-30"
 																		r="15"
-																		fill="#2D5F3F"
+																		fill="#5C7F4F"
 																		opacity={isTimerActive ? 0.8 : 0.4}
 																	/>
 
@@ -7419,7 +7419,7 @@ function App() {
 																		cy="0"
 																		rx="25"
 																		ry="35"
-																		fill="#2D5F3F"
+																		fill="#5C7F4F"
 																		opacity={isTimerActive ? 0.8 : 0.4}
 																	/>
 
@@ -7430,7 +7430,7 @@ function App() {
 																		width="15"
 																		height="30"
 																		rx="7"
-																		fill="#2D5F3F"
+																		fill="#5C7F4F"
 																		opacity={isTimerActive ? 0.8 : 0.4}
 																		style={{
 																			transform: isTimerActive
@@ -7446,7 +7446,7 @@ function App() {
 																		width="15"
 																		height="30"
 																		rx="7"
-																		fill="#2D5F3F"
+																		fill="#5C7F4F"
 																		opacity={isTimerActive ? 0.8 : 0.4}
 																		style={{
 																			transform: isTimerActive
@@ -7471,7 +7471,7 @@ function App() {
 																				cx={point.x}
 																				cy={point.y}
 																				r="4"
-																				fill="#2D5F3F"
+																				fill="#5C7F4F"
 																				opacity={expansionLevel}
 																			>
 																				<animate
@@ -7497,7 +7497,7 @@ function App() {
 																	x="125"
 																	y="210"
 																	textAnchor="middle"
-																	fill="#2D5F3F"
+																	fill="#5C7F4F"
 																	fontSize="18"
 																	fontWeight="bold"
 																>
@@ -7514,7 +7514,7 @@ function App() {
 																		className="h-full transition-all duration-1000"
 																		style={{
 																			width: `${techniqueProgress}%`,
-																			backgroundColor: "#2D5F3F",
+																			backgroundColor: "#5C7F4F",
 																		}}
 																	/>
 																</div>
@@ -7704,7 +7704,7 @@ function App() {
 																					d={`M 0,0 L 0,-80 A 80,80 0 0,1 ${80 * Math.sin((72 * Math.PI) / 180)},${-80 * Math.cos((72 * Math.PI) / 180)} Z`}
 																					fill={
 																						isComplete
-																							? "#2D5F3F"
+																							? "#5C7F4F"
 																							: isActive
 																								? "#8FA681"
 																								: "#E5E7EB"
@@ -7737,7 +7737,7 @@ function App() {
 																						fontWeight="bold"
 																						fill={
 																							isActive || isComplete
-																								? "#2D5F3F"
+																								? "#5C7F4F"
 																								: "#9CA3AF"
 																						}
 																					>
@@ -7750,7 +7750,7 @@ function App() {
 																					<circle
 																						r="25"
 																						fill="none"
-																						stroke="#2D5F3F"
+																						stroke="#5C7F4F"
 																						strokeWidth="2"
 																						opacity="0.5"
 																					>
@@ -7776,7 +7776,7 @@ function App() {
 																	<circle
 																		r="35"
 																		fill="#FFFFFF"
-																		stroke="#2D5F3F"
+																		stroke="#5C7F4F"
 																		strokeWidth="2"
 																	/>
 
@@ -7794,7 +7794,7 @@ function App() {
 																				y="15"
 																				textAnchor="middle"
 																				fontSize="10"
-																				fill="#2D5F3F"
+																				fill="#5C7F4F"
 																			>
 																				Eye Relief
 																			</text>
@@ -7814,7 +7814,7 @@ function App() {
 																					y="15"
 																					textAnchor="middle"
 																					fontSize="10"
-																					fill="#2D5F3F"
+																					fill="#5C7F4F"
 																				>
 																					Audio Rest
 																				</text>
@@ -7834,7 +7834,7 @@ function App() {
 																					y="15"
 																					textAnchor="middle"
 																					fontSize="10"
-																					fill="#2D5F3F"
+																					fill="#5C7F4F"
 																				>
 																					Posture
 																				</text>
@@ -7854,7 +7854,7 @@ function App() {
 																					y="15"
 																					textAnchor="middle"
 																					fontSize="10"
-																					fill="#2D5F3F"
+																					fill="#5C7F4F"
 																				>
 																					Distance
 																				</text>
@@ -7873,7 +7873,7 @@ function App() {
 																				y="15"
 																				textAnchor="middle"
 																				fontSize="10"
-																				fill="#2D5F3F"
+																				fill="#5C7F4F"
 																			>
 																				Face Relax
 																			</text>
@@ -7895,7 +7895,7 @@ function App() {
 																	cy="125"
 																	r="100"
 																	fill="none"
-																	stroke="#2D5F3F"
+																	stroke="#5C7F4F"
 																	strokeWidth="3"
 																	strokeDasharray={`${2 * Math.PI * 100} ${2 * Math.PI * 100}`}
 																	strokeDashoffset={
@@ -8092,7 +8092,7 @@ function App() {
 																			: "rgba(92, 127, 79, 0.1)",
 																		color: isTimerActive
 																			? "#9333EA"
-																			: "#2D5F3F",
+																			: "#5C7F4F",
 																	}}
 																>
 																	{Math.floor(techniqueProgress)}% Complete
@@ -8405,12 +8405,12 @@ function App() {
 																				cx="0"
 																				cy="-10"
 																				r="50"
-																				fill="#2D5F3F"
+																				fill="#5C7F4F"
 																				opacity="0.5"
 																			/>
 																			<path
 																				d="M -20,-20 Q -20,0 0,5 Q 20,0 20,-20 Q 0,-15 -20,-20 Z"
-																				fill="#2D5F3F"
+																				fill="#5C7F4F"
 																				opacity="0.7"
 																			/>
 																			<text
@@ -8771,7 +8771,7 @@ function App() {
 										className="h-full rounded-full transition-all duration-1000"
 										style={{
 											width: `${techniqueProgress}%`,
-											backgroundColor: "#2D5F3F",
+											backgroundColor: "#5C7F4F",
 										}}
 									/>
 								</div>
@@ -9099,12 +9099,12 @@ function App() {
 													"0 4px 15px rgba(0, 0, 0, 0.05)";
 											}}
 											onFocus={(e) => {
-												e.currentTarget.style.borderColor = "#2D5F3F";
+												e.currentTarget.style.borderColor = "#5C7F4F";
 												e.currentTarget.style.transform =
 													"translateY(-4px) scale(1.02)";
 												e.currentTarget.style.boxShadow =
 													"0 8px 25px rgba(45, 95, 63, 0.25)";
-												e.currentTarget.style.outline = "2px solid #2D5F3F";
+												e.currentTarget.style.outline = "2px solid #5C7F4F";
 												e.currentTarget.style.outlineOffset = "2px";
 											}}
 											onBlur={(e) => {
@@ -9228,7 +9228,7 @@ function App() {
 														<div
 															className="w-2 h-2 rounded-full mr-2"
 															aria-hidden="true"
-															style={{ backgroundColor: "#2D5F3F" }}
+															style={{ backgroundColor: "#5C7F4F" }}
 														></div>
 														<span
 															className="text-xs font-medium"
@@ -10109,7 +10109,7 @@ function App() {
 													style={{
 														background: selectedTechnique === "breathe-protocol"
 															? "linear-gradient(135deg, #7C3AED, #9333EA)"
-															: "linear-gradient(135deg, #2D5F3F, #5B9378)",
+															: "linear-gradient(135deg, #5C7F4F, #5B9378)",
 														color: "#FFFFFF",
 													}}
 													aria-label={selectedTechnique === "breathe-protocol" ? "Begin BREATHE Protocol practice" : "Begin breathing practice"}
@@ -10294,7 +10294,7 @@ function App() {
 													className="w-full px-6 py-3 rounded-lg font-medium transition-all hover:scale-105"
 													style={{
 														background:
-															"linear-gradient(135deg, #2D5F3F, #5B9378)",
+															"linear-gradient(135deg, #5C7F4F, #5B9378)",
 														color: "#FFFFFF",
 													}}
 													aria-label="Close modal and return to emotion mapping options"
@@ -10428,7 +10428,7 @@ function App() {
 													}}
 													className="w-full px-6 py-3 rounded-lg font-medium transition-all hover:scale-105"
 													style={{
-														background: "linear-gradient(135deg, #2D5F3F, #5B9378)",
+														background: "linear-gradient(135deg, #5C7F4F, #5B9378)",
 														color: "#FFFFFF",
 													}}
 													aria-label="Begin BREATHE protocol practice"
@@ -10686,7 +10686,7 @@ function App() {
 													className="w-full px-6 py-3 rounded-lg font-medium transition-all hover:scale-105"
 													style={{
 														background:
-															"linear-gradient(135deg, #2D5F3F, #5B9378)",
+															"linear-gradient(135deg, #5C7F4F, #5B9378)",
 														color: "#FFFFFF",
 													}}
 													aria-label="Begin body check-in practice"
@@ -10979,7 +10979,7 @@ function App() {
 													className="w-full px-6 py-3 rounded-lg font-medium transition-all hover:scale-105"
 													style={{
 														background:
-															"linear-gradient(135deg, #2D5F3F, #5B9378)",
+															"linear-gradient(135deg, #5C7F4F, #5B9378)",
 														color: "#FFFFFF",
 													}}
 													aria-label="Close modal and return to boundaries options"
@@ -11171,7 +11171,7 @@ function App() {
 													className="w-full px-6 py-3 rounded-lg font-medium transition-all hover:scale-105"
 													style={{
 														background:
-															"linear-gradient(135deg, #2D5F3F, #5B9378)",
+															"linear-gradient(135deg, #5C7F4F, #5B9378)",
 														color: "#FFFFFF",
 													}}
 													aria-label="Close modal and return to assignment reset options"

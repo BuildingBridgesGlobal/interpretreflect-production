@@ -41,7 +41,7 @@ const affirmationCategories: AffirmationCategory[] = [
 		description:
 			"Gentle reminders of your fundamental value as a human being, independent of performance or achievement",
 		icon: Heart,
-		color: "#2D5F3F",
+		color: "#5C7F4F",
 		bgColor: "#F0F5ED",
 		borderColor: "#7A9B6E",
 		affirmations: [
@@ -437,7 +437,7 @@ const AffirmationStudioAccessible: React.FC = () => {
 						<h3
 							id="daily-affirmation-heading"
 							className="flex items-center gap-2 text-xl font-bold mb-3"
-							style={{ color: "#2D5F3F" }}
+							style={{ color: "#5C7F4F" }}
 						>
 							<Sparkles className="h-6 w-6" />
 							Today's Affirmation
@@ -456,7 +456,7 @@ const AffirmationStudioAccessible: React.FC = () => {
 										className="px-4 py-2 rounded-lg flex items-center gap-2 transition-all"
 										style={{
 											backgroundColor: "#FFFFFF",
-											color: "#2D5F3F",
+											color: "#5C7F4F",
 											border: "1px solid #7A9B6E",
 										}}
 										aria-label="Share today's affirmation"
@@ -469,7 +469,7 @@ const AffirmationStudioAccessible: React.FC = () => {
 										className="px-4 py-2 rounded-lg flex items-center gap-2 transition-all"
 										style={{
 											backgroundColor: "#FFFFFF",
-											color: "#2D5F3F",
+											color: "#5C7F4F",
 											border: "1px solid #7A9B6E",
 										}}
 										aria-label="Get new daily affirmation"
@@ -498,7 +498,7 @@ const AffirmationStudioAccessible: React.FC = () => {
 						style={{
 							background:
 								viewMode === "all"
-									? "linear-gradient(135deg, #2D5F3F, #5B9378)"
+									? "linear-gradient(135deg, #5C7F4F, #5B9378)"
 									: "#e5e7eb",
 							color: viewMode === "all" ? "#ffffff" : "#374151",
 						}}
@@ -617,7 +617,7 @@ const AffirmationStudioAccessible: React.FC = () => {
 								onClick={() => setViewMode("all")}
 								className="px-4 py-2 text-white rounded-lg transition-all hover:opacity-90"
 								style={{
-									background: "linear-gradient(135deg, #2D5F3F, #5B9378)",
+									background: "linear-gradient(135deg, #5C7F4F, #5B9378)",
 								}}
 							>
 								Browse Affirmations
@@ -662,7 +662,7 @@ const AffirmationStudioAccessible: React.FC = () => {
 												className="p-2 rounded-lg transition-all hover:opacity-90"
 												style={{
 													background:
-														"linear-gradient(135deg, #2D5F3F, #5B9378)",
+														"linear-gradient(135deg, #5C7F4F, #5B9378)",
 												}}
 												aria-label="Remove from favorites"
 											>
@@ -682,7 +682,7 @@ const AffirmationStudioAccessible: React.FC = () => {
 											onClick={() => handleSelectCategory(category)}
 											className="mt-3 px-3 py-1.5 text-xs font-medium rounded-lg text-white hover:opacity-90 transition-all"
 											style={{
-												background: "linear-gradient(135deg, #2D5F3F, #5B9378)",
+												background: "linear-gradient(135deg, #5C7F4F, #5B9378)",
 											}}
 										>
 											View in context →

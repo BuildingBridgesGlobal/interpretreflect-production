@@ -335,7 +335,7 @@ OVERALL WELLNESS: ${formData.overall_wellness_rating}/10
 					>
 						<h3
 							className="text-lg font-semibold mb-4"
-							style={{ color: "#2D5F3F" }}
+							style={{ color: "#5C7F4F" }}
 						>
 							Taking a Moment for You
 						</h3>
@@ -350,7 +350,7 @@ OVERALL WELLNESS: ${formData.overall_wellness_rating}/10
 					<div>
 						<label
 							className="block text-sm font-medium mb-2"
-							style={{ color: "#2D5F3F" }}
+							style={{ color: "#5C7F4F" }}
 						>
 							What brings you to this check-in today?
 						</label>
@@ -378,7 +378,7 @@ OVERALL WELLNESS: ${formData.overall_wellness_rating}/10
 												: "#F8FBF6",
 										color:
 											formData.check_in_reason === reason.value
-												? "#2D5F3F"
+												? "#5C7F4F"
 												: "#5A5A5A",
 										border: `1px solid ${formData.check_in_reason === reason.value ? "#5B9378" : "#E8E5E0"}`,
 									}}
@@ -392,7 +392,7 @@ OVERALL WELLNESS: ${formData.overall_wellness_rating}/10
 					<div>
 						<label
 							className="block text-sm font-medium mb-2"
-							style={{ color: "#2D5F3F" }}
+							style={{ color: "#5C7F4F" }}
 						>
 							Rate your current energy level (1-10)
 						</label>
@@ -412,7 +412,7 @@ OVERALL WELLNESS: ${formData.overall_wellness_rating}/10
 								className="text-2xl font-bold px-4 py-2 rounded-lg"
 								style={{
 									backgroundColor: "rgba(107, 139, 96, 0.1)",
-									color: "#2D5F3F",
+									color: "#5C7F4F",
 								}}
 							>
 								{formData.energyLevel}
@@ -423,7 +423,7 @@ OVERALL WELLNESS: ${formData.overall_wellness_rating}/10
 					<div>
 						<label
 							className="block text-sm font-medium mb-2"
-							style={{ color: "#2D5F3F" }}
+							style={{ color: "#5C7F4F" }}
 						>
 							Rate your current stress level (1-10)
 						</label>
@@ -443,7 +443,7 @@ OVERALL WELLNESS: ${formData.overall_wellness_rating}/10
 								className="text-2xl font-bold px-4 py-2 rounded-lg"
 								style={{
 									backgroundColor: "rgba(107, 139, 96, 0.1)",
-									color: "#2D5F3F",
+									color: "#5C7F4F",
 								}}
 							>
 								{formData.stressLevel}
@@ -457,7 +457,7 @@ OVERALL WELLNESS: ${formData.overall_wellness_rating}/10
 					<div>
 						<label
 							className="block text-sm font-medium mb-2"
-							style={{ color: "#2D5F3F" }}
+							style={{ color: "#5C7F4F" }}
 						>
 							How are you feeling overall right now?
 						</label>
@@ -490,7 +490,7 @@ OVERALL WELLNESS: ${formData.overall_wellness_rating}/10
 					<div>
 						<label
 							className="block text-sm font-medium mb-2"
-							style={{ color: "#2D5F3F" }}
+							style={{ color: "#5C7F4F" }}
 						>
 							What emotions are present for you right now?
 						</label>
@@ -516,7 +516,7 @@ OVERALL WELLNESS: ${formData.overall_wellness_rating}/10
 					<div>
 						<label
 							className="block text-sm font-medium mb-2"
-							style={{ color: "#2D5F3F" }}
+							style={{ color: "#5C7F4F" }}
 						>
 							Rate the intensity of these emotions (1-10)
 						</label>
@@ -539,7 +539,7 @@ OVERALL WELLNESS: ${formData.overall_wellness_rating}/10
 								className="text-2xl font-bold px-4 py-2 rounded-lg"
 								style={{
 									backgroundColor: "rgba(107, 139, 96, 0.1)",
-									color: "#2D5F3F",
+									color: "#5C7F4F",
 								}}
 							>
 								{formData.emotional_intensity}
@@ -550,7 +550,7 @@ OVERALL WELLNESS: ${formData.overall_wellness_rating}/10
 					<div>
 						<label
 							className="block text-sm font-medium mb-2"
-							style={{ color: "#2D5F3F" }}
+							style={{ color: "#5C7F4F" }}
 						>
 							What might be triggering or influencing these emotions?
 						</label>
@@ -575,7 +575,7 @@ OVERALL WELLNESS: ${formData.overall_wellness_rating}/10
 					<div>
 						<label
 							className="block text-sm font-medium mb-2"
-							style={{ color: "#2D5F3F" }}
+							style={{ color: "#5C7F4F" }}
 						>
 							How does your body feel right now?
 						</label>
@@ -601,7 +601,7 @@ OVERALL WELLNESS: ${formData.overall_wellness_rating}/10
 					<div>
 						<label
 							className="block text-sm font-medium mb-2"
-							style={{ color: "#2D5F3F" }}
+							style={{ color: "#5C7F4F" }}
 						>
 							Are you experiencing any physical symptoms?
 						</label>
@@ -619,7 +619,7 @@ OVERALL WELLNESS: ${formData.overall_wellness_rating}/10
 					<div>
 						<label
 							className="block text-sm font-medium mb-2"
-							style={{ color: "#2D5F3F" }}
+							style={{ color: "#5C7F4F" }}
 						>
 							Rate your sleep quality recently (1-10)
 						</label>
@@ -639,7 +639,7 @@ OVERALL WELLNESS: ${formData.overall_wellness_rating}/10
 								className="text-2xl font-bold px-4 py-2 rounded-lg"
 								style={{
 									backgroundColor: "rgba(107, 139, 96, 0.1)",
-									color: "#2D5F3F",
+									color: "#5C7F4F",
 								}}
 							>
 								{formData.sleep_quality}
@@ -657,7 +657,7 @@ OVERALL WELLNESS: ${formData.overall_wellness_rating}/10
 					<div>
 						<label
 							className="block text-sm font-medium mb-2"
-							style={{ color: "#2D5F3F" }}
+							style={{ color: "#5C7F4F" }}
 						>
 							Rate your mental clarity right now (1-10)
 						</label>
@@ -677,7 +677,7 @@ OVERALL WELLNESS: ${formData.overall_wellness_rating}/10
 								className="text-2xl font-bold px-4 py-2 rounded-lg"
 								style={{
 									backgroundColor: "rgba(107, 139, 96, 0.1)",
-									color: "#2D5F3F",
+									color: "#5C7F4F",
 								}}
 							>
 								{formData.mental_clarity}
@@ -688,7 +688,7 @@ OVERALL WELLNESS: ${formData.overall_wellness_rating}/10
 					<div>
 						<label
 							className="block text-sm font-medium mb-2"
-							style={{ color: "#2D5F3F" }}
+							style={{ color: "#5C7F4F" }}
 						>
 							How would you describe your ability to focus?
 						</label>
@@ -710,7 +710,7 @@ OVERALL WELLNESS: ${formData.overall_wellness_rating}/10
 					<div>
 						<label
 							className="block text-sm font-medium mb-2"
-							style={{ color: "#2D5F3F" }}
+							style={{ color: "#5C7F4F" }}
 						>
 							What's occupying your mental space?
 						</label>
@@ -735,7 +735,7 @@ OVERALL WELLNESS: ${formData.overall_wellness_rating}/10
 					<div>
 						<label
 							className="block text-sm font-medium mb-2"
-							style={{ color: "#2D5F3F" }}
+							style={{ color: "#5C7F4F" }}
 						>
 							Rate your current workload sustainability (1-10)
 						</label>
@@ -758,7 +758,7 @@ OVERALL WELLNESS: ${formData.overall_wellness_rating}/10
 								className="text-2xl font-bold px-4 py-2 rounded-lg"
 								style={{
 									backgroundColor: "rgba(107, 139, 96, 0.1)",
-									color: "#2D5F3F",
+									color: "#5C7F4F",
 								}}
 							>
 								{formData.workload_sustainability}
@@ -769,7 +769,7 @@ OVERALL WELLNESS: ${formData.overall_wellness_rating}/10
 					<div>
 						<label
 							className="block text-sm font-medium mb-2"
-							style={{ color: "#2D5F3F" }}
+							style={{ color: "#5C7F4F" }}
 						>
 							How satisfied are you with your work right now?
 						</label>
@@ -795,7 +795,7 @@ OVERALL WELLNESS: ${formData.overall_wellness_rating}/10
 					<div>
 						<label
 							className="block text-sm font-medium mb-2"
-							style={{ color: "#2D5F3F" }}
+							style={{ color: "#5C7F4F" }}
 						>
 							What professional stressors are you managing?
 						</label>
@@ -820,7 +820,7 @@ OVERALL WELLNESS: ${formData.overall_wellness_rating}/10
 					<div>
 						<label
 							className="block text-sm font-medium mb-2"
-							style={{ color: "#2D5F3F" }}
+							style={{ color: "#5C7F4F" }}
 						>
 							Rate the quality of your social connections (1-10)
 						</label>
@@ -843,7 +843,7 @@ OVERALL WELLNESS: ${formData.overall_wellness_rating}/10
 								className="text-2xl font-bold px-4 py-2 rounded-lg"
 								style={{
 									backgroundColor: "rgba(107, 139, 96, 0.1)",
-									color: "#2D5F3F",
+									color: "#5C7F4F",
 								}}
 							>
 								{formData.connection_quality}
@@ -854,7 +854,7 @@ OVERALL WELLNESS: ${formData.overall_wellness_rating}/10
 					<div>
 						<label
 							className="block text-sm font-medium mb-2"
-							style={{ color: "#2D5F3F" }}
+							style={{ color: "#5C7F4F" }}
 						>
 							What support is available to you?
 						</label>
@@ -882,7 +882,7 @@ OVERALL WELLNESS: ${formData.overall_wellness_rating}/10
 					<div>
 						<label
 							className="block text-sm font-medium mb-2"
-							style={{ color: "#2D5F3F" }}
+							style={{ color: "#5C7F4F" }}
 						>
 							What do you need from your relationships right now?
 						</label>
@@ -907,7 +907,7 @@ OVERALL WELLNESS: ${formData.overall_wellness_rating}/10
 					<div>
 						<label
 							className="block text-sm font-medium mb-2"
-							style={{ color: "#2D5F3F" }}
+							style={{ color: "#5C7F4F" }}
 						>
 							What do you need most right now?
 						</label>
@@ -933,7 +933,7 @@ OVERALL WELLNESS: ${formData.overall_wellness_rating}/10
 					<div>
 						<label
 							className="block text-sm font-medium mb-2"
-							style={{ color: "#2D5F3F" }}
+							style={{ color: "#5C7F4F" }}
 						>
 							What resources are available to you?
 						</label>
@@ -951,7 +951,7 @@ OVERALL WELLNESS: ${formData.overall_wellness_rating}/10
 					<div>
 						<label
 							className="block text-sm font-medium mb-2"
-							style={{ color: "#2D5F3F" }}
+							style={{ color: "#5C7F4F" }}
 						>
 							What additional support would be helpful?
 						</label>
@@ -976,7 +976,7 @@ OVERALL WELLNESS: ${formData.overall_wellness_rating}/10
 					<div>
 						<label
 							className="block text-sm font-medium mb-2"
-							style={{ color: "#2D5F3F" }}
+							style={{ color: "#5C7F4F" }}
 						>
 							What self-care action will you commit to in the next 24 hours?
 						</label>
@@ -1004,7 +1004,7 @@ OVERALL WELLNESS: ${formData.overall_wellness_rating}/10
 					<div>
 						<label
 							className="block text-sm font-medium mb-2"
-							style={{ color: "#2D5F3F" }}
+							style={{ color: "#5C7F4F" }}
 						>
 							What will you prioritize for your wellness this week?
 						</label>
@@ -1022,7 +1022,7 @@ OVERALL WELLNESS: ${formData.overall_wellness_rating}/10
 					<div>
 						<label
 							className="block text-sm font-medium mb-2"
-							style={{ color: "#2D5F3F" }}
+							style={{ color: "#5C7F4F" }}
 						>
 							What are you grateful for right now?
 						</label>
@@ -1048,7 +1048,7 @@ OVERALL WELLNESS: ${formData.overall_wellness_rating}/10
 					<div>
 						<label
 							className="block text-sm font-medium mb-2"
-							style={{ color: "#2D5F3F" }}
+							style={{ color: "#5C7F4F" }}
 						>
 							Rate your overall wellness right now (1-10)
 						</label>
@@ -1071,7 +1071,7 @@ OVERALL WELLNESS: ${formData.overall_wellness_rating}/10
 								className="text-2xl font-bold px-4 py-2 rounded-lg"
 								style={{
 									backgroundColor: "rgba(107, 139, 96, 0.1)",
-									color: "#2D5F3F",
+									color: "#5C7F4F",
 								}}
 							>
 								{formData.overall_wellness_rating}
@@ -1083,7 +1083,7 @@ OVERALL WELLNESS: ${formData.overall_wellness_rating}/10
 						<div className="mt-8">
 							<p
 								className="text-sm font-medium mb-4"
-								style={{ color: "#2D5F3F" }}
+								style={{ color: "#5C7F4F" }}
 							>
 								Your check-in has been saved! Here's your summary:
 							</p>
@@ -1133,7 +1133,7 @@ OVERALL WELLNESS: ${formData.overall_wellness_rating}/10
 							<div
 								className="w-12 h-12 rounded-xl flex items-center justify-center"
 								style={{
-									background: "linear-gradient(135deg, #2D5F3F, #5B9378)",
+									background: "linear-gradient(135deg, #5C7F4F, #5B9378)",
 									boxShadow: "0 2px 8px rgba(107, 139, 96, 0.3)",
 								}}
 							>
@@ -1152,7 +1152,7 @@ OVERALL WELLNESS: ${formData.overall_wellness_rating}/10
 							onClick={onClose}
 							className="p-2 rounded-lg transition-all hover:opacity-90"
 							style={{
-								background: "linear-gradient(135deg, #2D5F3F, #5B9378)",
+								background: "linear-gradient(135deg, #5C7F4F, #5B9378)",
 							}}
 							aria-label="Close"
 						>
@@ -1232,7 +1232,7 @@ OVERALL WELLNESS: ${formData.overall_wellness_rating}/10
 							onClick={handleNext}
 							className="px-6 py-2 rounded-lg flex items-center transition-all"
 							style={{
-								background: "linear-gradient(135deg, #2D5F3F, #5B9378)",
+								background: "linear-gradient(135deg, #5C7F4F, #5B9378)",
 								color: "#FFFFFF",
 								boxShadow: "0 2px 8px rgba(107, 139, 96, 0.3)",
 							}}
@@ -1259,7 +1259,7 @@ OVERALL WELLNESS: ${formData.overall_wellness_rating}/10
 								background:
 									isSaving || showSummary
 										? "#CCCCCC"
-										: "linear-gradient(135deg, #2D5F3F, #5B9378)",
+										: "linear-gradient(135deg, #5C7F4F, #5B9378)",
 								color: "#FFFFFF",
 								boxShadow:
 									isSaving || showSummary

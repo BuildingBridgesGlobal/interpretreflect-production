@@ -23,7 +23,7 @@ export function TermsOfService() {
 								onClick={() => navigate("/")}
 								className="flex items-center space-x-2 px-4 py-2 rounded-lg font-semibold transition-all hover:opacity-90"
 								style={{
-									background: "#2D5F3F",
+									background: "#5C7F4F",
 									color: "#FFFFFF",
 									boxShadow: "0 2px 8px rgba(45, 95, 63, 0.2)",
 								}}
@@ -133,7 +133,7 @@ export function TermsOfService() {
 							</div>
 							<p
 								className="mt-3 text-sm font-semibold"
-								style={{ color: "#2D5F3F" }}
+								style={{ color: "#5C7F4F" }}
 							>
 								InterpretReflect is not a provider of medical or psychological
 								treatment.
@@ -188,7 +188,7 @@ export function TermsOfService() {
 							</div>
 							<p
 								className="mt-3 text-sm font-semibold"
-								style={{ color: "#2D5F3F" }}
+								style={{ color: "#5C7F4F" }}
 							>
 								The platform does not substitute professional medical, mental
 								health, or therapeutic services.
@@ -380,7 +380,7 @@ export function TermsOfService() {
 						<a
 							href="mailto:hello@huviatechnologies.com"
 							className="font-semibold text-base hover:underline"
-							style={{ color: "#2D5F3F" }}
+							style={{ color: "#5C7F4F" }}
 						>
 							hello@huviatechnologies.com
 						</a>
@@ -396,7 +396,7 @@ export function TermsOfService() {
 						onClick={() => navigate("/")}
 						className="inline-flex items-center px-6 py-3 rounded-lg font-semibold transition-all hover:opacity-90"
 						style={{
-							backgroundColor: "#2D5F3F",
+							backgroundColor: "#5C7F4F",
 							color: "#FFFFFF",
 						}}
 					>

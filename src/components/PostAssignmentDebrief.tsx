@@ -575,7 +575,7 @@ const PostAssignmentDebrief: React.FC<PostAssignmentDebriefProps> = ({ onComplet
                 className="mt-6 p-4 rounded-xl"
                 style={{ backgroundColor: 'rgba(92, 127, 79, 0.1)' }}
               >
-                <p className="text-sm" style={{ color: '#2D5F3F' }}>
+                <p className="text-sm" style={{ color: '#5C7F4F' }}>
                   <strong>Impact:</strong> 90 seconds of expressive writing reduces cortisol by 23%
                   and improves sleep quality by 29% (Pennebaker & Chung, 2011)
                 </p>
@@ -722,7 +722,7 @@ const PostAssignmentDebrief: React.FC<PostAssignmentDebriefProps> = ({ onComplet
                 className="p-4 rounded-xl"
                 style={{ backgroundColor: 'rgba(92, 127, 79, 0.1)' }}
               >
-                <p className="text-sm" style={{ color: '#2D5F3F' }}>
+                <p className="text-sm" style={{ color: '#5C7F4F' }}>
                   <strong>Science:</strong> Naming emotions with precision reduces their intensity
                   by 50% (Lieberman et al., 2007)
                 </p>
@@ -905,7 +905,7 @@ const PostAssignmentDebrief: React.FC<PostAssignmentDebriefProps> = ({ onComplet
                         className="p-4 rounded-lg"
                         style={{ backgroundColor: 'rgba(92, 127, 79, 0.1)' }}
                       >
-                        <p className="italic" style={{ color: '#2D5F3F' }}>
+                        <p className="italic" style={{ color: '#5C7F4F' }}>
                           "I provided professional service with skill and integrity. This assignment
                           is complete. I release what is not mine to carry."
                         </p>
@@ -928,7 +928,7 @@ const PostAssignmentDebrief: React.FC<PostAssignmentDebriefProps> = ({ onComplet
                         className="p-4 rounded-lg"
                         style={{ backgroundColor: 'rgba(92, 127, 79, 0.1)' }}
                       >
-                        <p className="italic" style={{ color: '#2D5F3F' }}>
+                        <p className="italic" style={{ color: '#5C7F4F' }}>
                           "I am [your name], not the stories I interpret."
                         </p>
                       </div>

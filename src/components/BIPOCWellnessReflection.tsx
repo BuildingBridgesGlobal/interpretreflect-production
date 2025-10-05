@@ -281,7 +281,7 @@ const BIPOCWellnessReflection: React.FC<BIPOCWellnessReflectionProps> = ({
 					>
 						<h3
 							className="text-lg font-semibold mb-4"
-							style={{ color: "#2D5F3F" }}
+							style={{ color: "#5C7F4F" }}
 						>
 							Grounding
 						</h3>
@@ -292,7 +292,7 @@ const BIPOCWellnessReflection: React.FC<BIPOCWellnessReflectionProps> = ({
 					</div>
 
 					<div>
-						<label className="block text-sm font-medium mb-2" style={{ color: "#2D5F3F" }}>
+						<label className="block text-sm font-medium mb-2" style={{ color: "#5C7F4F" }}>
 							As you begin this reflection, what sensations do you notice in your body right
 							now?
 						</label>
@@ -310,7 +310,7 @@ const BIPOCWellnessReflection: React.FC<BIPOCWellnessReflectionProps> = ({
 					</div>
 
 					<div>
-						<label className="block text-sm font-medium mb-2" style={{ color: "#2D5F3F" }}>
+						<label className="block text-sm font-medium mb-2" style={{ color: "#5C7F4F" }}>
 							Where is your nervous system right now? (1-10)
 						</label>
 						<div className="flex items-center space-x-4">
@@ -329,7 +329,7 @@ const BIPOCWellnessReflection: React.FC<BIPOCWellnessReflectionProps> = ({
 								className="text-2xl font-bold px-4 py-2 rounded-lg"
 								style={{
 									backgroundColor: "rgba(107, 139, 96, 0.1)",
-									color: "#2D5F3F",
+									color: "#5C7F4F",
 								}}
 							>
 								{formData.nervous_system_state}
@@ -343,7 +343,7 @@ const BIPOCWellnessReflection: React.FC<BIPOCWellnessReflectionProps> = ({
 					</div>
 
 					<div>
-						<label className="block text-sm font-medium mb-3" style={{ color: "#2D5F3F" }}>
+						<label className="block text-sm font-medium mb-3" style={{ color: "#5C7F4F" }}>
 							What emotions are present for you right now? (Select all that apply)
 						</label>
 						<div className="space-y-2">
@@ -390,7 +390,7 @@ const BIPOCWellnessReflection: React.FC<BIPOCWellnessReflectionProps> = ({
 					</div>
 
 					<div>
-						<label className="block text-sm font-medium mb-2" style={{ color: "#2D5F3F" }}>
+						<label className="block text-sm font-medium mb-2" style={{ color: "#5C7F4F" }}>
 							How clear or foggy do these emotions feel? (1-10)
 						</label>
 						<div className="flex items-center space-x-4">
@@ -409,7 +409,7 @@ const BIPOCWellnessReflection: React.FC<BIPOCWellnessReflectionProps> = ({
 								className="text-2xl font-bold px-4 py-2 rounded-lg"
 								style={{
 									backgroundColor: "rgba(107, 139, 96, 0.1)",
-									color: "#2D5F3F",
+									color: "#5C7F4F",
 								}}
 							>
 								{formData.emotional_clarity}
@@ -422,7 +422,7 @@ const BIPOCWellnessReflection: React.FC<BIPOCWellnessReflectionProps> = ({
 					</div>
 
 					<div>
-						<label className="block text-sm font-medium mb-2" style={{ color: "#2D5F3F" }}>
+						<label className="block text-sm font-medium mb-2" style={{ color: "#5C7F4F" }}>
 							How emotionally safe do you feel in this moment to reflect honestly? (1-10)
 						</label>
 						<div className="flex items-center space-x-4">
@@ -441,7 +441,7 @@ const BIPOCWellnessReflection: React.FC<BIPOCWellnessReflectionProps> = ({
 								className="text-2xl font-bold px-4 py-2 rounded-lg"
 								style={{
 									backgroundColor: "rgba(107, 139, 96, 0.1)",
-									color: "#2D5F3F",
+									color: "#5C7F4F",
 								}}
 							>
 								{formData.emotional_safety}
@@ -462,7 +462,7 @@ const BIPOCWellnessReflection: React.FC<BIPOCWellnessReflectionProps> = ({
 			fields: (
 				<div className="space-y-6">
 					<div>
-						<label className="block text-sm font-medium mb-2" style={{ color: "#2D5F3F" }}>
+						<label className="block text-sm font-medium mb-2" style={{ color: "#5C7F4F" }}>
 							Describe the work situation you're reflecting on
 						</label>
 						<textarea
@@ -483,7 +483,7 @@ const BIPOCWellnessReflection: React.FC<BIPOCWellnessReflectionProps> = ({
 					</div>
 
 					<div>
-						<label className="block text-sm font-medium mb-2" style={{ color: "#2D5F3F" }}>
+						<label className="block text-sm font-medium mb-2" style={{ color: "#5C7F4F" }}>
 							What racial/cultural dynamics were present? (Optional)
 						</label>
 						<textarea
@@ -497,7 +497,7 @@ const BIPOCWellnessReflection: React.FC<BIPOCWellnessReflectionProps> = ({
 					</div>
 
 					<div>
-						<label className="block text-sm font-medium mb-3" style={{ color: "#2D5F3F" }}>
+						<label className="block text-sm font-medium mb-3" style={{ color: "#5C7F4F" }}>
 							How did your body respond to racialized stress? (Select all that apply)
 						</label>
 						<div className="space-y-2">
@@ -543,7 +543,7 @@ const BIPOCWellnessReflection: React.FC<BIPOCWellnessReflectionProps> = ({
 					</div>
 
 					<div>
-						<label className="block text-sm font-medium mb-3" style={{ color: "#2D5F3F" }}>
+						<label className="block text-sm font-medium mb-3" style={{ color: "#5C7F4F" }}>
 							On a body level, how intense was your stress response?{" "}
 							{formData.stress_hormone_response}/10
 						</label>
@@ -565,7 +565,7 @@ const BIPOCWellnessReflection: React.FC<BIPOCWellnessReflectionProps> = ({
 					</div>
 
 					<div>
-						<label className="block text-sm font-medium mb-2" style={{ color: "#2D5F3F" }}>
+						<label className="block text-sm font-medium mb-2" style={{ color: "#5C7F4F" }}>
 							Did you feel within your window of tolerance (able to cope) or outside it
 							(overwhelmed/shutdown)?
 						</label>
@@ -581,7 +581,7 @@ const BIPOCWellnessReflection: React.FC<BIPOCWellnessReflectionProps> = ({
 									className="flex items-center p-3 rounded-lg border cursor-pointer hover:bg-gray-50 transition-colors"
 									style={{
 										borderColor:
-											formData.window_of_tolerance === option ? "#2D5F3F" : "#D1D5DB",
+											formData.window_of_tolerance === option ? "#5C7F4F" : "#D1D5DB",
 										backgroundColor:
 											formData.window_of_tolerance === option
 												? "rgba(45, 95, 63, 0.05)"
@@ -607,7 +607,7 @@ const BIPOCWellnessReflection: React.FC<BIPOCWellnessReflectionProps> = ({
 					</div>
 
 					<div>
-						<label className="block text-sm font-medium mb-3" style={{ color: "#2D5F3F" }}>
+						<label className="block text-sm font-medium mb-3" style={{ color: "#5C7F4F" }}>
 							How did the racialized stress affect your thinking? (Select all that apply)
 						</label>
 						<div className="space-y-2">
@@ -665,14 +665,14 @@ const BIPOCWellnessReflection: React.FC<BIPOCWellnessReflectionProps> = ({
 							border: "1px solid rgba(107, 139, 96, 0.2)",
 						}}
 					>
-						<p className="text-sm" style={{ color: "#2D5F3F" }}>
+						<p className="text-sm" style={{ color: "#5C7F4F" }}>
 							<strong>Note:</strong> This is a private space to document racialized harm.
 							You deserve to name what happened without minimizing it.
 						</p>
 					</div>
 
 					<div>
-						<label className="block text-sm font-medium mb-2" style={{ color: "#2D5F3F" }}>
+						<label className="block text-sm font-medium mb-2" style={{ color: "#5C7F4F" }}>
 							What specific harm or microaggressions occurred? (Optional)
 						</label>
 						<textarea
@@ -686,7 +686,7 @@ const BIPOCWellnessReflection: React.FC<BIPOCWellnessReflectionProps> = ({
 					</div>
 
 					<div>
-						<label className="block text-sm font-medium mb-3" style={{ color: "#2D5F3F" }}>
+						<label className="block text-sm font-medium mb-3" style={{ color: "#5C7F4F" }}>
 							Types of harm (Select all that apply)
 						</label>
 						<div className="space-y-2">
@@ -734,7 +734,7 @@ const BIPOCWellnessReflection: React.FC<BIPOCWellnessReflectionProps> = ({
 					</div>
 
 					<div>
-						<label className="block text-sm font-medium mb-2" style={{ color: "#2D5F3F" }}>
+						<label className="block text-sm font-medium mb-2" style={{ color: "#5C7F4F" }}>
 							How did this impact your relationship with yourself? (Optional)
 						</label>
 						<textarea
@@ -748,7 +748,7 @@ const BIPOCWellnessReflection: React.FC<BIPOCWellnessReflectionProps> = ({
 					</div>
 
 					<div>
-						<label className="block text-sm font-medium mb-2" style={{ color: "#2D5F3F" }}>
+						<label className="block text-sm font-medium mb-2" style={{ color: "#5C7F4F" }}>
 							How did this impact your ability to connect with others? (Optional)
 						</label>
 						<textarea
@@ -762,7 +762,7 @@ const BIPOCWellnessReflection: React.FC<BIPOCWellnessReflectionProps> = ({
 					</div>
 
 					<div>
-						<label className="block text-sm font-medium mb-3" style={{ color: "#2D5F3F" }}>
+						<label className="block text-sm font-medium mb-3" style={{ color: "#5C7F4F" }}>
 							Did this trigger feelings of rejection, abandonment, or not belonging?{" "}
 							{formData.attachment_wound}/10
 						</label>
@@ -782,7 +782,7 @@ const BIPOCWellnessReflection: React.FC<BIPOCWellnessReflectionProps> = ({
 					</div>
 
 					<div>
-						<label className="block text-sm font-medium mb-3" style={{ color: "#2D5F3F" }}>
+						<label className="block text-sm font-medium mb-3" style={{ color: "#5C7F4F" }}>
 							In this experience, how accessible was self-compassion?{" "}
 							{formData.self_compassion_access}/10
 						</label>
@@ -819,7 +819,7 @@ const BIPOCWellnessReflection: React.FC<BIPOCWellnessReflectionProps> = ({
 							border: "1px solid rgba(107, 139, 96, 0.2)",
 						}}
 					>
-						<p className="text-sm" style={{ color: "#2D5F3F" }}>
+						<p className="text-sm" style={{ color: "#5C7F4F" }}>
 							<strong>Affirmation:</strong> Your cultural identity is a strength, not
 							something to be hidden or minimized. You belong in this profession exactly as
 							you are.
@@ -827,7 +827,7 @@ const BIPOCWellnessReflection: React.FC<BIPOCWellnessReflectionProps> = ({
 					</div>
 
 					<div>
-						<label className="block text-sm font-medium mb-3" style={{ color: "#2D5F3F" }}>
+						<label className="block text-sm font-medium mb-3" style={{ color: "#5C7F4F" }}>
 							How much cultural code-switching did you do? {formData.cultural_code_switching}
 							/10
 						</label>
@@ -849,7 +849,7 @@ const BIPOCWellnessReflection: React.FC<BIPOCWellnessReflectionProps> = ({
 					</div>
 
 					<div>
-						<label className="block text-sm font-medium mb-2" style={{ color: "#2D5F3F" }}>
+						<label className="block text-sm font-medium mb-2" style={{ color: "#5C7F4F" }}>
 							What did code-switching cost you emotionally/energetically? (Optional)
 						</label>
 						<textarea
@@ -863,7 +863,7 @@ const BIPOCWellnessReflection: React.FC<BIPOCWellnessReflectionProps> = ({
 					</div>
 
 					<div>
-						<label className="block text-sm font-medium mb-3" style={{ color: "#2D5F3F" }}>
+						<label className="block text-sm font-medium mb-3" style={{ color: "#5C7F4F" }}>
 							How much of your authentic self could you bring? {formData.authenticity_level}
 							/10
 						</label>
@@ -885,7 +885,7 @@ const BIPOCWellnessReflection: React.FC<BIPOCWellnessReflectionProps> = ({
 					</div>
 
 					<div>
-						<label className="block text-sm font-medium mb-2" style={{ color: "#2D5F3F" }}>
+						<label className="block text-sm font-medium mb-2" style={{ color: "#5C7F4F" }}>
 							What cultural strengths, wisdom, or values did you draw on? (Optional)
 						</label>
 						<textarea
@@ -899,7 +899,7 @@ const BIPOCWellnessReflection: React.FC<BIPOCWellnessReflectionProps> = ({
 					</div>
 
 					<div>
-						<label className="block text-sm font-medium mb-3" style={{ color: "#2D5F3F" }}>
+						<label className="block text-sm font-medium mb-3" style={{ color: "#5C7F4F" }}>
 							How integrated or fragmented did you feel (culturally, professionally,
 							personally)? {formData.identity_integration}/10
 						</label>
@@ -931,7 +931,7 @@ const BIPOCWellnessReflection: React.FC<BIPOCWellnessReflectionProps> = ({
 
 						<div className="space-y-6">
 							<div>
-								<label className="block text-sm font-medium mb-2" style={{ color: "#2D5F3F" }}>
+								<label className="block text-sm font-medium mb-2" style={{ color: "#5C7F4F" }}>
 									Did immigration trauma or refugee experiences surface during this work?
 								</label>
 								<textarea
@@ -949,7 +949,7 @@ const BIPOCWellnessReflection: React.FC<BIPOCWellnessReflectionProps> = ({
 							</div>
 
 							<div>
-								<label className="block text-sm font-medium mb-2" style={{ color: "#2D5F3F" }}>
+								<label className="block text-sm font-medium mb-2" style={{ color: "#5C7F4F" }}>
 									How did working with your own community (if applicable) affect your boundaries or emotions?
 								</label>
 								<textarea
@@ -967,7 +967,7 @@ const BIPOCWellnessReflection: React.FC<BIPOCWellnessReflectionProps> = ({
 							</div>
 
 							<div>
-								<label className="block text-sm font-medium mb-2" style={{ color: "#2D5F3F" }}>
+								<label className="block text-sm font-medium mb-2" style={{ color: "#5C7F4F" }}>
 									Did you experience language loyalty or cultural broker tension?
 								</label>
 								<textarea
@@ -985,7 +985,7 @@ const BIPOCWellnessReflection: React.FC<BIPOCWellnessReflectionProps> = ({
 							</div>
 
 							<div>
-								<label className="block text-sm font-medium mb-3" style={{ color: "#2D5F3F" }}>
+								<label className="block text-sm font-medium mb-3" style={{ color: "#5C7F4F" }}>
 									If applicable, how much anxiety about documentation status (your own or others') was present?{" "}
 									{formData.documentation_anxiety}/10
 								</label>
@@ -1017,7 +1017,7 @@ const BIPOCWellnessReflection: React.FC<BIPOCWellnessReflectionProps> = ({
 			fields: (
 				<div className="space-y-6">
 					<div>
-						<label className="block text-sm font-medium mb-3" style={{ color: "#2D5F3F" }}>
+						<label className="block text-sm font-medium mb-3" style={{ color: "#5C7F4F" }}>
 							What did you do to regulate your emotions during/after? (Select all that apply)
 						</label>
 						<div className="space-y-2">
@@ -1063,7 +1063,7 @@ const BIPOCWellnessReflection: React.FC<BIPOCWellnessReflectionProps> = ({
 					</div>
 
 					<div>
-						<label className="block text-sm font-medium mb-3" style={{ color: "#2D5F3F" }}>
+						<label className="block text-sm font-medium mb-3" style={{ color: "#5C7F4F" }}>
 							How effective were your coping strategies? {formData.regulation_effectiveness}
 							/10
 						</label>
@@ -1085,7 +1085,7 @@ const BIPOCWellnessReflection: React.FC<BIPOCWellnessReflectionProps> = ({
 					</div>
 
 					<div>
-						<label className="block text-sm font-medium mb-2" style={{ color: "#2D5F3F" }}>
+						<label className="block text-sm font-medium mb-2" style={{ color: "#5C7F4F" }}>
 							Did you have access to supportive relationships for co-regulation?
 						</label>
 						<div className="space-y-2">
@@ -1100,7 +1100,7 @@ const BIPOCWellnessReflection: React.FC<BIPOCWellnessReflectionProps> = ({
 									className="flex items-center p-3 rounded-lg border cursor-pointer hover:bg-gray-50 transition-colors"
 									style={{
 										borderColor:
-											formData.co_regulation_access === option ? "#2D5F3F" : "#D1D5DB",
+											formData.co_regulation_access === option ? "#5C7F4F" : "#D1D5DB",
 										backgroundColor:
 											formData.co_regulation_access === option
 												? "rgba(45, 95, 63, 0.05)"
@@ -1126,7 +1126,7 @@ const BIPOCWellnessReflection: React.FC<BIPOCWellnessReflectionProps> = ({
 					</div>
 
 					<div>
-						<label className="block text-sm font-medium mb-3" style={{ color: "#2D5F3F" }}>
+						<label className="block text-sm font-medium mb-3" style={{ color: "#5C7F4F" }}>
 							Were you able to process and release the emotional charge?{" "}
 							{formData.emotional_discharge}/10
 						</label>
@@ -1148,7 +1148,7 @@ const BIPOCWellnessReflection: React.FC<BIPOCWellnessReflectionProps> = ({
 					</div>
 
 					<div>
-						<label className="block text-sm font-medium mb-3" style={{ color: "#2D5F3F" }}>
+						<label className="block text-sm font-medium mb-3" style={{ color: "#5C7F4F" }}>
 							How much are you ruminating or replaying this experience?{" "}
 							{formData.rumination_level}/10
 						</label>
@@ -1176,7 +1176,7 @@ const BIPOCWellnessReflection: React.FC<BIPOCWellnessReflectionProps> = ({
 			fields: (
 				<div className="space-y-6">
 					<div>
-						<label className="block text-sm font-medium mb-2" style={{ color: "#2D5F3F" }}>
+						<label className="block text-sm font-medium mb-2" style={{ color: "#5C7F4F" }}>
 							Does this experience connect to patterns in your life? (Optional)
 						</label>
 						<textarea
@@ -1190,7 +1190,7 @@ const BIPOCWellnessReflection: React.FC<BIPOCWellnessReflectionProps> = ({
 					</div>
 
 					<div>
-						<label className="block text-sm font-medium mb-2" style={{ color: "#2D5F3F" }}>
+						<label className="block text-sm font-medium mb-2" style={{ color: "#5C7F4F" }}>
 							What specifically triggered the strongest reaction in you? (Optional)
 						</label>
 						<textarea
@@ -1204,7 +1204,7 @@ const BIPOCWellnessReflection: React.FC<BIPOCWellnessReflectionProps> = ({
 					</div>
 
 					<div>
-						<label className="block text-sm font-medium mb-3" style={{ color: "#2D5F3F" }}>
+						<label className="block text-sm font-medium mb-3" style={{ color: "#5C7F4F" }}>
 							What needs went unmet in this experience? (Select all that apply)
 						</label>
 						<div className="space-y-2">
@@ -1225,7 +1225,7 @@ const BIPOCWellnessReflection: React.FC<BIPOCWellnessReflectionProps> = ({
 									key={need}
 									className="flex items-center p-3 rounded-lg border cursor-pointer transition-colors"
 									style={{
-										borderColor: formData.unmet_needs.includes(need) ? "#2D5F3F" : "#D1D5DB",
+										borderColor: formData.unmet_needs.includes(need) ? "#5C7F4F" : "#D1D5DB",
 										backgroundColor: formData.unmet_needs.includes(need)
 											? "rgba(107, 139, 96, 0.1)"
 											: "#FFFFFF",
@@ -1249,7 +1249,7 @@ const BIPOCWellnessReflection: React.FC<BIPOCWellnessReflectionProps> = ({
 					</div>
 
 					<div>
-						<label className="block text-sm font-medium mb-2" style={{ color: "#2D5F3F" }}>
+						<label className="block text-sm font-medium mb-2" style={{ color: "#5C7F4F" }}>
 							What beliefs about yourself or the world got activated? (Optional)
 						</label>
 						<textarea
@@ -1263,7 +1263,7 @@ const BIPOCWellnessReflection: React.FC<BIPOCWellnessReflectionProps> = ({
 					</div>
 
 					<div>
-						<label className="block text-sm font-medium mb-2" style={{ color: "#2D5F3F" }}>
+						<label className="block text-sm font-medium mb-2" style={{ color: "#5C7F4F" }}>
 							What is this experience teaching you about yourself? (Optional)
 						</label>
 						<textarea
@@ -1277,7 +1277,7 @@ const BIPOCWellnessReflection: React.FC<BIPOCWellnessReflectionProps> = ({
 					</div>
 
 					<div>
-						<label className="block text-sm font-medium mb-2" style={{ color: "#2D5F3F" }}>
+						<label className="block text-sm font-medium mb-2" style={{ color: "#5C7F4F" }}>
 							What would you say to a beloved friend going through this?
 						</label>
 						<textarea
@@ -1313,7 +1313,7 @@ const BIPOCWellnessReflection: React.FC<BIPOCWellnessReflectionProps> = ({
 							border: "1px solid rgba(107, 139, 96, 0.2)",
 						}}
 					>
-						<p className="text-sm" style={{ color: "#2D5F3F" }}>
+						<p className="text-sm" style={{ color: "#5C7F4F" }}>
 							<strong>Note:</strong> BIPOC interpreter burnout is not a personal failing—it's
 							the result of systemic racism, inequitable working conditions, and institutional
 							barriers. Naming these systems is part of resistance.
@@ -1321,7 +1321,7 @@ const BIPOCWellnessReflection: React.FC<BIPOCWellnessReflectionProps> = ({
 					</div>
 
 					<div>
-						<label className="block text-sm font-medium mb-2" style={{ color: "#2D5F3F" }}>
+						<label className="block text-sm font-medium mb-2" style={{ color: "#5C7F4F" }}>
 							Reminder: Your exhaustion, pain, and burnout are not personal failures. They are
 							physiological responses to systemic harm. How does this reframe land for you?
 							(Optional)
@@ -1337,7 +1337,7 @@ const BIPOCWellnessReflection: React.FC<BIPOCWellnessReflectionProps> = ({
 					</div>
 
 					<div>
-						<label className="block text-sm font-medium mb-2" style={{ color: "#2D5F3F" }}>
+						<label className="block text-sm font-medium mb-2" style={{ color: "#5C7F4F" }}>
 							What collective support or solidarity do you need right now? (Optional)
 						</label>
 						<textarea
@@ -1351,7 +1351,7 @@ const BIPOCWellnessReflection: React.FC<BIPOCWellnessReflectionProps> = ({
 					</div>
 
 					<div>
-						<label className="block text-sm font-medium mb-3" style={{ color: "#2D5F3F" }}>
+						<label className="block text-sm font-medium mb-3" style={{ color: "#5C7F4F" }}>
 							How connected or isolated do you feel from BIPOC community?{" "}
 							{formData.community_connection}/10
 						</label>
@@ -1388,7 +1388,7 @@ const BIPOCWellnessReflection: React.FC<BIPOCWellnessReflectionProps> = ({
 							border: "1px solid rgba(107, 139, 96, 0.2)",
 						}}
 					>
-						<p className="text-sm" style={{ color: "#2D5F3F" }}>
+						<p className="text-sm" style={{ color: "#5C7F4F" }}>
 							<strong>Affirmation:</strong> Your resilience is evidence of your strength, not
 							proof that the harm is acceptable. You deserve better working conditions AND you
 							are doing remarkable work.
@@ -1396,7 +1396,7 @@ const BIPOCWellnessReflection: React.FC<BIPOCWellnessReflectionProps> = ({
 					</div>
 
 					<div>
-						<label className="block text-sm font-medium mb-2" style={{ color: "#2D5F3F" }}>
+						<label className="block text-sm font-medium mb-2" style={{ color: "#5C7F4F" }}>
 							What boundaries do you need to protect your wellbeing? (Optional)
 						</label>
 						<textarea
@@ -1410,7 +1410,7 @@ const BIPOCWellnessReflection: React.FC<BIPOCWellnessReflectionProps> = ({
 					</div>
 
 					<div>
-						<label className="block text-sm font-medium mb-2" style={{ color: "#2D5F3F" }}>
+						<label className="block text-sm font-medium mb-2" style={{ color: "#5C7F4F" }}>
 							What would help you restore your nervous system and sense of self? (Optional)
 						</label>
 						<textarea
@@ -1424,7 +1424,7 @@ const BIPOCWellnessReflection: React.FC<BIPOCWellnessReflectionProps> = ({
 					</div>
 
 					<div>
-						<label className="block text-sm font-medium mb-2" style={{ color: "#2D5F3F" }}>
+						<label className="block text-sm font-medium mb-2" style={{ color: "#5C7F4F" }}>
 							What cultural healing practices support you? (Optional)
 						</label>
 						<textarea
@@ -1438,7 +1438,7 @@ const BIPOCWellnessReflection: React.FC<BIPOCWellnessReflectionProps> = ({
 					</div>
 
 					<div>
-						<label className="block text-sm font-medium mb-2" style={{ color: "#2D5F3F" }}>
+						<label className="block text-sm font-medium mb-2" style={{ color: "#5C7F4F" }}>
 							Where can you find moments of joy or resistance? (Optional)
 						</label>
 						<textarea
@@ -1452,7 +1452,7 @@ const BIPOCWellnessReflection: React.FC<BIPOCWellnessReflectionProps> = ({
 					</div>
 
 					<div>
-						<label className="block text-sm font-medium mb-2" style={{ color: "#2D5F3F" }}>
+						<label className="block text-sm font-medium mb-2" style={{ color: "#5C7F4F" }}>
 							What truth do you need to speak to yourself right now?
 						</label>
 						<textarea
@@ -1473,7 +1473,7 @@ const BIPOCWellnessReflection: React.FC<BIPOCWellnessReflectionProps> = ({
 					</div>
 
 					<div>
-						<label className="block text-sm font-medium mb-2" style={{ color: "#2D5F3F" }}>
+						<label className="block text-sm font-medium mb-2" style={{ color: "#5C7F4F" }}>
 							What is one small way you can care for yourself after this reflection?
 							(Optional)
 						</label>
@@ -1488,7 +1488,7 @@ const BIPOCWellnessReflection: React.FC<BIPOCWellnessReflectionProps> = ({
 					</div>
 
 					<div>
-						<label className="block text-sm font-medium mb-3" style={{ color: "#2D5F3F" }}>
+						<label className="block text-sm font-medium mb-3" style={{ color: "#5C7F4F" }}>
 							After this reflection, where is your overall wellbeing?{" "}
 							{formData.overall_wellbeing}/10
 						</label>
@@ -1537,7 +1537,7 @@ const BIPOCWellnessReflection: React.FC<BIPOCWellnessReflectionProps> = ({
 							<div
 								className="w-12 h-12 rounded-xl flex items-center justify-center"
 								style={{
-									background: "linear-gradient(135deg, #2D5F3F, #5B9378)",
+									background: "linear-gradient(135deg, #5C7F4F, #5B9378)",
 									boxShadow: "0 2px 8px rgba(107, 139, 96, 0.3)",
 								}}
 							>
@@ -1556,7 +1556,7 @@ const BIPOCWellnessReflection: React.FC<BIPOCWellnessReflectionProps> = ({
 							onClick={onClose}
 							className="p-2 rounded-lg transition-all hover:opacity-90"
 							style={{
-								background: "linear-gradient(135deg, #2D5F3F, #5B9378)",
+								background: "linear-gradient(135deg, #5C7F4F, #5B9378)",
 							}}
 							aria-label="Close"
 						>
@@ -1613,7 +1613,7 @@ const BIPOCWellnessReflection: React.FC<BIPOCWellnessReflectionProps> = ({
 										"linear-gradient(135deg, rgba(107, 139, 96, 0.1) 0%, rgba(92, 127, 79, 0.05) 100%)",
 								}}
 							>
-								<Check size={32} style={{ color: "#2D5F3F" }} />
+								<Check size={32} style={{ color: "#5C7F4F" }} />
 							</div>
 							<h3 className="text-2xl font-bold mb-2" style={{ color: "#1A1A1A" }}>
 								Ready to Save Your Reflection
@@ -1632,13 +1632,13 @@ const BIPOCWellnessReflection: React.FC<BIPOCWellnessReflectionProps> = ({
 								border: "1px solid rgba(107, 139, 96, 0.2)",
 							}}
 						>
-							<h4 className="font-semibold mb-4" style={{ color: "#2D5F3F" }}>
+							<h4 className="font-semibold mb-4" style={{ color: "#5C7F4F" }}>
 								Reflection Summary
 							</h4>
 							<div className="space-y-3 text-sm">
 								{formData.work_context && (
 									<div>
-										<span className="font-medium" style={{ color: "#2D5F3F" }}>
+										<span className="font-medium" style={{ color: "#5C7F4F" }}>
 											Work Context:{" "}
 										</span>
 										<span style={{ color: "#5A5A5A" }}>
@@ -1648,7 +1648,7 @@ const BIPOCWellnessReflection: React.FC<BIPOCWellnessReflectionProps> = ({
 								)}
 								<div className="grid grid-cols-2 gap-4 pt-2">
 									<div>
-										<span className="font-medium" style={{ color: "#2D5F3F" }}>
+										<span className="font-medium" style={{ color: "#5C7F4F" }}>
 											Nervous System State:{" "}
 										</span>
 										<span style={{ color: "#5A5A5A" }}>
@@ -1656,13 +1656,13 @@ const BIPOCWellnessReflection: React.FC<BIPOCWellnessReflectionProps> = ({
 										</span>
 									</div>
 									<div>
-										<span className="font-medium" style={{ color: "#2D5F3F" }}>
+										<span className="font-medium" style={{ color: "#5C7F4F" }}>
 											Stress Response:{" "}
 										</span>
 										<span style={{ color: "#5A5A5A" }}>{formData.stress_hormone_response}/10</span>
 									</div>
 									<div>
-										<span className="font-medium" style={{ color: "#2D5F3F" }}>
+										<span className="font-medium" style={{ color: "#5C7F4F" }}>
 											Code-Switching:{" "}
 										</span>
 										<span style={{ color: "#5A5A5A" }}>
@@ -1670,7 +1670,7 @@ const BIPOCWellnessReflection: React.FC<BIPOCWellnessReflectionProps> = ({
 										</span>
 									</div>
 									<div>
-										<span className="font-medium" style={{ color: "#2D5F3F" }}>
+										<span className="font-medium" style={{ color: "#5C7F4F" }}>
 											Overall Wellbeing:{" "}
 										</span>
 										<span style={{ color: "#5A5A5A" }}>{formData.overall_wellbeing}/10</span>
@@ -1705,7 +1705,7 @@ const BIPOCWellnessReflection: React.FC<BIPOCWellnessReflectionProps> = ({
 								style={{
 									background: isSaving
 										? "#CCCCCC"
-										: "linear-gradient(135deg, #2D5F3F, #5B9378)",
+										: "linear-gradient(135deg, #5C7F4F, #5B9378)",
 									color: "#FFFFFF",
 									boxShadow: isSaving
 										? "none"
@@ -1766,7 +1766,7 @@ const BIPOCWellnessReflection: React.FC<BIPOCWellnessReflectionProps> = ({
 							onClick={handleNext}
 							className="px-6 py-2 rounded-lg flex items-center transition-all"
 							style={{
-								background: "linear-gradient(135deg, #2D5F3F, #5B9378)",
+								background: "linear-gradient(135deg, #5C7F4F, #5B9378)",
 								color: "#FFFFFF",
 								boxShadow: "0 2px 8px rgba(107, 139, 96, 0.3)",
 							}}

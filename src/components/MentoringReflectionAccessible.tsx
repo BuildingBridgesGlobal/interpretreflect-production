@@ -329,7 +329,7 @@ SUMMARY: ${formData.one_word_summary}
 					>
 						<h3
 							className="text-lg font-semibold mb-4"
-							style={{ color: "#2D5F3F" }}
+							style={{ color: "#5C7F4F" }}
 						>
 							Reflecting on Your Mentoring Experience
 						</h3>
@@ -343,7 +343,7 @@ SUMMARY: ${formData.one_word_summary}
 					<div>
 						<label
 							className="block text-sm font-medium mb-2"
-							style={{ color: "#2D5F3F" }}
+							style={{ color: "#5C7F4F" }}
 						>
 							What type of mentoring relationship was this?
 						</label>
@@ -371,7 +371,7 @@ SUMMARY: ${formData.one_word_summary}
 												: "#F8FBF6",
 										color:
 											formData.mentorship_type === type.value
-												? "#2D5F3F"
+												? "#5C7F4F"
 												: "#5A5A5A",
 										border: `1px solid ${formData.mentorship_type === type.value ? "#5B9378" : "#E8E5E0"}`,
 									}}
@@ -385,7 +385,7 @@ SUMMARY: ${formData.one_word_summary}
 					<div>
 						<label
 							className="block text-sm font-medium mb-2"
-							style={{ color: "#2D5F3F" }}
+							style={{ color: "#5C7F4F" }}
 						>
 							What stage was this mentoring relationship?
 						</label>
@@ -412,7 +412,7 @@ SUMMARY: ${formData.one_word_summary}
 												: "#F8FBF6",
 										color:
 											formData.relationship_stage === stage.value
-												? "#2D5F3F"
+												? "#5C7F4F"
 												: "#5A5A5A",
 										border: `1px solid ${formData.relationship_stage === stage.value ? "#5B9378" : "#E8E5E0"}`,
 									}}
@@ -426,7 +426,7 @@ SUMMARY: ${formData.one_word_summary}
 					<div>
 						<label
 							className="block text-sm font-medium mb-2"
-							style={{ color: "#2D5F3F" }}
+							style={{ color: "#5C7F4F" }}
 						>
 							How would you describe this mentoring session overall?
 						</label>
@@ -459,7 +459,7 @@ SUMMARY: ${formData.one_word_summary}
 					<div>
 						<label
 							className="block text-sm font-medium mb-2"
-							style={{ color: "#2D5F3F" }}
+							style={{ color: "#5C7F4F" }}
 						>
 							What were the original goals for this mentoring session?
 						</label>
@@ -485,7 +485,7 @@ SUMMARY: ${formData.one_word_summary}
 					<div>
 						<label
 							className="block text-sm font-medium mb-2"
-							style={{ color: "#2D5F3F" }}
+							style={{ color: "#5C7F4F" }}
 						>
 							How well were these goals achieved?
 						</label>
@@ -511,7 +511,7 @@ SUMMARY: ${formData.one_word_summary}
 					<div>
 						<label
 							className="block text-sm font-medium mb-2"
-							style={{ color: "#2D5F3F" }}
+							style={{ color: "#5C7F4F" }}
 						>
 							Were there any unexpected outcomes or discoveries?
 						</label>
@@ -536,7 +536,7 @@ SUMMARY: ${formData.one_word_summary}
 					<div>
 						<label
 							className="block text-sm font-medium mb-2"
-							style={{ color: "#2D5F3F" }}
+							style={{ color: "#5C7F4F" }}
 						>
 							What were your key insights from this mentoring session?
 						</label>
@@ -560,7 +560,7 @@ SUMMARY: ${formData.one_word_summary}
 					<div>
 						<label
 							className="block text-sm font-medium mb-2"
-							style={{ color: "#2D5F3F" }}
+							style={{ color: "#5C7F4F" }}
 						>
 							What skills or competencies did you develop or strengthen?
 						</label>
@@ -578,7 +578,7 @@ SUMMARY: ${formData.one_word_summary}
 					<div>
 						<label
 							className="block text-sm font-medium mb-2"
-							style={{ color: "#2D5F3F" }}
+							style={{ color: "#5C7F4F" }}
 						>
 							What knowledge gaps were addressed during this session?
 						</label>
@@ -603,7 +603,7 @@ SUMMARY: ${formData.one_word_summary}
 					<div>
 						<label
 							className="block text-sm font-medium mb-2"
-							style={{ color: "#2D5F3F" }}
+							style={{ color: "#5C7F4F" }}
 						>
 							How effective was the communication during this session?
 						</label>
@@ -631,7 +631,7 @@ SUMMARY: ${formData.one_word_summary}
 					<div>
 						<label
 							className="block text-sm font-medium mb-2"
-							style={{ color: "#2D5F3F" }}
+							style={{ color: "#5C7F4F" }}
 						>
 							How did the relationship dynamics feel during this session?
 						</label>
@@ -649,7 +649,7 @@ SUMMARY: ${formData.one_word_summary}
 					<div>
 						<label
 							className="block text-sm font-medium mb-2"
-							style={{ color: "#2D5F3F" }}
+							style={{ color: "#5C7F4F" }}
 						>
 							Rate the level of trust in this relationship (1-10)
 						</label>
@@ -669,7 +669,7 @@ SUMMARY: ${formData.one_word_summary}
 								className="text-2xl font-bold px-4 py-2 rounded-lg"
 								style={{
 									backgroundColor: "rgba(107, 139, 96, 0.1)",
-									color: "#2D5F3F",
+									color: "#5C7F4F",
 								}}
 							>
 								{formData.trust_level}
@@ -687,7 +687,7 @@ SUMMARY: ${formData.one_word_summary}
 					<div>
 						<label
 							className="block text-sm font-medium mb-2"
-							style={{ color: "#2D5F3F" }}
+							style={{ color: "#5C7F4F" }}
 						>
 							What challenges or difficulties arose during the session?
 						</label>
@@ -715,7 +715,7 @@ SUMMARY: ${formData.one_word_summary}
 					<div>
 						<label
 							className="block text-sm font-medium mb-2"
-							style={{ color: "#2D5F3F" }}
+							style={{ color: "#5C7F4F" }}
 						>
 							How were these challenges handled or addressed?
 						</label>
@@ -733,7 +733,7 @@ SUMMARY: ${formData.one_word_summary}
 					<div>
 						<label
 							className="block text-sm font-medium mb-2"
-							style={{ color: "#2D5F3F" }}
+							style={{ color: "#5C7F4F" }}
 						>
 							What personal growth areas were highlighted during this session?
 						</label>
@@ -758,7 +758,7 @@ SUMMARY: ${formData.one_word_summary}
 					<div>
 						<label
 							className="block text-sm font-medium mb-2"
-							style={{ color: "#2D5F3F" }}
+							style={{ color: "#5C7F4F" }}
 						>
 							What mentoring approaches were most helpful and effective?
 						</label>
@@ -784,7 +784,7 @@ SUMMARY: ${formData.one_word_summary}
 					<div>
 						<label
 							className="block text-sm font-medium mb-2"
-							style={{ color: "#2D5F3F" }}
+							style={{ color: "#5C7F4F" }}
 						>
 							What strategies or approaches were less effective?
 						</label>
@@ -802,7 +802,7 @@ SUMMARY: ${formData.one_word_summary}
 					<div>
 						<label
 							className="block text-sm font-medium mb-2"
-							style={{ color: "#2D5F3F" }}
+							style={{ color: "#5C7F4F" }}
 						>
 							What impact did the mentor have on your development?
 						</label>
@@ -827,7 +827,7 @@ SUMMARY: ${formData.one_word_summary}
 					<div>
 						<label
 							className="block text-sm font-medium mb-2"
-							style={{ color: "#2D5F3F" }}
+							style={{ color: "#5C7F4F" }}
 						>
 							What are your next steps based on this mentoring session?
 						</label>
@@ -849,7 +849,7 @@ SUMMARY: ${formData.one_word_summary}
 					<div>
 						<label
 							className="block text-sm font-medium mb-2"
-							style={{ color: "#2D5F3F" }}
+							style={{ color: "#5C7F4F" }}
 						>
 							What areas will you continue to focus on for learning?
 						</label>
@@ -867,7 +867,7 @@ SUMMARY: ${formData.one_word_summary}
 					<div>
 						<label
 							className="block text-sm font-medium mb-2"
-							style={{ color: "#2D5F3F" }}
+							style={{ color: "#5C7F4F" }}
 						>
 							How do you see this mentoring relationship evolving?
 						</label>
@@ -892,7 +892,7 @@ SUMMARY: ${formData.one_word_summary}
 					<div>
 						<label
 							className="block text-sm font-medium mb-2"
-							style={{ color: "#2D5F3F" }}
+							style={{ color: "#5C7F4F" }}
 						>
 							Express your appreciation for this mentoring experience
 						</label>
@@ -916,7 +916,7 @@ SUMMARY: ${formData.one_word_summary}
 					<div>
 						<label
 							className="block text-sm font-medium mb-2"
-							style={{ color: "#2D5F3F" }}
+							style={{ color: "#5C7F4F" }}
 						>
 							Rate the overall quality of this session (1-10)
 						</label>
@@ -936,7 +936,7 @@ SUMMARY: ${formData.one_word_summary}
 								className="text-2xl font-bold px-4 py-2 rounded-lg"
 								style={{
 									backgroundColor: "rgba(107, 139, 96, 0.1)",
-									color: "#2D5F3F",
+									color: "#5C7F4F",
 								}}
 							>
 								{formData.session_quality}
@@ -947,7 +947,7 @@ SUMMARY: ${formData.one_word_summary}
 					<div>
 						<label
 							className="block text-sm font-medium mb-2"
-							style={{ color: "#2D5F3F" }}
+							style={{ color: "#5C7F4F" }}
 						>
 							Would you continue this mentoring relationship?
 						</label>
@@ -966,7 +966,7 @@ SUMMARY: ${formData.one_word_summary}
 												: "#F8FBF6",
 										color:
 											formData.would_continue === option
-												? "#2D5F3F"
+												? "#5C7F4F"
 												: "#5A5A5A",
 										border: `1px solid ${formData.would_continue === option ? "#5B9378" : "#E8E5E0"}`,
 									}}
@@ -980,7 +980,7 @@ SUMMARY: ${formData.one_word_summary}
 					<div>
 						<label
 							className="block text-sm font-medium mb-2"
-							style={{ color: "#2D5F3F" }}
+							style={{ color: "#5C7F4F" }}
 						>
 							Summarize this mentoring experience in one word
 						</label>
@@ -1007,7 +1007,7 @@ SUMMARY: ${formData.one_word_summary}
 						<div className="mt-8">
 							<p
 								className="text-sm font-medium mb-4"
-								style={{ color: "#2D5F3F" }}
+								style={{ color: "#5C7F4F" }}
 							>
 								Your reflection has been saved! Here's your summary:
 							</p>
@@ -1056,7 +1056,7 @@ SUMMARY: ${formData.one_word_summary}
 							<div
 								className="w-12 h-12 rounded-xl flex items-center justify-center"
 								style={{
-									background: "linear-gradient(135deg, #2D5F3F, #5B9378)",
+									background: "linear-gradient(135deg, #5C7F4F, #5B9378)",
 									boxShadow: "0 2px 8px rgba(107, 139, 96, 0.3)",
 								}}
 							>
@@ -1075,7 +1075,7 @@ SUMMARY: ${formData.one_word_summary}
 							onClick={onClose}
 							className="p-2 rounded-lg transition-all hover:opacity-90"
 							style={{
-								background: "linear-gradient(135deg, #2D5F3F, #5B9378)",
+								background: "linear-gradient(135deg, #5C7F4F, #5B9378)",
 							}}
 							aria-label="Close"
 						>
@@ -1155,7 +1155,7 @@ SUMMARY: ${formData.one_word_summary}
 							onClick={handleNext}
 							className="px-6 py-2 rounded-lg flex items-center transition-all"
 							style={{
-								background: "linear-gradient(135deg, #2D5F3F, #5B9378)",
+								background: "linear-gradient(135deg, #5C7F4F, #5B9378)",
 								color: "#FFFFFF",
 								boxShadow: "0 2px 8px rgba(107, 139, 96, 0.3)",
 							}}
@@ -1181,7 +1181,7 @@ SUMMARY: ${formData.one_word_summary}
 							style={{
 								background: isSaving
 									? "#CCCCCC"
-									: "linear-gradient(135deg, #2D5F3F, #5B9378)",
+									: "linear-gradient(135deg, #5C7F4F, #5B9378)",
 								color: "#FFFFFF",
 								boxShadow: isSaving
 									? "none"

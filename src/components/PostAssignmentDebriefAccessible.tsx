@@ -522,7 +522,7 @@ Current Feeling: ${formData.currentFeeling || "Not provided"}
 		<div className="mb-8">
 			<div className="flex items-center justify-between mb-4">
 				<div className="flex items-center gap-3">
-					<Activity className="h-6 w-6" style={{ color: "#2D5F3F" }} />
+					<Activity className="h-6 w-6" style={{ color: "#5C7F4F" }} />
 					<h2 className="text-2xl font-bold text-gray-800">
 						Post-Assignment Debrief
 					</h2>
@@ -531,7 +531,7 @@ Current Feeling: ${formData.currentFeeling || "Not provided"}
 					<button
 						onClick={onClose}
 						className="p-2 rounded-lg transition-colors text-white"
-						style={{ background: "linear-gradient(135deg, #2D5F3F, #5B9378)" }}
+						style={{ background: "linear-gradient(135deg, #5C7F4F, #5B9378)" }}
 						aria-label="Close"
 					>
 						<X className="w-5 h-5" />
@@ -553,7 +553,7 @@ Current Feeling: ${formData.currentFeeling || "Not provided"}
 							style={{
 								background:
 									isCompleted || isCurrent
-										? "linear-gradient(135deg, #2D5F3F, #5B9378)"
+										? "linear-gradient(135deg, #5C7F4F, #5B9378)"
 										: undefined,
 							}}
 						/>
@@ -579,7 +579,7 @@ Current Feeling: ${formData.currentFeeling || "Not provided"}
 					border: "1px solid rgba(107, 139, 96, 0.2)",
 				}}
 			>
-				<h3 className="text-lg font-semibold mb-4" style={{ color: "#2D5F3F" }}>
+				<h3 className="text-lg font-semibold mb-4" style={{ color: "#5C7F4F" }}>
 					Processing Your Experience
 				</h3>
 				<p className="mb-6" style={{ color: "#5A5A5A" }}>
@@ -593,7 +593,7 @@ Current Feeling: ${formData.currentFeeling || "Not provided"}
 			<div>
 				<label
 					className="block text-sm font-medium mb-2"
-					style={{ color: "#2D5F3F" }}
+					style={{ color: "#5C7F4F" }}
 				>
 					How are you feeling right now after completing this assignment?
 				</label>
@@ -615,7 +615,7 @@ Current Feeling: ${formData.currentFeeling || "Not provided"}
 			<div>
 				<label
 					className="block text-sm font-medium mb-2"
-					style={{ color: "#2D5F3F" }}
+					style={{ color: "#5C7F4F" }}
 				>
 					What stands out most from this assignment? (First impression)
 				</label>
@@ -637,7 +637,7 @@ Current Feeling: ${formData.currentFeeling || "Not provided"}
 			<div>
 				<label
 					className="block text-sm font-medium mb-2"
-					style={{ color: "#2D5F3F" }}
+					style={{ color: "#5C7F4F" }}
 				>
 					What do you need most right now for your well-being?
 				</label>
@@ -665,7 +665,7 @@ Current Feeling: ${formData.currentFeeling || "Not provided"}
 			<div>
 				<label
 					className="block text-sm font-medium mb-2"
-					style={{ color: "#2D5F3F" }}
+					style={{ color: "#5C7F4F" }}
 				>
 					Describe the assignment context
 				</label>
@@ -691,7 +691,7 @@ Current Feeling: ${formData.currentFeeling || "Not provided"}
 			<div>
 				<label
 					className="block text-sm font-medium mb-2"
-					style={{ color: "#2D5F3F" }}
+					style={{ color: "#5C7F4F" }}
 				>
 					Who were the participants?
 				</label>
@@ -713,7 +713,7 @@ Current Feeling: ${formData.currentFeeling || "Not provided"}
 			<div>
 				<label
 					className="block text-sm font-medium mb-2"
-					style={{ color: "#2D5F3F" }}
+					style={{ color: "#5C7F4F" }}
 				>
 					Duration and timeline
 				</label>
@@ -735,7 +735,7 @@ Current Feeling: ${formData.currentFeeling || "Not provided"}
 			<div>
 				<label
 					className="block text-sm font-medium mb-2"
-					style={{ color: "#2D5F3F" }}
+					style={{ color: "#5C7F4F" }}
 				>
 					Initial challenges encountered
 				</label>
@@ -818,7 +818,7 @@ Current Feeling: ${formData.currentFeeling || "Not provided"}
 			<div>
 				<label
 					className="block text-sm font-medium mb-2"
-					style={{ color: "#2D5F3F" }}
+					style={{ color: "#5C7F4F" }}
 				>
 					What was your proudest moment?
 				</label>
@@ -838,7 +838,7 @@ Current Feeling: ${formData.currentFeeling || "Not provided"}
 			</div>
 
 			<div>
-				<h4 className="text-sm font-medium mb-3" style={{ color: "#2D5F3F" }}>
+				<h4 className="text-sm font-medium mb-3" style={{ color: "#5C7F4F" }}>
 					How did you handle challenges?
 				</h4>
 
@@ -929,7 +929,7 @@ Current Feeling: ${formData.currentFeeling || "Not provided"}
 			</h3>
 
 			<div>
-				<h4 className="text-sm font-medium mb-3" style={{ color: "#2D5F3F" }}>
+				<h4 className="text-sm font-medium mb-3" style={{ color: "#5C7F4F" }}>
 					What adaptations did you make?
 				</h4>
 
@@ -1379,8 +1379,8 @@ Current Feeling: ${formData.currentFeeling || "Not provided"}
 				className="flex items-center gap-2 px-6 py-3 font-medium rounded-lg transition-all disabled:opacity-50 disabled:cursor-not-allowed"
 				style={{
 					backgroundColor: currentStep === 1 ? "#e5e7eb" : "#ffffff",
-					color: currentStep === 1 ? "#9ca3af" : "#2D5F3F",
-					border: `2px solid ${currentStep === 1 ? "#e5e7eb" : "#2D5F3F"}`,
+					color: currentStep === 1 ? "#9ca3af" : "#5C7F4F",
+					border: `2px solid ${currentStep === 1 ? "#e5e7eb" : "#5C7F4F"}`,
 				}}
 			>
 				<ArrowLeft className="h-4 w-4" />
@@ -1392,7 +1392,7 @@ Current Feeling: ${formData.currentFeeling || "Not provided"}
 					onClick={handleNext}
 					className="flex items-center gap-2 px-6 py-3 font-semibold rounded-lg text-white transition-all hover:opacity-90"
 					style={{
-						background: "linear-gradient(135deg, #2D5F3F, #5B9378)",
+						background: "linear-gradient(135deg, #5C7F4F, #5B9378)",
 					}}
 				>
 					Next
@@ -1404,7 +1404,7 @@ Current Feeling: ${formData.currentFeeling || "Not provided"}
 					disabled={isSaving}
 					className="flex items-center gap-2 px-6 py-4 font-semibold rounded-lg text-white transition-all hover:opacity-90 disabled:opacity-50"
 					style={{
-						background: "linear-gradient(135deg, #2D5F3F, #5B9378)",
+						background: "linear-gradient(135deg, #5C7F4F, #5B9378)",
 					}}
 				>
 					{isSaving ? (

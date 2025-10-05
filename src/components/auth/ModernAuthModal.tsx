@@ -209,9 +209,9 @@ export const ModernAuthModal: React.FC<ModernAuthModalProps> = ({
 					<button
 						onClick={onClose}
 						className="absolute top-4 right-4 p-2 bg-white border-2 rounded-lg hover:bg-gray-50 transition-colors"
-						style={{ borderColor: "#2D5F3F" }}
+						style={{ borderColor: "#5C7F4F" }}
 					>
-						<X className="w-5 h-5" style={{ color: "#2D5F3F" }} />
+						<X className="w-5 h-5" style={{ color: "#5C7F4F" }} />
 					</button>
 
 					{/* Logo */}
@@ -276,7 +276,7 @@ export const ModernAuthModal: React.FC<ModernAuthModalProps> = ({
 											}`}
 											style={
 												{
-													"--tw-ring-color": "#2D5F3F",
+													"--tw-ring-color": "#5C7F4F",
 												} as React.CSSProperties
 											}
 											required
@@ -293,7 +293,7 @@ export const ModernAuthModal: React.FC<ModernAuthModalProps> = ({
 										disabled={loading}
 										className="w-full flex items-center justify-center gap-2 px-4 py-3 text-white rounded-xl font-semibold transition-all disabled:opacity-50 disabled:cursor-not-allowed"
 										style={{
-											background: loading ? "#9CA3AF" : "#2D5F3F",
+											background: loading ? "#9CA3AF" : "#5C7F4F",
 										}}
 									>
 										{loading ? (
@@ -323,7 +323,7 @@ export const ModernAuthModal: React.FC<ModernAuthModalProps> = ({
 									onClick={() => setMode("signin")}
 									className="text-sm font-semibold transition-colors px-4 py-2 rounded-lg"
 									style={{
-										color: "#2D5F3F",
+										color: "#5C7F4F",
 										backgroundColor: "white",
 										border: "1px solid rgba(45, 95, 63, 0.2)"
 									}}
@@ -358,7 +358,7 @@ export const ModernAuthModal: React.FC<ModernAuthModalProps> = ({
 											}`}
 											style={
 												{
-													"--tw-ring-color": "#2D5F3F",
+													"--tw-ring-color": "#5C7F4F",
 												} as React.CSSProperties
 											}
 											required
@@ -386,7 +386,7 @@ export const ModernAuthModal: React.FC<ModernAuthModalProps> = ({
 											}`}
 											style={
 												{
-													"--tw-ring-color": "#2D5F3F",
+													"--tw-ring-color": "#5C7F4F",
 												} as React.CSSProperties
 											}
 											required
@@ -403,7 +403,7 @@ export const ModernAuthModal: React.FC<ModernAuthModalProps> = ({
 										disabled={loading}
 										className="w-full flex items-center justify-center gap-2 px-4 py-3 text-white rounded-xl font-semibold transition-all disabled:opacity-50 disabled:cursor-not-allowed"
 										style={{
-											background: loading ? "#9CA3AF" : "#2D5F3F",
+											background: loading ? "#9CA3AF" : "#5C7F4F",
 										}}
 									>
 										{loading ? (
@@ -438,8 +438,8 @@ export const ModernAuthModal: React.FC<ModernAuthModalProps> = ({
 										}}
 										className="ml-2 px-3 py-1 bg-white border rounded-md font-semibold transition-all"
 										style={{
-											borderColor: "#2D5F3F",
-											color: "#2D5F3F",
+											borderColor: "#5C7F4F",
+											color: "#5C7F4F",
 										}}
 										onMouseEnter={(e) => {
 											e.currentTarget.style.backgroundColor = "#F5F5DC";
@@ -455,7 +455,7 @@ export const ModernAuthModal: React.FC<ModernAuthModalProps> = ({
 									type="button"
 									onClick={() => setMode("forgot-password")}
 									className="px-3 py-1 text-sm text-white rounded-md font-semibold transition-all"
-									style={{ background: "#2D5F3F" }}
+									style={{ background: "#5C7F4F" }}
 								>
 									Forgot password?
 								</button>

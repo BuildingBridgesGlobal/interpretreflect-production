@@ -377,7 +377,7 @@ export const DirectCommunicationReflection: React.FC<
 					<div key={field.id} className="mb-6">
 						<label
 							className="block text-sm font-medium mb-2"
-							style={{ color: "#2D5F3F" }}
+							style={{ color: "#5C7F4F" }}
 						>
 							{field.label}
 						</label>
@@ -440,7 +440,7 @@ export const DirectCommunicationReflection: React.FC<
 							<div
 								className="w-12 h-12 rounded-xl flex items-center justify-center"
 								style={{
-									background: "linear-gradient(135deg, #2D5F3F, #5B9378)",
+									background: "linear-gradient(135deg, #5C7F4F, #5B9378)",
 									boxShadow: "0 2px 8px rgba(107, 139, 96, 0.3)",
 								}}
 							>
@@ -459,7 +459,7 @@ export const DirectCommunicationReflection: React.FC<
 							onClick={onClose}
 							className="p-2 rounded-lg transition-all hover:opacity-90"
 							style={{
-								background: "linear-gradient(135deg, #2D5F3F, #5B9378)",
+								background: "linear-gradient(135deg, #5C7F4F, #5B9378)",
 							}}
 							aria-label="Close"
 						>
@@ -540,7 +540,7 @@ export const DirectCommunicationReflection: React.FC<
 							onClick={handleNext}
 							className="px-6 py-2 rounded-lg flex items-center transition-all"
 							style={{
-								background: "linear-gradient(135deg, #2D5F3F, #5B9378)",
+								background: "linear-gradient(135deg, #5C7F4F, #5B9378)",
 								color: "#FFFFFF",
 								boxShadow: "0 2px 8px rgba(107, 139, 96, 0.3)",
 							}}
@@ -571,7 +571,7 @@ export const DirectCommunicationReflection: React.FC<
 								background:
 									isSubmitting || hasSaved || showSummary
 										? "#CCCCCC"
-										: "linear-gradient(135deg, #2D5F3F, #5B9378)",
+										: "linear-gradient(135deg, #5C7F4F, #5B9378)",
 								color: "#FFFFFF",
 								boxShadow:
 									isSubmitting || hasSaved || showSummary

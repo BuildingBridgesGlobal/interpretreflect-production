@@ -32,7 +32,7 @@ export const ReflectionTools: React.FC<ReflectionToolsProps> = ({
 	const reflectionCards: ReflectionTool[] = [
 		{
 			icon: NotepadIcon,
-			iconColor: "#2D5F3F",
+			iconColor: "#5C7F4F",
 			iconBg: "rgba(45, 95, 63, 0.2)",
 			title: "Pre-Assignment Prep",
 			description: "Prime attention, steady the nervous system, and set...",
@@ -43,7 +43,7 @@ export const ReflectionTools: React.FC<ReflectionToolsProps> = ({
 		},
 		{
 			icon: TargetIcon,
-			iconColor: "#2D5F3F",
+			iconColor: "#5C7F4F",
 			iconBg: "rgba(45, 95, 63, 0.2)",
 			title: "Post-Assignment Debrief",
 			description: "Consolidate learning, de-load stress, and turn...",
@@ -154,7 +154,7 @@ export const ReflectionTools: React.FC<ReflectionToolsProps> = ({
 		},
 		{
 			icon: ChatBubbleIcon,
-			iconColor: "#2D5F3F",
+			iconColor: "#5C7F4F",
 			iconBg: "rgba(45, 95, 63, 0.2)",
 			title: "Supporting Direct Communication",
 			description:
@@ -190,7 +190,7 @@ export const ReflectionTools: React.FC<ReflectionToolsProps> = ({
 		},
 		{
 			icon: Brain,
-			iconColor: "#2D5F3F",
+			iconColor: "#5C7F4F",
 			iconBg: "rgba(45, 95, 63, 0.2)",
 			title: "Neurodivergent Interpreter Wellness",
 			description:
@@ -272,7 +272,7 @@ export const ReflectionTools: React.FC<ReflectionToolsProps> = ({
 								className="text-xs px-2 py-1 rounded-full"
 								style={{
 									backgroundColor: "rgba(45, 95, 63, 0.15)",
-									color: "#2D5F3F"
+									color: "#5C7F4F"
 								}}
 							>
 								{statusItem.label}

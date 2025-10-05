@@ -247,7 +247,7 @@ export function TrialSignup() {
       <div className="min-h-screen flex items-center justify-center" style={{ background: 'linear-gradient(to bottom right, #F5F9F5, #E8F5E8)' }}>
         <div className="bg-white rounded-2xl shadow-2xl p-12 max-w-md text-center">
           <div className="w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-6" style={{ backgroundColor: 'rgba(92, 127, 79, 0.1)' }}>
-            <Check className="w-8 h-8" style={{ color: '#2D5F3F' }} />
+            <Check className="w-8 h-8" style={{ color: '#5C7F4F' }} />
           </div>
           <h2 className="text-3xl font-bold text-gray-900 mb-4">
             Welcome to InterpretReflect!
@@ -256,7 +256,7 @@ export function TrialSignup() {
             Your 3-day free trial is now active. Check your email to confirm your account.
           </p>
           <div className="rounded-lg p-4 mb-6" style={{ backgroundColor: 'rgba(92, 127, 79, 0.1)' }}>
-            <p className="text-sm" style={{ color: '#2D5F3F' }}>
+            <p className="text-sm" style={{ color: '#5C7F4F' }}>
               Trial expires on: {new Date(Date.now() + 3 * 24 * 60 * 60 * 1000).toLocaleDateString()}
             </p>
           </div>
@@ -290,7 +290,7 @@ export function TrialSignup() {
             className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full font-medium transition-all shadow-sm backdrop-blur-sm"
             style={{
               background: 'rgba(255, 255, 255, 0.9)',
-              color: '#2D5F3F',
+              color: '#5C7F4F',
               border: '1px solid rgba(45, 95, 63, 0.2)'
             }}
             onMouseEnter={(e) => {
@@ -316,14 +316,14 @@ export function TrialSignup() {
                 <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full text-sm font-bold mb-6"
                   style={{
                     backgroundColor: 'rgba(255, 220, 150, 0.3)',
-                    color: '#2D5F3F',
+                    color: '#5C7F4F',
                     border: '1px solid rgba(45, 95, 63, 0.2)'
                   }}>
                   ✨ EXCLUSIVE OFFER
                 </div>
                 <h1 className="text-4xl lg:text-5xl font-bold mb-4 leading-tight"
                   style={{
-                    background: 'linear-gradient(135deg, #2D5F3F, rgb(127, 92, 127))',
+                    background: 'linear-gradient(135deg, #5C7F4F, rgb(127, 92, 127))',
                     WebkitBackgroundClip: 'text',
                     WebkitTextFillColor: 'transparent',
                     backgroundClip: 'text'
@@ -337,7 +337,7 @@ export function TrialSignup() {
 
               {/* Features Grid */}
               <div className="bg-white/60 backdrop-blur-sm rounded-2xl p-6 border border-gray-100">
-                <h3 className="font-semibold text-lg mb-4" style={{ color: '#2D5F3F' }}>
+                <h3 className="font-semibold text-lg mb-4" style={{ color: '#5C7F4F' }}>
                   What's Included:
                 </h3>
                 <div className="space-y-3">
@@ -356,7 +356,7 @@ export function TrialSignup() {
                             // Regular bullet point
                             <div className="w-3 h-3 rounded-full"
                               style={{
-                                backgroundColor: '#2D5F3F',
+                                backgroundColor: '#5C7F4F',
                                 boxShadow: '0 2px 4px rgba(45, 95, 63, 0.3)'
                               }} />
                           )}
@@ -389,13 +389,13 @@ export function TrialSignup() {
                     background: 'linear-gradient(180deg, rgba(255, 240, 220, 0.3) 0%, rgba(255, 255, 255, 0) 100%)'
                   }}>
                   <h1 className="text-2xl font-bold tracking-tight leading-none mb-4">
-                    <span style={{ color: '#2D5F3F' }}>Interpret</span>
+                    <span style={{ color: '#5C7F4F' }}>Interpret</span>
                     <span style={{ color: 'rgba(92, 127, 79, 0.7)' }}>Reflect</span>
                   </h1>
                   <div className="inline-flex items-center gap-2 px-4 py-1 rounded-full text-xs font-semibold mb-4"
                     style={{
                       backgroundColor: 'rgba(255, 220, 150, 0.2)',
-                      color: '#2D5F3F'
+                      color: '#5C7F4F'
                     }}>
                     🎉 LIMITED TIME OFFER
                   </div>
@@ -416,7 +416,7 @@ export function TrialSignup() {
                   {loading && (
                     <div className="absolute inset-0 bg-white/80 backdrop-blur-sm z-20 flex items-center justify-center rounded-b-3xl">
                       <div className="text-center">
-                        <svg className="animate-spin h-12 w-12 mx-auto mb-4" style={{ color: '#2D5F3F' }} xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                        <svg className="animate-spin h-12 w-12 mx-auto mb-4" style={{ color: '#5C7F4F' }} xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
                           <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
                           <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                         </svg>
@@ -450,7 +450,7 @@ export function TrialSignup() {
                       className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:border-transparent transition-colors ${
                         fieldErrors.name && touched.name ? 'border-red-500' : 'border-gray-300'
                       }`}
-                      style={{ '--tw-ring-color': '#2D5F3F' } as React.CSSProperties}
+                      style={{ '--tw-ring-color': '#5C7F4F' } as React.CSSProperties}
                       placeholder="Enter your full name"
                     />
                     {fieldErrors.name && touched.name && (
@@ -480,7 +480,7 @@ export function TrialSignup() {
                       className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:border-transparent transition-colors ${
                         fieldErrors.email && touched.email ? 'border-red-500' : 'border-gray-300'
                       }`}
-                      style={{ '--tw-ring-color': '#2D5F3F' } as React.CSSProperties}
+                      style={{ '--tw-ring-color': '#5C7F4F' } as React.CSSProperties}
                       placeholder="your@email.com"
                     />
                     <p id="email-description" className="sr-only">We'll use this to create your account and send important updates</p>
@@ -511,7 +511,7 @@ export function TrialSignup() {
                       className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:border-transparent transition-colors ${
                         fieldErrors.password && touched.password && !fieldErrors.password.includes('Consider') ? 'border-red-500' : 'border-gray-300'
                       }`}
-                      style={{ '--tw-ring-color': '#2D5F3F' } as React.CSSProperties}
+                      style={{ '--tw-ring-color': '#5C7F4F' } as React.CSSProperties}
                       placeholder="Create a secure password"
                     />
                     {fieldErrors.password && touched.password && (
@@ -557,7 +557,7 @@ export function TrialSignup() {
                             fieldErrors.terms && touched.terms ? 'border-red-500' : 'border-gray-300'
                           }`}
                           style={{
-                            accentColor: '#2D5F3F',
+                            accentColor: '#5C7F4F',
                           }}
                       />
                       {/* Custom checkbox overlay for better visibility */}
@@ -571,9 +571,9 @@ export function TrialSignup() {
                     </div>
                     <label htmlFor="terms" className="text-sm text-gray-700 leading-relaxed cursor-pointer select-none">
                       I agree to the{' '}
-                      <a href="/terms" className="font-semibold underline hover:no-underline" style={{ color: '#2D5F3F' }}>Terms of Service</a>
+                      <a href="/terms" className="font-semibold underline hover:no-underline" style={{ color: '#5C7F4F' }}>Terms of Service</a>
                       {' '}and{' '}
-                      <a href="/privacy" className="font-semibold underline hover:no-underline" style={{ color: '#2D5F3F' }}>Privacy Policy</a>
+                      <a href="/privacy" className="font-semibold underline hover:no-underline" style={{ color: '#5C7F4F' }}>Privacy Policy</a>
                       <span className="block text-xs text-gray-500 mt-1">
                         Required to start your free trial
                       </span>
@@ -593,7 +593,7 @@ export function TrialSignup() {
                     disabled={loading || !agreedToTerms}
                     className="w-full py-5 font-black text-xl rounded-xl transform hover:scale-[1.02] transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-3 focus:outline-none focus:ring-4 shadow-xl relative overflow-hidden"
                     style={{
-                      background: 'linear-gradient(135deg, #2D5F3F, rgb(107, 142, 94))',
+                      background: 'linear-gradient(135deg, #5C7F4F, rgb(107, 142, 94))',
                       color: '#FFFFFF',
                       boxShadow: '0 15px 35px rgba(45, 95, 63, 0.3)',
                       border: '2px solid rgba(45, 95, 63, 0.3)',
@@ -608,7 +608,7 @@ export function TrialSignup() {
                       }
                     }}
                     onMouseLeave={(e) => {
-                      e.currentTarget.style.background = 'linear-gradient(135deg, #2D5F3F, rgb(107, 142, 94))';
+                      e.currentTarget.style.background = 'linear-gradient(135deg, #5C7F4F, rgb(107, 142, 94))';
                       e.currentTarget.style.transform = 'scale(1)';
                       e.currentTarget.style.boxShadow = '0 15px 35px rgba(45, 95, 63, 0.3)';
                     }}
@@ -645,11 +645,11 @@ export function TrialSignup() {
                     <div className="absolute top-0 left-1/2 transform -translate-x-1/2 w-32 h-px bg-gradient-to-r from-transparent via-gray-200 to-transparent" />
                     <div className="flex justify-center items-center gap-6 text-xs text-gray-500">
                       <div className="flex items-center gap-1">
-                        <Shield className="w-4 h-4" style={{ color: '#2D5F3F' }} />
+                        <Shield className="w-4 h-4" style={{ color: '#5C7F4F' }} />
                         <span>HIPAA Compliant</span>
                       </div>
                       <div className="flex items-center gap-1">
-                        <Check className="w-4 h-4" style={{ color: '#2D5F3F' }} />
+                        <Check className="w-4 h-4" style={{ color: '#5C7F4F' }} />
                         <span>Cancel Anytime</span>
                       </div>
                     </div>
@@ -663,15 +663,15 @@ export function TrialSignup() {
                         onClick={() => navigate('/login')}
                         className="ml-1 px-4 py-1.5 font-semibold rounded-full transition-all focus:outline-none focus:ring-2 focus:ring-offset-2"
                         style={{
-                          background: 'linear-gradient(135deg, #2D5F3F, rgb(107, 142, 94))',
+                          background: 'linear-gradient(135deg, #5C7F4F, rgb(107, 142, 94))',
                           color: '#FFFFFF'
                         }}
                         onMouseEnter={(e) => {
                           e.currentTarget.style.background = '#F5F5DC';
-                          e.currentTarget.style.color = '#2D5F3F';
+                          e.currentTarget.style.color = '#5C7F4F';
                         }}
                         onMouseLeave={(e) => {
-                          e.currentTarget.style.background = 'linear-gradient(135deg, #2D5F3F, rgb(107, 142, 94))';
+                          e.currentTarget.style.background = 'linear-gradient(135deg, #5C7F4F, rgb(107, 142, 94))';
                           e.currentTarget.style.color = '#FFFFFF';
                         }}
                         aria-label="Sign in to existing account"
@@ -699,30 +699,30 @@ export function TrialSignup() {
                   <span className="px-3 py-1 text-xs font-semibold rounded-full"
                     style={{
                       backgroundColor: 'rgba(92, 127, 79, 0.1)',
-                      color: '#2D5F3F'
+                      color: '#5C7F4F'
                     }}>
                     ESSENTIAL TIER
                   </span>
                 </div>
                 <div className="flex items-baseline gap-2 mb-4">
-                  <span className="text-3xl font-bold" style={{ color: '#2D5F3F' }}>$12.99</span>
+                  <span className="text-3xl font-bold" style={{ color: '#5C7F4F' }}>$12.99</span>
                   <span className="text-gray-600">/month</span>
                 </div>
                 <div className="grid grid-cols-2 gap-2 text-sm">
                   <div className="flex items-center gap-2">
-                    <Check className="w-4 h-4 flex-shrink-0" style={{ color: '#2D5F3F' }} />
+                    <Check className="w-4 h-4 flex-shrink-0" style={{ color: '#5C7F4F' }} />
                     <span className="text-gray-700">Daily reflections</span>
                   </div>
                   <div className="flex items-center gap-2">
-                    <Check className="w-4 h-4 flex-shrink-0" style={{ color: '#2D5F3F' }} />
+                    <Check className="w-4 h-4 flex-shrink-0" style={{ color: '#5C7F4F' }} />
                     <span className="text-gray-700">Stress tools</span>
                   </div>
                   <div className="flex items-center gap-2">
-                    <Check className="w-4 h-4 flex-shrink-0" style={{ color: '#2D5F3F' }} />
+                    <Check className="w-4 h-4 flex-shrink-0" style={{ color: '#5C7F4F' }} />
                     <span className="text-gray-700">Progress tracking</span>
                   </div>
                   <div className="flex items-center gap-2">
-                    <Check className="w-4 h-4 flex-shrink-0" style={{ color: '#2D5F3F' }} />
+                    <Check className="w-4 h-4 flex-shrink-0" style={{ color: '#5C7F4F' }} />
                     <span className="text-gray-700">Secure & private</span>
                   </div>
                 </div>

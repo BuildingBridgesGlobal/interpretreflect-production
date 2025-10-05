@@ -443,7 +443,7 @@ export const AllReflectionsView: React.FC<AllReflectionsViewProps> = ({
 							onClick={onClose}
 							className="p-2 text-white rounded-lg transition-all shadow-sm hover:shadow-md hover:opacity-90"
 							style={{
-								background: "linear-gradient(135deg, #2D5F3F, #5B9378)",
+								background: "linear-gradient(135deg, #5C7F4F, #5B9378)",
 							}}
 							title="Close"
 						>
@@ -500,7 +500,7 @@ export const AllReflectionsView: React.FC<AllReflectionsViewProps> = ({
 												<span
 													className="px-3 py-1 text-xs font-medium rounded-full text-white"
 													style={{
-														background: "linear-gradient(135deg, #2D5F3F, #5B9378)",
+														background: "linear-gradient(135deg, #5C7F4F, #5B9378)",
 													}}
 												>
 													{getReflectionTitle(reflection.entry_kind, reflection.data)}
@@ -532,7 +532,7 @@ export const AllReflectionsView: React.FC<AllReflectionsViewProps> = ({
 												className="p-2 text-white rounded-lg transition-all shadow-sm hover:shadow-md hover:opacity-90"
 												style={{
 													background:
-														"linear-gradient(135deg, #2D5F3F, #5B9378)",
+														"linear-gradient(135deg, #5C7F4F, #5B9378)",
 												}}
 												title="View details"
 											>

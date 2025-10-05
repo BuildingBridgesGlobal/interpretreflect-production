@@ -17,9 +17,9 @@ const COLOR_THEMES: Record<
 	ColorTheme,
 	{ primary: string; light: string; bg: string }
 > = {
-	green: { primary: "#2D5F3F", light: "#7A9B6E", bg: "#F0F5ED" },
+	green: { primary: "#5C7F4F", light: "#7A9B6E", bg: "#F0F5ED" },
 	sage: { primary: "#7A9B6E", light: "#91B082", bg: "#F5F9F3" },
-	forest: { primary: "#4A6B3E", light: "#2D5F3F", bg: "#EEF3EB" },
+	forest: { primary: "#4A6B3E", light: "#5C7F4F", bg: "#EEF3EB" },
 	gray: { primary: "#718096", light: "#A0AEC0", bg: "#F7FAFC" },
 };
 
@@ -199,7 +199,7 @@ export const BreathingPractice: React.FC<BreathingPracticeProps> = ({
 								onClick={onClose}
 								className="p-2 rounded-xl transition-all hover:scale-105"
 								style={{
-									background: "linear-gradient(135deg, #2D5F3F, #5B9378)",
+									background: "linear-gradient(135deg, #5C7F4F, #5B9378)",
 								}}
 							>
 								<X className="w-5 h-5 text-white" />
@@ -297,7 +297,7 @@ export const BreathingPractice: React.FC<BreathingPracticeProps> = ({
 							onClick={handleStart}
 							className="w-full py-3 rounded-xl transition-all text-white font-medium hover:opacity-90"
 							style={{
-								background: "linear-gradient(135deg, #2D5F3F, #5B9378)",
+								background: "linear-gradient(135deg, #5C7F4F, #5B9378)",
 							}}
 						>
 							Let's Begin
@@ -605,7 +605,7 @@ export const BreathingPractice: React.FC<BreathingPracticeProps> = ({
 							onClick={handleComplete}
 							className="px-6 py-2 rounded-lg transition-all text-white hover:opacity-90"
 							style={{
-								background: "linear-gradient(135deg, #2D5F3F, #5B9378)",
+								background: "linear-gradient(135deg, #5C7F4F, #5B9378)",
 							}}
 						>
 							I'm Done
@@ -638,7 +638,7 @@ export const BreathingPractice: React.FC<BreathingPracticeProps> = ({
 									style={{
 										background:
 											howFeeling === option
-												? "linear-gradient(135deg, #2D5F3F, #5B9378)"
+												? "linear-gradient(135deg, #5C7F4F, #5B9378)"
 												: undefined,
 										backgroundColor:
 											howFeeling === option ? undefined : "#F0F5ED",
@@ -681,7 +681,7 @@ export const BreathingPractice: React.FC<BreathingPracticeProps> = ({
 							onClick={handleSubmit}
 							className="flex-1 py-3 rounded-xl transition-all text-white font-medium hover:opacity-90"
 							style={{
-								background: "linear-gradient(135deg, #2D5F3F, #5B9378)",
+								background: "linear-gradient(135deg, #5C7F4F, #5B9378)",
 							}}
 						>
 							Done

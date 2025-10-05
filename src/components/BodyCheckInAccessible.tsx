@@ -224,7 +224,7 @@ export const BodyCheckInAccessible: React.FC<BodyCheckInProps> = ({
 									className="p-2 rounded-xl"
 									style={{ backgroundColor: "#F0F5ED" }}
 								>
-									<Heart className="w-6 h-6" style={{ color: "#2D5F3F" }} />
+									<Heart className="w-6 h-6" style={{ color: "#5C7F4F" }} />
 								</div>
 								<div>
 									<h2
@@ -243,7 +243,7 @@ export const BodyCheckInAccessible: React.FC<BodyCheckInProps> = ({
 								onClick={onClose}
 								className="p-2 rounded-xl transition-all hover:scale-105"
 								style={{
-									background: "linear-gradient(135deg, #2D5F3F, #5B9378)",
+									background: "linear-gradient(135deg, #5C7F4F, #5B9378)",
 								}}
 								aria-label="Close body check-in"
 							>
@@ -302,8 +302,8 @@ export const BodyCheckInAccessible: React.FC<BodyCheckInProps> = ({
 							onClick={handleStart}
 							className="w-full py-3 text-white rounded-xl font-medium hover:opacity-90 transition-all focus:outline-none focus:ring-2 focus:ring-offset-2"
 							style={{
-								background: "linear-gradient(135deg, #2D5F3F, #5B9378)",
-								focusRingColor: "#2D5F3F",
+								background: "linear-gradient(135deg, #5C7F4F, #5B9378)",
+								focusRingColor: "#5C7F4F",
 							}}
 							aria-label="Begin Body Check-In"
 						>
@@ -348,7 +348,7 @@ export const BodyCheckInAccessible: React.FC<BodyCheckInProps> = ({
 								onClick={onClose}
 								className="p-2 rounded-xl transition-all hover:scale-105"
 								style={{
-									background: "linear-gradient(135deg, #2D5F3F, #5B9378)",
+									background: "linear-gradient(135deg, #5C7F4F, #5B9378)",
 								}}
 								aria-label="Close practice"
 							>
@@ -417,7 +417,7 @@ export const BodyCheckInAccessible: React.FC<BodyCheckInProps> = ({
 							>
 								{areaInfo.title}
 							</h3>
-							<p className="text-sm mb-6" style={{ color: "#2D5F3F" }}>
+							<p className="text-sm mb-6" style={{ color: "#5C7F4F" }}>
 								{areaInfo.subtitle}
 							</p>
 
@@ -440,7 +440,7 @@ export const BodyCheckInAccessible: React.FC<BodyCheckInProps> = ({
 								</ul>
 							</div>
 
-							<p className="text-xs italic mb-6" style={{ color: "#2D5F3F" }}>
+							<p className="text-xs italic mb-6" style={{ color: "#5C7F4F" }}>
 								{areaInfo.tip}
 							</p>
 						</div>
@@ -449,8 +449,8 @@ export const BodyCheckInAccessible: React.FC<BodyCheckInProps> = ({
 							onClick={handleContinue}
 							className="w-full py-3 text-white rounded-xl font-medium hover:opacity-90 transition-all flex items-center justify-center gap-2 focus:outline-none focus:ring-2 focus:ring-offset-2"
 							style={{
-								background: "linear-gradient(135deg, #2D5F3F, #5B9378)",
-								focusRingColor: "#2D5F3F",
+								background: "linear-gradient(135deg, #5C7F4F, #5B9378)",
+								focusRingColor: "#5C7F4F",
 							}}
 							aria-label={
 								currentArea === "base-ground"
@@ -483,7 +483,7 @@ export const BodyCheckInAccessible: React.FC<BodyCheckInProps> = ({
 							onClick={onClose}
 							className="p-2 rounded-xl transition-all hover:scale-105"
 							style={{
-								background: "linear-gradient(135deg, #2D5F3F, #5B9378)",
+								background: "linear-gradient(135deg, #5C7F4F, #5B9378)",
 							}}
 							aria-label="Close reflection"
 						>
@@ -519,10 +519,10 @@ export const BodyCheckInAccessible: React.FC<BodyCheckInProps> = ({
 										style={{
 											background:
 												tensionLevel === option
-													? "linear-gradient(135deg, #2D5F3F, #5B9378)"
+													? "linear-gradient(135deg, #5C7F4F, #5B9378)"
 													: undefined,
 											color: tensionLevel === option ? "white" : "#4A5568",
-											focusRingColor: "#2D5F3F",
+											focusRingColor: "#5C7F4F",
 										}}
 										onMouseEnter={(e) => {
 											if (tensionLevel !== option) {
@@ -567,10 +567,10 @@ export const BodyCheckInAccessible: React.FC<BodyCheckInProps> = ({
 									style={{
 										background:
 											energyLevel === option
-												? "linear-gradient(135deg, #2D5F3F, #5B9378)"
+												? "linear-gradient(135deg, #5C7F4F, #5B9378)"
 												: undefined,
 										color: energyLevel === option ? "white" : "#4A5568",
-										focusRingColor: "#2D5F3F",
+										focusRingColor: "#5C7F4F",
 									}}
 									onMouseEnter={(e) => {
 										if (energyLevel !== option) {
@@ -614,10 +614,10 @@ export const BodyCheckInAccessible: React.FC<BodyCheckInProps> = ({
 									style={{
 										background:
 											overallFeeling === option
-												? "linear-gradient(135deg, #2D5F3F, #5B9378)"
+												? "linear-gradient(135deg, #5C7F4F, #5B9378)"
 												: undefined,
 										color: overallFeeling === option ? "white" : "#4A5568",
-										focusRingColor: "#2D5F3F",
+										focusRingColor: "#5C7F4F",
 									}}
 									onMouseEnter={(e) => {
 										if (overallFeeling !== option) {
@@ -672,10 +672,10 @@ export const BodyCheckInAccessible: React.FC<BodyCheckInProps> = ({
 									}`}
 									style={{
 										background: tensionAreas.includes(area)
-											? "linear-gradient(135deg, #2D5F3F, #5B9378)"
+											? "linear-gradient(135deg, #5C7F4F, #5B9378)"
 											: undefined,
 										color: tensionAreas.includes(area) ? "white" : "#4A5568",
-										focusRingColor: "#2D5F3F",
+										focusRingColor: "#5C7F4F",
 									}}
 									onMouseEnter={(e) => {
 										if (!tensionAreas.includes(area)) {
@@ -724,7 +724,7 @@ export const BodyCheckInAccessible: React.FC<BodyCheckInProps> = ({
 									<li>• Hand strain → They've been working hard</li>
 								)}
 							</ul>
-							<p className="text-xs mt-3 italic" style={{ color: "#2D5F3F" }}>
+							<p className="text-xs mt-3 italic" style={{ color: "#5C7F4F" }}>
 								These are just patterns - your body knows what it needs
 							</p>
 						</div>
@@ -742,8 +742,8 @@ export const BodyCheckInAccessible: React.FC<BodyCheckInProps> = ({
 								: "hover:opacity-90"
 						}`}
 						style={{
-							background: "linear-gradient(135deg, #2D5F3F, #5B9378)",
-							focusRingColor: "#2D5F3F",
+							background: "linear-gradient(135deg, #5C7F4F, #5B9378)",
+							focusRingColor: "#5C7F4F",
 						}}
 						aria-label="Save check-in and close"
 					>

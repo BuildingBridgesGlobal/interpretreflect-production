@@ -106,7 +106,7 @@ export const ProfessionalBoundariesResetAccessible: React.FC<
 									className="p-2 rounded-xl"
 									style={{ backgroundColor: "#F0F5ED" }}
 								>
-									<Shield className="w-6 h-6" style={{ color: "#2D5F3F" }} />
+									<Shield className="w-6 h-6" style={{ color: "#5C7F4F" }} />
 								</div>
 								<div>
 									<h2
@@ -125,7 +125,7 @@ export const ProfessionalBoundariesResetAccessible: React.FC<
 								onClick={onClose}
 								className="p-2 rounded-xl transition-all hover:scale-105"
 								style={{
-									background: "linear-gradient(135deg, #2D5F3F, #5B9378)",
+									background: "linear-gradient(135deg, #5C7F4F, #5B9378)",
 								}}
 								aria-label="Close professional boundaries reset"
 							>
@@ -243,8 +243,8 @@ export const ProfessionalBoundariesResetAccessible: React.FC<
 							onClick={handleStart}
 							className="w-full py-4 min-h-[56px] text-white rounded-xl font-medium text-lg hover:opacity-90 transition-all focus:outline-none focus:ring-2 focus:ring-offset-2"
 							style={{
-								background: "linear-gradient(135deg, #2D5F3F, #5B9378)",
-								focusRingColor: "#2D5F3F",
+								background: "linear-gradient(135deg, #5C7F4F, #5B9378)",
+								focusRingColor: "#5C7F4F",
 							}}
 							aria-label="Begin professional boundaries reset process"
 						>
@@ -280,7 +280,7 @@ export const ProfessionalBoundariesResetAccessible: React.FC<
 								onClick={onClose}
 								className="p-2 rounded-xl transition-all hover:scale-105"
 								style={{
-									background: "linear-gradient(135deg, #2D5F3F, #5B9378)",
+									background: "linear-gradient(135deg, #5C7F4F, #5B9378)",
 								}}
 								aria-label="Close reset practice"
 							>
@@ -347,7 +347,7 @@ export const ProfessionalBoundariesResetAccessible: React.FC<
 									<div className="flex items-center gap-2 mb-1">
 										<span
 											className="text-xs font-medium"
-											style={{ color: "#2D5F3F" }}
+											style={{ color: "#5C7F4F" }}
 										>
 											Step 1
 										</span>
@@ -363,7 +363,7 @@ export const ProfessionalBoundariesResetAccessible: React.FC<
 									<div className="flex items-center gap-2 mb-1">
 										<span
 											className="text-xs font-medium"
-											style={{ color: "#2D5F3F" }}
+											style={{ color: "#5C7F4F" }}
 										>
 											Step 2
 										</span>
@@ -379,7 +379,7 @@ export const ProfessionalBoundariesResetAccessible: React.FC<
 									<div className="flex items-center gap-2 mb-1">
 										<span
 											className="text-xs font-medium"
-											style={{ color: "#2D5F3F" }}
+											style={{ color: "#5C7F4F" }}
 										>
 											Step 3
 										</span>
@@ -395,7 +395,7 @@ export const ProfessionalBoundariesResetAccessible: React.FC<
 									<div className="flex items-center gap-2 mb-1">
 										<span
 											className="text-xs font-medium"
-											style={{ color: "#2D5F3F" }}
+											style={{ color: "#5C7F4F" }}
 										>
 											Step 4
 										</span>
@@ -409,7 +409,7 @@ export const ProfessionalBoundariesResetAccessible: React.FC<
 
 						<p
 							className="text-center font-medium mb-8"
-							style={{ color: "#2D5F3F" }}
+							style={{ color: "#5C7F4F" }}
 						>
 							You're safe here.
 						</p>
@@ -420,8 +420,8 @@ export const ProfessionalBoundariesResetAccessible: React.FC<
 								onClick={() => setIsPlaying(!isPlaying)}
 								className="flex-1 py-3 min-h-[48px] text-white rounded-xl font-medium hover:opacity-90 transition-all flex items-center justify-center gap-2 focus:outline-none focus:ring-2 focus:ring-offset-2"
 								style={{
-									background: "linear-gradient(135deg, #2D5F3F, #5B9378)",
-									focusRingColor: "#2D5F3F",
+									background: "linear-gradient(135deg, #5C7F4F, #5B9378)",
+									focusRingColor: "#5C7F4F",
 								}}
 								aria-label={isPlaying ? "Pause timer" : "Resume timer"}
 							>
@@ -438,7 +438,7 @@ export const ProfessionalBoundariesResetAccessible: React.FC<
 								style={{
 									backgroundColor: "#F0F5ED",
 									color: "#2D3748",
-									focusRingColor: "#2D5F3F",
+									focusRingColor: "#5C7F4F",
 								}}
 								onMouseEnter={(e) =>
 									(e.currentTarget.style.backgroundColor =
@@ -480,7 +480,7 @@ export const ProfessionalBoundariesResetAccessible: React.FC<
 								onClick={onClose}
 								className="p-2 rounded-xl transition-all hover:scale-105"
 								style={{
-									background: "linear-gradient(135deg, #2D5F3F, #5B9378)",
+									background: "linear-gradient(135deg, #5C7F4F, #5B9378)",
 								}}
 								aria-label="Close reflection"
 							>
@@ -507,12 +507,12 @@ export const ProfessionalBoundariesResetAccessible: React.FC<
 										style={{
 											background:
 												feelingBetter === option
-													? "linear-gradient(135deg, #2D5F3F, #5B9378)"
+													? "linear-gradient(135deg, #5C7F4F, #5B9378)"
 													: undefined,
 											backgroundColor:
 												feelingBetter === option ? undefined : "#F0F5ED",
 											color: feelingBetter === option ? "white" : "#4A5568",
-											focusRingColor: "#2D5F3F",
+											focusRingColor: "#5C7F4F",
 										}}
 										onMouseEnter={(e) => {
 											if (feelingBetter !== option) {
@@ -553,12 +553,12 @@ export const ProfessionalBoundariesResetAccessible: React.FC<
 										style={{
 											background:
 												whatHelped === option
-													? "linear-gradient(135deg, #2D5F3F, #5B9378)"
+													? "linear-gradient(135deg, #5C7F4F, #5B9378)"
 													: undefined,
 											backgroundColor:
 												whatHelped === option ? undefined : "#F0F5ED",
 											color: whatHelped === option ? "white" : "#4A5568",
-											focusRingColor: "#2D5F3F",
+											focusRingColor: "#5C7F4F",
 										}}
 										onMouseEnter={(e) => {
 											if (whatHelped !== option) {
@@ -599,12 +599,12 @@ export const ProfessionalBoundariesResetAccessible: React.FC<
 										style={{
 											background:
 												needSupport === option
-													? "linear-gradient(135deg, #2D5F3F, #5B9378)"
+													? "linear-gradient(135deg, #5C7F4F, #5B9378)"
 													: undefined,
 											backgroundColor:
 												needSupport === option ? undefined : "#F0F5ED",
 											color: needSupport === option ? "white" : "#4A5568",
-											focusRingColor: "#2D5F3F",
+											focusRingColor: "#5C7F4F",
 										}}
 										onMouseEnter={(e) => {
 											if (needSupport !== option) {
@@ -652,8 +652,8 @@ export const ProfessionalBoundariesResetAccessible: React.FC<
 							onClick={handleSubmit}
 							className="w-full py-3 text-white rounded-xl font-medium hover:opacity-90 transition-all focus:outline-none focus:ring-2 focus:ring-offset-2"
 							style={{
-								background: "linear-gradient(135deg, #2D5F3F, #5B9378)",
-								focusRingColor: "#2D5F3F",
+								background: "linear-gradient(135deg, #5C7F4F, #5B9378)",
+								focusRingColor: "#5C7F4F",
 							}}
 							aria-label="Complete reset and close"
 						>
@@ -676,7 +676,7 @@ export const ProfessionalBoundariesResetAccessible: React.FC<
 									onClick={() => setShowWhyModal(false)}
 									className="p-2 rounded-lg transition-all hover:opacity-90"
 									style={{
-										background: "linear-gradient(135deg, #2D5F3F, #5B9378)",
+										background: "linear-gradient(135deg, #5C7F4F, #5B9378)",
 									}}
 									aria-label="Close why modal"
 								>
@@ -770,7 +770,7 @@ export const ProfessionalBoundariesResetAccessible: React.FC<
 								onClick={() => setShowWhyModal(false)}
 								className="mt-6 w-full py-3 text-white rounded-lg font-medium hover:opacity-90 transition-all"
 								style={{
-									background: "linear-gradient(135deg, #2D5F3F, #5B9378)",
+									background: "linear-gradient(135deg, #5C7F4F, #5B9378)",
 								}}
 							>
 								Got it

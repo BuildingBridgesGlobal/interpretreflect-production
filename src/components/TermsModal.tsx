@@ -245,7 +245,7 @@ export const TermsModal: React.FC<TermsModalProps> = ({
                 onClick={() => setActiveTab('terms')}
                 className="px-4 py-2 rounded-lg font-medium transition-colors"
                 style={{
-                  backgroundColor: activeTab === 'terms' ? '#2D5F3F' : '#FAFAF8',
+                  backgroundColor: activeTab === 'terms' ? '#5C7F4F' : '#FAFAF8',
                   color: activeTab === 'terms' ? '#FFFFFF' : '#525252',
                   border: activeTab === 'terms' ? 'none' : '1px solid rgba(0, 0, 0, 0.05)'
                 }}
@@ -259,7 +259,7 @@ export const TermsModal: React.FC<TermsModalProps> = ({
                 onClick={() => setActiveTab('privacy')}
                 className="px-4 py-2 rounded-lg font-medium transition-colors"
                 style={{
-                  backgroundColor: activeTab === 'privacy' ? '#2D5F3F' : '#FAFAF8',
+                  backgroundColor: activeTab === 'privacy' ? '#5C7F4F' : '#FAFAF8',
                   color: activeTab === 'privacy' ? '#FFFFFF' : '#525252',
                   border: activeTab === 'privacy' ? 'none' : '1px solid rgba(0, 0, 0, 0.05)'
                 }}
@@ -319,7 +319,7 @@ export const TermsModal: React.FC<TermsModalProps> = ({
                   <p>Please read the Privacy Policy to continue</p>
                 )}
                 {canAccept && (
-                  <p style={{ color: "#2D5F3F" }} className="font-medium">
+                  <p style={{ color: "#5C7F4F" }} className="font-medium">
                     ✓ You have read all required documents
                   </p>
                 )}
@@ -345,7 +345,7 @@ export const TermsModal: React.FC<TermsModalProps> = ({
                   className="px-6 py-3 rounded-lg font-medium text-white transition-all"
                   style={{
                     background: canAccept && !isAccepting
-                      ? "linear-gradient(135deg, #2D5F3F, #5B9378)"
+                      ? "linear-gradient(135deg, #5C7F4F, #5B9378)"
                       : "#E5E7EB",
                     boxShadow: canAccept && !isAccepting
                       ? "0 4px 15px rgba(27, 94, 32, 0.3)"

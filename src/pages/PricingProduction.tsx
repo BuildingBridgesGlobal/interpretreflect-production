@@ -221,7 +221,7 @@ export function PricingProduction() {
 							className="inline-block px-4 py-1 rounded-full mb-4"
 							style={{
 								backgroundColor: "rgba(27, 94, 32, 0.1)",
-								color: "#2D5F3F",
+								color: "#5C7F4F",
 								fontWeight: "bold",
 								fontSize: "14px",
 							}}
@@ -251,7 +251,7 @@ export function PricingProduction() {
 									}`}
 									style={{
 										backgroundColor:
-											billingPeriod === "monthly" ? "#2D5F3F" : "transparent",
+											billingPeriod === "monthly" ? "#5C7F4F" : "transparent",
 									}}
 								>
 									Monthly
@@ -265,7 +265,7 @@ export function PricingProduction() {
 									}`}
 									style={{
 										backgroundColor:
-											billingPeriod === "yearly" ? "#2D5F3F" : "transparent",
+											billingPeriod === "yearly" ? "#5C7F4F" : "transparent",
 									}}
 								>
 									Yearly (Save $31)
@@ -274,7 +274,7 @@ export function PricingProduction() {
 						</div>
 
 						<div className="flex items-baseline justify-center gap-2 mb-4">
-							<span className="text-5xl font-bold" style={{ color: "#2D5F3F" }}>
+							<span className="text-5xl font-bold" style={{ color: "#5C7F4F" }}>
 								${billingPeriod === "monthly" ? "12.99" : "125"}
 							</span>
 							<span className="text-lg" style={{ color: "#5A5A5A" }}>
@@ -283,7 +283,7 @@ export function PricingProduction() {
 						</div>
 
 						{billingPeriod === "yearly" && (
-							<p className="text-sm mb-2" style={{ color: "#2D5F3F" }}>
+							<p className="text-sm mb-2" style={{ color: "#5C7F4F" }}>
 								Save $31 compared to monthly billing
 							</p>
 						)}
@@ -309,7 +309,7 @@ export function PricingProduction() {
 									<div>
 										<h4
 											className="font-semibold text-sm mb-1"
-											style={{ color: "#2D5F3F" }}
+											style={{ color: "#5C7F4F" }}
 										>
 											{feature.title}
 										</h4>
@@ -338,7 +338,7 @@ export function PricingProduction() {
 										className="inline-block px-6 py-3 rounded-lg"
 										style={{
 											backgroundColor: "rgba(27, 94, 32, 0.1)",
-											color: "#2D5F3F",
+											color: "#5C7F4F",
 										}}
 									>
 										<Check className="inline w-5 h-5 mr-2" />
@@ -362,16 +362,16 @@ export function PricingProduction() {
 											className="w-full md:w-auto px-8 py-4 text-lg rounded-lg font-semibold transition-all"
 											style={{
 												background:
-													"linear-gradient(135deg, #2D5F3F, rgb(107, 142, 94))",
+													"linear-gradient(135deg, #5C7F4F, rgb(107, 142, 94))",
 												color: "#FFFFFF",
 											}}
 											onMouseEnter={(e) => {
 												e.currentTarget.style.background = "#F5F5DC";
-												e.currentTarget.style.color = "#2D5F3F";
+												e.currentTarget.style.color = "#5C7F4F";
 											}}
 											onMouseLeave={(e) => {
 												e.currentTarget.style.background =
-													"linear-gradient(135deg, #2D5F3F, rgb(107, 142, 94))";
+													"linear-gradient(135deg, #5C7F4F, rgb(107, 142, 94))";
 												e.currentTarget.style.color = "#FFFFFF";
 											}}
 										>
@@ -461,7 +461,7 @@ export function PricingProduction() {
 				<div className="space-y-4">
 					<details className="group">
 						<summary className="cursor-pointer p-4 rounded-lg hover:bg-gray-50 transition-colors">
-							<span className="font-semibold" style={{ color: "#2D5F3F" }}>
+							<span className="font-semibold" style={{ color: "#5C7F4F" }}>
 								How does the free trial work?
 							</span>
 						</summary>
@@ -474,7 +474,7 @@ export function PricingProduction() {
 
 					<details className="group">
 						<summary className="cursor-pointer p-4 rounded-lg hover:bg-gray-50 transition-colors">
-							<span className="font-semibold" style={{ color: "#2D5F3F" }}>
+							<span className="font-semibold" style={{ color: "#5C7F4F" }}>
 								Can I cancel anytime?
 							</span>
 						</summary>
@@ -487,7 +487,7 @@ export function PricingProduction() {
 
 					<details className="group">
 						<summary className="cursor-pointer p-4 rounded-lg hover:bg-gray-50 transition-colors">
-							<span className="font-semibold" style={{ color: "#2D5F3F" }}>
+							<span className="font-semibold" style={{ color: "#5C7F4F" }}>
 								Is my data secure?
 							</span>
 						</summary>
@@ -500,7 +500,7 @@ export function PricingProduction() {
 
 					<details className="group">
 						<summary className="cursor-pointer p-4 rounded-lg hover:bg-gray-50 transition-colors">
-							<span className="font-semibold" style={{ color: "#2D5F3F" }}>
+							<span className="font-semibold" style={{ color: "#5C7F4F" }}>
 								Do you offer team or enterprise plans?
 							</span>
 						</summary>
@@ -535,16 +535,16 @@ export function PricingProduction() {
 							className="px-8 py-4 text-lg rounded-lg font-semibold transition-all"
 							style={{
 								background:
-									"linear-gradient(135deg, #2D5F3F, rgb(107, 142, 94))",
+									"linear-gradient(135deg, #5C7F4F, rgb(107, 142, 94))",
 								color: "#FFFFFF",
 							}}
 							onMouseEnter={(e) => {
 								e.currentTarget.style.background = "#F5F5DC";
-								e.currentTarget.style.color = "#2D5F3F";
+								e.currentTarget.style.color = "#5C7F4F";
 							}}
 							onMouseLeave={(e) => {
 								e.currentTarget.style.background =
-									"linear-gradient(135deg, #2D5F3F, rgb(107, 142, 94))";
+									"linear-gradient(135deg, #5C7F4F, rgb(107, 142, 94))";
 								e.currentTarget.style.color = "#FFFFFF";
 							}}
 						>

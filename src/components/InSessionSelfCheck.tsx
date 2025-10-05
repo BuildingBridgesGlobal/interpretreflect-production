@@ -294,7 +294,7 @@ OVERALL STATUS: ${formData.overall_status}/10
 					>
 						<h3
 							className="text-lg font-semibold mb-4"
-							style={{ color: "#2D5F3F" }}
+							style={{ color: "#5C7F4F" }}
 						>
 							Quick In-Session Check
 						</h3>
@@ -308,7 +308,7 @@ OVERALL STATUS: ${formData.overall_status}/10
 					<div>
 						<label
 							className="block text-sm font-medium mb-2"
-							style={{ color: "#2D5F3F" }}
+							style={{ color: "#5C7F4F" }}
 						>
 							How am I managing the current demands I'm encountering? (1-10)
 						</label>
@@ -331,7 +331,7 @@ OVERALL STATUS: ${formData.overall_status}/10
 								className="text-2xl font-bold px-4 py-2 rounded-lg"
 								style={{
 									backgroundColor: "rgba(107, 139, 96, 0.1)",
-									color: "#2D5F3F",
+									color: "#5C7F4F",
 								}}
 							>
 								{formData.demand_management}
@@ -342,7 +342,7 @@ OVERALL STATUS: ${formData.overall_status}/10
 					<div>
 						<label
 							className="block text-sm font-medium mb-2"
-							style={{ color: "#2D5F3F" }}
+							style={{ color: "#5C7F4F" }}
 						>
 							Quick notes (optional)
 						</label>
@@ -368,7 +368,7 @@ OVERALL STATUS: ${formData.overall_status}/10
 					<div>
 						<label
 							className="block text-sm font-medium mb-2"
-							style={{ color: "#2D5F3F" }}
+							style={{ color: "#5C7F4F" }}
 						>
 							Are my control strategies working effectively right now? (1-10)
 						</label>
@@ -391,7 +391,7 @@ OVERALL STATUS: ${formData.overall_status}/10
 								className="text-2xl font-bold px-4 py-2 rounded-lg"
 								style={{
 									backgroundColor: "rgba(107, 139, 96, 0.1)",
-									color: "#2D5F3F",
+									color: "#5C7F4F",
 								}}
 							>
 								{formData.control_effectiveness}
@@ -402,7 +402,7 @@ OVERALL STATUS: ${formData.overall_status}/10
 					<div>
 						<label
 							className="block text-sm font-medium mb-2"
-							style={{ color: "#2D5F3F" }}
+							style={{ color: "#5C7F4F" }}
 						>
 							What adjustments do I need to make to my approach?
 						</label>
@@ -428,7 +428,7 @@ OVERALL STATUS: ${formData.overall_status}/10
 					<div>
 						<label
 							className="block text-sm font-medium mb-2"
-							style={{ color: "#2D5F3F" }}
+							style={{ color: "#5C7F4F" }}
 						>
 							How is my energy level? (1-10)
 						</label>
@@ -448,7 +448,7 @@ OVERALL STATUS: ${formData.overall_status}/10
 								className="text-2xl font-bold px-4 py-2 rounded-lg"
 								style={{
 									backgroundColor: "rgba(107, 139, 96, 0.1)",
-									color: "#2D5F3F",
+									color: "#5C7F4F",
 								}}
 							>
 								{formData.energy_level}
@@ -459,7 +459,7 @@ OVERALL STATUS: ${formData.overall_status}/10
 					<div>
 						<label
 							className="block text-sm font-medium mb-2"
-							style={{ color: "#2D5F3F" }}
+							style={{ color: "#5C7F4F" }}
 						>
 							What do I need to maintain focus?
 						</label>
@@ -485,7 +485,7 @@ OVERALL STATUS: ${formData.overall_status}/10
 					<div>
 						<label
 							className="block text-sm font-medium mb-2"
-							style={{ color: "#2D5F3F" }}
+							style={{ color: "#5C7F4F" }}
 						>
 							Am I maintaining professional boundaries appropriately? (1-10)
 						</label>
@@ -508,7 +508,7 @@ OVERALL STATUS: ${formData.overall_status}/10
 								className="text-2xl font-bold px-4 py-2 rounded-lg"
 								style={{
 									backgroundColor: "rgba(107, 139, 96, 0.1)",
-									color: "#2D5F3F",
+									color: "#5C7F4F",
 								}}
 							>
 								{formData.boundary_maintenance}
@@ -519,7 +519,7 @@ OVERALL STATUS: ${formData.overall_status}/10
 					<div>
 						<label
 							className="block text-sm font-medium mb-2"
-							style={{ color: "#2D5F3F" }}
+							style={{ color: "#5C7F4F" }}
 						>
 							Any boundary concerns? (optional)
 						</label>
@@ -545,7 +545,7 @@ OVERALL STATUS: ${formData.overall_status}/10
 					<div>
 						<label
 							className="block text-sm font-medium mb-2"
-							style={{ color: "#2D5F3F" }}
+							style={{ color: "#5C7F4F" }}
 						>
 							How are my interpretive choices affecting the communication flow?
 						</label>
@@ -564,7 +564,7 @@ OVERALL STATUS: ${formData.overall_status}/10
 					<div>
 						<label
 							className="block text-sm font-medium mb-2"
-							style={{ color: "#2D5F3F" }}
+							style={{ color: "#5C7F4F" }}
 						>
 							Rate the communication flow (1-10)
 						</label>
@@ -584,7 +584,7 @@ OVERALL STATUS: ${formData.overall_status}/10
 								className="text-2xl font-bold px-4 py-2 rounded-lg"
 								style={{
 									backgroundColor: "rgba(107, 139, 96, 0.1)",
-									color: "#2D5F3F",
+									color: "#5C7F4F",
 								}}
 							>
 								{formData.flow_impact}
@@ -602,7 +602,7 @@ OVERALL STATUS: ${formData.overall_status}/10
 					<div>
 						<label
 							className="block text-sm font-medium mb-2"
-							style={{ color: "#2D5F3F" }}
+							style={{ color: "#5C7F4F" }}
 						>
 							What cultural factors am I navigating?
 						</label>
@@ -621,7 +621,7 @@ OVERALL STATUS: ${formData.overall_status}/10
 					<div>
 						<label
 							className="block text-sm font-medium mb-2"
-							style={{ color: "#2D5F3F" }}
+							style={{ color: "#5C7F4F" }}
 						>
 							Cultural navigation success (1-10)
 						</label>
@@ -644,7 +644,7 @@ OVERALL STATUS: ${formData.overall_status}/10
 								className="text-2xl font-bold px-4 py-2 rounded-lg"
 								style={{
 									backgroundColor: "rgba(107, 139, 96, 0.1)",
-									color: "#2D5F3F",
+									color: "#5C7F4F",
 								}}
 							>
 								{formData.cultural_success}
@@ -662,7 +662,7 @@ OVERALL STATUS: ${formData.overall_status}/10
 					<div>
 						<label
 							className="block text-sm font-medium mb-2"
-							style={{ color: "#2D5F3F" }}
+							style={{ color: "#5C7F4F" }}
 						>
 							Am I staying true to my role as an interpreter? (1-10)
 						</label>
@@ -682,7 +682,7 @@ OVERALL STATUS: ${formData.overall_status}/10
 								className="text-2xl font-bold px-4 py-2 rounded-lg"
 								style={{
 									backgroundColor: "rgba(107, 139, 96, 0.1)",
-									color: "#2D5F3F",
+									color: "#5C7F4F",
 								}}
 							>
 								{formData.role_adherence}
@@ -693,7 +693,7 @@ OVERALL STATUS: ${formData.overall_status}/10
 					<div>
 						<label
 							className="block text-sm font-medium mb-2"
-							style={{ color: "#2D5F3F" }}
+							style={{ color: "#5C7F4F" }}
 						>
 							Any role challenges? (optional)
 						</label>
@@ -719,7 +719,7 @@ OVERALL STATUS: ${formData.overall_status}/10
 					<div>
 						<label
 							className="block text-sm font-medium mb-2"
-							style={{ color: "#2D5F3F" }}
+							style={{ color: "#5C7F4F" }}
 						>
 							What support do I need from my team member right now?
 						</label>
@@ -738,7 +738,7 @@ OVERALL STATUS: ${formData.overall_status}/10
 					<div>
 						<label
 							className="block text-sm font-medium mb-2"
-							style={{ color: "#2D5F3F" }}
+							style={{ color: "#5C7F4F" }}
 						>
 							Support urgency (1=low, 10=high)
 						</label>
@@ -758,7 +758,7 @@ OVERALL STATUS: ${formData.overall_status}/10
 								className="text-2xl font-bold px-4 py-2 rounded-lg"
 								style={{
 									backgroundColor: "rgba(107, 139, 96, 0.1)",
-									color: "#2D5F3F",
+									color: "#5C7F4F",
 								}}
 							>
 								{formData.support_urgency}
@@ -776,7 +776,7 @@ OVERALL STATUS: ${formData.overall_status}/10
 					<div>
 						<label
 							className="block text-sm font-medium mb-2"
-							style={{ color: "#2D5F3F" }}
+							style={{ color: "#5C7F4F" }}
 						>
 							How am I managing my emotional responses to the content? (1-10)
 						</label>
@@ -799,7 +799,7 @@ OVERALL STATUS: ${formData.overall_status}/10
 								className="text-2xl font-bold px-4 py-2 rounded-lg"
 								style={{
 									backgroundColor: "rgba(107, 139, 96, 0.1)",
-									color: "#2D5F3F",
+									color: "#5C7F4F",
 								}}
 							>
 								{formData.emotional_response}
@@ -810,7 +810,7 @@ OVERALL STATUS: ${formData.overall_status}/10
 					<div>
 						<label
 							className="block text-sm font-medium mb-2"
-							style={{ color: "#2D5F3F" }}
+							style={{ color: "#5C7F4F" }}
 						>
 							Emotional regulation strategies (optional)
 						</label>
@@ -836,7 +836,7 @@ OVERALL STATUS: ${formData.overall_status}/10
 					<div>
 						<label
 							className="block text-sm font-medium mb-2"
-							style={{ color: "#2D5F3F" }}
+							style={{ color: "#5C7F4F" }}
 						>
 							What immediate action will I take?
 						</label>
@@ -862,7 +862,7 @@ OVERALL STATUS: ${formData.overall_status}/10
 					<div>
 						<label
 							className="block text-sm font-medium mb-2"
-							style={{ color: "#2D5F3F" }}
+							style={{ color: "#5C7F4F" }}
 						>
 							Next steps for this session
 						</label>
@@ -879,7 +879,7 @@ OVERALL STATUS: ${formData.overall_status}/10
 					<div>
 						<label
 							className="block text-sm font-medium mb-2"
-							style={{ color: "#2D5F3F" }}
+							style={{ color: "#5C7F4F" }}
 						>
 							Overall status (1-10)
 						</label>
@@ -899,7 +899,7 @@ OVERALL STATUS: ${formData.overall_status}/10
 								className="text-2xl font-bold px-4 py-2 rounded-lg"
 								style={{
 									backgroundColor: "rgba(107, 139, 96, 0.1)",
-									color: "#2D5F3F",
+									color: "#5C7F4F",
 								}}
 							>
 								{formData.overall_status}
@@ -911,7 +911,7 @@ OVERALL STATUS: ${formData.overall_status}/10
 						<div className="mt-8">
 							<p
 								className="text-sm font-medium mb-4"
-								style={{ color: "#2D5F3F" }}
+								style={{ color: "#5C7F4F" }}
 							>
 								Your self-check has been saved! Here's your summary:
 							</p>
@@ -960,7 +960,7 @@ OVERALL STATUS: ${formData.overall_status}/10
 							<div
 								className="w-12 h-12 rounded-xl flex items-center justify-center"
 								style={{
-									background: "linear-gradient(135deg, #2D5F3F, #5B9378)",
+									background: "linear-gradient(135deg, #5C7F4F, #5B9378)",
 									boxShadow: "0 2px 8px rgba(107, 139, 96, 0.3)",
 								}}
 							>
@@ -979,7 +979,7 @@ OVERALL STATUS: ${formData.overall_status}/10
 							onClick={onClose}
 							className="p-2 rounded-lg transition-all hover:opacity-90"
 							style={{
-								background: "linear-gradient(135deg, #2D5F3F, #5B9378)",
+								background: "linear-gradient(135deg, #5C7F4F, #5B9378)",
 							}}
 							aria-label="Close"
 						>
@@ -1062,7 +1062,7 @@ OVERALL STATUS: ${formData.overall_status}/10
 							onClick={handleNext}
 							className="px-6 py-2 rounded-lg flex items-center transition-all"
 							style={{
-								background: "linear-gradient(135deg, #2D5F3F, #5B9378)",
+								background: "linear-gradient(135deg, #5C7F4F, #5B9378)",
 								color: "#FFFFFF",
 								boxShadow: "0 2px 8px rgba(107, 139, 96, 0.3)",
 							}}
@@ -1089,7 +1089,7 @@ OVERALL STATUS: ${formData.overall_status}/10
 								background:
 									isSaving || hasSaved || showSummary
 										? "#CCCCCC"
-										: "linear-gradient(135deg, #2D5F3F, #5B9378)",
+										: "linear-gradient(135deg, #5C7F4F, #5B9378)",
 								color: "#FFFFFF",
 								boxShadow:
 									isSaving || hasSaved || showSummary

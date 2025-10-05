@@ -161,7 +161,7 @@ export const PricingNew: React.FC = () => {
 				<button
 					onClick={() => navigate("/")}
 					className="flex items-center gap-2 px-4 py-2 rounded-lg transition-all hover:bg-white/50"
-					style={{ color: "#2D5F3F" }}
+					style={{ color: "#5C7F4F" }}
 				>
 					<ArrowLeft className="w-5 h-5" />
 					<span className="font-medium">Back to App</span>
@@ -197,7 +197,7 @@ export const PricingNew: React.FC = () => {
 							}`}
 							style={{
 								backgroundColor:
-									billingPeriod === "monthly" ? "#2D5F3F" : "transparent",
+									billingPeriod === "monthly" ? "#5C7F4F" : "transparent",
 							}}
 						>
 							Monthly
@@ -211,7 +211,7 @@ export const PricingNew: React.FC = () => {
 							}`}
 							style={{
 								backgroundColor:
-									billingPeriod === "yearly" ? "#2D5F3F" : "transparent",
+									billingPeriod === "yearly" ? "#5C7F4F" : "transparent",
 							}}
 						>
 							Yearly (Save 20%)
@@ -249,7 +249,7 @@ export const PricingNew: React.FC = () => {
 									plan.popular ? "shadow-2xl relative" : "shadow-lg"
 								} bg-white p-8`}
 								style={{
-									borderColor: plan.popular ? "#2D5F3F" : "#E5E7EB",
+									borderColor: plan.popular ? "#5C7F4F" : "#E5E7EB",
 								}}
 							>
 								{/* Popular Badge */}
@@ -257,7 +257,7 @@ export const PricingNew: React.FC = () => {
 									<div className="absolute -top-4 left-1/2 transform -translate-x-1/2">
 										<span
 											className="text-white px-4 py-1 rounded-full text-sm font-semibold flex items-center gap-1"
-											style={{ backgroundColor: "#2D5F3F" }}
+											style={{ backgroundColor: "#5C7F4F" }}
 										>
 											<Sparkles className="w-4 h-4" />
 											BETA ACCESS
@@ -270,7 +270,7 @@ export const PricingNew: React.FC = () => {
 									<div
 										className="inline-flex items-center justify-center w-16 h-16 rounded-full text-white mb-4"
 										style={{
-											backgroundColor: plan.popular ? "#2D5F3F" : "#7A9B6E",
+											backgroundColor: plan.popular ? "#5C7F4F" : "#7A9B6E",
 										}}
 									>
 										{plan.icon}
@@ -374,7 +374,7 @@ export const PricingNew: React.FC = () => {
 										}
 										className={`w-full py-3 px-4 rounded-xl font-semibold transition-all text-white disabled:opacity-50 disabled:cursor-not-allowed`}
 										style={{
-											backgroundColor: plan.popular ? "#2D5F3F" : "#7A9B6E",
+											backgroundColor: plan.popular ? "#5C7F4F" : "#7A9B6E",
 										}}
 										onMouseEnter={(e) => {
 											e.currentTarget.style.backgroundColor = plan.popular
@@ -383,7 +383,7 @@ export const PricingNew: React.FC = () => {
 										}}
 										onMouseLeave={(e) => {
 											e.currentTarget.style.backgroundColor = plan.popular
-												? "#2D5F3F"
+												? "#5C7F4F"
 												: "#7A9B6E";
 										}}
 									>
@@ -433,7 +433,7 @@ export const PricingNew: React.FC = () => {
 							Currently subscribed to:
 							<span
 								className="font-semibold capitalize ml-2"
-								style={{ color: "#2D5F3F" }}
+								style={{ color: "#5C7F4F" }}
 							>
 								{currentPlan} Plan
 							</span>

@@ -115,7 +115,7 @@ export const StressResetView: React.FC<StressResetViewProps> = ({
 							style={{
 								backgroundColor: "#F1F8F4",
 								color: "var(--primary-800)",
-								border: "2px solid #2D5F3F",
+								border: "2px solid #5C7F4F",
 							}}
 							aria-label="Learn why breathing works"
 						>

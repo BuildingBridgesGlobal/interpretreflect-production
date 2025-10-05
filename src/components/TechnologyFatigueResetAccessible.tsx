@@ -152,7 +152,7 @@ export const TechnologyFatigueResetAccessible: React.FC<
 									className="p-2 rounded-xl"
 									style={{ backgroundColor: "#F0F5ED" }}
 								>
-									<Monitor className="w-6 h-6" style={{ color: "#2D5F3F" }} />
+									<Monitor className="w-6 h-6" style={{ color: "#5C7F4F" }} />
 								</div>
 								<div>
 									<h2
@@ -171,7 +171,7 @@ export const TechnologyFatigueResetAccessible: React.FC<
 								onClick={onClose}
 								className="p-2 rounded-xl transition-all hover:scale-105"
 								style={{
-									background: "linear-gradient(135deg, #2D5F3F, #5B9378)",
+									background: "linear-gradient(135deg, #5C7F4F, #5B9378)",
 								}}
 								aria-label="Close technology fatigue reset"
 							>
@@ -239,7 +239,7 @@ export const TechnologyFatigueResetAccessible: React.FC<
 							<div className="flex items-start gap-3">
 								<Clock
 									className="w-5 h-5 mt-0.5 flex-shrink-0"
-									style={{ color: "#2D5F3F" }}
+									style={{ color: "#5C7F4F" }}
 								/>
 								<div>
 									<p
@@ -261,8 +261,8 @@ export const TechnologyFatigueResetAccessible: React.FC<
 							onClick={handleStart}
 							className="w-full py-3 text-white rounded-xl font-medium transition-all hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-offset-2"
 							style={{
-								background: "linear-gradient(135deg, #2D5F3F, #5B9378)",
-								focusRingColor: "#2D5F3F",
+								background: "linear-gradient(135deg, #5C7F4F, #5B9378)",
+								focusRingColor: "#5C7F4F",
 							}}
 							aria-label="Start Technology Fatigue Reset"
 						>
@@ -300,7 +300,7 @@ export const TechnologyFatigueResetAccessible: React.FC<
 								onClick={onClose}
 								className="p-2 rounded-xl transition-all hover:scale-105"
 								style={{
-									background: "linear-gradient(135deg, #2D5F3F, #5B9378)",
+									background: "linear-gradient(135deg, #5C7F4F, #5B9378)",
 								}}
 								aria-label="Close practice"
 							>
@@ -369,7 +369,7 @@ export const TechnologyFatigueResetAccessible: React.FC<
 									style={{ backgroundColor: "#F0F5ED" }}
 								>
 									{React.cloneElement(stepInfo.icon as React.ReactElement, {
-										style: { color: "#2D5F3F" },
+										style: { color: "#5C7F4F" },
 									})}
 								</div>
 							</div>
@@ -401,7 +401,7 @@ export const TechnologyFatigueResetAccessible: React.FC<
 								))}
 							</ul>
 
-							<p className="text-xs italic" style={{ color: "#2D5F3F" }}>
+							<p className="text-xs italic" style={{ color: "#5C7F4F" }}>
 								{stepInfo.tip}
 							</p>
 						</div>
@@ -410,8 +410,8 @@ export const TechnologyFatigueResetAccessible: React.FC<
 							onClick={handleContinue}
 							className="w-full mt-6 py-3 text-white rounded-xl font-medium transition-all hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-offset-2"
 							style={{
-								background: "linear-gradient(135deg, #2D5F3F, #5B9378)",
-								focusRingColor: "#2D5F3F",
+								background: "linear-gradient(135deg, #5C7F4F, #5B9378)",
+								focusRingColor: "#5C7F4F",
 							}}
 							aria-label={
 								currentStep === "distance"
@@ -441,7 +441,7 @@ export const TechnologyFatigueResetAccessible: React.FC<
 							className="w-16 h-16 mx-auto rounded-full flex items-center justify-center"
 							style={{ backgroundColor: "#F0F5ED" }}
 						>
-							<Monitor className="w-8 h-8" style={{ color: "#2D5F3F" }} />
+							<Monitor className="w-8 h-8" style={{ color: "#5C7F4F" }} />
 						</div>
 					</div>
 
@@ -461,7 +461,7 @@ export const TechnologyFatigueResetAccessible: React.FC<
 						className="p-3 rounded-xl"
 						style={{ backgroundColor: "#F5F9F3" }}
 					>
-						<p className="text-xs" style={{ color: "#2D5F3F" }}>
+						<p className="text-xs" style={{ color: "#5C7F4F" }}>
 							Remember: Regular breaks prevent fatigue buildup
 						</p>
 					</div>

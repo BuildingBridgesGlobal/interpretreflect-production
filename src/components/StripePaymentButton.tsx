@@ -80,7 +80,7 @@ export function StripePaymentButton({
 			disabled={loading}
 			className={`px-6 py-3 rounded-lg font-semibold transition-all ${className}`}
 			style={{
-				background: loading ? "#ccc" : "#2D5F3F",
+				background: loading ? "#ccc" : "#5C7F4F",
 				color: "#FFFFFF",
 				cursor: loading ? "not-allowed" : "pointer",
 				opacity: loading ? 0.7 : 1,
@@ -88,12 +88,12 @@ export function StripePaymentButton({
 			onMouseEnter={(e) => {
 				if (!loading) {
 					e.currentTarget.style.background = "#F5F5DC";
-					e.currentTarget.style.color = "#2D5F3F";
+					e.currentTarget.style.color = "#5C7F4F";
 				}
 			}}
 			onMouseLeave={(e) => {
 				if (!loading) {
-					e.currentTarget.style.background = "#2D5F3F";
+					e.currentTarget.style.background = "#5C7F4F";
 					e.currentTarget.style.color = "#FFFFFF";
 				}
 			}}

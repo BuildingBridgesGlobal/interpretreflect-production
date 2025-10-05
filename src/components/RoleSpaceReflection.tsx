@@ -428,7 +428,7 @@ const RoleSpaceReflection: React.FC<RoleSpaceReflectionProps> = ({
 					<div key={field.id} className="mb-6">
 						<label
 							className="block text-sm font-medium mb-2"
-							style={{ color: "#2D5F3F" }}
+							style={{ color: "#5C7F4F" }}
 						>
 							{field.label}
 						</label>
@@ -466,7 +466,7 @@ const RoleSpaceReflection: React.FC<RoleSpaceReflectionProps> = ({
 					<div key={field.id} className="mb-6">
 						<label
 							className="block text-sm font-medium mb-2"
-							style={{ color: "#2D5F3F" }}
+							style={{ color: "#5C7F4F" }}
 						>
 							{field.label}
 						</label>
@@ -530,7 +530,7 @@ const RoleSpaceReflection: React.FC<RoleSpaceReflectionProps> = ({
 							<div
 								className="w-12 h-12 rounded-xl flex items-center justify-center"
 								style={{
-									background: "linear-gradient(135deg, #2D5F3F, #5B9378)",
+									background: "linear-gradient(135deg, #5C7F4F, #5B9378)",
 									boxShadow: "0 2px 8px rgba(107, 139, 96, 0.3)",
 								}}
 							>
@@ -549,7 +549,7 @@ const RoleSpaceReflection: React.FC<RoleSpaceReflectionProps> = ({
 							onClick={onClose}
 							className="p-2 rounded-lg transition-all hover:opacity-90"
 							style={{
-								background: "linear-gradient(135deg, #2D5F3F, #5B9378)",
+								background: "linear-gradient(135deg, #5C7F4F, #5B9378)",
 							}}
 							aria-label="Close"
 						>
@@ -606,7 +606,7 @@ const RoleSpaceReflection: React.FC<RoleSpaceReflectionProps> = ({
 								<div>
 									<h4
 										className="font-semibold mb-2"
-										style={{ color: "#2D5F3F" }}
+										style={{ color: "#5C7F4F" }}
 									>
 										Affirmation
 									</h4>
@@ -661,7 +661,7 @@ const RoleSpaceReflection: React.FC<RoleSpaceReflectionProps> = ({
 							onClick={handleNext}
 							className="px-6 py-2 rounded-lg flex items-center transition-all"
 							style={{
-								background: "linear-gradient(135deg, #2D5F3F, #5B9378)",
+								background: "linear-gradient(135deg, #5C7F4F, #5B9378)",
 								color: "#FFFFFF",
 								boxShadow: "0 2px 8px rgba(107, 139, 96, 0.3)",
 							}}
@@ -688,7 +688,7 @@ const RoleSpaceReflection: React.FC<RoleSpaceReflectionProps> = ({
 								background:
 									isSubmitting || hasSaved || showSummary
 										? "#CCCCCC"
-										: "linear-gradient(135deg, #2D5F3F, #5B9378)",
+										: "linear-gradient(135deg, #5C7F4F, #5B9378)",
 								color: "#FFFFFF",
 								boxShadow:
 									isSubmitting || hasSaved || showSummary

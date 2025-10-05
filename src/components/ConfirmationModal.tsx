@@ -66,7 +66,7 @@ export const ConfirmationModal: React.FC<ConfirmationModalProps> = ({
 						style={{
 							background: isDanger
 								? "linear-gradient(135deg, #dc2626, #ef4444)"
-								: "linear-gradient(135deg, #2D5F3F, #5B9378)",
+								: "linear-gradient(135deg, #5C7F4F, #5B9378)",
 						}}
 					>
 						{confirmText}

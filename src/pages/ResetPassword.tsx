@@ -127,7 +127,7 @@ const ResetPassword: React.FC = () => {
 									}`}
 									style={
 										{
-											"--tw-ring-color": "#2D5F3F",
+											"--tw-ring-color": "#5C7F4F",
 										} as React.CSSProperties
 									}
 									required
@@ -158,7 +158,7 @@ const ResetPassword: React.FC = () => {
 									}`}
 									style={
 										{
-											"--tw-ring-color": "#2D5F3F",
+											"--tw-ring-color": "#5C7F4F",
 										} as React.CSSProperties
 									}
 									required
@@ -175,7 +175,7 @@ const ResetPassword: React.FC = () => {
 								disabled={loading || !password || !confirmPassword}
 								className="w-full flex items-center justify-center gap-2 px-4 py-3 text-white rounded-xl font-semibold transition-all disabled:opacity-50 disabled:cursor-not-allowed"
 								style={{
-									background: loading ? "#9CA3AF" : "#2D5F3F",
+									background: loading ? "#9CA3AF" : "#5C7F4F",
 								}}
 							>
 								{loading ? (

@@ -347,7 +347,7 @@ export const TeamingReflectionEnhanced: React.FC<
 					>
 						<h3
 							className="text-lg font-semibold mb-4"
-							style={{ color: "#2D5F3F" }}
+							style={{ color: "#5C7F4F" }}
 						>
 							Opening Context
 						</h3>
@@ -360,7 +360,7 @@ export const TeamingReflectionEnhanced: React.FC<
 
 						<label
 							className="block text-sm font-medium mb-2"
-							style={{ color: "#2D5F3F" }}
+							style={{ color: "#5C7F4F" }}
 						>
 							What most surprised you about this team interpreting experience?
 						</label>
@@ -385,7 +385,7 @@ export const TeamingReflectionEnhanced: React.FC<
 						<div className="mt-6">
 							<label
 								className="block text-sm font-medium mb-2"
-								style={{ color: "#2D5F3F" }}
+								style={{ color: "#5C7F4F" }}
 							>
 								Was this a virtual or in-person assignment?
 							</label>
@@ -543,7 +543,7 @@ export const TeamingReflectionEnhanced: React.FC<
 					<div>
 						<label
 							className="block text-sm font-medium mb-2"
-							style={{ color: "#2D5F3F" }}
+							style={{ color: "#5C7F4F" }}
 						>
 							Looking back at your pre-assignment responses, which expectations
 							proved most accurate? Which were most different?
@@ -572,7 +572,7 @@ export const TeamingReflectionEnhanced: React.FC<
 					<div>
 						<label
 							className="block text-sm font-medium mb-2"
-							style={{ color: "#2D5F3F" }}
+							style={{ color: "#5C7F4F" }}
 						>
 							{prepData ? (
 								"self_focus" in prepData ? (
@@ -616,7 +616,7 @@ export const TeamingReflectionEnhanced: React.FC<
 					<div>
 						<label
 							className="block text-sm font-medium mb-2"
-							style={{ color: "#2D5F3F" }}
+							style={{ color: "#5C7F4F" }}
 						>
 							{prepData ? (
 								"self_focus" in prepData && prepData.stressors.length > 0 ? (
@@ -655,7 +655,7 @@ export const TeamingReflectionEnhanced: React.FC<
 						<div>
 							<label
 								className="block text-sm font-medium mb-2"
-								style={{ color: "#2D5F3F" }}
+								style={{ color: "#5C7F4F" }}
 							>
 								How did the technical aspects compare to your expectations?
 							</label>
@@ -676,7 +676,7 @@ export const TeamingReflectionEnhanced: React.FC<
 						<div>
 							<label
 								className="block text-sm font-medium mb-2"
-								style={{ color: "#2D5F3F" }}
+								style={{ color: "#5C7F4F" }}
 							>
 								How did the physical/environmental aspects compare to what you
 								anticipated?
@@ -703,7 +703,7 @@ export const TeamingReflectionEnhanced: React.FC<
 					<div>
 						<label
 							className="block text-sm font-medium mb-2"
-							style={{ color: "#2D5F3F" }}
+							style={{ color: "#5C7F4F" }}
 						>
 							Describe how your interpreting team actually functioned during the
 							assignment vs. what you imagined
@@ -732,7 +732,7 @@ export const TeamingReflectionEnhanced: React.FC<
 					<div>
 						<label
 							className="block text-sm font-medium mb-2"
-							style={{ color: "#2D5F3F" }}
+							style={{ color: "#5C7F4F" }}
 						>
 							How did your role evolve throughout the project?
 						</label>
@@ -750,7 +750,7 @@ export const TeamingReflectionEnhanced: React.FC<
 					<div>
 						<label
 							className="block text-sm font-medium mb-2"
-							style={{ color: "#2D5F3F" }}
+							style={{ color: "#5C7F4F" }}
 						>
 							What communication patterns emerged naturally?
 						</label>
@@ -768,7 +768,7 @@ export const TeamingReflectionEnhanced: React.FC<
 					<div>
 						<label
 							className="block text-sm font-medium mb-2"
-							style={{ color: "#2D5F3F" }}
+							style={{ color: "#5C7F4F" }}
 						>
 							Identify a moment when your team interpreted exceptionally well
 							together
@@ -795,7 +795,7 @@ export const TeamingReflectionEnhanced: React.FC<
 					<div>
 						<label
 							className="block text-sm font-medium mb-2"
-							style={{ color: "#2D5F3F" }}
+							style={{ color: "#5C7F4F" }}
 						>
 							How did you manage transitions and maintain flow as a team?
 						</label>
@@ -820,7 +820,7 @@ export const TeamingReflectionEnhanced: React.FC<
 					<div>
 						<label
 							className="block text-sm font-medium mb-2"
-							style={{ color: "#2D5F3F" }}
+							style={{ color: "#5C7F4F" }}
 						>
 							Describe a significant challenge during the assignment and how you
 							navigated it together
@@ -849,7 +849,7 @@ export const TeamingReflectionEnhanced: React.FC<
 					<div>
 						<label
 							className="block text-sm font-medium mb-2"
-							style={{ color: "#2D5F3F" }}
+							style={{ color: "#5C7F4F" }}
 						>
 							What unexpected interpreting skills did you develop?
 						</label>
@@ -875,7 +875,7 @@ export const TeamingReflectionEnhanced: React.FC<
 					<div>
 						<label
 							className="block text-sm font-medium mb-2"
-							style={{ color: "#2D5F3F" }}
+							style={{ color: "#5C7F4F" }}
 						>
 							How did you contribute to resolving any miscommunications or
 							technical issues?
@@ -897,7 +897,7 @@ export const TeamingReflectionEnhanced: React.FC<
 						<div>
 							<label
 								className="block text-sm font-medium mb-2"
-								style={{ color: "#2D5F3F" }}
+								style={{ color: "#5C7F4F" }}
 							>
 								What solutions did you find for remote collaboration challenges?
 							</label>
@@ -918,7 +918,7 @@ export const TeamingReflectionEnhanced: React.FC<
 						<div>
 							<label
 								className="block text-sm font-medium mb-2"
-								style={{ color: "#2D5F3F" }}
+								style={{ color: "#5C7F4F" }}
 							>
 								How did you handle environmental or positioning challenges?
 							</label>
@@ -937,7 +937,7 @@ export const TeamingReflectionEnhanced: React.FC<
 					<div>
 						<label
 							className="block text-sm font-medium mb-2"
-							style={{ color: "#2D5F3F" }}
+							style={{ color: "#5C7F4F" }}
 						>
 							What would you do differently in your next team interpreting
 							assignment?
@@ -963,7 +963,7 @@ export const TeamingReflectionEnhanced: React.FC<
 					<div>
 						<label
 							className="block text-sm font-medium mb-2"
-							style={{ color: "#2D5F3F" }}
+							style={{ color: "#5C7F4F" }}
 						>
 							Most important thing learned about yourself as a team interpreter?
 						</label>
@@ -989,7 +989,7 @@ export const TeamingReflectionEnhanced: React.FC<
 					<div>
 						<label
 							className="block text-sm font-medium mb-2"
-							style={{ color: "#2D5F3F" }}
+							style={{ color: "#5C7F4F" }}
 						>
 							What collaboration insights will you carry forward to future
 							assignments?
@@ -1018,7 +1018,7 @@ export const TeamingReflectionEnhanced: React.FC<
 					<div>
 						<label
 							className="block text-sm font-medium mb-2"
-							style={{ color: "#2D5F3F" }}
+							style={{ color: "#5C7F4F" }}
 						>
 							How has this changed your approach to team interpreting?
 						</label>
@@ -1036,7 +1036,7 @@ export const TeamingReflectionEnhanced: React.FC<
 					<div>
 						<label
 							className="block text-sm font-medium mb-2"
-							style={{ color: "#2D5F3F" }}
+							style={{ color: "#5C7F4F" }}
 						>
 							What specific techniques for smooth handoffs or support did you
 							discover?
@@ -1055,7 +1055,7 @@ export const TeamingReflectionEnhanced: React.FC<
 					<div>
 						<label
 							className="block text-sm font-medium mb-2"
-							style={{ color: "#2D5F3F" }}
+							style={{ color: "#5C7F4F" }}
 						>
 							Advice for someone about to start a similar team interpreting
 							assignment?
@@ -1081,7 +1081,7 @@ export const TeamingReflectionEnhanced: React.FC<
 					<div>
 						<label
 							className="block text-sm font-medium mb-2"
-							style={{ color: "#2D5F3F" }}
+							style={{ color: "#5C7F4F" }}
 						>
 							Then I thought team interpreting would be... → Now I know...
 						</label>
@@ -1109,7 +1109,7 @@ export const TeamingReflectionEnhanced: React.FC<
 					<div>
 						<label
 							className="block text-sm font-medium mb-2"
-							style={{ color: "#2D5F3F" }}
+							style={{ color: "#5C7F4F" }}
 						>
 							Then I worried about... → Now I understand...
 						</label>
@@ -1127,7 +1127,7 @@ export const TeamingReflectionEnhanced: React.FC<
 					<div>
 						<label
 							className="block text-sm font-medium mb-2"
-							style={{ color: "#2D5F3F" }}
+							style={{ color: "#5C7F4F" }}
 						>
 							Then I planned to handle handoffs by... → What actually worked
 							was...
@@ -1159,7 +1159,7 @@ export const TeamingReflectionEnhanced: React.FC<
 					<div>
 						<label
 							className="block text-sm font-medium mb-2"
-							style={{ color: "#2D5F3F" }}
+							style={{ color: "#5C7F4F" }}
 						>
 							My confidence in{" "}
 							{formData.assignment_type === "virtual"
@@ -1183,7 +1183,7 @@ export const TeamingReflectionEnhanced: React.FC<
 					<div>
 						<label
 							className="block text-sm font-medium mb-2"
-							style={{ color: "#2D5F3F" }}
+							style={{ color: "#5C7F4F" }}
 						>
 							Rate your overall team interpreting experience (1-10)
 						</label>
@@ -1227,7 +1227,7 @@ export const TeamingReflectionEnhanced: React.FC<
 					<div>
 						<label
 							className="block text-sm font-medium mb-2"
-							style={{ color: "#2D5F3F" }}
+							style={{ color: "#5C7F4F" }}
 						>
 							What three specific strategies will you bring to your next team
 							interpreting assignment?
@@ -1260,7 +1260,7 @@ export const TeamingReflectionEnhanced: React.FC<
 					>
 						<h3
 							className="text-lg font-semibold mb-4"
-							style={{ color: "#2D5F3F" }}
+							style={{ color: "#5C7F4F" }}
 						>
 							Post-Reflection Check
 						</h3>
@@ -1269,7 +1269,7 @@ export const TeamingReflectionEnhanced: React.FC<
 							<div>
 								<label
 									className="block text-sm font-medium mb-2"
-									style={{ color: "#2D5F3F" }}
+									style={{ color: "#5C7F4F" }}
 								>
 									How confident do you feel about future team interpreting
 									assignments? (1-10)
@@ -1301,7 +1301,7 @@ export const TeamingReflectionEnhanced: React.FC<
 							<div>
 								<label
 									className="block text-sm font-medium mb-2"
-									style={{ color: "#2D5F3F" }}
+									style={{ color: "#5C7F4F" }}
 								>
 									In one word, how are you feeling after this reflection?
 								</label>
@@ -1354,7 +1354,7 @@ export const TeamingReflectionEnhanced: React.FC<
 							<div
 								className="w-12 h-12 rounded-xl flex items-center justify-center"
 								style={{
-									background: "linear-gradient(135deg, #2D5F3F, #5B9378)",
+									background: "linear-gradient(135deg, #5C7F4F, #5B9378)",
 									boxShadow: "0 2px 8px rgba(107, 139, 96, 0.3)",
 								}}
 							>
@@ -1373,7 +1373,7 @@ export const TeamingReflectionEnhanced: React.FC<
 							onClick={onClose}
 							className="p-2 rounded-lg transition-all hover:opacity-90"
 							style={{
-								background: "linear-gradient(135deg, #2D5F3F, #5B9378)",
+								background: "linear-gradient(135deg, #5C7F4F, #5B9378)",
 							}}
 							aria-label="Close"
 						>
@@ -1456,7 +1456,7 @@ export const TeamingReflectionEnhanced: React.FC<
 							onClick={handleNext}
 							className="px-6 py-2 rounded-lg flex items-center transition-all"
 							style={{
-								background: "linear-gradient(135deg, #2D5F3F, #5B9378)",
+								background: "linear-gradient(135deg, #5C7F4F, #5B9378)",
 								color: "#FFFFFF",
 								boxShadow: "0 2px 8px rgba(107, 139, 96, 0.3)",
 							}}
@@ -1483,7 +1483,7 @@ export const TeamingReflectionEnhanced: React.FC<
 								style={{
 									background: isSaving
 										? "linear-gradient(145deg, #9CA3AF 0%, #6B7280 100%)"
-										: "linear-gradient(135deg, #2D5F3F, #5B9378)",
+										: "linear-gradient(135deg, #5C7F4F, #5B9378)",
 									color: "#FFFFFF",
 									boxShadow: "0 2px 8px rgba(107, 139, 96, 0.3)",
 									cursor: isSaving ? "not-allowed" : "pointer",
@@ -1522,7 +1522,7 @@ export const TeamingReflectionEnhanced: React.FC<
 							<div
 								className="w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4"
 								style={{
-									background: "linear-gradient(135deg, #2D5F3F, #5B9378)",
+									background: "linear-gradient(135deg, #5C7F4F, #5B9378)",
 									boxShadow: "0 4px 12px rgba(107, 139, 96, 0.3)",
 								}}
 							>
@@ -1550,7 +1550,7 @@ export const TeamingReflectionEnhanced: React.FC<
 									}}
 									className="px-6 py-3 rounded-lg transition-all"
 									style={{
-										background: "linear-gradient(135deg, #2D5F3F, #5B9378)",
+										background: "linear-gradient(135deg, #5C7F4F, #5B9378)",
 										color: "#FFFFFF",
 										boxShadow: "0 2px 8px rgba(107, 139, 96, 0.3)",
 									}}

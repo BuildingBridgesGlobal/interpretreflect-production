@@ -364,7 +364,7 @@ Current Feeling: ${formData.currentFeeling || "Not provided"}
 							style={{
 								background:
 									isCompleted || isCurrent
-										? "linear-gradient(135deg, #2D5F3F, #5B9378)"
+										? "linear-gradient(135deg, #5C7F4F, #5B9378)"
 										: undefined,
 							}}
 						/>
@@ -984,8 +984,8 @@ Current Feeling: ${formData.currentFeeling || "Not provided"}
 				className="flex items-center gap-2 px-6 py-3 font-medium rounded-lg transition-all disabled:opacity-50 disabled:cursor-not-allowed"
 				style={{
 					backgroundColor: currentStep === 1 ? "#e5e7eb" : "#ffffff",
-					color: currentStep === 1 ? "#9ca3af" : "#2D5F3F",
-					border: `2px solid ${currentStep === 1 ? "#e5e7eb" : "#2D5F3F"}`,
+					color: currentStep === 1 ? "#9ca3af" : "#5C7F4F",
+					border: `2px solid ${currentStep === 1 ? "#e5e7eb" : "#5C7F4F"}`,
 				}}
 			>
 				<ArrowLeft className="h-4 w-4" />
@@ -997,7 +997,7 @@ Current Feeling: ${formData.currentFeeling || "Not provided"}
 					onClick={handleNext}
 					className="flex items-center gap-2 px-6 py-3 font-semibold rounded-lg text-white transition-all hover:opacity-90"
 					style={{
-						background: "linear-gradient(135deg, #2D5F3F, #5B9378)",
+						background: "linear-gradient(135deg, #5C7F4F, #5B9378)",
 					}}
 				>
 					Next
@@ -1011,7 +1011,7 @@ Current Feeling: ${formData.currentFeeling || "Not provided"}
 					style={{
 						background: isSaving
 							? "linear-gradient(135deg, #9ca3af, #6b7280)"
-							: "linear-gradient(135deg, #2D5F3F, #5B9378)",
+							: "linear-gradient(135deg, #5C7F4F, #5B9378)",
 					}}
 				>
 					<CheckCircle className="h-5 w-5" />
@@ -1032,8 +1032,8 @@ Current Feeling: ${formData.currentFeeling || "Not provided"}
 							onClick={onClose}
 							className="absolute top-4 right-4 p-2 rounded-lg text-white transition-all hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-offset-2"
 							style={{
-								background: "linear-gradient(135deg, #2D5F3F, #5B9378)",
-								focusRingColor: "#2D5F3F",
+								background: "linear-gradient(135deg, #5C7F4F, #5B9378)",
+								focusRingColor: "#5C7F4F",
 							}}
 							aria-label="Close mentoring preparation"
 						>

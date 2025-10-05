@@ -110,7 +110,7 @@ export function EnterpriseWellnessDashboard() {
       <div 
         className="p-6"
         style={{
-          background: 'linear-gradient(135deg, #1A3D26 0%, #2D5F3F 100%)',
+          background: 'linear-gradient(135deg, #1A3D26 0%, #5C7F4F 100%)',
           color: '#FFFFFF'
         }}
       >

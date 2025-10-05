@@ -49,7 +49,7 @@ export const PaymentSuccess: React.FC = () => {
 				<div className="text-center">
 					<Loader
 						className="w-12 h-12 animate-spin mx-auto mb-4"
-						style={{ color: "#2D5F3F" }}
+						style={{ color: "#5C7F4F" }}
 					/>
 					<p className="text-gray-600">Verifying your payment...</p>
 				</div>
@@ -66,7 +66,7 @@ export const PaymentSuccess: React.FC = () => {
 						<div className="w-20 h-20 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
 							<Mail
 								className="w-12 h-12"
-								style={{ color: "#2D5F3F" }}
+								style={{ color: "#5C7F4F" }}
 							/>
 						</div>
 						<h1 className="text-3xl font-bold text-gray-900 mb-2">
@@ -95,7 +95,7 @@ export const PaymentSuccess: React.FC = () => {
 						onClick={() => navigate("/")}
 						className="w-full text-white font-semibold py-3 px-6 rounded-lg flex items-center justify-center"
 						style={{
-							background: "#2D5F3F",
+							background: "#5C7F4F",
 							cursor: "pointer",
 						}}
 					>
@@ -112,7 +112,7 @@ export const PaymentSuccess: React.FC = () => {
 							<a
 								href="mailto:hello@huviatechnologies.com"
 								className="hover:underline"
-								style={{ color: "#2D5F3F" }}
+								style={{ color: "#5C7F4F" }}
 							>
 								hello@huviatechnologies.com
 							</a>
@@ -131,7 +131,7 @@ export const PaymentSuccess: React.FC = () => {
 					<div className="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
 						<CheckCircle
 							className="w-12 h-12"
-							style={{ color: "#2D5F3F" }}
+							style={{ color: "#5C7F4F" }}
 						/>
 					</div>
 					<h1 className="text-3xl font-bold text-gray-900 mb-2">
@@ -157,15 +157,15 @@ export const PaymentSuccess: React.FC = () => {
 					}}
 					className="w-full text-white font-semibold py-3 px-6 rounded-lg flex items-center justify-center"
 					style={{
-						background: "#2D5F3F",
+						background: "#5C7F4F",
 						cursor: "pointer",
 					}}
 					onMouseEnter={(e) => {
-						e.currentTarget.style.background = "#2D5F3F";
+						e.currentTarget.style.background = "#5C7F4F";
 						e.currentTarget.style.opacity = "1";
 					}}
 					onMouseLeave={(e) => {
-						e.currentTarget.style.background = "#2D5F3F";
+						e.currentTarget.style.background = "#5C7F4F";
 						e.currentTarget.style.opacity = "1";
 					}}
 				>
@@ -179,7 +179,7 @@ export const PaymentSuccess: React.FC = () => {
 						<a
 							href="mailto:hello@huviatechnologies.com"
 							className="hover:underline"
-							style={{ color: "#2D5F3F" }}
+							style={{ color: "#5C7F4F" }}
 						>
 							hello@huviatechnologies.com
 						</a>

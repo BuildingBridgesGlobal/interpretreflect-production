@@ -456,7 +456,7 @@ export const InSessionTeamSync: React.FC<InSessionTeamSyncProps> = ({
 					<div key={field.id} className="mb-6">
 						<label
 							className="block text-sm font-medium mb-2"
-							style={{ color: "#2D5F3F" }}
+							style={{ color: "#5C7F4F" }}
 						>
 							{field.label}
 						</label>
@@ -479,7 +479,7 @@ export const InSessionTeamSync: React.FC<InSessionTeamSyncProps> = ({
 					<div key={field.id} className="mb-6">
 						<label
 							className="block text-sm font-medium mb-2"
-							style={{ color: "#2D5F3F" }}
+							style={{ color: "#5C7F4F" }}
 						>
 							{field.label}
 						</label>
@@ -502,7 +502,7 @@ export const InSessionTeamSync: React.FC<InSessionTeamSyncProps> = ({
 					<div key={field.id} className="mb-6">
 						<label
 							className="block text-sm font-medium mb-2"
-							style={{ color: "#2D5F3F" }}
+							style={{ color: "#5C7F4F" }}
 						>
 							{field.label}
 						</label>
@@ -529,7 +529,7 @@ export const InSessionTeamSync: React.FC<InSessionTeamSyncProps> = ({
 					<div key={field.id} className="mb-6">
 						<label
 							className="block text-sm font-medium mb-2"
-							style={{ color: "#2D5F3F" }}
+							style={{ color: "#5C7F4F" }}
 						>
 							{field.label}
 						</label>
@@ -556,7 +556,7 @@ export const InSessionTeamSync: React.FC<InSessionTeamSyncProps> = ({
 							</span>
 							<span
 								className="ml-4 px-3 py-1 rounded-full text-sm font-medium"
-								style={{ backgroundColor: "#E8F0E8", color: "#2D5F3F" }}
+								style={{ backgroundColor: "#E8F0E8", color: "#5C7F4F" }}
 							>
 								{value}
 							</span>
@@ -597,7 +597,7 @@ export const InSessionTeamSync: React.FC<InSessionTeamSyncProps> = ({
 							<div
 								className="w-12 h-12 rounded-lg flex items-center justify-center"
 								style={{
-									background: "linear-gradient(135deg, #2D5F3F, #5B9378)",
+									background: "linear-gradient(135deg, #5C7F4F, #5B9378)",
 								}}
 							>
 								<CommunityIcon size={64} />
@@ -615,7 +615,7 @@ export const InSessionTeamSync: React.FC<InSessionTeamSyncProps> = ({
 							onClick={onClose}
 							className="p-2 rounded-lg transition-all hover:opacity-90"
 							style={{
-								background: "linear-gradient(135deg, #2D5F3F, #5B9378)",
+								background: "linear-gradient(135deg, #5C7F4F, #5B9378)",
 							}}
 							aria-label="Close"
 						>
@@ -628,7 +628,7 @@ export const InSessionTeamSync: React.FC<InSessionTeamSyncProps> = ({
 						className="mt-4 p-3 rounded-lg"
 						style={{ backgroundColor: "#E8F0E8" }}
 					>
-						<p className="text-sm" style={{ color: "#2D5F3F" }}>
+						<p className="text-sm" style={{ color: "#5C7F4F" }}>
 							<strong>Research Foundation:</strong> Effective team communication
 							improves interpretation quality by 20-25% (Team Dynamics in
 							Healthcare Interpreting, 2023). Regular team check-ins during
@@ -652,7 +652,7 @@ export const InSessionTeamSync: React.FC<InSessionTeamSyncProps> = ({
 								className="h-full rounded-full transition-all duration-300"
 								style={{
 									width: `${progress}%`,
-									background: "linear-gradient(135deg, #2D5F3F, #5B9378)",
+									background: "linear-gradient(135deg, #5C7F4F, #5B9378)",
 								}}
 							/>
 						</div>
@@ -668,7 +668,7 @@ export const InSessionTeamSync: React.FC<InSessionTeamSyncProps> = ({
 						>
 							{currentSectionData.icon}
 						</div>
-						<h3 className="text-xl font-semibold" style={{ color: "#2D5F3F" }}>
+						<h3 className="text-xl font-semibold" style={{ color: "#5C7F4F" }}>
 							{currentSectionData.title}
 						</h3>
 					</div>
@@ -705,7 +705,7 @@ export const InSessionTeamSync: React.FC<InSessionTeamSyncProps> = ({
 								background:
 									isSubmitting || hasSaved || showSummary
 										? "#CCCCCC"
-										: "linear-gradient(135deg, #2D5F3F, #5B9378)",
+										: "linear-gradient(135deg, #5C7F4F, #5B9378)",
 								opacity: isSubmitting || hasSaved || showSummary ? 0.5 : 1,
 								cursor:
 									isSubmitting || hasSaved || showSummary

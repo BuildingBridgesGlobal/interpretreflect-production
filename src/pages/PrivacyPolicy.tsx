@@ -63,7 +63,7 @@ export function PrivacyPolicy() {
 					</p>
 					<p
 						className="text-base font-medium mb-6"
-						style={{ color: "#2D5F3F" }}
+						style={{ color: "#5C7F4F" }}
 					>
 						Your Privacy Matters
 					</p>
@@ -123,7 +123,7 @@ export function PrivacyPolicy() {
 
 							<p
 								className="mt-3 text-sm font-medium"
-								style={{ color: "#2D5F3F" }}
+								style={{ color: "#5C7F4F" }}
 							>
 								Important: We do not collect information about your own clients
 								or assignments unless you share it in a reflection.
@@ -282,7 +282,7 @@ export function PrivacyPolicy() {
 						<a
 							href="mailto:hello@huviatechnologies.com"
 							className="font-semibold text-base hover:underline"
-							style={{ color: "#2D5F3F" }}
+							style={{ color: "#5C7F4F" }}
 						>
 							hello@huviatechnologies.com
 						</a>

@@ -321,7 +321,7 @@ export const ValuesAlignmentCheckIn: React.FC<ValuesAlignmentCheckInProps> = ({ 
       case 'textarea':
         return (
           <div key={field.id} className="mb-6">
-            <label className="block text-sm font-medium mb-2" style={{ color: '#2D5F3F' }}>
+            <label className="block text-sm font-medium mb-2" style={{ color: '#5C7F4F' }}>
               {field.label}
             </label>
             <textarea
@@ -353,7 +353,7 @@ export const ValuesAlignmentCheckIn: React.FC<ValuesAlignmentCheckInProps> = ({ 
       case 'slider':
         return (
           <div key={field.id} className="mb-6">
-            <label className="block text-sm font-medium mb-2" style={{ color: '#2D5F3F' }}>
+            <label className="block text-sm font-medium mb-2" style={{ color: '#5C7F4F' }}>
               {field.label}
             </label>
             <div className="flex items-center space-x-4">
@@ -370,7 +370,7 @@ export const ValuesAlignmentCheckIn: React.FC<ValuesAlignmentCheckInProps> = ({ 
                 }}
               />
               <span className="text-sm" style={{ color: '#5A5A5A' }}>10</span>
-              <span className="ml-2 font-semibold" style={{ color: '#2D5F3F' }}>
+              <span className="ml-2 font-semibold" style={{ color: '#5C7F4F' }}>
                 {formData[field.id as keyof typeof formData] || 5}
               </span>
             </div>

@@ -96,7 +96,7 @@ export const ReflectionDetailView: React.FC<ReflectionDetailViewProps> = ({
 							onClick={onClose}
 							className="p-2 text-white rounded-lg transition-all shadow-sm hover:shadow-md hover:opacity-90"
 							style={{
-								background: "linear-gradient(135deg, #2D5F3F, #5B9378)",
+								background: "linear-gradient(135deg, #5C7F4F, #5B9378)",
 							}}
 							title="Close"
 						>

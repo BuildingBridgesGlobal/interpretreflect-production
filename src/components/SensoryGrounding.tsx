@@ -278,7 +278,7 @@ export const SensoryGrounding: React.FC<SensoryGroundingProps> = ({
 							<button
 								onClick={handleComplete}
 								className="flex-1 px-6 py-3 rounded-lg font-semibold text-white"
-								style={{ backgroundColor: "#2D5F3F" }}
+								style={{ backgroundColor: "#5C7F4F" }}
 							>
 								Complete
 							</button>
@@ -346,7 +346,7 @@ export const SensoryGrounding: React.FC<SensoryGroundingProps> = ({
 											style={{
 												color:
 													selectedApproach === approach.id
-														? "#2D5F3F"
+														? "#5C7F4F"
 														: "#9CA3AF",
 											}}
 										/>
@@ -369,7 +369,7 @@ export const SensoryGrounding: React.FC<SensoryGroundingProps> = ({
 							>
 								<p
 									className="text-lg font-semibold mb-4"
-									style={{ color: "#2D5F3F" }}
+									style={{ color: "#5C7F4F" }}
 								>
 									Step {currentStep + 1}: {currentStepData.title}
 								</p>
@@ -449,7 +449,7 @@ export const SensoryGrounding: React.FC<SensoryGroundingProps> = ({
 							<button
 								onClick={() => setIsPlaying(true)}
 								className="flex items-center px-8 py-3 rounded-lg font-semibold text-white"
-								style={{ backgroundColor: "#2D5F3F" }}
+								style={{ backgroundColor: "#5C7F4F" }}
 							>
 								<Play className="w-5 h-5 mr-2" />
 								Start Timer

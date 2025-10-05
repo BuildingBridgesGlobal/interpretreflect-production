@@ -340,7 +340,7 @@ OVERALL RESILIENCE: ${formData.overall_resilience}/10
 					>
 						<h3
 							className="text-lg font-semibold mb-4"
-							style={{ color: "#2D5F3F" }}
+							style={{ color: "#5C7F4F" }}
 						>
 							Values Alignment Check-In
 						</h3>
@@ -355,7 +355,7 @@ OVERALL RESILIENCE: ${formData.overall_resilience}/10
 					<div>
 						<label
 							className="block text-sm font-medium mb-2"
-							style={{ color: "#2D5F3F" }}
+							style={{ color: "#5C7F4F" }}
 						>
 							What brings you to this values alignment check-in?
 						</label>
@@ -383,7 +383,7 @@ OVERALL RESILIENCE: ${formData.overall_resilience}/10
 												: "#F8FBF6",
 										color:
 											formData.check_in_trigger === trigger.value
-												? "#2D5F3F"
+												? "#5C7F4F"
 												: "#5A5A5A",
 										border: `1px solid ${formData.check_in_trigger === trigger.value ? "#5B9378" : "#E8E5E0"}`,
 									}}
@@ -397,7 +397,7 @@ OVERALL RESILIENCE: ${formData.overall_resilience}/10
 					<div>
 						<label
 							className="block text-sm font-medium mb-2"
-							style={{ color: "#2D5F3F" }}
+							style={{ color: "#5C7F4F" }}
 						>
 							Describe a recent challenging situation you've navigated
 						</label>
@@ -423,7 +423,7 @@ OVERALL RESILIENCE: ${formData.overall_resilience}/10
 					<div>
 						<label
 							className="block text-sm font-medium mb-2"
-							style={{ color: "#2D5F3F" }}
+							style={{ color: "#5C7F4F" }}
 						>
 							How are you feeling about this situation emotionally?
 						</label>
@@ -456,7 +456,7 @@ OVERALL RESILIENCE: ${formData.overall_resilience}/10
 					<div>
 						<label
 							className="block text-sm font-medium mb-2"
-							style={{ color: "#2D5F3F" }}
+							style={{ color: "#5C7F4F" }}
 						>
 							What ethical tensions or dilemmas are you experiencing?
 						</label>
@@ -482,7 +482,7 @@ OVERALL RESILIENCE: ${formData.overall_resilience}/10
 					<div>
 						<label
 							className="block text-sm font-medium mb-2"
-							style={{ color: "#2D5F3F" }}
+							style={{ color: "#5C7F4F" }}
 						>
 							Are there any value conflicts you're navigating?
 						</label>
@@ -500,7 +500,7 @@ OVERALL RESILIENCE: ${formData.overall_resilience}/10
 					<div>
 						<label
 							className="block text-sm font-medium mb-2"
-							style={{ color: "#2D5F3F" }}
+							style={{ color: "#5C7F4F" }}
 						>
 							Rate your ethical clarity right now (1-10)
 						</label>
@@ -520,7 +520,7 @@ OVERALL RESILIENCE: ${formData.overall_resilience}/10
 								className="text-2xl font-bold px-4 py-2 rounded-lg"
 								style={{
 									backgroundColor: "rgba(107, 139, 96, 0.1)",
-									color: "#2D5F3F",
+									color: "#5C7F4F",
 								}}
 							>
 								{formData.ethical_clarity}
@@ -538,7 +538,7 @@ OVERALL RESILIENCE: ${formData.overall_resilience}/10
 					<div>
 						<label
 							className="block text-sm font-medium mb-2"
-							style={{ color: "#2D5F3F" }}
+							style={{ color: "#5C7F4F" }}
 						>
 							How are your professional boundaries holding up?
 						</label>
@@ -564,7 +564,7 @@ OVERALL RESILIENCE: ${formData.overall_resilience}/10
 					<div>
 						<label
 							className="block text-sm font-medium mb-2"
-							style={{ color: "#2D5F3F" }}
+							style={{ color: "#5C7F4F" }}
 						>
 							What boundary challenges are you facing?
 						</label>
@@ -582,7 +582,7 @@ OVERALL RESILIENCE: ${formData.overall_resilience}/10
 					<div>
 						<label
 							className="block text-sm font-medium mb-2"
-							style={{ color: "#2D5F3F" }}
+							style={{ color: "#5C7F4F" }}
 						>
 							How empowered do you feel to use your professional voice?
 						</label>
@@ -607,7 +607,7 @@ OVERALL RESILIENCE: ${formData.overall_resilience}/10
 					<div>
 						<label
 							className="block text-sm font-medium mb-2"
-							style={{ color: "#2D5F3F" }}
+							style={{ color: "#5C7F4F" }}
 						>
 							What meaning are you finding in your work right now?
 						</label>
@@ -631,7 +631,7 @@ OVERALL RESILIENCE: ${formData.overall_resilience}/10
 					<div>
 						<label
 							className="block text-sm font-medium mb-2"
-							style={{ color: "#2D5F3F" }}
+							style={{ color: "#5C7F4F" }}
 						>
 							What recent work are you most proud of?
 						</label>
@@ -649,7 +649,7 @@ OVERALL RESILIENCE: ${formData.overall_resilience}/10
 					<div>
 						<label
 							className="block text-sm font-medium mb-2"
-							style={{ color: "#2D5F3F" }}
+							style={{ color: "#5C7F4F" }}
 						>
 							Rate your sense of purpose alignment (1-10)
 						</label>
@@ -672,7 +672,7 @@ OVERALL RESILIENCE: ${formData.overall_resilience}/10
 								className="text-2xl font-bold px-4 py-2 rounded-lg"
 								style={{
 									backgroundColor: "rgba(107, 139, 96, 0.1)",
-									color: "#2D5F3F",
+									color: "#5C7F4F",
 								}}
 							>
 								{formData.purpose_alignment}
@@ -690,7 +690,7 @@ OVERALL RESILIENCE: ${formData.overall_resilience}/10
 					<div>
 						<label
 							className="block text-sm font-medium mb-2"
-							style={{ color: "#2D5F3F" }}
+							style={{ color: "#5C7F4F" }}
 						>
 							What positive impact have you made recently?
 						</label>
@@ -716,7 +716,7 @@ OVERALL RESILIENCE: ${formData.overall_resilience}/10
 					<div>
 						<label
 							className="block text-sm font-medium mb-2"
-							style={{ color: "#2D5F3F" }}
+							style={{ color: "#5C7F4F" }}
 						>
 							What areas of growth are emerging for you?
 						</label>
@@ -734,7 +734,7 @@ OVERALL RESILIENCE: ${formData.overall_resilience}/10
 					<div>
 						<label
 							className="block text-sm font-medium mb-2"
-							style={{ color: "#2D5F3F" }}
+							style={{ color: "#5C7F4F" }}
 						>
 							What insights have you gained about yourself?
 						</label>
@@ -759,7 +759,7 @@ OVERALL RESILIENCE: ${formData.overall_resilience}/10
 					<div>
 						<label
 							className="block text-sm font-medium mb-2"
-							style={{ color: "#2D5F3F" }}
+							style={{ color: "#5C7F4F" }}
 						>
 							What support do you need right now?
 						</label>
@@ -785,7 +785,7 @@ OVERALL RESILIENCE: ${formData.overall_resilience}/10
 					<div>
 						<label
 							className="block text-sm font-medium mb-2"
-							style={{ color: "#2D5F3F" }}
+							style={{ color: "#5C7F4F" }}
 						>
 							What support is available to you?
 						</label>
@@ -803,7 +803,7 @@ OVERALL RESILIENCE: ${formData.overall_resilience}/10
 					<div>
 						<label
 							className="block text-sm font-medium mb-2"
-							style={{ color: "#2D5F3F" }}
+							style={{ color: "#5C7F4F" }}
 						>
 							Rate your comfort with seeking support (1-10)
 						</label>
@@ -823,7 +823,7 @@ OVERALL RESILIENCE: ${formData.overall_resilience}/10
 								className="text-2xl font-bold px-4 py-2 rounded-lg"
 								style={{
 									backgroundColor: "rgba(107, 139, 96, 0.1)",
-									color: "#2D5F3F",
+									color: "#5C7F4F",
 								}}
 							>
 								{formData.support_comfort}
@@ -841,7 +841,7 @@ OVERALL RESILIENCE: ${formData.overall_resilience}/10
 					<div>
 						<label
 							className="block text-sm font-medium mb-2"
-							style={{ color: "#2D5F3F" }}
+							style={{ color: "#5C7F4F" }}
 						>
 							How is AI/technology impacting your work and ethics?
 						</label>
@@ -863,7 +863,7 @@ OVERALL RESILIENCE: ${formData.overall_resilience}/10
 					<div>
 						<label
 							className="block text-sm font-medium mb-2"
-							style={{ color: "#2D5F3F" }}
+							style={{ color: "#5C7F4F" }}
 						>
 							What boundaries do you maintain with technology?
 						</label>
@@ -881,7 +881,7 @@ OVERALL RESILIENCE: ${formData.overall_resilience}/10
 					<div>
 						<label
 							className="block text-sm font-medium mb-2"
-							style={{ color: "#2D5F3F" }}
+							style={{ color: "#5C7F4F" }}
 						>
 							What opportunities for innovation do you see?
 						</label>
@@ -906,7 +906,7 @@ OVERALL RESILIENCE: ${formData.overall_resilience}/10
 					<div>
 						<label
 							className="block text-sm font-medium mb-2"
-							style={{ color: "#2D5F3F" }}
+							style={{ color: "#5C7F4F" }}
 						>
 							What ethical commitment will you make for the coming week?
 						</label>
@@ -932,7 +932,7 @@ OVERALL RESILIENCE: ${formData.overall_resilience}/10
 					<div>
 						<label
 							className="block text-sm font-medium mb-2"
-							style={{ color: "#2D5F3F" }}
+							style={{ color: "#5C7F4F" }}
 						>
 							What boundary will you strengthen or maintain?
 						</label>
@@ -950,7 +950,7 @@ OVERALL RESILIENCE: ${formData.overall_resilience}/10
 					<div>
 						<label
 							className="block text-sm font-medium mb-2"
-							style={{ color: "#2D5F3F" }}
+							style={{ color: "#5C7F4F" }}
 						>
 							What growth commitment will you pursue?
 						</label>
@@ -976,7 +976,7 @@ OVERALL RESILIENCE: ${formData.overall_resilience}/10
 					<div>
 						<label
 							className="block text-sm font-medium mb-2"
-							style={{ color: "#2D5F3F" }}
+							style={{ color: "#5C7F4F" }}
 						>
 							Rate your overall resilience right now (1-10)
 						</label>
@@ -999,7 +999,7 @@ OVERALL RESILIENCE: ${formData.overall_resilience}/10
 								className="text-2xl font-bold px-4 py-2 rounded-lg"
 								style={{
 									backgroundColor: "rgba(107, 139, 96, 0.1)",
-									color: "#2D5F3F",
+									color: "#5C7F4F",
 								}}
 							>
 								{formData.overall_resilience}
@@ -1011,7 +1011,7 @@ OVERALL RESILIENCE: ${formData.overall_resilience}/10
 						<div className="mt-8">
 							<p
 								className="text-sm font-medium mb-4"
-								style={{ color: "#2D5F3F" }}
+								style={{ color: "#5C7F4F" }}
 							>
 								Your check-in has been saved! Here's your summary:
 							</p>
@@ -1060,7 +1060,7 @@ OVERALL RESILIENCE: ${formData.overall_resilience}/10
 							<div
 								className="w-12 h-12 rounded-xl flex items-center justify-center"
 								style={{
-									background: "linear-gradient(135deg, #2D5F3F, #5B9378)",
+									background: "linear-gradient(135deg, #5C7F4F, #5B9378)",
 									boxShadow: "0 2px 8px rgba(107, 139, 96, 0.3)",
 								}}
 							>
@@ -1079,7 +1079,7 @@ OVERALL RESILIENCE: ${formData.overall_resilience}/10
 							onClick={onClose}
 							className="p-2 rounded-lg transition-all hover:opacity-90"
 							style={{
-								background: "linear-gradient(135deg, #2D5F3F, #5B9378)",
+								background: "linear-gradient(135deg, #5C7F4F, #5B9378)",
 							}}
 							aria-label="Close"
 						>
@@ -1159,7 +1159,7 @@ OVERALL RESILIENCE: ${formData.overall_resilience}/10
 							onClick={handleNext}
 							className="px-6 py-2 rounded-lg flex items-center transition-all"
 							style={{
-								background: "linear-gradient(135deg, #2D5F3F, #5B9378)",
+								background: "linear-gradient(135deg, #5C7F4F, #5B9378)",
 								color: "#FFFFFF",
 								boxShadow: "0 2px 8px rgba(107, 139, 96, 0.3)",
 							}}
@@ -1186,7 +1186,7 @@ OVERALL RESILIENCE: ${formData.overall_resilience}/10
 								background:
 									isSaving || hasSaved || showSummary
 										? "#CCCCCC"
-										: "linear-gradient(135deg, #2D5F3F, #5B9378)",
+										: "linear-gradient(135deg, #5C7F4F, #5B9378)",
 								color: "#FFFFFF",
 								boxShadow:
 									isSaving || hasSaved || showSummary

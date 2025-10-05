@@ -245,13 +245,13 @@ function LandingPage({ onGetStarted }: LandingPageProps) {
               }}
             >
               Every session shapes your mind and your career. But the weight you carry isn't yours alone.{' '}
-              <span className="font-semibold" style={{ color: '#2D5F3F' }}>
+              <span className="font-semibold" style={{ color: '#5C7F4F' }}>
                 InterpretReflect™ gives you instant support, science-based tools, and a sense of belonging, so you can reset, recover, and thrive for the long run.
               </span>
             </p>
 
             <div className="mb-8">
-              <h3 className="text-2xl font-bold mb-4" style={{ color: '#2D5F3F' }}>
+              <h3 className="text-2xl font-bold mb-4" style={{ color: '#5C7F4F' }}>
                 Start Today. Join the Beta.
               </h3>
             </div>
@@ -382,7 +382,7 @@ function LandingPage({ onGetStarted }: LandingPageProps) {
               <h3 className="text-xl font-bold mb-2" style={{ color: '#1A1A1A' }}>
                 Recognize
               </h3>
-              <p className="font-semibold mb-2" style={{ color: '#2D5F3F' }}>
+              <p className="font-semibold mb-2" style={{ color: '#5C7F4F' }}>
                 See your stress - clearly
               </p>
               <p className="text-sm" style={{ color: '#5A5A5A' }}>
@@ -406,7 +406,7 @@ function LandingPage({ onGetStarted }: LandingPageProps) {
               <h3 className="text-xl font-bold mb-2" style={{ color: '#1A1A1A' }}>
                 Reset
               </h3>
-              <p className="font-semibold mb-2" style={{ color: '#2D5F3F' }}>
+              <p className="font-semibold mb-2" style={{ color: '#5C7F4F' }}>
                 Reset your nervous system, fast
               </p>
               <p className="text-sm" style={{ color: '#5A5A5A' }}>
@@ -430,7 +430,7 @@ function LandingPage({ onGetStarted }: LandingPageProps) {
               <h3 className="text-xl font-bold mb-2" style={{ color: '#1A1A1A' }}>
                 Thrive
               </h3>
-              <p className="font-semibold mb-2" style={{ color: '#2D5F3F' }}>
+              <p className="font-semibold mb-2" style={{ color: '#5C7F4F' }}>
                 Grow your resilience, session by session
               </p>
               <p className="text-sm" style={{ color: '#5A5A5A' }}>
@@ -477,7 +477,7 @@ function LandingPage({ onGetStarted }: LandingPageProps) {
                 e.currentTarget.style.boxShadow = '0 4px 15px rgba(0, 0, 0, 0.05)';
               }}
               onFocus={(e) => {
-                e.currentTarget.style.outline = '3px solid #2D5F3F';
+                e.currentTarget.style.outline = '3px solid #5C7F4F';
                 e.currentTarget.style.outlineOffset = '2px';
               }}
               onBlur={(e) => {
@@ -499,7 +499,7 @@ function LandingPage({ onGetStarted }: LandingPageProps) {
               >
                 Reflection Studio
               </h3>
-              <p className="font-semibold mb-3" style={{ color: '#2D5F3F' }}>
+              <p className="font-semibold mb-3" style={{ color: '#5C7F4F' }}>
                 Take a breath, process it all, and set boundaries
               </p>
               <p className="mb-4" style={{ color: '#5A5A5A', lineHeight: '1.6' }}>
@@ -510,7 +510,7 @@ function LandingPage({ onGetStarted }: LandingPageProps) {
                   <CheckCircle
                     className="h-5 w-5 mr-2 mt-0.5 flex-shrink-0"
                     aria-hidden="true"
-                    style={{ color: '#2D5F3F' }}
+                    style={{ color: '#5C7F4F' }}
                   />
                   <span className="text-sm" style={{ color: '#3A3A3A' }}>
                     Process challenging experiences
@@ -574,7 +574,7 @@ function LandingPage({ onGetStarted }: LandingPageProps) {
               >
                 Quick Resets
               </h3>
-              <p className="font-semibold mb-3" style={{ color: '#2D5F3F' }}>
+              <p className="font-semibold mb-3" style={{ color: '#5C7F4F' }}>
                 Down-regulate stress instantly
               </p>
               <p className="mb-4" style={{ color: '#5A5A5A', lineHeight: '1.6' }}>
@@ -648,7 +648,7 @@ function LandingPage({ onGetStarted }: LandingPageProps) {
               >
                 Elya AI Companion
               </h3>
-              <p className="font-semibold mb-3" style={{ color: '#2D5F3F' }}>
+              <p className="font-semibold mb-3" style={{ color: '#5C7F4F' }}>
                 Your private, always-on wellness buddy
               </p>
               <p className="mb-4" style={{ color: '#5A5A5A', lineHeight: '1.6' }}>
@@ -724,7 +724,7 @@ function LandingPage({ onGetStarted }: LandingPageProps) {
               <h3 className="text-xl font-bold mb-2" style={{ color: '#1A1A1A' }}>
                 Growth Tracking
               </h3>
-              <p className="font-semibold mb-3" style={{ color: '#2D5F3F' }}>
+              <p className="font-semibold mb-3" style={{ color: '#5C7F4F' }}>
                 See your wins and your progress, not just your setbacks
               </p>
               <p className="mb-4" style={{ color: '#5A5A5A', lineHeight: '1.6' }}>
@@ -999,7 +999,7 @@ function LandingPage({ onGetStarted }: LandingPageProps) {
                   backgroundColor: 'rgba(92, 127, 79, 0.1)',
                 }}
               >
-                <Brain className="h-8 w-8" style={{ color: '#2D5F3F' }} />
+                <Brain className="h-8 w-8" style={{ color: '#5C7F4F' }} />
               </div>
               <h3 className="text-lg font-bold mb-2" style={{ color: '#1A1A1A' }}>
                 Built on Science
@@ -1016,7 +1016,7 @@ function LandingPage({ onGetStarted }: LandingPageProps) {
                   backgroundColor: 'rgba(92, 127, 79, 0.1)',
                 }}
               >
-                <Clock className="h-8 w-8" style={{ color: '#2D5F3F' }} />
+                <Clock className="h-8 w-8" style={{ color: '#5C7F4F' }} />
               </div>
               <h3 className="text-lg font-bold mb-2" style={{ color: '#1A1A1A' }}>
                 Made for Busy Schedules
@@ -1033,7 +1033,7 @@ function LandingPage({ onGetStarted }: LandingPageProps) {
                   backgroundColor: 'rgba(92, 127, 79, 0.1)',
                 }}
               >
-                <Shield className="h-8 w-8" style={{ color: '#2D5F3F' }} />
+                <Shield className="h-8 w-8" style={{ color: '#5C7F4F' }} />
               </div>
               <h3 className="text-lg font-bold mb-2" style={{ color: '#1A1A1A' }}>
                 Radically Confidential
@@ -1050,7 +1050,7 @@ function LandingPage({ onGetStarted }: LandingPageProps) {
                   backgroundColor: 'rgba(92, 127, 79, 0.1)',
                 }}
               >
-                <Award className="h-8 w-8" style={{ color: '#2D5F3F' }} />
+                <Award className="h-8 w-8" style={{ color: '#5C7F4F' }} />
               </div>
               <h3 className="text-lg font-bold mb-2" style={{ color: '#1A1A1A' }}>
                 Real Professional Growth
@@ -1292,7 +1292,7 @@ function LandingPage({ onGetStarted }: LandingPageProps) {
                 </span>
               </div>
 
-              <p className="text-sm font-semibold mb-3" style={{ color: '#2D5F3F' }}>
+              <p className="text-sm font-semibold mb-3" style={{ color: '#5C7F4F' }}>
                 Perfect for:
               </p>
               <ul className="space-y-2 mb-6 text-sm" style={{ color: '#5A5A5A' }}>
@@ -1407,7 +1407,7 @@ function LandingPage({ onGetStarted }: LandingPageProps) {
               className="inline-flex items-center px-6 py-3 rounded-full font-medium text-base transition-all focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-sage-600"
               style={{
                 backgroundColor: 'transparent',
-                color: '#2D5F3F',
+                color: '#5C7F4F',
                 border: '1px solid #6B8B60',
               }}
               onMouseEnter={(e) => {

@@ -167,7 +167,7 @@ const PaymentForm: React.FC<{
 				timestamp: Date.now(),
 				version: "1.0",
 				gdpr: true,
-				hipaa: true,
+				
 				fromSignup: true,
 			};
 			localStorage.setItem("privacyConsent", JSON.stringify(consentData));

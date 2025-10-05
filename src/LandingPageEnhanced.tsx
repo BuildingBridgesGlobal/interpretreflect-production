@@ -161,16 +161,16 @@ function LandingPageEnhanced({ onGetStarted }: LandingPageProps) {
 						<div className="hidden md:flex items-center gap-4">
 							<button
 								onClick={() => scrollToSection("how-it-works")}
-								className="px-4 py-1.5 text-xs font-semibold text-white rounded-full transition-all focus:outline-none focus:ring-2 focus:ring-offset-2 hover:opacity-90"
-								style={{ background: colors.gradients.green }}
+								className="px-5 py-2.5 text-sm font-semibold rounded-lg border-2 transition-all focus:outline-none focus:ring-2 focus:ring-offset-2 hover:opacity-90"
+								style={{ borderColor: "#5C7F4F", color: "#5C7F4F", backgroundColor: "transparent" }}
 								aria-label="Learn how interpreterRx works"
 							>
 								How It Works
 							</button>
 							<button
 								onClick={() => scrollToSection("pricing")}
-								className="px-4 py-1.5 text-xs font-semibold text-white rounded-full transition-all focus:outline-none focus:ring-2 focus:ring-offset-2 hover:opacity-90"
-								style={{ background: colors.gradients.green }}
+								className="px-5 py-2.5 text-sm font-semibold rounded-lg border-2 transition-all focus:outline-none focus:ring-2 focus:ring-offset-2 hover:opacity-90"
+								style={{ borderColor: "#5C7F4F", color: "#5C7F4F", backgroundColor: "transparent" }}
 								aria-label="View pricing plans"
 							>
 								Pricing
@@ -181,16 +181,16 @@ function LandingPageEnhanced({ onGetStarted }: LandingPageProps) {
 								<>
 									<button
 										onClick={handleSignup}
-										className="px-4 py-1.5 text-xs font-semibold text-white rounded-full transition-all focus:outline-none focus:ring-2 focus:ring-offset-2 hover:opacity-90"
-										style={{ background: colors.gradients.green }}
+										className="px-6 py-3 text-sm font-bold text-white rounded-full transition-all focus:outline-none focus:ring-2 focus:ring-offset-2 hover:opacity-90"
+										style={{ backgroundColor: "#5C7F4F" }}
 										aria-label="Sign up for account"
 									>
-										Get Started
+										Get Started →
 									</button>
 									<button
 										onClick={handleLogin}
-										className="px-4 py-1.5 text-xs font-semibold text-white rounded-full transition-all focus:outline-none focus:ring-2 focus:ring-offset-2 hover:opacity-90"
-										style={{ background: colors.gradients.green }}
+										className="px-4 py-2 text-sm font-medium transition-all focus:outline-none focus:ring-2 focus:ring-offset-2 hover:opacity-90"
+										style={{ color: "#4A6A3F", backgroundColor: "transparent" }}
 										aria-label="Sign in to your account"
 									>
 										Sign In
@@ -199,8 +199,8 @@ function LandingPageEnhanced({ onGetStarted }: LandingPageProps) {
 							) : (
 								<button
 									onClick={handleSignup}
-									className="px-4 py-1.5 text-xs font-semibold text-white rounded-full transition-all focus:outline-none focus:ring-2 focus:ring-offset-2"
-									style={{ background: colors.gradients.green }}
+									className="px-6 py-3 text-sm font-bold text-white rounded-full transition-all focus:outline-none focus:ring-2 focus:ring-offset-2"
+									style={{ backgroundColor: "#5C7F4F" }}
 									aria-label="Go to your dashboard"
 								>
 									Go to Dashboard
@@ -247,8 +247,8 @@ function LandingPageEnhanced({ onGetStarted }: LandingPageProps) {
 									scrollToSection("how-it-works");
 									setMobileMenuOpen(false);
 								}}
-								className="block w-full py-2 text-center text-xs font-semibold text-white rounded-full"
-								style={{ background: colors.gradients.green }}
+								className="block w-full py-3 text-center text-sm font-semibold text-white rounded-full"
+								style={{ backgroundColor: "#5C7F4F" }}
 							>
 								How It Works
 							</button>
@@ -257,8 +257,8 @@ function LandingPageEnhanced({ onGetStarted }: LandingPageProps) {
 									scrollToSection("pricing");
 									setMobileMenuOpen(false);
 								}}
-								className="block w-full py-2 text-center text-xs font-semibold text-white rounded-full"
-								style={{ background: colors.gradients.green }}
+								className="block w-full py-3 text-center text-sm font-semibold text-white rounded-full"
+								style={{ backgroundColor: "#5C7F4F" }}
 							>
 								Pricing
 							</button>
@@ -269,15 +269,15 @@ function LandingPageEnhanced({ onGetStarted }: LandingPageProps) {
 								>
 									<button
 										onClick={handleSignup}
-										className="block w-full py-2 text-center text-xs font-semibold text-white rounded-full"
-										style={{ background: colors.gradients.green }}
+										className="block w-full py-3 text-center text-sm font-semibold text-white rounded-full"
+										style={{ backgroundColor: "#5C7F4F" }}
 									>
 										Get Started
 									</button>
 									<button
 										onClick={handleLogin}
-										className="block w-full py-2 text-center text-xs font-semibold text-white rounded-full"
-										style={{ background: colors.gradients.green }}
+										className="block w-full py-3 text-center text-sm font-semibold text-white rounded-full"
+										style={{ backgroundColor: "#5C7F4F" }}
 									>
 										Sign In
 									</button>

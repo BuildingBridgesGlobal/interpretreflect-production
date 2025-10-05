@@ -12,7 +12,7 @@ export const Footer: React.FC = () => {
 							InterpretReflect
 						</h3>
 						<p className="text-sm text-gray-600">
-							The wellness platform for interpreters
+							Turn every assignment into measurable growth.
 						</p>
 					</div>
 

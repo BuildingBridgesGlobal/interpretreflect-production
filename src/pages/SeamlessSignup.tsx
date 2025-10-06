@@ -548,6 +548,51 @@ export const SeamlessSignup: React.FC = () => {
 											)}
 										</div>
 									</div>
+
+									{/* Confirm Password */}
+									<div>
+										<label
+											htmlFor="confirmPassword"
+											className="block text-sm font-medium text-gray-700 mb-1"
+										>
+											Confirm Password
+										</label>
+										<input
+											type="password"
+											id="confirmPassword"
+											value={formData.confirmPassword || ""}
+											onChange={(e) => {
+												setFormData({ ...formData, confirmPassword: e.target.value });
+												if (error) setError("");
+											}}
+											onBlur={() => setTouched({ ...touched, confirmPassword: true })}
+											className={`w-full px-4 py-3 border rounded-xl focus:ring-2 focus:border-transparent transition-all ${
+												touched.confirmPassword && formData.password !== formData.confirmPassword
+													? "border-red-500"
+													: "border-gray-300"
+											}`}
+											style={
+												{
+													"--tw-ring-color": "#5C7F4F",
+												} as React.CSSProperties
+											}
+											placeholder="••••••••"
+											required
+										/>
+										{touched.confirmPassword && formData.confirmPassword && formData.password !== formData.confirmPassword && (
+											<p className="mt-1 text-xs text-red-600">
+												Passwords do not match
+											</p>
+										)}
+										{touched.confirmPassword && formData.password === formData.confirmPassword && formData.confirmPassword && (
+											<p className="mt-1 text-xs text-green-600 flex items-center gap-1">
+												<svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+													<path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+												</svg>
+												Passwords match
+											</p>
+										)}
+									</div>
 								</div>
 
 								{error && (
@@ -565,7 +610,9 @@ export const SeamlessSignup: React.FC = () => {
 										loading ||
 										!formData.email ||
 										!formData.password ||
-										!formData.name
+										!formData.name ||
+										!formData.confirmPassword ||
+										formData.password !== formData.confirmPassword
 									}
 									className="w-full px-6 py-3 rounded-lg font-semibold text-white transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
 									style={{
@@ -573,7 +620,9 @@ export const SeamlessSignup: React.FC = () => {
 											loading ||
 											!formData.email ||
 											!formData.password ||
-											!formData.name
+											!formData.name ||
+											!formData.confirmPassword ||
+											formData.password !== formData.confirmPassword
 												? "#ccc"
 												: "linear-gradient(135deg, #5C7F4F, rgb(107, 142, 94))",
 									}}

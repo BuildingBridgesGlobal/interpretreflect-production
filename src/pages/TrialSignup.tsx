@@ -12,6 +12,7 @@ export function TrialSignup() {
   const { user, signUp } = useAuth();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
   const [name, setName] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
@@ -536,11 +537,48 @@ export function TrialSignup() {
                     )}
                   </div>
 
+                  {/* Confirm Password */}
+                  <div>
+                    <label htmlFor="confirmPassword" className="block text-sm font-medium text-gray-700 mb-2">
+                      Confirm Password <span className="text-red-500">*</span>
+                    </label>
+                    <input
+                      type="password"
+                      id="confirmPassword"
+                      value={confirmPassword}
+                      onChange={(e) => setConfirmPassword(e.target.value)}
+                      onBlur={() => setTouched({ ...touched, confirmPassword: true })}
+                      aria-label="Confirm Password"
+                      aria-required="true"
+                      className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:border-transparent transition-colors ${
+                        touched.confirmPassword && password !== confirmPassword && confirmPassword ? 'border-red-500' : 'border-gray-300'
+                      }`}
+                      style={{ '--tw-ring-color': '#5C7F4F' } as React.CSSProperties}
+                      placeholder="Re-enter your password"
+                    />
+                    {touched.confirmPassword && confirmPassword && password !== confirmPassword && (
+                      <p className="mt-1 text-sm text-red-600 flex items-center gap-1">
+                        <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                          <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
+                        </svg>
+                        Passwords do not match
+                      </p>
+                    )}
+                    {touched.confirmPassword && password === confirmPassword && confirmPassword && (
+                      <p className="mt-1 text-sm text-green-600 flex items-center gap-1">
+                        <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                          <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                        </svg>
+                        Passwords match
+                      </p>
+                    )}
+                  </div>
+
                   {/* Terms checkbox removed - handled in Stripe checkout page */}
 
                   <button
                     type="submit"
-                    disabled={loading}
+                    disabled={loading || !confirmPassword || password !== confirmPassword}
                     className="w-full py-5 font-black text-xl rounded-xl transform hover:scale-[1.02] transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-3 focus:outline-none focus:ring-4 shadow-xl relative overflow-hidden"
                     style={{
                       background: 'linear-gradient(135deg, #5C7F4F, rgb(107, 142, 94))',

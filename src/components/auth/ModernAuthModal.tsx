@@ -452,7 +452,6 @@ export const ModernAuthModal: React.FC<ModernAuthModalProps> = ({
 									</button>
 								</p>
 												{/* BETA: Forgot password button temporarily disabled */}
-							<p className="text-xs text-gray-500 mt-2">Need help? Email hello@huviatechnologies.com</p>
 							</div>
 
 							{/* Terms notice */}

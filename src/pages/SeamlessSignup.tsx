@@ -99,38 +99,23 @@ const PaymentForm: React.FC<{
 		setError("");
 
 		try {
-			// First, create the user account
-			let finalUserId = userId;
-
-			if (!finalUserId) {
-				const { data: signupData, error: signupError } =
-					await supabase.auth.signUp({
-						email: email.toLowerCase().trim(),
-						password: password,
-						options: {
-							emailRedirectTo: `${window.location.origin}/`,
-							data: {
-								full_name: name,
-								subscription_plan: plan,
-							},
-						},
-					});
-
-				if (signupError) {
-					throw new Error(`Failed to create account: ${signupError.message}`);
-				}
-
-				if (!signupData?.user) {
-					throw new Error("Failed to create account");
-				}
-
-				finalUserId = signupData.user.id;
-			}
+			// DO NOT create the user account yet - account will be created by Stripe webhook after payment
+			// This prevents users from closing the payment window and logging in for free
 
 			// Get the Stripe Price ID for the selected plan
-			const STRIPE_PRICE_ID = import.meta.env.VITE_STRIPE_PRICE_ID_ESSENTIAL || 'price_1234'; // Replace with your actual price ID
+			const STRIPE_PRICE_ID = import.meta.env.VITE_STRIPE_PRICE_ID_ESSENTIAL || 'price_1234';
+
+			// Store signup data in localStorage temporarily (will be used after payment)
+			const signupData = {
+				email: email.toLowerCase().trim(),
+				password: password,
+				name: name,
+				plan: plan,
+			};
+			localStorage.setItem('pending_signup', JSON.stringify(signupData));
 
 			// Call the Supabase Edge Function to create a Stripe Checkout session
+			// Pass signup data as metadata so webhook can create account after payment
 			console.log('Creating checkout session with priceId:', STRIPE_PRICE_ID);
 			const { data, error: functionError } = await supabase.functions.invoke(
 				'create-checkout-session',
@@ -138,10 +123,14 @@ const PaymentForm: React.FC<{
 					body: {
 						priceId: STRIPE_PRICE_ID,
 						email: email,
-						userId: finalUserId,
+						userId: userId || null, // Only for SSO users who already have an account
 						metadata: {
 							plan: plan,
 							full_name: name,
+							// Include password hash for new signups (webhook will create account)
+							is_new_signup: !userId,
+							signup_email: email.toLowerCase().trim(),
+							signup_password: password, // Webhook will handle secure account creation
 						},
 					},
 				}
@@ -151,8 +140,11 @@ const PaymentForm: React.FC<{
 			if (functionError) {
 				throw new Error(`Payment setup failed: ${functionError.message}`);
 			}
-			
-			if (data?.error) { console.error('Stripe error:', data.error); throw new Error(`Stripe error: ${data.error}`); }
+
+			if (data?.error) {
+				console.error('Stripe error:', data.error);
+				throw new Error(`Stripe error: ${data.error}`);
+			}
 
 			if (!data?.url) {
 				throw new Error("Failed to create checkout session");
@@ -171,7 +163,6 @@ const PaymentForm: React.FC<{
 				timestamp: Date.now(),
 				version: "1.0",
 				gdpr: true,
-				
 				fromSignup: true,
 			};
 			localStorage.setItem("privacyConsent", JSON.stringify(consentData));
@@ -265,6 +256,7 @@ export const SeamlessSignup: React.FC = () => {
 	const [formData, setFormData] = useState({
 		email: "",
 		password: "",
+		confirmPassword: "",
 		name: "",
 		plan: "essential",
 		acceptedTerms: false,

@@ -90,6 +90,52 @@ serve(async (req) => {
           }
         }
 
+        // If still no profile and this is a new signup, create the user account NOW (after payment)
+        if (!profile && subscription.metadata?.is_new_signup === 'true') {
+          console.log('Creating new user account after successful payment...')
+
+          const signupEmail = subscription.metadata?.signup_email
+          const signupPassword = subscription.metadata?.signup_password
+          const fullName = subscription.metadata?.full_name
+
+          if (signupEmail && signupPassword) {
+            try {
+              // Create the user account using Supabase Admin Auth
+              const { data: newUser, error: createError } = await supabaseAdmin.auth.admin.createUser({
+                email: signupEmail,
+                password: signupPassword,
+                email_confirm: true, // Auto-confirm email since they paid
+                user_metadata: {
+                  full_name: fullName,
+                  subscription_plan: subscription.metadata?.plan || 'essential',
+                }
+              })
+
+              if (createError) {
+                console.error('Failed to create user after payment:', createError)
+              } else if (newUser.user) {
+                console.log('✅ User account created successfully:', newUser.user.id)
+
+                // Update profile with customer ID and subscription info
+                await supabaseAdmin
+                  .from('profiles')
+                  .update({
+                    stripe_customer_id: customerId,
+                    subscription_status: subscription.status,
+                    subscription_tier: subscription.items.data[0].price.nickname || 'essential',
+                    full_name: fullName,
+                    updated_at: new Date().toISOString(),
+                  })
+                  .eq('id', newUser.user.id)
+
+                profile = { id: newUser.user.id }
+              }
+            } catch (err) {
+              console.error('Error creating user account:', err)
+            }
+          }
+        }
+
         if (profile) {
           await supabaseAdmin
             .from('subscriptions')

@@ -27,6 +27,39 @@ export const useSubscription = (): SubscriptionStatus => {
 		}
 
 		try {
+			// First check profile for admin status and trial
+			const { data: profile, error: profileError } = await supabase
+				.from("profiles")
+				.select("is_admin, subscription_status, trial_started_at, trial_ends_at")
+				.eq("id", user.id)
+				.maybeSingle();
+
+			if (profileError) {
+				console.log("Error checking profile:", profileError);
+			}
+
+			// Allow access if user is admin
+			if (profile?.is_admin === true) {
+				console.log("User is admin - granting access");
+				setHasActiveSubscription(true);
+				setSubscription({ admin: true });
+				setLoading(false);
+				return;
+			}
+
+			// Check if user has an active trial
+			if (profile?.trial_started_at && profile?.trial_ends_at) {
+				const trialEndDate = new Date(profile.trial_ends_at);
+				const now = new Date();
+				if (trialEndDate > now) {
+					console.log("User has active trial - granting access");
+					setHasActiveSubscription(true);
+					setSubscription({ trial: true, trial_ends_at: profile.trial_ends_at });
+					setLoading(false);
+					return;
+				}
+			}
+
 			// Check for active or past_due subscription (grace period)
 			const { data, error } = await supabase
 				.from("subscriptions")
@@ -46,9 +79,11 @@ export const useSubscription = (): SubscriptionStatus => {
 			}
 
 			if (data) {
+				console.log("User has active paid subscription - granting access");
 				setHasActiveSubscription(true);
 				setSubscription(data);
 			} else {
+				console.log("User has no active subscription, trial, or admin access - blocking access");
 				setHasActiveSubscription(false);
 				setSubscription(null);
 			}

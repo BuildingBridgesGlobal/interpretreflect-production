@@ -200,8 +200,10 @@ export function TrialSignup() {
         // Step 5: Track analytics
         analytics.trackTrialStart();
 
-        // Step 6: Add to Encharge
-        await enchargeService.handleTrialSignup(email, newUser.id, name);
+        // Step 6: Add to Encharge (non-blocking - run in background)
+        enchargeService.handleTrialSignup(email, newUser.id, name).catch(err => {
+          console.warn('Encharge sync failed (non-critical):', err);
+        });
 
         // Step 7: Log trial event
         await supabase

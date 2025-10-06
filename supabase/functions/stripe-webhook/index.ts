@@ -11,6 +11,37 @@ const supabaseAdmin = createClient(
   Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? ''
 )
 
+// Helper function to send events to Encharge
+async function sendToEncharge(userId: string, eventType: string, eventData: any, userEmail?: string) {
+  try {
+    const supabaseUrl = Deno.env.get('SUPABASE_URL')
+    const anonKey = Deno.env.get('SUPABASE_ANON_KEY')
+
+    const response = await fetch(`${supabaseUrl}/functions/v1/send-encharge-event`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${anonKey}`
+      },
+      body: JSON.stringify({
+        userId,
+        eventType,
+        eventData,
+        userEmail
+      })
+    })
+
+    if (!response.ok) {
+      console.error('Failed to send to Encharge:', await response.text())
+    } else {
+      console.log(`✅ Sent ${eventType} to Encharge for user ${userId}`)
+    }
+  } catch (error) {
+    console.error('Error sending to Encharge:', error)
+    // Non-blocking - don't throw, just log
+  }
+}
+
 serve(async (req) => {
   const signature = req.headers.get('stripe-signature')
   const webhookSecret = Deno.env.get('STRIPE_WEBHOOK_SECRET')
@@ -83,6 +114,14 @@ serve(async (req) => {
               updated_at: new Date().toISOString(),
             })
             .eq('id', profile.id)
+
+          // 🎉 Send subscription_created event to Encharge
+          await sendToEncharge(profile.id, 'subscription_created', {
+            planName: subscription.items.data[0].price.nickname || 'Essential',
+            amount: (subscription.items.data[0].price.unit_amount || 0) / 100,
+            currency: subscription.currency,
+            subscriptionId: subscription.id
+          }, session.customer_details?.email || undefined)
         }
         break
       }
@@ -171,6 +210,12 @@ serve(async (req) => {
               updated_at: new Date().toISOString(),
             })
             .eq('id', profile.id)
+
+          // 🚫 Send subscription_cancelled event to Encharge
+          await sendToEncharge(profile.id, 'subscription_cancelled', {
+            subscriptionId: subscription.id,
+            cancelReason: subscription.cancellation_details?.reason || 'unknown'
+          })
         }
         break
       }
@@ -208,6 +253,14 @@ serve(async (req) => {
                 updated_at: new Date().toISOString(),
               })
               .eq('id', profile.id)
+
+            // 💳 Send payment_success event to Encharge
+            await sendToEncharge(profile.id, 'payment_success', {
+              amount: (invoice.amount_paid || 0) / 100,
+              currency: invoice.currency,
+              invoiceUrl: invoice.hosted_invoice_url,
+              invoiceId: invoice.id
+            })
           }
         }
         break
@@ -243,7 +296,13 @@ serve(async (req) => {
               })
               .eq('id', profile.id)
 
-            // TODO: Send email to user to update payment method
+            // ⚠️ Send payment_failed event to Encharge
+            await sendToEncharge(profile.id, 'payment_failed', {
+              amount: (invoice.amount_due || 0) / 100,
+              invoiceId: invoice.id,
+              retryDate: invoice.next_payment_attempt ? new Date(invoice.next_payment_attempt * 1000).toISOString() : null
+            })
+
             console.log(`Payment failed for customer ${customerId}, subscription ${subscriptionId}`)
           }
         }

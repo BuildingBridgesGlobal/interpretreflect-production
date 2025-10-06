@@ -1,5 +1,8 @@
 // Encharge API configuration
+// Using the JWT API Key for authentication with Encharge API
 const ENCHARGE_API_KEY = import.meta.env.VITE_ENCHARGE_API_KEY;
+// Write Key is also available if needed for specific endpoints
+const ENCHARGE_WRITE_KEY = import.meta.env.VITE_ENCHARGE_WRITE_KEY;
 const ENCHARGE_API_URL = "https://api.encharge.io/v1";
 
 export interface EnchargeUser {
@@ -29,7 +32,7 @@ class EnchargeService {
 	}
 
 	/**
-	 * Make a request to the Encharge API
+	 * Make a request to the Encharge API with timeout
 	 */
 	private async makeRequest(endpoint: string, method: string, data?: any): Promise<any> {
 		if (!this.apiKey) {
@@ -38,6 +41,10 @@ class EnchargeService {
 		}
 
 		try {
+			// Add 5-second timeout to prevent blocking
+			const controller = new AbortController();
+			const timeoutId = setTimeout(() => controller.abort(), 5000);
+
 			const response = await fetch(`${ENCHARGE_API_URL}${endpoint}`, {
 				method,
 				headers: {
@@ -45,7 +52,10 @@ class EnchargeService {
 					"Content-Type": "application/json",
 				},
 				body: data ? JSON.stringify(data) : undefined,
+				signal: controller.signal,
 			});
+
+			clearTimeout(timeoutId);
 
 			if (!response.ok) {
 				const errorText = await response.text();
@@ -58,8 +68,12 @@ class EnchargeService {
 				return await response.json();
 			}
 			return response.text();
-		} catch (error) {
-			console.error("Encharge API request failed:", error);
+		} catch (error: any) {
+			if (error.name === 'AbortError') {
+				console.warn("Encharge API request timed out (5s limit)");
+			} else {
+				console.error("Encharge API request failed:", error);
+			}
 			throw error;
 		}
 	}

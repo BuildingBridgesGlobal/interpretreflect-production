@@ -16,7 +16,7 @@ export function TrialSignup() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [success, setSuccess] = useState(false);
-  const [agreedToTerms, setAgreedToTerms] = useState(false);
+  // const [agreedToTerms, setAgreedToTerms] = useState(false); // Removed - handled in Stripe
   const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
   const [touched, setTouched] = useState<Record<string, boolean>>({});
 
@@ -110,12 +110,13 @@ export function TrialSignup() {
     }
   };
 
-  const handleTermsChange = (checked: boolean) => {
-    setAgreedToTerms(checked);
-    if (touched.terms) {
-      setFieldErrors(prev => ({ ...prev, terms: validateTerms(checked) }));
-    }
-  };
+  // Terms removed - handled in Stripe checkout
+  // const handleTermsChange = (checked: boolean) => {
+  //   setAgreedToTerms(checked);
+  //   if (touched.terms) {
+  //     setFieldErrors(prev => ({ ...prev, terms: validateTerms(checked) }));
+  //   }
+  // };
 
   // Field blur handler to mark as touched
   const handleBlur = (fieldName: string) => {
@@ -132,9 +133,7 @@ export function TrialSignup() {
       case 'password':
         setFieldErrors(prev => ({ ...prev, password: validatePassword(password) }));
         break;
-      case 'terms':
-        setFieldErrors(prev => ({ ...prev, terms: validateTerms(agreedToTerms) }));
-        break;
+      // Terms case removed - handled in Stripe
     }
   };
 
@@ -142,14 +141,13 @@ export function TrialSignup() {
     e.preventDefault();
 
     // Mark all fields as touched
-    setTouched({ name: true, email: true, password: true, terms: true });
+    setTouched({ name: true, email: true, password: true });
 
-    // Validate all fields
+    // Validate all fields (terms removed - handled in Stripe)
     const errors = {
       name: validateName(name),
       email: validateEmail(email),
-      password: validatePassword(password),
-      terms: validateTerms(agreedToTerms)
+      password: validatePassword(password)
     };
 
     setFieldErrors(errors);
@@ -538,59 +536,11 @@ export function TrialSignup() {
                     )}
                   </div>
 
-                  <div className={`p-4 rounded-lg border transition-colors ${
-                    fieldErrors.terms && touched.terms ? 'bg-red-50 border-red-300' : 'bg-gray-50 border-gray-200'
-                  }`}>
-                    <div className="flex items-start gap-3">
-                      <div className="relative flex items-center">
-                        <input
-                          type="checkbox"
-                          id="terms"
-                          checked={agreedToTerms}
-                          onChange={(e) => handleTermsChange(e.target.checked)}
-                          onBlur={() => handleBlur('terms')}
-                          aria-label="I agree to the Terms of Service and Privacy Policy"
-                          aria-required="true"
-                          aria-invalid={!!fieldErrors.terms}
-                          aria-describedby={fieldErrors.terms ? 'terms-error' : undefined}
-                          className={`w-5 h-5 rounded border-2 text-green-600 focus:ring-2 focus:ring-green-500 focus:ring-offset-2 cursor-pointer transition-all ${
-                            fieldErrors.terms && touched.terms ? 'border-red-500' : 'border-gray-300'
-                          }`}
-                          style={{
-                            accentColor: '#5C7F4F',
-                          }}
-                      />
-                      {/* Custom checkbox overlay for better visibility */}
-                      {agreedToTerms && (
-                        <div className="absolute inset-0 pointer-events-none flex items-center justify-center">
-                          <svg className="w-3 h-3 text-white" fill="currentColor" viewBox="0 0 20 20">
-                            <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
-                          </svg>
-                        </div>
-                      )}
-                    </div>
-                    <label htmlFor="terms" className="text-sm text-gray-700 leading-relaxed cursor-pointer select-none">
-                      I agree to the{' '}
-                      <a href="/terms" className="font-semibold underline hover:no-underline" style={{ color: '#5C7F4F' }}>Terms of Service</a>
-                      {' '}and{' '}
-                      <a href="/privacy" className="font-semibold underline hover:no-underline" style={{ color: '#5C7F4F' }}>Privacy Policy</a>
-                      <span className="block text-xs text-gray-500 mt-1">
-                        Required to start your free trial
-                      </span>
-                    </label>
-                  </div>
-                  {fieldErrors.terms && touched.terms && (
-                    <p id="terms-error" className="mt-2 text-sm text-red-600 flex items-center gap-1">
-                      <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
-                        <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
-                      </svg>
-                      {fieldErrors.terms}
-                    </p>
-                  )}
+                  {/* Terms checkbox removed - handled in Stripe checkout page */}
 
                   <button
                     type="submit"
-                    disabled={loading || !agreedToTerms}
+                    disabled={loading}
                     className="w-full py-5 font-black text-xl rounded-xl transform hover:scale-[1.02] transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-3 focus:outline-none focus:ring-4 shadow-xl relative overflow-hidden"
                     style={{
                       background: 'linear-gradient(135deg, #5C7F4F, rgb(107, 142, 94))',
@@ -601,7 +551,7 @@ export function TrialSignup() {
                       textShadow: '0 1px 2px rgba(0,0,0,0.1)'
                     }}
                     onMouseEnter={(e) => {
-                      if (!loading && agreedToTerms) {
+                      if (!loading) {
                         e.currentTarget.style.background = 'linear-gradient(135deg, rgb(107, 142, 94), rgb(122, 157, 109))';
                         e.currentTarget.style.transform = 'scale(1.02) translateY(-2px)';
                         e.currentTarget.style.boxShadow = '0 18px 40px rgba(45, 95, 63, 0.4)';

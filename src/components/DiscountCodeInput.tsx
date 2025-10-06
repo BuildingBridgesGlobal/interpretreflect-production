@@ -30,9 +30,14 @@ export const DiscountCodeInput: React.FC<DiscountCodeInputProps> = ({
 			// Validate the code format (basic check)
 			const trimmedCode = code.trim().toUpperCase();
 
-			// For now, we'll accept BETA30DAYS
-			// In production, you'd validate against Stripe API
-			if (trimmedCode === "BETA30DAYS") {
+			// Valid discount codes (not publicly announced)
+			// These should match your Stripe promotion codes
+			const validCodes = [
+				"BETA30DAYS",   // 30-day free trial for beta testers
+				"TRIAL3DAY",    // 3-day free trial (matches Stripe)
+			];
+
+			if (validCodes.includes(trimmedCode)) {
 				setAppliedCode(trimmedCode);
 				onCodeApplied(trimmedCode);
 				setError(null);
@@ -121,6 +126,11 @@ export const DiscountCodeInput: React.FC<DiscountCodeInputProps> = ({
 							{appliedCode === "BETA30DAYS" && (
 								<span className="ml-2 text-sm font-normal">
 									• 30-day free trial
+								</span>
+							)}
+							{appliedCode === "TRIAL3DAY" && (
+								<span className="ml-2 text-sm font-normal">
+									• 3-day free trial
 								</span>
 							)}
 						</span>

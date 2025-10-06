@@ -1,9 +1,72 @@
 import react from "@vitejs/plugin-react";
 import { defineConfig } from "vite";
+import { VitePWA } from "vite-plugin-pwa";
 
 // https://vitejs.dev/config/
 export default defineConfig({
-	plugins: [react()],
+	plugins: [
+		react(),
+		VitePWA({
+			registerType: "autoUpdate",
+			includeAssets: ["favicon.svg", "favicon.ico", "apple-touch-icon.png"],
+			manifest: {
+				name: "InterpretReflect",
+				short_name: "InterpretReflect",
+				description: "The wellness platform for interpreters. Prevent burnout, manage vicarious trauma, and maintain healthy boundaries.",
+				theme_color: "#5C7F4F",
+				background_color: "#FAF9F6",
+				display: "standalone",
+				scope: "/",
+				start_url: "/",
+				orientation: "portrait-primary",
+				categories: ["health", "wellness", "productivity"],
+				icons: [
+					{
+						src: "/favicon-192x192.png",
+						sizes: "192x192",
+						type: "image/png",
+						purpose: "any maskable"
+					},
+					{
+						src: "/favicon-512x512.png",
+						sizes: "512x512",
+						type: "image/png",
+						purpose: "any maskable"
+					}
+				]
+			},
+			workbox: {
+				globPatterns: ["**/*.{js,css,html,ico,png,svg,woff,woff2}"],
+				runtimeCaching: [
+					{
+						urlPattern: /^https:\/\/.*\.supabase\.co\/.*/i,
+						handler: "NetworkFirst",
+						options: {
+							cacheName: "supabase-cache",
+							expiration: {
+								maxEntries: 50,
+								maxAgeSeconds: 60 * 60 * 24 // 24 hours
+							},
+							cacheableResponse: {
+								statuses: [0, 200]
+							}
+						}
+					},
+					{
+						urlPattern: /^https:\/\/agenticflow\.ai\/.*/i,
+						handler: "NetworkFirst",
+						options: {
+							cacheName: "agenticflow-cache",
+							expiration: {
+								maxEntries: 10,
+								maxAgeSeconds: 60 * 60 // 1 hour
+							}
+						}
+					}
+				]
+			}
+		})
+	],
 	server: {
 		port: 80,
 	},

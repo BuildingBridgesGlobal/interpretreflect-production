@@ -30,12 +30,6 @@ export const SubscriptionGate: React.FC<SubscriptionGateProps> = ({
 	];
 	const isPublicRoute = publicRoutes.includes(location.pathname);
 
-	// TEMPORARY: Skip subscription check if user is logged in
-	// This prevents infinite loading for users who have paid but database isn't synced
-	if (user) {
-		return <>{children}</>;
-	}
-
 	// If still loading, show spinner
 	if (authLoading || subLoading) {
 		return (

@@ -102,13 +102,13 @@ const PersonalizedHomepage: React.FC<PersonalizedHomepageProps> = ({
 		const wellnessCheckIns = reflections
 			.filter(r => r.type === "wellness_checkin" || r.type === "Wellness Check-in")
 			.sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime());
-		
+
 		// Use the most recent wellness check-in (index 0 after sorting)
 		const todayCheckIn = wellnessCheckIns.length > 0 ? wellnessCheckIns[0] : null;
 
-		// Extract mood and energy from today's check-in or use defaults
-		let mood = 6; // Default neutral on 1-10 scale
-		let energy = 6; // Default moderate on 1-10 scale
+		// Extract mood and energy from today's check-in or use 0 for new users
+		let mood = 0; // Default 0 for new users - no check-ins yet
+		let energy = 0; // Default 0 for new users - no check-ins yet
 
 		if (todayCheckIn?.data) {
 			// Extract mood from data (scale 1-10)
@@ -659,7 +659,7 @@ const PersonalizedHomepage: React.FC<PersonalizedHomepageProps> = ({
 								<div>
 									<div className="flex items-center justify-between mb-2">
 										<span className="text-sm text-gray-500">Today's Mood</span>
-										{getMoodIcon(wellnessStats.mood)}
+										{wellnessStats.mood > 0 && getMoodIcon(wellnessStats.mood)}
 									</div>
 									<div className="flex items-center gap-2">
 										<div className="flex-1 bg-gray-100 rounded-full h-2 overflow-hidden">
@@ -672,7 +672,7 @@ const PersonalizedHomepage: React.FC<PersonalizedHomepageProps> = ({
 											/>
 										</div>
 										<span className="text-sm font-medium text-gray-600">
-											{wellnessStats.mood}/10
+											{wellnessStats.mood > 0 ? `${wellnessStats.mood}/10` : '—'}
 										</span>
 									</div>
 								</div>
@@ -681,7 +681,7 @@ const PersonalizedHomepage: React.FC<PersonalizedHomepageProps> = ({
 								<div>
 									<div className="flex items-center justify-between mb-2">
 										<span className="text-sm text-gray-500">Energy Level</span>
-										<Zap className="w-4 h-4" style={{ color: 'var(--color-green-500)' }} />
+										{wellnessStats.energy > 0 && <Zap className="w-4 h-4" style={{ color: 'var(--color-green-500)' }} />}
 									</div>
 									<div className="flex items-center gap-2">
 										<div className="flex-1 bg-gray-100 rounded-full h-2 overflow-hidden">
@@ -695,7 +695,7 @@ const PersonalizedHomepage: React.FC<PersonalizedHomepageProps> = ({
 											/>
 										</div>
 										<span className="text-sm font-medium text-gray-600">
-											{wellnessStats.energy}/10
+											{wellnessStats.energy > 0 ? `${wellnessStats.energy}/10` : '—'}
 										</span>
 									</div>
 								</div>

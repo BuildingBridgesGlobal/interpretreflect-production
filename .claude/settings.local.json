@@ -34,7 +34,8 @@
       "Bash(echo \"Run these commands to update Supabase secrets (replace with your actual live keys):\n\n# Update Stripe Secret Key\nnpx supabase secrets set STRIPE_SECRET_KEY=sk_live_YOUR_KEY_HERE --project-ref kvguxuxanpynwdffpssm\n\n# Update Stripe Webhook Secret  \nnpx supabase secrets set STRIPE_WEBHOOK_SECRET=whsec_YOUR_WEBHOOK_SECRET_HERE --project-ref kvguxuxanpynwdffpssm\")",
       "Bash(find:*)",
       "Bash(git log:*)",
-      "Bash(npx eslint:*)"
+      "Bash(npx eslint:*)",
+      "Bash(claude mcp:*)"
     ],
     "deny": [],
     "ask": []

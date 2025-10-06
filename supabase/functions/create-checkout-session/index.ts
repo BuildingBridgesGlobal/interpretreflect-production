@@ -89,6 +89,7 @@ serve(async (req) => {
         metadata: {
           user_id: userId || '',
         },
+        trial_period_days: 3,
       },
     })
 

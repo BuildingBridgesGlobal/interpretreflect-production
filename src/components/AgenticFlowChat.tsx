@@ -1,8 +1,33 @@
 import { X } from "lucide-react";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 
 export function AgenticFlowChat() {
 	const [isOpen, setIsOpen] = useState(false);
+
+	// Load AgenticFlow script when chat opens
+	useEffect(() => {
+		if (!isOpen) return;
+
+		// Check if script already exists
+		const existingScript = document.getElementById('agenticflow-agent');
+		if (existingScript) return;
+
+		// Load the AgenticFlow script
+		const script = document.createElement('script');
+		script.id = 'agenticflow-agent';
+		script.src = 'https://agenticflow.ai/scripts/agent.js';
+		script.setAttribute('data-agent-id', 'a1cab40c-bcc2-49d8-ab97-f233f9b83fb2');
+		script.async = true;
+		document.body.appendChild(script);
+
+		return () => {
+			// Cleanup on unmount
+			const scriptEl = document.getElementById('agenticflow-agent');
+			if (scriptEl) {
+				scriptEl.remove();
+			}
+		};
+	}, [isOpen]);
 
 	return (
 		<>
@@ -111,22 +136,22 @@ export function AgenticFlowChat() {
 						</button>
 					</div>
 
-					{/* AgenticFlow iframe */}
-					<iframe
+					{/* AgenticFlow Widget Container */}
+					<div
+						id="agenticflow-widget-container"
 						style={{
 							minHeight: "380px",
 							flex: 1,
 							width: "100%",
-							border: "none",
+							overflow: "auto",
+							padding: "16px",
 						}}
-						src="https://agenticflow.ai/embed/agents/a1cab40c-bcc2-49d8-ab97-f233f9b83fb2?theme=green"
-						width="100%"
-						height="100%"
-						frameBorder="0"
-						title="Elya AI Chat"
-						allow="clipboard-write; microphone"
-						sandbox="allow-scripts allow-same-origin allow-forms allow-popups allow-popups-to-escape-sandbox"
-					/>
+					>
+						{/* AgenticFlow script will inject the chat widget here */}
+						<div className="text-center py-8 text-gray-500">
+							Loading Elya...
+						</div>
+					</div>
 				</div>
 			)}
 		</>

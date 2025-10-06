@@ -1,56 +1,74 @@
 import React, { useEffect, useState } from "react";
 
 export function AgenticFlowChat() {
-	const [scriptLoaded, setScriptLoaded] = useState(false);
+	const [widgetReady, setWidgetReady] = useState(false);
 
-	// Load AgenticFlow script on component mount
 	useEffect(() => {
-		// Check if script already exists
-		const existingScript = document.getElementById('agenticflow-agent');
-		if (existingScript) {
-			setScriptLoaded(true);
-			return;
-		}
+		// Wait for AgenticFlow script to load and create widget
+		const checkWidget = setInterval(() => {
+			// Check if AgenticFlow has created any elements
+			const widget = document.querySelector('[id*="agenticflow"], [class*="agenticflow"], iframe[src*="agenticflow"]');
+			if (widget) {
+				console.log('AgenticFlow widget found:', widget);
+				setWidgetReady(true);
+				clearInterval(checkWidget);
+			}
+		}, 500);
 
-		// Load the AgenticFlow script
-		const script = document.createElement('script');
-		script.id = 'agenticflow-agent';
-		script.src = 'https://agenticflow.ai/scripts/agent.js';
-		script.setAttribute('data-agent-id', 'a1cab40c-bcc2-49d8-ab97-f233f9b83fb2');
-		script.async = true;
+		// Clear interval after 10 seconds
+		setTimeout(() => {
+			clearInterval(checkWidget);
+			if (!widgetReady) {
+				console.log('AgenticFlow widget not detected after 10 seconds');
+			}
+		}, 10000);
 
-		script.onload = () => {
-			console.log('AgenticFlow script loaded successfully');
-			setScriptLoaded(true);
-		};
-
-		script.onerror = () => {
-			console.error('Failed to load AgenticFlow script');
-		};
-
-		document.body.appendChild(script);
-
-		return () => {
-			// Keep script loaded - don't remove on unmount
-		};
-	}, []);
+		return () => clearInterval(checkWidget);
+	}, [widgetReady]);
 
 	const handleOpenChat = () => {
-		// Try to find and click AgenticFlow's button
-		const agenticButton = document.querySelector('[data-agenticflow-button]') as HTMLElement;
-		if (agenticButton) {
-			agenticButton.click();
-			return;
+		console.log('Elya button clicked, looking for AgenticFlow widget...');
+
+		// Try multiple selectors to find the AgenticFlow widget/button
+		const selectors = [
+			'[data-agenticflow]',
+			'[id*="agenticflow"]',
+			'[class*="agenticflow"]',
+			'iframe[src*="agenticflow"]',
+			'button[aria-label*="chat"]',
+			'button[aria-label*="agent"]',
+		];
+
+		for (const selector of selectors) {
+			const element = document.querySelector(selector) as HTMLElement;
+			if (element) {
+				console.log('Found element with selector:', selector, element);
+
+				// If it's a button, click it
+				if (element.tagName === 'BUTTON') {
+					element.click();
+					return;
+				}
+
+				// If it's an iframe, try to make it visible
+				if (element.tagName === 'IFRAME') {
+					element.style.display = 'block';
+					element.style.visibility = 'visible';
+					element.style.opacity = '1';
+					return;
+				}
+
+				// Try clicking any clickable parent
+				const clickableParent = element.closest('button, a') as HTMLElement;
+				if (clickableParent) {
+					clickableParent.click();
+					return;
+				}
+			}
 		}
 
-		// Alternative: try to find iframe or widget
-		const agenticWidget = document.querySelector('iframe[src*="agenticflow"]') as HTMLElement;
-		if (agenticWidget) {
-			agenticWidget.style.display = 'block';
-			return;
-		}
-
-		console.log('AgenticFlow widget not found. Script loaded:', scriptLoaded);
+		console.log('No AgenticFlow widget found. Check if script loaded correctly.');
+		console.log('Available scripts:', Array.from(document.scripts).map(s => s.src));
 	};
 
 	return (
@@ -88,6 +106,22 @@ export function AgenticFlowChat() {
 					}}
 				/>
 			</button>
+
+			{/* Debug info - remove after testing */}
+			{process.env.NODE_ENV === 'development' && (
+				<div style={{
+					position: 'fixed',
+					top: '10px',
+					left: '10px',
+					background: 'black',
+					color: 'white',
+					padding: '10px',
+					fontSize: '12px',
+					zIndex: 99998
+				}}>
+					Widget Ready: {widgetReady ? 'Yes' : 'No'}
+				</div>
+			)}
 		</>
 	);
 }

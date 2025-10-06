@@ -1,125 +1,132 @@
-import React, { useEffect, useState } from "react";
+import { X } from "lucide-react";
+import React, { useState } from "react";
 
 export function AgenticFlowChat() {
-	const [widgetReady, setWidgetReady] = useState(false);
-
-	useEffect(() => {
-		// Wait for AgenticFlow script to load and create widget
-		const checkWidget = setInterval(() => {
-			// Check if AgenticFlow has created any elements
-			const widget = document.querySelector('[id*="agenticflow"], [class*="agenticflow"], iframe[src*="agenticflow"]');
-			if (widget) {
-				console.log('AgenticFlow widget found:', widget);
-				setWidgetReady(true);
-				clearInterval(checkWidget);
-			}
-		}, 500);
-
-		// Clear interval after 10 seconds
-		setTimeout(() => {
-			clearInterval(checkWidget);
-			if (!widgetReady) {
-				console.log('AgenticFlow widget not detected after 10 seconds');
-			}
-		}, 10000);
-
-		return () => clearInterval(checkWidget);
-	}, [widgetReady]);
-
-	const handleOpenChat = () => {
-		console.log('Elya button clicked, looking for AgenticFlow widget...');
-
-		// Try multiple selectors to find the AgenticFlow widget/button
-		const selectors = [
-			'[data-agenticflow]',
-			'[id*="agenticflow"]',
-			'[class*="agenticflow"]',
-			'iframe[src*="agenticflow"]',
-			'button[aria-label*="chat"]',
-			'button[aria-label*="agent"]',
-		];
-
-		for (const selector of selectors) {
-			const element = document.querySelector(selector) as HTMLElement;
-			if (element) {
-				console.log('Found element with selector:', selector, element);
-
-				// If it's a button, click it
-				if (element.tagName === 'BUTTON') {
-					element.click();
-					return;
-				}
-
-				// If it's an iframe, try to make it visible
-				if (element.tagName === 'IFRAME') {
-					element.style.display = 'block';
-					element.style.visibility = 'visible';
-					element.style.opacity = '1';
-					return;
-				}
-
-				// Try clicking any clickable parent
-				const clickableParent = element.closest('button, a') as HTMLElement;
-				if (clickableParent) {
-					clickableParent.click();
-					return;
-				}
-			}
-		}
-
-		console.log('No AgenticFlow widget found. Check if script loaded correctly.');
-		console.log('Available scripts:', Array.from(document.scripts).map(s => s.src));
-	};
+	const [isOpen, setIsOpen] = useState(false);
 
 	return (
 		<>
 			{/* Custom Elya Button */}
-			<button
-				onClick={handleOpenChat}
-				className="fixed shadow-lg hover:shadow-xl transition-all hover:scale-105"
-				style={{
-					bottom: "30px",
-					right: "30px",
-					background: "white",
-					borderRadius: "50%",
-					width: "75px",
-					height: "75px",
-					display: "flex",
-					alignItems: "center",
-					justifyContent: "center",
-					zIndex: 99999,
-					border: "3px solid #5B9378",
-					boxShadow: "0 4px 20px rgba(0,0,0,0.3)",
-					padding: "5px",
-				}}
-				title="Chat with Elya"
-				aria-label="Open Elya AI Chat"
-			>
-				<img
-					src="/elya_2.png"
-					alt="Elya"
+			{!isOpen && (
+				<button
+					onClick={() => setIsOpen(true)}
+					className="fixed shadow-lg hover:shadow-xl transition-all hover:scale-105"
 					style={{
-						width: "100%",
-						height: "100%",
-						objectFit: "contain",
+						bottom: "30px",
+						right: "30px",
+						background: "white",
 						borderRadius: "50%",
+						width: "75px",
+						height: "75px",
+						display: "flex",
+						alignItems: "center",
+						justifyContent: "center",
+						zIndex: 99999,
+						border: "3px solid #5B9378",
+						boxShadow: "0 4px 20px rgba(0,0,0,0.3)",
+						padding: "5px",
 					}}
-				/>
-			</button>
+					title="Chat with Elya"
+					aria-label="Open Elya AI Chat"
+				>
+					<img
+						src="/elya_2.png"
+						alt="Elya"
+						style={{
+							width: "100%",
+							height: "100%",
+							objectFit: "contain",
+							borderRadius: "50%",
+						}}
+					/>
+				</button>
+			)}
 
-			{/* Debug info - remove after testing */}
-			{process.env.NODE_ENV === 'development' && (
-				<div style={{
-					position: 'fixed',
-					top: '10px',
-					left: '10px',
-					background: 'black',
-					color: 'white',
-					padding: '10px',
-					fontSize: '12px',
-					zIndex: 99998
-				}}>
-					Widget Ready: {widgetReady ? 'Yes' : 'No'}
+			{/* Chat Window */}
+			{isOpen && (
+				<div
+					className="fixed shadow-2xl rounded-2xl"
+					style={{
+						bottom: "30px",
+						right: "30px",
+						width: "400px",
+						maxWidth: "calc(100vw - 60px)",
+						height: "600px",
+						maxHeight: "calc(100vh - 100px)",
+						backgroundColor: "#FFFFFF",
+						border: "2px solid #E5E5E5",
+						zIndex: 99999,
+						display: "flex",
+						flexDirection: "column",
+						overflow: "hidden",
+					}}
+				>
+					{/* Header */}
+					<div
+						className="px-4 py-3 flex items-center justify-between"
+						style={{
+							borderBottom: "1px solid #E5E5E5",
+							background:
+								"linear-gradient(135deg, var(--color-green-600), var(--color-green-500))",
+						}}
+					>
+						<div className="flex items-center gap-2">
+							<div>
+								<h3
+									className="font-semibold text-sm"
+									style={{ color: "#FFFFFF" }}
+								>
+									Chat with Elya
+								</h3>
+								<p
+									className="text-xs"
+									style={{
+										color: "rgba(255, 255, 255, 0.9)",
+										fontSize: "11px",
+									}}
+								>
+									Your AI Wellness Companion
+								</p>
+							</div>
+						</div>
+						<button
+							onClick={() => setIsOpen(false)}
+							className="p-2 rounded-lg transition-all hover:scale-110"
+							style={{
+								backgroundColor: "rgba(255, 255, 255, 0.2)",
+								border: "1px solid rgba(255, 255, 255, 0.3)",
+							}}
+							onMouseEnter={(e) => {
+								e.currentTarget.style.backgroundColor =
+									"rgba(255, 255, 255, 0.3)";
+								e.currentTarget.style.transform = "scale(1.1)";
+							}}
+							onMouseLeave={(e) => {
+								e.currentTarget.style.backgroundColor =
+									"rgba(255, 255, 255, 0.2)";
+								e.currentTarget.style.transform = "scale(1)";
+							}}
+							aria-label="Close chat"
+						>
+							<X size={20} style={{ color: "#FFFFFF", strokeWidth: 2.5 }} />
+						</button>
+					</div>
+
+					{/* AgenticFlow iframe - now using the embed URL */}
+					<iframe
+						style={{
+							minHeight: "380px",
+							flex: 1,
+							width: "100%",
+							border: "none",
+						}}
+						src="https://agenticflow.ai/embed/agents/a1cab40c-bcc2-49d8-ab97-f233f9b83fb2?theme=green"
+						width="100%"
+						height="100%"
+						frameBorder="0"
+						title="Elya AI Chat"
+						allow="clipboard-write; microphone"
+					/>
 				</div>
 			)}
 		</>

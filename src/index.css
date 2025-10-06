@@ -227,6 +227,11 @@ body {
 	top: 10px;
 }
 
+/* Hide AgenticFlow's default blue chat button - we use custom Elya button */
+#agenticflow-chat-bubble-button {
+	display: none !important;
+}
+
 /* Screen Reader Mode Enhancements */
 .screen-reader-mode img:not([alt]) {
 	border: 3px solid red !important;

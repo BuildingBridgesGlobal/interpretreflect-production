@@ -124,6 +124,8 @@ export function AgenticFlowChat() {
 						height="100%"
 						frameBorder="0"
 						title="Elya AI Chat"
+						allow="clipboard-write; microphone"
+						sandbox="allow-scripts allow-same-origin allow-forms allow-popups allow-popups-to-escape-sandbox"
 					/>
 				</div>
 			)}

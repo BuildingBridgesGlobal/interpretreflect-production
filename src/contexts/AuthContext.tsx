@@ -84,12 +84,19 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
 					return;
 				}
 
+				// Add timeout to prevent infinite loading
+				const timeoutPromise = new Promise((_, reject) =>
+					setTimeout(() => reject(new Error('Auth initialization timeout')), 10000)
+				);
+
 				// Just get current session - don't manually refresh
 				// Supabase client will auto-refresh when needed
+				const sessionPromise = supabase.auth.getSession();
+
 				const {
 					data: { session },
 					error: sessionError,
-				} = await supabase.auth.getSession();
+				} = await Promise.race([sessionPromise, timeoutPromise]) as any;
 
 				if (sessionError) {
 					// Only log if it's not an expected error

@@ -557,26 +557,7 @@ export const SeamlessSignup: React.FC = () => {
 								)}
 
 								{/* Terms and Privacy Checkbox */}
-								<div className="flex items-center gap-2 mt-4">
-									<input
-										type="checkbox"
-										id="terms"
-										checked={formData.acceptedTerms || false}
-										onChange={(e) => setFormData({ ...formData, acceptedTerms: e.target.checked })}
-										className="w-3.5 h-3.5 rounded border-gray-300 flex-shrink-0"
-										style={{ accentColor: "#5C7F4F" }}
-									/>
-									<label htmlFor="terms" className="text-xs text-gray-600">
-										I agree to the{" "}
-										<a href="/terms" target="_blank" className="text-[#5C7F4F] underline hover:text-[#4A6A3F]">
-											Terms of Service
-										</a>{" "}
-										and{" "}
-										<a href="/privacy" target="_blank" className="text-[#5C7F4F] underline hover:text-[#4A6A3F]">
-											Privacy Policy
-										</a>
-									</label>
-								</div>
+								{/* Terms checkbox removed - handled in Stripe checkout */}
 
 								<button
 									onClick={handleNext}
@@ -584,8 +565,7 @@ export const SeamlessSignup: React.FC = () => {
 										loading ||
 										!formData.email ||
 										!formData.password ||
-										!formData.name ||
-										!formData.acceptedTerms
+										!formData.name
 									}
 									className="w-full px-6 py-3 rounded-lg font-semibold text-white transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
 									style={{
@@ -593,8 +573,7 @@ export const SeamlessSignup: React.FC = () => {
 											loading ||
 											!formData.email ||
 											!formData.password ||
-											!formData.name ||
-											!formData.acceptedTerms
+											!formData.name
 												? "#ccc"
 												: "linear-gradient(135deg, #5C7F4F, rgb(107, 142, 94))",
 									}}

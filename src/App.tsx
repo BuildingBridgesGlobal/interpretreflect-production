@@ -55,6 +55,10 @@ import ProfileSettings from "./components/ProfileSettings";
 import { SubscriptionGate } from "./components/SubscriptionGate";
 import { TemperatureExploration } from "./components/TemperatureExploration";
 import { WelcomeModal } from "./components/WelcomeModal";
+import { OnboardingFlow } from "./components/OnboardingFlow";
+import { FeatureDiscovery } from "./components/onboarding/FeatureDiscovery";
+import { ProgressiveOnboarding } from "./components/onboarding/ProgressiveOnboarding";
+import { onboardingAnalytics } from "./utils/onboardingAnalytics";
 
 // Lazy load large reflection components for better code splitting
 const DirectCommunicationReflection = lazy(() => import("./components/DirectCommunicationReflection"));
@@ -143,6 +147,12 @@ function App() {
 	const [resetToolkitData, setResetToolkitData] = useState<any>(null);
 	const [insightsLoading, setInsightsLoading] = useState(false);
 	const [senseCount, setSenseCount] = useState(0); // For sensory reset
+
+	// Onboarding state
+	const [showWelcomeModal, setShowWelcomeModal] = useState(false);
+	const [showFeatureDiscovery, setShowFeatureDiscovery] = useState(false);
+	const [onboardingVisible, setOnboardingVisible] = useState(false);
+	const [welcomeRecommendations, setWelcomeRecommendations] = useState<string[]>([]);
 	const [expansionLevel, setExpansionLevel] = useState(0); // For expansion practice
 	const intervalRef = useRef<NodeJS.Timeout | null>(null); // Store interval reference
 	const [showPreAssignmentPrep, setShowPreAssignmentPrep] = useState(false);
@@ -311,6 +321,58 @@ function App() {
 
 		fetchGrowthInsights();
 	}, [user, activeTab]);
+
+	// Onboarding logic
+	useEffect(() => {
+		if (!user) return;
+
+		// Check if user needs onboarding
+		const checkOnboarding = async () => {
+			try {
+				const { data: profile } = await import("./lib/supabase").then(m => 
+					m.supabase.from("profiles").select("onboarding_completed, created_at").eq("id", user.id).single()
+				);
+
+				if (!profile) return;
+
+				// Show welcome modal for new users (first 7 days)
+				const signupDate = new Date(profile.created_at);
+				const daysSinceSignup = Math.floor((Date.now() - signupDate.getTime()) / (1000 * 60 * 60 * 24));
+				
+				if (daysSinceSignup <= 7 && !localStorage.getItem("hasSeenWelcomeModal")) {
+					setShowWelcomeModal(true);
+					onboardingAnalytics.trackOnboardingStart(user.id, 'welcome_modal');
+				}
+
+				// Show onboarding flow for users who haven't completed it
+				if (!profile.onboarding_completed) {
+					setOnboardingVisible(true);
+				}
+			} catch (error) {
+				console.error("Error checking onboarding status:", error);
+			}
+		};
+
+		checkOnboarding();
+	}, [user]);
+
+	// Onboarding handlers
+	const handleWelcomeComplete = (recommendations: string[]) => {
+		setWelcomeRecommendations(recommendations);
+		setShowWelcomeModal(false);
+		setShowFeatureDiscovery(true);
+		onboardingAnalytics.trackWelcomeModal(user?.id || '', 3, {}, 'completed');
+	};
+
+	const handleFeatureDiscoveryComplete = () => {
+		setShowFeatureDiscovery(false);
+		onboardingAnalytics.trackFeatureDiscovery(user?.id || '', 'all', 'completed');
+	};
+
+	const handleOnboardingComplete = () => {
+		setOnboardingVisible(false);
+		onboardingAnalytics.trackOnboardingComplete(user?.id || '', {});
+	};
 
 	// Helper to check if any modal is open
 	const isAnyModalOpen = () => {
@@ -11187,6 +11249,41 @@ function App() {
 							{/* AgenticFlow Chat */}
 							<AgenticFlowChat />
 
+							{/* Onboarding Modals */}
+							{showWelcomeModal && (
+								<WelcomeModal
+									onClose={() => {
+										setShowWelcomeModal(false);
+										localStorage.setItem("hasSeenWelcomeModal", "true");
+									}}
+									onComplete={handleWelcomeComplete}
+								/>
+							)}
+
+							{showFeatureDiscovery && (
+								<FeatureDiscovery
+									isOpen={showFeatureDiscovery}
+									onClose={() => setShowFeatureDiscovery(false)}
+									onComplete={handleFeatureDiscoveryComplete}
+								/>
+							)}
+
+							{onboardingVisible && (
+								<OnboardingFlow
+									onComplete={handleOnboardingComplete}
+									onClose={() => setOnboardingVisible(false)}
+								/>
+							)}
+
+							{/* Progressive Onboarding Tips */}
+							{user && (
+								<ProgressiveOnboarding
+									user={user}
+									onDismiss={(tipId) => {
+										onboardingAnalytics.trackProgressiveTip(user.id, tipId, 'dismissed');
+									}}
+								/>
+							)}
 
 						</div>
 					}

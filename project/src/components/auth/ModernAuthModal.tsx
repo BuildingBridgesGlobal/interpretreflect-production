@@ -21,7 +21,7 @@ export const ModernAuthModal: React.FC<ModernAuthModalProps> = ({
 }) => {
 	const navigate = useNavigate();
 	const { signIn, signInWithGoogle, signInWithApple } = useAuth();
-	const [mode, setMode] = useState<"signin" | "signup" | "magic-link" | "forgot-password">(
+	const [mode, setMode] = useState<"signin" | "signup" | "magic-link">(
 		defaultMode,
 	);
 	const [email, setEmail] = useState("");
@@ -86,39 +86,7 @@ export const ModernAuthModal: React.FC<ModernAuthModalProps> = ({
 		}
 	};
 
-	const handlePasswordReset = async () => {
-		setError("");
-		setValidationErrors({});
-
-		// Validate email
-		if (!email) {
-			setValidationErrors({ email: "Email is required" });
-			return;
-		}
-		if (!validateEmail(email)) {
-			setValidationErrors({ email: "Please enter a valid email" });
-			return;
-		}
-
-		setLoading(true);
-		try {
-			const { error } = await supabase.auth.resetPasswordForEmail(email, {
-				redirectTo: `${window.location.origin}/reset-password`,
-			});
-
-			if (error) throw error;
-
-			setSuccess(true);
-			setTimeout(() => {
-				setSuccess(false);
-				setMode("signin");
-			}, 5000);
-		} catch (err: any) {
-			setError(err.message || "Failed to send password reset email");
-		} finally {
-			setLoading(false);
-		}
-	};
+	// Password reset function removed - users should contact support
 
 	const handleMagicLink = async () => {
 		setError("");
@@ -220,12 +188,10 @@ export const ModernAuthModal: React.FC<ModernAuthModalProps> = ({
 							Interpret<span className="text-gray-600">Reflect</span>
 						</h1>
 						<h2 className="text-2xl font-bold text-gray-900">
-							{mode === "forgot-password" ? "Reset Password" : "Welcome back"}
+							Welcome back
 						</h2>
 						<p className="text-gray-600 mt-2">
-							{mode === "forgot-password"
-								? "We'll send you a link to reset your password"
-								: "Sign in to continue your wellness journey"}
+							Sign in to continue your wellness journey
 						</p>
 					</div>
 
@@ -239,99 +205,13 @@ export const ModernAuthModal: React.FC<ModernAuthModalProps> = ({
 								Check your email!
 							</h3>
 							<p className="text-gray-600">
-								{mode === "forgot-password"
-									? `We've sent password reset instructions to`
-									: `We've sent a magic link to`}{" "}
+								We've sent a magic link to{" "}
 								<strong>{email}</strong>
 							</p>
 							<p className="text-sm text-gray-500 mt-4">
-								{mode === "forgot-password"
-									? "Follow the link in your email to create a new password."
-									: "Click the link in your email to sign in instantly."}
+								Click the link in your email to sign in instantly.
 							</p>
 						</div>
-					) : mode === "forgot-password" ? (
-						// Forgot Password Form
-						<>
-							<form
-								onSubmit={(e) => {
-									e.preventDefault();
-									handlePasswordReset();
-								}}
-							>
-								<div className="space-y-4">
-									<div>
-										<input
-											type="email"
-											value={email}
-											onChange={(e) => {
-												setEmail(e.target.value);
-												setValidationErrors({});
-											}}
-											placeholder="Email address"
-											className={`w-full px-4 py-3 border rounded-xl focus:outline-none focus:ring-2 focus:border-transparent transition-all ${
-												validationErrors.email
-													? "border-red-500"
-													: "border-gray-300"
-											}`}
-											style={
-												{
-													"--tw-ring-color": "#2D5F3F",
-												} as React.CSSProperties
-											}
-											required
-										/>
-										{validationErrors.email && (
-											<p className="text-sm text-red-500 mt-1">
-												{validationErrors.email}
-											</p>
-										)}
-									</div>
-
-									<button
-										type="submit"
-										disabled={loading}
-										className="w-full flex items-center justify-center gap-2 px-4 py-3 text-white rounded-xl font-semibold transition-all disabled:opacity-50 disabled:cursor-not-allowed"
-										style={{
-											background: loading ? "#9CA3AF" : "#2D5F3F",
-										}}
-									>
-										{loading ? (
-											<>
-												<Loader2 className="w-5 h-5 animate-spin" />
-												Sending...
-											</>
-										) : (
-											<>
-												Send Reset Link
-												<ArrowRight className="w-5 h-5" />
-											</>
-										)}
-									</button>
-								</div>
-
-								{error && (
-									<div className="mt-4 p-3 bg-red-50 border border-red-200 rounded-lg">
-										<p className="text-sm text-red-600">{error}</p>
-									</div>
-								)}
-							</form>
-
-							{/* Back to Sign In */}
-							<div className="mt-6 text-center">
-								<button
-									onClick={() => setMode("signin")}
-									className="text-sm font-semibold transition-colors px-4 py-2 rounded-lg"
-									style={{
-										color: "#2D5F3F",
-										backgroundColor: "white",
-										border: "1px solid rgba(45, 95, 63, 0.2)"
-									}}
-								>
-									← Back to Sign In
-								</button>
-							</div>
-						</>
 					) : (
 						<>
 							{/* Sign In Form */}
@@ -451,14 +331,16 @@ export const ModernAuthModal: React.FC<ModernAuthModalProps> = ({
 										Sign up
 									</button>
 								</p>
-								<button
-									type="button"
-									onClick={() => setMode("forgot-password")}
-									className="px-3 py-1 text-sm text-white rounded-md font-semibold transition-all"
-									style={{ background: "#2D5F3F" }}
-								>
-									Forgot password?
-								</button>
+								<p className="text-sm text-gray-600">
+									Need help?{" "}
+									<a
+										href="mailto:hello@huviatechnologies.com"
+										className="underline font-semibold"
+										style={{ color: "#2D5F3F" }}
+									>
+										Contact support
+									</a>
+								</p>
 							</div>
 
 							{/* Terms notice */}

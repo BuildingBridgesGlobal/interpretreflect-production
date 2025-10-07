@@ -13,8 +13,9 @@ if (
 	console.warn("Missing Supabase credentials. Running in demo mode.");
 }
 
-// Create Supabase client with session persistence
-// Sessions persist in localStorage but will be checked for validity
+// Create Supabase client without session persistence
+// Sessions use sessionStorage, so users must log in each browser session
+// This prevents cross-tab issues and auto-login behavior
 // detectSessionInUrl is disabled globally to prevent cross-tab session leakage
 // Individual pages (like reset-password) will handle URL tokens manually
 export const supabase = createClient(supabaseUrl, supabaseAnonKey, {
@@ -22,7 +23,7 @@ export const supabase = createClient(supabaseUrl, supabaseAnonKey, {
 		autoRefreshToken: true,
 		persistSession: true,
 		detectSessionInUrl: false,
-		storage: window.localStorage,
+		storage: window.sessionStorage,
 		storageKey: "supabase.auth.token",
 		flowType: "pkce",
 	},

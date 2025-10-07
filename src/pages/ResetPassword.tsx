@@ -16,32 +16,41 @@ const ResetPassword: React.FC = () => {
 	>({});
 
 	useEffect(() => {
-		// Simple session check - Supabase handles URL params automatically
-		const checkSession = async () => {
-			console.log('Reset password - Initial URL:', window.location.href);
+		let mounted = true;
 
-			// Longer delay to let Supabase process any URL params
-			await new Promise(resolve => setTimeout(resolve, 1000));
+		// Listen for auth state changes (this catches the session from URL)
+		const { data: { subscription } } = supabase.auth.onAuthStateChange(async (event, session) => {
+			if (!mounted) return;
 
-			const { data: { session }, error } = await supabase.auth.getSession();
-
-			console.log('Reset password - Session after delay:', {
+			console.log('Reset password - Auth event:', event, {
 				hasSession: !!session,
-				error: error?.message,
 				userId: session?.user?.id
 			});
 
-			if (!session) {
-				// Check if this was accessed via a reset link
-				const hasResetParams = window.location.search || window.location.hash;
-				console.log('Reset password - No session found, has params:', !!hasResetParams);
-				if (!hasResetParams) {
-					setError("Please use the password reset link from your email.");
-				}
+			// When password recovery session is established, we're ready
+			if (event === 'PASSWORD_RECOVERY' || (event === 'SIGNED_IN' && session)) {
+				console.log('Reset password - Session ready for password update');
 			}
+		});
+
+		// Also check current session immediately
+		const checkSession = async () => {
+			console.log('Reset password - Initial URL:', window.location.href);
+
+			const { data: { session }, error } = await supabase.auth.getSession();
+
+			console.log('Reset password - Initial session check:', {
+				hasSession: !!session,
+				error: error?.message
+			});
 		};
 
 		checkSession();
+
+		return () => {
+			mounted = false;
+			subscription.unsubscribe();
+		};
 	}, []);
 
 	const validatePassword = (pass: string) => {

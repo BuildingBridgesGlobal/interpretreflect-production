@@ -64,11 +64,12 @@ const ResetPassword: React.FC = () => {
 
 			if (error) throw error;
 
+			// Sign out the recovery session immediately after password update
+			// This prevents auth state issues when redirecting
+			await supabase.auth.signOut();
+
 			setSuccess(true);
-			// Redirect to dashboard after success
-			setTimeout(() => {
-				navigate("/");
-			}, 2000);
+			// Don't auto-redirect - let user click button when ready
 		} catch (err: any) {
 			setError(err.message || "Failed to reset password");
 		} finally {
@@ -101,9 +102,17 @@ const ResetPassword: React.FC = () => {
 						<h3 className="text-xl font-semibold text-gray-900 mb-2">
 							Password Reset Successfully!
 						</h3>
-						<p className="text-gray-600">
-							Redirecting you to the app...
+						<p className="text-gray-600 mb-6">
+							Your password has been updated. You can now sign in with your new password.
 						</p>
+						<button
+							onClick={() => window.location.href = "/"}
+							className="w-full flex items-center justify-center gap-2 px-4 py-3 text-white rounded-xl font-semibold transition-all hover:opacity-90"
+							style={{ background: "#2D5F3F" }}
+						>
+							Go to Sign In
+							<ArrowRight className="w-5 h-5" />
+						</button>
 					</div>
 				) : (
 					<form onSubmit={handleResetPassword}>

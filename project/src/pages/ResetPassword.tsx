@@ -11,7 +11,6 @@ const ResetPassword: React.FC = () => {
 	const [loading, setLoading] = useState(false);
 	const [error, setError] = useState("");
 	const [success, setSuccess] = useState(false);
-	const [redirectCountdown, setRedirectCountdown] = useState(3);
 	const [validationErrors, setValidationErrors] = useState<
 		Record<string, string>
 	>({});
@@ -65,18 +64,17 @@ const ResetPassword: React.FC = () => {
 
 			if (error) throw error;
 
+			// First, refresh the session to convert recovery session to normal session
+			const { data: refreshData, error: refreshError } = await supabase.auth.refreshSession();
+
+			if (refreshError) {
+				console.error("Failed to refresh session after password reset:", refreshError);
+			}
+
 			setSuccess(true);
 
-			// Start countdown and redirect
-			let countdown = 3;
-			const countdownInterval = setInterval(() => {
-				countdown--;
-				setRedirectCountdown(countdown);
-				if (countdown <= 0) {
-					clearInterval(countdownInterval);
-					window.location.href = "/dashboard";
-				}
-			}, 1000);
+			// Don't auto-redirect - let user manually navigate when ready
+			// This avoids auth state conflicts
 		} catch (err: any) {
 			setError(err.message || "Failed to reset password");
 		} finally {
@@ -110,23 +108,25 @@ const ResetPassword: React.FC = () => {
 							Password Reset Successfully!
 						</h3>
 						<p className="text-gray-600 mb-6">
-							Your password has been updated successfully.
+							Your password has been updated successfully. Please sign in with your new password.
 						</p>
-						<div className="space-y-4">
-							<div className="flex items-center justify-center gap-2">
-								<Loader2 className="w-5 h-5 animate-spin text-gray-600" />
-								<p className="text-gray-600">
-									Redirecting to dashboard in {redirectCountdown}...
-								</p>
-							</div>
+						<div className="space-y-3">
 							<button
-								onClick={() => window.location.href = "/dashboard"}
+								onClick={async () => {
+									// Sign out the recovery session before redirecting
+									await supabase.auth.signOut();
+									// Use replace to prevent back button issues
+									window.location.replace("/");
+								}}
 								className="w-full flex items-center justify-center gap-2 px-4 py-3 text-white rounded-xl font-semibold transition-all hover:opacity-90"
 								style={{ background: "#2D5F3F" }}
 							>
-								Go to Dashboard Now
+								Go to Sign In
 								<ArrowRight className="w-5 h-5" />
 							</button>
+							<p className="text-xs text-center text-gray-500">
+								Click the button above to sign in with your new password
+							</p>
 						</div>
 					</div>
 				) : (

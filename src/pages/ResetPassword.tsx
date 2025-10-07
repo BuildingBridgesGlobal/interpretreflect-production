@@ -62,6 +62,7 @@ const ResetPassword: React.FC = () => {
 
 	const handleResetPassword = async (e: React.FormEvent) => {
 		e.preventDefault();
+		console.log('🔥 FORM SUBMITTED - handleResetPassword called');
 		setError("");
 		setValidationErrors({});
 
@@ -82,37 +83,42 @@ const ResetPassword: React.FC = () => {
 			return;
 		}
 
+		console.log('🔥 Setting loading to true');
 		setLoading(true);
 		try {
+			console.log('🔥 About to check session...');
 			// Double-check we have a valid session before updating
 			const { data: { session } } = await supabase.auth.getSession();
 
-			console.log('Reset password - Form submit session check:', {
+			console.log('🔥 Session check result:', {
 				hasSession: !!session,
 				userId: session?.user?.id,
 				userEmail: session?.user?.email
 			});
 
 			if (!session) {
+				console.log('🔥 NO SESSION - throwing error');
 				throw new Error("No active session. Please click the reset link from your email again.");
 			}
 
-			console.log('Reset password - Attempting to update password...');
+			console.log('🔥 About to update password...');
 			const { error } = await supabase.auth.updateUser({
 				password: password,
 			});
 
 			if (error) {
-				console.error('Reset password - Update error:', error);
+				console.error('🔥 Password update ERROR:', error);
 				throw error;
 			}
 
-			console.log('Reset password - Password updated successfully');
+			console.log('🔥 Password updated! Signing out...');
 
 			// Sign out the recovery session immediately
 			await supabase.auth.signOut();
 
+			console.log('🔥 Signed out! Setting success...');
 			setSuccess(true);
+			console.log('🔥 Success set!');
 		} catch (err: any) {
 			console.error("Password reset error:", err);
 			setError(err.message || "Failed to reset password");

@@ -16,6 +16,17 @@ export const SubscriptionGate: React.FC<SubscriptionGateProps> = ({
 	const { hasActiveSubscription, loading: subLoading, error: subError } = useSubscription();
 	const location = useLocation();
 
+	// Log subscription gate check details
+	console.log("🔐 SubscriptionGate Check:", {
+		path: location.pathname,
+		user: user?.email,
+		userId: user?.id,
+		hasActiveSubscription,
+		authLoading,
+		subLoading,
+		subError
+	});
+
 	// Allow access to certain public routes
 	const publicRoutes = [
 		"/",
@@ -33,6 +44,7 @@ export const SubscriptionGate: React.FC<SubscriptionGateProps> = ({
 
 	// If it's a public route, render immediately without any auth checks
 	if (isPublicRoute) {
+		console.log("✅ Public route - allowing access:", location.pathname);
 		return <>{children}</>;
 	}
 
@@ -68,11 +80,17 @@ export const SubscriptionGate: React.FC<SubscriptionGateProps> = ({
 
 	// If not logged in, redirect to signup
 	if (!user) {
+		console.log("❌ No user - redirecting to signup");
 		return <Navigate to="/signup" state={{ from: location }} replace />;
 	}
 
 	// If logged in but no subscription, show reactivation page
 	if (user && !hasActiveSubscription) {
+		console.log("⚠️ User has no active subscription - showing reactivation page", {
+			userId: user.id,
+			email: user.email,
+			path: location.pathname
+		});
 		return (
 			<div className="min-h-screen bg-gradient-to-br from-green-50 to-blue-100 flex items-center justify-center px-4">
 				<div className="max-w-md w-full bg-white rounded-xl shadow-lg p-8 text-center">
@@ -121,5 +139,10 @@ export const SubscriptionGate: React.FC<SubscriptionGateProps> = ({
 	}
 
 	// User has active subscription or is on public route, allow access
+	console.log("✅ User has active subscription - allowing access", {
+		userId: user.id,
+		email: user.email,
+		path: location.pathname
+	});
 	return <>{children}</>;
 };

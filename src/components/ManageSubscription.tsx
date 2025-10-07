@@ -11,6 +11,7 @@ import {
 	HelpCircle,
 	Mail,
 	Package,
+	RefreshCw,
 	Shield,
 	XCircle,
 } from "lucide-react";
@@ -21,6 +22,8 @@ import { useNavigate } from "react-router-dom";
 
 import { useAuth } from "../contexts/AuthContext";
 import { supabase } from "../lib/supabase";
+import { syncSubscriptionStatus } from "../utils/syncSubscriptionStatus";
+import { useSubscription, clearSubscriptionCache } from "../hooks/useSubscription";
 
 interface SubscriptionData {
 	plan_name: "essential" | "professional" | "organization" | "free";
@@ -83,7 +86,9 @@ const PLAN_DETAILS = {
 export const ManageSubscription: React.FC = () => {
 	const navigate = useNavigate();
 	const { user } = useAuth();
+	const { hasActiveSubscription } = useSubscription();
 	const [loading, setLoading] = useState(false);
+	const [syncing, setSyncing] = useState(false);
 	const [subscription, setSubscription] = useState<SubscriptionData | null>(
 		null,
 	);
@@ -101,20 +106,45 @@ export const ManageSubscription: React.FC = () => {
 	const fetchSubscriptionData = async () => {
 		setLoading(true);
 		try {
+			// First get profile to check subscription status
+			const { data: profile } = await supabase
+				.from("profiles")
+				.select("subscription_status, subscription_tier, is_admin, trial_ends_at")
+				.eq("id", user?.id)
+				.single();
+
+			// Then get subscription details
 			const { data, error } = await supabase
 				.from("subscriptions")
 				.select("*")
 				.eq("user_id", user?.id)
-				.single();
+				.order("created_at", { ascending: false })
+				.limit(1)
+				.maybeSingle();
+
+			console.log("Profile subscription status:", profile?.subscription_status);
+			console.log("Subscription data:", data);
 
 			if (data) {
-				setSubscription(data);
+				setSubscription({
+					...data,
+					status: data.status || profile?.subscription_status || "inactive"
+				});
+			} else if (profile?.subscription_status) {
+				// Profile has status but no subscription record (data mismatch)
+				setSubscription({
+					plan_name: profile.subscription_tier || "essential",
+					price: 0,
+					status: profile.subscription_status as any,
+					next_billing_date: null,
+					payment_method: null,
+				});
 			} else {
 				// Default to free plan if no subscription
 				setSubscription({
 					plan_name: "free",
 					price: 0,
-					status: "active",
+					status: "inactive",
 					next_billing_date: null,
 					payment_method: null,
 				});
@@ -124,6 +154,33 @@ export const ManageSubscription: React.FC = () => {
 			toast.error("Failed to load subscription data");
 		} finally {
 			setLoading(false);
+		}
+	};
+
+	const handleSyncSubscription = async () => {
+		if (!user) return;
+
+		setSyncing(true);
+		try {
+			const result = await syncSubscriptionStatus(user.id);
+
+			if (result.success) {
+				toast.success(result.message);
+				// Refresh data after sync
+				clearSubscriptionCache();
+				await fetchSubscriptionData();
+				// Reload the page to ensure all components get updated
+				setTimeout(() => {
+					window.location.reload();
+				}, 1000);
+			} else {
+				toast.error(result.message);
+			}
+		} catch (error) {
+			console.error("Error syncing subscription:", error);
+			toast.error("Failed to sync subscription status");
+		} finally {
+			setSyncing(false);
 		}
 	};
 
@@ -402,6 +459,44 @@ export const ManageSubscription: React.FC = () => {
 												</div>
 											)}
 										</div>
+									</div>
+
+									{/* Sync Button and Debug Info */}
+									<div className="mt-6 p-4 bg-yellow-50 border border-yellow-200 rounded-lg">
+										<div className="flex items-center justify-between mb-2">
+											<div>
+												<p className="text-sm font-medium text-yellow-800">
+													Subscription Status Verification
+												</p>
+												<p className="text-xs text-yellow-700 mt-1">
+													Hook Status: {hasActiveSubscription ? "Active" : "Inactive"} |
+													DB Status: {subscription.status}
+												</p>
+											</div>
+											<button
+												onClick={handleSyncSubscription}
+												disabled={syncing}
+												className="flex items-center px-4 py-2 text-sm font-medium text-white rounded-lg transition-colors disabled:opacity-50"
+												style={{ backgroundColor: syncing ? "#9CA3AF" : "#5C7F4F" }}
+											>
+												{syncing ? (
+													<>
+														<RefreshCw className="h-4 w-4 mr-2 animate-spin" />
+														Syncing...
+													</>
+												) : (
+													<>
+														<RefreshCw className="h-4 w-4 mr-2" />
+														Sync with Stripe
+													</>
+												)}
+											</button>
+										</div>
+										{subscription.status === 'canceled' && hasActiveSubscription && (
+											<p className="text-xs text-red-600 mt-2">
+												⚠️ Data mismatch detected: Your subscription appears cancelled but you still have access. Click "Sync with Stripe" to fix this.
+											</p>
+										)}
 									</div>
 								</div>
 							</section>

@@ -13,7 +13,13 @@ interface SubscriptionStatus {
 
 // Cache for subscription data to avoid repeated API calls
 const subscriptionCache = new Map<string, { data: any; timestamp: number; expires: number }>();
-const CACHE_DURATION = 5 * 60 * 1000; // 5 minutes
+const CACHE_DURATION = 30 * 1000; // Reduced to 30 seconds for better accuracy
+
+// Export a function to force clear the cache (useful for debugging)
+export const clearSubscriptionCache = () => {
+	console.log("🔄 Clearing subscription cache");
+	subscriptionCache.clear();
+};
 
 export const useSubscription = (): SubscriptionStatus => {
 	const { user } = useAuth();
@@ -30,13 +36,25 @@ export const useSubscription = (): SubscriptionStatus => {
 
 	useEffect(() => {
 		checkSubscription();
-		
+
 		// Cleanup function to abort ongoing requests
 		return () => {
 			if (abortControllerRef.current) {
 				abortControllerRef.current.abort();
 			}
 		};
+	}, [user]);
+
+	// Also recheck subscription when window gains focus (to catch external changes)
+	useEffect(() => {
+		const handleFocus = () => {
+			console.log("Window focused - rechecking subscription");
+			clearSubscriptionCache();
+			checkSubscription();
+		};
+
+		window.addEventListener('focus', handleFocus);
+		return () => window.removeEventListener('focus', handleFocus);
 	}, [user]);
 
 	const checkSubscription = useCallback(async () => {
@@ -126,6 +144,28 @@ export const useSubscription = (): SubscriptionStatus => {
 
 			// Only check subscriptions if not already granted access
 			if (!hasAccess) {
+				// First, get ALL subscriptions to see what's in the database
+				const allSubscriptionsPromise = supabase
+					.from("subscriptions")
+					.select("*")
+					.eq("user_id", user.id)
+					.order("created_at", { ascending: false });
+
+				const { data: allSubs, error: allSubsError } = await Promise.race([
+					allSubscriptionsPromise,
+					timeoutPromise
+				]) as any;
+
+				if (allSubs && allSubs.length > 0) {
+					console.log("All user subscriptions found:", allSubs.map((s: any) => ({
+						id: s.id,
+						status: s.status,
+						created_at: s.created_at,
+						current_period_end: s.current_period_end
+					})));
+				}
+
+				// Now check for active subscriptions only
 				const subscriptionPromise = supabase
 					.from("subscriptions")
 					.select("*")
@@ -134,7 +174,7 @@ export const useSubscription = (): SubscriptionStatus => {
 					.order("created_at", { ascending: false })
 					.limit(1)
 					.maybeSingle();
-				
+
 				const { data, error } = await Promise.race([
 					subscriptionPromise,
 					timeoutPromise
@@ -149,10 +189,33 @@ export const useSubscription = (): SubscriptionStatus => {
 					console.warn("Error checking subscription:", error);
 					setError("Unable to verify subscription status");
 				} else if (data) {
-					console.log("User has active paid subscription - granting access");
+					console.log("User has active paid subscription - granting access", {
+						subscriptionId: data.id,
+						status: data.status,
+						periodEnd: data.current_period_end
+					});
 					hasAccess = true;
 					subscriptionData = data;
+				} else {
+					console.log("No active subscription found for user", user.id);
+					// Check if profile has subscription_status set incorrectly
+					if (profile?.subscription_status === 'active') {
+						console.error("⚠️ MISMATCH: Profile shows active subscription but no active subscription found in database!");
+					}
 				}
+			}
+
+			// Final verification: if profile shows 'canceled' but we found no active subscription
+			// and no trial, ensure hasAccess is false
+			if (profile?.subscription_status === 'canceled' && !hasAccess) {
+				console.log("✅ Correctly blocking access for canceled subscription");
+				hasAccess = false;
+			}
+
+			// Final verification: if profile incorrectly shows 'active' but no subscription found
+			if (profile?.subscription_status === 'active' && !subscriptionData && !hasAccess) {
+				console.error("⚠️ Profile shows active but no subscription found - blocking access");
+				hasAccess = false;
 			}
 
 			// Update state

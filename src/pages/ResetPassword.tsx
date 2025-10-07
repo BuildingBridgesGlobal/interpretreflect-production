@@ -35,22 +35,53 @@ const ResetPassword: React.FC = () => {
 	>({});
 
 	useEffect(() => {
-		// Manually exchange recovery token from URL hash
+		// Manually exchange recovery token from URL
 		// Uses isolated client with sessionStorage to prevent cross-tab leakage
 		const exchangeTokenFromUrl = async () => {
-			// Get the hash fragment from URL
+			// Check both hash params and query params (Supabase can send either)
 			const hashParams = new URLSearchParams(window.location.hash.substring(1));
-			const accessToken = hashParams.get('access_token');
-			const refreshToken = hashParams.get('refresh_token');
-			const type = hashParams.get('type');
+			const queryParams = new URLSearchParams(window.location.search);
 
-			console.log('Reset password page - URL hash:', window.location.hash);
-			console.log('Reset password page - Token type:', type);
-			console.log('Reset password page - Has access token:', !!accessToken);
+			// Try hash params first (PKCE flow)
+			let accessToken = hashParams.get('access_token');
+			let refreshToken = hashParams.get('refresh_token');
+			let type = hashParams.get('type');
 
-			// If this is a recovery (password reset) link
-			if (type === 'recovery' && accessToken) {
+			// If not in hash, check for legacy code flow in query params
+			const code = queryParams.get('code');
+
+			console.log('Reset password page - Full URL:', window.location.href);
+			console.log('Reset password page - Hash params:', window.location.hash);
+			console.log('Reset password page - Query params:', window.location.search);
+			console.log('Reset password page - Code:', code);
+			console.log('Reset password page - Type:', type);
+			console.log('Reset password page - Access token:', !!accessToken);
+
+			// If we have a code parameter, exchange it for a session
+			if (code) {
 				try {
+					console.log('Exchanging code for session...');
+					const { data, error } = await resetPasswordClient.auth.exchangeCodeForSession(code);
+
+					if (error) {
+						console.error('Failed to exchange code:', error);
+						setError("Invalid or expired reset link. Please request a new one.");
+					} else if (!data.session) {
+						setError("Invalid or expired reset link. Please request a new one.");
+					} else {
+						console.log('Session established successfully via code exchange');
+						// Clear the code from URL
+						window.history.replaceState(null, '', window.location.pathname);
+					}
+				} catch (err) {
+					console.error('Error exchanging code:', err);
+					setError("Failed to process reset link. Please try again.");
+				}
+			}
+			// If this is a recovery hash link (PKCE flow)
+			else if (type === 'recovery' && accessToken) {
+				try {
+					console.log('Setting session from hash tokens...');
 					// Exchange tokens using isolated client (sessionStorage only)
 					const { data, error } = await resetPasswordClient.auth.setSession({
 						access_token: accessToken,
@@ -71,12 +102,10 @@ const ResetPassword: React.FC = () => {
 					console.error('Error exchanging token:', err);
 					setError("Failed to process reset link. Please try again.");
 				}
-			} else if (!type && !accessToken) {
-				// Completely missing hash params - invalid direct navigation
+			} else if (!type && !accessToken && !code) {
+				// Completely missing params - invalid direct navigation
 				setError("Invalid or expired reset link. Please request a new one.");
 			}
-			// If there's a partial hash or session already exists, don't show error yet
-			// Let the user try to submit the form and it will validate then
 		};
 		exchangeTokenFromUrl();
 	}, []);

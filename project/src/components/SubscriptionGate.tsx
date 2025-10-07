@@ -31,7 +31,12 @@ export const SubscriptionGate: React.FC<SubscriptionGateProps> = ({
 	];
 	const isPublicRoute = publicRoutes.includes(location.pathname);
 
-	// If still loading, show spinner
+	// If it's a public route, render immediately without any auth checks
+	if (isPublicRoute) {
+		return <>{children}</>;
+	}
+
+	// If still loading (only check for protected routes)
 	if (authLoading || subLoading) {
 		return (
 			<div className="min-h-screen flex items-center justify-center">
@@ -44,12 +49,12 @@ export const SubscriptionGate: React.FC<SubscriptionGateProps> = ({
 	}
 
 	// If not logged in, redirect to signup
-	if (!user && !isPublicRoute) {
+	if (!user) {
 		return <Navigate to="/signup" state={{ from: location }} replace />;
 	}
 
 	// If logged in but no subscription, show subscription required message
-	if (user && !hasActiveSubscription && !isPublicRoute) {
+	if (user && !hasActiveSubscription) {
 		return (
 			<div className="min-h-screen bg-gradient-to-br from-green-50 to-blue-100 flex items-center justify-center px-4">
 				<div className="max-w-md w-full bg-white rounded-xl shadow-lg p-8 text-center">

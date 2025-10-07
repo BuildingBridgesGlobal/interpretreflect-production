@@ -18,14 +18,23 @@ const ResetPassword: React.FC = () => {
 	useEffect(() => {
 		// Simple session check - Supabase handles URL params automatically
 		const checkSession = async () => {
-			// Small delay to let Supabase process any URL params
-			await new Promise(resolve => setTimeout(resolve, 100));
+			console.log('Reset password - Initial URL:', window.location.href);
 
-			const { data: { session } } = await supabase.auth.getSession();
+			// Longer delay to let Supabase process any URL params
+			await new Promise(resolve => setTimeout(resolve, 1000));
+
+			const { data: { session }, error } = await supabase.auth.getSession();
+
+			console.log('Reset password - Session after delay:', {
+				hasSession: !!session,
+				error: error?.message,
+				userId: session?.user?.id
+			});
 
 			if (!session) {
 				// Check if this was accessed via a reset link
 				const hasResetParams = window.location.search || window.location.hash;
+				console.log('Reset password - No session found, has params:', !!hasResetParams);
 				if (!hasResetParams) {
 					setError("Please use the password reset link from your email.");
 				}
@@ -68,15 +77,28 @@ const ResetPassword: React.FC = () => {
 		try {
 			// Double-check we have a valid session before updating
 			const { data: { session } } = await supabase.auth.getSession();
+
+			console.log('Reset password - Form submit session check:', {
+				hasSession: !!session,
+				userId: session?.user?.id,
+				userEmail: session?.user?.email
+			});
+
 			if (!session) {
 				throw new Error("No active session. Please click the reset link from your email again.");
 			}
 
+			console.log('Reset password - Attempting to update password...');
 			const { error } = await supabase.auth.updateUser({
 				password: password,
 			});
 
-			if (error) throw error;
+			if (error) {
+				console.error('Reset password - Update error:', error);
+				throw error;
+			}
+
+			console.log('Reset password - Password updated successfully');
 
 			setSuccess(true);
 			// Redirect to login page after success

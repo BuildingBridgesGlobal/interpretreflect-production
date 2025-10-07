@@ -12,11 +12,12 @@ const supabaseAnonKey =
 
 // Create isolated Supabase client for reset password page ONLY
 // Uses sessionStorage to prevent cross-tab session leakage
+// Enables detectSessionInUrl to automatically handle password reset tokens
 const resetPasswordClient = createClient(supabaseUrl, supabaseAnonKey, {
 	auth: {
 		autoRefreshToken: false,
 		persistSession: true,
-		detectSessionInUrl: false,
+		detectSessionInUrl: true, // Enable to auto-detect recovery tokens in URL
 		storage: window.sessionStorage, // CRITICAL: sessionStorage isolates to this tab only
 		storageKey: "supabase.reset.token",
 		flowType: "pkce",
@@ -35,79 +36,35 @@ const ResetPassword: React.FC = () => {
 	>({});
 
 	useEffect(() => {
-		// Manually exchange recovery token from URL
-		// Uses isolated client with sessionStorage to prevent cross-tab leakage
-		const exchangeTokenFromUrl = async () => {
-			// Check both hash params and query params (Supabase can send either)
-			const hashParams = new URLSearchParams(window.location.hash.substring(1));
-			const queryParams = new URLSearchParams(window.location.search);
-
-			// Try hash params first (PKCE flow)
-			let accessToken = hashParams.get('access_token');
-			let refreshToken = hashParams.get('refresh_token');
-			let type = hashParams.get('type');
-
-			// If not in hash, check for legacy code flow in query params
-			const code = queryParams.get('code');
-
+		// Wait for Supabase client to automatically process URL tokens
+		// detectSessionInUrl is enabled, so it will handle code exchange automatically
+		const checkSession = async () => {
 			console.log('Reset password page - Full URL:', window.location.href);
-			console.log('Reset password page - Hash params:', window.location.hash);
-			console.log('Reset password page - Query params:', window.location.search);
-			console.log('Reset password page - Code:', code);
-			console.log('Reset password page - Type:', type);
-			console.log('Reset password page - Access token:', !!accessToken);
 
-			// If we have a code parameter, exchange it for a session
-			if (code) {
-				try {
-					console.log('Exchanging code for session...');
-					const { data, error } = await resetPasswordClient.auth.exchangeCodeForSession(code);
+			// Give Supabase a moment to process the URL
+			await new Promise(resolve => setTimeout(resolve, 500));
 
-					if (error) {
-						console.error('Failed to exchange code:', error);
-						setError("Invalid or expired reset link. Please request a new one.");
-					} else if (!data.session) {
-						setError("Invalid or expired reset link. Please request a new one.");
-					} else {
-						console.log('Session established successfully via code exchange');
-						// Clear the code from URL
-						window.history.replaceState(null, '', window.location.pathname);
-					}
-				} catch (err) {
-					console.error('Error exchanging code:', err);
-					setError("Failed to process reset link. Please try again.");
-				}
-			}
-			// If this is a recovery hash link (PKCE flow)
-			else if (type === 'recovery' && accessToken) {
-				try {
-					console.log('Setting session from hash tokens...');
-					// Exchange tokens using isolated client (sessionStorage only)
-					const { data, error } = await resetPasswordClient.auth.setSession({
-						access_token: accessToken,
-						refresh_token: refreshToken || '',
-					});
+			// Check if we have a valid session after auto-processing
+			const { data: { session }, error } = await resetPasswordClient.auth.getSession();
 
-					if (error) {
-						console.error('Failed to set session:', error);
-						setError("Invalid or expired reset link. Please request a new one.");
-					} else if (!data.session) {
-						setError("Invalid or expired reset link. Please request a new one.");
-					} else {
-						console.log('Session established successfully for password reset');
-					}
-					// Clear the hash to avoid reprocessing
-					window.history.replaceState(null, '', window.location.pathname);
-				} catch (err) {
-					console.error('Error exchanging token:', err);
-					setError("Failed to process reset link. Please try again.");
-				}
-			} else if (!type && !accessToken && !code) {
-				// Completely missing params - invalid direct navigation
+			console.log('Reset password page - Session check:', {
+				hasSession: !!session,
+				error: error?.message
+			});
+
+			// Only show error if we're missing both URL params AND session
+			const hasUrlParams = window.location.search.includes('code') ||
+								window.location.hash.includes('access_token');
+
+			if (!session && !hasUrlParams) {
+				setError("Invalid or expired reset link. Please request a new one.");
+			} else if (!session && hasUrlParams) {
+				// Has params but no session - token exchange might have failed
 				setError("Invalid or expired reset link. Please request a new one.");
 			}
 		};
-		exchangeTokenFromUrl();
+
+		checkSession();
 	}, []);
 
 	const validatePassword = (pass: string) => {

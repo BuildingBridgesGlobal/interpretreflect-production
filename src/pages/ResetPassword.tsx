@@ -2,27 +2,7 @@ import { ArrowRight, Check, Loader2 } from "lucide-react";
 import type React from "react";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { createClient } from "@supabase/supabase-js";
-
-// Supabase credentials
-const supabaseUrl =
-	import.meta.env.VITE_SUPABASE_URL || "https://placeholder.supabase.co";
-const supabaseAnonKey =
-	import.meta.env.VITE_SUPABASE_ANON_KEY || "placeholder-key";
-
-// Create isolated Supabase client for reset password page ONLY
-// Uses sessionStorage to prevent cross-tab session leakage
-// Enables detectSessionInUrl to automatically handle password reset tokens
-const resetPasswordClient = createClient(supabaseUrl, supabaseAnonKey, {
-	auth: {
-		autoRefreshToken: false,
-		persistSession: true,
-		detectSessionInUrl: true, // Enable to auto-detect recovery tokens in URL
-		storage: window.sessionStorage, // CRITICAL: sessionStorage isolates to this tab only
-		storageKey: "supabase.reset.token",
-		flowType: "pkce",
-	},
-});
+import { supabase } from "../lib/supabase";
 
 const ResetPassword: React.FC = () => {
 	const navigate = useNavigate();
@@ -36,31 +16,19 @@ const ResetPassword: React.FC = () => {
 	>({});
 
 	useEffect(() => {
-		// Wait for Supabase client to automatically process URL tokens
-		// detectSessionInUrl is enabled, so it will handle code exchange automatically
+		// Simple session check - Supabase handles URL params automatically
 		const checkSession = async () => {
-			console.log('Reset password page - Full URL:', window.location.href);
+			// Small delay to let Supabase process any URL params
+			await new Promise(resolve => setTimeout(resolve, 100));
 
-			// Give Supabase a moment to process the URL
-			await new Promise(resolve => setTimeout(resolve, 500));
+			const { data: { session } } = await supabase.auth.getSession();
 
-			// Check if we have a valid session after auto-processing
-			const { data: { session }, error } = await resetPasswordClient.auth.getSession();
-
-			console.log('Reset password page - Session check:', {
-				hasSession: !!session,
-				error: error?.message
-			});
-
-			// Only show error if we're missing both URL params AND session
-			const hasUrlParams = window.location.search.includes('code') ||
-								window.location.hash.includes('access_token');
-
-			if (!session && !hasUrlParams) {
-				setError("Invalid or expired reset link. Please request a new one.");
-			} else if (!session && hasUrlParams) {
-				// Has params but no session - token exchange might have failed
-				setError("Invalid or expired reset link. Please request a new one.");
+			if (!session) {
+				// Check if this was accessed via a reset link
+				const hasResetParams = window.location.search || window.location.hash;
+				if (!hasResetParams) {
+					setError("Please use the password reset link from your email.");
+				}
 			}
 		};
 
@@ -99,20 +67,18 @@ const ResetPassword: React.FC = () => {
 		setLoading(true);
 		try {
 			// Double-check we have a valid session before updating
-			const { data: { session } } = await resetPasswordClient.auth.getSession();
+			const { data: { session } } = await supabase.auth.getSession();
 			if (!session) {
 				throw new Error("No active session. Please click the reset link from your email again.");
 			}
 
-			const { error } = await resetPasswordClient.auth.updateUser({
+			const { error } = await supabase.auth.updateUser({
 				password: password,
 			});
 
 			if (error) throw error;
 
 			setSuccess(true);
-			// Clear the sessionStorage token after successful reset
-			sessionStorage.removeItem("supabase.reset.token");
 			// Redirect to login page after success
 			setTimeout(() => {
 				navigate("/");

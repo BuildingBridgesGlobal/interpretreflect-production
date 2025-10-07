@@ -5,6 +5,8 @@ import { useNavigate } from "react-router-dom";
 import { supabase } from "../lib/supabase";
 
 const ResetPassword: React.FC = () => {
+	console.log('🔥🔥🔥 ResetPassword component RENDERING');
+
 	const navigate = useNavigate();
 	const [password, setPassword] = useState("");
 	const [confirmPassword, setConfirmPassword] = useState("");
@@ -16,6 +18,7 @@ const ResetPassword: React.FC = () => {
 	>({});
 
 	useEffect(() => {
+		console.log('🔥🔥🔥 useEffect RUNNING');
 		let mounted = true;
 
 		// Manually exchange code from URL if present

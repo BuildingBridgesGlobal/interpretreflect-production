@@ -58,6 +58,12 @@ const ResetPassword: React.FC = () => {
 
 		setLoading(true);
 		try {
+			// Double-check we have a valid session before updating
+			const { data: { session } } = await supabase.auth.getSession();
+			if (!session) {
+				throw new Error("No active session. Please click the reset link from your email again.");
+			}
+
 			const { error } = await supabase.auth.updateUser({
 				password: password,
 			});
@@ -70,6 +76,7 @@ const ResetPassword: React.FC = () => {
 				navigate("/");
 			}, 2000);
 		} catch (err: any) {
+			console.error("Password reset error:", err);
 			setError(err.message || "Failed to reset password");
 		} finally {
 			setLoading(false);

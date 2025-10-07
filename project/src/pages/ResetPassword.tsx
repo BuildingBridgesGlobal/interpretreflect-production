@@ -33,46 +33,62 @@ const ResetPassword: React.FC = () => {
 	useEffect(() => {
 		// Check if user has access to this page (came from email link)
 		const checkAccess = async () => {
+			console.log("🔍 Password reset: Checking access on page load");
 			try {
 				// Get URL parameters
 				const urlParams = new URLSearchParams(window.location.search);
 				const code = urlParams.get('code');
+				console.log("🔗 Password reset: URL code parameter:", code ? "Present" : "Not present");
 
 				// Also check hash params (Supabase sometimes uses hash)
 				const hashParams = new URLSearchParams(window.location.hash.substring(1));
 				const accessToken = hashParams.get('access_token');
 				const type = hashParams.get('type');
+				console.log("🔗 Password reset: Hash parameters:", {
+					hasAccessToken: !!accessToken,
+					type: type
+				});
 
 				// If we have a code parameter or recovery token, this is valid
 				if (code || (type === 'recovery' && accessToken)) {
-					console.log('Password reset: Valid reset link detected');
+					console.log('✅ Password reset: Valid reset link detected');
 
 					// Exchange the code for a session if we have one
 					if (code) {
 						try {
-							const { error } = await resetSupabase.auth.exchangeCodeForSession(code);
+							console.log("🔄 Password reset: Exchanging code for session...");
+							const { data, error } = await resetSupabase.auth.exchangeCodeForSession(code);
+							console.log("📊 Password reset: Exchange result:", { data, error });
 							if (error) {
-								console.error('Error exchanging code:', error);
+								console.error('❌ Error exchanging code:', error);
 								setError("Invalid or expired reset link. Please request a new one.");
 								return;
 							}
+							console.log("✅ Password reset: Code exchanged successfully");
 						} catch (err) {
-							console.error('Failed to exchange code:', err);
+							console.error('💥 Failed to exchange code:', err);
 						}
 					}
 
 					// Clear the URL to prevent re-processing and avoid multi-tab issues
+					console.log("🧹 Password reset: Clearing URL parameters");
 					window.history.replaceState(null, '', window.location.pathname);
+
+					// Final session check
+					const { data: { session } } = await resetSupabase.auth.getSession();
+					console.log("✨ Password reset: Final session check:", session ? "Session established" : "No session");
 					return; // Allow password reset
 				}
 
 				// Otherwise check for existing recovery session
+				console.log("🔍 Password reset: Checking for existing session...");
 				const { data: { session } } = await resetSupabase.auth.getSession();
+				console.log("📊 Password reset: Existing session check:", session ? "Session found" : "No session");
 				if (!session) {
 					setError("Invalid or expired reset link. Please request a new one.");
 				}
 			} catch (err) {
-				console.error('Error checking reset access:', err);
+				console.error('💥 Error checking reset access:', err);
 				setError("An error occurred. Please request a new reset link.");
 			}
 		};
@@ -88,6 +104,7 @@ const ResetPassword: React.FC = () => {
 
 	const handleResetPassword = async (e: React.FormEvent) => {
 		e.preventDefault();
+		console.log("🔄 Password reset: Starting password reset process");
 		setError("");
 		setValidationErrors({});
 
@@ -105,28 +122,50 @@ const ResetPassword: React.FC = () => {
 
 		if (Object.keys(errors).length > 0) {
 			setValidationErrors(errors);
+			console.log("❌ Password reset: Validation errors:", errors);
 			return;
 		}
 
 		setLoading(true);
+		console.log("✅ Password reset: Validation passed, updating password...");
+
 		try {
-			const { error } = await resetSupabase.auth.updateUser({
+			// First, check if we have a session
+			const { data: { session }, error: sessionError } = await resetSupabase.auth.getSession();
+			console.log("📊 Password reset: Current session status:", session ? "Session exists" : "No session", sessionError);
+
+			console.log("🔐 Password reset: Calling updateUser with new password");
+			const { data, error } = await resetSupabase.auth.updateUser({
 				password: password,
 			});
 
-			if (error) throw error;
+			console.log("📝 Password reset: Update response:", { data, error });
+
+			if (error) {
+				console.error("❌ Password reset: Update failed:", error);
+				throw error;
+			}
+
+			console.log("✅ Password reset: Password updated successfully");
 
 			// Immediately sign out to clear the recovery session
 			// This prevents auth conflicts with other open tabs
-			await resetSupabase.auth.signOut();
+			console.log("🚪 Password reset: Signing out to clear recovery session");
+			const { error: signOutError } = await resetSupabase.auth.signOut();
+			if (signOutError) {
+				console.warn("⚠️ Password reset: Sign out warning:", signOutError);
+			}
 
+			console.log("🎉 Password reset: Process completed successfully");
 			setSuccess(true);
 
 			// User will manually navigate to sign in
 			// This ensures clean auth state
 		} catch (err: any) {
+			console.error("💥 Password reset: Fatal error:", err);
 			setError(err.message || "Failed to reset password");
 		} finally {
+			console.log("🏁 Password reset: Setting loading to false");
 			setLoading(false);
 		}
 	};

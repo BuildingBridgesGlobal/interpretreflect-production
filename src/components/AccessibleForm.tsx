@@ -141,6 +141,7 @@ export const AccessibleForm: React.FC<AccessibleFormProps> = ({ type, onSubmit }
             type="text"
             required
             autoComplete="name"
+            autoFocus={type === 'signup'}
             aria-required="true"
             aria-invalid={!!errors.name}
             aria-describedby={errors.name ? 'name-error' : undefined}
@@ -174,6 +175,11 @@ export const AccessibleForm: React.FC<AccessibleFormProps> = ({ type, onSubmit }
           type="email"
           required
           autoComplete="email"
+          autoFocus={type === 'login'}
+          inputMode="email"
+          autoCapitalize="none"
+          autoCorrect="off"
+          spellCheck={false}
           aria-required="true"
           aria-invalid={!!errors.email}
           aria-describedby={errors.email ? 'email-error' : 'email-hint'}
@@ -269,8 +275,9 @@ export const AccessibleForm: React.FC<AccessibleFormProps> = ({ type, onSubmit }
             </label>
           </div>
           <a 
-            href="#" 
+            href="/reset-password" 
             className="text-sm text-sage-600 hover:text-sage-500 underline focus:outline-none focus:ring-2 focus:ring-sage-500 rounded"
+            aria-label="Reset your password"
           >
             Forgot your password?
           </a>

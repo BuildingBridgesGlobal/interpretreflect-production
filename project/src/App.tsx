@@ -26,6 +26,10 @@ import {
 import React, { lazy, useEffect, useRef, useState, Suspense, startTransition } from "react";
 import { Route, Routes, useNavigate } from "react-router-dom";
 import ResetPassword from "./pages/ResetPassword";
+import ResetPasswordManual from "./pages/ResetPasswordManual";
+import ForgotPasswordSimple from "./pages/ForgotPasswordSimple";
+import ForgotPassword from "./pages/ForgotPassword";
+import EnterResetCode from "./pages/EnterResetCode";
 import { AffirmationReflectionStudio } from "./components/AffirmationReflectionStudio";
 import AffirmationStudioAccessible from "./components/AffirmationStudioAccessible";
 import { AgenticFlowChat } from "./components/AgenticFlowChat";
@@ -9727,6 +9731,8 @@ function App() {
 				<Route path="/signup" element={<SeamlessSignup />} />
 				<Route path="/payment-success" element={<PaymentSuccess />} />
 				<Route path="/reset-password" element={<ResetPassword />} />
+				<Route path="/forgot-password" element={<ForgotPassword />} />
+				<Route path="/enter-reset-code" element={<EnterResetCode />} />
 				<Route
 					path="/landing"
 					element={
@@ -9771,6 +9777,8 @@ function App() {
 				<Route path="/header-demo" element={<HeaderDemo />} />
 				<Route path="/payment-success" element={<PaymentSuccess />} />
 				<Route path="/reset-password" element={<ResetPassword />} />
+				<Route path="/forgot-password" element={<ForgotPassword />} />
+				<Route path="/enter-reset-code" element={<EnterResetCode />} />
 				<Route
 					path="/landing"
 					element={

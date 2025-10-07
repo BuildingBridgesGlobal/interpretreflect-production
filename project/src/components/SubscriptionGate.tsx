@@ -22,6 +22,8 @@ export const SubscriptionGate: React.FC<SubscriptionGateProps> = ({
 		"/signup",
 		"/login",
 		"/reset-password", // Add password reset as public route
+		"/forgot-password", // New forgot password page
+		"/enter-reset-code", // New code entry page
 		"/pricing",
 		"/about",
 		"/contact",

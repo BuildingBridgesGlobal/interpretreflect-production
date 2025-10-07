@@ -13,11 +13,12 @@ if (
 	console.warn("Missing Supabase credentials. Running in demo mode.");
 }
 
-// Create Supabase client - sessions do not persist, users must sign in each time
+// Create Supabase client with session persistence
+// Sessions persist in localStorage but will be checked for validity
 export const supabase = createClient(supabaseUrl, supabaseAnonKey, {
 	auth: {
-		autoRefreshToken: false,
-		persistSession: false,
+		autoRefreshToken: true,
+		persistSession: true,
 		detectSessionInUrl: true,
 		storage: window.localStorage,
 		storageKey: "supabase.auth.token",

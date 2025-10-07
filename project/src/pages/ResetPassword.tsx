@@ -2,7 +2,13 @@ import { ArrowRight, Check, Loader2 } from "lucide-react";
 import type React from "react";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { supabase } from "../lib/supabase";
+import { createClient } from "@supabase/supabase-js";
+
+// Create a separate Supabase client for password reset to avoid auth conflicts
+const resetSupabase = createClient(
+	import.meta.env.VITE_SUPABASE_URL || "",
+	import.meta.env.VITE_SUPABASE_ANON_KEY || ""
+);
 
 const ResetPassword: React.FC = () => {
 	const navigate = useNavigate();
@@ -35,7 +41,7 @@ const ResetPassword: React.FC = () => {
 					// Exchange the code for a session if we have one
 					if (code) {
 						try {
-							const { error } = await supabase.auth.exchangeCodeForSession(code);
+							const { error } = await resetSupabase.auth.exchangeCodeForSession(code);
 							if (error) {
 								console.error('Error exchanging code:', error);
 								setError("Invalid or expired reset link. Please request a new one.");
@@ -52,7 +58,7 @@ const ResetPassword: React.FC = () => {
 				}
 
 				// Otherwise check for existing recovery session
-				const { data: { session } } = await supabase.auth.getSession();
+				const { data: { session } } = await resetSupabase.auth.getSession();
 				if (!session) {
 					setError("Invalid or expired reset link. Please request a new one.");
 				}
@@ -95,7 +101,7 @@ const ResetPassword: React.FC = () => {
 
 		setLoading(true);
 		try {
-			const { error } = await supabase.auth.updateUser({
+			const { error } = await resetSupabase.auth.updateUser({
 				password: password,
 			});
 
@@ -103,7 +109,7 @@ const ResetPassword: React.FC = () => {
 
 			// Immediately sign out to clear the recovery session
 			// This prevents auth conflicts with other open tabs
-			await supabase.auth.signOut();
+			await resetSupabase.auth.signOut();
 
 			setSuccess(true);
 
@@ -171,6 +177,7 @@ const ResetPassword: React.FC = () => {
 								</label>
 								<input
 									type="password"
+									autoComplete="new-password"
 									value={password}
 									onChange={(e) => {
 										setPassword(e.target.value);
@@ -202,6 +209,7 @@ const ResetPassword: React.FC = () => {
 								</label>
 								<input
 									type="password"
+									autoComplete="new-password"
 									value={confirmPassword}
 									onChange={(e) => {
 										setConfirmPassword(e.target.value);

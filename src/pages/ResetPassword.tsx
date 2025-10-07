@@ -130,7 +130,7 @@ const ResetPassword: React.FC = () => {
 						Interpret<span className="text-gray-600">Reflect</span>
 					</h1>
 					<h2 className="text-2xl font-bold text-gray-900">
-						Create New Password
+						Create New Password v2
 					</h2>
 					<p className="text-gray-600 mt-2">
 						Enter your new password below

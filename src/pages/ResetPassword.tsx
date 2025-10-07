@@ -18,38 +18,47 @@ const ResetPassword: React.FC = () => {
 	useEffect(() => {
 		let mounted = true;
 
-		// Listen for auth state changes (this catches the session from URL)
-		const { data: { subscription } } = supabase.auth.onAuthStateChange(async (event, session) => {
-			if (!mounted) return;
+		// Manually exchange code from URL if present
+		const exchangeCode = async () => {
+			const params = new URLSearchParams(window.location.search);
+			const code = params.get('code');
 
-			console.log('Reset password - Auth event:', event, {
-				hasSession: !!session,
-				userId: session?.user?.id
-			});
+			console.log('🔥 Reset password page loaded');
+			console.log('🔥 URL:', window.location.href);
+			console.log('🔥 Code from URL:', code);
 
-			// When password recovery session is established, we're ready
-			if (event === 'PASSWORD_RECOVERY' || (event === 'SIGNED_IN' && session)) {
-				console.log('Reset password - Session ready for password update');
+			if (code) {
+				console.log('🔥 Found code, attempting to exchange...');
+				try {
+					const { data, error } = await supabase.auth.exchangeCodeForSession(code);
+
+					if (error) {
+						console.error('🔥 Code exchange ERROR:', error);
+						setError('Failed to verify reset link. Please request a new one.');
+					} else {
+						console.log('🔥 Code exchange SUCCESS! Session:', {
+							hasSession: !!data.session,
+							userId: data.session?.user?.id
+						});
+					}
+				} catch (err) {
+					console.error('🔥 Code exchange EXCEPTION:', err);
+					setError('Failed to verify reset link. Please request a new one.');
+				}
+			} else {
+				console.log('🔥 No code in URL, checking for existing session...');
+				const { data: { session } } = await supabase.auth.getSession();
+				console.log('🔥 Existing session check:', {
+					hasSession: !!session,
+					userId: session?.user?.id
+				});
 			}
-		});
-
-		// Also check current session immediately
-		const checkSession = async () => {
-			console.log('Reset password - Initial URL:', window.location.href);
-
-			const { data: { session }, error } = await supabase.auth.getSession();
-
-			console.log('Reset password - Initial session check:', {
-				hasSession: !!session,
-				error: error?.message
-			});
 		};
 
-		checkSession();
+		exchangeCode();
 
 		return () => {
 			mounted = false;
-			subscription.unsubscribe();
 		};
 	}, []);
 

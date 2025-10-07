@@ -13,15 +13,15 @@ if (
 	console.warn("Missing Supabase credentials. Running in demo mode.");
 }
 
-// Create Supabase client with session storage
-// Sessions use sessionStorage, so users must log in each browser session
+// Create Supabase client with localStorage for password reset compatibility
 // detectSessionInUrl is enabled to handle password reset and magic links
+// Using localStorage temporarily to fix password reset flow
 export const supabase = createClient(supabaseUrl, supabaseAnonKey, {
 	auth: {
 		autoRefreshToken: true,
 		persistSession: true,
 		detectSessionInUrl: true,
-		storage: window.sessionStorage,
+		storage: window.localStorage,
 		storageKey: "supabase.auth.token",
 		flowType: "pkce",
 	},

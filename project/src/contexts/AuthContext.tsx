@@ -110,6 +110,25 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
 
 				// Only try to get user if we have a session
 				if (session?.user) {
+					// SECURITY FIX: Check subscription status before allowing access
+					const { data: subscriptions } = await supabase
+						.from('subscriptions')
+						.select('status')
+						.eq('user_id', session.user.id)
+						.eq('status', 'active')
+						.limit(1);
+
+					// If user has NO active subscription, sign them out immediately
+					if (!subscriptions || subscriptions.length === 0) {
+						console.warn('User has no active subscription - signing out');
+						await supabase.auth.signOut();
+						setUser(null);
+						setUserRole(SECURITY_CONFIG.rbac.defaultRole);
+						setNeedsTermsAcceptance(false);
+						setLoading(false);
+						return;
+					}
+
 					setUser(session.user);
 					// Start session manager
 					sessionManager.startSession();
@@ -174,6 +193,24 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
 				setLoading(false);
 
 					if (event === "SIGNED_IN" && session?.user) {
+						// SECURITY FIX: Check subscription status before allowing access
+						const { data: subscriptions } = await supabase
+							.from('subscriptions')
+							.select('status')
+							.eq('user_id', session.user.id)
+							.eq('status', 'active')
+							.limit(1);
+
+						// If user has NO active subscription, sign them out immediately
+						if (!subscriptions || subscriptions.length === 0) {
+							console.warn('User has no active subscription - signing out');
+							await supabase.auth.signOut();
+							setUser(null);
+							setUserRole(SECURITY_CONFIG.rbac.defaultRole);
+							setNeedsTermsAcceptance(false);
+							return;
+						}
+
 						sessionManager.startSession();
 						const role = session.user.email?.includes("admin")
 							? "admin"
@@ -207,6 +244,44 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
 				authListener.subscription.unsubscribe();
 			};
 		}
+
+		// SECURITY FIX: Set up real-time subscription monitoring
+		// Monitor for subscription status changes and sign out users if their subscription is canceled
+		let subscriptionChannel: any;
+		if (!isDevMode && !isPasswordResetPage) {
+			subscriptionChannel = supabase
+				.channel('subscription-status-monitor')
+				.on(
+					'postgres_changes',
+					{
+						event: 'UPDATE',
+						schema: 'public',
+						table: 'subscriptions',
+					},
+					async (payload: any) => {
+						// Check if this update affects the current user
+						const { data: { user: currentUser } } = await supabase.auth.getUser();
+
+						if (currentUser && payload.new.user_id === currentUser.id) {
+							console.log('Subscription status changed for current user:', payload.new.status);
+
+							// If subscription is no longer active, sign user out immediately
+							if (payload.new.status !== 'active') {
+								console.warn('Subscription became inactive - signing out user immediately');
+								await supabase.auth.signOut();
+								window.location.href = '/signup?reason=subscription_expired';
+							}
+						}
+					}
+				)
+				.subscribe();
+		}
+
+		return () => {
+			if (subscriptionChannel) {
+				subscriptionChannel.unsubscribe();
+			}
+		};
 	}, []);
 
 	const signIn = async (

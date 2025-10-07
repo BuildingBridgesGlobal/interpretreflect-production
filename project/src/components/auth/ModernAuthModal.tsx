@@ -176,8 +176,9 @@ export const ModernAuthModal: React.FC<ModernAuthModalProps> = ({
 					{/* Close button */}
 					<button
 						onClick={onClose}
-						className="absolute top-4 right-4 p-2 bg-white border-2 rounded-lg hover:bg-gray-50 transition-colors"
+						className="absolute top-4 right-4 p-2 bg-white border-2 rounded-lg font-semibold transition-all hover:bg-[#F5F5DC]"
 						style={{ borderColor: "#2D5F3F" }}
+						aria-label="Close modal"
 					>
 						<X className="w-5 h-5" style={{ color: "#2D5F3F" }} />
 					</button>

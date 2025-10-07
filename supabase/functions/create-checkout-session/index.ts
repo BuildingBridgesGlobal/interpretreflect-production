@@ -88,6 +88,7 @@ serve(async (req) => {
       subscription_data: {
         metadata: {
           user_id: userId || '',
+          ...metadata, // Pass all metadata to subscription for webhook access
         },
         trial_period_days: 3,
       },

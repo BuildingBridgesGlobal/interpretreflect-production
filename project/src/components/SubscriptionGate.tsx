@@ -65,17 +65,17 @@ export const SubscriptionGate: React.FC<SubscriptionGateProps> = ({
 							<Lock className="w-12 h-12 text-red-600" />
 						</div>
 						<h1 className="text-2xl font-bold text-gray-900 mb-2">
-							Subscription Required
+							No Active Subscription
 						</h1>
 						<p className="text-gray-600">
-							You need an active subscription to access this platform.
+							Your subscription has expired or been cancelled.
 						</p>
 					</div>
 
 					<div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4 mb-6">
 						<p className="text-sm text-yellow-800">
-							Your account exists but you haven't completed your subscription.
-							Please complete your payment to access all features.
+							To continue using InterpretReflect, please subscribe or reactivate your subscription.
+							You'll regain access to all premium features immediately.
 						</p>
 					</div>
 
@@ -88,7 +88,7 @@ export const SubscriptionGate: React.FC<SubscriptionGateProps> = ({
 						}}
 					>
 						<CreditCard className="w-5 h-5" />
-						Complete Subscription
+						Subscribe Now
 					</button>
 
 					<button
@@ -101,6 +101,17 @@ export const SubscriptionGate: React.FC<SubscriptionGateProps> = ({
 					>
 						Sign out and return to homepage
 					</button>
+
+					<p className="mt-4 text-xs text-gray-500">
+						Need help? Contact us at{" "}
+						<a
+							href="mailto:hello@huviatechnologies.com"
+							className="hover:underline"
+							style={{ color: "#2D5F3F" }}
+						>
+							hello@huviatechnologies.com
+						</a>
+					</p>
 				</div>
 			</div>
 		);

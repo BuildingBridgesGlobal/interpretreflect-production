@@ -20,6 +20,15 @@ export function TrialSignup() {
   const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
   const [touched, setTouched] = useState<Record<string, boolean>>({});
 
+  // Check if user was redirected due to subscription expiration
+  const [showExpirationMessage, setShowExpirationMessage] = useState(false);
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    if (params.get('reason') === 'subscription_expired') {
+      setShowExpirationMessage(true);
+    }
+  }, []);
+
   // Redirect if already logged in
   useEffect(() => {
     if (user) {
@@ -175,70 +184,55 @@ export function TrialSignup() {
     setError('');
 
     try {
-      // Step 1: Create account
-      await signUp(email, password);
+      // SECURITY FIX: Don't create account yet - redirect to payment first
+      // Account will be created by webhook after successful payment
 
-      // Step 2: Get the new user
-      const { data: { user: newUser } } = await supabase.auth.getUser();
+      // Track analytics (trial intent)
+      analytics.trackTrialStart();
 
-      if (newUser) {
-        // Step 3: Update profile with name
-        await supabase
-          .from('profiles')
-          .update({
-            full_name: name,
-            updated_at: new Date().toISOString()
-          })
-          .eq('id', newUser.id);
-
-        // Step 4: Start trial
-        const { data: trialData, error: trialError } = await supabase.rpc('start_user_trial', {
-          user_id: newUser.id
-        });
-
-        if (trialError) throw trialError;
-
-        // Step 5: Track analytics
-        analytics.trackTrialStart();
-
-        // Step 6: Add to Encharge
-        await enchargeService.handleTrialSignup(email, newUser.id, name);
-
-        // Step 7: Log trial event
-        await supabase
-          .from('subscription_events')
-          .insert({
-            user_id: newUser.id,
-            event_type: 'trial_started',
+      // Create Stripe checkout session with signup data in metadata
+      const { data, error: checkoutError } = await supabase.functions.invoke(
+        'create-checkout-session',
+        {
+          body: {
+            priceId: 'price_1S37dPIouyG60O9hzikj2c9h', // Monthly price ID
+            email: email.toLowerCase().trim(),
+            userId: null, // No user yet
             metadata: {
-              source: 'trial_signup_page',
-              trial_duration_days: 3
+              is_new_signup: 'true',
+              signup_email: email.toLowerCase().trim(),
+              signup_password: password, // Will be securely handled by webhook
+              full_name: name,
+              plan: 'essential',
+              source: 'trial_signup_page'
             }
-          });
+          },
+        }
+      );
 
-        setSuccess(true);
+      if (checkoutError) throw checkoutError;
 
-        // Redirect after 3 seconds to the main app
-        setTimeout(() => {
-          navigate('/');
-        }, 3000);
+      // Redirect to Stripe Checkout
+      if (data?.url) {
+        window.location.href = data.url;
+      } else {
+        throw new Error('Failed to create checkout session');
       }
     } catch (err: any) {
       console.error('Trial signup error:', err);
-      setError(err.message || 'Failed to start trial. Please try again.');
-    } finally {
+      setError(err.message || 'Failed to start checkout. Please try again.');
       setLoading(false);
     }
   };
 
   const features = [
     'Instant Access to All Premium Features',
-    'No Credit Card Required',
-    '3 Full Days of Unlimited Access',
+    '3-Day Free Trial Included',
     'AI Wellness Companion Elya Included',
     'Your AI wellness companion for instant reflection support',
     'Cancel Anytime, No Questions Asked',
-    'Essential Tier After Trial: $12.99/Month'
+    'Only $12.99/Month After Trial',
+    'Secure Payment via Stripe'
   ];
 
 
@@ -423,6 +417,15 @@ export function TrialSignup() {
                         <p className="text-lg font-semibold text-gray-700">Creating your account...</p>
                         <p className="text-sm text-gray-500 mt-2">This will only take a moment</p>
                       </div>
+                    </div>
+                  )}
+
+                  {showExpirationMessage && (
+                    <div className="mb-6 p-4 bg-blue-50 border border-blue-200 rounded-lg">
+                      <p className="text-blue-800 text-sm font-semibold mb-1">Your subscription has expired</p>
+                      <p className="text-blue-700 text-sm">
+                        Please renew your subscription to continue accessing InterpretReflect. You'll get immediate access after payment.
+                      </p>
                     </div>
                   )}
 
@@ -627,11 +630,11 @@ export function TrialSignup() {
                           <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
                           <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                         </svg>
-                        <span className="font-bold">Starting Your Trial...</span>
+                        <span className="font-bold">Redirecting to Checkout...</span>
                       </div>
                     ) : (
                       <div className="flex items-center gap-2 relative z-10">
-                        <span>START MY FREE TRIAL</span>
+                        <span>CONTINUE TO CHECKOUT</span>
                         <ArrowRight className="w-6 h-6" />
                       </div>
                     )}

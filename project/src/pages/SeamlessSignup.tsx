@@ -109,126 +109,61 @@ const PaymentForm: React.FC<{
 	const handleSubmit = async (e: React.FormEvent) => {
 		e.preventDefault();
 
-		if (!stripe || !elements) return;
-
 		setProcessing(true);
 		setError("");
 
 		try {
-			// Create payment method first
-			const cardElement = elements.getElement(CardElement);
-			if (!cardElement) {
-				throw new Error("Card element not found");
-			}
+			// SECURITY FIX: Don't create accounts in frontend
+			// Use Stripe Checkout Session instead with metadata
+			// Account will be created by webhook after successful payment
 
-			const { error: pmError, paymentMethod } =
-				await stripe.createPaymentMethod({
-					type: "card",
-					card: cardElement,
-					billing_details: {
-						email,
-						name,
-					},
-				});
+			const priceId = 'price_1S37dPIouyG60O9hzikj2c9h'; // Monthly price
+			const { supabase } = await import("../lib/supabase");
 
-			if (pmError) {
-				throw pmError;
-			}
-
-			// For now, simulate successful payment (in production, you'd verify with Stripe)
-			console.log("Payment method created:", paymentMethod.id);
-
-			// If user already exists (Google SSO), just update their subscription status
-			if (isGoogleSSO && userId) {
-				// Update user metadata with payment info
-				const { error: updateError } = await supabase.auth.updateUser({
-					data: {
-						stripe_payment_method_id: paymentMethod.id,
-						subscription_plan: plan,
-						subscription_status: 'active',
-					},
-				});
-
-				if (updateError) {
-					throw new Error(`Failed to update subscription: ${updateError.message}`);
-				}
-
-				// Create subscription record in database
-				const { error: subError } = await supabase
-					.from('subscriptions')
-					.insert({
-						user_id: userId,
-						status: 'active',
-						plan: plan,
-						stripe_payment_method_id: paymentMethod.id,
-					});
-
-				if (subError) {
-					console.error('Failed to create subscription record:', subError);
-				}
-			} else {
-				// Email signup - create the account after successful payment
-				const { data: signupData, error: signupError } =
-					await supabase.auth.signUp({
+			// Create checkout session with signup data in metadata
+			const { data, error: checkoutError } = await supabase.functions.invoke(
+				'create-checkout-session',
+				{
+					body: {
+						priceId: priceId,
 						email: email.toLowerCase().trim(),
-						password: password, // Use the password passed from step 1
-						options: {
-							data: {
-								full_name: name,
-								stripe_payment_method_id: paymentMethod.id,
-								subscription_plan: plan,
-								subscription_status: 'active',
-							},
-						},
-					});
-
-				if (signupError) {
-					throw new Error(`Failed to create account: ${signupError.message}`);
-				}
-
-				// Sign them in immediately
-				if (signupData?.user) {
-					const { error: signInError } = await supabase.auth.signInWithPassword({
-						email: email.toLowerCase().trim(),
-						password: password,
-					});
-
-					if (signInError) {
-						console.error("Could not auto sign in:", signInError);
-					}
-
-					// Create subscription record
-					const { error: subError } = await supabase
-						.from('subscriptions')
-						.insert({
-							user_id: signupData.user.id,
-							status: 'active',
+						userId: userId || null,
+						metadata: {
+							is_new_signup: isGoogleSSO ? 'false' : 'true',
+							signup_email: email.toLowerCase().trim(),
+							signup_password: isGoogleSSO ? '' : password, // Only for new signups
+							full_name: name,
 							plan: plan,
-							stripe_payment_method_id: paymentMethod.id,
-						});
-
-					if (subError) {
-						console.error('Failed to create subscription record:', subError);
-					}
+							source: 'seamless_signup_page',
+							existing_user_id: userId || ''
+						}
+					},
 				}
+			);
+
+			if (checkoutError) throw checkoutError;
+
+			// Redirect to Stripe Checkout
+			if (data?.url) {
+				// Track analytics before redirect
+				if (analytics.trackSubscriptionIntent) {
+					analytics.trackSubscriptionIntent(plan);
+				}
+
+				// Set privacy consent to prevent modal from appearing after payment
+				const consentData = {
+					timestamp: Date.now(),
+					version: "1.0",
+					gdpr: true,
+					hipaa: true,
+					fromSignup: true,
+				};
+				localStorage.setItem("privacyConsent", JSON.stringify(consentData));
+
+				window.location.href = data.url;
+			} else {
+				throw new Error('Failed to create checkout session');
 			}
-
-			// Track successful conversion
-			if (analytics.trackSubscriptionSuccess) {
-				analytics.trackSubscriptionSuccess(plan, 12.99);
-			}
-
-			// Set privacy consent to prevent modal from appearing
-			const consentData = {
-				timestamp: Date.now(),
-				version: "1.0",
-				gdpr: true,
-				hipaa: true,
-				fromSignup: true,
-			};
-			localStorage.setItem("privacyConsent", JSON.stringify(consentData));
-
-			onSuccess();
 		} catch (err: any) {
 			setError(err.message || "Payment failed. Please try again.");
 			setProcessing(false);
@@ -237,36 +172,6 @@ const PaymentForm: React.FC<{
 
 	return (
 		<form onSubmit={handleSubmit} className="space-y-6">
-			<div>
-				<label className="block text-sm font-medium text-gray-700 mb-2">
-					Card Information
-				</label>
-				<div
-					className="p-4 border rounded-lg focus-within:ring-2 focus-within:border-transparent transition-all"
-					style={
-						{ "--tw-ring-color": "#2D5F3F" } as React.CSSProperties
-					}
-				>
-					<CardElement
-						options={{
-							style: {
-								base: {
-									fontSize: "16px",
-									color: "#424770",
-									"::placeholder": {
-										color: "#aab7c4",
-									},
-								},
-								invalid: {
-									color: "#9e2146",
-								},
-							},
-						}}
-						onChange={(e) => setCardComplete(e.complete)}
-					/>
-				</div>
-			</div>
-
 			{/* Security badges */}
 			<div className="flex items-center justify-center gap-4 py-4 bg-gray-50 rounded-lg">
 				<div className="flex items-center gap-1 text-sm text-gray-600">
@@ -277,6 +182,13 @@ const PaymentForm: React.FC<{
 					<Lock className="w-4 h-4" style={{ color: "#2D5F3F" }} />
 					<span>PCI Compliant</span>
 				</div>
+			</div>
+
+			<div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+				<p className="text-sm text-blue-800">
+					You'll be redirected to Stripe's secure checkout to complete your payment.
+					Your account will be created automatically after successful payment.
+				</p>
 			</div>
 
 			{error && (
@@ -304,11 +216,11 @@ const PaymentForm: React.FC<{
 
 				<button
 					type="submit"
-					disabled={!stripe || processing || !cardComplete}
+					disabled={processing}
 					className="flex-1 px-6 py-3 rounded-lg font-semibold text-white transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
 					style={{
 						background:
-							processing || !cardComplete
+							processing
 								? "#ccc"
 								: "linear-gradient(135deg, #2D5F3F, rgb(107, 142, 94))",
 					}}
@@ -316,11 +228,11 @@ const PaymentForm: React.FC<{
 					{processing ? (
 						<>
 							<Loader2 className="w-5 h-5 animate-spin" />
-							Processing...
+							Redirecting to Checkout...
 						</>
 					) : (
 						<>
-							Complete Sign Up
+							Continue to Payment
 							<ArrowRight className="w-5 h-5" />
 						</>
 					)}

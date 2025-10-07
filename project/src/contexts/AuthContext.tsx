@@ -111,14 +111,15 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
 				// Only try to get user if we have a session
 				if (session?.user) {
 					// SECURITY FIX: Check subscription status before allowing access
+					// Allow 'active', 'trialing', or 'past_due' (grace period)
 					const { data: subscriptions } = await supabase
 						.from('subscriptions')
 						.select('status')
 						.eq('user_id', session.user.id)
-						.eq('status', 'active')
+						.in('status', ['active', 'trialing', 'past_due'])
 						.limit(1);
 
-					// If user has NO active subscription, sign them out immediately
+					// If user has NO active/valid subscription, sign them out immediately
 					if (!subscriptions || subscriptions.length === 0) {
 						console.warn('User has no active subscription - signing out');
 						await supabase.auth.signOut();
@@ -194,14 +195,15 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
 
 					if (event === "SIGNED_IN" && session?.user) {
 						// SECURITY FIX: Check subscription status before allowing access
+						// Allow 'active', 'trialing', or 'past_due' (grace period)
 						const { data: subscriptions } = await supabase
 							.from('subscriptions')
 							.select('status')
 							.eq('user_id', session.user.id)
-							.eq('status', 'active')
+							.in('status', ['active', 'trialing', 'past_due'])
 							.limit(1);
 
-						// If user has NO active subscription, sign them out immediately
+						// If user has NO active/valid subscription, sign them out immediately
 						if (!subscriptions || subscriptions.length === 0) {
 							console.warn('User has no active subscription - signing out');
 							await supabase.auth.signOut();
@@ -265,8 +267,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
 						if (currentUser && payload.new.user_id === currentUser.id) {
 							console.log('Subscription status changed for current user:', payload.new.status);
 
-							// If subscription is no longer active, sign user out immediately
-							if (payload.new.status !== 'active') {
+							// If subscription is no longer valid (canceled, incomplete, etc.), sign user out
+							const validStatuses = ['active', 'trialing', 'past_due'];
+							if (!validStatuses.includes(payload.new.status)) {
 								console.warn('Subscription became inactive - signing out user immediately');
 								await supabase.auth.signOut();
 								window.location.href = '/signup?reason=subscription_expired';

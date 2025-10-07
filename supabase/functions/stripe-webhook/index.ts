@@ -3,7 +3,7 @@ import Stripe from 'https://esm.sh/stripe@13.10.0?target=deno'
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.39.0'
 
 const stripe = new Stripe(Deno.env.get('STRIPE_SECRET_KEY') || '', {
-  apiVersion: '2023-10-16',
+  apiVersion: '2024-11-20.acacia',
 })
 
 const supabaseAdmin = createClient(
@@ -42,12 +42,25 @@ async function sendToEncharge(userId: string, eventType: string, eventData: any,
   }
 }
 
+const corsHeaders = {
+  'Access-Control-Allow-Origin': '*',
+  'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type, stripe-signature',
+}
+
 serve(async (req) => {
+  // Handle CORS preflight requests
+  if (req.method === 'OPTIONS') {
+    return new Response('ok', { headers: corsHeaders })
+  }
+
   const signature = req.headers.get('stripe-signature')
   const webhookSecret = Deno.env.get('STRIPE_WEBHOOK_SECRET')
 
   if (!signature || !webhookSecret) {
-    return new Response('Webhook Error: Missing signature or secret', { status: 400 })
+    return new Response('Webhook Error: Missing signature or secret', {
+      status: 400,
+      headers: corsHeaders
+    })
   }
 
   try {
@@ -387,11 +400,14 @@ serve(async (req) => {
     }
 
     return new Response(JSON.stringify({ received: true }), {
-      headers: { 'Content-Type': 'application/json' },
+      headers: { ...corsHeaders, 'Content-Type': 'application/json' },
       status: 200,
     })
   } catch (err) {
     console.error(`Webhook Error: ${err.message}`)
-    return new Response(`Webhook Error: ${err.message}`, { status: 400 })
+    return new Response(`Webhook Error: ${err.message}`, {
+      status: 400,
+      headers: corsHeaders
+    })
   }
 })

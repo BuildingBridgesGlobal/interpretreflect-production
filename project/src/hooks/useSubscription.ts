@@ -28,11 +28,12 @@ export const useSubscription = (): SubscriptionStatus => {
 
 		try {
 			// Check for active subscription in database
+			// Allow 'active', 'trialing', or 'past_due' (grace period)
 			const { data, error } = await supabase
 				.from("subscriptions")
 				.select("*")
 				.eq("user_id", user.id)
-				.eq("status", "active")
+				.in("status", ["active", "trialing", "past_due"])
 				.order("created_at", { ascending: false })
 				.limit(1)
 				.maybeSingle();

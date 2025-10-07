@@ -4,11 +4,11 @@ import "./utils/unregisterServiceWorker";
 import { testSupabaseAccess } from "./utils/testSupabaseAccess";
 import { testBurnoutDirectly } from "./utils/testBurnoutDirectly";
 import { testBurnoutComplete } from "./utils/testBurnoutComplete";
+import { initializeMobileOptimizations } from "./utils/mobileOptimization";
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import { BrowserRouter } from "react-router-dom";
 import { Analytics } from "@vercel/analytics/react";
-import { SpeedInsights } from "@vercel/speed-insights/react";
 
 import App from "./App.tsx";
 import { ErrorBoundary } from "./components/ErrorBoundary";
@@ -29,6 +29,10 @@ if (import.meta.env.PROD) {
 }
 
 console.log("Main.tsx is loading...");
+
+// Initialize mobile optimizations
+initializeMobileOptimizations();
+
 const rootElement = document.getElementById("root");
 console.log("Root element found:", rootElement);
 

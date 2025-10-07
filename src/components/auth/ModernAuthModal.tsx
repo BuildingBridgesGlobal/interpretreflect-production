@@ -204,7 +204,7 @@ export const ModernAuthModal: React.FC<ModernAuthModalProps> = ({
 				/>
 
 				{/* Modal */}
-				<div className="relative bg-white rounded-2xl shadow-2xl max-w-md w-full p-8 transform transition-all">
+				<div className="mobile-modal relative bg-white rounded-2xl shadow-2xl max-w-md w-full p-4 sm:p-8 transform transition-all">
 					{/* Close button */}
 					<button
 						onClick={onClose}
@@ -269,7 +269,7 @@ export const ModernAuthModal: React.FC<ModernAuthModalProps> = ({
 												setValidationErrors({});
 											}}
 											placeholder="Email address"
-											className={`w-full px-4 py-3 border rounded-xl focus:outline-none focus:ring-2 focus:border-transparent transition-all ${
+											className={`mobile-input w-full px-4 py-3 border rounded-xl focus:outline-none focus:ring-2 focus:border-transparent transition-all ${
 												validationErrors.email
 													? "border-red-500"
 													: "border-gray-300"
@@ -291,7 +291,7 @@ export const ModernAuthModal: React.FC<ModernAuthModalProps> = ({
 									<button
 										type="submit"
 										disabled={loading}
-										className="w-full flex items-center justify-center gap-2 px-4 py-3 text-white rounded-xl font-semibold transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+										className="mobile-button w-full flex items-center justify-center gap-2 px-4 py-3 text-white rounded-xl font-semibold transition-all disabled:opacity-50 disabled:cursor-not-allowed"
 										style={{
 											background: loading ? "#9CA3AF" : "#5C7F4F",
 										}}
@@ -351,7 +351,7 @@ export const ModernAuthModal: React.FC<ModernAuthModalProps> = ({
 												setValidationErrors({});
 											}}
 											placeholder="Email address"
-											className={`w-full px-4 py-3 border rounded-xl focus:outline-none focus:ring-2 focus:border-transparent transition-all ${
+											className={`mobile-input w-full px-4 py-3 border rounded-xl focus:outline-none focus:ring-2 focus:border-transparent transition-all ${
 												validationErrors.email
 													? "border-red-500"
 													: "border-gray-300"
@@ -379,7 +379,7 @@ export const ModernAuthModal: React.FC<ModernAuthModalProps> = ({
 												setValidationErrors({});
 											}}
 											placeholder="Password"
-											className={`w-full px-4 py-3 border rounded-xl focus:outline-none focus:ring-2 focus:border-transparent transition-all ${
+											className={`mobile-input w-full px-4 py-3 border rounded-xl focus:outline-none focus:ring-2 focus:border-transparent transition-all ${
 												validationErrors.password
 													? "border-red-500"
 													: "border-gray-300"
@@ -401,7 +401,7 @@ export const ModernAuthModal: React.FC<ModernAuthModalProps> = ({
 									<button
 										type="submit"
 										disabled={loading}
-										className="w-full flex items-center justify-center gap-2 px-4 py-3 text-white rounded-xl font-semibold transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+										className="mobile-button w-full flex items-center justify-center gap-2 px-4 py-3 text-white rounded-xl font-semibold transition-all disabled:opacity-50 disabled:cursor-not-allowed"
 										style={{
 											background: loading ? "#9CA3AF" : "#5C7F4F",
 										}}

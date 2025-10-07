@@ -22,6 +22,23 @@ export const NavigationTabs: React.FC<NavigationTabsProps> = ({
 			className="px-4 sm:px-6 lg:px-8 py-3"
 			style={{ backgroundColor: "#FAFAF8" }}
 		>
+			{/* Mobile-optimized styles */}
+			<style>{`
+				.scrollbar-hide {
+					-ms-overflow-style: none;
+					scrollbar-width: none;
+				}
+				.scrollbar-hide::-webkit-scrollbar {
+					display: none;
+				}
+				@media (max-width: 640px) {
+					.nav-tab-button {
+						min-width: 44px;
+						min-height: 44px;
+						touch-action: manipulation;
+					}
+				}
+			`}</style>
 			<nav
 				role="navigation"
 				aria-label="Main navigation"
@@ -33,8 +50,12 @@ export const NavigationTabs: React.FC<NavigationTabsProps> = ({
 				}}
 			>
 				<ul
-					className="flex justify-center space-x-2 list-none m-0 p-0"
+					className="flex justify-center space-x-1 sm:space-x-2 list-none m-0 p-0 overflow-x-auto scrollbar-hide"
 					role="tablist"
+					style={{
+						scrollbarWidth: 'none',
+						msOverflowStyle: 'none',
+					}}
 				>
 					{tabs.map((tab) => (
 						<li key={tab.id} role="presentation">
@@ -44,7 +65,7 @@ export const NavigationTabs: React.FC<NavigationTabsProps> = ({
 									e.stopPropagation();
 									setActiveTab(tab.id);
 								}}
-								className={`flex items-center px-5 py-3 text-base font-medium transition-all duration-300 rounded-full ${
+								className={`nav-tab-button flex items-center px-3 sm:px-5 py-2 sm:py-3 text-sm sm:text-base font-medium transition-all duration-300 rounded-full whitespace-nowrap ${
 									activeTab === tab.id ? "shadow-md" : ""
 								}`}
 								role="tab"
@@ -70,21 +91,6 @@ export const NavigationTabs: React.FC<NavigationTabsProps> = ({
 								}}
 							>
 								{tab.label}
-								{tab.badge && (
-									<span
-										className="ml-1.5 px-1.5 py-0.5 text-xs font-medium rounded-full"
-										style={{
-											backgroundColor:
-												activeTab === tab.id
-													? "rgba(255, 255, 255, 0.3)"
-													: "rgba(156, 163, 175, 0.15)",
-											color: activeTab === tab.id ? "#FFFFFF" : "#6B7280",
-											fontSize: "9px",
-										}}
-									>
-										{tab.badge}
-									</span>
-								)}
 							</button>
 						</li>
 					))}

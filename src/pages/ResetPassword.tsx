@@ -110,9 +110,11 @@ const ResetPassword: React.FC = () => {
 			console.log('Reset password - Password updated successfully');
 
 			setSuccess(true);
-			// Redirect to login page after success
-			setTimeout(() => {
-				navigate("/");
+
+			// Sign out the recovery session and redirect to login
+			setTimeout(async () => {
+				await supabase.auth.signOut();
+				window.location.href = "/";
 			}, 2000);
 		} catch (err: any) {
 			console.error("Password reset error:", err);

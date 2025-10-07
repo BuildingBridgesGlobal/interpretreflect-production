@@ -86,7 +86,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
 
 				// Add timeout to prevent infinite loading
 				const timeoutPromise = new Promise((_, reject) =>
-					setTimeout(() => reject(new Error('Auth initialization timeout')), 5000)
+					setTimeout(() => reject(new Error('Auth initialization timeout')), 10000)
 				);
 
 				// Just get current session - don't manually refresh

@@ -11,6 +11,7 @@ const ResetPassword: React.FC = () => {
 	const [loading, setLoading] = useState(false);
 	const [error, setError] = useState("");
 	const [success, setSuccess] = useState(false);
+	const [redirectCountdown, setRedirectCountdown] = useState(3);
 	const [validationErrors, setValidationErrors] = useState<
 		Record<string, string>
 	>({});
@@ -64,12 +65,18 @@ const ResetPassword: React.FC = () => {
 
 			if (error) throw error;
 
-			// Sign out the recovery session immediately after password update
-			// This prevents auth state issues when redirecting
-			await supabase.auth.signOut();
-
 			setSuccess(true);
-			// Don't auto-redirect - let user click button when ready
+
+			// Start countdown and redirect
+			let countdown = 3;
+			const countdownInterval = setInterval(() => {
+				countdown--;
+				setRedirectCountdown(countdown);
+				if (countdown <= 0) {
+					clearInterval(countdownInterval);
+					window.location.href = "/dashboard";
+				}
+			}, 1000);
 		} catch (err: any) {
 			setError(err.message || "Failed to reset password");
 		} finally {
@@ -103,16 +110,24 @@ const ResetPassword: React.FC = () => {
 							Password Reset Successfully!
 						</h3>
 						<p className="text-gray-600 mb-6">
-							Your password has been updated. You can now sign in with your new password.
+							Your password has been updated successfully.
 						</p>
-						<button
-							onClick={() => window.location.href = "/"}
-							className="w-full flex items-center justify-center gap-2 px-4 py-3 text-white rounded-xl font-semibold transition-all hover:opacity-90"
-							style={{ background: "#2D5F3F" }}
-						>
-							Go to Sign In
-							<ArrowRight className="w-5 h-5" />
-						</button>
+						<div className="space-y-4">
+							<div className="flex items-center justify-center gap-2">
+								<Loader2 className="w-5 h-5 animate-spin text-gray-600" />
+								<p className="text-gray-600">
+									Redirecting to dashboard in {redirectCountdown}...
+								</p>
+							</div>
+							<button
+								onClick={() => window.location.href = "/dashboard"}
+								className="w-full flex items-center justify-center gap-2 px-4 py-3 text-white rounded-xl font-semibold transition-all hover:opacity-90"
+								style={{ background: "#2D5F3F" }}
+							>
+								Go to Dashboard Now
+								<ArrowRight className="w-5 h-5" />
+							</button>
+						</div>
 					</div>
 				) : (
 					<form onSubmit={handleResetPassword}>

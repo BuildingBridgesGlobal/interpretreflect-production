@@ -109,13 +109,10 @@ const ResetPassword: React.FC = () => {
 
 			console.log('Reset password - Password updated successfully');
 
-			setSuccess(true);
+			// Sign out the recovery session immediately
+			await supabase.auth.signOut();
 
-			// Sign out the recovery session and redirect to login
-			setTimeout(async () => {
-				await supabase.auth.signOut();
-				window.location.href = "/";
-			}, 2000);
+			setSuccess(true);
 		} catch (err: any) {
 			console.error("Password reset error:", err);
 			setError(err.message || "Failed to reset password");
@@ -149,9 +146,16 @@ const ResetPassword: React.FC = () => {
 						<h3 className="text-xl font-semibold text-gray-900 mb-2">
 							Password Reset Successfully!
 						</h3>
-						<p className="text-gray-600">
-							Redirecting you to the app...
+						<p className="text-gray-600 mb-4">
+							Your password has been updated. You can now sign in with your new password.
 						</p>
+						<button
+							onClick={() => window.location.href = "/"}
+							className="px-6 py-3 rounded-lg font-semibold text-white transition-all"
+							style={{ background: "#5C7F4F" }}
+						>
+							Go to Sign In
+						</button>
 					</div>
 				) : (
 					<form onSubmit={handleResetPassword}>

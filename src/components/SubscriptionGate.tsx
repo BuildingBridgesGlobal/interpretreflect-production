@@ -21,6 +21,7 @@ export const SubscriptionGate: React.FC<SubscriptionGateProps> = ({
 		"/",
 		"/signup",
 		"/login",
+		"/reset-password",
 		"/pricing",
 		"/about",
 		"/contact",

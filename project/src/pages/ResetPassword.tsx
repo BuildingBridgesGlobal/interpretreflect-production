@@ -5,9 +5,18 @@ import { useNavigate } from "react-router-dom";
 import { createClient } from "@supabase/supabase-js";
 
 // Create a separate Supabase client for password reset to avoid auth conflicts
+// IMPORTANT: Disable session persistence to prevent multi-tab conflicts
 const resetSupabase = createClient(
 	import.meta.env.VITE_SUPABASE_URL || "",
-	import.meta.env.VITE_SUPABASE_ANON_KEY || ""
+	import.meta.env.VITE_SUPABASE_ANON_KEY || "",
+	{
+		auth: {
+			persistSession: false, // Don't persist session across tabs
+			autoRefreshToken: false, // Don't auto-refresh
+			detectSessionInUrl: true, // Still detect the recovery token
+			storage: undefined, // No storage = no persistence
+		}
+	}
 );
 
 const ResetPassword: React.FC = () => {

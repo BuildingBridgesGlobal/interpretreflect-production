@@ -20,6 +20,7 @@ const resetSupabase = createClient(
 );
 
 const ResetPassword: React.FC = () => {
+	console.log("🚀🚀🚀 ResetPassword Component v2.1 LOADED - Debug Build 🚀🚀🚀");
 	const navigate = useNavigate();
 	const [password, setPassword] = useState("");
 	const [confirmPassword, setConfirmPassword] = useState("");
@@ -184,6 +185,7 @@ const ResetPassword: React.FC = () => {
 					<p className="text-gray-600 mt-2">
 						Enter your new password below
 					</p>
+					<p className="text-xs text-gray-400 mt-1">v2.1 - Debug</p>
 				</div>
 
 				{success ? (

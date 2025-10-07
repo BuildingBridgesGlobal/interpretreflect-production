@@ -16,15 +16,19 @@ const ResetPassword: React.FC = () => {
 	>({});
 
 	useEffect(() => {
-		// Check if user has access to this page (came from email link)
-		const checkAccess = async () => {
+		// Handle the password recovery token from the email link
+		// Supabase automatically exchanges the token in the URL hash for a session
+		const handleRecoveryToken = async () => {
+			// Wait a moment for Supabase to process the hash fragment
+			await new Promise(resolve => setTimeout(resolve, 500));
+
 			const { data: { session } } = await supabase.auth.getSession();
 			if (!session) {
 				// No valid session from email link
 				setError("Invalid or expired reset link. Please request a new one.");
 			}
 		};
-		checkAccess();
+		handleRecoveryToken();
 	}, []);
 
 	const validatePassword = (pass: string) => {

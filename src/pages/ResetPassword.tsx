@@ -44,6 +44,10 @@ const ResetPassword: React.FC = () => {
 			const refreshToken = hashParams.get('refresh_token');
 			const type = hashParams.get('type');
 
+			console.log('Reset password page - URL hash:', window.location.hash);
+			console.log('Reset password page - Token type:', type);
+			console.log('Reset password page - Has access token:', !!accessToken);
+
 			// If this is a recovery (password reset) link
 			if (type === 'recovery' && accessToken) {
 				try {
@@ -58,6 +62,8 @@ const ResetPassword: React.FC = () => {
 						setError("Invalid or expired reset link. Please request a new one.");
 					} else if (!data.session) {
 						setError("Invalid or expired reset link. Please request a new one.");
+					} else {
+						console.log('Session established successfully for password reset');
 					}
 					// Clear the hash to avoid reprocessing
 					window.history.replaceState(null, '', window.location.pathname);
@@ -65,13 +71,12 @@ const ResetPassword: React.FC = () => {
 					console.error('Error exchanging token:', err);
 					setError("Failed to process reset link. Please try again.");
 				}
-			} else {
-				// No recovery token in URL, check if already has session
-				const { data: { session } } = await resetPasswordClient.auth.getSession();
-				if (!session) {
-					setError("Invalid or expired reset link. Please request a new one.");
-				}
+			} else if (!type && !accessToken) {
+				// Completely missing hash params - invalid direct navigation
+				setError("Invalid or expired reset link. Please request a new one.");
 			}
+			// If there's a partial hash or session already exists, don't show error yet
+			// Let the user try to submit the form and it will validate then
 		};
 		exchangeTokenFromUrl();
 	}, []);

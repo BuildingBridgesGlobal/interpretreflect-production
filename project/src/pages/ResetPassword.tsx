@@ -19,23 +19,41 @@ const ResetPassword: React.FC = () => {
 		// Check if user has access to this page (came from email link)
 		const checkAccess = async () => {
 			try {
-				// Get the current URL hash/params to check for recovery token
+				// Get URL parameters
+				const urlParams = new URLSearchParams(window.location.search);
+				const code = urlParams.get('code');
+
+				// Also check hash params (Supabase sometimes uses hash)
 				const hashParams = new URLSearchParams(window.location.hash.substring(1));
 				const accessToken = hashParams.get('access_token');
 				const type = hashParams.get('type');
 
-				// If this is a recovery link, handle it specially
-				if (type === 'recovery' && accessToken) {
-					console.log('Password reset: Recovery session detected');
-					// Clear the URL to prevent re-processing
+				// If we have a code parameter or recovery token, this is valid
+				if (code || (type === 'recovery' && accessToken)) {
+					console.log('Password reset: Valid reset link detected');
+
+					// Exchange the code for a session if we have one
+					if (code) {
+						try {
+							const { error } = await supabase.auth.exchangeCodeForSession(code);
+							if (error) {
+								console.error('Error exchanging code:', error);
+								setError("Invalid or expired reset link. Please request a new one.");
+								return;
+							}
+						} catch (err) {
+							console.error('Failed to exchange code:', err);
+						}
+					}
+
+					// Clear the URL to prevent re-processing and avoid multi-tab issues
 					window.history.replaceState(null, '', window.location.pathname);
-					return; // Recovery session is valid, allow password reset
+					return; // Allow password reset
 				}
 
-				// Otherwise check for existing session
+				// Otherwise check for existing recovery session
 				const { data: { session } } = await supabase.auth.getSession();
 				if (!session) {
-					// No valid session from email link
 					setError("Invalid or expired reset link. Please request a new one.");
 				}
 			} catch (err) {

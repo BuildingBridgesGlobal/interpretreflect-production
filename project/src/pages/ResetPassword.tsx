@@ -18,10 +18,29 @@ const ResetPassword: React.FC = () => {
 	useEffect(() => {
 		// Check if user has access to this page (came from email link)
 		const checkAccess = async () => {
-			const { data: { session } } = await supabase.auth.getSession();
-			if (!session) {
-				// No valid session from email link
-				setError("Invalid or expired reset link. Please request a new one.");
+			try {
+				// Get the current URL hash/params to check for recovery token
+				const hashParams = new URLSearchParams(window.location.hash.substring(1));
+				const accessToken = hashParams.get('access_token');
+				const type = hashParams.get('type');
+
+				// If this is a recovery link, handle it specially
+				if (type === 'recovery' && accessToken) {
+					console.log('Password reset: Recovery session detected');
+					// Clear the URL to prevent re-processing
+					window.history.replaceState(null, '', window.location.pathname);
+					return; // Recovery session is valid, allow password reset
+				}
+
+				// Otherwise check for existing session
+				const { data: { session } } = await supabase.auth.getSession();
+				if (!session) {
+					// No valid session from email link
+					setError("Invalid or expired reset link. Please request a new one.");
+				}
+			} catch (err) {
+				console.error('Error checking reset access:', err);
+				setError("An error occurred. Please request a new reset link.");
 			}
 		};
 		checkAccess();
@@ -64,17 +83,14 @@ const ResetPassword: React.FC = () => {
 
 			if (error) throw error;
 
-			// First, refresh the session to convert recovery session to normal session
-			const { data: refreshData, error: refreshError } = await supabase.auth.refreshSession();
-
-			if (refreshError) {
-				console.error("Failed to refresh session after password reset:", refreshError);
-			}
+			// Immediately sign out to clear the recovery session
+			// This prevents auth conflicts with other open tabs
+			await supabase.auth.signOut();
 
 			setSuccess(true);
 
-			// Don't auto-redirect - let user manually navigate when ready
-			// This avoids auth state conflicts
+			// User will manually navigate to sign in
+			// This ensures clean auth state
 		} catch (err: any) {
 			setError(err.message || "Failed to reset password");
 		} finally {
@@ -112,9 +128,8 @@ const ResetPassword: React.FC = () => {
 						</p>
 						<div className="space-y-3">
 							<button
-								onClick={async () => {
-									// Sign out the recovery session before redirecting
-									await supabase.auth.signOut();
+								onClick={() => {
+									// Navigate to sign in page
 									// Use replace to prevent back button issues
 									window.location.replace("/");
 								}}

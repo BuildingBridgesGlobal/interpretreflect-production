@@ -9,7 +9,7 @@ import { analytics } from '../utils/analytics';
 
 export function TrialSignup() {
   const navigate = useNavigate();
-  const { user, signUp } = useAuth();
+  const { user } = useAuth();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [name, setName] = useState('');

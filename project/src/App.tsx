@@ -30,6 +30,7 @@ import ResetPasswordManual from "./pages/ResetPasswordManual";
 import ForgotPasswordSimple from "./pages/ForgotPasswordSimple";
 import ForgotPassword from "./pages/ForgotPassword";
 import EnterResetCode from "./pages/EnterResetCode";
+import EmailTestPage from "./pages/EmailTestPage";
 import { AffirmationReflectionStudio } from "./components/AffirmationReflectionStudio";
 import AffirmationStudioAccessible from "./components/AffirmationStudioAccessible";
 import { AgenticFlowChat } from "./components/AgenticFlowChat";
@@ -9733,6 +9734,7 @@ function App() {
 				<Route path="/reset-password" element={<ResetPassword />} />
 				<Route path="/forgot-password" element={<ForgotPassword />} />
 				<Route path="/enter-reset-code" element={<EnterResetCode />} />
+				<Route path="/test-email" element={<EmailTestPage />} />
 				<Route
 					path="/landing"
 					element={
@@ -9779,6 +9781,7 @@ function App() {
 				<Route path="/reset-password" element={<ResetPassword />} />
 				<Route path="/forgot-password" element={<ForgotPassword />} />
 				<Route path="/enter-reset-code" element={<EnterResetCode />} />
+				<Route path="/test-email" element={<EmailTestPage />} />
 				<Route
 					path="/landing"
 					element={

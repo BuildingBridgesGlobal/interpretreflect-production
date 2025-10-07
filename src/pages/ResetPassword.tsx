@@ -16,15 +16,45 @@ const ResetPassword: React.FC = () => {
 	>({});
 
 	useEffect(() => {
-		// Check if user has access to this page (came from email link)
-		const checkAccess = async () => {
-			const { data: { session } } = await supabase.auth.getSession();
-			if (!session) {
-				// No valid session from email link
-				setError("Invalid or expired reset link. Please request a new one.");
+		// Manually exchange recovery token from URL hash
+		// This prevents cross-tab session leakage
+		const exchangeTokenFromUrl = async () => {
+			// Get the hash fragment from URL
+			const hashParams = new URLSearchParams(window.location.hash.substring(1));
+			const accessToken = hashParams.get('access_token');
+			const refreshToken = hashParams.get('refresh_token');
+			const type = hashParams.get('type');
+
+			// If this is a recovery (password reset) link
+			if (type === 'recovery' && accessToken) {
+				try {
+					// Exchange the tokens for a session (only in this tab)
+					const { data, error } = await supabase.auth.setSession({
+						access_token: accessToken,
+						refresh_token: refreshToken || '',
+					});
+
+					if (error) {
+						console.error('Failed to set session:', error);
+						setError("Invalid or expired reset link. Please request a new one.");
+					} else if (!data.session) {
+						setError("Invalid or expired reset link. Please request a new one.");
+					}
+					// Clear the hash to avoid reprocessing
+					window.history.replaceState(null, '', window.location.pathname);
+				} catch (err) {
+					console.error('Error exchanging token:', err);
+					setError("Failed to process reset link. Please try again.");
+				}
+			} else {
+				// No recovery token in URL, check if already has session
+				const { data: { session } } = await supabase.auth.getSession();
+				if (!session) {
+					setError("Invalid or expired reset link. Please request a new one.");
+				}
 			}
 		};
-		checkAccess();
+		exchangeTokenFromUrl();
 	}, []);
 
 	const validatePassword = (pass: string) => {

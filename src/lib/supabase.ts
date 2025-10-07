@@ -15,11 +15,13 @@ if (
 
 // Create Supabase client with session persistence
 // Sessions persist in localStorage but will be checked for validity
+// detectSessionInUrl is disabled globally to prevent cross-tab session leakage
+// Individual pages (like reset-password) will handle URL tokens manually
 export const supabase = createClient(supabaseUrl, supabaseAnonKey, {
 	auth: {
 		autoRefreshToken: true,
 		persistSession: true,
-		detectSessionInUrl: true,
+		detectSessionInUrl: false,
 		storage: window.localStorage,
 		storageKey: "supabase.auth.token",
 		flowType: "pkce",

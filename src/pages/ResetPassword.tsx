@@ -2,7 +2,26 @@ import { ArrowRight, Check, Loader2 } from "lucide-react";
 import type React from "react";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { supabase } from "../lib/supabase";
+import { createClient } from "@supabase/supabase-js";
+
+// Supabase credentials
+const supabaseUrl =
+	import.meta.env.VITE_SUPABASE_URL || "https://placeholder.supabase.co";
+const supabaseAnonKey =
+	import.meta.env.VITE_SUPABASE_ANON_KEY || "placeholder-key";
+
+// Create isolated Supabase client for reset password page ONLY
+// Uses sessionStorage to prevent cross-tab session leakage
+const resetPasswordClient = createClient(supabaseUrl, supabaseAnonKey, {
+	auth: {
+		autoRefreshToken: false,
+		persistSession: true,
+		detectSessionInUrl: false,
+		storage: window.sessionStorage, // CRITICAL: sessionStorage isolates to this tab only
+		storageKey: "supabase.reset.token",
+		flowType: "pkce",
+	},
+});
 
 const ResetPassword: React.FC = () => {
 	const navigate = useNavigate();
@@ -17,7 +36,7 @@ const ResetPassword: React.FC = () => {
 
 	useEffect(() => {
 		// Manually exchange recovery token from URL hash
-		// This prevents cross-tab session leakage
+		// Uses isolated client with sessionStorage to prevent cross-tab leakage
 		const exchangeTokenFromUrl = async () => {
 			// Get the hash fragment from URL
 			const hashParams = new URLSearchParams(window.location.hash.substring(1));
@@ -28,8 +47,8 @@ const ResetPassword: React.FC = () => {
 			// If this is a recovery (password reset) link
 			if (type === 'recovery' && accessToken) {
 				try {
-					// Exchange the tokens for a session (only in this tab)
-					const { data, error } = await supabase.auth.setSession({
+					// Exchange tokens using isolated client (sessionStorage only)
+					const { data, error } = await resetPasswordClient.auth.setSession({
 						access_token: accessToken,
 						refresh_token: refreshToken || '',
 					});
@@ -48,7 +67,7 @@ const ResetPassword: React.FC = () => {
 				}
 			} else {
 				// No recovery token in URL, check if already has session
-				const { data: { session } } = await supabase.auth.getSession();
+				const { data: { session } } = await resetPasswordClient.auth.getSession();
 				if (!session) {
 					setError("Invalid or expired reset link. Please request a new one.");
 				}
@@ -89,19 +108,21 @@ const ResetPassword: React.FC = () => {
 		setLoading(true);
 		try {
 			// Double-check we have a valid session before updating
-			const { data: { session } } = await supabase.auth.getSession();
+			const { data: { session } } = await resetPasswordClient.auth.getSession();
 			if (!session) {
 				throw new Error("No active session. Please click the reset link from your email again.");
 			}
 
-			const { error } = await supabase.auth.updateUser({
+			const { error } = await resetPasswordClient.auth.updateUser({
 				password: password,
 			});
 
 			if (error) throw error;
 
 			setSuccess(true);
-			// Redirect to dashboard after success
+			// Clear the sessionStorage token after successful reset
+			sessionStorage.removeItem("supabase.reset.token");
+			// Redirect to login page after success
 			setTimeout(() => {
 				navigate("/");
 			}, 2000);

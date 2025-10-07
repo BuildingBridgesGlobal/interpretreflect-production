@@ -451,7 +451,25 @@ export const ModernAuthModal: React.FC<ModernAuthModalProps> = ({
 										Sign up
 									</button>
 								</p>
-												{/* BETA: Forgot password button temporarily disabled */}
+								<p className="text-sm text-gray-600">
+									Forgot your password?
+									<button
+										onClick={() => setMode("forgot-password")}
+										className="ml-2 px-3 py-1 bg-white border rounded-md font-semibold transition-all"
+										style={{
+											borderColor: "#5C7F4F",
+											color: "#5C7F4F",
+										}}
+										onMouseEnter={(e) => {
+											e.currentTarget.style.backgroundColor = "#F5F5DC";
+										}}
+										onMouseLeave={(e) => {
+											e.currentTarget.style.backgroundColor = "white";
+										}}
+									>
+										Reset password
+									</button>
+								</p>
 							</div>
 
 							{/* Terms notice */}

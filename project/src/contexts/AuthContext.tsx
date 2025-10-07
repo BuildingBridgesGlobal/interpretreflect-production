@@ -64,6 +64,13 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
 	}, []);
 
 	useEffect(() => {
+		// Skip auth initialization entirely for password reset page
+		if (window.location.pathname === '/reset-password') {
+			console.log("AuthContext: Skipping auth for password reset page");
+			setLoading(false);
+			return;
+		}
+
 		// Check active sessions and sets the user
 		const initializeAuth = async () => {
 			console.log("AuthContext: Initializing auth...");
@@ -137,14 +144,22 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
 
 		initializeAuth();
 
-		// Only set up auth listener if Supabase is configured
+		// Only set up auth listener if Supabase is configured AND not on password reset page
 		const isDevMode =
 			!import.meta.env.VITE_SUPABASE_URL ||
 			!import.meta.env.VITE_SUPABASE_ANON_KEY;
-		if (!isDevMode) {
+		const isPasswordResetPage = window.location.pathname === '/reset-password';
+
+		if (!isDevMode && !isPasswordResetPage) {
 			// Listen for changes on auth state (sign in, sign out, etc.)
 			const { data: authListener } = supabase.auth.onAuthStateChange(
 				async (event, session) => {
+					// Skip auth state changes on password reset page
+					if (window.location.pathname === '/reset-password') {
+						console.log("Skipping auth state change on password reset page");
+						return;
+					}
+
 					console.log("Auth state changed:", event, session?.user?.email);
 
 					// Handle token refresh events

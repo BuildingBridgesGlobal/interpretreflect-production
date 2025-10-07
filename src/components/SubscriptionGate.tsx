@@ -13,7 +13,7 @@ export const SubscriptionGate: React.FC<SubscriptionGateProps> = ({
 	children,
 }) => {
 	const { user, loading: authLoading } = useAuth();
-	const { hasActiveSubscription, loading: subLoading } = useSubscription();
+	const { hasActiveSubscription, loading: subLoading, error: subError } = useSubscription();
 	const location = useLocation();
 
 	// Allow access to certain public routes
@@ -30,14 +30,32 @@ export const SubscriptionGate: React.FC<SubscriptionGateProps> = ({
 	];
 	const isPublicRoute = publicRoutes.includes(location.pathname);
 
-	// If still loading, show spinner
+	// If still loading, show improved loading state
 	if (authLoading || subLoading) {
 		return (
-			<div className="min-h-screen flex items-center justify-center">
-				<Loader2
-					className="w-8 h-8 animate-spin"
-					style={{ color: "#5C7F4F" }}
-				/>
+			<div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-green-50 to-blue-100">
+				<div className="text-center">
+					<div className="mb-4">
+						<Loader2
+							className="w-12 h-12 animate-spin mx-auto"
+							style={{ color: "#5C7F4F" }}
+						/>
+					</div>
+					<h2 className="text-xl font-semibold text-gray-800 mb-2">
+						{authLoading ? "Checking authentication..." : "Verifying subscription..."}
+					</h2>
+					<p className="text-gray-600 text-sm">
+						Please wait while we verify your access
+					</p>
+					{/* Show error if subscription check failed */}
+					{subError && (
+						<div className="mt-4 p-3 bg-yellow-50 border border-yellow-200 rounded-lg max-w-md mx-auto">
+							<p className="text-sm text-yellow-800">
+								⚠️ {subError}. You may still be able to access the platform.
+							</p>
+						</div>
+					)}
+				</div>
 			</div>
 		);
 	}

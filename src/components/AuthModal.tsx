@@ -112,10 +112,19 @@ export const AuthModal: React.FC<AuthModalProps> = ({
 				<div className="relative p-6 pb-0">
 					<button
 						onClick={onClose}
-						className="absolute right-4 top-4 p-2 rounded-lg transition-colors hover:bg-gray-100"
+						className="absolute right-4 top-4 p-2 rounded-lg transition-all"
+						style={{
+							background: "linear-gradient(135deg, #5C7F4F, #5B9378)",
+						}}
+						onMouseEnter={(e) => {
+							e.currentTarget.style.background = "linear-gradient(135deg, #6B8E5E, #6AA387)";
+						}}
+						onMouseLeave={(e) => {
+							e.currentTarget.style.background = "linear-gradient(135deg, #5C7F4F, #5B9378)";
+						}}
 						aria-label="Close modal"
 					>
-						<X className="h-5 w-5" style={{ color: "#1A1A1A" }} />
+						<X className="h-5 w-5" style={{ color: "#FFFFFF" }} />
 					</button>
 
 					<h2

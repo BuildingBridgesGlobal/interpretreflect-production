@@ -57,56 +57,54 @@ export const PaymentSuccess: React.FC = () => {
 		);
 	}
 
-	// Show email verification message if user isn't logged in
+	// Show welcome message if user isn't logged in yet
 	if (emailVerificationRequired) {
 		return (
 			<div className="min-h-screen bg-gradient-to-br from-green-50 to-blue-100 flex items-center justify-center px-4">
 				<div className="max-w-md w-full bg-white rounded-xl shadow-lg p-8 text-center">
 					<div className="mb-6">
-						<div className="w-20 h-20 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
-							<Mail
+						<div className="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+							<CheckCircle
 								className="w-12 h-12"
 								style={{ color: "#5C7F4F" }}
 							/>
 						</div>
 						<h1 className="text-3xl font-bold text-gray-900 mb-2">
-							Payment Successful!
+							Welcome to InterpretReflect!
 						</h1>
-						<p className="text-gray-600">One more step to get started</p>
+						<p className="text-gray-600">Thank you for signing up</p>
 					</div>
 
-					<div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-6">
-						<p className="text-sm text-blue-900 font-semibold mb-2">
-							Please verify your email address
-						</p>
-						<p className="text-sm text-blue-800">
-							We've sent a verification email to <strong>{userEmail || "your email address"}</strong>.
-							Click the link in the email to activate your account and access the platform.
+					<div className="bg-green-50 border border-green-200 rounded-lg p-4 mb-6">
+						<p className="text-sm text-gray-800 leading-relaxed">
+							We're excited to help you on your interpreting journey and reduce your likelihood of burnout.
+							Your wellness matters, and we're here to support you every step of the way.
 						</p>
 					</div>
 
 					<div className="bg-gray-50 rounded-lg p-4 mb-6">
-						<p className="text-sm text-gray-700 mb-2">
-							Your subscription is active! Once you verify your email, you'll have full access to all premium features.
+						<p className="text-sm text-gray-700">
+							Your subscription is active! You now have full access to all premium wellness tools designed
+							specifically for interpreters.
 						</p>
 					</div>
 
 					<button
-						onClick={() => navigate("/")}
+						onClick={() => {
+							// Force reload to ensure user session is properly recognized
+							window.location.href = "/";
+						}}
 						className="w-full text-white font-semibold py-3 px-6 rounded-lg flex items-center justify-center"
 						style={{
 							background: "#5C7F4F",
 							cursor: "pointer",
 						}}
 					>
-						Return to Sign In
+						Get Started
 						<ArrowRight className="w-5 h-5 ml-2" />
 					</button>
 
 					<div className="mt-6 pt-6 border-t border-gray-200">
-						<p className="text-xs text-gray-500 mb-2">
-							Didn't receive the email? Check your spam folder or contact support.
-						</p>
 						<p className="text-sm text-gray-500">
 							Need help?{" "}
 							<a
@@ -140,13 +138,13 @@ export const PaymentSuccess: React.FC = () => {
 					<p className="text-gray-600">Welcome to your wellness journey</p>
 				</div>
 
-				<div className="bg-gray-50 rounded-lg p-4 mb-6">
-					<p className="text-sm text-gray-700 mb-2">
-						Thank you for your subscription! You now have full access to all
-						premium features.
+				<div className="bg-green-50 border border-green-200 rounded-lg p-4 mb-6">
+					<p className="text-sm text-gray-800 leading-relaxed mb-2">
+						We're excited to help you on your interpreting journey and reduce your likelihood of burnout.
+						Your wellness matters, and we're here to support you every step of the way.
 					</p>
-					<p className="text-sm text-gray-600">
-						A confirmation email has been sent to {user?.email}
+					<p className="text-sm text-gray-700">
+						You now have full access to all premium wellness tools designed specifically for interpreters.
 					</p>
 				</div>
 

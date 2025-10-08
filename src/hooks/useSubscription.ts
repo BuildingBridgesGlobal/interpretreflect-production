@@ -131,7 +131,12 @@ export const useSubscription = (): SubscriptionStatus => {
 				hasAccess = true;
 				subscriptionData = { admin: true };
 			}
-			// Check trial status
+			// Check trial status - either by subscription_status or trial dates
+			else if (profile?.subscription_status === 'trialing' || profile?.subscription_status === 'trial') {
+				console.log("User has trialing/trial status - granting access");
+				hasAccess = true;
+				subscriptionData = { trial: true, status: profile.subscription_status };
+			}
 			else if (profile?.trial_started_at && profile?.trial_ends_at) {
 				const trialEndDate = new Date(profile.trial_ends_at);
 				const now = new Date();

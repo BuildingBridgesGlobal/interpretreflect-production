@@ -100,10 +100,19 @@ export const ModernAuthModal: React.FC<ModernAuthModalProps> = ({
 					{/* Close button */}
 					<button
 						onClick={onClose}
-						className="absolute top-4 right-4 text-gray-400 hover:text-gray-600 transition-colors"
+						className="absolute top-4 right-4 p-2 rounded-lg transition-all"
+						style={{
+							background: "#5C7F4F",
+						}}
+						onMouseEnter={(e) => {
+							e.currentTarget.style.background = "#6B8E5E";
+						}}
+						onMouseLeave={(e) => {
+							e.currentTarget.style.background = "#5C7F4F";
+						}}
 						aria-label="Close modal"
 					>
-						<X className="w-6 h-6" />
+						<X className="w-6 h-6 text-white" />
 					</button>
 
 					{/* Header */}

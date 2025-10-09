@@ -107,13 +107,10 @@ export async function updateBurnoutAssessmentDirect(userId: string, date: string
   const session = JSON.parse(sessionStr);
 
   try {
-    const startOfDay = new Date(date + "T00:00:00").toISOString();
-    const endOfDay = new Date(date + "T23:59:59").toISOString();
-
-    // Build the update URL with filters
-
+    // Use direct date equality since assessment_date is a DATE column (not timestamp)
+    // Format: YYYY-MM-DD
     const response = await fetch(
-      `${supabaseUrl}/rest/v1/burnout_assessments?user_id=eq.${userId}&assessment_date=gte.${startOfDay}&assessment_date=lte.${endOfDay}`,
+      `${supabaseUrl}/rest/v1/burnout_assessments?user_id=eq.${userId}&assessment_date=eq.${date}`,
       {
         method: "PATCH",
         headers: {

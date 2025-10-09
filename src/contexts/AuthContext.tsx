@@ -4,6 +4,7 @@ import { createContext, useContext, useEffect, useState } from "react";
 
 import { SECURITY_CONFIG } from "../config/security";
 import { supabase } from "../lib/supabase";
+import { setSentryUser, clearSentryUser } from "../lib/sentry";
 import { dataSyncService } from "../services/dataSync";
 import { enchargeService } from "../services/enchargeService";
 import { UserDataLoader } from "../services/userDataLoader";
@@ -118,6 +119,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
 				// Only try to get user if we have a session
 				if (session?.user) {
 					setUser(session.user);
+					// Set Sentry user context for error tracking
+					setSentryUser({ id: session.user.id, email: session.user.email });
 					// Start session manager
 					sessionManager.startSession();
 					// Set user role (in production, fetch from database)
@@ -357,6 +360,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
 
 			// End session
 			sessionManager.endSession("LOGOUT");
+			// Clear Sentry user context
+			clearSentryUser();
 			setUser(null);
 			setUserRole(SECURITY_CONFIG.rbac.defaultRole);
 			setNeedsTermsAcceptance(false);

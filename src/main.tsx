@@ -5,6 +5,7 @@ import { testSupabaseAccess } from "./utils/testSupabaseAccess";
 import { testBurnoutDirectly } from "./utils/testBurnoutDirectly";
 import { testBurnoutComplete } from "./utils/testBurnoutComplete";
 import { initializeMobileOptimizations } from "./utils/mobileOptimization";
+import { initSentry } from "./lib/sentry";
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import { BrowserRouter } from "react-router-dom";
@@ -21,6 +22,9 @@ import "./styles/header.css";
 import "./styles/accessibleColors.css";
 import "./styles/yellowSelection.css";
 import "./styles/icons.css";
+
+// Initialize Sentry error tracking
+initSentry();
 
 // Disable console logs in production for better performance and security
 if (import.meta.env.PROD) {

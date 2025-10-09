@@ -888,6 +888,7 @@ const DailyBurnoutGaugeAccessible: React.FC<DailyBurnoutGaugeProps> = ({
 								<label
 									key={option.value}
 									className="relative flex items-start gap-3 p-4 rounded-xl cursor-pointer transition-all hover:bg-gray-50"
+									onClick={() => handleAnswer(option.value)}
 									style={{
 										backgroundColor:
 											answers[currentQ.id as keyof typeof answers] ===

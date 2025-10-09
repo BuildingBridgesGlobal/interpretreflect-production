@@ -422,13 +422,13 @@ const DailyBurnoutGaugeAccessible: React.FC<DailyBurnoutGaugeProps> = ({
 		console.log("📊 User ID:", user.id);
 
 		try {
-			// Create proper timestamp for assessment_date
-			const assessmentTimestamp = new Date().toISOString();
+			// Get just the date string (YYYY-MM-DD) for the DATE column
+			const assessmentDate = new Date().toISOString().split('T')[0];
 
 			// Prepare data matching exact table structure
 			const saveData = {
 				user_id: user.id,
-				assessment_date: assessmentTimestamp,
+				assessment_date: assessmentDate,
 				burnout_score: results.totalScore, // numeric 0-10
 				risk_level: results.riskLevel, // text: low/moderate/high/severe
 				symptoms: {

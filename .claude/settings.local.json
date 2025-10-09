@@ -39,8 +39,7 @@
       "Bash(echo:*)",
       "Bash(__NEW_LINE__ sleep 3)",
       "Bash(nslookup:*)",
-      "Bash(__NEW_LINE__ sleep 90)",
-      "Bash(npm audit:*)"
+      "Bash(__NEW_LINE__ sleep 90)"
     ],
     "deny": [],
     "ask": []

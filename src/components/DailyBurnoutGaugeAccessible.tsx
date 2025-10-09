@@ -456,11 +456,34 @@ const DailyBurnoutGaugeAccessible: React.FC<DailyBurnoutGaugeProps> = ({
 			console.log("📊 Supabase response:", { savedData, burnoutError });
 
 			if (burnoutError) {
-				console.error("❌ Save/update failed:", burnoutError.message);
+				console.error("❌ Insert failed:", burnoutError.message);
 				console.error("❌ Full error:", burnoutError);
-				alert(`Error saving assessment: ${burnoutError.message}`);
+
+				// Handle duplicate entry for today - silently update
+				if (burnoutError.code === "23505" || burnoutError.needsUpdate) {
+					console.log("📝 Assessment already exists for today, updating instead...");
+
+					// Update existing record for today using direct API
+					const { data: updateData, error: updateError } = await updateBurnoutAssessmentDirect(
+						user.id,
+						results.date,
+						saveData
+					);
+
+					if (updateError) {
+						console.error("Error updating assessment:", updateError);
+						alert("Error updating today's assessment. Please try again.");
+					} else {
+						console.log("✅ Assessment updated successfully:", updateData);
+						// No alert - just log success
+						window.dispatchEvent(new Event("burnout-assessment-saved"));
+					}
+				} else {
+					alert(`Error saving assessment: ${burnoutError.message}`);
+					throw burnoutError;
+				}
 			} else {
-				console.log("✅ Assessment saved/updated successfully:", savedData);
+				console.log("✅ Assessment saved successfully:", savedData);
 				// No alert - just log success
 
 				// Skip verification query to avoid hanging

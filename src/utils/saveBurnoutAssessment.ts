@@ -28,7 +28,8 @@ export async function saveBurnoutAssessmentDirect(saveData: any) {
   console.log("✅ Using session for user:", session.user?.id);
 
   try {
-    // Make direct REST API call to insert
+    // Use UPSERT (INSERT ... ON CONFLICT ... UPDATE) via Prefer: resolution=merge-duplicates
+    // This handles both insert and update in a single operation
     const response = await fetch(
       `${supabaseUrl}/rest/v1/burnout_assessments`,
       {
@@ -37,7 +38,7 @@ export async function saveBurnoutAssessmentDirect(saveData: any) {
           "Content-Type": "application/json",
           "apikey": supabaseKey,
           "Authorization": `Bearer ${session.access_token}`,
-          "Prefer": "return=representation"
+          "Prefer": "return=representation,resolution=merge-duplicates"
         },
         body: JSON.stringify(saveData)
       }
@@ -48,20 +49,6 @@ export async function saveBurnoutAssessmentDirect(saveData: any) {
     if (!response.ok) {
       const errorText = await response.text();
       console.error("❌ Save failed:", errorText);
-
-      // Check for duplicate entry
-      if (response.status === 409 || errorText.includes("duplicate")) {
-        console.log("📝 Record exists for today, will try update instead...");
-        return {
-          data: null,
-          error: {
-            code: "23505",
-            message: "duplicate",
-            needsUpdate: true
-          }
-        };
-      }
-
       return {
         data: null,
         error: new Error(`Save failed: ${response.status} - ${errorText}`)
@@ -69,7 +56,7 @@ export async function saveBurnoutAssessmentDirect(saveData: any) {
     }
 
     const data = await response.json();
-    console.log("✅ Successfully saved assessment:", data);
+    console.log("✅ Successfully saved/updated assessment:", data);
     return { data: data[0] || data, error: null };
 
   } catch (error) {

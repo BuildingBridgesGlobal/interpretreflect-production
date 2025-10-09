@@ -96,14 +96,14 @@ const PersonalizedHomepage: React.FC<PersonalizedHomepageProps> = ({
 		const today = new Date();
 		today.setHours(0, 0, 0, 0);
 
-		// Get the MOST RECENT wellness check-in for mood and energy
-		// Look for wellness_checkin (the actual type saved by WellnessCheckInAccessible)
+		// Get the MOST RECENT wellness check-in OR burnout assessment for mood and energy
+		// Look for wellness_checkin or burnout_assessment types
 		// Sort by timestamp descending to get the most recent one
 		const wellnessCheckIns = reflections
-			.filter(r => r.type === "wellness_checkin" || r.type === "Wellness Check-in")
+			.filter(r => r.type === "wellness_checkin" || r.type === "Wellness Check-in" || r.type === "burnout_assessment")
 			.sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime());
 
-		// Use the most recent wellness check-in (index 0 after sorting)
+		// Use the most recent wellness check-in or burnout assessment (index 0 after sorting)
 		const todayCheckIn = wellnessCheckIns.length > 0 ? wellnessCheckIns[0] : null;
 
 		// Extract mood and energy from today's check-in or use 0 for new users
@@ -111,44 +111,62 @@ const PersonalizedHomepage: React.FC<PersonalizedHomepageProps> = ({
 		let energy = 0; // Default 0 for new users - no check-ins yet
 
 		if (todayCheckIn?.data) {
-			// Extract mood from data (scale 1-10)
-			// Wellness check-in uses stressLevel, so we invert it for mood (10 - stress = mood)
-			if (todayCheckIn.data.stressLevel !== undefined) {
-				// Convert stress (1-10 where 10 is worst) to mood (1-10 where 10 is best)
-				mood = Math.min(10, Math.max(1, 11 - todayCheckIn.data.stressLevel));
-			} else if (todayCheckIn.data.mood) {
-				mood = Math.min(10, Math.max(1, todayCheckIn.data.mood));
-			} else if (todayCheckIn.data.emotionalState) {
-				// Map emotional states to mood scores (1-10 scale)
-				const moodMap: Record<string, number> = {
-					'excellent': 10, 'great': 9, 'good': 8,
-					'okay': 6, 'neutral': 5, 'fair': 5,
-					'challenging': 4, 'difficult': 3, 'stressed': 3,
-					'overwhelmed': 2, 'exhausted': 1
-				};
-				const state = todayCheckIn.data.emotionalState.toLowerCase();
-				mood = moodMap[state] || 6;
-			}
-		}
+			// Check if this is a burnout assessment
+			if (todayCheckIn.type === "burnout_assessment") {
+				// Burnout assessment data structure:
+				// - total_score: 0-10 (higher = more burnout, lower = better wellbeing)
+				// - energy_tank: 1-5 (higher = more energy)
+				// - emotional_leakage: 1-5 (higher = better boundaries/mood)
 
-		// Extract energy from data (scale 1-10)
-		if (todayCheckIn?.data) {
-			// Wellness check-in uses energyLevel directly (1-10 scale)
-			if (todayCheckIn.data.energyLevel !== undefined) {
-				energy = Math.min(10, Math.max(1, todayCheckIn.data.energyLevel));
-			} else if (todayCheckIn.data.energy) {
-				energy = Math.min(10, Math.max(1, todayCheckIn.data.energy));
-			} else if (todayCheckIn.data.energy_level) {
-				// Map energy levels to scores (1-10 scale)
-				const energyMap: Record<string, number> = {
-					'high': 10, 'energized': 9,
-					'good': 8, 'stable': 7,
-					'moderate': 6, 'okay': 5,
-					'low': 4, 'tired': 3,
-					'depleted': 2, 'exhausted': 1
-				};
-				const level = todayCheckIn.data.energyLevel.toLowerCase();
-				energy = energyMap[level] || 6;
+				if (todayCheckIn.data.total_score !== undefined) {
+					// Convert burnout score (0-10, lower is better) to mood (1-10, higher is better)
+					// Invert: mood = 10 - burnout_score, then scale to 1-10 range
+					mood = Math.min(10, Math.max(1, Math.round(10 - todayCheckIn.data.total_score)));
+				}
+
+				if (todayCheckIn.data.energy_tank !== undefined) {
+					// Convert energy_tank (1-5) to energy (1-10) by doubling
+					energy = Math.min(10, Math.max(1, todayCheckIn.data.energy_tank * 2));
+				}
+			} else {
+				// Regular wellness check-in
+				// Extract mood from data (scale 1-10)
+				// Wellness check-in uses stressLevel, so we invert it for mood (10 - stress = mood)
+				if (todayCheckIn.data.stressLevel !== undefined) {
+					// Convert stress (1-10 where 10 is worst) to mood (1-10 where 10 is best)
+					mood = Math.min(10, Math.max(1, 11 - todayCheckIn.data.stressLevel));
+				} else if (todayCheckIn.data.mood) {
+					mood = Math.min(10, Math.max(1, todayCheckIn.data.mood));
+				} else if (todayCheckIn.data.emotionalState) {
+					// Map emotional states to mood scores (1-10 scale)
+					const moodMap: Record<string, number> = {
+						'excellent': 10, 'great': 9, 'good': 8,
+						'okay': 6, 'neutral': 5, 'fair': 5,
+						'challenging': 4, 'difficult': 3, 'stressed': 3,
+						'overwhelmed': 2, 'exhausted': 1
+					};
+					const state = todayCheckIn.data.emotionalState.toLowerCase();
+					mood = moodMap[state] || 6;
+				}
+
+				// Extract energy from data (scale 1-10)
+				// Wellness check-in uses energyLevel directly (1-10 scale)
+				if (todayCheckIn.data.energyLevel !== undefined) {
+					energy = Math.min(10, Math.max(1, todayCheckIn.data.energyLevel));
+				} else if (todayCheckIn.data.energy) {
+					energy = Math.min(10, Math.max(1, todayCheckIn.data.energy));
+				} else if (todayCheckIn.data.energy_level) {
+					// Map energy levels to scores (1-10 scale)
+					const energyMap: Record<string, number> = {
+						'high': 10, 'energized': 9,
+						'good': 8, 'stable': 7,
+						'moderate': 6, 'okay': 5,
+						'low': 4, 'tired': 3,
+						'depleted': 2, 'exhausted': 1
+					};
+					const level = todayCheckIn.data.energyLevel.toLowerCase();
+					energy = energyMap[level] || 6;
+				}
 			}
 		}
 

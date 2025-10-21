@@ -697,7 +697,7 @@ const PersonalizedHomepage: React.FC<PersonalizedHomepageProps> = ({
 		<div
 			className="min-h-screen"
 			style={{
-				backgroundColor: "#F8FAFB",
+				backgroundColor: "#FAF8F5",
 			}}
 		>
 			<main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
@@ -875,10 +875,10 @@ const PersonalizedHomepage: React.FC<PersonalizedHomepageProps> = ({
 										className="w-full px-3 py-2 text-sm rounded-lg font-medium transition-all flex items-center justify-center gap-2"
 										style={{
 											background: canTakeAssessment
-												? "linear-gradient(135deg, rgb(45, 95, 63), rgb(91, 147, 120))"
+												? "#6B8268"
 												: "#9CA3AF",
 											boxShadow: canTakeAssessment
-												? "rgba(107, 139, 96, 0.3) 0px 2px 8px"
+												? "rgba(107, 130, 104, 0.3) 0px 2px 8px"
 												: "none",
 											color: "white",
 											cursor: canTakeAssessment ? "pointer" : "not-allowed",
@@ -912,10 +912,10 @@ const PersonalizedHomepage: React.FC<PersonalizedHomepageProps> = ({
 										className="w-full px-4 py-2.5 rounded-lg font-medium text-sm transition-all flex items-center justify-center gap-2"
 										style={{
 											background: canTakeAssessment
-												? "linear-gradient(135deg, rgb(45, 95, 63), rgb(91, 147, 120))"
+												? "#6B8268"
 												: "#9CA3AF",
 											boxShadow: canTakeAssessment
-												? "rgba(107, 139, 96, 0.3) 0px 2px 8px"
+												? "rgba(107, 130, 104, 0.3) 0px 2px 8px"
 												: "none",
 											color: "white",
 											cursor: canTakeAssessment ? "pointer" : "not-allowed",
@@ -981,9 +981,7 @@ const PersonalizedHomepage: React.FC<PersonalizedHomepageProps> = ({
 							border: "2px solid #D1D5DB",
 							boxShadow: "0 1px 3px rgba(0, 0, 0, 0.04)"
 						}}>
-							<div className="px-8 py-6" style={{
-								borderBottom: "2px solid #E5E7EB"
-							}}>
+							<div className="px-8 py-6">
 								<div className="flex items-center justify-between">
 									<h2 className="text-xl font-semibold" style={{
 										color: "#111827",

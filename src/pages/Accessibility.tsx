@@ -2,7 +2,6 @@ import {
 	ArrowLeft,
 	Eye,
 	Globe,
-	HelpCircle,
 	Keyboard,
 	MessageSquare,
 	Users,
@@ -14,7 +13,7 @@ export function Accessibility() {
 	const navigate = useNavigate();
 
 	return (
-		<div style={{ backgroundColor: "var(--color-surface)", minHeight: "100vh" }}>
+		<div style={{ backgroundColor: "#FAF9F6", minHeight: "100vh" }}>
 			{/* Header */}
 			<nav
 				className="sticky top-0 z-50"
@@ -86,7 +85,7 @@ export function Accessibility() {
 				{/* Key Accessibility Practices */}
 				<section className="mb-12">
 					<h2
-						className="text-3xl font-bold mb-8 text-center"
+						className="text-2xl font-bold mb-1 text-center"
 						style={{ color: "var(--color-slate-700)" }}
 					>
 						Key Accessibility Practices
@@ -109,16 +108,16 @@ export function Accessibility() {
 									<Eye className="w-5 h-5" style={{ color: "#5B9378" }} />
 								</div>
 								<h3
-									className="text-lg font-semibold ml-3"
+									className="text-base font-semibold ml-3"
 									style={{ color: "var(--color-slate-700)" }}
 								>
 									Focus Management
 								</h3>
 							</div>
 							<p
+								className="text-base"
 								style={{
 									color: "var(--color-slate-600)",
-									fontSize: "14px",
 									lineHeight: "1.6",
 								}}
 							>
@@ -145,16 +144,16 @@ export function Accessibility() {
 									<Globe className="w-5 h-5" style={{ color: "#5B9378" }} />
 								</div>
 								<h3
-									className="text-lg font-semibold ml-3"
+									className="text-base font-semibold ml-3"
 									style={{ color: "var(--color-slate-700)" }}
 								>
 									Semantic HTML
 								</h3>
 							</div>
 							<p
+								className="text-base"
 								style={{
 									color: "var(--color-slate-600)",
-									fontSize: "14px",
 									lineHeight: "1.6",
 								}}
 							>
@@ -183,16 +182,16 @@ export function Accessibility() {
 									/>
 								</div>
 								<h3
-									className="text-lg font-semibold ml-3"
+									className="text-base font-semibold ml-3"
 									style={{ color: "var(--color-slate-700)" }}
 								>
 									Descriptive Text
 								</h3>
 							</div>
 							<p
+								className="text-base"
 								style={{
 									color: "var(--color-slate-600)",
-									fontSize: "14px",
 									lineHeight: "1.6",
 								}}
 							>
@@ -218,16 +217,16 @@ export function Accessibility() {
 									<Keyboard className="w-5 h-5" style={{ color: "#5B9378" }} />
 								</div>
 								<h3
-									className="text-lg font-semibold ml-3"
+									className="text-base font-semibold ml-3"
 									style={{ color: "var(--color-slate-700)" }}
 								>
 									Keyboard Access
 								</h3>
 							</div>
 							<p
+								className="text-base"
 								style={{
 									color: "var(--color-slate-600)",
-									fontSize: "14px",
 									lineHeight: "1.6",
 								}}
 							>
@@ -253,16 +252,16 @@ export function Accessibility() {
 									<Eye className="w-5 h-5" style={{ color: "#5B9378" }} />
 								</div>
 								<h3
-									className="text-lg font-semibold ml-3"
+									className="text-base font-semibold ml-3"
 									style={{ color: "var(--color-slate-700)" }}
 								>
 									High Contrast & Zoom
 								</h3>
 							</div>
 							<p
+								className="text-base"
 								style={{
 									color: "var(--color-slate-600)",
-									fontSize: "14px",
 									lineHeight: "1.6",
 								}}
 							>
@@ -288,16 +287,16 @@ export function Accessibility() {
 									<Users className="w-5 h-5" style={{ color: "#5B9378" }} />
 								</div>
 								<h3
-									className="text-lg font-semibold ml-3"
+									className="text-base font-semibold ml-3"
 									style={{ color: "var(--color-slate-700)" }}
 								>
 									Screen Readers
 								</h3>
 							</div>
 							<p
+								className="text-base"
 								style={{
 									color: "var(--color-slate-600)",
-									fontSize: "14px",
 									lineHeight: "1.6",
 								}}
 							>
@@ -319,20 +318,17 @@ export function Accessibility() {
 						}}
 					>
 						<h2
-							className="text-2xl font-bold mb-6"
+							className="text-2xl font-bold mb-1"
 							style={{ color: "var(--color-slate-700)" }}
 						>
 							Practical Tips for Users
 						</h2>
 						<div className="grid md:grid-cols-3 gap-4">
 							<div className="flex items-start">
-								<span className="text-2xl mr-3" style={{ color: "#5B9378" }}>
-									🔍
-								</span>
 								<p
+									className="text-base"
 									style={{
 										color: "var(--color-slate-600)",
-										fontSize: "14px",
 										lineHeight: "1.6",
 									}}
 								>
@@ -341,13 +337,10 @@ export function Accessibility() {
 								</p>
 							</div>
 							<div className="flex items-start">
-								<span className="text-2xl mr-3" style={{ color: "#5B9378" }}>
-									🎨
-								</span>
 								<p
+									className="text-base"
 									style={{
 										color: "var(--color-slate-600)",
-										fontSize: "14px",
 										lineHeight: "1.6",
 									}}
 								>
@@ -356,13 +349,10 @@ export function Accessibility() {
 								</p>
 							</div>
 							<div className="flex items-start">
-								<span className="text-2xl mr-3" style={{ color: "#5B9378" }}>
-									⌨️
-								</span>
 								<p
+									className="text-base"
 									style={{
 										color: "var(--color-slate-600)",
-										fontSize: "14px",
 										lineHeight: "1.6",
 									}}
 								>
@@ -383,25 +373,23 @@ export function Accessibility() {
 							border: "2px solid rgba(27, 94, 32, 0.15)",
 						}}
 					>
-						<div className="flex items-center mb-4">
-							<span className="text-3xl mr-4">🤟</span>
-							<h2 className="text-2xl font-bold" style={{ color: "var(--color-slate-700)" }}>
-								ASL Video Translations Coming Soon
-							</h2>
-						</div>
+						<h2 className="text-2xl font-bold mb-1" style={{ color: "var(--color-slate-700)" }}>
+							ASL Video Translations Coming Soon
+						</h2>
 						<p
-							style={{ color: "var(--color-slate-600)", fontSize: "16px", lineHeight: "1.8" }}
+							className="text-base"
+							style={{ color: "var(--color-slate-600)", lineHeight: "1.8" }}
 						>
 							We are committed to accessibility for all interpreters. ASL video
 							translations will be available in a future release. If you have
 							requests or need ASL support before these are available, please
 							contact us at{" "}
 							<a
-								href="mailto:hello@huviatechnologies.com"
+								href="mailto:info@interpretreflect.com"
 								className="font-semibold hover:underline"
 								style={{ color: "#5B9378" }}
 							>
-								hello@huviatechnologies.com
+								info@interpretreflect.com
 							</a>
 							.
 						</p>
@@ -418,15 +406,15 @@ export function Accessibility() {
 						}}
 					>
 						<h2
-							className="text-2xl font-bold mb-6"
+							className="text-2xl font-bold mb-1"
 							style={{ color: "var(--color-slate-700)" }}
 						>
 							Continuous Improvements
 						</h2>
 						<p
+							className="text-base"
 							style={{
 								color: "var(--color-slate-600)",
-								fontSize: "16px",
 								marginBottom: "20px",
 								lineHeight: "1.8",
 							}}
@@ -441,9 +429,9 @@ export function Accessibility() {
 									style={{ backgroundColor: "#5B9378" }}
 								/>
 								<p
+									className="text-base"
 									style={{
 										color: "var(--color-slate-600)",
-										fontSize: "15px",
 										lineHeight: "1.6",
 									}}
 								>
@@ -456,9 +444,9 @@ export function Accessibility() {
 									style={{ backgroundColor: "#5B9378" }}
 								/>
 								<p
+									className="text-base"
 									style={{
 										color: "var(--color-slate-600)",
-										fontSize: "15px",
 										lineHeight: "1.6",
 									}}
 								>
@@ -471,9 +459,9 @@ export function Accessibility() {
 									style={{ backgroundColor: "#5B9378" }}
 								/>
 								<p
+									className="text-base"
 									style={{
 										color: "var(--color-slate-600)",
-										fontSize: "15px",
 										lineHeight: "1.6",
 									}}
 								>
@@ -486,9 +474,9 @@ export function Accessibility() {
 									style={{ backgroundColor: "#5B9378" }}
 								/>
 								<p
+									className="text-base"
 									style={{
 										color: "var(--color-slate-600)",
-										fontSize: "15px",
 										lineHeight: "1.6",
 									}}
 								>
@@ -496,63 +484,6 @@ export function Accessibility() {
 								</p>
 							</div>
 						</div>
-					</div>
-				</section>
-
-				{/* Assistance & Feedback */}
-				<section className="mb-12">
-					<div
-						className="rounded-2xl p-8 text-center"
-						style={{
-							background:
-								"linear-gradient(135deg, rgba(107, 139, 96, 0.08), rgba(92, 127, 79, 0.05))",
-							border: "2px solid rgba(107, 139, 96, 0.2)",
-						}}
-					>
-						<div className="flex justify-center mb-4">
-							<div
-								className="w-16 h-16 rounded-full flex items-center justify-center"
-								style={{ backgroundColor: "rgba(107, 139, 96, 0.1)" }}
-							>
-								<HelpCircle className="w-8 h-8" style={{ color: "#5B9378" }} />
-							</div>
-						</div>
-						<h2
-							className="text-2xl font-bold mb-4"
-							style={{ color: "var(--color-slate-700)" }}
-						>
-							Need Assistance?
-						</h2>
-						<p
-							style={{
-								color: "var(--color-slate-600)",
-								fontSize: "16px",
-								marginBottom: "20px",
-								lineHeight: "1.8",
-							}}
-						>
-							If you experience any difficulty using our website or have
-							suggestions for improving accessibility, please don't hesitate to
-							reach out.
-						</p>
-						<a
-							href="mailto:hello@huviatechnologies.com"
-							className="inline-flex items-center px-6 py-3 rounded-lg font-semibold transition-all"
-							style={{
-								background:
-									"linear-gradient(135deg, var(--color-green-600), var(--color-green-500))",
-								color: "white",
-								boxShadow: "0 2px 8px rgba(45, 95, 63, 0.2)",
-							}}
-						>
-							Contact Us
-						</a>
-						<p
-							style={{ color: "var(--color-slate-600)", fontSize: "14px", marginTop: "16px" }}
-						>
-							We aim to respond to all accessibility requests within two
-							business days.
-						</p>
 					</div>
 				</section>
 
@@ -566,7 +497,8 @@ export function Accessibility() {
 						}}
 					>
 						<p
-							style={{ color: "var(--color-slate-600)", fontSize: "14px", lineHeight: "1.6" }}
+							className="text-base"
+							style={{ color: "var(--color-slate-600)", lineHeight: "1.6" }}
 						>
 							<strong style={{ color: "var(--color-slate-700)" }}>Note:</strong> Some
 							accessibility improvements are ongoing. We appreciate your

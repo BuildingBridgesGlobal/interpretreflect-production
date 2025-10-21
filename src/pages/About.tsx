@@ -66,13 +66,13 @@ export function About() {
 					{/* Opening Statement */}
 					<div className="max-w-3xl mx-auto mb-2">
 						<p
-							className="text-lg leading-relaxed mb-3"
+							className="text-base leading-relaxed mb-3"
 							style={{ color: "#3A3A3A" }}
 						>
 							Interpreters are present in moments that shape lives. A parent learning about a child's diagnosis. A DeafBlind person navigating a hospital visit. A refugee family working with legal services. A college student accessing lectures. Each of these conversations carries weight.
 						</p>
 						<p
-							className="text-lg leading-relaxed"
+							className="text-base leading-relaxed"
 							style={{ color: "#3A3A3A" }}
 						>
 							For interpreters, that weight often lingers long after the assignment ends. InterpretReflect™ was created to provide a place where interpreters can process, reset, and sustain their practice in service of the communities that depend on equitable access to communication.
@@ -85,7 +85,7 @@ export function About() {
 			<div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-2">
 				{/* Why We Exist */}
 				<section className="mb-2">
-					<h2 className="text-3xl font-bold mb-1" style={{ color: "#1A1A1A" }}>
+					<h2 className="text-2xl font-bold mb-1" style={{ color: "#1A1A1A" }}>
 						Why We Exist
 					</h2>
 					<div
@@ -96,14 +96,14 @@ export function About() {
 						}}
 					>
 						<p
-							className="text-lg leading-relaxed mb-4"
+							className="text-base leading-relaxed mb-4"
 							style={{ color: "#3A3A3A" }}
 						>
 							Burnout, vicarious trauma, and compassion fatigue are not signs of weakness. They are natural outcomes of a profession that demands emotional and cognitive endurance across spoken, signed, and tactile languages.
 						</p>
 
 						<p
-							className="text-lg font-semibold mb-4"
+							className="text-base font-semibold mb-4"
 							style={{ color: "#5C7F4F" }}
 						>
 							InterpretReflect provides tools that:
@@ -153,7 +153,7 @@ export function About() {
 
 				{/* What We Do */}
 				<section className="mb-2">
-					<h2 className="text-3xl font-bold mb-1" style={{ color: "#1A1A1A" }}>
+					<h2 className="text-2xl font-bold mb-1" style={{ color: "#1A1A1A" }}>
 						What We Do
 					</h2>
 					<div
@@ -164,7 +164,7 @@ export function About() {
 						}}
 					>
 						<p
-							className="text-lg leading-relaxed mb-4"
+							className="text-base leading-relaxed mb-4"
 							style={{ color: "#3A3A3A" }}
 						>
 							We translate neuroscience and trauma-informed care into tools designed for the realities of interpreting work across modalities:
@@ -236,7 +236,7 @@ export function About() {
 
 				{/* How It Works */}
 				<section className="mb-2">
-					<h2 className="text-3xl font-bold mb-1" style={{ color: "#1A1A1A" }}>
+					<h2 className="text-2xl font-bold mb-1" style={{ color: "#1A1A1A" }}>
 						How It Works
 					</h2>
 					<div
@@ -246,7 +246,7 @@ export function About() {
 							boxShadow: "0 4px 15px rgba(0, 0, 0, 0.05)",
 						}}
 					>
-						<p className="text-lg mb-6" style={{ color: "#3A3A3A" }}>
+						<p className="text-base mb-6" style={{ color: "#3A3A3A" }}>
 							In three simple steps, support is always within reach:
 						</p>
 
@@ -299,7 +299,7 @@ export function About() {
 
 				{/* Why Choose InterpretReflect */}
 				<section className="mb-2">
-					<h2 className="text-3xl font-bold mb-1" style={{ color: "#1A1A1A" }}>
+					<h2 className="text-2xl font-bold mb-1" style={{ color: "#1A1A1A" }}>
 						Why Choose InterpretReflect
 					</h2>
 					<div
@@ -362,7 +362,7 @@ export function About() {
 
 				{/* Common Concerns */}
 				<section className="mb-2">
-					<h2 className="text-3xl font-bold mb-1" style={{ color: "#1A1A1A" }}>
+					<h2 className="text-2xl font-bold mb-1" style={{ color: "#1A1A1A" }}>
 						Common Concerns, Answered
 					</h2>
 					<div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -432,7 +432,7 @@ export function About() {
 
 				{/* The Bigger Picture */}
 				<section className="mb-2">
-					<h2 className="text-3xl font-bold mb-1" style={{ color: "#1A1A1A" }}>
+					<h2 className="text-2xl font-bold mb-1" style={{ color: "#1A1A1A" }}>
 						The Bigger Picture
 					</h2>
 					<div
@@ -443,14 +443,14 @@ export function About() {
 						}}
 					>
 						<p
-							className="text-lg leading-relaxed mb-3"
+							className="text-base leading-relaxed mb-3"
 							style={{ color: "#3A3A3A" }}
 						>
 							Interpreting is about language and so much more. It is about showing up fully as a human being in moments where presence, clarity, and attunement matter. Neuroscience shows that chronic stress and unprocessed emotions disrupt focus, memory, and decision-making. Emotional intelligence research confirms that resilience and self-awareness are what allow professionals to regulate under pressure and stay grounded in their values.
 						</p>
 
 						<p
-							className="text-lg leading-relaxed mb-4"
+							className="text-base leading-relaxed mb-4"
 							style={{ color: "#3A3A3A" }}
 						>
 							When interpreters have the tools to pause, reflect, and reset, they are not just protecting themselves. They are strengthening their ability to enter spaces clear, centered, and authentically present. Communities benefit when interpreters can bring their whole selves into the work. Deaf, DeafBlind, hard-of-hearing, multilingual, and hearing participants all experience communication that feels safer, more trustworthy, and more equitable.
@@ -472,7 +472,7 @@ export function About() {
 
 				{/* Call to Action */}
 				<section className="text-center mb-2">
-					<h2 className="text-3xl font-bold mb-1" style={{ color: "#1A1A1A" }}>
+					<h2 className="text-2xl font-bold mb-1" style={{ color: "#1A1A1A" }}>
 						Take the First Step
 					</h2>
 
@@ -483,7 +483,7 @@ export function About() {
 							border: "2px solid rgba(45, 95, 63, 0.2)",
 						}}
 					>
-						<p className="text-lg font-medium" style={{ color: "#5C7F4F" }}>
+						<p className="text-base font-medium" style={{ color: "#5C7F4F" }}>
 							Every day interpreters support communication in high-stakes and everyday interactions alike. InterpretReflect is here to support interpreters, so the communities they serve can thrive too.
 						</p>
 					</div>
@@ -514,7 +514,7 @@ export function About() {
 
 				{/* Founder's Note */}
 				<section className="mb-2">
-					<h2 className="text-3xl font-bold mb-1 text-center" style={{ color: "#1A1A1A" }}>
+					<h2 className="text-2xl font-bold mb-1 text-center" style={{ color: "#1A1A1A" }}>
 						Founder's Note
 					</h2>
 					<div
@@ -526,25 +526,25 @@ export function About() {
 						}}
 					>
 						<p
-							className="text-lg leading-relaxed mb-3"
+							className="text-base leading-relaxed mb-3"
 							style={{ color: "#3A3A3A" }}
 						>
 							My name is Sarah Wheeler. I am a Child of Deaf Adults, a United States Air Force veteran, and have been interpreting since 2006 across community, medical, legal, educational, VRS/VRI, and performance settings. I hold graduate degrees in Interpreter Pedagogy and Psychology and national certification as an interpreter. I am also certified in emotional intelligence assessment (EQ-i 2.0 and EQ 360).
 						</p>
 						<p
-							className="text-lg leading-relaxed mb-3"
+							className="text-base leading-relaxed mb-3"
 							style={{ color: "#3A3A3A" }}
 						>
 							Over the years I have presented internationally, taught at universities, published books, and co-created programs that blend emotional intelligence with interpreting practice. My leadership includes founding Building Bridges Global, The Interpreter School, and Huvia Technologies, where we are building AI-powered tools that keep human connection at the center of innovation.
 						</p>
 						<p
-							className="text-lg leading-relaxed mb-4"
+							className="text-base leading-relaxed mb-4"
 							style={{ color: "#3A3A3A" }}
 						>
 							I have been honored with recognition such as Interpreter of the Year and the North Carolina Association of the Deaf award for Outstanding Contributions to the Welfare of Deaf Persons.
 						</p>
 						<p
-							className="text-lg leading-relaxed mb-4"
+							className="text-base leading-relaxed mb-4"
 							style={{ color: "#3A3A3A" }}
 						>
 							My goal has always been to help interpreters sustain clarity and presence by supporting both the mind and the nervous system. InterpretReflect™ is the culmination of these experiences. It is a platform designed for interpreters of all modalities, by someone who has walked the path, carried the weight, and knows the importance of having a place to set it down.

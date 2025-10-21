@@ -365,13 +365,10 @@ FEELING: ${formData.feeling_word}
 							className="text-lg font-semibold mb-4"
 							style={{ color: "#5C7F4F" }}
 						>
-							Setting Your Foundation
+							Getting Ready
 						</h3>
 						<p className="mb-6" style={{ color: "#5A5A5A" }}>
-							Before you begin your interpreting assignment, let's explore the
-							context and materials you'll need. Understanding these elements
-							helps reduce cognitive load and allows you to focus on delivering
-							quality interpretation.
+							Taking a few minutes to prepare helps you feel more confident and focused. Let's think through what you need to know and what you'll use.
 						</p>
 					</div>
 
@@ -380,14 +377,14 @@ FEELING: ${formData.feeling_word}
 							className="block text-sm font-medium mb-2"
 							style={{ color: "#5C7F4F" }}
 						>
-							What is the assignment context and participants' backgrounds?
+							What do you know about this assignment and the people involved?
 						</label>
 						<textarea
 							value={formData.context_background}
 							onChange={(e) =>
 								handleFieldChange("context_background", e.target.value)
 							}
-							placeholder="Describe the setting, participants, and any relevant background information..."
+							placeholder="Tell us about where you'll be, who'll be there, and any background info that's helpful..."
 							rows={4}
 							className="w-full px-4 py-3 border rounded-lg resize-none focus:ring-2 focus:ring-sage-500"
 							style={{
@@ -406,14 +403,14 @@ FEELING: ${formData.feeling_word}
 							className="block text-sm font-medium mb-2"
 							style={{ color: "#5C7F4F" }}
 						>
-							Which materials, documents, or terminology should you review?
+							What materials or terms do you want to look over beforehand?
 						</label>
 						<textarea
 							value={formData.materials_review}
 							onChange={(e) =>
 								handleFieldChange("materials_review", e.target.value)
 							}
-							placeholder="List specific materials, glossaries, or documents..."
+							placeholder="Like specific documents, glossaries, terminology lists, or anything you want to brush up on..."
 							rows={3}
 							className="w-full px-4 py-3 border rounded-lg resize-none focus:ring-2 focus:ring-sage-500"
 							style={{
@@ -430,7 +427,7 @@ FEELING: ${formData.feeling_word}
 			),
 		},
 		{
-			title: "Readiness Assessment",
+			title: "How You're Doing",
 			icon: <Activity className="w-5 h-5" style={{ color: "#5B9378" }} />,
 			content: (
 				<div className="space-y-6">
@@ -439,14 +436,14 @@ FEELING: ${formData.feeling_word}
 							className="block text-sm font-medium mb-2"
 							style={{ color: "#5C7F4F" }}
 						>
-							What are your emotional and physical readiness levels?
+							How are you feeling emotionally and physically right now?
 						</label>
 						<textarea
 							value={formData.readiness_levels}
 							onChange={(e) =>
 								handleFieldChange("readiness_levels", e.target.value)
 							}
-							placeholder="Rate and describe your current state..."
+							placeholder="Tell us how you're feeling - energized, tired, nervous, calm, ready..."
 							rows={4}
 							className="w-full px-4 py-3 border rounded-lg resize-none focus:ring-2 focus:ring-sage-500"
 							style={{
@@ -465,14 +462,14 @@ FEELING: ${formData.feeling_word}
 							className="block text-sm font-medium mb-2"
 							style={{ color: "#5C7F4F" }}
 						>
-							Which demands do you anticipate?
+							What challenges do you think might come up?
 						</label>
 						<textarea
 							value={formData.anticipated_demands}
 							onChange={(e) =>
 								handleFieldChange("anticipated_demands", e.target.value)
 							}
-							placeholder="Environmental, Interpersonal, Paralinguistic, Intrapersonal..."
+							placeholder="Like: noisy environment, complex relationships between people, fast-paced content, managing your own stress..."
 							rows={4}
 							className="w-full px-4 py-3 border rounded-lg resize-none focus:ring-2 focus:ring-sage-500"
 							style={{
@@ -489,7 +486,7 @@ FEELING: ${formData.feeling_word}
 			),
 		},
 		{
-			title: "Control & Contingency Planning",
+			title: "Your Game Plan",
 			icon: <Shield className="w-5 h-5" style={{ color: "#5B9378" }} />,
 			content: (
 				<div className="space-y-6">
@@ -498,14 +495,14 @@ FEELING: ${formData.feeling_word}
 							className="block text-sm font-medium mb-2"
 							style={{ color: "#5C7F4F" }}
 						>
-							What control strategies do you have for anticipated demands?
+							How will you handle those challenges you mentioned?
 						</label>
 						<textarea
 							value={formData.control_strategies}
 							onChange={(e) =>
 								handleFieldChange("control_strategies", e.target.value)
 							}
-							placeholder="List specific strategies for each type of demand..."
+							placeholder="For each challenge, what will you do? Like: position myself away from noise, take breaks when needed, use breathing techniques when stressed..."
 							rows={4}
 							className="w-full px-4 py-3 border rounded-lg resize-none focus:ring-2 focus:ring-sage-500"
 							style={{
@@ -524,14 +521,14 @@ FEELING: ${formData.feeling_word}
 							className="block text-sm font-medium mb-2"
 							style={{ color: "#5C7F4F" }}
 						>
-							What backup plans do you have for unexpected challenges?
+							What's your backup plan if things don't go as expected?
 						</label>
 						<textarea
 							value={formData.backup_plans}
 							onChange={(e) =>
 								handleFieldChange("backup_plans", e.target.value)
 							}
-							placeholder="Describe contingency plans..."
+							placeholder="Who can you call? What will you do if you need help or a break? What's your exit strategy if needed..."
 							rows={4}
 							className="w-full px-4 py-3 border rounded-lg resize-none focus:ring-2 focus:ring-sage-500"
 							style={{
@@ -546,7 +543,7 @@ FEELING: ${formData.feeling_word}
 			),
 		},
 		{
-			title: "Role-Space Awareness",
+			title: "Understanding Your Role",
 			icon: <Users className="w-5 h-5" style={{ color: "#5B9378" }} />,
 			content: (
 				<div className="space-y-6">
@@ -555,13 +552,12 @@ FEELING: ${formData.feeling_word}
 							className="block text-sm font-medium mb-2"
 							style={{ color: "#5C7F4F" }}
 						>
-							How do your role, alignment, and interaction management show up in
-							this assignment?
+							How will you show up in your professional role for this assignment? (Think about: staying neutral vs. advocating, managing boundaries, and how you'll interact with participants)
 						</label>
 						<textarea
 							value={formData.role_space}
 							onChange={(e) => handleFieldChange("role_space", e.target.value)}
-							placeholder="Describe your professional boundaries and positioning..."
+							placeholder="For example: I'll stay in my role as a neutral conduit, maintain clear boundaries if asked to step outside my role, and check in with participants about communication preferences..."
 							rows={6}
 							className="w-full px-4 py-3 border rounded-lg resize-none focus:ring-2 focus:ring-sage-500"
 							style={{
@@ -576,7 +572,7 @@ FEELING: ${formData.feeling_word}
 			),
 		},
 		{
-			title: "Mental Preparation & Self-Care",
+			title: "Taking Care of Yourself",
 			icon: <Brain className="w-5 h-5" style={{ color: "#5B9378" }} />,
 			content: (
 				<div className="space-y-6">
@@ -585,14 +581,14 @@ FEELING: ${formData.feeling_word}
 							className="block text-sm font-medium mb-2"
 							style={{ color: "#5C7F4F" }}
 						>
-							What practices will you use for focus and regulation?
+							What will you do to stay focused and calm?
 						</label>
 						<textarea
 							value={formData.neuroscience_practices}
 							onChange={(e) =>
 								handleFieldChange("neuroscience_practices", e.target.value)
 							}
-							placeholder="Mindfulness, breathing, grounding techniques..."
+							placeholder="Like: deep breathing, taking short breaks, grounding myself, staying present..."
 							rows={4}
 							className="w-full px-4 py-3 border rounded-lg resize-none focus:ring-2 focus:ring-sage-500"
 							style={{
@@ -613,15 +609,14 @@ FEELING: ${formData.feeling_word}
 							className="block text-sm font-medium mb-2"
 							style={{ color: "#5C7F4F" }}
 						>
-							What are your triggers or vulnerabilities and how will you manage
-							them?
+							What situations or topics might be hard for you? How will you handle them?
 						</label>
 						<textarea
 							value={formData.triggers_vulnerabilities}
 							onChange={(e) =>
 								handleFieldChange("triggers_vulnerabilities", e.target.value)
 							}
-							placeholder="Be honest about challenges and management strategies..."
+							placeholder="It's okay to acknowledge what's tough for you. Name it and plan for how you'll cope..."
 							rows={4}
 							className="w-full px-4 py-3 border rounded-lg resize-none focus:ring-2 focus:ring-sage-500"
 							style={{
@@ -640,7 +635,7 @@ FEELING: ${formData.feeling_word}
 			),
 		},
 		{
-			title: "Ethics & Cultural Awareness",
+			title: "Cultural & Ethical Considerations",
 			icon: <Compass className="w-5 h-5" style={{ color: "#5B9378" }} />,
 			content: (
 				<div className="space-y-6">
@@ -649,15 +644,14 @@ FEELING: ${formData.feeling_word}
 							className="block text-sm font-medium mb-2"
 							style={{ color: "#5C7F4F" }}
 						>
-							Are you prepared for the cultural context and potential ethical
-							dilemmas?
+							What do you know about the cultural context of this assignment? Are there any ethical situations you might face?
 						</label>
 						<textarea
 							value={formData.ethics_culture}
 							onChange={(e) =>
 								handleFieldChange("ethics_culture", e.target.value)
 							}
-							placeholder="Identify cultural considerations and ethical boundaries..."
+							placeholder="For example: I'm aware of cultural communication styles that might differ from my own. I might face decisions about confidentiality, power dynamics, or requests to go outside my role. If that happens, I'll..."
 							rows={5}
 							className="w-full px-4 py-3 border rounded-lg resize-none focus:ring-2 focus:ring-sage-500"
 							style={{
@@ -674,7 +668,7 @@ FEELING: ${formData.feeling_word}
 			),
 		},
 		{
-			title: "Closing Commitment",
+			title: "Your Intention",
 			icon: <Target className="w-5 h-5" style={{ color: "#5B9378" }} />,
 			content: (
 				<div className="space-y-6">
@@ -683,14 +677,14 @@ FEELING: ${formData.feeling_word}
 							className="block text-sm font-medium mb-2"
 							style={{ color: "#5C7F4F" }}
 						>
-							What goals do you have for professional growth in this assignment?
+							What do you want to work on or get better at during this assignment?
 						</label>
 						<textarea
 							value={formData.growth_goals}
 							onChange={(e) =>
 								handleFieldChange("growth_goals", e.target.value)
 							}
-							placeholder="Identify specific skills to develop..."
+							placeholder="Like: managing my stress better, improving my speed, staying more present..."
 							rows={3}
 							className="w-full px-4 py-3 border rounded-lg resize-none focus:ring-2 focus:ring-sage-500"
 							style={{
@@ -707,7 +701,7 @@ FEELING: ${formData.feeling_word}
 							className="block text-sm font-medium mb-2"
 							style={{ color: "#5C7F4F" }}
 						>
-							Craft a one-sentence intention for this assignment
+							Sum up your intention in one sentence - what's your focus for this assignment?
 						</label>
 						<input
 							type="text"
@@ -715,7 +709,7 @@ FEELING: ${formData.feeling_word}
 							onChange={(e) =>
 								handleFieldChange("intention_statement", e.target.value)
 							}
-							placeholder="I will..."
+							placeholder="I will... (like: stay present and grounded, bring my best self, focus on clear communication...)"
 							className="w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-sage-500"
 							style={{
 								borderColor: errors.intention_statement ? "#ef4444" : "#E8E5E0",

@@ -1,34 +1,86 @@
-// Direct REST API save for burnout assessments to bypass hanging Supabase client
+import { supabase } from '../lib/supabase';
+
+// Helper function to add timeout to any promise
+function withTimeout<T>(promise: Promise<T>, timeoutMs: number, errorMsg: string): Promise<T> {
+  return Promise.race([
+    promise,
+    new Promise<T>((_, reject) =>
+      setTimeout(() => reject(new Error(errorMsg)), timeoutMs)
+    )
+  ]);
+}
+
+// Direct REST API save for burnout assessments with token refresh handling
 export async function saveBurnoutAssessmentDirect(saveData: any) {
   console.log("💾 Saving burnout assessment via direct REST API...");
 
   const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
   const supabaseKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
 
-  // Try different possible session keys
-  let sessionStr = localStorage.getItem('sb-kvguxuxanpynwdffpssm-auth-token');
+  // Get auth token - try from localStorage first to avoid hanging getSession() call
+  console.log("🔐 Getting auth token...");
+  let accessToken: string | null = null;
+  let userId: string | null = null;
 
-  // If not found, try to find any Supabase auth token
-  if (!sessionStr) {
-    const keys = Object.keys(localStorage);
-    const authKey = keys.find(k => k.includes('supabase.auth.token') || (k.startsWith('sb-') && k.includes('-auth-token')));
+  // Try to get token from localStorage (faster, doesn't hang)
+  try {
+    const authKey = Object.keys(localStorage).find(key => key.includes('supabase.auth.token'));
     if (authKey) {
-      console.log("📌 Found auth key:", authKey);
-      sessionStr = localStorage.getItem(authKey);
+      const authData = JSON.parse(localStorage.getItem(authKey) || '{}');
+      accessToken = authData.access_token || authData.currentSession?.access_token;
+      userId = authData.user?.id || authData.currentSession?.user?.id;
+
+      if (accessToken && userId) {
+        console.log("✅ Using token from localStorage for user:", userId);
+      }
+    }
+  } catch (err) {
+    console.warn("⚠️ Failed to get token from localStorage:", err);
+  }
+
+  // Fallback: try getSession() with timeout if localStorage didn't work
+  if (!accessToken || !userId) {
+    console.log("🔐 Attempting to get session from Supabase (with timeout)...");
+    try {
+      const result = await withTimeout(
+        supabase.auth.getSession(),
+        5000,
+        "Auth session timeout after 5 seconds"
+      );
+      const session = result.data.session;
+      const sessionError = result.error;
+
+      if (sessionError || !session) {
+        console.error("❌ No valid session found:", sessionError);
+        return { data: null, error: new Error("Not authenticated. Please log in again.") };
+      }
+
+      accessToken = session.access_token;
+      userId = session.user.id;
+      console.log("✅ Using token from getSession for user:", userId);
+    } catch (err: any) {
+      console.error("❌ Session fetch timed out or failed:", err.message);
+      return { data: null, error: new Error("Authentication timeout. Please try again.") };
     }
   }
 
-  if (!sessionStr) {
-    console.error("❌ No session found in localStorage");
-    console.log("Available localStorage keys:", Object.keys(localStorage));
-    return { data: null, error: new Error("Not authenticated") };
+  if (!accessToken || !userId) {
+    console.error("❌ Could not retrieve authentication token");
+    return { data: null, error: new Error("Authentication failed. Please log in again.") };
   }
 
-  const session = JSON.parse(sessionStr);
-  console.log("✅ Using session for user:", session.user?.id);
-
   try {
-    // Make direct REST API call to insert
+    console.log("🌐 Making fetch request to:", `${supabaseUrl}/rest/v1/burnout_assessments`);
+    console.log("🔑 Using auth token (first 20 chars):", accessToken.substring(0, 20) + "...");
+    console.log("📤 Request body:", saveData);
+
+    // Make direct REST API call to insert with timeout
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => {
+      console.error("⏱️ Fetch request timed out after 10 seconds");
+      controller.abort();
+    }, 10000);
+
     const response = await fetch(
       `${supabaseUrl}/rest/v1/burnout_assessments`,
       {
@@ -36,13 +88,15 @@ export async function saveBurnoutAssessmentDirect(saveData: any) {
         headers: {
           "Content-Type": "application/json",
           "apikey": supabaseKey,
-          "Authorization": `Bearer ${session.access_token}`,
+          "Authorization": `Bearer ${accessToken}`,
           "Prefer": "return=representation"
         },
-        body: JSON.stringify(saveData)
+        body: JSON.stringify(saveData),
+        signal: controller.signal
       }
     );
 
+    clearTimeout(timeoutId);
     console.log("📊 Save response status:", response.status);
 
     if (!response.ok) {
@@ -78,33 +132,61 @@ export async function saveBurnoutAssessmentDirect(saveData: any) {
   }
 }
 
-// Update existing assessment for today
+// Update existing assessment for today with token refresh handling
 export async function updateBurnoutAssessmentDirect(userId: string, date: string, updateData: any) {
   console.log("🔄 Updating burnout assessment via direct REST API...");
 
   const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
   const supabaseKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
 
-  // Try different possible session keys
-  let sessionStr = localStorage.getItem('sb-kvguxuxanpynwdffpssm-auth-token');
+  // Get auth token - try from localStorage first to avoid hanging getSession() call
+  console.log("🔐 Getting auth token for update...");
+  let accessToken: string | null = null;
 
-  // If not found, try to find any Supabase auth token
-  if (!sessionStr) {
-    const keys = Object.keys(localStorage);
-    const authKey = keys.find(k => k.includes('supabase.auth.token') || (k.startsWith('sb-') && k.includes('-auth-token')));
+  // Try to get token from localStorage (faster, doesn't hang)
+  try {
+    const authKey = Object.keys(localStorage).find(key => key.includes('supabase.auth.token'));
     if (authKey) {
-      console.log("📌 Found auth key:", authKey);
-      sessionStr = localStorage.getItem(authKey);
+      const authData = JSON.parse(localStorage.getItem(authKey) || '{}');
+      accessToken = authData.access_token || authData.currentSession?.access_token;
+
+      if (accessToken) {
+        console.log("✅ Using token from localStorage for update");
+      }
+    }
+  } catch (err) {
+    console.warn("⚠️ Failed to get token from localStorage:", err);
+  }
+
+  // Fallback: try getSession() with timeout if localStorage didn't work
+  if (!accessToken) {
+    console.log("🔐 Attempting to get session from Supabase (with timeout)...");
+    try {
+      const result = await withTimeout(
+        supabase.auth.getSession(),
+        5000,
+        "Auth session timeout after 5 seconds"
+      );
+      const session = result.data.session;
+      const sessionError = result.error;
+
+      if (sessionError || !session) {
+        console.error("❌ No valid session found:", sessionError);
+        return { data: null, error: new Error("Not authenticated. Please log in again.") };
+      }
+
+      accessToken = session.access_token;
+      console.log("✅ Using token from getSession for update");
+    } catch (err: any) {
+      console.error("❌ Session fetch timed out or failed:", err.message);
+      return { data: null, error: new Error("Authentication timeout. Please try again.") };
     }
   }
 
-  if (!sessionStr) {
-    console.error("❌ No session found in localStorage");
-    console.log("Available localStorage keys:", Object.keys(localStorage));
-    return { data: null, error: new Error("Not authenticated") };
+  if (!accessToken) {
+    console.error("❌ Could not retrieve authentication token");
+    return { data: null, error: new Error("Authentication failed. Please log in again.") };
   }
-
-  const session = JSON.parse(sessionStr);
 
   try {
     // Use direct date equality since assessment_date is a DATE column (not timestamp)
@@ -116,7 +198,7 @@ export async function updateBurnoutAssessmentDirect(userId: string, date: string
         headers: {
           "Content-Type": "application/json",
           "apikey": supabaseKey,
-          "Authorization": `Bearer ${session.access_token}`,
+          "Authorization": `Bearer ${accessToken}`,
           "Prefer": "return=representation"
         },
         body: JSON.stringify(updateData)

@@ -612,11 +612,11 @@ export const BillingPlanDetails: React.FC = () => {
 										<p className="text-sm text-blue-900">
 											Need a custom receipt or see a billing issue? Contact us:{" "}
 											<a
-												href="mailto:hello@huviatechnologies.com"
+												href="mailto:info@interpretreflect.com"
 												className="text-indigo-600 hover:text-indigo-500 underline font-medium"
-												aria-label="Email support at hello@huviatechnologies.com"
+												aria-label="Email support at info@interpretreflect.com"
 											>
-												hello@huviatechnologies.com
+												info@interpretreflect.com
 											</a>
 										</p>
 									</div>

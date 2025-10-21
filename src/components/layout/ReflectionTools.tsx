@@ -19,6 +19,7 @@ interface ReflectionTool {
 	title: string;
 	description: string;
 	status: Array<{ label: string; color: string }>;
+	trackingInfo?: string;
 	onClick?: () => void;
 }
 
@@ -35,21 +36,20 @@ export const ReflectionTools: React.FC<ReflectionToolsProps> = ({
 			iconColor: "#5C7F4F",
 			iconBg: "rgba(45, 95, 63, 0.2)",
 			title: "Pre-Assignment Prep",
-			description: "Prime attention, steady the nervous system, and set...",
+			description: "Set yourself up for success before your next assignment. Prepare your mind, body, and spirit.",
 			status: [
-				{ label: "Prepare Well", color: "text-gray-400" },
-				{ label: "Ready to start", color: "text-gray-400" },
+				{ label: "5 min", color: "text-gray-400" },
 			],
+			trackingInfo: "View confidence trends in Growth Insights → Confidence Levels",
 		},
 		{
 			icon: TargetIcon,
 			iconColor: "#5C7F4F",
 			iconBg: "rgba(45, 95, 63, 0.2)",
 			title: "Post-Assignment Debrief",
-			description: "Consolidate learning, de-load stress, and turn...",
+			description: "Process what happened, capture what you learned, and release the stress. Growth happens here.",
 			status: [
-				{ label: "Reflect & Grow", color: "text-gray-400" },
-				{ label: "Ready to start", color: "text-gray-400" },
+				{ label: "10 min", color: "text-gray-400" },
 			],
 		},
 		{
@@ -57,10 +57,9 @@ export const ReflectionTools: React.FC<ReflectionToolsProps> = ({
 			iconColor: "text-purple-400",
 			iconBg: "bg-purple-500/20",
 			title: "Teaming Prep",
-			description: "Align minds and mechanics so handoffs are smooth...",
+			description: "Get ready to work with your interpreting partner. Align on logistics, roles, and communication.",
 			status: [
-				{ label: "Team Ready", color: "text-gray-400" },
-				{ label: "Ready to start", color: "text-gray-400" },
+				{ label: "5 min", color: "text-gray-400" },
 			],
 		},
 		{
@@ -68,10 +67,9 @@ export const ReflectionTools: React.FC<ReflectionToolsProps> = ({
 			iconColor: "text-purple-400",
 			iconBg: "bg-purple-500/20",
 			title: "Teaming Reflection",
-			description: "Consolidate what worked between partners, surface...",
+			description: "Reflect on how your team collaboration went. What worked? What would you do differently?",
 			status: [
-				{ label: "Team Review", color: "text-gray-400" },
-				{ label: "Ready to start", color: "text-gray-400" },
+				{ label: "7 min", color: "text-gray-400" },
 			],
 		},
 		{
@@ -79,10 +77,9 @@ export const ReflectionTools: React.FC<ReflectionToolsProps> = ({
 			iconColor: "text-purple-400",
 			iconBg: "bg-purple-500/20",
 			title: "Mentoring Prep",
-			description: "Clarify the ask, define success, and set up a...",
+			description: "Prepare to get the most from your mentoring session. Clarify what you need and what success looks like.",
 			status: [
-				{ label: "Get the Right", color: "text-gray-400" },
-				{ label: "Ready to start", color: "text-gray-400" },
+				{ label: "5 min", color: "text-gray-400" },
 			],
 		},
 		{
@@ -90,10 +87,9 @@ export const ReflectionTools: React.FC<ReflectionToolsProps> = ({
 			iconColor: "text-purple-400",
 			iconBg: "bg-purple-500/20",
 			title: "Mentoring Reflection",
-			description: "Consolidate insights and capture next steps",
+			description: "Capture insights from your mentoring session and plan your next steps forward.",
 			status: [
-				{ label: "Apply", color: "text-gray-400" },
-				{ label: "Ready to start", color: "text-gray-400" },
+				{ label: "5 min", color: "text-gray-400" },
 			],
 		},
 		{
@@ -101,10 +97,20 @@ export const ReflectionTools: React.FC<ReflectionToolsProps> = ({
 			iconColor: "text-purple-400",
 			iconBg: "bg-purple-500/20",
 			title: "Wellness Check-in",
-			description: "Focus on emotional and physical wellbeing",
+			description: "Check in with your emotional and physical wellbeing. How are you really doing today?",
 			status: [
-				{ label: "Stay", color: "text-gray-400" },
-				{ label: "Ready to start", color: "text-gray-400" },
+				{ label: "3 min", color: "text-gray-400" },
+			],
+			trackingInfo: "View stress & energy trends in Growth Insights",
+		},
+		{
+			icon: HeartPulseIcon,
+			iconColor: "text-pink-400",
+			iconBg: "bg-pink-500/20",
+			title: "Emotion Clarity Practice",
+			description: "Build your emotional vocabulary to identify and regulate feelings with precision",
+			status: [
+				{ label: "3-5 min", color: "text-gray-400" },
 			],
 		},
 		{
@@ -112,10 +118,9 @@ export const ReflectionTools: React.FC<ReflectionToolsProps> = ({
 			iconColor: "text-red-400",
 			iconBg: "bg-red-500/20",
 			title: "Values Alignment Check-In",
-			description: "Realign with your values after challenging decisions",
+			description: "After an ethically complex situation, reconnect with what matters most to you.",
 			status: [
-				{ label: "Values", color: "text-gray-400" },
-				{ label: "Ready to start", color: "text-gray-400" },
+				{ label: "5 min", color: "text-gray-400" },
 			],
 		},
 		{
@@ -123,10 +128,9 @@ export const ReflectionTools: React.FC<ReflectionToolsProps> = ({
 			iconColor: "text-orange-400",
 			iconBg: "bg-orange-500/20",
 			title: "In-Session Self-Check",
-			description: "Quick monitoring for active interpreting sessions",
+			description: "Quick check-in during an active assignment. Monitor your energy and wellbeing in real-time.",
 			status: [
-				{ label: "Real-time", color: "text-gray-400" },
-				{ label: "Ready to start", color: "text-gray-400" },
+				{ label: "1 min", color: "text-gray-400" },
 			],
 		},
 		{
@@ -134,10 +138,9 @@ export const ReflectionTools: React.FC<ReflectionToolsProps> = ({
 			iconColor: "text-purple-400",
 			iconBg: "bg-purple-500/20",
 			title: "In-Session Team Sync",
-			description: "Team coordination check during assignments",
+			description: "Quick team coordination during an assignment. Stay aligned with your interpreting partner.",
 			status: [
-				{ label: "Team sync", color: "text-gray-400" },
-				{ label: "Ready to start", color: "text-gray-400" },
+				{ label: "1 min", color: "text-gray-400" },
 			],
 		},
 		{
@@ -146,10 +149,9 @@ export const ReflectionTools: React.FC<ReflectionToolsProps> = ({
 			iconBg: "rgba(45, 95, 63, 0.2)",
 			title: "Role-Space Reflection",
 			description:
-				"Clarify and honor your professional boundaries after each assignment",
+				"Clarify and honor your professional boundaries. What is (and isn't) your responsibility?",
 			status: [
-				{ label: "Boundaries", color: "text-gray-400" },
-				{ label: "Ready to start", color: "text-gray-400" },
+				{ label: "5 min", color: "text-gray-400" },
 			],
 		},
 		{
@@ -158,10 +160,9 @@ export const ReflectionTools: React.FC<ReflectionToolsProps> = ({
 			iconBg: "rgba(45, 95, 63, 0.2)",
 			title: "Supporting Direct Communication",
 			description:
-				"Reflect on facilitating respectful, independent communication",
+				"Reflect on how you facilitated direct communication between consumers. Keep the focus where it belongs.",
 			status: [
-				{ label: "Direct Flow", color: "text-gray-400" },
-				{ label: "Ready to start", color: "text-gray-400" },
+				{ label: "5 min", color: "text-gray-400" },
 			],
 		},
 		{
@@ -170,10 +171,9 @@ export const ReflectionTools: React.FC<ReflectionToolsProps> = ({
 			iconBg: "bg-orange-500/20",
 			title: "BIPOC Interpreter Wellness",
 			description:
-				"Center your experience as a Black, Indigenous, or Person of Color interpreter",
+				"A space to center your experience as a Black, Indigenous, or Person of Color interpreter. Your story matters.",
 			status: [
-				{ label: "Cultural Affirmation", color: "text-gray-400" },
-				{ label: "Ready to start", color: "text-gray-400" },
+				{ label: "7 min", color: "text-gray-400" },
 			],
 		},
 		{
@@ -182,10 +182,9 @@ export const ReflectionTools: React.FC<ReflectionToolsProps> = ({
 			iconBg: "bg-purple-500/20",
 			title: "Deaf Interpreter Professional Identity",
 			description:
-				"For DI/CDI: Teaming dynamics, audism, and professional recognition",
+				"For Deaf Interpreters: Navigate teaming dynamics, audism, and professional recognition.",
 			status: [
-				{ label: "DI/CDI Identity", color: "text-gray-400" },
-				{ label: "Ready to start", color: "text-gray-400" },
+				{ label: "7 min", color: "text-gray-400" },
 			],
 		},
 		{
@@ -194,10 +193,9 @@ export const ReflectionTools: React.FC<ReflectionToolsProps> = ({
 			iconBg: "rgba(45, 95, 63, 0.2)",
 			title: "Neurodivergent Interpreter Wellness",
 			description:
-				"For ADHD, autism, dyslexia, and all cognitive differences",
+				"For neurodivergent interpreters: Honor your unique strengths and navigate challenges with self-compassion.",
 			status: [
-				{ label: "ND Affirmation", color: "text-gray-400" },
-				{ label: "Ready to start", color: "text-gray-400" },
+				{ label: "7 min", color: "text-gray-400" },
 			],
 		},
 	];
@@ -212,6 +210,7 @@ export const ReflectionTools: React.FC<ReflectionToolsProps> = ({
 			"Mentoring Prep": "mentoring-prep",
 			"Mentoring Reflection": "mentoring-reflection",
 			"Wellness Check-in": "wellness",
+			"Emotion Clarity Practice": "emotion-clarity",
 			"Values Alignment Check-In": "ethics-meaning",
 			"In-Session Self-Check": "in-session-self",
 			"In-Session Team Sync": "in-session-team",
@@ -259,11 +258,25 @@ export const ReflectionTools: React.FC<ReflectionToolsProps> = ({
 						{card.title}
 					</h3>
 
-					<p className="text-sm mb-4" style={{
+					<p className="text-sm mb-3" style={{
 						color: "var(--color-slate-600)"
 					}}>
 						{card.description}
 					</p>
+
+					{/* Tracking Info */}
+					{card.trackingInfo && (
+						<div
+							className="mb-4 px-3 py-2 rounded-lg text-xs leading-relaxed"
+							style={{
+								backgroundColor: "rgba(92, 127, 79, 0.08)",
+								border: "1px solid rgba(92, 127, 79, 0.2)",
+								color: "#3A3A3A"
+							}}
+						>
+							📊 {card.trackingInfo}
+						</div>
+					)}
 
 					<div className="flex flex-wrap gap-2">
 						{card.status.map((statusItem, statusIndex) => (
@@ -284,3 +297,4 @@ export const ReflectionTools: React.FC<ReflectionToolsProps> = ({
 		</div>
 	);
 };
+

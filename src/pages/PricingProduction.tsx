@@ -505,7 +505,7 @@ export function PricingProduction() {
 							</span>
 						</summary>
 						<p className="px-4 pb-4 text-sm" style={{ color: "#666" }}>
-							Yes! Contact us at hello@huviatechnologies.com for custom pricing
+							Yes! Contact us at info@interpretreflect.com for custom pricing
 							for agencies and organizations.
 						</p>
 					</details>

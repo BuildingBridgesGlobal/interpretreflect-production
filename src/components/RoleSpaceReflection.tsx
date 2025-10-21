@@ -105,173 +105,173 @@ const RoleSpaceReflection: React.FC<RoleSpaceReflectionProps> = ({
 	// Section definitions with 8 prompts
 	const sections = [
 		{
-			title: "Role Definition & Shifts",
+			title: "Your Role & How It Shifted",
 			icon: <Compass className="w-5 h-5" style={{ color: "#5B9378" }} />,
 			fields: [
 				{
 					id: "role_intention",
 					label:
-						"What role did you intend to hold during this assignment (such as facilitator, conduit, or advocate)?",
+						"What role were you planning to play? (For example: a neutral conduit passing information, a facilitator helping communication flow, or an advocate supporting someone's needs)",
 					type: "textarea",
-					placeholder: "Describe your intended role and approach...",
+					placeholder: "Describe what you intended to do in this assignment...",
 					required: true,
 				},
 				{
 					id: "role_shift",
 					label:
-						"Did your role shift at any point? If so, describe when and why.",
+						"Did that role change at any point? If so, when did it shift and why?",
 					type: "textarea",
-					placeholder: "Reflect on any role changes during the assignment...",
+					placeholder: "Tell us if your role changed during the assignment and what prompted that...",
 					required: true,
 				},
 			],
 		},
 		{
-			title: "Professional Boundaries",
+			title: "Staying in Your Lane",
 			icon: <SecureLockIcon size={64} />,
 			fields: [
 				{
 					id: "boundary_pressure",
 					label:
-						"Were there moments you felt pressure to move outside your professional boundaries?",
+						"Were there moments when you felt pushed to step outside your professional role? (Like being asked to give advice instead of interpreting, or feeling like you should help in a way that wasn't your job)",
 					type: "textarea",
-					placeholder: "Describe any boundary challenges you faced...",
+					placeholder: "Tell us about any times you felt pressure to go beyond your role...",
 					required: true,
 				},
 				{
 					id: "pressure_response",
-					label: "How did you respond, and what emotions surfaced for you?",
+					label: "How did you handle that pressure? What feelings came up for you?",
 					type: "textarea",
-					placeholder: "Reflect on your response and emotional experience...",
+					placeholder: "Describe what you did and how you felt...",
 					required: true,
 				},
 			],
 		},
 		{
-			title: "Emotional Intelligence",
+			title: "Your Emotions & Choices",
 			icon: <HeartPulseIcon size={64} />,
 			fields: [
 				{
 					id: "emotional_awareness",
 					label:
-						"How did your awareness of your emotional state influence your interpreting decisions?",
+						"How did being aware of your own emotions affect the choices you made while interpreting?",
 					type: "textarea",
 					placeholder:
-						"Describe the connection between emotions and decisions...",
+						"Tell us how your feelings influenced your decisions...",
 					required: true,
 				},
 				{
 					id: "emotional_influence",
-					label: "How did emotions affect your ethical positioning?",
+					label: "Did your emotions affect how you handled ethical situations? In what ways?",
 					type: "textarea",
-					placeholder: "Reflect on emotional impact on ethics...",
+					placeholder: "Describe how your feelings impacted your ethical choices...",
 					required: true,
 				},
 			],
 		},
 		{
-			title: "Values & Ethics Navigation",
+			title: "When Values Clash",
 			icon: <NotepadIcon size={64} />,
 			fields: [
 				{
 					id: "values_tension",
 					label:
-						"Did you notice any tension between your values, ethical guidelines, and what participants expected from you?",
+						"Did you feel any tension between what you believe is right, what the professional guidelines say, and what the participants wanted from you?",
 					type: "textarea",
-					placeholder: "Describe any ethical tensions or conflicts...",
+					placeholder: "Describe any moments where these things didn't align...",
 					required: true,
 				},
 				{
 					id: "tension_navigation",
-					label: "How did you navigate this tension?",
+					label: "How did you work through that tension?",
 					type: "textarea",
-					placeholder: "Explain your approach to resolving conflicts...",
+					placeholder: "Tell us how you handled the situation...",
 					required: true,
 				},
 			],
 		},
 		{
-			title: "Role Communication",
+			title: "Setting Expectations",
 			icon: <CommunityIcon size={64} />,
 			fields: [
 				{
 					id: "role_communication",
 					label:
-						"How did you communicate or clarify your role to the people involved?",
+						"How did you explain or clarify your role to the people you were working with?",
 					type: "textarea",
-					placeholder: "Describe your role clarification approach...",
+					placeholder: "Describe how you communicated what you could and couldn't do...",
 					required: true,
 				},
 				{
 					id: "misunderstandings",
-					label: "Did any misunderstandings occur? How were they addressed?",
+					label: "Were there any mix-ups about your role? How did you clear them up?",
 					type: "textarea",
-					placeholder: "Reflect on any role confusion and resolution...",
+					placeholder: "Tell us about any confusion and how you resolved it...",
 					required: true,
 				},
 			],
 		},
 		{
-			title: "Strategies & Skills",
+			title: "What Helped You Cope",
 			icon: <TargetIcon size={64} />,
 			fields: [
 				{
 					id: "strategies_used",
 					label:
-						"What strategies or emotional intelligence skills did you use to handle stressful or challenging moments?",
+						"What did you do to handle the stressful or tough moments? What skills or strategies did you lean on?",
 					type: "textarea",
-					placeholder: "List strategies and skills employed...",
+					placeholder: "List the ways you managed stress or challenges...",
 					required: true,
 				},
 				{
 					id: "boundary_maintenance",
 					label:
-						"How did these help you maintain boundaries or adapt your stance?",
+						"How did these strategies help you stay in your professional role or adjust when needed?",
 					type: "textarea",
-					placeholder: "Connect strategies to boundary management...",
+					placeholder: "Connect your coping strategies to maintaining your boundaries...",
 					required: true,
 				},
 			],
 		},
 		{
-			title: "Experience Impact",
+			title: "How It Felt Overall",
 			icon: <AlertTriangle className="w-5 h-5" style={{ color: "#5B9378" }} />,
 			fields: [
 				{
 					id: "experience_feeling",
 					label:
-						"How did you feel about your presence and participation in the interaction?",
+						"How did you feel about being there and doing this work?",
 					type: "textarea",
-					placeholder: "Reflect on your overall experience...",
+					placeholder: "Share your overall feelings about the experience...",
 					required: true,
 				},
 				{
 					id: "energy_impact",
 					label:
-						"Did the experience leave you energized, uneasy, or something else?",
+						"Did this leave you feeling energized, drained, uneasy, or something else?",
 					type: "textarea",
-					placeholder: "Describe the impact on your energy and well-being...",
+					placeholder: "Describe how this affected your energy and well-being...",
 					required: true,
 				},
 			],
 		},
 		{
-			title: "Future Practice",
+			title: "Taking It Forward",
 			icon: <Sparkles className="w-5 h-5" style={{ color: "#5B9378" }} />,
 			fields: [
 				{
 					id: "future_insight",
-					label: "Looking ahead, what is one insight from this experience?",
+					label: "What's one thing you learned from this that you'll carry forward?",
 					type: "textarea",
-					placeholder: "Share a key learning or realization...",
+					placeholder: "Share your biggest takeaway...",
 					required: true,
 				},
 				{
 					id: "adjustment_practice",
 					label:
-						"What small adjustment would you like to practice next time to support your role-space and well-being?",
+						"What's one small thing you want to do differently next time to protect your role and your well-being?",
 					type: "textarea",
-					placeholder: "Identify a specific practice for next time...",
+					placeholder: "Name one specific change you want to practice...",
 					required: true,
 				},
 			],
@@ -366,8 +366,8 @@ const RoleSpaceReflection: React.FC<RoleSpaceReflectionProps> = ({
 				time_spent_seconds: timeSpent,
 				// Add field for getDisplayName fallback (matches what's checked in reflectionTypes.ts)
 				role_space:
-					formData.current_role ||
-					formData.role_clarity ||
+					formData.role_intention ||
+					formData.role_shift ||
 					"Role-space reflection completed",
 			};
 
@@ -541,7 +541,7 @@ const RoleSpaceReflection: React.FC<RoleSpaceReflectionProps> = ({
 									Role-Space Reflection
 								</h2>
 								<p className="text-sm mt-1" style={{ color: "#5A5A5A" }}>
-									Clarify and Honor Your Professional Boundaries
+									Understanding Your Professional Role & Boundaries
 								</p>
 							</div>
 						</div>
@@ -614,9 +614,7 @@ const RoleSpaceReflection: React.FC<RoleSpaceReflectionProps> = ({
 										className="text-sm leading-relaxed"
 										style={{ color: "#5A5A5A" }}
 									>
-										My clarity about my role, emotions, and boundaries
-										strengthens my ability to serve with integrity while
-										protecting my energy and professional presence.
+										Understanding my role, emotions, and boundaries helps me do this work with integrity while also protecting my energy and well-being.
 									</p>
 								</div>
 							</div>

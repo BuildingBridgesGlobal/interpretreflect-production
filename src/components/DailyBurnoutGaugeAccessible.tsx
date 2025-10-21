@@ -411,6 +411,8 @@ const DailyBurnoutGaugeAccessible: React.FC<DailyBurnoutGaugeProps> = ({
 	};
 
 	const saveAssessment = async (results: BurnoutAssessmentResults) => {
+		console.log("🔍 saveAssessment called, user:", user?.id);
+
 		if (!user) {
 			console.error("No user found, cannot save assessment");
 			alert("Please log in to save your assessment");
@@ -425,26 +427,22 @@ const DailyBurnoutGaugeAccessible: React.FC<DailyBurnoutGaugeProps> = ({
 			// Get just the date string (YYYY-MM-DD) for the DATE column
 			const assessmentDate = new Date().toISOString().split('T')[0];
 
-			// Prepare data matching exact table structure
+			// Prepare data matching ACTUAL table structure in database
+			// Cap total_score at 9.99 to avoid DECIMAL(3,2) overflow (database limitation)
+			const cappedScore = Math.min(results.totalScore, 9.99);
+
 			const saveData = {
 				user_id: user.id,
 				assessment_date: assessmentDate,
-				burnout_score: results.totalScore, // numeric 0-10
-				risk_level: results.riskLevel, // text: low/moderate/high/severe
-				symptoms: {
-					energy_tank: results.energyTank,
-					recovery_speed: results.recoverySpeed,
-					emotional_leakage: results.emotionalLeakage,
-					performance_signal: results.performanceSignal,
-					tomorrow_readiness: results.tomorrowReadiness,
-				}, // jsonb
+				// Individual scores (required columns)
 				energy_tank: results.energyTank, // integer 1-5
 				recovery_speed: results.recoverySpeed, // integer 1-5
 				emotional_leakage: results.emotionalLeakage, // integer 1-5
 				performance_signal: results.performanceSignal, // integer 1-5
 				tomorrow_readiness: results.tomorrowReadiness, // integer 1-5
-				total_score: results.rawScore ? results.rawScore.toString() : `${results.totalScore}`, // text
-				recovery_recommendations: results.recommendations || [], // text array
+				// Total score and risk level (required)
+				total_score: cappedScore, // decimal - capped at 9.99 due to DECIMAL(3,2) limitation
+				risk_level: results.riskLevel, // text: low/moderate/high/severe
 			};
 
 			console.log("📊 Full save data:", saveData);
@@ -458,6 +456,8 @@ const DailyBurnoutGaugeAccessible: React.FC<DailyBurnoutGaugeProps> = ({
 			if (burnoutError) {
 				console.error("❌ Insert failed:", burnoutError.message);
 				console.error("❌ Full error:", burnoutError);
+				console.log("🔍 Checking conditions - code:", burnoutError.code, "needsUpdate:", burnoutError.needsUpdate);
+				console.log("🔍 Code check:", burnoutError.code === "23505", "needsUpdate check:", !!burnoutError.needsUpdate);
 
 				// Handle duplicate entry for today - silently update
 				if (burnoutError.code === "23505" || burnoutError.needsUpdate) {

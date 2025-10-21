@@ -108,11 +108,11 @@ export const PaymentSuccess: React.FC = () => {
 						<p className="text-sm text-gray-500">
 							Need help?{" "}
 							<a
-								href="mailto:hello@huviatechnologies.com"
+								href="mailto:info@interpretreflect.com"
 								className="hover:underline"
 								style={{ color: "#5C7F4F" }}
 							>
-								hello@huviatechnologies.com
+								info@interpretreflect.com
 							</a>
 						</p>
 					</div>
@@ -175,11 +175,11 @@ export const PaymentSuccess: React.FC = () => {
 					<p className="text-sm text-gray-500">
 						Need help? Contact our support team at{" "}
 						<a
-							href="mailto:hello@huviatechnologies.com"
+							href="mailto:info@interpretreflect.com"
 							className="hover:underline"
 							style={{ color: "#5C7F4F" }}
 						>
-							hello@huviatechnologies.com
+							info@interpretreflect.com
 						</a>
 					</p>
 				</div>

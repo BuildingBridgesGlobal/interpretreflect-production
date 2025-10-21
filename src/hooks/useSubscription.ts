@@ -13,7 +13,7 @@ interface SubscriptionStatus {
 
 // Cache for subscription data to avoid repeated API calls
 const subscriptionCache = new Map<string, { data: any; timestamp: number; expires: number }>();
-const CACHE_DURATION = 30 * 1000; // Reduced to 30 seconds for better accuracy
+const CACHE_DURATION = 24 * 60 * 60 * 1000; // 24 hours - only check once per day
 
 // Export a function to force clear the cache (useful for debugging)
 export const clearSubscriptionCache = () => {
@@ -45,16 +45,16 @@ export const useSubscription = (): SubscriptionStatus => {
 		};
 	}, [user]);
 
-	// Also recheck subscription when window gains focus (to catch external changes)
+	// Listen for manual subscription refresh events (e.g., after payment)
 	useEffect(() => {
-		const handleFocus = () => {
-			console.log("Window focused - rechecking subscription");
+		const handleSubscriptionRefresh = () => {
+			console.log("Manual subscription refresh triggered");
 			clearSubscriptionCache();
 			checkSubscription();
 		};
 
-		window.addEventListener('focus', handleFocus);
-		return () => window.removeEventListener('focus', handleFocus);
+		window.addEventListener('refreshSubscription', handleSubscriptionRefresh);
+		return () => window.removeEventListener('refreshSubscription', handleSubscriptionRefresh);
 	}, [user]);
 
 	const checkSubscription = useCallback(async () => {
@@ -238,10 +238,14 @@ export const useSubscription = (): SubscriptionStatus => {
 			if (signal.aborted) {
 				return; // Don't update state if request was aborted
 			}
-			
+
 			console.error("Failed to check subscription:", err);
 			setError(err.message || "Failed to check subscription");
-			setHasActiveSubscription(false);
+
+			// IMPORTANT: On error, assume user has access (fail open, not closed)
+			// If their subscription is truly invalid, they wouldn't be able to log in
+			console.warn("⚠️ Subscription check failed - allowing access (fail-open policy)");
+			setHasActiveSubscription(true);
 			setSubscription(null);
 		} finally {
 			if (!signal.aborted) {

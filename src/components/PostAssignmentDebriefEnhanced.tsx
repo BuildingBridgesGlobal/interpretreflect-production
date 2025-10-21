@@ -405,15 +405,15 @@ Generated: ${new Date().toLocaleString()}`;
               Opening Context
             </h3>
             <p className="mb-6" style={{ color: '#5A5A5A' }}>
-              Now that you've completed your interpreting assignment, let's debrief your experience, 
-              process any emotions, and capture learnings for future growth. This reflection directly 
-              connects to your pre-assignment preparation.
+              You did it! Now let's take some time to process what happened, notice how you're feeling,
+              and capture what you learned. This helps you grow as an interpreter and take care of yourself
+              along the way.
             </p>
             
             <div className="space-y-6">
               <div>
                 <label className="block text-sm font-medium mb-2" style={{ color: '#047857' }}>
-                  In one word, how would you describe this assignment experience?
+                  If you had to describe this assignment in just one word, what would it be?
                 </label>
                 <input
                   type="text"
@@ -432,12 +432,12 @@ Generated: ${new Date().toLocaleString()}`;
 
               <div>
                 <label className="block text-sm font-medium mb-2" style={{ color: '#047857' }}>
-                  What was the most unexpected aspect of this assignment?
+                  What surprised you most about this assignment?
                 </label>
                 <textarea
                   value={formData.most_unexpected}
                   onChange={(e) => handleFieldChange('most_unexpected', e.target.value)}
-                  placeholder="Describe what surprised you..."
+                  placeholder="Tell us what caught you off guard..."
                   rows={3}
                   className="w-full px-4 py-3 border rounded-lg resize-none focus:ring-2 focus:ring-emerald-500"
                   style={{
@@ -451,7 +451,7 @@ Generated: ${new Date().toLocaleString()}`;
 
               <div>
                 <label className="block text-sm font-medium mb-2" style={{ color: '#047857' }}>
-                  Overall, how satisfied are you with your performance? (1-10)
+                  How satisfied are you with how you did? (1-10)
                 </label>
                 <div className="flex items-center space-x-4">
                   <input
@@ -529,15 +529,15 @@ Generated: ${new Date().toLocaleString()}`;
           <div>
             <label className="block text-sm font-medium mb-2" style={{ color: '#047857' }}>
               {prepData ? (
-                <>You rated your confidence as <strong>{prepData.confidence_level}/10</strong>. How accurate was that self-assessment?</>
+                <>Before the assignment, you rated your confidence as <strong>{prepData.confidence_level}/10</strong>. Looking back, was that accurate?</>
               ) : (
-                "How accurate was your pre-assignment confidence assessment?"
+                "Looking back, how accurate was your sense of confidence before starting?"
               )}
             </label>
             <textarea
               value={formData.confidence_accuracy}
               onChange={(e) => handleFieldChange('confidence_accuracy', e.target.value)}
-              placeholder="Reflect on your confidence prediction..."
+              placeholder="Tell us if you felt more or less confident than you expected..."
               rows={3}
               className="w-full px-4 py-3 border rounded-lg resize-none focus:ring-2 focus:ring-emerald-500"
               style={{
@@ -552,15 +552,15 @@ Generated: ${new Date().toLocaleString()}`;
           <div>
             <label className="block text-sm font-medium mb-2" style={{ color: '#047857' }}>
               {prepData ? (
-                <>You anticipated: <strong>{prepData.anticipated_challenges}</strong>. Which actually occurred? Which didn't?</>
+                <>You thought these challenges might come up: <strong>{prepData.anticipated_challenges}</strong>. Which ones actually happened? What surprised you?</>
               ) : (
-                "Reflect on your anticipated challenges vs. actual challenges"
+                "Compare what you thought would be challenging with what actually was"
               )}
             </label>
             <textarea
               value={formData.challenges_reflection}
               onChange={(e) => handleFieldChange('challenges_reflection', e.target.value)}
-              placeholder="Compare anticipated vs. actual challenges..."
+              placeholder="Tell us which challenges showed up and which didn't..."
               rows={3}
               className="w-full px-4 py-3 border rounded-lg resize-none focus:ring-2 focus:ring-emerald-500"
             />
@@ -569,15 +569,15 @@ Generated: ${new Date().toLocaleString()}`;
           <div>
             <label className="block text-sm font-medium mb-2" style={{ color: '#047857' }}>
               {prepData ? (
-                <>Your preparation included: <strong>{prepData.preparation_completed}</strong>. What was most/least helpful?</>
+                <>You prepared by: <strong>{prepData.preparation_completed}</strong>. What helped the most? What wasn't as useful?</>
               ) : (
-                "What aspects of your preparation were most and least helpful?"
+                "What parts of your preparation were most helpful? Least helpful?"
               )}
             </label>
             <textarea
               value={formData.preparation_effectiveness}
               onChange={(e) => handleFieldChange('preparation_effectiveness', e.target.value)}
-              placeholder="Evaluate your preparation effectiveness..."
+              placeholder="Reflect on what preparation paid off..."
               rows={3}
               className="w-full px-4 py-3 border rounded-lg resize-none focus:ring-2 focus:ring-emerald-500"
             />
@@ -586,15 +586,15 @@ Generated: ${new Date().toLocaleString()}`;
           <div>
             <label className="block text-sm font-medium mb-2" style={{ color: '#047857' }}>
               {prepData ? (
-                <>You felt <strong>{prepData.current_emotions.join(', ')}</strong> before starting. How did your emotional state evolve?</>
+                <>Before starting, you felt <strong>{prepData.current_emotions.join(', ')}</strong>. How did your emotions shift during the assignment?</>
               ) : (
-                "How did your emotional state evolve throughout the assignment?"
+                "How did your emotions change throughout the assignment?"
               )}
             </label>
             <textarea
               value={formData.emotional_evolution}
               onChange={(e) => handleFieldChange('emotional_evolution', e.target.value)}
-              placeholder="Describe your emotional journey..."
+              placeholder="Describe how your feelings changed along the way..."
               rows={3}
               className="w-full px-4 py-3 border rounded-lg resize-none focus:ring-2 focus:ring-emerald-500"
             />
@@ -603,15 +603,15 @@ Generated: ${new Date().toLocaleString()}`;
           <div>
             <label className="block text-sm font-medium mb-2" style={{ color: '#047857' }}>
               {prepData ? (
-                <>Looking at your intention: "<strong>{prepData.assignment_intention}</strong>". How well did you maintain this?</>
+                <>Your intention was: "<strong>{prepData.assignment_intention}</strong>". Were you able to stick with this?</>
               ) : (
-                "How well did you maintain your pre-assignment intention?"
+                "How well did you stay true to your intention for this assignment?"
               )}
             </label>
             <textarea
               value={formData.intention_maintenance}
               onChange={(e) => handleFieldChange('intention_maintenance', e.target.value)}
-              placeholder="Reflect on maintaining your intention..."
+              placeholder="Tell us how well you kept your intention in mind..."
               rows={3}
               className="w-full px-4 py-3 border rounded-lg resize-none focus:ring-2 focus:ring-emerald-500"
             />
@@ -626,12 +626,12 @@ Generated: ${new Date().toLocaleString()}`;
         <div className="space-y-6">
           <div>
             <label className="block text-sm font-medium mb-2" style={{ color: '#047857' }}>
-              Describe how the assignment actually unfolded vs. your expectations
+              How did the assignment actually go compared to what you expected?
             </label>
             <textarea
               value={formData.assignment_unfolded}
               onChange={(e) => handleFieldChange('assignment_unfolded', e.target.value)}
-              placeholder="Compare reality with expectations..."
+              placeholder="Tell us what was different from what you imagined..."
               rows={4}
               className="w-full px-4 py-3 border rounded-lg resize-none focus:ring-2 focus:ring-emerald-500"
               style={{
@@ -645,12 +645,12 @@ Generated: ${new Date().toLocaleString()}`;
 
           <div>
             <label className="block text-sm font-medium mb-2" style={{ color: '#047857' }}>
-              What interpreting strategies did you actually use? Which were most effective?
+              What strategies or techniques did you use? Which ones worked best?
             </label>
             <textarea
               value={formData.strategies_used}
               onChange={(e) => handleFieldChange('strategies_used', e.target.value)}
-              placeholder="Describe strategies and their effectiveness..."
+              placeholder="Share what approaches you used and what helped most..."
               rows={3}
               className="w-full px-4 py-3 border rounded-lg resize-none focus:ring-2 focus:ring-emerald-500"
               style={{
@@ -664,12 +664,12 @@ Generated: ${new Date().toLocaleString()}`;
 
           <div>
             <label className="block text-sm font-medium mb-2" style={{ color: '#047857' }}>
-              How did you manage cognitive load throughout the assignment?
+              How did you handle the mental workload? (Processing information, remembering details, managing stress all at once)
             </label>
             <textarea
               value={formData.cognitive_load_management}
               onChange={(e) => handleFieldChange('cognitive_load_management', e.target.value)}
-              placeholder="Describe your cognitive load management..."
+              placeholder="Tell us how you managed all the thinking and processing..."
               rows={3}
               className="w-full px-4 py-3 border rounded-lg resize-none focus:ring-2 focus:ring-emerald-500"
             />
@@ -757,7 +757,7 @@ Generated: ${new Date().toLocaleString()}`;
         <div className="space-y-6">
           <div>
             <label className="block text-sm font-medium mb-2" style={{ color: '#047857' }}>
-              What emotions arose during the assignment? (select all that apply)
+              What emotions came up for you during the assignment? (select all that apply)
             </label>
             <div className="grid grid-cols-3 md:grid-cols-5 gap-2 mb-4">
               {EMOTION_OPTIONS.map(emotion => (
@@ -795,12 +795,12 @@ Generated: ${new Date().toLocaleString()}`;
 
           <div>
             <label className="block text-sm font-medium mb-2" style={{ color: '#047857' }}>
-              Where did you notice tension or ease in your body during the work?
+              What did you notice in your body while you were working? (Like tension in your shoulders, butterflies in your stomach, feeling relaxed, etc.)
             </label>
             <textarea
               value={formData.body_experience}
               onChange={(e) => handleFieldChange('body_experience', e.target.value)}
-              placeholder="Describe physical sensations and their locations..."
+              placeholder="Tell us what physical sensations you noticed..."
               rows={3}
               className="w-full px-4 py-3 border rounded-lg resize-none focus:ring-2 focus:ring-emerald-500"
               style={{
@@ -814,12 +814,12 @@ Generated: ${new Date().toLocaleString()}`;
 
           <div>
             <label className="block text-sm font-medium mb-2" style={{ color: '#047857' }}>
-              Describe any moments of flow or struggle you experienced
+              Were there moments when everything clicked and you felt "in the zone"? Or times when you struggled?
             </label>
             <textarea
               value={formData.flow_struggle_moments}
               onChange={(e) => handleFieldChange('flow_struggle_moments', e.target.value)}
-              placeholder="Identify when you felt in flow vs. struggling..."
+              placeholder="Describe when things felt easy vs. when they felt hard..."
               rows={3}
               className="w-full px-4 py-3 border rounded-lg resize-none focus:ring-2 focus:ring-emerald-500"
             />
@@ -827,12 +827,12 @@ Generated: ${new Date().toLocaleString()}`;
 
           <div>
             <label className="block text-sm font-medium mb-2" style={{ color: '#047857' }}>
-              How did you manage stress or overwhelm if/when it arose?
+              If you felt stressed or overwhelmed, what did you do to cope in the moment?
             </label>
             <textarea
               value={formData.stress_management}
               onChange={(e) => handleFieldChange('stress_management', e.target.value)}
-              placeholder="Describe your stress management in action..."
+              placeholder="Share what helped you manage stress..."
               rows={3}
               className="w-full px-4 py-3 border rounded-lg resize-none focus:ring-2 focus:ring-emerald-500"
             />
@@ -964,12 +964,12 @@ Generated: ${new Date().toLocaleString()}`;
         <div className="space-y-6">
           <div>
             <label className="block text-sm font-medium mb-2" style={{ color: '#047857' }}>
-              What skills did you strengthen through this assignment?
+              What skills got stronger for you during this assignment?
             </label>
             <textarea
               value={formData.skills_strengthened}
               onChange={(e) => handleFieldChange('skills_strengthened', e.target.value)}
-              placeholder="Identify specific skills that improved..."
+              placeholder="Name the specific skills you practiced or improved..."
               rows={3}
               className="w-full px-4 py-3 border rounded-lg resize-none focus:ring-2 focus:ring-emerald-500"
               style={{
@@ -983,12 +983,12 @@ Generated: ${new Date().toLocaleString()}`;
 
           <div>
             <label className="block text-sm font-medium mb-2" style={{ color: '#047857' }}>
-              What new capabilities or confidence did you discover?
+              Did you discover you could do something you weren't sure about before? What new confidence did you gain?
             </label>
             <textarea
               value={formData.new_capabilities}
               onChange={(e) => handleFieldChange('new_capabilities', e.target.value)}
-              placeholder="Describe newfound abilities or confidence..."
+              placeholder="Tell us what you learned you can do..."
               rows={3}
               className="w-full px-4 py-3 border rounded-lg resize-none focus:ring-2 focus:ring-emerald-500"
             />
@@ -996,12 +996,12 @@ Generated: ${new Date().toLocaleString()}`;
 
           <div>
             <label className="block text-sm font-medium mb-2" style={{ color: '#047857' }}>
-              How has this assignment changed your approach to interpretation?
+              Will this experience change how you approach interpreting going forward? How?
             </label>
             <textarea
               value={formData.approach_changes}
               onChange={(e) => handleFieldChange('approach_changes', e.target.value)}
-              placeholder="Describe shifts in your approach or mindset..."
+              placeholder="Share what you'll do differently next time..."
               rows={3}
               className="w-full px-4 py-3 border rounded-lg resize-none focus:ring-2 focus:ring-emerald-500"
             />
@@ -1042,12 +1042,12 @@ Generated: ${new Date().toLocaleString()}`;
         <div className="space-y-6">
           <div>
             <label className="block text-sm font-medium mb-2" style={{ color: '#047857' }}>
-              What self-care or recovery practices have you done/will you do?
+              How are you taking care of yourself after this? What have you done or what will you do to recharge?
             </label>
             <textarea
               value={formData.recovery_practices}
               onChange={(e) => handleFieldChange('recovery_practices', e.target.value)}
-              placeholder="List recovery activities completed or planned..."
+              placeholder="List what you've done or plan to do to recover..."
               rows={3}
               className="w-full px-4 py-3 border rounded-lg resize-none focus:ring-2 focus:ring-emerald-500"
               style={{
@@ -1061,12 +1061,12 @@ Generated: ${new Date().toLocaleString()}`;
 
           <div>
             <label className="block text-sm font-medium mb-2" style={{ color: '#047857' }}>
-              What do you need to feel fully complete with this assignment?
+              What would help you feel like this assignment is fully wrapped up and behind you?
             </label>
             <textarea
               value={formData.completion_needs}
               onChange={(e) => handleFieldChange('completion_needs', e.target.value)}
-              placeholder="Identify what you need for closure..."
+              placeholder="Tell us what you need to feel complete..."
               rows={3}
               className="w-full px-4 py-3 border rounded-lg resize-none focus:ring-2 focus:ring-emerald-500"
             />
@@ -1349,7 +1349,7 @@ Generated: ${new Date().toLocaleString()}`;
         <div className="space-y-6">
           <div>
             <label className="block text-sm font-medium mb-2" style={{ color: '#047857' }}>
-              Based on this experience, what are three specific insights you'll apply to future assignments?
+              What are three specific things you learned that you'll use next time?
             </label>
             <div className="space-y-3">
               {[0, 1, 2].map((index) => (
@@ -1377,12 +1377,12 @@ Generated: ${new Date().toLocaleString()}`;
 
           <div>
             <label className="block text-sm font-medium mb-2" style={{ color: '#047857' }}>
-              What one thing are you most proud of from this assignment?
+              What's the one thing you're most proud of from this assignment?
             </label>
             <textarea
               value={formData.proudest_moment}
               onChange={(e) => handleFieldChange('proudest_moment', e.target.value)}
-              placeholder="Share your proudest achievement or moment..."
+              placeholder="Tell us what you're proud of accomplishing..."
               rows={3}
               className="w-full px-4 py-3 border rounded-lg resize-none focus:ring-2 focus:ring-emerald-500"
               style={{

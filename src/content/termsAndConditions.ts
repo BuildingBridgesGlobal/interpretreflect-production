@@ -360,7 +360,7 @@ We may update these Terms periodically. Continued use after changes constitutes 
 - Monthly subscriptions: No refunds for partial months
 - Annual subscriptions: Non-refundable once purchased
 - Refunds are at our sole discretion except where required by law
-- To request a refund, contact hello@huviatechnologies.com
+- To request a refund, contact info@interpretreflect.com
 
 ### 12A.5 Free Trials
 - Free trial terms, if offered, are specified at signup
@@ -413,12 +413,12 @@ While we respect user privacy, we may be required to report certain information 
 
 ## 15. ACCESSIBILITY
 
-We are committed to making our Service accessible to all users. If you encounter accessibility issues, please contact us at hello@huviatechnologies.com.
+We are committed to making our Service accessible to all users. If you encounter accessibility issues, please contact us at info@interpretreflect.com.
 
 ## 16. DISPUTE RESOLUTION
 
 ### 16.1 Informal Resolution First
-We prefer to resolve disputes informally. Before filing any legal action, please contact us at hello@huviatechnologies.com to attempt to resolve the issue. We'll work with you in good faith to find a solution.
+We prefer to resolve disputes informally. Before filing any legal action, please contact us at info@interpretreflect.com to attempt to resolve the issue. We'll work with you in good faith to find a solution.
 
 ### 16.2 Governing Law
 These Terms are governed by the laws of the State of Delaware, USA. However, this does not deprive you of protections under mandatory consumer protection laws in your place of residence.
@@ -495,7 +495,7 @@ In compliance with the Children's Online Privacy Protection Act (COPPA):
 - Do not allow minors to use this Service
 - The Service contains AI interactions and wellness content designed for adult interpreters
 - We are not responsible for minors who misrepresent their age
-- If you believe a minor has accessed our Service, contact us immediately at hello@huviatechnologies.com
+- If you believe a minor has accessed our Service, contact us immediately at info@interpretreflect.com
 
 ### 20.5 Discovery of Minor Usage
 If we discover or are notified that a minor has registered:
@@ -517,7 +517,7 @@ These Terms, together with our Privacy Policy, constitute the entire agreement b
 For questions about these Terms, please contact:
 
 **Huvia Technologies, LLC**
-Email: hello@huviatechnologies.com
+Email: info@interpretreflect.com
 
 ## 24. EMERGENCY RESOURCES
 
@@ -718,7 +718,7 @@ BY CLICKING "I ACCEPT" OR USING THE SERVICE, YOU ACKNOWLEDGE THAT:
   - Zero-Knowledge Wellness Verification (ZKWV)
   - Emotional Contagion Mapping (ECM) for agencies
   - Attestation Receipts system
-  - Updated all contact emails to hello@huviatechnologies.com
+  - Updated all contact emails to info@interpretreflect.com
 - Version 3.0.0 - January 23, 2025 - Major revision:
   - Added explicit COPPA compliance and strict 18+ age restrictions
   - Included geo-appropriate crisis resources with monitoring disclaimers
@@ -915,7 +915,7 @@ We may update this Policy periodically. We will notify you of material changes v
 For privacy-related questions or concerns:
 
 **InterpretReflect Privacy Team**
-Email: hello@huviatechnologies.com
+Email: info@interpretreflect.com
 Phone: [Your Phone Number]
 Address: [Your Business Address]
 

@@ -204,28 +204,36 @@ export const ManageSubscription: React.FC = () => {
 	const handleCancelSubscription = async () => {
 		setCancelling(true);
 		try {
-			// Call your backend API to cancel the subscription
-			const { error } = await supabase.rpc("cancel_subscription", {
-				user_id: user?.id,
+			// Get auth session for the request
+			const { data: { session } } = await supabase.auth.getSession();
+
+			if (!session) {
+				throw new Error('Not authenticated');
+			}
+
+			// Call Edge Function to create Stripe Customer Portal session
+			const { data, error } = await supabase.functions.invoke('create-portal-session', {
+				body: {
+					returnUrl: window.location.origin + '/profile-settings'
+				},
+				headers: {
+					Authorization: `Bearer ${session.access_token}`
+				}
 			});
 
 			if (error) throw error;
 
-			toast.success("Subscription cancelled successfully");
-			setShowCancelModal(false);
-			await fetchSubscriptionData();
+			if (data?.url) {
+				// Redirect to Stripe Customer Portal where user can cancel
+				window.location.href = data.url;
+			} else {
+				throw new Error('No portal URL returned');
+			}
 
-			// Announce to screen readers
-			const announcement = document.createElement("div");
-			announcement.setAttribute("role", "status");
-			announcement.setAttribute("aria-live", "polite");
-			announcement.textContent =
-				"Your subscription has been cancelled. You will retain access until the end of your billing period.";
-			document.body.appendChild(announcement);
-			setTimeout(() => document.body.removeChild(announcement), 3000);
 		} catch (error) {
-			console.error("Error cancelling subscription:", error);
-			toast.error("Failed to cancel subscription. Please contact support.");
+			console.error("Error opening billing portal:", error);
+			toast.error("Failed to open billing portal. Please contact support at info@interpretreflect.com");
+			setShowCancelModal(false);
 		} finally {
 			setCancelling(false);
 		}
@@ -745,15 +753,6 @@ export const ManageSubscription: React.FC = () => {
 									aria-hidden="true"
 								/>
 								<span className="text-gray-700">
-									7-day money-back guarantee for first-time subscribers.
-								</span>
-							</li>
-							<li className="flex items-start">
-								<CheckCircle
-									className="h-5 w-5 text-green-600 mt-0.5 mr-3 flex-shrink-0"
-									aria-hidden="true"
-								/>
-								<span className="text-gray-700">
 									We'll notify you at least 30 days in advance about any price
 									changes.
 								</span>
@@ -766,11 +765,11 @@ export const ManageSubscription: React.FC = () => {
 								<span className="text-gray-700">
 									Support email for billing issues:{" "}
 									<a
-										href="mailto:hello@huviatechnologies.com"
+										href="mailto:info@interpretreflect.com"
 										className="text-green-700 hover:text-green-600 underline"
-										aria-label="Email support at hello@huviatechnologies.com"
+										aria-label="Email support at info@interpretreflect.com"
 									>
-										hello@huviatechnologies.com
+										info@interpretreflect.com
 									</a>
 								</span>
 							</li>
@@ -820,30 +819,34 @@ export const ManageSubscription: React.FC = () => {
 								id="modal-title"
 								className="text-lg font-semibold text-gray-900"
 							>
-								Cancel Subscription
+								Manage Your Subscription
 							</h3>
 						</div>
 
 						<div className="px-6 py-4">
 							<div className="flex items-start mb-4">
-								<AlertCircle
-									className="h-6 w-6 text-amber-500 mt-0.5 mr-3 flex-shrink-0"
+								<Shield
+									className="h-6 w-6 text-green-600 mt-0.5 mr-3 flex-shrink-0"
 									aria-hidden="true"
 								/>
 								<div>
-									<p className="text-gray-700">
-										Are you sure you want to cancel? You will retain access
-										until{" "}
+									<p className="text-gray-700 mb-3">
+										You'll be securely redirected to Stripe's billing portal where you can:
+									</p>
+									<ul className="list-disc list-inside space-y-1 text-sm text-gray-600 mb-3 ml-2">
+										<li>Cancel your subscription</li>
+										<li>Update payment methods</li>
+										<li>View billing history</li>
+										<li>Download invoices</li>
+									</ul>
+									<p className="text-sm text-gray-600">
+										If you cancel, you'll retain access until{" "}
 										<strong>
 											{subscription?.next_billing_date
 												? formatDate(subscription.next_billing_date)
 												: "the end of your billing period"}
 										</strong>
-										.
-									</p>
-									<p className="text-sm text-gray-600 mt-2">
-										Your reflections remain secure and exportable even after
-										canceling.
+										. Your reflections remain secure and exportable.
 									</p>
 								</div>
 							</div>
@@ -854,22 +857,23 @@ export const ManageSubscription: React.FC = () => {
 								type="button"
 								onClick={() => setShowCancelModal(false)}
 								className="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-								aria-label="Keep subscription"
+								aria-label="Go back"
 							>
-								Keep Subscription
+								Go Back
 							</button>
 							<button
 								type="button"
 								onClick={handleCancelSubscription}
 								disabled={cancelling}
-								className="px-4 py-2 text-sm font-medium text-white bg-red-600 border border-transparent rounded-md hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 disabled:opacity-50 disabled:cursor-not-allowed"
+								className="px-4 py-2 text-sm font-medium text-white border border-transparent rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 disabled:opacity-50 disabled:cursor-not-allowed"
+								style={{ backgroundColor: cancelling ? "#9CA3AF" : "#5C7F4F" }}
 								aria-label={
 									cancelling
-										? "Cancelling subscription..."
-										: "Confirm cancellation"
+										? "Opening billing portal..."
+										: "Continue to billing portal"
 								}
 							>
-								{cancelling ? "Cancelling..." : "Yes, Cancel"}
+								{cancelling ? "Opening..." : "Continue to Billing Portal"}
 							</button>
 						</div>
 					</div>

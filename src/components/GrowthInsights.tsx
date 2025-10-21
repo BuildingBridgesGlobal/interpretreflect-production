@@ -6,6 +6,7 @@ import {
 	ChevronRight,
 	Clock,
 	Heart,
+	Info,
 	MessageCircle,
 	RefreshCw,
 	Sparkles,
@@ -53,6 +54,7 @@ interface GrowthMetrics {
 
 	lastActivity: string;
 	lastActivityTime: string;
+
 }
 
 interface ActivityEvent {
@@ -100,6 +102,16 @@ const GrowthInsights: React.FC = () => {
 			setError(null);
 
 			console.log("🔄 Starting data fetch...");
+
+			// Try to ensure fresh session, but don't let it block (timeout after 3 seconds)
+			try {
+				await Promise.race([
+					ensureFreshSession(),
+					new Promise((_, reject) => setTimeout(() => reject(new Error('Session check timeout')), 3000))
+				]);
+			} catch (sessionError) {
+				console.log("⚠️ Session check timed out, continuing anyway:", sessionError);
+			}
 
 			// === FETCH REFLECTIONS DATA ===
 			// Query: Get all reflection entries for the logged-in user
@@ -239,42 +251,14 @@ const GrowthInsights: React.FC = () => {
 					console.log("Processing assessment:", {
 						id: b.id,
 						date: b.assessment_date,
-						burnout_score: b.burnout_score,
 						total_score: b.total_score,
 						risk_level: b.risk_level
 					});
 
-					// Check if we have burnout_score (0-10) or need to normalize total_score
-					let normalizedScore: number;
-					if (b.burnout_score !== undefined && b.burnout_score !== null) {
-						// Already normalized 0-10 scale from burnout_assessments table
-						normalizedScore = parseFloat(String(b.burnout_score));
-						console.log(`Using burnout_score: ${b.burnout_score} -> normalized: ${normalizedScore}`);
-					} else if (b.total_score) {
-						// Handle various formats of total_score
-						const rawScore = parseFloat(String(b.total_score));
-						if (rawScore >= 5 && rawScore <= 25) {
-							// Old format: 5-25 range, normalize to 0-10
-							normalizedScore = ((rawScore - 5) / 20) * 10;
-							console.log(`Converting total_score (5-25): ${rawScore} -> normalized: ${normalizedScore}`);
-						} else if (rawScore >= 0 && rawScore <= 10) {
-							// Already normalized
-							normalizedScore = rawScore;
-							console.log(`Using already normalized total_score: ${rawScore}`);
-						} else if (rawScore >= 15 && rawScore <= 75) {
-							// Another old format: 15-75 range, normalize to 0-10
-							normalizedScore = ((rawScore - 15) / 60) * 10;
-							console.log(`Converting total_score (15-75): ${rawScore} -> normalized: ${normalizedScore}`);
-						} else {
-							// Unknown format, use as-is but clamp to 0-10
-							normalizedScore = Math.min(10, Math.max(0, rawScore));
-							console.log(`Unknown format total_score: ${rawScore} -> clamped: ${normalizedScore}`);
-						}
-					} else {
-						// Fallback to middle value
-						normalizedScore = 5;
-						console.log(`No score found, using default: ${normalizedScore}`);
-					}
+					// The total_score is already normalized to 0-10 scale
+					// (saved as DECIMAL(3,2) capped at 9.99)
+					const normalizedScore = b.total_score ? parseFloat(String(b.total_score)) : 5;
+					console.log(`Using total_score: ${b.total_score} -> normalized: ${normalizedScore}`);
 
 					return {
 						date: new Date(b.assessment_date).toLocaleDateString("en-US", {
@@ -282,7 +266,7 @@ const GrowthInsights: React.FC = () => {
 							day: "numeric",
 						}),
 						score: Math.round(normalizedScore * 10) / 10, // Round to 1 decimal
-						rawScore: b.total_score ? parseFloat(String(b.total_score)) : normalizedScore,
+						rawScore: normalizedScore,
 						riskLevel: b.risk_level,
 					};
 				});
@@ -557,6 +541,8 @@ const GrowthInsights: React.FC = () => {
 		};
 	}, [user, fetchMetrics]);
 
+
+
 	// ========== HELPER FUNCTIONS ==========
 
 	const mapEntryKindToType = (entryKind: string): ActivityEvent["type"] => {
@@ -672,7 +658,7 @@ const GrowthInsights: React.FC = () => {
 								Growth Insights
 							</h1>
 							<p className="text-gray-600 mt-2">
-								Track your wellness journey and professional development
+								Track your burnout potential over time with daily assessments and professional development
 							</p>
 						</div>
 
@@ -707,7 +693,7 @@ const GrowthInsights: React.FC = () => {
 				{/* ========== LIVE TRACKING SECTION ========== */}
 				<div className="bg-white rounded-xl p-6 shadow-sm mb-8" role="region" aria-labelledby="live-tracking-heading">
 					<h2 id="live-tracking-heading" className="text-xl font-semibold text-gray-900 mb-4">
-						Live Tracking
+						Live Burnout Tracking
 					</h2>
 					<p className="text-sm text-gray-600 mb-4">
 						<strong>Data Source:</strong> These metrics are pulled from your most recent Daily Burnout Check (found on your homepage).
@@ -826,8 +812,8 @@ const GrowthInsights: React.FC = () => {
 								/>
 							</div>
 							<span className="text-sm font-medium px-2 py-1 rounded-full bg-amber-100 text-amber-700">
-								Wellness: {metrics?.averageBurnoutScore
-									? Math.round((10 - metrics.averageBurnoutScore) * 10)
+								Burnout Risk: {metrics?.averageBurnoutScore
+									? Math.round(metrics.averageBurnoutScore * 10)
 									: 50}%
 							</span>
 						</div>
@@ -835,13 +821,13 @@ const GrowthInsights: React.FC = () => {
 							id="burnout-heading"
 							className="text-lg font-semibold text-gray-900 mb-1"
 						>
-							Daily Burnout Trend
+							Daily Burnout Tracker
 						</h2>
 						<p className="text-sm text-gray-600 mb-1">
-							Track your wellness with daily assessments
+							Track your burnout potential over time with daily assessments
 						</p>
 						<p className="text-xs text-amber-600 mb-3 font-medium">
-							From: Homepage Daily Burnout Checks
+							📊 Data from: Homepage → Daily Burnout Check
 						</p>
 						{/* Mini Chart */}
 						{metrics?.burnoutTrend && metrics.burnoutTrend.length > 0 ? (
@@ -849,8 +835,8 @@ const GrowthInsights: React.FC = () => {
 								<AreaChart
 									data={metrics.burnoutTrend.slice(-7).map((item) => ({
 										date: item.date,
-										// Convert 0-10 burnout score to 0-100 wellness percentage
-										percentage: Math.round((10 - item.score) * 10),
+										// Convert 0-10 burnout score to 0-100 burnout risk percentage
+										percentage: Math.round(item.score * 10),
 									}))
 								}
 								>
@@ -889,7 +875,7 @@ const GrowthInsights: React.FC = () => {
 														{payload[0].payload.date}
 													</p>
 													<p className="text-xs text-amber-600">
-														Wellness: {payload[0].value}%
+														Burnout Risk: {payload[0].value}%
 													</p>
 												</div>
 											);
@@ -1048,17 +1034,17 @@ const GrowthInsights: React.FC = () => {
 					id="burnout-trend-heading"
 					className="text-xl font-semibold text-gray-900"
 					>
-					Your Stress & Energy Over Time
+					Daily Burnout Tracker
 					</h2>
 					<p className="text-sm text-gray-600 mt-1 flex items-center gap-2">
 					<Info className="w-4 h-4 text-blue-500" aria-hidden="true" />
-					 <strong>Data Source:</strong> Daily Burnout Checks from your homepage
+					 <strong>Data Source:</strong> Daily Burnout Check from your homepage
 					 </p>
 					</div>
 						<div className="flex items-center gap-4">
 							<div className="flex items-center gap-2 text-sm text-gray-600">
 								<Activity className="w-4 h-4" aria-hidden="true" />
-								<span>Track your wellness percentage over time</span>
+								<span>Track your burnout potential over time</span>
 							</div>
 						</div>
 					</div>
@@ -1070,9 +1056,9 @@ const GrowthInsights: React.FC = () => {
 								<LineChart
 									data={metrics.burnoutTrend.map((item) => ({
 										date: item.date,
-										// Convert 0-10 burnout score to 100-0 wellness percentage
-										// 0 burnout = 100% wellness, 10 burnout = 0% wellness
-										percentage: Math.round((10 - item.score) * 10),
+										// Convert 0-10 burnout score to 0-100 burnout risk percentage
+										// 0 burnout = 0% risk, 10 burnout = 100% risk
+										percentage: Math.round(item.score * 10),
 									}))}
 									margin={{ top: 5, right: 30, left: 20, bottom: 5 }}
 								>
@@ -1095,16 +1081,16 @@ const GrowthInsights: React.FC = () => {
 										border: "1px solid #e5e7eb",
 										borderRadius: "8px",
 									}}
-									formatter={(value: any) => [`${value}%`, "Wellness"]}
+									formatter={(value: any) => [`${value}%`, "Burnout Risk"]}
 								/>
 								<Line
 									type="monotone"
 									dataKey="percentage"
-									stroke="#10b981"
+									stroke="#ef4444"
 									strokeWidth={2}
-									dot={{ fill: "#10b981", r: 4 }}
+									dot={{ fill: "#ef4444", r: 4 }}
 									activeDot={{ r: 6 }}
-									name="Wellness %"
+									name="Burnout Risk %"
 								/>
 							</LineChart>
 						</ResponsiveContainer>
@@ -1117,7 +1103,7 @@ const GrowthInsights: React.FC = () => {
 								</div>
 								<p className="text-gray-500">Data synced from Supabase</p>
 								<p className="text-sm text-gray-400 mt-2">
-									Complete daily assessments to populate your wellness trend
+									Complete daily assessments to populate your burnout trend
 								</p>
 							</div>
 						</div>
@@ -1125,13 +1111,13 @@ const GrowthInsights: React.FC = () => {
 					</div>
 					<div className="mt-4 p-3 bg-amber-50 rounded-lg">
 						<p className="text-sm text-amber-800">
-							<strong>How it works:</strong> Your wellness trend updates
-							automatically with each Daily Burnout Check you complete on the homepage.
-							The graph shows your wellness percentage (100% = excellent, 0% = severe burnout).
-							Wellness above 70% indicates good balance, while below 30% suggests you may need additional support.
+							<strong>How it works:</strong> Your burnout trend updates
+							automatically with each Daily Burnout Check you complete on the homepage (once every 12 hours).
+							The graph shows your burnout risk percentage (0% = low risk, 100% = high risk).
+							Risk below 30% indicates good balance, while above 70% suggests you may need additional support.
 						</p>
 						<p className="text-sm text-amber-800 mt-2">
-							<strong>Tip:</strong> Complete your Daily Burnout Check on the homepage each day to see your wellness trend populate here!
+							<strong>Tip:</strong> Complete your Daily Burnout Check on the homepage every 12 hours to see your burnout trend populate here!
 						</p>
 					</div>
 				</div>

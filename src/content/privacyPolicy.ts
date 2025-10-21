@@ -117,7 +117,7 @@ We do not disclose your encrypted content to support or vendors unless you grant
 
 ### 8.1 Access, correction, deletion, portability
 - You can access/update profile data in-app.
-- Request a copy or deletion of your personal data at hello@huviatechnologies.com.
+- Request a copy or deletion of your personal data at info@interpretreflect.com.
 - We will verify your identity and respond within statutory timelines.
 
 ### 8.2 Opt-outs
@@ -188,7 +188,7 @@ We classify our AI as general-purpose/limited-risk. We implement transparency, r
 - Rights to know/access, delete, correct, portability, and limit use of sensitive data where applicable.
 - We do not sell or share personal information for cross-context behavioral advertising.
 - California residents may use an agent; we honor GPC signals where applicable.
-- To exercise rights: hello@huviatechnologies.com.
+- To exercise rights: info@interpretreflect.com.
 
 ## 15) Changes to this Policy
 
@@ -197,7 +197,7 @@ When we make material changes, we will notify you (email and/or in-app) and upda
 ## 16) Contact us (and DPO, if applicable)
 
 **Huvia Technologies, LLC**
-Email: hello@huviatechnologies.com
+Email: info@interpretreflect.com
 
 EU/UK inquiries: If we appoint an EU/UK representative or DPO, we will publish their details here.
 
@@ -216,7 +216,7 @@ We do not make legally significant decisions based solely on automated processin
 Linked resources are governed by their own privacy policies.
 
 ### 17.5 Data Processing Addendum (B2B)
-If you are an organizational customer needing a DPA (including SCCs), contact hello@huviatechnologies.com.
+If you are an organizational customer needing a DPA (including SCCs), contact info@interpretreflect.com.
 
 ## 18) Summary of key commitments (non-contractual plain English)
 

@@ -172,10 +172,30 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
 
 					console.log("Auth state changed:", event, session?.user?.email);
 
+					// Handle session expired / signed out due to expiration
+					if (event === "SIGNED_OUT" && !session) {
+						// Check if this was due to session expiration (not manual logout)
+						const wasManualLogout = sessionManager.getSessionData()?.reason === "LOGOUT";
+
+						if (!wasManualLogout) {
+							// Session expired, trigger modal
+							window.dispatchEvent(new CustomEvent("sessionExpired"));
+						}
+					}
+
 					// Handle token refresh events
 					if (event === "TOKEN_REFRESHED" && session) {
-						console.log("Token refreshed successfully");
+						console.log("Token refreshed successfully - reloading user data");
 						setUser(session.user);
+
+						// Reload user data to ensure subscription status is current
+						await UserDataLoader.loadUserData(session.user.id);
+
+						// Trigger a data sync to refresh all data
+						dataSyncService.triggerManualSync().catch(err => {
+							console.error("Failed to sync data after token refresh:", err);
+						});
+
 						return;
 					}
 

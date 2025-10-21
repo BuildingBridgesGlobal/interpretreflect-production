@@ -1,9 +1,12 @@
+import { BookOpen, Sparkles } from "lucide-react";
 import type React from "react";
+import { useState } from "react";
 
 import { DirectCommunicationReflection } from "../DirectCommunicationReflection";
 import { EthicsMeaningCheckAccessible } from "../EthicsMeaningCheckAccessible";
 import { InSessionSelfCheck } from "../InSessionSelfCheck";
 import { InSessionTeamSync } from "../InSessionTeamSync";
+import { InterpreterGlossary } from "../InterpreterGlossary";
 import { ReflectionTools } from "../layout/ReflectionTools";
 import { MentoringPrepAccessible } from "../MentoringPrepAccessible";
 import { MentoringReflectionAccessible } from "../MentoringReflectionAccessible";
@@ -92,6 +95,7 @@ export const ReflectionStudioView: React.FC<ReflectionStudioViewProps> = ({
 	setShowNeurodivergentInterpreter,
 	saveReflection,
 }) => {
+	const [showGlossary, setShowGlossary] = useState(false);
 	const handleToolSelect = (tool: string) => {
 		switch (tool) {
 			case "pre-assignment":
@@ -152,20 +156,46 @@ export const ReflectionStudioView: React.FC<ReflectionStudioViewProps> = ({
 			<div className="space-y-8">
 				{/* Welcome Section */}
 				<div className="mb-8">
-					<h2
-						id="reflection-studio-heading"
-						className="text-4xl font-bold mb-3"
-						style={{ color: "var(--color-slate-700)", letterSpacing: "-0.5px" }}
-					>
-						Reflection Studio
-					</h2>
-					<p
-						className="text-lg"
-						style={{ color: "var(--color-slate-600)", fontWeight: "400" }}
-					>
-						Ready to reflect and grow today?
-					</p>
+					<div className="flex items-start justify-between gap-4">
+						<div className="flex-1">
+							<div className="flex items-center gap-3 mb-3">
+								<Sparkles className="text-green-600" size={32} />
+								<h2
+									id="reflection-studio-heading"
+									className="text-4xl font-bold"
+									style={{ color: "var(--color-slate-700)", letterSpacing: "-0.5px" }}
+								>
+									Reflection Studio
+								</h2>
+							</div>
+							<p
+								className="text-lg mb-3"
+								style={{ color: "var(--color-slate-600)", fontWeight: "400", lineHeight: "1.6" }}
+							>
+								Your personal space for professional growth. Choose a guided reflection below to process your work, build skills, and take care of yourself.
+							</p>
+							<p
+								className="text-base"
+								style={{ color: "var(--color-slate-500)", fontWeight: "400", lineHeight: "1.6" }}
+							>
+								New to some of these terms? That's okay! We use professional interpreter language here, but we're here to learn together.
+							</p>
+						</div>
+						<button
+							onClick={() => setShowGlossary(true)}
+							className="flex items-center gap-2 px-4 py-2.5 rounded-lg border-2 border-green-500 bg-white hover:bg-green-50 transition-all shadow-sm hover:shadow-md"
+							style={{ color: "var(--color-green-700)" }}
+						>
+							<BookOpen size={20} />
+							<span className="font-medium">View Glossary</span>
+						</button>
+					</div>
 				</div>
+
+				{/* Glossary Modal */}
+				{showGlossary && (
+					<InterpreterGlossary onClose={() => setShowGlossary(false)} />
+				)}
 
 				{/* Category Tabs */}
 				<nav

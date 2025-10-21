@@ -66,7 +66,7 @@ export function AdminDashboard() {
 
 		// In production, check admin role from database
 		const adminEmails = [
-			"hello@huviatechnologies.com",
+			"info@interpretreflect.com",
 			"admin@interpretreflect.com",
 		];
 		if (!adminEmails.includes(user.email || "")) {

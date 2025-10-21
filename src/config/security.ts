@@ -2,10 +2,10 @@
 export const SECURITY_CONFIG = {
 	// Session management
 	session: {
-		timeout: 30 * 60 * 1000, // 30 minutes in milliseconds
-		warningTime: 5 * 60 * 1000, // 5 minutes before timeout
-		checkInterval: 60 * 1000, // Check every minute
-		extendOnActivity: true,
+		timeout: 12 * 60 * 60 * 1000, // 12 hours in milliseconds (for full VRS shifts)
+		warningTime: 15 * 60 * 1000, // 15 minutes before timeout
+		checkInterval: 5 * 60 * 1000, // Check every 5 minutes
+		extendOnActivity: true, // Auto-extend when user is active
 	},
 
 	// HTTPS enforcement
@@ -87,7 +87,7 @@ export const SECURITY_CONFIG = {
 
 export const SECURITY_MESSAGES = {
 	sessionWarning:
-		"Your session will expire in 5 minutes due to inactivity. Any unsaved work will be lost.",
+		"Your session will expire in 15 minutes due to inactivity. Any unsaved work will be lost.",
 	sessionExpired:
 		"Your session has expired for security reasons. Please log in again.",
 	privacyConsent:

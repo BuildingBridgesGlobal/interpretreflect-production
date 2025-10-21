@@ -1,15 +1,17 @@
+// Professional Pre-Assignment Prep with warm, accessible UX
 import {
 	Check,
 	CheckCircle,
 	ChevronLeft,
 	ChevronRight,
 	Circle,
-	Download,
-	Edit2,
 	FileText,
+	Heart,
 	Lightbulb,
-	Mail,
-	TrendingUp,
+	Shield,
+	Target,
+	Brain,
+	Users,
 } from "lucide-react";
 import type React from "react";
 import { useEffect, useRef, useState } from "react";
@@ -24,6 +26,9 @@ import {
 	SecureLockIcon,
 } from "./CustomIcon";
 import { ModalNavigationHeader } from "./ModalNavigationHeader";
+import { ReflectionSuccessToast } from "./ReflectionSuccessToast";
+import { ReflectionIntro } from "./shared/ReflectionIntro";
+import { IT } from "./shared/TermTooltip";
 
 interface PreAssignmentPrepProps {
 	onClose: () => void;
@@ -50,6 +55,7 @@ const ASSIGNMENT_TYPES = [
 	{ value: "conference", label: "Conference", icon: CommunityIcon },
 	{ value: "community", label: "Community", icon: CommunityIcon },
 	{ value: "mental-health", label: "Mental Health", icon: HeartPulseIcon },
+	{ value: "other", label: "Other", icon: NotepadIcon },
 ];
 
 const EMOTIONAL_STATES = [
@@ -69,14 +75,14 @@ const PHYSICAL_STATES = [
 ];
 
 const steps = [
-	{ id: 1, title: "Assignment Details", icon: FileText },
-	{ id: 2, title: "Emotional Check", icon: Heart },
-	{ id: 3, title: "Physical Readiness", icon: Target },
-	{ id: 4, title: "Knowledge Prep", icon: Brain },
-	{ id: 5, title: "Support Network", icon: Users },
+	{ id: 1, title: "The Assignment", icon: FileText },
+	{ id: 2, title: "How You Feel", icon: Heart },
+	{ id: 3, title: "Your Energy", icon: Target },
+	{ id: 4, title: "Quick Review", icon: Brain },
+	{ id: 5, title: "Your Backup", icon: Users },
 	{ id: 6, title: "Self-Care Plan", icon: Shield },
-	{ id: 7, title: "Positive Mindset", icon: Lightbulb },
-	{ id: 8, title: "Review & Complete", icon: CheckCircle },
+	{ id: 7, title: "Affirmations", icon: Lightbulb },
+	{ id: 8, title: "Review", icon: CheckCircle },
 ];
 
 const PreAssignmentPrepAccessible: React.FC<PreAssignmentPrepProps> = ({
@@ -86,8 +92,9 @@ const PreAssignmentPrepAccessible: React.FC<PreAssignmentPrepProps> = ({
 	const { user } = useAuth();
 	const [currentStep, setCurrentStep] = useState(1);
 	const [isReviewing, setIsReviewing] = useState(false);
-	const [showComparison, setShowComparison] = useState(false);
 	const [isSaving, setIsSaving] = useState(false);
+	const [showSuccessToast, setShowSuccessToast] = useState(false);
+	const [newInput, setNewInput] = useState("");
 
 	const [formData, setFormData] = useState<PrepData>({
 		assignmentType: "",
@@ -102,22 +109,14 @@ const PreAssignmentPrepAccessible: React.FC<PreAssignmentPrepProps> = ({
 		timestamp: new Date().toISOString(),
 	});
 
-	const [previousPrep, setPreviousPrep] = useState<PrepData | null>(null);
 	const progressRef = useRef<HTMLDivElement>(null);
 
-	// Load previous prep data for comparison
+	// Load draft if exists
 	useEffect(() => {
-		const saved = localStorage.getItem("lastPreAssignmentPrep");
-		if (saved) {
-			setPreviousPrep(JSON.parse(saved));
-		}
-
-		// Load draft if exists
 		const draft = localStorage.getItem("preAssignmentPrepDraft");
 		if (draft) {
 			const parsed = JSON.parse(draft);
 			setFormData(parsed);
-			// Resume from where they left off
 			const lastStep = localStorage.getItem("preAssignmentPrepStep");
 			if (lastStep) {
 				setCurrentStep(parseInt(lastStep));
@@ -130,8 +129,6 @@ const PreAssignmentPrepAccessible: React.FC<PreAssignmentPrepProps> = ({
 		const saveTimer = setTimeout(() => {
 			localStorage.setItem("preAssignmentPrepDraft", JSON.stringify(formData));
 			localStorage.setItem("preAssignmentPrepStep", currentStep.toString());
-			setIsSaving(true);
-			setTimeout(() => setIsSaving(false), 1000);
 		}, 1000);
 
 		return () => clearTimeout(saveTimer);
@@ -170,14 +167,13 @@ const PreAssignmentPrepAccessible: React.FC<PreAssignmentPrepProps> = ({
 		};
 
 		try {
-			// Save to database using direct API
 			const accessToken = JSON.parse(
 				localStorage.getItem("session") || "{}",
 			).access_token;
 
 			const reflectionData = {
 				user_id: user.id,
-				entry_kind: "pre_assignment_prep",
+				entry_kind: "pre_assignment_prep", // CRITICAL: Growth Insights tracks this!
 				data: completedData,
 				reflection_id: crypto.randomUUID(),
 			};
@@ -205,7 +201,6 @@ const PreAssignmentPrepAccessible: React.FC<PreAssignmentPrepProps> = ({
 
 			console.log("PreAssignmentPrepAccessible - Saved successfully:", data);
 
-			// Also save to localStorage for offline access
 			localStorage.setItem(
 				"lastPreAssignmentPrep",
 				JSON.stringify(completedData),
@@ -213,11 +208,14 @@ const PreAssignmentPrepAccessible: React.FC<PreAssignmentPrepProps> = ({
 			localStorage.removeItem("preAssignmentPrepDraft");
 			localStorage.removeItem("preAssignmentPrepStep");
 
-			if (onComplete) {
-				onComplete(completedData);
-			}
+			setShowSuccessToast(true);
 
-			onClose();
+			setTimeout(() => {
+				if (onComplete) {
+					onComplete(completedData);
+				}
+				onClose();
+			}, 1500);
 		} catch (error) {
 			console.error("Error saving pre-assignment prep:", error);
 			alert("Failed to save reflection. Please try again.");
@@ -226,77 +224,57 @@ const PreAssignmentPrepAccessible: React.FC<PreAssignmentPrepProps> = ({
 		}
 	};
 
-	const handleDownloadChecklist = () => {
-		const checklist = generateChecklist();
-		const blob = new Blob([checklist], { type: "text/plain" });
-		const url = URL.createObjectURL(blob);
-		const a = document.createElement("a");
-		a.href = url;
-		a.download = `pre-assignment-checklist-${new Date().toISOString().split("T")[0]}.txt`;
-		a.click();
-		URL.revokeObjectURL(url);
+	const addToList = (field: keyof PrepData, value: string) => {
+		if (value.trim()) {
+			setFormData((prev) => ({
+				...prev,
+				[field]: [...(prev[field] as string[]), value.trim()],
+			}));
+			setNewInput("");
+		}
 	};
 
-	const handleEmailChecklist = () => {
-		const checklist = generateChecklist();
-		const subject = `Pre-Assignment Checklist - ${new Date().toLocaleDateString()}`;
-		const mailtoUrl = `mailto:?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(checklist)}`;
-		window.open(mailtoUrl);
+	const removeFromList = (field: keyof PrepData, index: number) => {
+		setFormData((prev) => ({
+			...prev,
+			[field]: (prev[field] as string[]).filter((_, i) => i !== index),
+		}));
 	};
 
-	const generateChecklist = () => {
-		return `PRE-ASSIGNMENT PREPARATION CHECKLIST
-Date: ${new Date().toLocaleString()}
-
-ASSIGNMENT DETAILS
-✓ Type: ${formData.assignmentType}
-✓ Duration: ${formData.duration}
-
-READINESS CHECK
-✓ Emotional State: ${formData.emotionalState}
-✓ Physical State: ${formData.physicalReadiness}
-
-PREPARATION
-✓ Knowledge Gaps Identified: ${formData.knowledgeGaps.join(", ") || "None identified"}
-✓ Support Contacts: ${formData.supportContacts.join(", ") || "None listed"}
-
-SELF-CARE PLAN
-${formData.selfCarePost.map((item) => `✓ ${item}`).join("\n")}
-
-POSITIVE AFFIRMATIONS
-${formData.positiveAffirmations.map((item) => `✓ ${item}`).join("\n")}
-
-NOTES
-${formData.notes || "No additional notes"}
-
----
-Generated by InterpretReflect™`;
-	};
-
-	const renderProgressIndicator = () => (
-		<nav aria-label="Progress through preparation steps" className="mb-6">
-			<ol className="flex items-center justify-between" role="list">
-				{steps.map((step) => {
-					const isCompleted = step.id < currentStep;
-					const isCurrent = step.id === currentStep;
+	const renderProgressBar = () => (
+		<nav aria-label="Progress" className="mb-8">
+			<ol className="flex justify-between items-center">
+				{steps.map((step, index) => {
+					const isCompleted = index + 1 < currentStep;
+					const isCurrent = index + 1 === currentStep;
 					const Icon = step.icon;
 
 					return (
-						<li key={step.id} className="flex-1">
+						<li key={step.id} className="flex-1 relative">
+							{index < steps.length - 1 && (
+								<div
+									className="absolute top-5 left-1/2 w-full h-0.5"
+									style={{
+										backgroundColor: isCompleted
+											? "#5C7F4F"
+											: "rgba(203, 213, 224, 0.5)",
+									}}
+									aria-hidden="true"
+								/>
+							)}
 							<button
-								onClick={() => isCompleted && handleStepJump(step.id)}
-								disabled={!isCompleted && !isCurrent}
-								className={`w-full flex flex-col items-center p-3 rounded-lg transition-all focus:outline-none focus:ring-2 focus:ring-offset-2 ${
+								type="button"
+								onClick={() => handleStepJump(step.id)}
+								className={`relative w-full flex flex-col items-center p-2 rounded-lg transition-all ${
 									isCompleted || isCurrent
-										? "text-white shadow-md hover:shadow-lg"
-										: "bg-gray-50"
-								}`}
+										? "text-white"
+										: "text-gray-400 hover:text-gray-600"
+								} ${isCurrent ? "ring-2 ring-offset-2 ring-green-500" : ""}`}
 								style={{
 									background:
 										isCompleted || isCurrent
 											? "linear-gradient(135deg, #5C7F4F, #5B9378)"
 											: "transparent",
-									focusRingColor: "#5C7F4F",
 								}}
 								aria-label={`${step.title} - ${isCompleted ? "Completed" : isCurrent ? "Current step" : "Not yet reached"}`}
 								aria-current={isCurrent ? "step" : undefined}
@@ -305,9 +283,6 @@ Generated by InterpretReflect™`;
 									className={`w-10 h-10 rounded-full flex items-center justify-center mb-2 ${
 										isCompleted || isCurrent ? "bg-white/20" : "bg-gray-200"
 									}`}
-									style={{
-										color: isCompleted || isCurrent ? "#FFFFFF" : "#718096",
-									}}
 								>
 									{isCompleted ? (
 										<Check className="h-5 w-5" />
@@ -315,20 +290,7 @@ Generated by InterpretReflect™`;
 										<Icon className="h-5 w-5" />
 									)}
 								</div>
-								<span
-									className={`text-xs ${
-										isCompleted
-											? "font-semibold"
-											: isCurrent
-												? "font-medium"
-												: ""
-									}`}
-									style={{
-										color: isCompleted || isCurrent ? "#FFFFFF" : "#A0AEC0",
-									}}
-								>
-									{step.title}
-								</span>
+								<span className="text-xs font-medium">{step.title}</span>
 							</button>
 						</li>
 					);
@@ -380,18 +342,15 @@ Generated by InterpretReflect™`;
 				className="text-xl font-bold mb-4"
 				style={{ color: "#2D3748" }}
 			>
-				Assignment Details
+				What's the assignment?
 			</h3>
 			<p className="text-sm mb-6" style={{ color: "#4A5568" }}>
-				Let's start by understanding what you're preparing for.
+				Let's start with the basics. What kind of interpreting are you doing?
 			</p>
 
 			<fieldset className="mb-6">
-				<legend
-					className="text-sm font-medium mb-3"
-					style={{ color: "#2D3748" }}
-				>
-					What type of assignment is this?
+				<legend className="text-sm font-medium mb-3" style={{ color: "#2D3748" }}>
+					Assignment type
 				</legend>
 				<div className="grid grid-cols-2 gap-3">
 					{ASSIGNMENT_TYPES.map((type) => {
@@ -399,22 +358,11 @@ Generated by InterpretReflect™`;
 						return (
 							<label
 								key={type.value}
-								className={`flex items-center gap-3 p-4 rounded-xl cursor-pointer transition-all border-2 focus-within:ring-2 focus-within:ring-offset-2 ${
+								className={`flex items-center gap-3 p-4 rounded-xl cursor-pointer transition-all border-2 ${
 									formData.assignmentType === type.value
-										? "border-green-500"
+										? "border-green-500 bg-green-50"
 										: "border-gray-200 hover:border-gray-300"
 								}`}
-								style={{
-									backgroundColor:
-										formData.assignmentType === type.value
-											? "#F0F5ED"
-											: "#FFFFFF",
-									borderColor:
-										formData.assignmentType === type.value
-											? "#5C7F4F"
-											: undefined,
-									focusRingColor: "#5C7F4F",
-								}}
 							>
 								<input
 									type="radio"
@@ -427,64 +375,35 @@ Generated by InterpretReflect™`;
 											assignmentType: e.target.value,
 										}))
 									}
-									className="absolute opacity-0 pointer-events-none"
+									className="sr-only"
 								/>
-								<Icon size={64} />
-								<span style={{ color: "#2D3748" }}>{type.label}</span>
+								<Icon size={24} />
+								<span className="font-medium">{type.label}</span>
 							</label>
 						);
 					})}
 				</div>
 			</fieldset>
 
-			<fieldset>
-				<legend
-					className="text-sm font-medium mb-3"
+			<div>
+				<label
+					htmlFor="duration"
+					className="block text-sm font-medium mb-2"
 					style={{ color: "#2D3748" }}
 				>
-					Expected duration
-				</legend>
-				<div className="grid grid-cols-3 gap-3">
-					{[
-						"30 min",
-						"1 hour",
-						"2 hours",
-						"3 hours",
-						"4+ hours",
-						"All day",
-					].map((duration) => (
-						<label
-							key={duration}
-							className={`p-3 rounded-lg text-center cursor-pointer transition-all border-2 focus-within:ring-2 focus-within:ring-offset-2 ${
-								formData.duration === duration
-									? "border-green-500"
-									: "border-gray-200 hover:border-gray-300"
-							}`}
-							style={{
-								backgroundColor:
-									formData.duration === duration ? "#F0F5ED" : "#FFFFFF",
-								borderColor:
-									formData.duration === duration ? "#5C7F4F" : undefined,
-								focusRingColor: "#5C7F4F",
-							}}
-						>
-							<input
-								type="radio"
-								name="duration"
-								value={duration}
-								checked={formData.duration === duration}
-								onChange={(e) =>
-									setFormData((prev) => ({ ...prev, duration: e.target.value }))
-								}
-								className="absolute opacity-0 pointer-events-none"
-							/>
-							<span className="text-sm" style={{ color: "#2D3748" }}>
-								{duration}
-							</span>
-						</label>
-					))}
-				</div>
-			</fieldset>
+					How long will it last? (optional)
+				</label>
+				<input
+					id="duration"
+					type="text"
+					value={formData.duration}
+					onChange={(e) =>
+						setFormData((prev) => ({ ...prev, duration: e.target.value }))
+					}
+					placeholder="e.g., 2 hours, all day, 30 minutes"
+					className="w-full p-3 rounded-lg border-2 border-gray-200 focus:outline-none focus:ring-2 focus:ring-green-500"
+				/>
+			</div>
 		</section>
 	);
 
@@ -495,10 +414,10 @@ Generated by InterpretReflect™`;
 				className="text-xl font-bold mb-4"
 				style={{ color: "#2D3748" }}
 			>
-				Emotional Check-In
+				How are you feeling?
 			</h3>
 			<p className="text-sm mb-6" style={{ color: "#4A5568" }}>
-				How are you feeling emotionally as you prepare for this assignment?
+				Be honest with yourself - there's no right or wrong answer. Just noticing how you feel helps.
 			</p>
 
 			<fieldset>
@@ -507,22 +426,11 @@ Generated by InterpretReflect™`;
 					{EMOTIONAL_STATES.map((state) => (
 						<label
 							key={state.value}
-							className={`flex items-center justify-between p-4 rounded-xl cursor-pointer transition-all border-2 focus-within:ring-2 focus-within:ring-offset-2 ${
+							className={`flex items-center justify-between p-4 rounded-xl cursor-pointer transition-all border-2 ${
 								formData.emotionalState === state.value
-									? "border-green-500"
+									? "border-green-500 bg-green-50"
 									: "border-gray-200 hover:border-gray-300"
 							}`}
-							style={{
-								backgroundColor:
-									formData.emotionalState === state.value
-										? "#F0F5ED"
-										: "#FFFFFF",
-								borderColor:
-									formData.emotionalState === state.value
-										? "#5C7F4F"
-										: undefined,
-								focusRingColor: "#5C7F4F",
-							}}
 						>
 							<input
 								type="radio"
@@ -535,7 +443,7 @@ Generated by InterpretReflect™`;
 										emotionalState: e.target.value,
 									}))
 								}
-								className="absolute opacity-0 pointer-events-none"
+								className="sr-only"
 							/>
 							<span className="flex items-center gap-3">
 								<span className="text-2xl" aria-hidden="true">
@@ -558,37 +466,6 @@ Generated by InterpretReflect™`;
 					))}
 				</div>
 			</fieldset>
-
-			{previousPrep && (
-				<button
-					onClick={() => setShowComparison(!showComparison)}
-					className="mt-4 text-sm flex items-center gap-2"
-					style={{ color: "#5C7F4F" }}
-				>
-					<TrendingUp className="h-4 w-4" />
-					Compare with last prep
-				</button>
-			)}
-
-			{showComparison && previousPrep && (
-				<aside
-					aria-labelledby="comparison-heading"
-					className="mt-4 p-4 rounded-lg"
-					style={{ backgroundColor: "#F7FAFC" }}
-				>
-					<h4
-						id="comparison-heading"
-						className="text-sm font-medium mb-2"
-						style={{ color: "#2D3748" }}
-					>
-						Previous Assignment Comparison
-					</h4>
-					<ul className="space-y-1 text-sm" style={{ color: "#4A5568" }}>
-						<li>Last time: {previousPrep.emotionalState || "Not recorded"}</li>
-						<li>Type: {previousPrep.assignmentType || "Not recorded"}</li>
-					</ul>
-				</aside>
-			)}
 		</section>
 	);
 
@@ -599,10 +476,10 @@ Generated by InterpretReflect™`;
 				className="text-xl font-bold mb-4"
 				style={{ color: "#2D3748" }}
 			>
-				Physical Readiness
+				What's your energy level?
 			</h3>
 			<p className="text-sm mb-6" style={{ color: "#4A5568" }}>
-				How is your body feeling today?
+				Knowing your physical state helps you plan for breaks and self-care.
 			</p>
 
 			<fieldset>
@@ -611,22 +488,11 @@ Generated by InterpretReflect™`;
 					{PHYSICAL_STATES.map((state) => (
 						<label
 							key={state.value}
-							className={`flex items-center justify-between p-4 rounded-xl cursor-pointer transition-all border-2 focus-within:ring-2 focus-within:ring-offset-2 ${
+							className={`flex items-center justify-between p-4 rounded-xl cursor-pointer transition-all border-2 ${
 								formData.physicalReadiness === state.value
-									? "border-green-500"
+									? "border-green-500 bg-green-50"
 									: "border-gray-200 hover:border-gray-300"
 							}`}
-							style={{
-								backgroundColor:
-									formData.physicalReadiness === state.value
-										? "#F0F5ED"
-										: "#FFFFFF",
-								borderColor:
-									formData.physicalReadiness === state.value
-										? "#5C7F4F"
-										: undefined,
-								focusRingColor: "#5C7F4F",
-							}}
 						>
 							<input
 								type="radio"
@@ -639,7 +505,7 @@ Generated by InterpretReflect™`;
 										physicalReadiness: e.target.value,
 									}))
 								}
-								className="absolute opacity-0 pointer-events-none"
+								className="sr-only"
 							/>
 							<span className="flex items-center gap-3">
 								<span className="text-2xl" aria-hidden="true">
@@ -674,37 +540,56 @@ Generated by InterpretReflect™`;
 				className="text-xl font-bold mb-4"
 				style={{ color: "#2D3748" }}
 			>
-				Knowledge Preparation
+				Anything you want to brush up on?
 			</h3>
 			<p className="text-sm mb-6" style={{ color: "#4A5568" }}>
-				Are there any topics or terms you'd like to review before starting?
+				Are there any topics, terms, or concepts you'd like to review quickly? (This is optional!)
 			</p>
 
-			<fieldset>
-				<legend
-					className="text-sm font-medium mb-3"
-					style={{ color: "#2D3748" }}
-				>
-					Knowledge gaps or areas to review (optional)
-				</legend>
-				<textarea
-					className="w-full p-4 rounded-lg border-2 focus:outline-none focus:ring-2 focus:ring-offset-2"
-					style={{
-						borderColor: "#E2E8F0",
-						focusRingColor: "#5C7F4F",
-					}}
-					rows={4}
-					placeholder="E.g., Medical terminology, legal procedures, technical concepts..."
-					value={formData.knowledgeGaps.join("\n")}
-					onChange={(e) =>
-						setFormData((prev) => ({
-							...prev,
-							knowledgeGaps: e.target.value.split("\n").filter(Boolean),
-						}))
-					}
-					aria-label="List knowledge gaps or areas to review"
-				/>
-			</fieldset>
+			<div>
+				<div className="flex gap-2 mb-4">
+					<input
+						type="text"
+						value={newInput}
+						onChange={(e) => setNewInput(e.target.value)}
+						onKeyPress={(e) => {
+							if (e.key === "Enter") {
+								e.preventDefault();
+								addToList("knowledgeGaps", newInput);
+							}
+						}}
+						placeholder="e.g., medical terminology, legal terms..."
+						className="flex-1 p-3 rounded-lg border-2 border-gray-200 focus:outline-none focus:ring-2 focus:ring-green-500"
+					/>
+					<button
+						type="button"
+						onClick={() => addToList("knowledgeGaps", newInput)}
+						className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors"
+					>
+						Add
+					</button>
+				</div>
+
+				{formData.knowledgeGaps.length > 0 && (
+					<div className="space-y-2">
+						{formData.knowledgeGaps.map((item, index) => (
+							<div
+								key={index}
+								className="flex items-center justify-between p-3 bg-gray-50 rounded-lg"
+							>
+								<span className="text-sm">{item}</span>
+								<button
+									type="button"
+									onClick={() => removeFromList("knowledgeGaps", index)}
+									className="text-red-600 hover:text-red-800 text-sm font-medium"
+								>
+									Remove
+								</button>
+							</div>
+						))}
+					</div>
+				)}
+			</div>
 		</section>
 	);
 
@@ -715,37 +600,56 @@ Generated by InterpretReflect™`;
 				className="text-xl font-bold mb-4"
 				style={{ color: "#2D3748" }}
 			>
-				Support Network
+				Who's got your back?
 			</h3>
 			<p className="text-sm mb-6" style={{ color: "#4A5568" }}>
-				Who can you reach out to if you need support?
+				Know who you can reach out to if you need support - before, during, or after the assignment.
 			</p>
 
-			<fieldset>
-				<legend
-					className="text-sm font-medium mb-3"
-					style={{ color: "#2D3748" }}
-				>
-					Support contacts (optional)
-				</legend>
-				<textarea
-					className="w-full p-4 rounded-lg border-2 focus:outline-none focus:ring-2 focus:ring-offset-2"
-					style={{
-						borderColor: "#E2E8F0",
-						focusRingColor: "#5C7F4F",
-					}}
-					rows={3}
-					placeholder="E.g., Team lead, mentor, colleague..."
-					value={formData.supportContacts.join("\n")}
-					onChange={(e) =>
-						setFormData((prev) => ({
-							...prev,
-							supportContacts: e.target.value.split("\n").filter(Boolean),
-						}))
-					}
-					aria-label="List your support contacts"
-				/>
-			</fieldset>
+			<div>
+				<div className="flex gap-2 mb-4">
+					<input
+						type="text"
+						value={newInput}
+						onChange={(e) => setNewInput(e.target.value)}
+						onKeyPress={(e) => {
+							if (e.key === "Enter") {
+								e.preventDefault();
+								addToList("supportContacts", newInput);
+							}
+						}}
+						placeholder="e.g., mentor's name, colleague, supervisor..."
+						className="flex-1 p-3 rounded-lg border-2 border-gray-200 focus:outline-none focus:ring-2 focus:ring-green-500"
+					/>
+					<button
+						type="button"
+						onClick={() => addToList("supportContacts", newInput)}
+						className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors"
+					>
+						Add
+					</button>
+				</div>
+
+				{formData.supportContacts.length > 0 && (
+					<div className="space-y-2">
+						{formData.supportContacts.map((contact, index) => (
+							<div
+								key={index}
+								className="flex items-center justify-between p-3 bg-gray-50 rounded-lg"
+							>
+								<span className="text-sm">{contact}</span>
+								<button
+									type="button"
+									onClick={() => removeFromList("supportContacts", index)}
+									className="text-red-600 hover:text-red-800 text-sm font-medium"
+								>
+									Remove
+								</button>
+							</div>
+						))}
+					</div>
+				)}
+			</div>
 		</section>
 	);
 
@@ -756,154 +660,116 @@ Generated by InterpretReflect™`;
 				className="text-xl font-bold mb-4"
 				style={{ color: "#2D3748" }}
 			>
-				Post-Assignment Self-Care
+				How will you recharge after?
 			</h3>
 			<p className="text-sm mb-6" style={{ color: "#4A5568" }}>
-				How will you take care of yourself after this assignment?
+				Planning self-care in advance makes it more likely to happen. What will help you decompress?
 			</p>
 
-			<fieldset>
-				<legend
-					className="text-sm font-medium mb-3"
-					style={{ color: "#2D3748" }}
-				>
-					Select or add self-care activities
-				</legend>
-
-				{[
-					"Take a walk",
-					"Practice breathing exercises",
-					"Call a friend",
-					"Rest",
-					"Stretch",
-					"Hydrate",
-				].map((activity) => (
-					<label
-						key={activity}
-						className="flex items-center gap-3 p-3 mb-2 rounded-lg hover:bg-gray-50 cursor-pointer"
-					>
-						<input
-							type="checkbox"
-							checked={formData.selfCarePost.includes(activity)}
-							onChange={(e) => {
-								if (e.target.checked) {
-									setFormData((prev) => ({
-										...prev,
-										selfCarePost: [...prev.selfCarePost, activity],
-									}));
-								} else {
-									setFormData((prev) => ({
-										...prev,
-										selfCarePost: prev.selfCarePost.filter(
-											(a) => a !== activity,
-										),
-									}));
-								}
-							}}
-							className="w-4 h-4 rounded"
-							style={{ accentColor: "#5C7F4F" }}
-						/>
-						<span style={{ color: "#2D3748" }}>{activity}</span>
-					</label>
-				))}
-
-				<input
-					type="text"
-					className="w-full mt-3 p-3 rounded-lg border-2 focus:outline-none focus:ring-2 focus:ring-offset-2"
-					style={{
-						borderColor: "#E2E8F0",
-						focusRingColor: "#5C7F4F",
-					}}
-					placeholder="Add your own..."
-					onKeyPress={(e) => {
-						if (e.key === "Enter") {
-							const value = (e.target as HTMLInputElement).value;
-							if (value) {
-								setFormData((prev) => ({
-									...prev,
-									selfCarePost: [...prev.selfCarePost, value],
-								}));
-								(e.target as HTMLInputElement).value = "";
+			<div>
+				<div className="flex gap-2 mb-4">
+					<input
+						type="text"
+						value={newInput}
+						onChange={(e) => setNewInput(e.target.value)}
+						onKeyPress={(e) => {
+							if (e.key === "Enter") {
+								e.preventDefault();
+								addToList("selfCarePost", newInput);
 							}
-						}
-					}}
-					aria-label="Add custom self-care activity"
-				/>
-			</fieldset>
+						}}
+						placeholder="e.g., take a walk, call a friend, rest..."
+						className="flex-1 p-3 rounded-lg border-2 border-gray-200 focus:outline-none focus:ring-2 focus:ring-green-500"
+					/>
+					<button
+						type="button"
+						onClick={() => addToList("selfCarePost", newInput)}
+						className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors"
+					>
+						Add
+					</button>
+				</div>
+
+				{formData.selfCarePost.length > 0 && (
+					<div className="space-y-2">
+						{formData.selfCarePost.map((item, index) => (
+							<div
+								key={index}
+								className="flex items-center justify-between p-3 bg-gray-50 rounded-lg"
+							>
+								<span className="text-sm">{item}</span>
+								<button
+									type="button"
+									onClick={() => removeFromList("selfCarePost", index)}
+									className="text-red-600 hover:text-red-800 text-sm font-medium"
+								>
+									Remove
+								</button>
+							</div>
+						))}
+					</div>
+				)}
+			</div>
 		</section>
 	);
 
 	const renderPositiveMindset = () => (
-		<section aria-labelledby="mindset-heading">
+		<section aria-labelledby="affirmations-heading">
 			<h3
-				id="mindset-heading"
+				id="affirmations-heading"
 				className="text-xl font-bold mb-4"
 				style={{ color: "#2D3748" }}
 			>
-				Positive Mindset
+				What are your strengths today?
 			</h3>
 			<p className="text-sm mb-6" style={{ color: "#4A5568" }}>
-				What are 3 things you've done well in preparing for this assignment?
+				Remind yourself of what you bring to this work. What skills or qualities will help you today?
 			</p>
 
-			<fieldset>
-				<legend
-					className="text-sm font-medium mb-3"
-					style={{ color: "#2D3748" }}
-				>
-					Celebrate your preparation wins
-				</legend>
+			<div>
+				<div className="flex gap-2 mb-4">
+					<input
+						type="text"
+						value={newInput}
+						onChange={(e) => setNewInput(e.target.value)}
+						onKeyPress={(e) => {
+							if (e.key === "Enter") {
+								e.preventDefault();
+								addToList("positiveAffirmations", newInput);
+							}
+						}}
+						placeholder="e.g., I'm prepared, I adapt well, I care about this work..."
+						className="flex-1 p-3 rounded-lg border-2 border-gray-200 focus:outline-none focus:ring-2 focus:ring-green-500"
+					/>
+					<button
+						type="button"
+						onClick={() => addToList("positiveAffirmations", newInput)}
+						className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors"
+					>
+						Add
+					</button>
+				</div>
 
-				{[1, 2, 3].map((num) => (
-					<div key={num} className="mb-3">
-						<label htmlFor={`affirmation-${num}`} className="sr-only">
-							Positive affirmation {num}
-						</label>
-						<input
-							id={`affirmation-${num}`}
-							type="text"
-							className="w-full p-3 rounded-lg border-2 focus:outline-none focus:ring-2 focus:ring-offset-2"
-							style={{
-								borderColor: "#E2E8F0",
-								focusRingColor: "#5C7F4F",
-							}}
-							placeholder={`Win #${num}...`}
-							value={formData.positiveAffirmations[num - 1] || ""}
-							onChange={(e) => {
-								const newAffirmations = [...formData.positiveAffirmations];
-								newAffirmations[num - 1] = e.target.value;
-								setFormData((prev) => ({
-									...prev,
-									positiveAffirmations: newAffirmations,
-								}));
-							}}
-						/>
+				{formData.positiveAffirmations.length > 0 && (
+					<div className="space-y-2">
+						{formData.positiveAffirmations.map((affirmation, index) => (
+							<div
+								key={index}
+								className="flex items-center justify-between p-3 bg-green-50 rounded-lg"
+							>
+								<span className="text-sm">{affirmation}</span>
+								<button
+									type="button"
+									onClick={() => removeFromList("positiveAffirmations", index)}
+									className="text-red-600 hover:text-red-800 text-sm font-medium"
+								>
+									Remove
+								</button>
+							</div>
+						))}
 					</div>
-				))}
-			</fieldset>
-
-			<fieldset className="mt-6">
-				<legend
-					className="text-sm font-medium mb-3"
-					style={{ color: "#2D3748" }}
-				>
-					Any notes or reminders for yourself? (optional)
-				</legend>
-				<textarea
-					className="w-full p-4 rounded-lg border-2 focus:outline-none focus:ring-2 focus:ring-offset-2"
-					style={{
-						borderColor: "#E2E8F0",
-						focusRingColor: "#5C7F4F",
-					}}
-					rows={3}
-					placeholder="Add any notes or reminders..."
-					value={formData.notes}
-					onChange={(e) =>
-						setFormData((prev) => ({ ...prev, notes: e.target.value }))
-					}
-					aria-label="Additional notes or reminders"
-				/>
-			</fieldset>
+				)}
+			</div>
 		</section>
 	);
 
@@ -911,102 +777,72 @@ Generated by InterpretReflect™`;
 		<section aria-labelledby="review-heading">
 			<h3
 				id="review-heading"
-				className="text-xl font-bold mb-6"
+				className="text-2xl font-bold mb-6"
 				style={{ color: "#2D3748" }}
 			>
-				Review Your Pre-Assignment Prep
+				You're all set! 🎉
 			</h3>
 
-			<div className="space-y-4">
-				{/* Assignment Details */}
-				<div className="p-4 rounded-lg" style={{ backgroundColor: "#F7FAFC" }}>
-					<div className="flex justify-between items-start mb-2">
-						<h4 className="font-medium" style={{ color: "#2D3748" }}>
-							Assignment Details
+			<div className="space-y-6">
+				{/* Assignment Overview */}
+				{formData.assignmentType && (
+					<div className="p-4 bg-gray-50 rounded-lg">
+						<h4 className="font-semibold mb-2" style={{ color: "#2D3748" }}>
+							Assignment
 						</h4>
-						<button
-							onClick={() => handleStepJump(1)}
-							className="p-1 hover:bg-gray-200 rounded transition-all"
-							aria-label="Edit assignment details"
-						>
-							<Edit2 className="h-4 w-4" style={{ color: "#5C7F4F" }} />
-						</button>
+						<p className="text-sm capitalize" style={{ color: "#4A5568" }}>
+							{formData.assignmentType.replace("-", " ")}
+							{formData.duration && ` • ${formData.duration}`}
+						</p>
 					</div>
-					<ul className="space-y-1 text-sm" style={{ color: "#4A5568" }}>
-						<li>
-							Type:{" "}
-							<strong>{formData.assignmentType || "Not specified"}</strong>
-						</li>
-						<li>
-							Duration: <strong>{formData.duration || "Not specified"}</strong>
-						</li>
-					</ul>
-				</div>
+				)}
 
-				{/* Emotional State */}
-				<div className="p-4 rounded-lg" style={{ backgroundColor: "#F7FAFC" }}>
-					<div className="flex justify-between items-start mb-2">
-						<h4 className="font-medium" style={{ color: "#2D3748" }}>
-							Emotional Check
+				{/* Emotional & Physical State */}
+				{(formData.emotionalState || formData.physicalReadiness) && (
+					<div className="p-4 bg-gray-50 rounded-lg">
+						<h4 className="font-semibold mb-2" style={{ color: "#2D3748" }}>
+							How You're Doing
 						</h4>
-						<button
-							onClick={() => handleStepJump(2)}
-							className="p-1 hover:bg-gray-200 rounded transition-all"
-							aria-label="Edit emotional state"
-						>
-							<Edit2 className="h-4 w-4" style={{ color: "#5C7F4F" }} />
-						</button>
+						{formData.emotionalState && (
+							<p className="text-sm capitalize" style={{ color: "#4A5568" }}>
+								Emotionally: {formData.emotionalState}
+							</p>
+						)}
+						{formData.physicalReadiness && (
+							<p className="text-sm capitalize" style={{ color: "#4A5568" }}>
+								Energy: {formData.physicalReadiness}
+							</p>
+						)}
 					</div>
-					<p className="text-sm" style={{ color: "#4A5568" }}>
-						Feeling:{" "}
-						<strong>{formData.emotionalState || "Not specified"}</strong>
-					</p>
-				</div>
+				)}
 
-				{/* Physical Readiness */}
-				<div className="p-4 rounded-lg" style={{ backgroundColor: "#F7FAFC" }}>
-					<div className="flex justify-between items-start mb-2">
-						<h4 className="font-medium" style={{ color: "#2D3748" }}>
-							Physical Readiness
-						</h4>
-						<button
-							onClick={() => handleStepJump(3)}
-							className="p-1 hover:bg-gray-200 rounded transition-all"
-							aria-label="Edit physical readiness"
-						>
-							<Edit2 className="h-4 w-4" style={{ color: "#5C7F4F" }} />
-						</button>
-					</div>
-					<p className="text-sm" style={{ color: "#4A5568" }}>
-						State:{" "}
-						<strong>{formData.physicalReadiness || "Not specified"}</strong>
-					</p>
-				</div>
-
-				{/* Knowledge Gaps */}
+				{/* Knowledge Review */}
 				{formData.knowledgeGaps.length > 0 && (
-					<div
-						className="p-4 rounded-lg"
-						style={{ backgroundColor: "#F7FAFC" }}
-					>
-						<div className="flex justify-between items-start mb-2">
-							<h4 className="font-medium" style={{ color: "#2D3748" }}>
-								Knowledge Areas to Review
-							</h4>
-							<button
-								onClick={() => handleStepJump(4)}
-								className="p-1 hover:bg-gray-200 rounded transition-all"
-								aria-label="Edit knowledge gaps"
-							>
-								<Edit2 className="h-4 w-4" style={{ color: "#5C7F4F" }} />
-							</button>
-						</div>
-						<ul
-							className="list-disc list-inside text-sm"
-							style={{ color: "#4A5568" }}
-						>
-							{formData.knowledgeGaps.map((gap, index) => (
-								<li key={index}>{gap}</li>
+					<div className="p-4 bg-gray-50 rounded-lg">
+						<h4 className="font-semibold mb-2" style={{ color: "#2D3748" }}>
+							To Review
+						</h4>
+						<ul className="space-y-1">
+							{formData.knowledgeGaps.map((item, index) => (
+								<li key={index} className="text-sm" style={{ color: "#4A5568" }}>
+									• {item}
+								</li>
+							))}
+						</ul>
+					</div>
+				)}
+
+				{/* Support Network */}
+				{formData.supportContacts.length > 0 && (
+					<div className="p-4 bg-gray-50 rounded-lg">
+						<h4 className="font-semibold mb-2" style={{ color: "#2D3748" }}>
+							Your Support Team
+						</h4>
+						<ul className="space-y-1">
+							{formData.supportContacts.map((contact, index) => (
+								<li key={index} className="text-sm" style={{ color: "#4A5568" }}>
+									• {contact}
+								</li>
 							))}
 						</ul>
 					</div>
@@ -1014,184 +850,131 @@ Generated by InterpretReflect™`;
 
 				{/* Self-Care Plan */}
 				{formData.selfCarePost.length > 0 && (
-					<div
-						className="p-4 rounded-lg"
-						style={{ backgroundColor: "#F7FAFC" }}
-					>
-						<div className="flex justify-between items-start mb-2">
-							<h4 className="font-medium" style={{ color: "#2D3748" }}>
-								Post-Assignment Self-Care
-							</h4>
-							<button
-								onClick={() => handleStepJump(6)}
-								className="p-1 hover:bg-gray-200 rounded transition-all"
-								aria-label="Edit self-care plan"
-							>
-								<Edit2 className="h-4 w-4" style={{ color: "#5C7F4F" }} />
-							</button>
-						</div>
-						<ul
-							className="list-disc list-inside text-sm"
-							style={{ color: "#4A5568" }}
-						>
+					<div className="p-4 bg-green-50 rounded-lg">
+						<h4 className="font-semibold mb-2" style={{ color: "#2D3748" }}>
+							Post-Assignment Self-Care
+						</h4>
+						<ul className="space-y-1">
 							{formData.selfCarePost.map((item, index) => (
-								<li key={index}>{item}</li>
+								<li key={index} className="text-sm" style={{ color: "#4A5568" }}>
+									• {item}
+								</li>
+							))}
+						</ul>
+					</div>
+				)}
+
+				{/* Affirmations */}
+				{formData.positiveAffirmations.length > 0 && (
+					<div className="p-4 bg-green-50 rounded-lg">
+						<h4 className="font-semibold mb-2" style={{ color: "#2D3748" }}>
+							Your Strengths
+						</h4>
+						<ul className="space-y-1">
+							{formData.positiveAffirmations.map((affirmation, index) => (
+								<li key={index} className="text-sm" style={{ color: "#4A5568" }}>
+									• {affirmation}
+								</li>
 							))}
 						</ul>
 					</div>
 				)}
 			</div>
 
-			{/* Personalized Checklist */}
-			<div
-				className="mt-6 p-6 rounded-xl"
-				style={{
-					backgroundColor: "#F0F5ED",
-					border: "2px solid #7A9B6E",
-				}}
-			>
-				<h4
-					className="text-lg font-bold mb-4 flex items-center gap-2"
-					style={{ color: "#5C7F4F" }}
-				>
-					<CheckCircle className="h-5 w-5" />
-					Your Personalized Checklist
-				</h4>
-
-				<ul className="space-y-2 mb-4">
-					{formData.assignmentType && (
-						<li className="flex items-start gap-2">
-							<Check className="h-4 w-4 mt-0.5" style={{ color: "#5C7F4F" }} />
-							<span className="text-sm" style={{ color: "#2D3748" }}>
-								Prepared for {formData.assignmentType} assignment
-							</span>
-						</li>
-					)}
-					{formData.emotionalState && (
-						<li className="flex items-start gap-2">
-							<Check className="h-4 w-4 mt-0.5" style={{ color: "#5C7F4F" }} />
-							<span className="text-sm" style={{ color: "#2D3748" }}>
-								Emotional state acknowledged
-							</span>
-						</li>
-					)}
-					{formData.selfCarePost.length > 0 && (
-						<li className="flex items-start gap-2">
-							<Check className="h-4 w-4 mt-0.5" style={{ color: "#5C7F4F" }} />
-							<span className="text-sm" style={{ color: "#2D3748" }}>
-								Self-care plan in place
-							</span>
-						</li>
-					)}
-					{formData.supportContacts.length > 0 && (
-						<li className="flex items-start gap-2">
-							<Check className="h-4 w-4 mt-0.5" style={{ color: "#5C7F4F" }} />
-							<span className="text-sm" style={{ color: "#2D3748" }}>
-								Support contacts identified
-							</span>
-						</li>
-					)}
-				</ul>
-
-				<div className="flex gap-3">
-					<button
-						onClick={handleDownloadChecklist}
-						className="flex-1 py-2 px-4 rounded-lg flex items-center justify-center gap-2 transition-all"
-						style={{
-							backgroundColor: "#FFFFFF",
-							color: "#5C7F4F",
-							border: "1px solid #7A9B6E",
-						}}
-						aria-label="Download checklist"
-					>
-						<Download className="h-4 w-4" />
-						Download
-					</button>
-					<button
-						onClick={handleEmailChecklist}
-						className="flex-1 py-2 px-4 rounded-lg flex items-center justify-center gap-2 transition-all"
-						style={{
-							backgroundColor: "#FFFFFF",
-							color: "#5C7F4F",
-							border: "1px solid #7A9B6E",
-						}}
-						aria-label="Email checklist to myself"
-					>
-						<Mail className="h-4 w-4" />
-						Email
-					</button>
-				</div>
+			<div className="mt-6 p-4 bg-blue-50 border-l-4 border-blue-500 rounded">
+				<p className="text-sm" style={{ color: "#2563eb" }}>
+					💡 You've got this! Take a deep breath and trust your preparation.
+				</p>
 			</div>
 		</section>
 	);
 
 	return (
-		<div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
-			<div className="bg-white rounded-2xl max-w-3xl w-full max-h-[90vh] overflow-y-auto">
-				<form
-					aria-labelledby="prep-form-heading"
-					className="p-6"
-					onSubmit={(e) => {
-						e.preventDefault();
-						handleComplete();
-					}}
-				>
-					{/* Header */}
-					<ModalNavigationHeader
-						title="Pre-Assignment Preparation"
-						subtitle="Prepare mentally and emotionally for your upcoming assignment"
-						onClose={onClose}
-						showAutoSave={isSaving}
-					/>
+		<div
+			className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4"
+			onClick={onClose}
+		>
+			<div
+				className="bg-white rounded-2xl shadow-2xl w-full max-w-4xl max-h-[90vh] overflow-hidden flex flex-col"
+				onClick={(e) => e.stopPropagation()}
+			>
+				{/* Header */}
+				<ModalNavigationHeader
+					title="Pre-Assignment Prep"
+					subtitle="Set yourself up for success"
+					onClose={onClose}
+				/>
 
-					{/* Progress Indicator */}
-					{renderProgressIndicator()}
-
-					{/* Step Content */}
-					<div className="mb-6">{renderStepContent()}</div>
-
-					{/* Navigation Buttons */}
-					<div className="flex justify-between items-center">
-						<button
-							type="button"
-							onClick={handlePrevious}
-							disabled={currentStep === 1}
-							className="px-6 py-3 rounded-xl font-medium flex items-center gap-2 transition-all disabled:opacity-50"
-							style={{
-								backgroundColor: "#F7FAFC",
-								color: "#4A5568",
-							}}
-							aria-label="Go to previous step"
-						>
-							<ChevronLeft className="h-5 w-5" />
-							Previous
-						</button>
-
-						{currentStep < steps.length ? (
-							<button
-								type="button"
-								onClick={handleNext}
-								className="px-6 py-3 rounded-xl font-medium flex items-center gap-2 text-white transition-all"
-								style={{ backgroundColor: "#5C7F4F" }}
-								aria-label="Go to next step"
-							>
-								Next
-								<ChevronRight className="h-5 w-5" />
-							</button>
-						) : (
-							<button
-								type="submit"
-								className="px-6 py-3 rounded-xl font-medium flex items-center gap-2 text-white transition-all"
-								style={{ backgroundColor: "#5C7F4F" }}
-								aria-label="Complete preparation"
-							>
-								<CheckCircle className="h-5 w-5" />
-								Complete Prep
-							</button>
-						)}
+				{/* Intro (only show on first step) */}
+				{currentStep === 1 && (
+					<div className="px-8 pt-6">
+						<ReflectionIntro
+							title="Pre-Assignment Prep"
+							subtitle="Set yourself up for success before your next assignment"
+							description="Take a few minutes to mentally and emotionally prepare. This professional practice helps reduce stress and improve your performance."
+							estimatedTime="5 minutes"
+							professionalContext="Professional interpreters use pre-assignment preparation to get ready for the demands ahead. It's a proven way to center yourself and set intentions."
+							tips={[
+								"Be honest - this is just for you",
+								"Skip anything that doesn't apply",
+								"Even 2 minutes of prep makes a difference",
+							]}
+						/>
 					</div>
-				</form>
+				)}
+
+				{/* Content */}
+				<div className="flex-1 overflow-y-auto px-8 py-6">
+					{renderProgressBar()}
+					{renderStepContent()}
+				</div>
+
+				{/* Footer Navigation */}
+				<div
+					className="border-t p-6 flex items-center justify-between"
+					style={{ borderColor: "#E5E7EB" }}
+				>
+					<button
+						onClick={handlePrevious}
+						disabled={currentStep === 1}
+						className="flex items-center gap-2 px-4 py-2 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-100"
+						style={{ color: "#4B5563" }}
+					>
+						<ChevronLeft size={20} />
+						Previous
+					</button>
+
+					<div className="text-sm" style={{ color: "#6B7280" }}>
+						{currentStep} of {steps.length}
+					</div>
+
+					{currentStep === steps.length ? (
+						<button
+							onClick={handleComplete}
+							disabled={isSaving}
+							className="flex items-center gap-2 px-6 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors disabled:opacity-50"
+						>
+							{isSaving ? "Saving..." : "Complete"}
+						</button>
+					) : (
+						<button
+							onClick={handleNext}
+							className="flex items-center gap-2 px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors"
+						>
+							Next
+							<ChevronRight size={20} />
+						</button>
+					)}
+				</div>
 			</div>
+
+			{/* Success Toast */}
+			{showSuccessToast && (
+				<ReflectionSuccessToast
+					onClose={() => setShowSuccessToast(false)}
+					reflectionType="Pre-Assignment Prep"
+				/>
+			)}
 		</div>
 	);
 };

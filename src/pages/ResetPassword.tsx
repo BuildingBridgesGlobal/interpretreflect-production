@@ -274,10 +274,10 @@ const ResetPassword: React.FC = () => {
 				<p className="mt-6 text-xs text-center text-gray-500">
 					Having trouble? Contact{" "}
 					<a
-						href="mailto:hello@huviatechnologies.com"
+						href="mailto:info@interpretreflect.com"
 						className="underline hover:text-gray-700"
 					>
-						hello@huviatechnologies.com
+						info@interpretreflect.com
 					</a>
 				</p>
 			</div>

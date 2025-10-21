@@ -6,6 +6,11 @@ const ENCHARGE_API_URL = 'https://api.encharge.io/v1';
 const supabaseUrl = Deno.env.get('SUPABASE_URL')!;
 const supabaseServiceKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
 
+const corsHeaders = {
+  'Access-Control-Allow-Origin': '*',
+  'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
+};
+
 interface EnchargeEvent {
   userId: string;
   eventType: string;
@@ -14,7 +19,24 @@ interface EnchargeEvent {
 }
 
 serve(async (req) => {
+  // Handle CORS preflight requests
+  if (req.method === 'OPTIONS') {
+    return new Response('ok', { headers: corsHeaders });
+  }
+
   try {
+    // Verify authorization header exists
+    const authHeader = req.headers.get('authorization');
+    if (!authHeader) {
+      return new Response(
+        JSON.stringify({ code: 401, message: 'Missing authorization header' }),
+        {
+          status: 401,
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+        }
+      );
+    }
+
     const { userId, eventType, eventData, userEmail } = await req.json() as EnchargeEvent;
     
     const supabase = createClient(supabaseUrl, supabaseServiceKey);
@@ -183,14 +205,14 @@ serve(async (req) => {
     console.log(`Successfully sent ${eventType} event to Encharge for ${email}`);
 
     return new Response(
-      JSON.stringify({ 
-        success: true, 
+      JSON.stringify({
+        success: true,
         message: `Event ${mapping.event} sent to Encharge`,
         email,
         tags: mapping.tags
       }),
-      { 
-        headers: { 'Content-Type': 'application/json' },
+      {
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
         status: 200
       }
     );
@@ -199,8 +221,8 @@ serve(async (req) => {
     console.error('Error in send-encharge-event:', error);
     return new Response(
       JSON.stringify({ error: error.message }),
-      { 
-        headers: { 'Content-Type': 'application/json' },
+      {
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
         status: 500
       }
     );

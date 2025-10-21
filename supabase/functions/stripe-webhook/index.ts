@@ -11,37 +11,6 @@ const supabaseAdmin = createClient(
   Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? ''
 )
 
-// Helper function to send events to Encharge
-async function sendToEncharge(userId: string, eventType: string, eventData: any, userEmail?: string) {
-  try {
-    const supabaseUrl = Deno.env.get('SUPABASE_URL')
-    const anonKey = Deno.env.get('SUPABASE_ANON_KEY')
-
-    const response = await fetch(`${supabaseUrl}/functions/v1/send-encharge-event`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${anonKey}`
-      },
-      body: JSON.stringify({
-        userId,
-        eventType,
-        eventData,
-        userEmail
-      })
-    })
-
-    if (!response.ok) {
-      console.error('Failed to send to Encharge:', await response.text())
-    } else {
-      console.log(`✅ Sent ${eventType} to Encharge for user ${userId}`)
-    }
-  } catch (error) {
-    console.error('Error sending to Encharge:', error)
-    // Non-blocking - don't throw, just log
-  }
-}
-
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type, stripe-signature',
@@ -150,6 +119,15 @@ serve(async (req) => {
         }
 
         if (profile) {
+          // Safely convert timestamps, handling null/undefined values
+          const currentPeriodStart = subscription.current_period_start
+            ? new Date(subscription.current_period_start * 1000).toISOString()
+            : new Date().toISOString()
+
+          const currentPeriodEnd = subscription.current_period_end
+            ? new Date(subscription.current_period_end * 1000).toISOString()
+            : new Date().toISOString()
+
           await supabaseAdmin
             .from('subscriptions')
             .upsert({
@@ -159,8 +137,8 @@ serve(async (req) => {
               price_id: subscription.items.data[0].price.id,
               plan_name: subscription.items.data[0].price.nickname || 'Subscription',
               plan_amount: subscription.items.data[0].price.unit_amount,
-              current_period_start: new Date(subscription.current_period_start * 1000).toISOString(),
-              current_period_end: new Date(subscription.current_period_end * 1000).toISOString(),
+              current_period_start: currentPeriodStart,
+              current_period_end: currentPeriodEnd,
               cancel_at_period_end: subscription.cancel_at_period_end,
             })
 
@@ -173,14 +151,6 @@ serve(async (req) => {
               updated_at: new Date().toISOString(),
             })
             .eq('id', profile.id)
-
-          // 🎉 Send subscription_created event to Encharge
-          await sendToEncharge(profile.id, 'subscription_created', {
-            planName: subscription.items.data[0].price.nickname || 'Essential',
-            amount: (subscription.items.data[0].price.unit_amount || 0) / 100,
-            currency: subscription.currency,
-            subscriptionId: subscription.id
-          }, session.customer_details?.email || undefined)
         }
         break
       }
@@ -196,6 +166,15 @@ serve(async (req) => {
           .single()
 
         if (profile) {
+          // Safely convert timestamps, handling null/undefined values
+          const currentPeriodStart = subscription.current_period_start
+            ? new Date(subscription.current_period_start * 1000).toISOString()
+            : new Date().toISOString()
+
+          const currentPeriodEnd = subscription.current_period_end
+            ? new Date(subscription.current_period_end * 1000).toISOString()
+            : new Date().toISOString()
+
           await supabaseAdmin
             .from('subscriptions')
             .upsert({
@@ -205,8 +184,8 @@ serve(async (req) => {
               price_id: subscription.items.data[0].price.id,
               plan_name: subscription.items.data[0].price.nickname || 'Subscription',
               plan_amount: subscription.items.data[0].price.unit_amount,
-              current_period_start: new Date(subscription.current_period_start * 1000).toISOString(),
-              current_period_end: new Date(subscription.current_period_end * 1000).toISOString(),
+              current_period_start: currentPeriodStart,
+              current_period_end: currentPeriodEnd,
               cancel_at_period_end: subscription.cancel_at_period_end,
             })
 
@@ -269,12 +248,6 @@ serve(async (req) => {
               updated_at: new Date().toISOString(),
             })
             .eq('id', profile.id)
-
-          // 🚫 Send subscription_cancelled event to Encharge
-          await sendToEncharge(profile.id, 'subscription_cancelled', {
-            subscriptionId: subscription.id,
-            cancelReason: subscription.cancellation_details?.reason || 'unknown'
-          })
         }
         break
       }
@@ -294,13 +267,22 @@ serve(async (req) => {
             .single()
 
           if (profile) {
+            // Safely convert timestamps, handling null/undefined values
+            const currentPeriodStart = subscription.current_period_start
+              ? new Date(subscription.current_period_start * 1000).toISOString()
+              : new Date().toISOString()
+
+            const currentPeriodEnd = subscription.current_period_end
+              ? new Date(subscription.current_period_end * 1000).toISOString()
+              : new Date().toISOString()
+
             // Update subscription status to active on successful payment
             await supabaseAdmin
               .from('subscriptions')
               .update({
                 status: 'active',
-                current_period_start: new Date(subscription.current_period_start * 1000).toISOString(),
-                current_period_end: new Date(subscription.current_period_end * 1000).toISOString(),
+                current_period_start: currentPeriodStart,
+                current_period_end: currentPeriodEnd,
                 updated_at: new Date().toISOString(),
               })
               .eq('id', subscriptionId)
@@ -312,14 +294,6 @@ serve(async (req) => {
                 updated_at: new Date().toISOString(),
               })
               .eq('id', profile.id)
-
-            // 💳 Send payment_success event to Encharge
-            await sendToEncharge(profile.id, 'payment_success', {
-              amount: (invoice.amount_paid || 0) / 100,
-              currency: invoice.currency,
-              invoiceUrl: invoice.hosted_invoice_url,
-              invoiceId: invoice.id
-            })
           }
         }
         break
@@ -354,13 +328,6 @@ serve(async (req) => {
                 updated_at: new Date().toISOString(),
               })
               .eq('id', profile.id)
-
-            // ⚠️ Send payment_failed event to Encharge
-            await sendToEncharge(profile.id, 'payment_failed', {
-              amount: (invoice.amount_due || 0) / 100,
-              invoiceId: invoice.id,
-              retryDate: invoice.next_payment_attempt ? new Date(invoice.next_payment_attempt * 1000).toISOString() : null
-            })
 
             console.log(`Payment failed for customer ${customerId}, subscription ${subscriptionId}`)
           }

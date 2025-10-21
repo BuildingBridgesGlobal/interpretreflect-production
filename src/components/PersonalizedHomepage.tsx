@@ -74,6 +74,9 @@ const PersonalizedHomepage: React.FC<PersonalizedHomepageProps> = ({
 	const [lastAssessmentDate, setLastAssessmentDate] = useState<string | null>(
 		null,
 	);
+	const [lastAssessmentTime, setLastAssessmentTime] = useState<Date | null>(null);
+	const [timeUntilNext, setTimeUntilNext] = useState<string>("");
+	const [canTakeAssessment, setCanTakeAssessment] = useState(true);
 	const [deletingId, setDeletingId] = useState<string | null>(null);
 	const [selectedReflection, setSelectedReflection] = useState<any>(null);
 	const [confirmDelete, setConfirmDelete] = useState<{
@@ -493,8 +496,8 @@ const PersonalizedHomepage: React.FC<PersonalizedHomepageProps> = ({
 					setBurnoutLevel(data.level);
 					setLastAssessmentDate(data.date);
 				} else {
-					// Clear old assessment if it's from a previous day
-					localStorage.removeItem("dailyBurnoutAssessment");
+					// DON'T delete old assessment - we need it for 12-hour timer check!
+					// Just clear the display state
 					setBurnoutScore(null);
 					setBurnoutLevel(null);
 					setLastAssessmentDate(null);
@@ -580,6 +583,70 @@ const PersonalizedHomepage: React.FC<PersonalizedHomepageProps> = ({
 		return () => clearInterval(interval);
 	}, [userFullName]);
 
+	// Check and update 24-hour timer for burnout assessment
+	useEffect(() => {
+		const checkTimer = () => {
+			const saved = localStorage.getItem("dailyBurnoutAssessment");
+			console.log("🕐 Checking burnout timer, localStorage data:", saved);
+
+			if (!saved) {
+				console.log("✅ No saved assessment, allowing new assessment");
+				setCanTakeAssessment(true);
+				setTimeUntilNext("");
+				return;
+			}
+
+			const data = JSON.parse(saved);
+			if (!data.timestamp) {
+				// Old format without timestamp, allow assessment
+				console.log("⚠️ Old format without timestamp, allowing assessment");
+				setCanTakeAssessment(true);
+				setTimeUntilNext("");
+				return;
+			}
+
+			const lastTime = new Date(data.timestamp);
+			const now = new Date();
+			const hoursSince = (now.getTime() - lastTime.getTime()) / (1000 * 60 * 60);
+			console.log(`⏱️ Hours since last assessment: ${hoursSince.toFixed(2)}`);
+
+			if (hoursSince >= 24) {
+				console.log("✅ 24+ hours passed, allowing new assessment");
+				setCanTakeAssessment(true);
+				setTimeUntilNext("");
+			} else {
+				const hoursRemaining = 24 - hoursSince;
+				const hours = Math.floor(hoursRemaining);
+				const minutes = Math.round((hoursRemaining - hours) * 60);
+
+				// Fix the 60 minutes issue
+				let displayHours = hours;
+				let displayMinutes = minutes;
+				if (displayMinutes >= 60) {
+					displayHours += 1;
+					displayMinutes = 0;
+				}
+
+				let timeText = "";
+				if (displayHours > 0 && displayMinutes > 0) {
+					timeText = `${displayHours}h ${displayMinutes}m`;
+				} else if (displayHours > 0) {
+					timeText = `${displayHours}h`;
+				} else {
+					timeText = `${displayMinutes}m`;
+				}
+
+				console.log(`🔒 Assessment locked for ${timeText}`);
+				setCanTakeAssessment(false);
+				setTimeUntilNext(timeText);
+			}
+		};
+
+		checkTimer();
+		const interval = setInterval(checkTimer, 60000); // Update every minute
+		return () => clearInterval(interval);
+	}, []); // Run only on mount - always check localStorage
+
 	const getMoodIcon = (mood: number) => {
 		if (mood >= 4) return <Sun className="w-4 h-4 text-yellow-500" />;
 		if (mood >= 3) return <Cloud className="w-4 h-4 text-blue-400" />;
@@ -630,66 +697,73 @@ const PersonalizedHomepage: React.FC<PersonalizedHomepageProps> = ({
 		<div
 			className="min-h-screen"
 			style={{
-				backgroundColor: "var(--color-surface)",
+				backgroundColor: "#F8FAFB",
 			}}
 		>
-			<main className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+			<main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
 				{/* Header Section */}
-				<div className="rounded-2xl shadow-clean p-6 mb-6" style={{
-					backgroundColor: "var(--color-card)",
-					border: "1px solid var(--color-slate-200)"
+				<div className="rounded-xl p-8 mb-8" style={{
+					backgroundColor: "white",
+					border: "1px solid #E5E9EB",
+					boxShadow: "0 1px 3px rgba(0, 0, 0, 0.04)"
 				}}>
-					<div className="flex flex-col sm:flex-row sm:items-center sm:justify-between">
-						<div>
-							<h1 className="text-2xl font-medium text-gray-800 mb-1">
+					<div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4">
+						<div className="flex-1">
+							<h1 className="text-3xl font-semibold mb-2" style={{
+								color: "#1A2B3C",
+								letterSpacing: "-0.02em"
+							}}>
 								{greeting}
 							</h1>
-							<p className="text-gray-500">{dateString}</p>
+							<p className="text-base" style={{
+								color: "#64748B"
+							}}>{dateString}</p>
 						</div>
 
-						{/* Tip of the Day */}
-					</div>
-
-					{/* Trust Badges */}
-					<div className="mt-4 flex flex-wrap gap-2 justify-center sm:justify-end">
-						<TrustBadge variant="research" size="sm" />
+						{/* Trust Badges */}
+						<div className="flex flex-wrap gap-2">
+							<TrustBadge variant="research" size="sm" />
+						</div>
 					</div>
 				</div>
 
-				<div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+				<div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
 					{/* Left Column - Wellness Stats */}
 					<div className="lg:col-span-1 space-y-6">
 						{/* Wellness Stats Card - Wellness Zone */}
-						<div className="rounded-2xl shadow-clean p-6 transition-all hover:shadow-clean-md hover:-translate-y-0.5" style={{
-							backgroundColor: "var(--color-wellness-bg)",
-							border: "1px solid var(--color-wellness-border)"
+						<div className="rounded-xl p-7 transition-all" style={{
+							backgroundColor: "white",
+							border: "2px solid #D1D5DB",
+							boxShadow: "0 1px 3px rgba(0, 0, 0, 0.04)"
 						}}>
-							<h2 className="text-lg font-semibold mb-4 flex items-center gap-2 pb-3" style={{
-								color: "var(--color-green-700)",
-								borderBottom: "1px solid var(--color-green-200)"
+							<h2 className="text-xl font-semibold mb-6 flex items-center gap-2.5" style={{
+								color: "#111827",
+								letterSpacing: "-0.01em"
 							}}>
-								<Heart className="w-5 h-5" style={{ color: "var(--color-green-600)" }} />
+								<Heart className="w-5 h-5" style={{ color: "#4B5563" }} />
 								Your Wellness
 							</h2>
 
-							<div className="space-y-4">
+							<div className="space-y-5">
 								{/* Mood */}
 								<div>
-									<div className="flex items-center justify-between mb-2">
-										<span className="text-sm text-gray-500">Today's Mood</span>
+									<div className="flex items-center justify-between mb-3">
+										<span className="text-sm font-medium" style={{ color: "#374151" }}>Today's Mood</span>
 										{wellnessStats.mood > 0 && getMoodIcon(wellnessStats.mood)}
 									</div>
-									<div className="flex items-center gap-2">
-										<div className="flex-1 bg-gray-100 rounded-full h-2 overflow-hidden">
+									<div className="flex items-center gap-3">
+										<div className="flex-1 bg-white rounded-full h-2.5 overflow-hidden" style={{
+											boxShadow: "inset 0 1px 2px rgba(0, 0, 0, 0.05)"
+										}}>
 											<div
-												className="h-2 rounded-full bg-gradient-to-r from-yellow-300 to-yellow-400 transition-all duration-1000 ease-out animate-[slideIn_0.8s_ease-out]"
+												className="h-2.5 rounded-full transition-all duration-1000 ease-out"
 												style={{
+													backgroundColor: "#B8C9B6",
 													width: `${(wellnessStats.mood / 10) * 100}%`,
-													animation: 'slideIn 0.8s ease-out'
 												}}
 											/>
 										</div>
-										<span className="text-sm font-medium text-gray-600">
+										<span className="text-sm font-semibold min-w-[2.5rem] text-right" style={{ color: "#111827" }}>
 											{wellnessStats.mood > 0 ? `${wellnessStats.mood}/10` : '—'}
 										</span>
 									</div>
@@ -697,54 +771,65 @@ const PersonalizedHomepage: React.FC<PersonalizedHomepageProps> = ({
 
 								{/* Energy */}
 								<div>
-									<div className="flex items-center justify-between mb-2">
-										<span className="text-sm text-gray-500">Energy Level</span>
-										{wellnessStats.energy > 0 && <Zap className="w-4 h-4" style={{ color: 'var(--color-green-500)' }} />}
+									<div className="flex items-center justify-between mb-3">
+										<span className="text-sm font-medium" style={{ color: "#374151" }}>Energy Level</span>
+										{wellnessStats.energy > 0 && <Zap className="w-4 h-4" style={{ color: '#6B8268' }} />}
 									</div>
-									<div className="flex items-center gap-2">
-										<div className="flex-1 bg-gray-100 rounded-full h-2 overflow-hidden">
+									<div className="flex items-center gap-3">
+										<div className="flex-1 bg-white rounded-full h-2.5 overflow-hidden" style={{
+											boxShadow: "inset 0 1px 2px rgba(0, 0, 0, 0.05)"
+										}}>
 											<div
-												className="h-2 rounded-full transition-all duration-1000 ease-out"
+												className="h-2.5 rounded-full transition-all duration-1000 ease-out"
 												style={{
-													background: 'linear-gradient(to right, var(--color-green-500), var(--color-green-400))',
+													backgroundColor: "#6B8268",
 													width: `${(wellnessStats.energy / 10) * 100}%`,
-													animation: 'slideIn 1s ease-out'
 												}}
 											/>
 										</div>
-										<span className="text-sm font-medium text-gray-600">
+										<span className="text-sm font-semibold min-w-[2.5rem] text-right" style={{ color: "#111827" }}>
 											{wellnessStats.energy > 0 ? `${wellnessStats.energy}/10` : '—'}
 										</span>
 									</div>
 								</div>
 
 								{/* Streak */}
-								<div className="pt-3 border-t border-sage-50">
+								<div className="pt-5 mt-5" style={{
+									borderTop: "1px solid #D1D5DB"
+								}}>
 									<div className="flex items-center justify-between">
 										<div>
-											<p className="text-sm text-gray-500">Reflection Streak</p>
-											<p className="text-2xl font-bold text-gray-800">
-												{supabaseStreak !== null ? supabaseStreak : wellnessStats.streakDays} days
+											<p className="text-sm font-medium mb-1" style={{ color: "#374151" }}>Reflection Streak</p>
+											<p className="text-3xl font-bold" style={{ color: "#111827", letterSpacing: "-0.02em" }}>
+												{supabaseStreak !== null ? supabaseStreak : wellnessStats.streakDays} <span className="text-lg font-semibold" style={{ color: "#4B5563" }}>days</span>
 											</p>
 										</div>
-										<Target className="w-8 h-8 text-amber-400" />
+										<div className="w-12 h-12 rounded-xl flex items-center justify-center" style={{
+											backgroundColor: "#F3F4F6"
+										}}>
+											<Target className="w-6 h-6" style={{ color: "#6B8268" }} />
+										</div>
 									</div>
 								</div>
 
 								{/* Weekly Progress */}
-								<div className="pt-3 border-t border-sage-50">
-									<div className="flex items-center justify-between mb-2">
-										<span className="text-sm text-gray-500">Weekly Goal</span>
-										<span className="text-sm font-medium text-gray-700">
+								<div className="pt-5" style={{
+									borderTop: "1px solid #D1D5DB"
+								}}>
+									<div className="flex items-center justify-between mb-3">
+										<span className="text-sm font-medium" style={{ color: "#374151" }}>Weekly Goal</span>
+										<span className="text-sm font-semibold" style={{ color: "#111827" }}>
 											{supabaseWeeklyProgress !== null ? supabaseWeeklyProgress : wellnessStats.weeklyProgress}%
 										</span>
 									</div>
-									<div className="bg-gray-100 rounded-full h-2 overflow-hidden">
+									<div className="bg-white rounded-full h-2.5 overflow-hidden" style={{
+										boxShadow: "inset 0 1px 2px rgba(0, 0, 0, 0.05)"
+									}}>
 										<div
-											className="h-2 rounded-full bg-gradient-to-r from-emerald-400 to-green-400 transition-all duration-1000 ease-out"
+											className="h-2.5 rounded-full transition-all duration-1000 ease-out"
 											style={{
+												backgroundColor: "#6B8268",
 												width: `${supabaseWeeklyProgress !== null ? supabaseWeeklyProgress : wellnessStats.weeklyProgress}%`,
-												animation: 'slideIn 1.2s ease-out'
 											}}
 										/>
 									</div>
@@ -753,17 +838,23 @@ const PersonalizedHomepage: React.FC<PersonalizedHomepageProps> = ({
 						</div>
 
 						{/* Daily Burnout Check - Serious Zone */}
-						<div className="rounded-2xl shadow-clean p-6 transition-all hover:shadow-clean-md hover:-translate-y-0.5" style={{
-							backgroundColor: "var(--color-serious-bg)",
-							border: "1px solid var(--color-serious-border)"
+						<div className="rounded-xl p-7 transition-all" style={{
+							backgroundColor: "white",
+							border: "2px solid #D1D5DB",
+							boxShadow: "0 1px 3px rgba(0, 0, 0, 0.04)"
 						}}>
-							<h2 className="text-lg font-semibold mb-4 flex items-center gap-2 pb-3" style={{
-								color: "var(--color-slate-700)",
-								borderBottom: "1px solid var(--color-slate-200)"
+							<h2 className="text-xl font-semibold mb-2 flex items-center gap-2.5" style={{
+								color: "#111827",
+								letterSpacing: "-0.01em"
 							}}>
-								<Gauge className="w-5 h-5" style={{ color: "var(--color-slate-600)" }} />
+								<Gauge className="w-5 h-5" style={{ color: "#4B5563" }} />
 								Daily Burnout Check
 							</h2>
+							<p className="text-xs mb-5" style={{
+								color: "#4B5563"
+							}}>
+								📊 Tracks to: Growth Insights → Daily Burnout Tracker
+							</p>
 
 							{burnoutScore !== null ? (
 								<div className="space-y-3">
@@ -779,15 +870,36 @@ const PersonalizedHomepage: React.FC<PersonalizedHomepageProps> = ({
 										</div>
 									</div>
 									<button
-										onClick={() => setShowBurnoutGauge(true)}
-										className="w-full px-3 py-2 text-sm text-white rounded-lg font-medium transition-all hover:opacity-80"
+										onClick={() => canTakeAssessment && setShowBurnoutGauge(true)}
+										disabled={!canTakeAssessment}
+										className="w-full px-3 py-2 text-sm rounded-lg font-medium transition-all flex items-center justify-center gap-2"
 										style={{
-											background: "linear-gradient(135deg, rgb(45, 95, 63), rgb(91, 147, 120))",
-											boxShadow: "rgba(107, 139, 96, 0.3) 0px 2px 8px",
+											background: canTakeAssessment
+												? "linear-gradient(135deg, rgb(45, 95, 63), rgb(91, 147, 120))"
+												: "#9CA3AF",
+											boxShadow: canTakeAssessment
+												? "rgba(107, 139, 96, 0.3) 0px 2px 8px"
+												: "none",
+											color: "white",
+											cursor: canTakeAssessment ? "pointer" : "not-allowed",
+											opacity: canTakeAssessment ? 1 : 0.7,
 										}}
 									>
-										Retake Assessment
+										{canTakeAssessment ? (
+											<>
+												<Gauge className="w-4 h-4" />
+												Retake Assessment
+											</>
+										) : (
+											<>
+												<Clock className="w-4 h-4" />
+												Available in {timeUntilNext}
+											</>
+										)}
 									</button>
+									<p className="text-xs text-gray-500 mt-3 leading-relaxed">
+										We ask for one check-in per day to get your full day's average state. This gives us a more accurate baseline and helps prevent anxiety from temporary dips. Best time: after work when you can reflect on your whole day.
+									</p>
 								</div>
 							) : (
 								<div>
@@ -795,41 +907,64 @@ const PersonalizedHomepage: React.FC<PersonalizedHomepageProps> = ({
 										Quick 5-question check-in to monitor your burnout risk
 									</p>
 									<button
-										onClick={() => setShowBurnoutGauge(true)}
-										className="w-full px-4 py-2.5 text-white rounded-lg font-medium text-sm transition-all flex items-center justify-center gap-2 hover:opacity-80"
+										onClick={() => canTakeAssessment && setShowBurnoutGauge(true)}
+										disabled={!canTakeAssessment}
+										className="w-full px-4 py-2.5 rounded-lg font-medium text-sm transition-all flex items-center justify-center gap-2"
 										style={{
-											background: "linear-gradient(135deg, rgb(45, 95, 63), rgb(91, 147, 120))",
-											boxShadow: "rgba(107, 139, 96, 0.3) 0px 2px 8px",
+											background: canTakeAssessment
+												? "linear-gradient(135deg, rgb(45, 95, 63), rgb(91, 147, 120))"
+												: "#9CA3AF",
+											boxShadow: canTakeAssessment
+												? "rgba(107, 139, 96, 0.3) 0px 2px 8px"
+												: "none",
+											color: "white",
+											cursor: canTakeAssessment ? "pointer" : "not-allowed",
+											opacity: canTakeAssessment ? 1 : 0.7,
 										}}
 									>
-										<Gauge className="w-4 h-4" />
-										Take Assessment
+										{canTakeAssessment ? (
+											<>
+												<Gauge className="w-4 h-4" />
+												Take Assessment
+											</>
+										) : (
+											<>
+												<Clock className="w-4 h-4" />
+												Available in {timeUntilNext}
+											</>
+										)}
 									</button>
+									<p className="text-xs text-gray-500 mt-3 leading-relaxed">
+										We ask for one check-in per day to get your full day's average state. This gives us a more accurate baseline and helps prevent anxiety from temporary dips. Best time: after work when you can reflect on your whole day.
+									</p>
 								</div>
 							)}
 						</div>
 
 						{/* Start Reflection CTA - Action Zone */}
-						<div className="rounded-2xl p-6 shadow-clean transition-all hover:shadow-clean-md hover:-translate-y-0.5" style={{
-							backgroundColor: "var(--color-action-bg)",
-							border: "1px solid var(--color-action-border)"
+						<div className="rounded-xl p-7 transition-all" style={{
+							backgroundColor: "#F9FAFB",
+							border: "2px solid #D1D5DB",
+							boxShadow: "0 1px 3px rgba(0, 0, 0, 0.04)"
 						}}>
-							<h3 className="font-semibold mb-2" style={{
-								color: "var(--color-green-700)"
+							<h3 className="font-semibold mb-2 text-lg" style={{
+								color: "#111827",
+								letterSpacing: "-0.01em"
 							}}>
 								Ready to reflect?
 							</h3>
-							<p className="text-sm mb-4" style={{
-								color: "var(--color-slate-600)"
+							<p className="text-sm mb-5" style={{
+								color: "#4B5563"
 							}}>
 								Take 5 minutes to check in with yourself
 							</p>
 							<button
 								onClick={() => onNavigate?.("reflection")}
-								className="w-full px-4 py-3 rounded-xl font-semibold text-sm text-white transition-all flex items-center justify-center gap-2 hover:opacity-90 hover:scale-[1.01]"
+								className="w-full px-5 py-3.5 rounded-lg font-semibold text-sm transition-all flex items-center justify-center gap-2 hover:opacity-90"
 								style={{
-									background: "linear-gradient(135deg, rgb(45, 95, 63), rgb(91, 147, 120))",
-									boxShadow: "rgba(107, 139, 96, 0.3) 0px 2px 8px"
+									backgroundColor: "#6B8268",
+									color: "white",
+									boxShadow: "0 1px 3px rgba(0, 0, 0, 0.08)"
 								}}
 								title="Go to Reflection Studio to create a new reflection"
 							>
@@ -841,16 +976,18 @@ const PersonalizedHomepage: React.FC<PersonalizedHomepageProps> = ({
 
 					{/* Right Column - Recent Reflections */}
 					<div className="lg:col-span-2">
-						<div className="rounded-2xl shadow-clean transition-all hover:shadow-clean-md hover:-translate-y-0.5" style={{
-							backgroundColor: "var(--color-card)",
-							border: "1px solid var(--color-slate-200)"
+						<div className="rounded-xl transition-all" style={{
+							backgroundColor: "white",
+							border: "2px solid #D1D5DB",
+							boxShadow: "0 1px 3px rgba(0, 0, 0, 0.04)"
 						}}>
-							<div className="px-6 py-4" style={{
-								borderBottom: "1px solid var(--color-slate-200)"
+							<div className="px-8 py-6" style={{
+								borderBottom: "2px solid #E5E7EB"
 							}}>
 								<div className="flex items-center justify-between">
-									<h2 className="text-lg font-semibold" style={{
-										color: "var(--color-slate-700)"
+									<h2 className="text-xl font-semibold" style={{
+										color: "#111827",
+										letterSpacing: "-0.01em"
 									}}>
 										Recent Reflections
 									</h2>
@@ -864,19 +1001,20 @@ const PersonalizedHomepage: React.FC<PersonalizedHomepageProps> = ({
 											}
 										}}
 										disabled={recentReflections.length === 0}
-										className={`px-3 py-1.5 text-sm font-semibold flex items-center gap-1 rounded-lg transition-all hover:opacity-90 ${
+										className={`px-4 py-2 text-sm font-semibold flex items-center gap-1.5 rounded-lg transition-all ${
 											recentReflections.length > 0
-												? "text-white cursor-pointer"
-												: "text-gray-400 cursor-not-allowed opacity-50"
+												? "cursor-pointer hover:opacity-90"
+												: "cursor-not-allowed opacity-40"
 										}`}
 										style={{
-											background:
+											backgroundColor:
 												recentReflections.length > 0
-													? "linear-gradient(135deg, rgb(45, 95, 63), rgb(91, 147, 120))"
-													: "#e5e7eb",
+													? "#6B8268"
+													: "#E5E7EB",
+											color: recentReflections.length > 0 ? "white" : "#6B7280",
 											boxShadow:
 												recentReflections.length > 0
-													? "rgba(107, 139, 96, 0.3) 0px 2px 8px"
+													? "0 1px 3px rgba(0, 0, 0, 0.08)"
 													: "none"
 										}}
 										title={
@@ -891,35 +1029,74 @@ const PersonalizedHomepage: React.FC<PersonalizedHomepageProps> = ({
 								</div>
 							</div>
 
-							<div className="divide-y divide-gray-100">
+							<div className="p-6 space-y-4">
 								{recentReflections.length > 0 ? (
-									recentReflections.map((reflection) => (
+									recentReflections.map((reflection, index) => (
 										<div
 											key={reflection.id}
-											className="p-5 hover:bg-gray-50 transition-colors"
+											className="p-5 rounded-lg hover:bg-gray-50/30 transition-all"
+											style={{
+												border: "2px solid #D1D5DB",
+												backgroundColor: "white"
+											}}
 										>
-											<div className="flex items-start justify-between mb-2">
-												<div className="flex items-start gap-3">
+											<div className="flex items-start justify-between mb-3">
+												<div className="flex items-start gap-4 flex-1">
 													<div
-														className="w-2 h-2 rounded-full mt-2 flex-shrink-0"
+														className="w-3 h-3 rounded-full mt-1.5 flex-shrink-0"
 														style={{
 															backgroundColor: getMoodColor(reflection.mood),
+															boxShadow: `0 0 0 3px ${getMoodColor(reflection.mood)}20`
 														}}
 													/>
-													<div className="flex-1">
-														<h3 className="font-medium text-gray-800 mb-1">
+													<div className="flex-1 min-w-0">
+														<h3 className="font-semibold text-base mb-2" style={{
+															color: "#111827",
+															letterSpacing: "-0.01em"
+														}}>
 															{reflection.title}
 														</h3>
-														<p className="text-xs text-gray-500 flex items-center gap-1.5 mt-1">
-															<Clock className="w-3 h-3" />
+														<p className="text-sm mb-3" style={{
+															color: "#4B5563",
+															lineHeight: "1.6"
+														}}>
+															{reflection.preview}
+														</p>
+														<div className="flex flex-wrap gap-2 mb-3">
+															{reflection.tags
+																.filter((tag) => {
+																	const isTimestamp = /^\d{4}-\d{2}-\d{2}T/.test(tag);
+																	if (isTimestamp) {
+																		console.warn("Found timestamp in tags:", tag);
+																		return false;
+																	}
+																	return true;
+																})
+																.map((tag) => (
+																	<span
+																		key={tag}
+																		className="px-2.5 py-1 text-xs font-medium rounded-lg"
+																		style={{
+																			backgroundColor: "#F3F4F6",
+																			color: "#374151",
+																			border: "1px solid #D1D5DB"
+																		}}
+																	>
+																		{tag}
+																	</span>
+																))}
+														</div>
+														<p className="text-xs flex items-center gap-1.5" style={{
+															color: "#6B7280"
+														}}>
+															<Clock className="w-3.5 h-3.5" />
 															{formatRelativeTime(reflection.date)}
 														</p>
 													</div>
 												</div>
-												<div className="flex gap-2">
+												<div className="flex gap-1.5 ml-4">
 													<button
 														onClick={() => {
-															// Find the full reflection data from localReflections
 															const fullReflection = localReflections.find(
 																(r) => r.id === reflection.id,
 															);
@@ -927,14 +1104,15 @@ const PersonalizedHomepage: React.FC<PersonalizedHomepageProps> = ({
 																setSelectedReflection(fullReflection);
 															}
 														}}
-														className="p-1.5 text-white rounded-lg transition-all hover:opacity-80"
+														className="p-1.5 rounded-md transition-all hover:opacity-80"
 														style={{
-															background: "linear-gradient(135deg, rgb(45, 95, 63), rgb(91, 147, 120))",
-															boxShadow: "rgba(107, 139, 96, 0.3) 0px 2px 8px",
+															backgroundColor: "#6B8268",
+															color: "white",
+															boxShadow: "0 1px 2px rgba(0, 0, 0, 0.05)",
 														}}
 														title="View reflection"
 													>
-														<Eye className="w-4 h-4" />
+														<Eye className="w-3.5 h-3.5" />
 													</button>
 													<button
 														onClick={() =>
@@ -944,73 +1122,48 @@ const PersonalizedHomepage: React.FC<PersonalizedHomepageProps> = ({
 															})
 														}
 														disabled={deletingId === reflection.id}
-														className={`p-1.5 text-white rounded-lg transition-all hover:opacity-80 ${
+														className={`p-1.5 rounded-md transition-all ${
 															deletingId === reflection.id
 																? "opacity-50 cursor-not-allowed"
-																: ""
+																: "hover:opacity-80"
 														}`}
 														style={{
-															background:
-																"linear-gradient(135deg, #ef5350, #f44336)",
+															backgroundColor: "#DC2626",
+															color: "white",
+															boxShadow: "0 1px 2px rgba(0, 0, 0, 0.05)",
 														}}
 														title="Delete reflection"
 													>
-														<Trash2 className="w-4 h-4" />
+														<Trash2 className="w-3.5 h-3.5" />
 													</button>
 												</div>
-											</div>
-
-											<p className="text-sm text-gray-500 mb-3 ml-5">
-												{reflection.preview}
-											</p>
-
-											<div className="flex flex-wrap gap-1.5 ml-5">
-												{reflection.tags
-													.filter((tag) => {
-														// Filter out any timestamps that might have snuck in
-														const isTimestamp = /^\d{4}-\d{2}-\d{2}T/.test(tag);
-														if (isTimestamp) {
-															console.warn("Found timestamp in tags:", tag);
-															return false;
-														}
-														return true;
-													})
-													.map((tag) => (
-														<span
-															key={tag}
-															className="px-2 py-1 text-xs rounded-full text-white"
-															style={{
-																background:
-																	"linear-gradient(135deg, #43a047, #66bb6a)",
-															}}
-														>
-															{tag}
-														</span>
-													))}
 											</div>
 										</div>
 									))
 								) : (
-									<div className="p-10 text-center">
-										<div className="mb-6 flex justify-center">
-											<EmptyReflectionIllustration size={140} />
+									<div className="p-12 text-center">
+										<div className="mb-8 flex justify-center">
+											<EmptyReflectionIllustration size={160} />
 										</div>
-										<h3 className="font-semibold mb-2 text-lg" style={{
-											color: "var(--color-slate-700)"
+										<h3 className="font-semibold mb-3 text-xl" style={{
+											color: "#111827",
+											letterSpacing: "-0.01em"
 										}}>
 											Your reflection journey starts here
 										</h3>
-										<p className="text-sm mb-6 max-w-md mx-auto" style={{
-											color: "var(--color-slate-600)"
+										<p className="text-base mb-8 max-w-md mx-auto" style={{
+											color: "#4B5563",
+											lineHeight: "1.6"
 										}}>
 											Take a moment to check in with yourself. Every reflection is a step toward greater self-awareness and well-being.
 										</p>
 										<button
 											onClick={() => onNavigate?.("reflection")}
-											className="px-6 py-3 rounded-xl font-semibold text-sm text-white transition-all hover:opacity-90 hover:scale-[1.01]"
+											className="px-8 py-4 rounded-lg font-semibold text-sm transition-all hover:opacity-90"
 											style={{
-												background: "linear-gradient(135deg, rgb(45, 95, 63), rgb(91, 147, 120))",
-												boxShadow: "rgba(107, 139, 96, 0.3) 0px 2px 8px"
+												backgroundColor: "#6B8268",
+												color: "white",
+												boxShadow: "0 1px 3px rgba(0, 0, 0, 0.08)"
 											}}
 										>
 											Create Your First Reflection
@@ -1029,8 +1182,9 @@ const PersonalizedHomepage: React.FC<PersonalizedHomepageProps> = ({
 					onComplete={(results) => {
 						const scorePercentage = Math.round((results.totalScore / 25) * 100);
 						const today = new Date().toISOString();
+						const now = new Date();
 
-						// Save to localStorage with today's date
+						// Save to localStorage with today's date AND timestamp
 						localStorage.setItem(
 							"dailyBurnoutAssessment",
 							JSON.stringify({
@@ -1038,12 +1192,15 @@ const PersonalizedHomepage: React.FC<PersonalizedHomepageProps> = ({
 								level: results.riskLevel,
 								date: today,
 								totalScore: results.totalScore,
+								timestamp: now.toISOString(), // Add timestamp for 12-hour check
 							}),
 						);
 
 						setBurnoutScore(scorePercentage);
 						setBurnoutLevel(results.riskLevel);
 						setLastAssessmentDate(today);
+						setLastAssessmentTime(now); // Set the time assessment was taken
+						setCanTakeAssessment(false); // Disable button
 						setShowBurnoutGauge(false);
 					}}
 					onClose={() => setShowBurnoutGauge(false)}

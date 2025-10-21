@@ -76,11 +76,11 @@ export function Contact() {
 							<p className="font-semibold mb-2" style={{ color: "#1A1A1A" }}>
 								<strong>Email:</strong>{" "}
 								<a
-									href="mailto:hello@huviatechnologies.com"
+									href="mailto:info@interpretreflect.com"
 									className="hover:underline"
 									style={{ color: "#5B9378" }}
 								>
-									hello@huviatechnologies.com
+									info@interpretreflect.com
 								</a>
 							</p>
 							<p style={{ color: "#5A5A5A" }}>

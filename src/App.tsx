@@ -44,6 +44,8 @@ import {
 } from "./components/CustomIcon";
 import { CustomizePreferences } from "./components/CustomizePreferences";
 import { EmotionMappingAccessible as EmotionMapping } from "./components/EmotionMappingAccessible";
+import { EmotionClarityPractice } from "./components/EmotionClarityPractice";
+import { InteroceptiveScan } from "./components/InteroceptiveScan";
 import GrowthInsights from "./components/GrowthInsights";
 import GrowthInsightsDashboard from "./components/GrowthInsightsDashboard";
 import { Header } from "./components/layout/Header";
@@ -54,8 +56,6 @@ import { AffirmationsView } from "./components/views/AffirmationsView";
 import ProfileSettings from "./components/ProfileSettings";
 import { SubscriptionGate } from "./components/SubscriptionGate";
 import { TemperatureExploration } from "./components/TemperatureExploration";
-import { WelcomeModal } from "./components/WelcomeModal";
-import { OnboardingFlow } from "./components/OnboardingFlow";
 import { FeatureDiscovery } from "./components/onboarding/FeatureDiscovery";
 import { ProgressiveOnboarding } from "./components/onboarding/ProgressiveOnboarding";
 import { onboardingAnalytics } from "./utils/onboardingAnalytics";
@@ -83,6 +83,9 @@ const WellnessCheckInAccessible = lazy(() => import("./components/WellnessCheckI
 const BreatheProtocolAccessible = lazy(() => import("./components/BreatheProtocolAccessible").then(m => ({ default: m.BreatheProtocolAccessible })));
 import { useAuth } from "./contexts/AuthContext";
 import { useOnboarding } from "./hooks/useOnboarding";
+import { useReflectionSubmit } from "./hooks/useReflectionSubmit";
+import { ReflectionSuccessToast } from "./components/ReflectionSuccessToast";
+import SessionExpiredModal from "./components/SessionExpiredModal";
 import LandingPageEnhanced from "./LandingPageEnhanced";
 import { supabase } from "./lib/supabase";
 import { About } from "./pages/About";
@@ -96,6 +99,7 @@ import { PricingNew } from "./pages/PricingNew";
 import { PricingProduction } from "./pages/PricingProduction";
 import { PricingTest } from "./pages/PricingTest";
 import { PrivacyPolicy } from "./pages/PrivacyPolicy";
+import Research from "./pages/Research";
 import { SeamlessSignup } from "./pages/SeamlessSignup";
 import { TermsOfService } from "./pages/TermsOfService";
 import { growthInsightsApi } from "./services/growthInsightsApi";
@@ -109,8 +113,13 @@ if (import.meta.env.DEV) {
 function App() {
 	const navigate = useNavigate();
 	const { user, loading, signOut } = useAuth();
+	const { showToast, closeToast } = useReflectionSubmit();
 
 	console.log("App Component - User:", user, "Loading:", loading);
+
+	// Session expiration modal state
+	const [showSessionExpiredModal, setShowSessionExpiredModal] = useState(false);
+
 	// Load saved tab preference or default to home
 	const [activeTab, setActiveTab] = useState(() => {
 		const savedTab = localStorage.getItem("preferredTab");
@@ -149,9 +158,7 @@ function App() {
 	const [senseCount, setSenseCount] = useState(0); // For sensory reset
 
 	// Onboarding state
-	const [showWelcomeModal, setShowWelcomeModal] = useState(false);
 	const [showFeatureDiscovery, setShowFeatureDiscovery] = useState(false);
-	const [onboardingVisible, setOnboardingVisible] = useState(false);
 	const [welcomeRecommendations, setWelcomeRecommendations] = useState<string[]>([]);
 	const [expansionLevel, setExpansionLevel] = useState(0); // For expansion practice
 	const intervalRef = useRef<NodeJS.Timeout | null>(null); // Store interval reference
@@ -173,6 +180,7 @@ function App() {
 	const [showNeurodivergentInterpreter, setShowNeurodivergentInterpreter] = useState(false);
 	const [showWellnessCheckIn, setShowWellnessCheckIn] = useState(false);
 	const [showEthicsMeaningCheck, setShowEthicsMeaningCheck] = useState(false);
+	const [showReflectionSuccessToast, setShowReflectionSuccessToast] = useState(false);
 	const [showBreathingPractice, setShowBreathingPractice] = useState(false);
 	const [showInSessionSelfCheck, setShowInSessionSelfCheck] = useState(false);
 	const [showInSessionTeamSync, setShowInSessionTeamSync] = useState(false);
@@ -194,6 +202,8 @@ function App() {
 	const [showTechnologyFatigueReset, setShowTechnologyFatigueReset] =
 		useState(false);
 	const [showEmotionMapping, setShowEmotionMapping] = useState(false);
+	const [showEmotionClarity, setShowEmotionClarity] = useState(false);
+	const [showInteroceptiveScan, setShowInteroceptiveScan] = useState(false);
 	const [showAffirmationStudio, setShowAffirmationStudio] = useState(false);
 	const [showFiveZoneModal, setShowFiveZoneModal] = useState(false);
 	const [showDailyBurnout] = useState(false);
@@ -295,6 +305,20 @@ function App() {
 		loadReflectionData();
 	}, [user, savedReflections]); // Reload when user changes or new reflections are saved
 
+	// Listen for session expiration events
+	useEffect(() => {
+		const handleSessionExpired = () => {
+			console.log("Session expired - showing modal");
+			setShowSessionExpiredModal(true);
+		};
+
+		window.addEventListener("sessionExpired", handleSessionExpired);
+
+		return () => {
+			window.removeEventListener("sessionExpired", handleSessionExpired);
+		};
+	}, []);
+
 	// Fetch Growth Insights data when user is authenticated and on insights tab
 	useEffect(() => {
 		const fetchGrowthInsights = async () => {
@@ -335,19 +359,6 @@ function App() {
 
 				if (!profile) return;
 
-				// Show welcome modal for new users (first 7 days)
-				const signupDate = new Date(profile.created_at);
-				const daysSinceSignup = Math.floor((Date.now() - signupDate.getTime()) / (1000 * 60 * 60 * 24));
-				
-				if (daysSinceSignup <= 7 && !localStorage.getItem("hasSeenWelcomeModal")) {
-					setShowWelcomeModal(true);
-					onboardingAnalytics.trackOnboardingStart(user.id, 'welcome_modal');
-				}
-
-				// Show onboarding flow for users who haven't completed it
-				if (!profile.onboarding_completed) {
-					setOnboardingVisible(true);
-				}
 			} catch (error) {
 				console.error("Error checking onboarding status:", error);
 			}
@@ -357,21 +368,9 @@ function App() {
 	}, [user]);
 
 	// Onboarding handlers
-	const handleWelcomeComplete = (recommendations: string[]) => {
-		setWelcomeRecommendations(recommendations);
-		setShowWelcomeModal(false);
-		setShowFeatureDiscovery(true);
-		onboardingAnalytics.trackWelcomeModal(user?.id || '', 3, {}, 'completed');
-	};
-
 	const handleFeatureDiscoveryComplete = () => {
 		setShowFeatureDiscovery(false);
 		onboardingAnalytics.trackFeatureDiscovery(user?.id || '', 'all', 'completed');
-	};
-
-	const handleOnboardingComplete = () => {
-		setOnboardingVisible(false);
-		onboardingAnalytics.trackOnboardingComplete(user?.id || '', {});
 	};
 
 	// Helper to check if any modal is open
@@ -382,6 +381,8 @@ function App() {
 			showBodyCheckIn ||
 			showAssignmentReset ||
 			showEmotionMapping ||
+			showEmotionClarity ||
+			showInteroceptiveScan ||
 			showAffirmationStudio ||
 			showTechnologyFatigueReset ||
 			showDailyBurnout ||
@@ -439,11 +440,101 @@ function App() {
 					// Load from Supabase for logged-in users
 					console.log("🔍 Querying burnout_assessments table for user:", user.id);
 
-					// Use simple REST API without Supabase client
-					const { fetchBurnoutDataSimple } = await import("./utils/fetchBurnoutDataSimple");
-					const { data, error } = await fetchBurnoutDataSimple(user.id);
+					// Get data from last 7 days (rolling window)
+					const sevenDaysAgo = new Date();
+					sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
+					sevenDaysAgo.setHours(0, 0, 0, 0);
+					const sevenDaysAgoStr = sevenDaysAgo.toISOString().split('T')[0];
+
+					console.log("📅 Filtering burnout data from last 7 days:", sevenDaysAgoStr);
+
+					// Use direct REST API instead of Supabase JS client to avoid timeout issues
+					console.log("⏳ Fetching burnout data via direct REST API...");
+
+					let data, error;
+					try {
+						// Get token from localStorage (same approach as saveBurnoutAssessment.ts)
+						let accessToken: string | null = null;
+						try {
+							const authKey = Object.keys(localStorage).find(key => key.includes('supabase.auth.token'));
+							if (authKey) {
+								const authData = JSON.parse(localStorage.getItem(authKey) || '{}');
+								accessToken = authData.access_token || authData.currentSession?.access_token;
+
+								if (accessToken) {
+									console.log("✅ Using token from localStorage");
+								}
+							}
+						} catch (e) {
+							console.warn("⚠️ Could not get token from localStorage:", e);
+						}
+
+						// Fallback: try getSession() with timeout if localStorage didn't work
+						if (!accessToken) {
+							console.log("🔐 Attempting to get session from Supabase (with timeout)...");
+							try {
+								const sessionPromise = supabase.auth.getSession();
+								const timeoutPromise = new Promise((_, reject) =>
+									setTimeout(() => reject(new Error("Session timeout")), 5000)
+								);
+
+								const result: any = await Promise.race([sessionPromise, timeoutPromise]);
+								const session = result.data?.session;
+
+								if (session?.access_token) {
+									accessToken = session.access_token;
+									console.log("✅ Using token from getSession");
+								}
+							} catch (err: any) {
+								console.warn("⚠️ Session fetch timed out or failed:", err.message);
+							}
+						}
+
+						console.log("🔍 Debug: Got access token, exists?", !!accessToken);
+
+						if (!accessToken) {
+							throw new Error("No access token found - please log in again");
+						}
+
+						// Build the query URL
+						const url = new URL(`${import.meta.env.VITE_SUPABASE_URL}/rest/v1/burnout_assessments`);
+						url.searchParams.set('user_id', `eq.${user.id}`);
+						url.searchParams.set('assessment_date', `gte.${sevenDaysAgoStr}`);
+						url.searchParams.set('order', 'assessment_date.desc');
+						url.searchParams.set('limit', '30');
+						url.searchParams.set('select', '*');
+
+						console.log("🌐 Fetching from:", url.toString());
+
+						const response = await fetch(url.toString(), {
+							method: 'GET',
+							headers: {
+								'apikey': import.meta.env.VITE_SUPABASE_ANON_KEY,
+								'Authorization': `Bearer ${accessToken}`,
+								'Content-Type': 'application/json',
+								'Prefer': 'return=representation'
+							}
+						});
+
+						console.log("📊 Response status:", response.status);
+
+						if (!response.ok) {
+							const errorText = await response.text();
+							console.error("❌ Fetch failed:", errorText);
+							throw new Error(`HTTP ${response.status}: ${errorText}`);
+						}
+
+						data = await response.json();
+						error = null;
+						console.log("✅ Successfully fetched data via REST API:", data);
+					} catch (fetchError: any) {
+						console.error("🚨 REST API fetch failed:", fetchError.message);
+						error = fetchError;
+						data = null;
+					}
 
 					console.log("📊 Query completed. Data:", data, "Error:", error);
+					console.log("📊 RAW DATA RECEIVED:", JSON.stringify(data, null, 2));
 
 					console.log("📊 Supabase query executed for user:", user.id);
 					console.log("📊 Response data:", data);
@@ -510,28 +601,20 @@ function App() {
 						const formattedData = data.map((d) => {
 							console.log("Processing assessment record:", d);
 
-							// Extract date as YYYY-MM-DD from timestamp
-							const assessmentDate = new Date(d.assessment_date)
-								.toISOString()
-								.split("T")[0];
+							// Extract date as YYYY-MM-DD without timezone conversion
+							// Use the date string directly to avoid timezone shifts
+							const assessmentDate = d.assessment_date.split("T")[0];
 
-							// Use burnout_score (0-10 normalized) for the chart
+							// Use total_score (0-10 normalized) for the chart
 							let totalScore = 5; // default (middle of 0-10 range)
-							if (d.burnout_score !== null && d.burnout_score !== undefined) {
-								// burnout_score is already normalized to 0-10
+							if (d.total_score !== null && d.total_score !== undefined) {
+								// total_score is already normalized to 0-10 in our database
+								totalScore = Number(d.total_score);
+								console.log(`Using total_score (0-10): ${totalScore}`);
+							} else if (d.burnout_score !== null && d.burnout_score !== undefined) {
+								// Legacy: burnout_score is also normalized to 0-10
 								totalScore = Number(d.burnout_score);
-								console.log(`Using burnout_score (0-10): ${totalScore}`);
-							} else if (
-								d.total_score !== null &&
-								d.total_score !== undefined
-							) {
-								// total_score is the raw score (5-25), need to normalize
-								const rawScore =
-									parseInt(d.total_score) || parseFloat(d.total_score) || 15;
-								totalScore = Math.round(((rawScore - 5) / 20) * 10 * 10) / 10;
-								console.log(
-									`Normalized total_score ${rawScore} to ${totalScore}`,
-								);
+								console.log(`Using legacy burnout_score (0-10): ${totalScore}`);
 							} else {
 								console.log("No score found, using default: 5");
 							}
@@ -903,11 +986,21 @@ function App() {
 			if (user) {
 				console.log("📊 Reloading from Supabase for user:", user.id);
 				console.log("📍 Current tab:", activeTab);
+
+				// Get data from last 7 days (rolling window)
+				const sevenDaysAgo = new Date();
+				sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
+				sevenDaysAgo.setHours(0, 0, 0, 0);
+				const sevenDaysAgoStr = sevenDaysAgo.toISOString().split('T')[0];
+
+				console.log("📅 Reloading burnout data from last 7 days:", sevenDaysAgoStr);
+
 				try {
-					const { data, error } = await supabase
+					const { data, error} = await supabase
 						.from("burnout_assessments")
 						.select("*")
 						.eq("user_id", user.id)
+						.gte("assessment_date", sevenDaysAgoStr)
 						.order("assessment_date", { ascending: false })
 						.limit(30);
 
@@ -919,9 +1012,8 @@ function App() {
 
 						// Convert Supabase data to match our format
 						const formattedData = data.map((d) => {
-							const assessmentDate = new Date(d.assessment_date)
-								.toISOString()
-								.split("T")[0];
+							// Parse date without timezone conversion
+							const assessmentDate = d.assessment_date.split("T")[0];
 							let totalScore = 15;
 							if (d.total_score !== null && d.total_score !== undefined) {
 								totalScore =
@@ -1014,33 +1106,8 @@ function App() {
 				}
 			}
 
-			// Fall back to localStorage
-			console.log("📊 Loading from localStorage...");
-			const historyData = localStorage.getItem("burnoutAssessmentHistory");
-			if (historyData) {
-				const history = JSON.parse(historyData);
-				const formattedHistory = history.map((d: BurnoutData) => ({
-					energyTank: d.energyTank || 3,
-					recoverySpeed: d.recoverySpeed || 3,
-					emotionalLeakage: d.emotionalLeakage || 3,
-					performanceSignal: d.performanceSignal || 3,
-					tomorrowReadiness: d.tomorrowReadiness || 3,
-					totalScore: Number(d.totalScore) || 15,
-					riskLevel: d.level || d.riskLevel || "moderate",
-					date: d.date,
-					timestamp: d.timestamp || new Date(d.date).toISOString(),
-				}));
-
-				setBurnoutData(formattedHistory);
-				(window as any).lastBurnoutDataSource = "LOCALSTORAGE-UPDATE";
-				console.log(
-					"✅ Updated burnout data from localStorage:",
-					formattedHistory,
-				);
-				console.log(
-					"🔍 DATA SOURCE: LOCALSTORAGE (fallback after assessment save)",
-				);
-			}
+			// No localStorage fallback - burnout data must come from Supabase
+			console.log("⚠️ No user session or Supabase data - burnout trends require login");
 		};
 
 		window.addEventListener("burnout-assessment-saved", handleAssessmentUpdate);
@@ -2647,10 +2714,10 @@ function App() {
 				</section>
 
 
-				{/* Burnout Trend Chart */}
+				{/* Wellness Trend Chart */}
 				<section
 					className="rounded-2xl p-8"
-					aria-labelledby="burnout-trend-heading"
+					aria-labelledby="wellness-trend-heading"
 					style={{
 						backgroundColor: "var(--bg-card)",
 						boxShadow:
@@ -2661,16 +2728,16 @@ function App() {
 					<div className="flex items-center justify-between mb-6">
 						<div>
 							<h2
-								id="burnout-trend-heading"
+								id="wellness-trend-heading"
 								className="text-2xl font-bold"
 								style={{ color: "var(--primary-900)" }}
 							>
-								Daily Burnout Trend
+								Daily Burnout Trends
 							</h2>
 							<p className="text-sm text-gray-600 mt-1">
-								Track your burnout risk over time with daily assessments
+								Track your burnout potential over the last 7 days with daily assessments (once every 12 hours).
 								{getAggregatedData().length > 0 &&
-									` (${getAggregatedData().length} days tracked)`}
+									` (${getAggregatedData().length} ${getAggregatedData().length === 1 ? 'day' : 'days'} recorded)`}
 							</p>
 						</div>
 						<div className="flex gap-2">
@@ -2693,38 +2760,38 @@ function App() {
 						}}
 					>
 						{/* Always show the graph structure */}
-						<>
-							{/* Y-axis labels with burnout percentages (flipped) */}
-							<div className="absolute left-0 top-0 h-full flex flex-col justify-between text-xs font-medium py-4 z-10">
+						{/* Y-axis labels with burnout risk percentages */}
+						<div className="absolute left-0 top-0 h-full flex flex-col justify-between text-xs font-medium py-4 z-10">
 								<div className="flex items-center gap-1">
-									<span className="text-red-600">100%</span>
-									<span className="text-red-600 text-[10px]">Critical</span>
+									<span className="text-red-700">100%</span>
+									<span className="text-red-700 text-[10px]">Critical</span>
 								</div>
 								<div className="flex items-center gap-1">
 									<span className="text-orange-600">80%</span>
-									<span className="text-orange-600 text-[10px]">Alert</span>
+									<span className="text-orange-600 text-[10px]">High Risk</span>
 								</div>
 								<div className="flex items-center gap-1">
 									<span className="text-yellow-600">60%</span>
-									<span className="text-yellow-600 text-[10px]">Moderate</span>
+									<span className="text-yellow-600 text-[10px]">Elevated</span>
 								</div>
 								<div className="flex items-center gap-1">
-									<span className="text-green-500">40%</span>
-									<span className="text-green-500 text-[10px]">Good</span>
+									<span className="text-lime-600">40%</span>
+									<span className="text-lime-600 text-[10px]">Moderate</span>
 								</div>
 								<div className="flex items-center gap-1">
 									<span className="text-green-600">20%</span>
-									<span className="text-green-600 text-[10px]">Excellent</span>
+									<span className="text-green-600 text-[10px]">Low</span>
 								</div>
 								<div className="flex items-center gap-1">
 									<span className="text-green-700">0%</span>
+									<span className="text-green-700 text-[10px]">Low Risk</span>
 								</div>
 							</div>
 
 							{/* Chart content */}
 							<div className="ml-24 mr-4 h-full relative">
 								<svg
-									key={`burnout-chart-${burnoutData?.length || 0}-${burnoutData?.[burnoutData?.length - 1]?.timestamp || "empty"}`}
+									key={`burnout-chart-${burnoutData?.length || 0}-${JSON.stringify(burnoutData)}`}
 									className="w-full h-full"
 									viewBox="0 0 400 200"
 									style={{ filter: "drop-shadow(0 2px 4px rgba(0,0,0,0.1))" }}
@@ -2740,7 +2807,7 @@ function App() {
 										>
 											<stop
 												offset="0%"
-												style={{ stopColor: "#10b981", stopOpacity: 0.8 }}
+												style={{ stopColor: "#ef4444", stopOpacity: 0.8 }}
 											/>
 											<stop
 												offset="50%"
@@ -2748,7 +2815,7 @@ function App() {
 											/>
 											<stop
 												offset="100%"
-												style={{ stopColor: "#ef4444", stopOpacity: 0.8 }}
+												style={{ stopColor: "#10b981", stopOpacity: 0.8 }}
 											/>
 										</linearGradient>
 										<linearGradient
@@ -2861,9 +2928,11 @@ function App() {
 													const x =
 														(i / Math.max(displayData.length - 1, 1)) * 380 +
 														10;
-													// totalScore is 0-10, convert to wellness percentage (inverse)
-													const wellness = (1 - d.totalScore / 10) * 100;
-													const y = 200 - (wellness / 100) * 200; // Scale to chart height
+													// totalScore is 0-10, convert to burnout risk percentage
+													const burnoutRisk = (d.totalScore / 10) * 100;
+													// Higher burnout (100%) should be at top (y=190), lower burnout (0%) at bottom (y=10)
+													// Use 180 range instead of 190 to leave 10px padding at bottom
+													const y = 190 - (burnoutRisk / 100) * 180;
 													return `L ${x},${y}`;
 												});
 
@@ -2871,9 +2940,9 @@ function App() {
 
 												const firstPoint = displayData[0];
 												const lastPoint = displayData[displayData.length - 1];
-												const firstWellness =
-													(1 - firstPoint.totalScore / 10) * 100;
-												const firstY = 200 - (firstWellness / 100) * 200;
+												const firstBurnoutRisk =
+													(firstPoint.totalScore / 10) * 100;
+												const firstY = 190 - (firstBurnoutRisk / 100) * 180;
 												const lastX =
 													((displayData.length - 1) /
 														Math.max(displayData.length - 1, 1)) *
@@ -2901,9 +2970,11 @@ function App() {
 													const x =
 														(i / Math.max(displayData.length - 1, 1)) * 380 +
 														10;
-													// totalScore is 0-10, convert to wellness percentage (inverse)
-													const wellness = (1 - d.totalScore / 10) * 100;
-													const y = 200 - (wellness / 100) * 200; // Scale to chart height
+													// totalScore is 0-10, convert to burnout risk percentage
+													const burnoutRisk = (d.totalScore / 10) * 100;
+													// Higher burnout (100%) should be at top (y=190), lower burnout (0%) at bottom (y=10)
+													// Use 180 range instead of 190 to leave 10px padding at bottom
+													const y = 190 - (burnoutRisk / 100) * 180;
 													return { x, y };
 												});
 
@@ -2950,24 +3021,21 @@ function App() {
 														)) *
 														380 +
 													10;
-												// totalScore is 0-10, convert to wellness percentage (inverse - lower score = higher wellness)
-												const wellness = Math.round(
-													(1 - d.totalScore / 10) * 100,
+												// totalScore is 0-10, convert to burnout risk percentage
+												const burnoutRisk = Math.round(
+													(d.totalScore / 10) * 100,
 												);
-												const y = 200 - (wellness / 100) * 200;
+												// Higher burnout (100%) should be at top (y=190), lower burnout (0%) at bottom (y=10)
+												// Use 180 range instead of 190 to leave 10px padding at bottom
+												const y = 190 - (burnoutRisk / 100) * 180;
 
-												// Format date for tooltip
-												const dateObj = new Date(d.date);
-												const formattedDate = dateObj.toLocaleDateString(
-													"en-US",
-													{
-														month: "short",
-														day: "numeric",
-													},
-												);
+												// Format date for tooltip (parse without timezone conversion)
+												const [year, month, day] = d.date.split("-");
+												const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+												const formattedDate = `${monthNames[parseInt(month) - 1]} ${parseInt(day)}`;
 
-												// Position tooltip below point if wellness is 70% or higher
-												const tooltipBelow = wellness >= 70;
+												// Position tooltip below point if burnout risk is 70% or higher (high burnout)
+												const tooltipBelow = burnoutRisk >= 70;
 												const tooltipY = tooltipBelow ? y + 15 : y - 50;
 												const dateTextY = tooltipBelow ? y + 33 : y - 32;
 												const percentTextY = tooltipBelow ? y + 45 : y - 20;
@@ -3040,7 +3108,7 @@ function App() {
 																className="tooltip-text"
 																style={{ pointerEvents: "none" }}
 															>
-																{wellness}% Well
+																{burnoutRisk}% Risk
 															</text>
 														</g>
 
@@ -3086,29 +3154,6 @@ function App() {
 												);
 											})}
 								</svg>
-
-								{/* X-axis dates */}
-								<div className="absolute bottom-0 left-0 right-0 flex justify-between text-xs text-gray-500 mt-2">
-									{getAggregatedData().length > 0 &&
-										getAggregatedData()
-											.slice(-30)
-											.filter((_, i) => {
-												if (showSummaryView === "monthly") return true;
-												if (showSummaryView === "weekly") return i % 2 === 0;
-												return i % 7 === 0;
-											})
-											.map((d, i) => (
-												<span key={i}>
-													{new Date(d.date).toLocaleDateString("en-US", {
-														month: "short",
-														day:
-															showSummaryView === "monthly"
-																? undefined
-																: "numeric",
-													})}
-												</span>
-											))}
-								</div>
 							</div>
 
 							{/* Enhanced Legend with Stats */}
@@ -3116,76 +3161,96 @@ function App() {
 								<div className="flex items-center gap-2 mb-3">
 									<div className="w-2 h-2 rounded-full bg-green-500 animate-pulse"></div>
 									<p className="text-xs font-semibold text-gray-700">
-										Live Wellness Tracking
+										Live Burnout Tracking
 									</p>
 								</div>
 
 								{/* Current Status */}
 								<div className="mb-3 p-2 bg-gradient-to-r from-green-50 to-blue-50 rounded-lg">
 									<p className="text-[10px] text-gray-600 font-medium mb-1">
-										Today's Wellness
+										Today's Burnout Risk
 									</p>
-									<p className="text-lg font-bold bg-gradient-to-r from-green-600 to-blue-600 bg-clip-text text-transparent">
+									<p className="text-lg font-bold bg-gradient-to-r from-red-600 to-orange-600 bg-clip-text text-transparent">
 										{getAggregatedData().length > 0
-											? `${Math.round((1 - getAggregatedData()[getAggregatedData().length - 1].totalScore / 10) * 100)}%`
+											? `${Math.round((getAggregatedData()[getAggregatedData().length - 1].totalScore / 10) * 100)}%`
 											: "--"}
 									</p>
 								</div>
 
 								{/* Trend Indicator */}
 								<div className="flex items-center gap-2 mb-3">
-									{getAggregatedData().length > 1 &&
-									getAggregatedData()[getAggregatedData().length - 1]
-										.totalScore >
-										getAggregatedData()[getAggregatedData().length - 2]
-											.totalScore ? (
-										<div className="flex items-center gap-1 text-green-600">
-											<svg width="12" height="12" viewBox="0 0 12 12">
-												<path d="M6 3L9 7H3Z" fill="currentColor" />
-											</svg>
-											<span className="text-[10px] font-medium">Improving</span>
-										</div>
-									) : (
-										<div className="flex items-center gap-1 text-blue-600">
-											<svg width="12" height="12" viewBox="0 0 12 12">
-												<path
-													d="M3 6H9"
-													stroke="currentColor"
-													strokeWidth="2"
-												/>
-											</svg>
-											<span className="text-[10px] font-medium">Stable</span>
-										</div>
-									)}
+									{(() => {
+										const aggregatedData = getAggregatedData();
+										if (aggregatedData.length > 1) {
+											const latest = aggregatedData[aggregatedData.length - 1];
+											const previous = aggregatedData[aggregatedData.length - 2];
+
+											if (latest?.totalScore !== undefined && previous?.totalScore !== undefined) {
+												if (latest.totalScore < previous.totalScore) {
+													return (
+														<div className="flex items-center gap-1 text-green-600">
+															<svg width="12" height="12" viewBox="0 0 12 12">
+																<path d="M6 3L9 7H3Z" fill="currentColor" />
+															</svg>
+															<span className="text-[10px] font-medium">Improving</span>
+														</div>
+													);
+												} else if (latest.totalScore > previous.totalScore) {
+													return (
+														<div className="flex items-center gap-1 text-red-600">
+															<svg width="12" height="12" viewBox="0 0 12 12">
+																<path d="M6 9L9 5H3Z" fill="currentColor" />
+															</svg>
+															<span className="text-[10px] font-medium">Getting Worse</span>
+														</div>
+													);
+												} else {
+													return (
+														<div className="flex items-center gap-1 text-blue-600">
+															<svg width="12" height="12" viewBox="0 0 12 12">
+																<path
+																	d="M3 6H9"
+																	stroke="currentColor"
+																	strokeWidth="2"
+																/>
+															</svg>
+															<span className="text-[10px] font-medium">Stable</span>
+														</div>
+													);
+												}
+											}
+										}
+										return null;
+									})()}
 								</div>
 
 								{/* Wellness Zones */}
 								<div className="space-y-1">
 									<p className="text-[10px] font-semibold text-gray-700 mb-1">
-										Burnout Zones
+										Burnout Risk Zones
 									</p>
 									<div className="flex items-center gap-2">
 										<div className="w-2 h-2 rounded-full bg-green-500"></div>
 										<span className="text-[10px] text-gray-600">
-											0-20% Excellent
+											0-20% Low Risk
 										</span>
 									</div>
 									<div className="flex items-center gap-2">
 										<div className="w-2 h-2 rounded-full bg-lime-500"></div>
 										<span className="text-[10px] text-gray-600">
-											20-40% Good
+											20-40% Moderate
 										</span>
 									</div>
 									<div className="flex items-center gap-2">
 										<div className="w-2 h-2 rounded-full bg-yellow-500"></div>
 										<span className="text-[10px] text-gray-600">
-											40-60% Moderate
+											40-60% Elevated
 										</span>
 									</div>
 									<div className="flex items-center gap-2">
 										<div className="w-2 h-2 rounded-full bg-orange-500"></div>
 										<span className="text-[10px] text-gray-600">
-											60-80% Alert
+											60-80% High Risk
 										</span>
 									</div>
 									<div className="flex items-center gap-2">
@@ -3196,7 +3261,6 @@ function App() {
 									</div>
 								</div>
 							</div>
-						</>
 					</div>
 
 					{burnoutData && burnoutData.length > 0 && (
@@ -3247,6 +3311,19 @@ function App() {
 					<div className="mt-6 text-left">
 						<p className="text-[9px] text-gray-500 italic">
 							Data from: Daily Burnout Checks (Homepage)
+						</p>
+					</div>
+
+					{/* Scoring Explanation */}
+					<div className="mt-4 p-3 bg-green-50 rounded-lg border border-green-200">
+						<p className="text-xs text-green-900 font-semibold mb-1">
+							How Scoring Works
+						</p>
+						<p className="text-[10px] text-green-800 leading-relaxed">
+							The assessment has 5 questions with options ranging from best (top) to worst (bottom).
+							Selecting all the <strong>best options</strong> results in <strong>0% burnout risk</strong> (low risk).
+							Selecting all the <strong>worst options</strong> results in <strong>100% burnout risk</strong> (critical).
+							Your score reflects your choices: better answers = lower burnout risk percentage. Assessments can be taken once every 12 hours.
 						</p>
 					</div>
 				</section>
@@ -4007,93 +4084,27 @@ function App() {
 	);
 
 	const reflectionCards = [
+		// Assignment Workflow
 		{
 			icon: NotepadIcon,
 			iconColor: "text-blue-400",
 			iconBg: "bg-blue-500/20",
 			title: "Pre-Assignment Prep",
-			description: "Prime attention, steady the nervous system, and set...",
-			status: [
-				{ label: "Prepare Well", color: "text-gray-400" },
-				{ label: "Ready to start", color: "text-gray-400" },
-			],
+			description: "Prime attention, steady the nervous system, and set intentions before assignments",
+			category: "Assignment Workflow",
+			tracksProgress: true,
+			trackingInfo: "View confidence trends in Growth Insights → Confidence Levels",
+			duration: "5 min",
 		},
 		{
 			icon: TargetIcon,
 			iconColor: "text-blue-400",
 			iconBg: "bg-blue-500/20",
 			title: "Post-Assignment Debrief",
-			description: "Consolidate learning, de-load stress, and turn...",
-			status: [
-				{ label: "Reflect & Grow", color: "text-gray-400" },
-				{ label: "Ready to start", color: "text-gray-400" },
-			],
-		},
-		{
-			icon: CommunityIcon,
-			iconColor: "text-purple-400",
-			iconBg: "bg-purple-500/20",
-			title: "Teaming Prep",
-			description: "Align minds and mechanics so handoffs are smooth...",
-			status: [
-				{ label: "Team Ready", color: "text-gray-400" },
-				{ label: "Ready to start", color: "text-gray-400" },
-			],
-		},
-		{
-			icon: CommunityIcon,
-			iconColor: "text-purple-400",
-			iconBg: "bg-purple-500/20",
-			title: "Teaming Reflection",
-			description: "Consolidate what worked between partners, surface...",
-			status: [
-				{ label: "Team Review", color: "text-gray-400" },
-				{ label: "Ready to start", color: "text-gray-400" },
-			],
-		},
-		{
-			icon: GrowthIcon,
-			iconColor: "text-purple-400",
-			iconBg: "bg-purple-500/20",
-			title: "Mentoring Prep",
-			description: "Clarify the ask, define success, and set up a...",
-			status: [
-				{ label: "Get the Right", color: "text-gray-400" },
-				{ label: "Ready to start", color: "text-gray-400" },
-			],
-		},
-		{
-			icon: GrowthIcon,
-			iconColor: "text-purple-400",
-			iconBg: "bg-purple-500/20",
-			title: "Mentoring Reflection",
-			description: "Consolidate insights and capture next steps",
-			status: [
-				{ label: "Apply", color: "text-gray-400" },
-				{ label: "Ready to start", color: "text-gray-400" },
-			],
-		},
-		{
-			icon: HeartPulseIcon,
-			iconColor: "text-purple-400",
-			iconBg: "bg-purple-500/20",
-			title: "Wellness Check-in",
-			description: "Focus on emotional and physical wellbeing",
-			status: [
-				{ label: "Stay", color: "text-gray-400" },
-				{ label: "Ready to start", color: "text-gray-400" },
-			],
-		},
-		{
-			icon: TargetIcon,
-			iconColor: "text-red-400",
-			iconBg: "bg-red-500/20",
-			title: "Values Alignment Check-In",
-			description: "Realign with your values after challenging decisions",
-			status: [
-				{ label: "Values", color: "text-gray-400" },
-				{ label: "Ready to start", color: "text-gray-400" },
-			],
+			description: "Consolidate learning, de-load stress, and turn experience into growth",
+			category: "Assignment Workflow",
+			tracksProgress: false,
+			duration: "10 min",
 		},
 		{
 			icon: HeartPulseIcon,
@@ -4101,10 +4112,41 @@ function App() {
 			iconBg: "bg-orange-500/20",
 			title: "In-Session Self-Check",
 			description: "Quick monitoring for active interpreting sessions",
-			status: [
-				{ label: "Real-time", color: "text-gray-400" },
-				{ label: "Ready to start", color: "text-gray-400" },
-			],
+			category: "Assignment Workflow",
+			tracksProgress: false,
+			duration: "2 min",
+		},
+		{
+			icon: TargetIcon,
+			iconColor: "text-red-400",
+			iconBg: "bg-red-500/20",
+			title: "Values Alignment Check-In",
+			description: "Realign with your values after challenging decisions",
+			category: "Assignment Workflow",
+			tracksProgress: false,
+			duration: "7 min",
+		},
+
+		// Team Collaboration
+		{
+			icon: CommunityIcon,
+			iconColor: "text-purple-400",
+			iconBg: "bg-purple-500/20",
+			title: "Teaming Prep",
+			description: "Align minds and mechanics so handoffs are smooth and stress-free",
+			category: "Team Collaboration",
+			tracksProgress: false,
+			duration: "5 min",
+		},
+		{
+			icon: CommunityIcon,
+			iconColor: "text-purple-400",
+			iconBg: "bg-purple-500/20",
+			title: "Teaming Reflection",
+			description: "Consolidate what worked between partners and surface improvement opportunities",
+			category: "Team Collaboration",
+			tracksProgress: false,
+			duration: "8 min",
 		},
 		{
 			icon: CommunityIcon,
@@ -4112,86 +4154,211 @@ function App() {
 			iconBg: "bg-purple-500/20",
 			title: "In-Session Team Sync",
 			description: "Team coordination check during assignments",
-			status: [
-				{ label: "Team sync", color: "text-gray-400" },
-				{ label: "Ready to start", color: "text-gray-400" },
-			],
-		},
-		{
-			icon: SecureLockIcon,
-			iconColor: "text-green-400",
-			iconBg: "bg-green-500/20",
-			title: "Role-Space Reflection",
-			description:
-				"Clarify and honor your professional boundaries after each assignment",
-			status: [
-				{ label: "Boundaries", color: "text-gray-400" },
-				{ label: "Ready to start", color: "text-gray-400" },
-			],
+			category: "Team Collaboration",
+			tracksProgress: false,
+			duration: "3 min",
 		},
 		{
 			icon: ChatBubbleIcon,
 			iconColor: "text-blue-400",
 			iconBg: "bg-blue-500/20",
 			title: "Supporting Direct Communication",
-			description:
-				"Reflect on facilitating respectful, independent communication",
-			status: [
-				{ label: "Direct Flow", color: "text-gray-400" },
-				{ label: "Ready to start", color: "text-gray-400" },
-			],
+			description: "Reflect on facilitating respectful, independent communication",
+			category: "Team Collaboration",
+			tracksProgress: false,
+			duration: "6 min",
+		},
+
+		// Professional Growth
+		{
+			icon: GrowthIcon,
+			iconColor: "text-purple-400",
+			iconBg: "bg-purple-500/20",
+			title: "Mentoring Prep",
+			description: "Clarify the ask, define success, and set up a productive mentoring session",
+			category: "Professional Growth",
+			tracksProgress: false,
+			duration: "5 min",
+		},
+		{
+			icon: GrowthIcon,
+			iconColor: "text-purple-400",
+			iconBg: "bg-purple-500/20",
+			title: "Mentoring Reflection",
+			description: "Consolidate insights and capture next steps from your mentoring session",
+			category: "Professional Growth",
+			tracksProgress: false,
+			duration: "7 min",
 		},
 		{
 			icon: NotepadIcon,
 			iconColor: "text-indigo-400",
 			iconBg: "bg-indigo-500/20",
 			title: "DECIDE Framework",
-			description:
-				"Navigate ethical decisions with a structured six-step process for clarity and confidence",
-			status: [
-				{ label: "Ethical Navigation", color: "text-gray-400" },
-				{ label: "Ready to start", color: "text-gray-400" },
-			],
+			description: "Navigate ethical decisions with a structured six-step process for clarity and confidence",
+			category: "Professional Growth",
+			tracksProgress: false,
+			duration: "15 min",
 		},
+
+		// Wellness & Boundaries
+		{
+			icon: HeartPulseIcon,
+			iconColor: "text-purple-400",
+			iconBg: "bg-purple-500/20",
+			title: "Wellness Check-in",
+			description: "Focus on emotional and physical wellbeing with comprehensive self-assessment",
+			category: "Wellness & Boundaries",
+			tracksProgress: true,
+			trackingInfo: "View stress & energy trends in Growth Insights",
+			duration: "8 min",
+		},
+		{
+			icon: HeartPulseIcon,
+			iconColor: "text-pink-400",
+			iconBg: "bg-pink-500/20",
+			title: "Emotion Clarity Practice",
+			description: "Build your emotional vocabulary to identify and regulate feelings with precision",
+			category: "Wellness & Boundaries",
+			tracksProgress: false,
+			duration: "3-5 min",
+		},
+		{
+			icon: SecureLockIcon,
+			iconColor: "text-green-400",
+			iconBg: "bg-green-500/20",
+			title: "Role-Space Reflection",
+			description: "Clarify and honor your professional boundaries after each assignment",
+			category: "Wellness & Boundaries",
+			tracksProgress: false,
+			duration: "10 min",
+		},
+
+		// Identity-Affirming Reflections
 		{
 			icon: HeartPulseIcon,
 			iconColor: "text-orange-600",
 			iconBg: "bg-orange-500/20",
 			title: "BIPOC Interpreter Wellness",
-			description:
-				"Center your experience as a Black, Indigenous, or Person of Color interpreter",
-			status: [
-				{ label: "Cultural Affirmation", color: "text-gray-400" },
-				{ label: "Ready to start", color: "text-gray-400" },
-			],
+			description: "Center your experience as a Black, Indigenous, or Person of Color interpreter",
+			category: "Identity-Affirming",
+			tracksProgress: false,
+			duration: "10 min",
 		},
 		{
 			icon: CommunityIcon,
 			iconColor: "text-purple-400",
 			iconBg: "bg-purple-500/20",
 			title: "Deaf Interpreter Professional Identity",
-			description:
-				"For DI/CDI: Teaming dynamics, audism, and professional recognition",
-			status: [
-				{ label: "DI/CDI Identity", color: "text-gray-400" },
-				{ label: "Ready to start", color: "text-gray-400" },
-			],
+			description: "For DI/CDI: Teaming dynamics, audism, and professional recognition",
+			category: "Identity-Affirming",
+			tracksProgress: false,
+			duration: "12 min",
 		},
 		{
 			icon: GrowthIcon,
 			iconColor: "#5C7F4F",
 			iconBg: "rgba(45, 95, 63, 0.2)",
 			title: "Neurodivergent Interpreter Wellness",
-			description:
-				"For ADHD, autism, dyslexia, and all cognitive differences",
-			status: [
-				{ label: "ND Affirmation", color: "text-gray-400" },
-				{ label: "Ready to start", color: "text-gray-400" },
-			],
+			description: "For ADHD, autism, dyslexia, and all cognitive differences",
+			category: "Identity-Affirming",
+			tracksProgress: false,
+			duration: "10 min",
 		},
 	];
 
-	const renderStressReset = () => (
+	const stressResetCards = [
+		// Quick Resets (2-5 min)
+		{
+			id: "breathing-practice",
+			title: "Breathing Practice",
+			description: "Guided breathing to calm your nervous system and balance heart rate",
+			category: "Quick Resets",
+			duration: "2-5 min",
+			whenToUse: "Between assignments or when feeling anxious",
+			benefit: "Activates relaxation response",
+		},
+		{
+			id: "assignment-reset",
+			title: "Assignment Reset",
+			description: "Quick structured pause to transition between appointments",
+			category: "Quick Resets",
+			duration: "3-5 min",
+			whenToUse: "Between back-to-back assignments",
+			benefit: "Helps brain transition out of stress mode",
+		},
+
+		// Body-Based (5-8 min)
+		{
+			id: "body-checkin",
+			title: "Body Check-In",
+			description: "Scan and release physical tension from interpreting stress",
+			category: "Body-Based",
+			duration: "5-8 min",
+			whenToUse: "After long assignments or when feeling physically tense",
+			benefit: "Releases interpreter tension patterns",
+		},
+		{
+			id: "interoceptive-scan",
+			title: "Interoceptive Awareness Scan",
+			description: "Connect with internal body signals to preserve attention and emotional clarity",
+			category: "Body-Based",
+			duration: "3-5 min",
+			whenToUse: "Before high-stakes assignments or when feeling disconnected from your body",
+			benefit: "Preserves language networks and cognitive flexibility under pressure",
+		},
+		{
+			id: "tech-fatigue",
+			title: "Technology Fatigue Reset",
+			description: "Five-zone recovery method for digital sensory overload",
+			category: "Body-Based",
+			duration: "5-7 min",
+			whenToUse: "After remote/video interpreting sessions",
+			benefit: "Reduces screen fatigue and restores balance",
+		},
+
+		// Mental & Emotional (5-10 min)
+		{
+			id: "emotion-mapping",
+			title: "Emotion Mapping",
+			description: "Name and process emotions to calm your nervous system",
+			category: "Mental & Emotional",
+			duration: "5-8 min",
+			whenToUse: "When feeling emotionally overwhelmed",
+			benefit: "Reduces reactivity by 50%",
+		},
+		{
+			id: "breathe-protocol",
+			title: "BREATHE Protocol",
+			description: "Guided 7-step reflection for building stress resilience",
+			category: "Mental & Emotional",
+			duration: "8-10 min",
+			whenToUse: "For deeper reflection and skill-building",
+			benefit: "Builds long-term stress management skills",
+		},
+
+		// Role Clarity (7-10 min)
+		{
+			id: "boundaries-reset",
+			title: "Professional Boundaries Reset",
+			description: "Release what's not yours and reinforce your professional role",
+			category: "Role Clarity",
+			duration: "7-10 min",
+			whenToUse: "After emotionally difficult assignments",
+			benefit: "Prevents compassion fatigue",
+		},
+	];
+
+	const renderStressReset = () => {
+		// Group cards by category
+		const categories = [
+			"Quick Resets",
+			"Body-Based",
+			"Mental & Emotional",
+			"Role Clarity"
+		];
+
+		return (
 		<main
 			className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8"
 			role="main"
@@ -4216,796 +4383,197 @@ function App() {
 				</p>
 			</header>
 
-			<section
-				className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 max-w-6xl mx-auto"
-				aria-label="Available reset practices"
-			>
-				{/* Breathing Practice */}
-				<section
-					className="rounded-xl p-6 transition-all group relative overflow-hidden focus:outline-none focus:ring-4 focus:ring-offset-2 focus:ring-green-600 cursor-pointer"
-					tabIndex={0}
-					role="button"
-					aria-labelledby="breathing-practice-title"
-					onClick={(e) => {
-						// Blur the card to prevent it from receiving keyboard events
-						e.currentTarget.blur();
-						setBreathingMode("gentle");
-						setShowBreathingPractice(true);
-						const id = trackTechniqueStart("breathing-practice");
-						setCurrentTechniqueId(id);
-					}}
-					style={{
-						background: "linear-gradient(145deg, #FFFFFF 0%, #FAFAF8 100%)",
-						border: "2px solid transparent",
-						boxShadow: "0 4px 15px rgba(0, 0, 0, 0.05)",
-						transform: "translateY(0)",
-					}}
-					onMouseEnter={(e) => {
-						// Disable hover effects when any modal is open
-						if (isAnyModalOpen()) return;
+			{/* Render cards grouped by category */}
+			{categories.map((category) => {
+				const cardsInCategory = stressResetCards.filter(card => card.category === category);
+				if (cardsInCategory.length === 0) return null;
 
-						e.currentTarget.style.borderColor = "var(--primary-800)";
-						e.currentTarget.style.boxShadow =
-							"0 10px 25px rgba(27, 94, 32, 0.3), 0 0 0 3px rgba(27, 94, 32, 0.2)";
-						e.currentTarget.style.transform = "translateY(-4px) scale(1.01)";
-						e.currentTarget.style.boxShadow =
-							"0 10px 25px rgba(45, 95, 63, 0.2)";
-					}}
-					onMouseLeave={(e) => {
-						// Disable hover effects when any modal is open
-						if (isAnyModalOpen()) return;
-
-						e.currentTarget.style.borderColor = "transparent";
-						e.currentTarget.style.transform = "translateY(0) scale(1)";
-						e.currentTarget.style.boxShadow = "0 4px 15px rgba(0, 0, 0, 0.05)";
-					}}
-				>
-					<div
-						className="absolute top-0 right-0 w-32 h-32 opacity-10"
-						style={{
-							background:
-								"radial-gradient(circle, #1A3D26 0%, transparent 70%)",
-							transform: "translate(50%, -50%)",
-						}}
-					></div>
-
-					<header className="flex justify-end mb-3">
-						<button
-							onClick={(e) => {
-								e.stopPropagation();
-								setShowBreathingModal(true);
-							}}
-							className="text-sm px-4 py-3 min-h-[44px] min-w-[44px] rounded-lg transition-all hover:scale-105 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-800"
+				return (
+					<div key={category} className="mb-12">
+						{/* Category Header */}
+						<h3
+							className="text-xl font-bold mb-6 pb-2 border-b-2"
 							style={{
-								backgroundColor: "#F1F8F4",
-								color: "var(--primary-800)",
-								border: "2px solid #5C7F4F",
-							}}
-							aria-label="Learn why breathing works"
-						>
-							Why breathing works?
-						</button>
-					</header>
-
-					<h3
-						id="breathing-practice-title"
-						className="text-lg font-semibold mb-3"
-						style={{ color: "#0D3A14" }}
-					>
-						Breathing Practice
-					</h3>
-
-					<p
-						className="text-sm mb-4"
-						style={{ color: "#2A2A2A", lineHeight: "1.6" }}
-					>
-						<strong>Neuroscience:</strong> Guided breathing activates your
-						body's relaxation response, calming the nervous system after
-						high-pressure interpreting. Research shows slow, intentional breaths
-						balance heart rate and reduce stress hormones.
-					</p>
-
-					<div className="mb-4">
-						<p
-							className="text-sm font-semibold mb-2"
-							style={{ color: "#0D3A14" }}
-						>
-							Practice Steps:
-						</p>
-						<ol
-							className="space-y-1.5 text-sm list-decimal list-inside"
-							style={{ color: "#2A2A2A" }}
-						>
-							<li>Settle into a comfortable posture</li>
-							<li>Inhale slowly through the nose (4 counts)</li>
-							<li>Exhale slowly through the mouth (6 counts)</li>
-							<li>Repeat for set cycles or minutes</li>
-						</ol>
-					</div>
-
-					<div
-						className="pt-3 border-t"
-						style={{ borderColor: "rgba(15, 40, 24, 0.2)" }}
-					>
-						<p className="text-sm italic" style={{ color: "#4A4A4A" }}>
-							Balances autonomic nervous system
-						</p>
-					</div>
-				</section>
-
-				{/* Body Check-In */}
-				<section
-					className="rounded-xl p-6 transition-all group relative overflow-hidden focus:outline-none focus:ring-4 focus:ring-offset-2 focus:ring-green-600 cursor-pointer"
-					tabIndex={0}
-					role="button"
-					aria-labelledby="body-checkin-title"
-					onClick={(e) => {
-						// Blur the card to prevent it from receiving keyboard events
-						e.currentTarget.blur();
-						setBodyCheckInMode("quick");
-						setShowBodyCheckIn(true);
-						const id = trackTechniqueStart("body-checkin");
-						setCurrentTechniqueId(id);
-					}}
-					style={{
-						background: "linear-gradient(145deg, #FFFFFF 0%, #FAFAF8 100%)",
-						border: "2px solid transparent",
-						boxShadow: "0 4px 15px rgba(0, 0, 0, 0.05)",
-						transform: "translateY(0)",
-					}}
-					onMouseEnter={(e) => {
-						// Disable hover effects when any modal is open
-						if (isAnyModalOpen()) return;
-
-						e.currentTarget.style.borderColor = "var(--primary-800)";
-						e.currentTarget.style.boxShadow =
-							"0 10px 25px rgba(27, 94, 32, 0.3), 0 0 0 3px rgba(27, 94, 32, 0.2)";
-						e.currentTarget.style.transform = "translateY(-4px) scale(1.01)";
-						e.currentTarget.style.boxShadow =
-							"0 10px 25px rgba(45, 95, 63, 0.2)";
-					}}
-					onMouseLeave={(e) => {
-						// Disable hover effects when any modal is open
-						if (isAnyModalOpen()) return;
-
-						e.currentTarget.style.borderColor = "transparent";
-						e.currentTarget.style.transform = "translateY(0) scale(1)";
-						e.currentTarget.style.boxShadow = "0 4px 15px rgba(0, 0, 0, 0.05)";
-					}}
-				>
-					<div
-						className="absolute top-0 right-0 w-32 h-32 opacity-10"
-						style={{
-							background:
-								"radial-gradient(circle, #1A3D26 0%, transparent 70%)",
-							transform: "translate(50%, -50%)",
-						}}
-					></div>
-
-					<header className="flex justify-end mb-3">
-						<button
-							onClick={(e) => {
-								e.stopPropagation();
-								setShowBodyCheckInModal(true);
-							}}
-							className="text-sm px-4 py-3 min-h-[44px] min-w-[44px] rounded-lg transition-all hover:scale-105 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-800"
-							style={{
-								backgroundColor: "#F1F8F4",
-								color: "var(--primary-800)",
-								border: "2px solid #5C7F4F",
-							}}
-							aria-label="Learn why body check-ins work"
-						>
-							Why this works?
-						</button>
-					</header>
-
-					<h3
-						id="body-checkin-title"
-						className="text-lg font-semibold mb-3"
-						style={{ color: "#0D3A14" }}
-					>
-						Body Check-In
-					</h3>
-
-					<p
-						className="text-sm mb-4"
-						style={{ color: "#2A2A2A", lineHeight: "1.6" }}
-					>
-						<strong>Neuroscience:</strong> Your body holds tension patterns from
-						interpreting stress. Somatic awareness activates the insula cortex,
-						helping release physical holding and reset your nervous system.
-					</p>
-
-					<div className="mb-4">
-						<p
-							className="text-sm font-semibold mb-2"
-							style={{ color: "#0D3A14" }}
-						>
-							Four-Step Process:
-						</p>
-						<ol className="space-y-1.5 text-sm" style={{ color: "#2A2A2A" }}>
-							<li>1. Pause and ground yourself</li>
-							<li>2. Scan from head to toe</li>
-							<li>3. Release tension points</li>
-							<li>4. Breathe into open spaces</li>
-						</ol>
-					</div>
-
-					<div
-						className="pt-3 border-t"
-						style={{ borderColor: "rgba(15, 40, 24, 0.2)" }}
-					>
-						<p className="text-sm italic" style={{ color: "#4A4A4A" }}>
-							Releases interpreter tension patterns
-						</p>
-					</div>
-				</section>
-
-				{/* Emotion Mapping */}
-				<article
-					className="rounded-xl p-6 transition-all group relative overflow-hidden focus:outline-none focus:ring-4 focus:ring-offset-2 focus:ring-green-600 cursor-pointer"
-					tabIndex={0}
-					role="button"
-					aria-labelledby="emotion-mapping-title"
-					onClick={(e) => {
-						// Blur the card to prevent it from receiving keyboard events
-						e.currentTarget.blur();
-						setEmotionMappingMode("quick");
-						setShowEmotionMapping(true);
-						const id = trackTechniqueStart("emotion-mapping");
-						setCurrentTechniqueId(id);
-					}}
-					style={{
-						background: "linear-gradient(145deg, #FFFFFF 0%, #FAFAF8 100%)",
-						border: "2px solid transparent",
-						boxShadow: "0 4px 15px rgba(0, 0, 0, 0.05)",
-						transform: "translateY(0)",
-					}}
-					onMouseEnter={(e) => {
-						e.currentTarget.style.borderColor = "var(--primary-800)";
-						e.currentTarget.style.boxShadow =
-							"0 10px 25px rgba(27, 94, 32, 0.3), 0 0 0 3px rgba(27, 94, 32, 0.2)";
-						e.currentTarget.style.transform = "translateY(-6px) scale(1.02)";
-						e.currentTarget.style.boxShadow =
-							"0 12px 30px rgba(92, 127, 79, 0.25)";
-					}}
-					onMouseLeave={(e) => {
-						e.currentTarget.style.borderColor = "transparent";
-						e.currentTarget.style.transform = "translateY(0) scale(1)";
-						e.currentTarget.style.boxShadow = "0 4px 15px rgba(0, 0, 0, 0.05)";
-					}}
-				>
-					<div
-						className="absolute top-0 right-0 w-32 h-32 opacity-10"
-						style={{
-							background:
-								"radial-gradient(circle, #1A3D26 0%, transparent 70%)",
-							transform: "translate(50%, -50%)",
-						}}
-					></div>
-
-					<header className="flex justify-end mb-3">
-						<button
-							onClick={(e) => {
-								e.stopPropagation();
-								setShowEmotionMappingModal(true);
-							}}
-							className="text-sm px-4 py-3 min-h-[44px] min-w-[44px] rounded-lg transition-all hover:scale-105 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-800"
-							style={{
-								backgroundColor: "#F1F8F4",
-								color: "var(--primary-800)",
-								border: "2px solid #5C7F4F",
-							}}
-							aria-label="Learn why emotion mapping works"
-						>
-							Why emotion mapping works?
-						</button>
-					</header>
-
-					<h3
-						id="emotion-mapping-title"
-						className="text-lg font-semibold mb-3"
-						style={{ color: "#0D3A14" }}
-					>
-						Emotion Mapping
-					</h3>
-
-					<p
-						className="text-sm mb-4"
-						style={{ color: "#2A2A2A", lineHeight: "1.6" }}
-					>
-						<strong style={{ color: "#0D3A14" }}>Neuroscience-backed:</strong>{" "}
-						Research shows that recognizing and labeling emotions calms the
-						nervous system, reduces amygdala reactivity by 50%, and improves
-						cognitive performance.
-					</p>
-
-					<div className="mb-4">
-						<p
-							className="text-sm font-semibold mb-2"
-							style={{ color: "#0D3A14" }}
-						>
-							Four-step process:
-						</p>
-						<ol
-							className="text-sm space-y-1.5 list-decimal list-inside"
-							style={{ color: "#2A2A2A" }}
-						>
-							<li>
-								<strong>Pause:</strong> Take a mindful breath and check in with
-								yourself
-							</li>
-							<li>
-								<strong>Name:</strong> Label your emotion (tension, pride,
-								fatigue, etc.)
-							</li>
-							<li>
-								<strong>Reflect:</strong> Notice triggers - assignment content,
-								technology, environment
-							</li>
-							<li>
-								<strong>Compassion:</strong> Close with self-kindness and
-								acceptance
-							</li>
-						</ol>
-					</div>
-
-					<div
-						className="pt-3 border-t"
-						style={{ borderColor: "rgba(15, 40, 24, 0.2)" }}
-					>
-						<p className="text-sm italic" style={{ color: "#4A4A4A" }}>
-							Regulates stress response & maintains focus
-						</p>
-					</div>
-				</article>
-
-				{/* Professional Boundaries Reset */}
-				<article
-					className="rounded-xl p-6 transition-all group relative overflow-hidden focus:outline-none focus:ring-4 focus:ring-offset-2 focus:ring-green-600 cursor-pointer"
-					tabIndex={0}
-					role="button"
-					aria-labelledby="boundaries-reset-title"
-					onClick={() => {
-						startTransition(() => {
-							setBoundariesResetMode("quick");
-							setShowProfessionalBoundariesReset(true);
-							const id = trackTechniqueStart("boundaries-reset");
-							setCurrentTechniqueId(id);
-						});
-					}}
-					style={{
-						background: "linear-gradient(145deg, #FFFFFF 0%, #FAFAF8 100%)",
-						border: "2px solid transparent",
-						boxShadow: "0 4px 15px rgba(0, 0, 0, 0.05)",
-						transform: "translateY(0)",
-					}}
-					onMouseEnter={(e) => {
-						e.currentTarget.style.borderColor = "var(--primary-800)";
-						e.currentTarget.style.boxShadow =
-							"0 10px 25px rgba(27, 94, 32, 0.3), 0 0 0 3px rgba(27, 94, 32, 0.2)";
-						e.currentTarget.style.transform = "translateY(-6px) scale(1.02)";
-						e.currentTarget.style.boxShadow =
-							"0 12px 30px rgba(92, 127, 79, 0.25)";
-					}}
-					onMouseLeave={(e) => {
-						e.currentTarget.style.borderColor = "transparent";
-						e.currentTarget.style.transform = "translateY(0) scale(1)";
-						e.currentTarget.style.boxShadow = "0 4px 15px rgba(0, 0, 0, 0.05)";
-					}}
-				>
-					<div
-						className="absolute top-0 right-0 w-32 h-32 opacity-10"
-						style={{
-							background:
-								"radial-gradient(circle, #1A3D26 0%, transparent 70%)",
-							transform: "translate(50%, -50%)",
-						}}
-					></div>
-
-					<header className="flex justify-end mb-3">
-						<button
-							onClick={(e) => {
-								e.stopPropagation();
-								setShowBoundariesWhyModal(true);
-							}}
-							className="text-sm px-4 py-3 min-h-[44px] min-w-[44px] rounded-lg transition-all hover:scale-105 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-800"
-							style={{
-								backgroundColor: "#F1F8F4",
-								color: "var(--primary-800)",
-								border: "2px solid #5C7F4F",
-							}}
-							aria-label="Learn why professional boundaries matter"
-						>
-							Why boundaries matter?
-						</button>
-					</header>
-
-					<h3
-						id="boundaries-reset-title"
-						className="text-lg font-semibold mb-3"
-						style={{ color: "#0D3A14" }}
-					>
-						Professional Boundaries Reset
-					</h3>
-
-					<p
-						className="text-sm mb-4"
-						style={{ color: "#2A2A2A", lineHeight: "1.6" }}
-					>
-						<strong style={{ color: "#0D3A14" }}>Science-backed:</strong>{" "}
-						Behavioral research shows that intentional boundary resets increase
-						resilience, prevent compassion fatigue, and support ethical
-						practice.
-					</p>
-
-					<div className="mb-4">
-						<p
-							className="text-sm font-semibold mb-2"
-							style={{ color: "#0D3A14" }}
-						>
-							Three-step process:
-						</p>
-						<ol
-							className="text-sm space-y-1.5 list-decimal list-inside"
-							style={{ color: "#2A2A2A" }}
-						>
-							<li>
-								<strong>Reflect:</strong> Notice lingering thoughts or emotions
-								from the assignment
-							</li>
-							<li>
-								<strong>Release:</strong> Use breath or gesture to let go of
-								what's not yours
-							</li>
-							<li>
-								<strong>Affirm:</strong> Reinforce your role, limits, and
-								professional identity
-							</li>
-						</ol>
-					</div>
-
-					<div
-						className="pt-3 border-t"
-						style={{ borderColor: "rgba(15, 40, 24, 0.2)" }}
-					>
-						<p className="text-sm italic" style={{ color: "#4A4A4A" }}>
-							Protects against role conflict & compassion fatigue
-						</p>
-					</div>
-				</article>
-
-				{/* Assignment Reset */}
-				<article
-					className="rounded-xl p-6 transition-all group relative overflow-hidden focus:outline-none focus:ring-4 focus:ring-offset-2 focus:ring-green-600 cursor-pointer"
-					tabIndex={0}
-					role="button"
-					aria-labelledby="assignment-reset-title"
-					onClick={(e) => {
-						// Blur the card to prevent it from receiving keyboard events
-						e.currentTarget.blur();
-						setAssignmentResetMode("fast");
-						setShowAssignmentReset(true);
-						const id = trackTechniqueStart("assignment-reset");
-						setCurrentTechniqueId(id);
-					}}
-					style={{
-						background: "linear-gradient(145deg, #FFFFFF 0%, #FAFAF8 100%)",
-						border: "2px solid transparent",
-						boxShadow: "0 4px 15px rgba(0, 0, 0, 0.05)",
-						transform: "translateY(0)",
-					}}
-					onMouseEnter={(e) => {
-						e.currentTarget.style.borderColor = "var(--primary-800)";
-						e.currentTarget.style.boxShadow =
-							"0 10px 25px rgba(27, 94, 32, 0.3), 0 0 0 3px rgba(27, 94, 32, 0.2)";
-						e.currentTarget.style.transform = "translateY(-6px) scale(1.02)";
-						e.currentTarget.style.boxShadow =
-							"0 12px 30px rgba(92, 127, 79, 0.25)";
-					}}
-					onMouseLeave={(e) => {
-						e.currentTarget.style.borderColor = "transparent";
-						e.currentTarget.style.transform = "translateY(0) scale(1)";
-						e.currentTarget.style.boxShadow = "0 4px 15px rgba(0, 0, 0, 0.05)";
-					}}
-				>
-					<div
-						className="absolute top-0 right-0 w-32 h-32 opacity-10"
-						style={{
-							background:
-								"radial-gradient(circle, #1A3D26 0%, transparent 70%)",
-							transform: "translate(50%, -50%)",
-						}}
-					></div>
-
-					<header className="flex justify-end mb-3">
-						<button
-							onClick={(e) => {
-								e.stopPropagation();
-								setShowAssignmentWhyModal(true);
-							}}
-							className="text-sm px-4 py-3 min-h-[44px] min-w-[44px] rounded-lg transition-all hover:scale-105 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-800"
-							style={{
-								backgroundColor: "#F1F8F4",
-								color: "var(--primary-800)",
-								border: "2px solid #5C7F4F",
-							}}
-							aria-label="Learn why the Assignment Reset works"
-						>
-							Why this works?
-						</button>
-					</header>
-
-					<h3
-						id="assignment-reset-title"
-						className="text-lg font-semibold mb-3"
-						style={{ color: "#0D3A14" }}
-					>
-						Assignment Reset
-					</h3>
-
-					<p
-						className="text-sm mb-4"
-						style={{ color: "#2A2A2A", lineHeight: "1.6" }}
-					>
-						<strong style={{ color: "#0D3A14" }}>Neuroscience-backed:</strong>{" "}
-						Brief, structured pauses help your brain transition out of stress
-						mode and activate your body's natural relaxation response.
-					</p>
-
-					<div className="mb-4">
-						<p
-							className="text-sm font-semibold mb-2"
-							style={{ color: "#0D3A14" }}
-						>
-							What's included:
-						</p>
-						<ul className="text-sm space-y-1.5" style={{ color: "#2A2A2A", listStyleType: "none" }}>
-							<li>• Self-awareness check</li>
-							<li>• Tension release & grounding</li>
-							<li>• Calming breath work</li>
-							<li>• Intention setting for next assignment</li>
-						</ul>
-					</div>
-
-					<div
-						className="pt-3 border-t"
-						style={{ borderColor: "rgba(15, 40, 24, 0.2)" }}
-					>
-						<p className="text-sm italic" style={{ color: "#4A4A4A" }}>
-							Optimized for quick transitions between appointments
-						</p>
-					</div>
-				</article>
-
-				{/* Technology Fatigue Reset */}
-				<article
-					className="rounded-xl p-6 transition-all group relative overflow-hidden focus:outline-none focus:ring-4 focus:ring-offset-2 focus:ring-green-600 cursor-pointer"
-					tabIndex={0}
-					role="button"
-					aria-labelledby="tech-fatigue-title"
-					onClick={(e) => {
-						// Blur the card to prevent it from receiving keyboard events
-						e.currentTarget.blur();
-						startTransition(() => {
-							setTechFatigueMode("quick");
-							setShowTechnologyFatigueReset(true);
-							const id = trackTechniqueStart("tech-fatigue-reset");
-							setCurrentTechniqueId(id);
-						});
-					}}
-					style={{
-						background: "linear-gradient(145deg, #FFFFFF 0%, #FAFAF8 100%)",
-						border: "2px solid transparent",
-						boxShadow: "0 4px 15px rgba(0, 0, 0, 0.05)",
-						transform: "translateY(0)",
-					}}
-					onMouseEnter={(e) => {
-						e.currentTarget.style.borderColor = "var(--primary-800)";
-						e.currentTarget.style.boxShadow =
-							"0 10px 25px rgba(27, 94, 32, 0.3), 0 0 0 3px rgba(27, 94, 32, 0.2)";
-						e.currentTarget.style.transform = "translateY(-6px) scale(1.02)";
-						e.currentTarget.style.boxShadow =
-							"0 12px 30px rgba(92, 127, 79, 0.25)";
-					}}
-					onMouseLeave={(e) => {
-						e.currentTarget.style.borderColor = "transparent";
-						e.currentTarget.style.transform = "translateY(0) scale(1)";
-						e.currentTarget.style.boxShadow = "0 4px 15px rgba(0, 0, 0, 0.05)";
-					}}
-				>
-					<div
-						className="absolute top-0 right-0 w-32 h-32 opacity-10"
-						style={{
-							background:
-								"radial-gradient(circle, #1A3D26 0%, transparent 70%)",
-							transform: "translate(50%, -50%)",
-						}}
-					></div>
-
-					<header className="flex justify-end mb-3">
-						<button
-							onClick={(e) => {
-								e.stopPropagation();
-								setShowFiveZoneModal(true);
-							}}
-							className="text-sm px-4 py-3 min-h-[44px] min-w-[44px] rounded-lg transition-all hover:scale-105 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-800"
-							style={{
-								backgroundColor: "#F1F8F4",
-								color: "var(--primary-800)",
-								border: "2px solid #5C7F4F",
-							}}
-							aria-label="Learn why these five zones help with technology fatigue"
-						>
-							Why these 5 zones?
-						</button>
-					</header>
-
-					<h3
-						id="tech-fatigue-title"
-						className="text-lg font-semibold mb-3"
-						style={{ color: "#0D3A14" }}
-					>
-						Technology Fatigue Reset
-					</h3>
-
-					<p
-						className="text-sm mb-4"
-						style={{ color: "#2A2A2A", lineHeight: "1.6" }}
-					>
-						<strong style={{ color: "#0D3A14" }}>Neuroscience-backed:</strong>{" "}
-						Reduces digital sensory overload and helps restore balance in your
-						nervous system after interpreting online.
-					</p>
-
-					<div className="mb-4">
-						<p
-							className="text-sm font-semibold mb-2"
-							style={{ color: "#0D3A14" }}
-						>
-							Five-Zone Recovery Method:
-						</p>
-						<ul className="text-sm space-y-1.5" style={{ color: "#2A2A2A", listStyleType: "none" }}>
-							<li>• Visual rest</li>
-							<li>• Posture reset</li>
-							<li>• Mindful breathing</li>
-							<li>• Auditory pause</li>
-							<li>• Cognitive defocus</li>
-						</ul>
-					</div>
-
-					<div
-						className="pt-3 border-t"
-						style={{ borderColor: "rgba(15, 40, 24, 0.2)" }}
-					>
-						<p className="text-sm italic" style={{ color: "#4A4A4A" }}>
-							Evidence-based practice for remote interpreters
-						</p>
-					</div>
-				</article>
-
-				{/* BREATHE Protocol */}
-				<section
-					className="rounded-xl p-6 transition-all group relative overflow-hidden focus:outline-none focus:ring-4 focus:ring-offset-2 focus:ring-green-600 cursor-pointer"
-					tabIndex={0}
-					role="button"
-					aria-labelledby="breathe-protocol-title"
-					onClick={(e) => {
-						e.currentTarget.blur();
-						startTransition(() => {
-							setShowBreatheProtocol(true);
-							const id = trackTechniqueStart("breathe-protocol");
-							setCurrentTechniqueId(id);
-						});
-					}}
-					style={{
-						background: "linear-gradient(145deg, #FFFFFF 0%, #FAFAF8 100%)",
-						border: "2px solid transparent",
-						boxShadow: "0 4px 15px rgba(0, 0, 0, 0.05)",
-						transform: "translateY(0)",
-					}}
-					onMouseEnter={(e) => {
-						if (isAnyModalOpen()) return;
-						e.currentTarget.style.borderColor = "var(--primary-800)";
-						e.currentTarget.style.boxShadow =
-							"0 10px 25px rgba(27, 94, 32, 0.3), 0 0 0 3px rgba(27, 94, 32, 0.2)";
-						e.currentTarget.style.transform = "translateY(-4px) scale(1.01)";
-					}}
-					onMouseLeave={(e) => {
-						if (isAnyModalOpen()) return;
-						e.currentTarget.style.borderColor = "transparent";
-						e.currentTarget.style.transform = "translateY(0) scale(1)";
-						e.currentTarget.style.boxShadow = "0 4px 15px rgba(0, 0, 0, 0.05)";
-					}}
-				>
-					<div
-						className="absolute top-0 right-0 w-32 h-32 opacity-10"
-						style={{
-							background:
-								"radial-gradient(circle, #1A3D26 0%, transparent 70%)",
-							transform: "translate(50%, -50%)",
-						}}
-					></div>
-
-					<header className="flex justify-end mb-3">
-						<button
-							type="button"
-							aria-label="Learn why BREATHE Protocol works"
-							onClick={(e) => {
-								e.stopPropagation();
-								setShowBreatheProtocolModal(true);
-							}}
-							className="text-sm px-4 py-3 min-h-[44px] min-w-[44px] rounded-lg transition-all hover:scale-105 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-800"
-							style={{
-								backgroundColor: "#F1F8F4",
-								color: "var(--primary-800)",
-								border: "2px solid #5C7F4F",
+								color: "#1A3D26",
+								borderColor: "#5C7F4F"
 							}}
 						>
-							Why this works?
-						</button>
-					</header>
+							{category}
+						</h3>
 
-					<h3
-						id="breathe-protocol-title"
-						className="text-lg font-semibold mb-3"
-						style={{ color: "#0D3A14" }}
-					>
-						BREATHE Protocol – Guided Stress Reset
-					</h3>
-
-					<p
-						className="text-sm mb-4"
-						style={{ color: "#2A2A2A", lineHeight: "1.6" }}
-					>
-						<strong>Why this works:</strong> Guided questions build self-awareness and regulation, supporting calm, focused interpreting under stress.
-					</p>
-
-					<div className="mb-4">
-						<p
-							className="text-sm font-semibold mb-2"
-							style={{ color: "#0D3A14" }}
+						{/* Cards Grid */}
+						<section
+							className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 max-w-6xl mx-auto"
+							aria-label={`${category} practices`}
 						>
-							Use these prompts to reset in real time:
-						</p>
-						<ol className="space-y-1.5 list-decimal list-inside">
-							<li className="text-sm" style={{ color: "#2A2A2A" }}>
-								<strong>B – Breathe:</strong> When and how would you use 4-7-8 breathing?
-							</li>
-							<li className="text-sm" style={{ color: "#2A2A2A" }}>
-								<strong>R – Recognize:</strong> What emotions do you need to notice and name?
-							</li>
-							<li className="text-sm" style={{ color: "#2A2A2A" }}>
-								<strong>E – Evaluate:</strong> How is this emotion impacting your interpreting?
-							</li>
-							<li className="text-sm" style={{ color: "#2A2A2A" }}>
-								<strong>A – Adjust:</strong> What physical adjustments would help you shift?
-							</li>
-							<li className="text-sm" style={{ color: "#2A2A2A" }}>
-								<strong>T – Trust:</strong> What preparation can you rely on?
-							</li>
-							<li className="text-sm" style={{ color: "#2A2A2A" }}>
-								<strong>H – Hold:</strong> What boundaries need reinforcing?
-							</li>
-							<li className="text-sm" style={{ color: "#2A2A2A" }}>
-								<strong>E – Engage:</strong> How will you re-engage with intention?
-							</li>
-						</ol>
-					</div>
+							{cardsInCategory.map((card) => {
+								const handleCardClick = () => {
+									let id: string | null = null;
+									if (card.id === "breathing-practice") {
+										setBreathingMode("gentle");
+										setShowBreathingPractice(true);
+										id = trackTechniqueStart("breathing-practice");
+										setCurrentTechniqueId(id);
+									} else if (card.id === "body-checkin") {
+										setBodyCheckInMode("quick");
+										setShowBodyCheckIn(true);
+										id = trackTechniqueStart("body-checkin");
+										setCurrentTechniqueId(id);
+								} else if (card.id === "interoceptive-scan") {
+									setShowInteroceptiveScan(true);
+									id = trackTechniqueStart("interoceptive-scan");
+									setCurrentTechniqueId(id);
+								} else if (card.id === "emotion-clarity") {
+									setShowEmotionClarity(true);
+									id = trackTechniqueStart("emotion-clarity");
+									setCurrentTechniqueId(id);
+								} else if (card.id === "emotion-mapping") {
+									setEmotionMappingMode("quick");
+									setShowEmotionMapping(true);
+									id = trackTechniqueStart("emotion-mapping");
+									setCurrentTechniqueId(id);
+									} else if (card.id === "boundaries-reset") {
+										setBoundariesResetMode("quick");
+										setShowProfessionalBoundariesReset(true);
+										id = trackTechniqueStart("boundaries-reset");
+										setCurrentTechniqueId(id);
+									} else if (card.id === "assignment-reset") {
+										setAssignmentResetMode("fast");
+										setShowAssignmentReset(true);
+										id = trackTechniqueStart("assignment-reset");
+										setCurrentTechniqueId(id);
+									} else if (card.id === "tech-fatigue") {
+										setTechFatigueMode("quick");
+										setShowTechnologyFatigueReset(true);
+										id = trackTechniqueStart("tech-fatigue-reset");
+										setCurrentTechniqueId(id);
+									} else if (card.id === "breathe-protocol") {
+										setShowBreatheProtocol(true);
+										id = trackTechniqueStart("breathe-protocol");
+										setCurrentTechniqueId(id);
+									}
+								};
 
-					<div
-						className="pt-3 border-t"
-						style={{ borderColor: "rgba(15, 40, 24, 0.2)" }}
-					>
-						<p className="text-sm italic" style={{ color: "#4A4A4A" }}>
-							Reflect on your experience to build resilience
-						</p>
+								return (
+									<article
+										key={card.id}
+										className="rounded-xl p-6 transition-all group relative overflow-hidden focus:outline-none focus:ring-4 focus:ring-offset-2 focus:ring-green-600 cursor-pointer"
+										tabIndex={0}
+										role="button"
+										aria-label={`${card.title} stress reset practice`}
+										onClick={(e) => {
+											e.currentTarget.blur();
+											startTransition(() => {
+												handleCardClick();
+											});
+										}}
+										onKeyDown={(e) => {
+											if (e.key !== "Tab") {
+												e.currentTarget.blur();
+											}
+										}}
+										style={{
+											background: "linear-gradient(145deg, #FFFFFF 0%, #FAFAF8 100%)",
+											border: "2px solid transparent",
+											boxShadow: "0 4px 15px rgba(0, 0, 0, 0.05)",
+											transform: "translateY(0)",
+										}}
+										onMouseEnter={(e) => {
+											if (isAnyModalOpen()) return;
+											e.currentTarget.style.borderColor = "var(--primary-800)";
+											e.currentTarget.style.boxShadow = "0 10px 25px rgba(27, 94, 32, 0.3), 0 0 0 3px rgba(27, 94, 32, 0.2)";
+											e.currentTarget.style.transform = "translateY(-4px) scale(1.01)";
+										}}
+										onMouseLeave={(e) => {
+											if (isAnyModalOpen()) return;
+											e.currentTarget.style.borderColor = "transparent";
+											e.currentTarget.style.transform = "translateY(0) scale(1)";
+											e.currentTarget.style.boxShadow = "0 4px 15px rgba(0, 0, 0, 0.05)";
+										}}
+									>
+										{/* Decorative gradient */}
+										<div
+											className="absolute top-0 right-0 w-32 h-32 opacity-10"
+											style={{
+												background: "radial-gradient(circle, #1A3D26 0%, transparent 70%)",
+												transform: "translate(50%, -50%)",
+											}}
+										></div>
+
+										{/* Tracked badge */}
+										{card.tracksProgress && (
+											<div className="absolute top-3 right-3 px-2 py-1 rounded-md text-xs font-medium flex items-center gap-1" style={{ backgroundColor: "rgba(92, 127, 79, 0.15)", color: "#1A3D26" }}>
+												<svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+													<path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+												</svg>
+												<span>Tracked</span>
+											</div>
+										)}
+
+										{/* Title */}
+										<h3
+											className="text-lg font-semibold mb-3"
+											style={{ color: "#0D3A14" }}
+										>
+											{card.title}
+										</h3>
+
+										{/* Description */}
+										<p
+											className="text-sm mb-4"
+											style={{ color: "#2A2A2A", lineHeight: "1.6" }}
+										>
+											{card.description}
+										</p>
+
+										{/* When to use */}
+										<div className="mb-4 p-3 rounded-lg" style={{ backgroundColor: "rgba(92, 127, 79, 0.08)" }}>
+											<p className="text-xs font-semibold mb-1" style={{ color: "#1A3D26" }}>
+												When to use:
+											</p>
+											<p className="text-xs" style={{ color: "#3A3A3A" }}>
+												{card.whenToUse}
+											</p>
+										</div>
+
+										{/* Bottom info */}
+										<div className="flex items-center justify-between pt-3 border-t" style={{ borderColor: "rgba(15, 40, 24, 0.2)" }}>
+											{/* Duration */}
+											<div className="flex items-center">
+												<svg
+													width="14"
+													height="14"
+													viewBox="0 0 24 24"
+													fill="none"
+													stroke="#5C7F4F"
+													strokeWidth="2"
+													strokeLinecap="round"
+													strokeLinejoin="round"
+													className="mr-1.5"
+												>
+													<circle cx="12" cy="12" r="10"></circle>
+													<polyline points="12 6 12 12 16 14"></polyline>
+												</svg>
+												<span className="text-xs font-medium" style={{ color: "#3A3A3A" }}>
+													{card.duration}
+												</span>
+											</div>
+
+											{/* Benefit */}
+											<p className="text-xs italic" style={{ color: "#4A4A4A" }}>
+												{card.benefit}
+											</p>
+										</div>
+									</article>
+								);
+							})}
+						</section>
 					</div>
-				</section>
-			</section>
+				);
+			})}
 		</main>
-	);
+		);
+	};
 
 	const renderStressResetModals = () => (
 		<>
@@ -5161,7 +4729,7 @@ function App() {
 										setShowFiveZoneModal(false);
 										setTechFatigueMode("quick");
 										setShowTechFatigue(true);
-										const id = trackTechniqueStart("tech-fatigue-reset");
+										id = trackTechniqueStart("tech-fatigue-reset");
 										setCurrentTechniqueId(id);
 									}}
 									className="w-full px-6 py-3 rounded-lg font-medium transition-all hover:scale-105"
@@ -5323,7 +4891,7 @@ function App() {
 										setShowAssignmentResetModal(false);
 										setAssignmentResetMode("fast");
 										setShowAssignmentReset(true);
-										const id = trackTechniqueStart("assignment-reset");
+										id = trackTechniqueStart("assignment-reset");
 										setCurrentTechniqueId(id);
 									}}
 									className="w-full px-6 py-3 rounded-lg font-medium transition-all hover:scale-105"
@@ -5504,7 +5072,7 @@ function App() {
 									onClick={() => {
 										setShowBoundariesModal(false);
 										setSelectedTechnique("boundaries");
-										const id = trackTechniqueStart("professional-boundaries");
+										id = trackTechniqueStart("professional-boundaries");
 										setCurrentTechniqueId(id);
 									}}
 									className="w-full px-6 py-3 rounded-lg font-medium transition-all hover:scale-105"
@@ -5685,7 +5253,7 @@ function App() {
 									onClick={() => {
 										setShowEmotionMappingModal(false);
 										setSelectedTechnique("emotion-mapping");
-										const id = trackTechniqueStart("emotion-mapping");
+										id = trackTechniqueStart("emotion-mapping");
 										setCurrentTechniqueId(id);
 									}}
 									className="w-full px-6 py-3 rounded-lg font-medium transition-all hover:scale-105"
@@ -9086,6 +8654,16 @@ function App() {
 
 	const renderReflectionStudio = () => {
 		console.log("renderReflectionStudio called");
+
+		// Group cards by category
+		const categories = [
+			"Assignment Workflow",
+			"Team Collaboration",
+			"Professional Growth",
+			"Wellness & Boundaries",
+			"Identity-Affirming"
+		];
+
 		return (
 		<main
 			className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8"
@@ -9094,33 +8672,22 @@ function App() {
 		>
 			{/* Main Content */}
 			<div className="space-y-8">
-				{/* Welcome Section */}
-				<div className="mb-8">
+				{/* Header */}
+				<div className="mb-8 text-center">
 					<h2
 						id="reflection-studio-heading"
 						className="text-4xl font-bold mb-3"
 						style={{ color: "#1A1A1A", letterSpacing: "-0.5px" }}
 					>
-						{(() => {
-							const hour = new Date().getHours();
-							const name = user?.email?.split("@")[0] || "User";
-							let timeGreeting = "Good morning";
-							if (hour >= 12 && hour < 17) {
-								timeGreeting = "Good afternoon";
-							} else if (hour >= 17) {
-								timeGreeting = "Good evening";
-							}
-							return `${timeGreeting}, ${name}`;
-						})()}
+						Reflection Studio
 					</h2>
 					<p
 						className="text-lg"
 						style={{ color: "#3A3A3A", fontWeight: "400" }}
 					>
-						Ready to reflect and grow today?
+						Choose a reflection to get started
 					</p>
 				</div>
-
 
 				{/* Content */}
 				<div
@@ -9128,15 +8695,33 @@ function App() {
 					id="structured-panel"
 					aria-labelledby="structured-tab"
 				>
-					{/* Reflection Cards Grid */}
-					<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-									{reflectionCards.map((card, index) => (
+					{/* Render cards grouped by category */}
+					{categories.map((category) => {
+						const cardsInCategory = reflectionCards.filter(card => card.category === category);
+						if (cardsInCategory.length === 0) return null;
+
+						return (
+							<div key={category} className="mb-12">
+								{/* Category Header */}
+								<h3
+									className="text-xl font-bold mb-6 pb-2 border-b-2"
+									style={{
+										color: "#1A3D26",
+										borderColor: "#5C7F4F"
+									}}
+								>
+									{category}
+								</h3>
+
+								{/* Reflection Cards Grid */}
+								<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+									{cardsInCategory.map((card, index) => (
 										<article
 											key={index}
 											tabIndex={0}
 											role="button"
 											aria-label={`${card.title} reflection card`}
-											className="rounded-xl p-6 transition-all cursor-pointer group focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-sage-600"
+											className="rounded-xl p-6 transition-all cursor-pointer group focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-sage-600 relative"
 											style={{
 												backgroundColor: "var(--bg-card)",
 												border: "2px solid transparent",
@@ -9177,7 +8762,23 @@ function App() {
 													"0 4px 15px rgba(0, 0, 0, 0.05)";
 												e.currentTarget.style.outline = "none";
 											}}
-											onClick={() => {
+											onKeyDown={(e) => {
+												// Due to role="button", ANY key press triggers onClick
+												// Blur the element immediately to remove focus styles before modal opens
+												// Allow Tab key to pass through for navigation
+												if (e.key !== "Tab") {
+													e.currentTarget.blur();
+												}
+											}}
+											onClick={(e) => {
+												// Immediately reset transform styles to prevent card from appearing above modal
+												e.currentTarget.style.transform = "translateY(0) scale(1)";
+												e.currentTarget.style.boxShadow = "0 4px 15px rgba(0, 0, 0, 0.05)";
+												e.currentTarget.style.borderColor = "transparent";
+												e.currentTarget.style.outline = "none";
+												// Blur the element to trigger onBlur cleanup
+												e.currentTarget.blur();
+
 												startTransition(() => {
 													if (card.title === "Pre-Assignment Prep") {
 														setShowPreAssignmentPrep(true);
@@ -9193,6 +8794,8 @@ function App() {
 														setShowMentoringReflection(true);
 													} else if (card.title === "Wellness Check-in") {
 														setShowWellnessCheckIn(true);
+													} else if (card.title === "Emotion Clarity Practice") {
+														setShowEmotionClarity(true);
 													} else if (card.title === "Values Alignment Check-In") {
 														setShowEthicsMeaningCheck(true);
 													} else if (card.title === "In-Session Self-Check") {
@@ -9217,55 +8820,40 @@ function App() {
 													// Add handlers for other cards here as needed
 												});
 											}}
-											onKeyDown={(e) => {
-												if (e.key === "Enter" || e.key === " ") {
-													e.preventDefault();
-													startTransition(() => {
-														if (card.title === "Pre-Assignment Prep") {
-															setShowPreAssignmentPrep(true);
-														} else if (card.title === "Post-Assignment Debrief") {
-															console.log(
-																"App.tsx - Post-Assignment Debrief button clicked",
-															);
-															setShowPostAssignmentDebrief(true);
-														} else if (card.title === "Teaming Prep") {
-															setShowTeamingPrep(true);
-														} else if (card.title === "Teaming Reflection") {
-															setShowTeamingReflection(true);
-														} else if (card.title === "Mentoring Prep") {
-															setShowMentoringPrep(true);
-														} else if (card.title === "Mentoring Reflection") {
-															setShowMentoringReflection(true);
-														} else if (card.title === "Wellness Check-in") {
-															setShowWellnessCheckIn(true);
-														} else if (
-															card.title === "Values Alignment Check-In"
-														) {
-															setShowEthicsMeaningCheck(true);
-														} else if (card.title === "In-Session Self-Check") {
-															setShowInSessionSelfCheck(true);
-														} else if (card.title === "In-Session Team Sync") {
-															setShowInSessionTeamSync(true);
-														} else if (card.title === "Role-Space Reflection") {
-															setShowRoleSpaceReflection(true);
-														} else if (
-															card.title === "Supporting Direct Communication"
-														) {
-															setShowDirectCommunicationReflection(true);
-														} else if (card.title === "DECIDE Framework") {
-															setShowDecideFramework(true);
-														} else if (card.title === "BIPOC Interpreter Wellness") {
-															setShowBIPOCWellness(true);
-														} else if (card.title === "Deaf Interpreter Professional Identity") {
-															setShowDeafInterpreter(true);
-														} else if (card.title === "Neurodivergent Interpreter Wellness") {
-															setShowNeurodivergentInterpreter(true);
-														}
-														// Handle other card selections
-													});
-												}
-											}}
 										>
+											{/* Progress Tracking Badge */}
+											{card.tracksProgress && (
+												<div
+													className="absolute top-3 right-3 px-2 py-1 rounded-md flex items-center gap-1"
+													style={{
+														backgroundColor: "rgba(92, 127, 79, 0.1)",
+														border: "1px solid rgba(92, 127, 79, 0.3)"
+													}}
+													title={card.trackingInfo || "This reflection saves data to your Growth Insights dashboard"}
+												>
+													<svg
+														width="14"
+														height="14"
+														viewBox="0 0 24 24"
+														fill="none"
+														stroke="#5C7F4F"
+														strokeWidth="2"
+														strokeLinecap="round"
+														strokeLinejoin="round"
+													>
+														<line x1="12" y1="20" x2="12" y2="10"></line>
+														<line x1="18" y1="20" x2="18" y2="4"></line>
+														<line x1="6" y1="20" x2="6" y2="16"></line>
+													</svg>
+													<span
+														className="text-[10px] font-semibold"
+														style={{ color: "#5C7F4F" }}
+													>
+														Tracked
+													</span>
+												</div>
+											)}
+
 											<div className="mb-4">
 												<card.icon size={64} aria-hidden="true" />
 											</div>
@@ -9278,35 +8866,56 @@ function App() {
 											</h3>
 
 											<p
-												className="text-sm mb-6 leading-relaxed"
+												className="text-sm mb-4 leading-relaxed"
 												style={{ color: "#3A3A3A", lineHeight: "1.6" }}
 											>
 												{card.description}
 											</p>
 
-											<div className="space-y-2">
-												{card.status.map((status, statusIndex) => (
-													<div key={statusIndex} className="flex items-center">
-														<div
-															className="w-2 h-2 rounded-full mr-2"
-															aria-hidden="true"
-															style={{ backgroundColor: "#5C7F4F" }}
-														></div>
-														<span
-															className="text-xs font-medium"
-															style={{ color: "#3A3A3A" }}
-														>
-															{status.label}
-														</span>
-													</div>
-												))}
+											{/* Tracking Info */}
+											{card.trackingInfo && (
+												<div
+													className="mb-4 px-3 py-2 rounded-lg text-xs leading-relaxed"
+													style={{
+														backgroundColor: "rgba(92, 127, 79, 0.08)",
+														border: "1px solid rgba(92, 127, 79, 0.2)",
+														color: "#3A3A3A"
+													}}
+												>
+													📊 {card.trackingInfo}
+												</div>
+											)}
+
+											{/* Duration */}
+											<div className="flex items-center">
+												<svg
+													width="16"
+													height="16"
+													viewBox="0 0 24 24"
+													fill="none"
+													stroke="#5C7F4F"
+													strokeWidth="2"
+													strokeLinecap="round"
+													strokeLinejoin="round"
+													className="mr-2"
+												>
+													<circle cx="12" cy="12" r="10"></circle>
+													<polyline points="12 6 12 12 16 14"></polyline>
+												</svg>
+												<span
+													className="text-xs font-medium"
+													style={{ color: "#3A3A3A" }}
+												>
+													{card.duration}
+												</span>
 											</div>
 										</article>
 									))}
 								</div>
-
+							</div>
+						);
+					})}
 				</div>
-
 			</div>
 		</main>
 		);
@@ -9320,9 +8929,15 @@ function App() {
 					onComplete={(data) => {
 						console.log("Pre-Assignment Prep Results:", data);
 						// Data is automatically saved to Supabase in the component
+						// Close the modal immediately
 						setShowPreAssignmentPrep(false);
 
-						// Trigger a reflections reload after a short delay to avoid re-render issues
+						// Show success toast on the main page after modal closes
+						setTimeout(() => {
+							setShowReflectionSuccessToast(true);
+						}, 300);
+
+						// Trigger a reflections reload after a short delay
 						setTimeout(() => {
 							loadReflections();
 							// Also reload confidence data for Growth Snapshot
@@ -9346,7 +8961,13 @@ function App() {
 							data,
 						);
 						console.log("Post-Assignment Debrief Results:", data);
+						// Close the modal immediately
 						setShowPostAssignmentDebrief(false);
+
+						// Show success toast on the main page after modal closes
+						setTimeout(() => {
+							setShowReflectionSuccessToast(true);
+						}, 300);
 
 						// Reload reflections to show the new one
 						if (user?.id) {
@@ -9378,7 +8999,13 @@ function App() {
 					onComplete={async (data) => {
 						console.log("Team Prep Results:", data);
 						// Data is automatically saved to Supabase in the component
+						// Close the modal immediately
 						setShowTeamingPrep(false);
+
+						// Show success toast on the main page after modal closes
+						setTimeout(() => {
+							setShowReflectionSuccessToast(true);
+						}, 300);
 
 						// Reload reflections to show the new one
 						if (user?.id) {
@@ -9410,6 +9037,13 @@ function App() {
 					onComplete={async (data) => {
 						console.log("Team Reflection Results:", data);
 						// Data is automatically saved to Supabase in the component
+						// Close the modal immediately
+						setShowTeamingReflection(false);
+
+						// Show success toast on the main page after modal closes
+						setTimeout(() => {
+							setShowReflectionSuccessToast(true);
+						}, 300);
 
 						// Reload reflections to show the new one
 						if (user?.id) {
@@ -9430,9 +9064,6 @@ function App() {
 								setRecentReflections(formattedReflections);
 							}
 						}
-
-						// Don't close immediately - let the success modal show
-						// The component will handle closing via onClose when user clicks Continue
 					}}
 					onClose={() => setShowTeamingReflection(false)}
 				/>
@@ -9443,7 +9074,13 @@ function App() {
 				<MentoringPrepAccessible
 					onComplete={async (data) => {
 						console.log("Mentoring Prep Results:", data);
+						// Close the modal immediately
 						setShowMentoringPrep(false);
+
+						// Show success toast on the main page after modal closes
+						setTimeout(() => {
+							setShowReflectionSuccessToast(true);
+						}, 300);
 
 						// Reload reflections to show the new one
 						if (user?.id) {
@@ -9474,7 +9111,13 @@ function App() {
 				<MentoringReflectionAccessible
 					onComplete={async (results) => {
 						console.log("Mentoring Reflection Results:", results);
+						// Close the modal immediately
 						setShowMentoringReflection(false);
+
+						// Show success toast on the main page after modal closes
+						setTimeout(() => {
+							setShowReflectionSuccessToast(true);
+						}, 300);
 
 						// Reload reflections to show the new one
 						if (user?.id) {
@@ -9505,7 +9148,13 @@ function App() {
 				<RoleSpaceReflection
 					onComplete={async (data) => {
 						console.log("Role-Space Reflection Results:", data);
+						// Close the modal immediately
 						setShowRoleSpaceReflection(false);
+
+						// Show success toast on the main page after modal closes
+						setTimeout(() => {
+							setShowReflectionSuccessToast(true);
+						}, 300);
 
 						// Reload reflections to show the new one
 						if (user?.id) {
@@ -9536,7 +9185,13 @@ function App() {
 				<DirectCommunicationReflection
 					onComplete={async (data) => {
 						console.log("Direct Communication Reflection Results:", data);
+						// Close the modal immediately
 						setShowDirectCommunicationReflection(false);
+
+						// Show success toast on the main page after modal closes
+						setTimeout(() => {
+							setShowReflectionSuccessToast(true);
+						}, 300);
 
 						// Reload reflections to show the new one
 						if (user?.id) {
@@ -9567,7 +9222,13 @@ function App() {
 				<DecideFrameworkReflection
 					onComplete={async (data) => {
 						console.log("DECIDE Framework Reflection Results:", data);
+						// Close the modal immediately
 						setShowDecideFramework(false);
+
+						// Show success toast on the main page after modal closes
+						setTimeout(() => {
+							setShowReflectionSuccessToast(true);
+						}, 300);
 
 						// Save to Supabase
 						if (user?.id) {
@@ -9622,7 +9283,13 @@ function App() {
 					onClose={() => setShowNeurodivergentInterpreter(false)}
 					onComplete={async (data) => {
 						console.log("Neurodivergent Interpreter Reflection completed:", data);
+						// Close the modal immediately
 						setShowNeurodivergentInterpreter(false);
+
+						// Show success toast on the main page after modal closes
+						setTimeout(() => {
+							setShowReflectionSuccessToast(true);
+						}, 300);
 
 						// Reload reflections to show the new one
 						if (user?.id) {
@@ -9636,8 +9303,13 @@ function App() {
 				<WellnessCheckInAccessible
 					onComplete={async (results) => {
 						// WellnessCheckInAccessible already saves internally, no need to save again
-						// Just close the modal and reload reflections
+						// Close the modal immediately
 						setShowWellnessCheckIn(false);
+
+						// Show success toast on the main page after modal closes
+						setTimeout(() => {
+							setShowReflectionSuccessToast(true);
+						}, 300);
 
 						// Reload reflections to show the new one
 						if (user?.id) {
@@ -9667,7 +9339,13 @@ function App() {
 				<InSessionSelfCheck
 					onComplete={(results) => {
 						// InSessionSelfCheck already saves internally, no need to save again
+						// Close the modal immediately
 						setShowInSessionSelfCheck(false);
+
+						// Show success toast on the main page after modal closes
+						setTimeout(() => {
+							setShowReflectionSuccessToast(true);
+						}, 300);
 					}}
 					onClose={() => setShowInSessionSelfCheck(false)}
 				/>
@@ -9677,7 +9355,13 @@ function App() {
 				<InSessionTeamSync
 					onComplete={(results) => {
 						// InSessionTeamSync already saves internally, no need to save again
+						// Close the modal immediately
 						setShowInSessionTeamSync(false);
+
+						// Show success toast on the main page after modal closes
+						setTimeout(() => {
+							setShowReflectionSuccessToast(true);
+						}, 300);
 					}}
 					onClose={() => setShowInSessionTeamSync(false)}
 				/>
@@ -9688,7 +9372,13 @@ function App() {
 				<EthicsMeaningCheckAccessible
 					onComplete={(results) => {
 						// EthicsMeaningCheckAccessible already saves internally, no need to save again
+						// Close the modal immediately
 						setShowEthicsMeaningCheck(false);
+
+						// Show success toast on the main page after modal closes
+						setTimeout(() => {
+							setShowReflectionSuccessToast(true);
+						}, 300);
 					}}
 					onClose={() => setShowEthicsMeaningCheck(false)}
 				/>
@@ -9720,12 +9410,21 @@ function App() {
 	if (!user) {
 		console.log("App: Showing landing page routes");
 		return (
-			<Routes>
+			<>
+				<SessionExpiredModal
+					isOpen={showSessionExpiredModal}
+					onSignIn={() => {
+						setShowSessionExpiredModal(false);
+						navigate("/");
+					}}
+				/>
+				<Routes>
 				<Route path="/privacy" element={<PrivacyPolicy />} />
 				<Route path="/terms" element={<TermsOfService />} />
 				<Route path="/contact" element={<Contact />} />
 				<Route path="/about" element={<About />} />
 				<Route path="/accessibility" element={<Accessibility />} />
+				<Route path="/research" element={<Research />} />
 				<Route path="/pricing" element={<PricingNew />} />
 				<Route path="/signup" element={<SeamlessSignup />} />
 				<Route path="/payment-success" element={<PaymentSuccess />} />
@@ -9743,19 +9442,27 @@ function App() {
 					}
 				/>
 			</Routes>
+			</>
 		);
 	}
 
 	// Show main app for authenticated users or dev mode
 	return (
 		<SubscriptionGate>
-
+			<SessionExpiredModal
+				isOpen={showSessionExpiredModal}
+				onSignIn={() => {
+					setShowSessionExpiredModal(false);
+					navigate("/");
+				}}
+			/>
 			<Routes>
 				<Route path="/privacy" element={<PrivacyPolicy />} />
 				<Route path="/terms" element={<TermsOfService />} />
 				<Route path="/contact" element={<Contact />} />
 				<Route path="/about" element={<About />} />
 				<Route path="/accessibility" element={<Accessibility />} />
+				<Route path="/research" element={<Research />} />
 				<Route path="/pricing" element={<PricingProduction />} />
 				<Route path="/signup" element={<SeamlessSignup />} />
 				<Route path="/pricing-old" element={<PricingNew />} />
@@ -9864,6 +9571,51 @@ function App() {
 									}}
 								/>
 							)}
+
+						{showEmotionClarity && (
+							<EmotionClarityPractice
+								onSave={async () => {
+									// Reload reflections to show the new one
+									if (user?.id) {
+										const { reflectionService } = await import(
+											"./services/reflectionService"
+										);
+										const reflections = await reflectionService.getUserReflections(
+											user.id,
+											10,
+										);
+										if (reflections) {
+											const formattedReflections = reflections.map((r) => ({
+												id: r.id || Date.now().toString(),
+												type: r.entry_kind || "reflection",
+												data: r.data || {},
+												timestamp: r.created_at || new Date().toISOString(),
+											}));
+											setSavedReflections(formattedReflections);
+										}
+									}
+								}}
+								onClose={() => {
+									setShowEmotionClarity(false);
+									if (currentTechniqueId) {
+										trackTechniqueComplete(currentTechniqueId, "completed");
+										setCurrentTechniqueId(null);
+									}
+								}}
+							/>
+						)}
+
+						{showInteroceptiveScan && (
+							<InteroceptiveScan
+								onClose={() => {
+									setShowInteroceptiveScan(false);
+									if (currentTechniqueId) {
+										trackTechniqueComplete(currentTechniqueId, "completed");
+										setCurrentTechniqueId(null);
+									}
+								}}
+							/>
+						)}
 
 							{/* Breathing Practice Why It Works Modal */}
 							{showBreathingModal && (
@@ -10157,13 +9909,13 @@ function App() {
 															setShowBreathingModal(false);
 															setShowBreatheProtocol(true);
 															setBreatheStep(0);
-															const id = trackTechniqueStart("breathe-protocol");
+															id = trackTechniqueStart("breathe-protocol");
 															setCurrentTechniqueId(id);
 														} else {
 															setShowBreathingModal(false);
 															setBreathingMode("gentle");
 															setShowBreathingPractice(true);
-															const id = trackTechniqueStart("breathing-practice");
+															id = trackTechniqueStart("breathing-practice");
 															setCurrentTechniqueId(id);
 														}
 													}}
@@ -10485,7 +10237,7 @@ function App() {
 														setShowBreatheProtocolModal(false);
 														setShowBreatheProtocol(true);
 														setBreatheStep(0);
-														const id = trackTechniqueStart("breathe-protocol");
+														id = trackTechniqueStart("breathe-protocol");
 														setCurrentTechniqueId(id);
 													}}
 													className="w-full px-6 py-3 rounded-lg font-medium transition-all hover:scale-105"
@@ -10742,7 +10494,7 @@ function App() {
 														setShowBodyCheckInModal(false);
 														setBodyCheckInMode("quick");
 														setShowBodyCheckIn(true);
-														const id = trackTechniqueStart("body-checkin");
+														id = trackTechniqueStart("body-checkin");
 														setCurrentTechniqueId(id);
 													}}
 													className="w-full px-6 py-3 rounded-lg font-medium transition-all hover:scale-105"
@@ -11250,28 +11002,11 @@ function App() {
 							<AgenticFlowChat />
 
 							{/* Onboarding Modals */}
-							{showWelcomeModal && (
-								<WelcomeModal
-									onClose={() => {
-										setShowWelcomeModal(false);
-										localStorage.setItem("hasSeenWelcomeModal", "true");
-									}}
-									onComplete={handleWelcomeComplete}
-								/>
-							)}
-
 							{showFeatureDiscovery && (
 								<FeatureDiscovery
 									isOpen={showFeatureDiscovery}
 									onClose={() => setShowFeatureDiscovery(false)}
 									onComplete={handleFeatureDiscoveryComplete}
-								/>
-							)}
-
-							{onboardingVisible && (
-								<OnboardingFlow
-									onComplete={handleOnboardingComplete}
-									onClose={() => setOnboardingVisible(false)}
 								/>
 							)}
 
@@ -11284,6 +11019,15 @@ function App() {
 									}}
 								/>
 							)}
+
+							{/* Reflection Success Toast */}
+							<ReflectionSuccessToast show={showToast} onClose={closeToast} />
+
+							{/* Reflection Success Toast - After Modal Close */}
+							<ReflectionSuccessToast
+								show={showReflectionSuccessToast}
+								onClose={() => setShowReflectionSuccessToast(false)}
+							/>
 
 						</div>
 					}

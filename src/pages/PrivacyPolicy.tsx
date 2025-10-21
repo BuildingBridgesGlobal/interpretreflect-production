@@ -93,46 +93,38 @@ export function PrivacyPolicy() {
 						}}
 					>
 						<h2
-							className="text-2xl font-bold mb-3"
+							className="text-2xl font-bold mb-1"
 							style={{ color: "#1A1A1A" }}
 						>
 							1. What We Collect
 						</h2>
 						<div className="space-y-2" style={{ color: "#3A3A3A" }}>
-							<p className="text-sm font-semibold">Account Information</p>
-							<p className="text-sm mb-2">
+							<p className="text-base font-semibold">Account Information</p>
+							<p className="text-base mb-2">
 								Email, name, interpreting credentials.
 							</p>
 
-							<p className="text-sm font-semibold">Wellness Responses</p>
-							<p className="text-sm mb-2">
+							<p className="text-base font-semibold">Wellness Responses</p>
+							<p className="text-base mb-2">
 								Your entries in reflections, assessments, or journaling tools.
 							</p>
 
-							<p className="text-sm font-semibold">Service Usage</p>
-							<p className="text-sm mb-2">
+							<p className="text-base font-semibold">Service Usage</p>
+							<p className="text-base mb-2">
 								Non-identifiable analytics only; we do not track you across
 								sites.
 							</p>
 
-							<p className="text-sm font-semibold">Payments</p>
-							<p className="text-sm mb-2">
+							<p className="text-base font-semibold">Payments</p>
+							<p className="text-base mb-2">
 								Managed securely by Stripe; we do not store your payment
 								details.
-							</p>
-
-							<p
-								className="mt-3 text-sm font-medium"
-								style={{ color: "#5C7F4F" }}
-							>
-								Important: We do not collect information about your own clients
-								or assignments unless you share it in a reflection.
 							</p>
 						</div>
 					</div>
 				</section>
 
-				{/* 2. How We Protect Your Data */}
+				{/* 2. How Your Data is Used */}
 				<section className="mb-8">
 					<div
 						className="rounded-2xl p-6"
@@ -142,25 +134,66 @@ export function PrivacyPolicy() {
 						}}
 					>
 						<h2
-							className="text-2xl font-bold mb-3"
+							className="text-2xl font-bold mb-1"
 							style={{ color: "#1A1A1A" }}
 						>
-							2. How We Protect Your Data
+							2. How Your Data is Used
 						</h2>
-						<div className="space-y-1.5 text-sm" style={{ color: "#3A3A3A" }}>
-							<p>
+						<div className="space-y-2" style={{ color: "#3A3A3A" }}>
+							<p className="text-base">
+								We use your data solely to provide and improve the InterpretReflect service:
+							</p>
+							<p className="text-base">
+								• <strong>Service Delivery:</strong> To provide personalized wellness tools, assessments, and reflections tailored to your needs.
+							</p>
+							<p className="text-base">
+								• <strong>Account Management:</strong> To manage your subscription, authenticate your identity, and communicate important updates.
+							</p>
+							<p className="text-base">
+								• <strong>Platform Improvement:</strong> To analyze usage patterns and improve features, always using anonymized data.
+							</p>
+							<p className="text-base">
+								• <strong>Support & Communication:</strong> To respond to your inquiries and provide customer support.
+							</p>
+							<p
+								className="mt-3 text-base font-medium"
+								style={{ color: "#5C7F4F" }}
+							>
+								We never use your data for advertising or sell it to third parties.
+							</p>
+						</div>
+					</div>
+				</section>
+
+				{/* 3. How We Protect Your Data */}
+				<section className="mb-8">
+					<div
+						className="rounded-2xl p-6"
+						style={{
+							backgroundColor: "#FFFFFF",
+							boxShadow: "0 4px 15px rgba(0, 0, 0, 0.05)",
+						}}
+					>
+						<h2
+							className="text-2xl font-bold mb-1"
+							style={{ color: "#1A1A1A" }}
+						>
+							3. How We Protect Your Data
+						</h2>
+						<div className="space-y-2" style={{ color: "#3A3A3A" }}>
+							<p className="text-base">
 								• <strong>Encryption:</strong> All data is encrypted in transit
 								and at rest.
 							</p>
-							<p>
+							<p className="text-base">
 								• <strong>Access:</strong> Only you (and no one else) can view
 								your personal reflections.
 							</p>
-							<p>
+							<p className="text-base">
 								• <strong>Industry Best Practices:</strong> Security protocols
 								are in place and regularly reviewed.
 							</p>
-							<p>
+							<p className="text-base">
 								• <strong>Audit & Updates:</strong> Security is regularly
 								checked, and we work to improve protections.
 							</p>
@@ -168,7 +201,7 @@ export function PrivacyPolicy() {
 					</div>
 				</section>
 
-				{/* 3. Compliance Notice */}
+				{/* 4. Compliance Notice */}
 				<section className="mb-8">
 					<div
 						className="rounded-2xl p-6"
@@ -178,17 +211,17 @@ export function PrivacyPolicy() {
 						}}
 					>
 						<h2
-							className="text-2xl font-bold mb-3"
+							className="text-2xl font-bold mb-1"
 							style={{ color: "#1A1A1A" }}
 						>
-							3. Compliance Notice
+							4. Compliance Notice
 						</h2>
-						<div className="space-y-2 text-sm" style={{ color: "#3A3A3A" }}>
-							<p>
+						<div className="space-y-2" style={{ color: "#3A3A3A" }}>
+							<p className="text-base">
 								<strong>Not Medical/Clinical:</strong> InterpretReflect is a
 								wellness tool, not a substitute for healthcare or counseling.
 							</p>
-							<p>
+							<p className="text-base">
 								<strong>GDPR:</strong> GDPR compliance features are in
 								development.
 							</p>
@@ -196,7 +229,7 @@ export function PrivacyPolicy() {
 					</div>
 				</section>
 
-				{/* 4. Your Choices & Rights */}
+				{/* 5. Your Choices & Rights */}
 				<section className="mb-8">
 					<div
 						className="rounded-2xl p-6"
@@ -206,26 +239,26 @@ export function PrivacyPolicy() {
 						}}
 					>
 						<h2
-							className="text-2xl font-bold mb-3"
+							className="text-2xl font-bold mb-1"
 							style={{ color: "#1A1A1A" }}
 						>
-							4. Your Choices & Rights
+							5. Your Choices & Rights
 						</h2>
-						<div className="space-y-1.5 text-sm" style={{ color: "#3A3A3A" }}>
-							<p>
+						<div className="space-y-2" style={{ color: "#3A3A3A" }}>
+							<p className="text-base">
 								• <strong>Privacy First:</strong> We never sell or share your
 								data with third parties for marketing.
 							</p>
-							<p>
+							<p className="text-base">
 								• <strong>Opt-In Research:</strong> We may use de-identified,
 								aggregated data for research—but only with your explicit
 								permission.
 							</p>
-							<p>
+							<p className="text-base">
 								• <strong>Manage or Delete Data:</strong> To access or delete
-								your data, email us at hello@huviatechnologies.com.
+								your data, email us at info@interpretreflect.com.
 							</p>
-							<p>
+							<p className="text-base">
 								• <strong>Features:</strong> Data export and two-factor
 								authentication are in our roadmap.
 							</p>
@@ -233,7 +266,7 @@ export function PrivacyPolicy() {
 					</div>
 				</section>
 
-				{/* 5. Cookies */}
+				{/* 6. Cookies */}
 				<section className="mb-8">
 					<div
 						className="rounded-2xl p-6"
@@ -243,16 +276,16 @@ export function PrivacyPolicy() {
 						}}
 					>
 						<h2
-							className="text-2xl font-bold mb-3"
+							className="text-2xl font-bold mb-1"
 							style={{ color: "#1A1A1A" }}
 						>
-							5. Cookies
+							6. Cookies
 						</h2>
-						<div className="space-y-1.5 text-sm" style={{ color: "#3A3A3A" }}>
-							<p>
+						<div className="space-y-2" style={{ color: "#3A3A3A" }}>
+							<p className="text-base">
 								<strong>Essential Cookies:</strong> For login and security.
 							</p>
-							<p>
+							<p className="text-base">
 								<strong>Analytics Cookies:</strong> Anonymous usage insights;
 								you can control these in your browser settings.
 							</p>
@@ -260,7 +293,7 @@ export function PrivacyPolicy() {
 					</div>
 				</section>
 
-				{/* 6. Contact */}
+				{/* 7. Contact */}
 				<section className="mb-8">
 					<div
 						className="rounded-2xl p-6 text-center"
@@ -271,20 +304,20 @@ export function PrivacyPolicy() {
 						}}
 					>
 						<h2
-							className="text-2xl font-bold mb-3"
+							className="text-2xl font-bold mb-1"
 							style={{ color: "#1A1A1A" }}
 						>
-							6. Contact
+							7. Contact
 						</h2>
-						<p className="mb-2 text-sm" style={{ color: "#3A3A3A" }}>
+						<p className="mb-2 text-base" style={{ color: "#3A3A3A" }}>
 							Got questions about your data or privacy? Contact us at
 						</p>
 						<a
-							href="mailto:hello@huviatechnologies.com"
+							href="mailto:info@interpretreflect.com"
 							className="font-semibold text-base hover:underline"
 							style={{ color: "#5C7F4F" }}
 						>
-							hello@huviatechnologies.com
+							info@interpretreflect.com
 						</a>
 					</div>
 				</section>

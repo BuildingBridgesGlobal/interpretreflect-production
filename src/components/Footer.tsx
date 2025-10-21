@@ -19,7 +19,7 @@ export const Footer: React.FC = () => {
 					<div>
 						<h3 className="font-semibold text-gray-900 mb-4">Contact Us</h3>
 						<p className="text-sm text-gray-600">
-							Email: hello@huviatechnologies.com
+							Email: info@interpretreflect.com
 						</p>
 					</div>
 
@@ -33,6 +33,15 @@ export const Footer: React.FC = () => {
 									style={{ color: "black" }}
 								>
 									About Us
+								</a>
+							</li>
+							<li>
+								<a
+									href="/research"
+									className="text-sm text-black hover:text-green-600"
+									style={{ color: "black" }}
+								>
+									Research
 								</a>
 							</li>
 							<li>

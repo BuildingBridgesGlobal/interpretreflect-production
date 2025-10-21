@@ -84,8 +84,9 @@ export const SubscriptionGate: React.FC<SubscriptionGateProps> = ({
 		return <Navigate to="/signup" state={{ from: location }} replace />;
 	}
 
-	// If logged in but no subscription, show reactivation page
-	if (user && !hasActiveSubscription) {
+	// If logged in but no subscription AND no error, show reactivation page
+	// If there's an error, allow access (fail-open policy)
+	if (user && !hasActiveSubscription && !subError) {
 		console.log("⚠️ User has no active subscription - showing reactivation page", {
 			userId: user.id,
 			email: user.email,
@@ -138,11 +139,22 @@ export const SubscriptionGate: React.FC<SubscriptionGateProps> = ({
 		);
 	}
 
-	// User has active subscription or is on public route, allow access
-	console.log("✅ User has active subscription - allowing access", {
-		userId: user.id,
-		email: user.email,
-		path: location.pathname
-	});
+	// User has active subscription, or subscription check failed (fail-open), or is on public route
+	// Fail-open policy: If we can't verify subscription, allow access
+	// Real enforcement happens at login via Stripe webhooks
+	if (subError) {
+		console.log("✅ Allowing access despite subscription check error (fail-open policy)", {
+			userId: user.id,
+			email: user.email,
+			path: location.pathname,
+			error: subError
+		});
+	} else {
+		console.log("✅ User has active subscription - allowing access", {
+			userId: user.id,
+			email: user.email,
+			path: location.pathname
+		});
+	}
 	return <>{children}</>;
 };

@@ -2881,12 +2881,32 @@ export const AffirmationsView: React.FC<AffirmationsViewProps> = () => {
 
 	const handleProgramChange = (programId: string) => {
 		setSelectedProgram(programId);
-		setCurrentWeek(1);
-		setCurrentDay(1);
+
+		// Find the next incomplete day for this program
+		const programCompletedDays = completedDays[programId] || [];
+		const program = programs.find(p => p.id === programId);
+		const totalDays = program?.weeks.reduce((sum, week) => sum + week.days.length, 0) || 0;
+
+		// Find the first day that hasn't been completed, or go to day 1 if all are complete
+		let nextDay = 1;
+		for (let day = 1; day <= totalDays; day++) {
+			if (!programCompletedDays.includes(day)) {
+				nextDay = day;
+				break;
+			}
+		}
+
+		// If all days are complete, start at the last day
+		if (nextDay === 1 && programCompletedDays.length === totalDays) {
+			nextDay = totalDays;
+		}
+
+		setCurrentDay(nextDay);
+		const week = Math.ceil(nextDay / 7);
+		setCurrentWeek(week);
 
 		// Track affirmation program started in Encharge
 		if (user?.email) {
-			const program = programs.find(p => p.id === programId);
 			if (program) {
 				enchargeService.trackAffirmationProgramStarted(user.email, program.title).catch(error => {
 					console.error("Failed to track affirmation program in Encharge:", error);

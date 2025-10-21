@@ -51,10 +51,11 @@ export const SuccessToast: React.FC<SuccessToastProps> = ({
             setIsVisible(false);
             setTimeout(onClose, 300);
           }}
-          className="absolute top-3 right-3 p-1 rounded-lg transition-all hover:bg-white/50"
+          className="absolute top-3 right-3 p-1 rounded-lg transition-all"
+          style={{ backgroundColor: '#FFFFFF' }}
           aria-label="Close notification"
         >
-          <X className="w-4 h-4" style={{ color: 'var(--color-success)' }} />
+          <X className="w-4 h-4" style={{ color: '#000000' }} />
         </button>
 
         {/* Content */}

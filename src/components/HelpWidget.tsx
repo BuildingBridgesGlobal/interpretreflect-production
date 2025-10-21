@@ -283,10 +283,10 @@ const HelpWidget: React.FC<HelpWidgetProps> = ({
                 <div>
                   <p className="help-contact-label">Email Support</p>
                   <a 
-                    href="mailto:hello@huviatechnologies.com"
+                    href="mailto:info@interpretreflect.com"
                     className="help-contact-value"
                   >
-                    hello@huviatechnologies.com
+                    info@interpretreflect.com
                   </a>
                 </div>
               </div>

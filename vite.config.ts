@@ -8,6 +8,7 @@ export default defineConfig({
 		react(),
 		VitePWA({
 			registerType: "autoUpdate",
+			disable: process.env.NODE_ENV === 'development', // Disable service worker in dev mode
 			includeAssets: ["favicon.svg", "favicon.ico", "apple-touch-icon.png"],
 			manifest: {
 				name: "InterpretReflect",

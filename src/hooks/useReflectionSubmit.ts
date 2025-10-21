@@ -16,6 +16,7 @@ interface SubmitReflectionParams {
 	sessionId?: string;
 	onSuccess?: () => void;
 	onError?: (error: Error) => void;
+	showSuccessToast?: boolean;
 }
 
 interface SubmitResult {
@@ -28,6 +29,7 @@ export function useReflectionSubmit() {
 	const [isSubmitting, setIsSubmitting] = useState(false);
 	const [submitError, setSubmitError] = useState<string | null>(null);
 	const [submitSuccess, setSubmitSuccess] = useState(false);
+	const [showToast, setShowToast] = useState(false);
 	const navigate = useNavigate();
 
 	const submitReflection = useCallback(
@@ -39,6 +41,7 @@ export function useReflectionSubmit() {
 			sessionId,
 			onSuccess,
 			onError,
+			showSuccessToast = true,
 		}: SubmitReflectionParams): Promise<SubmitResult> => {
 			setIsSubmitting(true);
 			setSubmitError(null);
@@ -90,6 +93,11 @@ export function useReflectionSubmit() {
 
 				setSubmitSuccess(true);
 
+				// Show success toast notification
+				if (showSuccessToast) {
+					setShowToast(true);
+				}
+
 				if (onSuccess) {
 					onSuccess();
 				}
@@ -120,6 +128,11 @@ export function useReflectionSubmit() {
 		setIsSubmitting(false);
 		setSubmitError(null);
 		setSubmitSuccess(false);
+		setShowToast(false);
+	}, []);
+
+	const closeToast = useCallback(() => {
+		setShowToast(false);
 	}, []);
 
 	return {
@@ -127,6 +140,8 @@ export function useReflectionSubmit() {
 		isSubmitting,
 		submitError,
 		submitSuccess,
+		showToast,
+		closeToast,
 		clearError,
 		resetState,
 	};

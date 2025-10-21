@@ -952,17 +952,30 @@ ${formData.support_needs}
 							className="block text-sm font-medium mb-2"
 							style={{ color: "#5C7F4F" }}
 						>
-							What would make you rate this interpreting assignment a 10/10?
+							Rate your current expectations for this assignment (1-10)
 						</label>
-						<textarea
-							value={formData.ten_out_of_ten}
-							onChange={(e) =>
-								handleFieldChange("ten_out_of_ten", e.target.value)
-							}
-							placeholder="Describe the perfect outcome..."
-							rows={2}
-							className="w-full px-4 py-3 border rounded-lg resize-none focus:ring-2 focus:ring-sage-500"
-						/>
+						<div className="flex items-center space-x-4">
+							<input
+								type="range"
+								min="1"
+								max="10"
+								value={formData.ten_out_of_ten || 5}
+								onChange={(e) =>
+									handleFieldChange("ten_out_of_ten", parseInt(e.target.value))
+								}
+								className="flex-1"
+								style={{ accentColor: "#5B9378" }}
+							/>
+							<span
+								className="text-2xl font-bold px-4 py-2 rounded-lg"
+								style={{
+									backgroundColor: "rgba(107, 139, 96, 0.1)",
+									color: "#5C7F4F",
+								}}
+							>
+								{formData.ten_out_of_ten || 5}
+							</span>
+						</div>
 					</div>
 
 					<div>

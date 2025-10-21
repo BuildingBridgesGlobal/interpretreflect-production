@@ -340,10 +340,8 @@ OVERALL WELLNESS: ${formData.overall_wellness_rating}/10
 							Taking a Moment for You
 						</h3>
 						<p className="mb-6" style={{ color: "#5A5A5A" }}>
-							This wellness check-in is your dedicated time to pause, reflect,
-							and reconnect with yourself. Your wellbeing matters, and taking
-							care of yourself enables you to show up fully in all areas of your
-							life.
+							This is your time to pause and check in with yourself. How you're doing matters,
+							and taking care of yourself helps you show up fully in your work and life.
 						</p>
 					</div>
 
@@ -352,7 +350,7 @@ OVERALL WELLNESS: ${formData.overall_wellness_rating}/10
 							className="block text-sm font-medium mb-2"
 							style={{ color: "#5C7F4F" }}
 						>
-							What brings you to this check-in today?
+							What made you decide to check in today?
 						</label>
 						<div className="grid grid-cols-2 gap-3">
 							{[
@@ -492,14 +490,14 @@ OVERALL WELLNESS: ${formData.overall_wellness_rating}/10
 							className="block text-sm font-medium mb-2"
 							style={{ color: "#5C7F4F" }}
 						>
-							What emotions are present for you right now?
+							What emotions are you feeling right now?
 						</label>
 						<textarea
 							value={formData.primary_emotions}
 							onChange={(e) =>
 								handleFieldChange("primary_emotions", e.target.value)
 							}
-							placeholder="Name the emotions you're experiencing (e.g., anxious, content, frustrated, hopeful)..."
+							placeholder="Name what you're feeling (like anxious, content, frustrated, hopeful, tired, excited...)..."
 							rows={3}
 							className="w-full px-4 py-3 border rounded-lg resize-none focus:ring-2 focus:ring-sage-500"
 							style={{
@@ -518,7 +516,7 @@ OVERALL WELLNESS: ${formData.overall_wellness_rating}/10
 							className="block text-sm font-medium mb-2"
 							style={{ color: "#5C7F4F" }}
 						>
-							Rate the intensity of these emotions (1-10)
+							How strong are these emotions? (1-10)
 						</label>
 						<div className="flex items-center space-x-4">
 							<input
@@ -552,14 +550,14 @@ OVERALL WELLNESS: ${formData.overall_wellness_rating}/10
 							className="block text-sm font-medium mb-2"
 							style={{ color: "#5C7F4F" }}
 						>
-							What might be triggering or influencing these emotions?
+							What do you think is causing these feelings?
 						</label>
 						<textarea
 							value={formData.emotional_triggers}
 							onChange={(e) =>
 								handleFieldChange("emotional_triggers", e.target.value)
 							}
-							placeholder="Reflect on recent events, interactions, or thoughts..."
+							placeholder="Think about what's been happening recently - events, conversations, situations..."
 							rows={3}
 							className="w-full px-4 py-3 border rounded-lg resize-none focus:ring-2 focus:ring-sage-500"
 						/>
@@ -603,14 +601,14 @@ OVERALL WELLNESS: ${formData.overall_wellness_rating}/10
 							className="block text-sm font-medium mb-2"
 							style={{ color: "#5C7F4F" }}
 						>
-							Are you experiencing any physical symptoms?
+							Are you dealing with any physical symptoms?
 						</label>
 						<textarea
 							value={formData.physical_symptoms}
 							onChange={(e) =>
 								handleFieldChange("physical_symptoms", e.target.value)
 							}
-							placeholder="Note any headaches, fatigue, tension, or other symptoms..."
+							placeholder="Like headaches, fatigue, muscle tension, stomach issues, or anything else..."
 							rows={3}
 							className="w-full px-4 py-3 border rounded-lg resize-none focus:ring-2 focus:ring-sage-500"
 						/>
@@ -621,7 +619,7 @@ OVERALL WELLNESS: ${formData.overall_wellness_rating}/10
 							className="block text-sm font-medium mb-2"
 							style={{ color: "#5C7F4F" }}
 						>
-							Rate your sleep quality recently (1-10)
+							How's your sleep been lately? (1-10)
 						</label>
 						<div className="flex items-center space-x-4">
 							<input
@@ -659,7 +657,7 @@ OVERALL WELLNESS: ${formData.overall_wellness_rating}/10
 							className="block text-sm font-medium mb-2"
 							style={{ color: "#5C7F4F" }}
 						>
-							Rate your mental clarity right now (1-10)
+							How clear is your thinking right now? (1-10)
 						</label>
 						<div className="flex items-center space-x-4">
 							<input
@@ -690,12 +688,12 @@ OVERALL WELLNESS: ${formData.overall_wellness_rating}/10
 							className="block text-sm font-medium mb-2"
 							style={{ color: "#5C7F4F" }}
 						>
-							How would you describe your ability to focus?
+							How's your ability to focus and concentrate?
 						</label>
 						<textarea
 							value={formData.focus_level}
 							onChange={(e) => handleFieldChange("focus_level", e.target.value)}
-							placeholder="Reflect on your concentration and attention span..."
+							placeholder="Tell us if you're able to concentrate or if your mind keeps wandering..."
 							rows={3}
 							className="w-full px-4 py-3 border rounded-lg resize-none focus:ring-2 focus:ring-sage-500"
 							style={{
@@ -712,14 +710,14 @@ OVERALL WELLNESS: ${formData.overall_wellness_rating}/10
 							className="block text-sm font-medium mb-2"
 							style={{ color: "#5C7F4F" }}
 						>
-							What's occupying your mental space?
+							What's taking up space in your head right now?
 						</label>
 						<textarea
 							value={formData.cognitive_load}
 							onChange={(e) =>
 								handleFieldChange("cognitive_load", e.target.value)
 							}
-							placeholder="List thoughts, worries, or tasks taking up mental energy..."
+							placeholder="List the thoughts, worries, or tasks running through your mind..."
 							rows={3}
 							className="w-full px-4 py-3 border rounded-lg resize-none focus:ring-2 focus:ring-sage-500"
 						/>
@@ -737,7 +735,7 @@ OVERALL WELLNESS: ${formData.overall_wellness_rating}/10
 							className="block text-sm font-medium mb-2"
 							style={{ color: "#5C7F4F" }}
 						>
-							Rate your current workload sustainability (1-10)
+							Can you keep up with your current workload? (1-10, where 1 = not sustainable, 10 = totally manageable)
 						</label>
 						<div className="flex items-center space-x-4">
 							<input
@@ -797,14 +795,14 @@ OVERALL WELLNESS: ${formData.overall_wellness_rating}/10
 							className="block text-sm font-medium mb-2"
 							style={{ color: "#5C7F4F" }}
 						>
-							What professional stressors are you managing?
+							What's stressing you out at work right now?
 						</label>
 						<textarea
 							value={formData.professional_stressors}
 							onChange={(e) =>
 								handleFieldChange("professional_stressors", e.target.value)
 							}
-							placeholder="Identify current work-related challenges or pressures..."
+							placeholder="Name the work-related things that are weighing on you..."
 							rows={3}
 							className="w-full px-4 py-3 border rounded-lg resize-none focus:ring-2 focus:ring-sage-500"
 						/>
@@ -822,7 +820,7 @@ OVERALL WELLNESS: ${formData.overall_wellness_rating}/10
 							className="block text-sm font-medium mb-2"
 							style={{ color: "#5C7F4F" }}
 						>
-							Rate the quality of your social connections (1-10)
+							How connected do you feel to others right now? (1-10)
 						</label>
 						<div className="flex items-center space-x-4">
 							<input
@@ -856,14 +854,14 @@ OVERALL WELLNESS: ${formData.overall_wellness_rating}/10
 							className="block text-sm font-medium mb-2"
 							style={{ color: "#5C7F4F" }}
 						>
-							What support is available to you?
+							Who can you turn to for support?
 						</label>
 						<textarea
 							value={formData.support_availability}
 							onChange={(e) =>
 								handleFieldChange("support_availability", e.target.value)
 							}
-							placeholder="Consider friends, family, colleagues, professionals..."
+							placeholder="Think about friends, family, colleagues, therapists, mentors..."
 							rows={3}
 							className="w-full px-4 py-3 border rounded-lg resize-none focus:ring-2 focus:ring-sage-500"
 							style={{
@@ -884,14 +882,14 @@ OVERALL WELLNESS: ${formData.overall_wellness_rating}/10
 							className="block text-sm font-medium mb-2"
 							style={{ color: "#5C7F4F" }}
 						>
-							What do you need from your relationships right now?
+							What do you need from the people in your life right now?
 						</label>
 						<textarea
 							value={formData.relationship_needs}
 							onChange={(e) =>
 								handleFieldChange("relationship_needs", e.target.value)
 							}
-							placeholder="Think about connection, space, understanding, or support..."
+							placeholder="Like more connection, some space, understanding, practical help..."
 							rows={3}
 							className="w-full px-4 py-3 border rounded-lg resize-none focus:ring-2 focus:ring-sage-500"
 						/>
@@ -935,14 +933,14 @@ OVERALL WELLNESS: ${formData.overall_wellness_rating}/10
 							className="block text-sm font-medium mb-2"
 							style={{ color: "#5C7F4F" }}
 						>
-							What resources are available to you?
+							What resources do you have access to?
 						</label>
 						<textarea
 							value={formData.available_resources}
 							onChange={(e) =>
 								handleFieldChange("available_resources", e.target.value)
 							}
-							placeholder="List tools, people, or strategies you can access..."
+							placeholder="List tools, people, strategies, or anything else that can help..."
 							rows={3}
 							className="w-full px-4 py-3 border rounded-lg resize-none focus:ring-2 focus:ring-sage-500"
 						/>
@@ -953,14 +951,14 @@ OVERALL WELLNESS: ${formData.overall_wellness_rating}/10
 							className="block text-sm font-medium mb-2"
 							style={{ color: "#5C7F4F" }}
 						>
-							What additional support would be helpful?
+							What extra support would help you right now?
 						</label>
 						<textarea
 							value={formData.support_required}
 							onChange={(e) =>
 								handleFieldChange("support_required", e.target.value)
 							}
-							placeholder="Consider professional help, time off, or specific assistance..."
+							placeholder="Think about therapy, time off, someone to talk to, or practical help..."
 							rows={3}
 							className="w-full px-4 py-3 border rounded-lg resize-none focus:ring-2 focus:ring-sage-500"
 						/>
@@ -1144,7 +1142,7 @@ OVERALL WELLNESS: ${formData.overall_wellness_rating}/10
 									Wellness Check-In
 								</h2>
 								<p className="text-sm mt-1" style={{ color: "#5A5A5A" }}>
-									Take a moment to assess and nurture your wellbeing
+									Check in with yourself and see how you're doing
 								</p>
 							</div>
 						</div>

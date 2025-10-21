@@ -19,8 +19,8 @@ export const NavigationTabs: React.FC<NavigationTabsProps> = ({
 }) => {
 	return (
 		<div
-			className="px-4 sm:px-6 lg:px-8 py-3"
-			style={{ backgroundColor: "#FAFAF8" }}
+			className="px-4 sm:px-6 lg:px-8 py-4"
+			style={{ backgroundColor: "#F8FAFB" }}
 		>
 			{/* Mobile-optimized styles */}
 			<style>{`
@@ -42,15 +42,14 @@ export const NavigationTabs: React.FC<NavigationTabsProps> = ({
 			<nav
 				role="navigation"
 				aria-label="Main navigation"
-				className="max-w-7xl mx-auto rounded-full"
+				className="max-w-7xl mx-auto"
 				style={{
 					backgroundColor: "transparent",
-					border: "none",
-					padding: "6px",
+					padding: "12px",
 				}}
 			>
 				<ul
-					className="flex justify-center space-x-1 sm:space-x-2 list-none m-0 p-0 overflow-x-auto scrollbar-hide"
+					className="flex justify-center space-x-2 sm:space-x-3 list-none m-0 p-0 overflow-x-auto scrollbar-hide"
 					role="tablist"
 					style={{
 						scrollbarWidth: 'none',
@@ -65,28 +64,28 @@ export const NavigationTabs: React.FC<NavigationTabsProps> = ({
 									e.stopPropagation();
 									setActiveTab(tab.id);
 								}}
-								className={`nav-tab-button flex items-center px-3 sm:px-5 py-2 sm:py-3 text-sm sm:text-base font-medium transition-all duration-300 rounded-full whitespace-nowrap ${
-									activeTab === tab.id ? "shadow-md" : ""
-								}`}
+								className={`nav-tab-button flex items-center px-5 sm:px-6 py-3 sm:py-3.5 text-base sm:text-lg font-semibold transition-all duration-300 rounded-lg whitespace-nowrap`}
 								role="tab"
 								aria-selected={activeTab === tab.id}
 								aria-controls={`${tab.id}-panel`}
 								aria-current={activeTab === tab.id ? "page" : undefined}
 								style={{
-									color: activeTab === tab.id ? "#5C7F4F" : "#4A5568",
-									fontWeight: activeTab === tab.id ? "600" : "400",
-									background: "transparent",
+									color: activeTab === tab.id ? "white" : "#374151",
+									fontWeight: activeTab === tab.id ? "600" : "500",
+									backgroundColor: activeTab === tab.id ? "#6B8268" : "transparent",
+									border: activeTab === tab.id ? "2px solid #6B8268" : "2px solid transparent",
+									boxShadow: activeTab === tab.id ? "0 2px 4px rgba(107, 130, 104, 0.2)" : "none"
 								}}
 								onMouseEnter={(e) => {
 									if (activeTab !== tab.id) {
-										e.currentTarget.style.color = "#5C7F4F";
-										e.currentTarget.style.transform = "translateY(-2px)";
+										e.currentTarget.style.backgroundColor = "#F3F4F6";
+										e.currentTarget.style.color = "#111827";
 									}
 								}}
 								onMouseLeave={(e) => {
 									if (activeTab !== tab.id) {
-										e.currentTarget.style.color = "#4A5568";
-										e.currentTarget.style.transform = "translateY(0)";
+										e.currentTarget.style.backgroundColor = "transparent";
+										e.currentTarget.style.color = "#374151";
 									}
 								}}
 							>

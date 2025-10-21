@@ -21,11 +21,22 @@ export function TermsOfService() {
 						<div className="flex items-center">
 							<button
 								onClick={() => navigate("/")}
-								className="flex items-center space-x-2 px-4 py-2 rounded-lg font-semibold transition-all hover:opacity-90"
+								className="flex items-center space-x-2 px-4 py-2 rounded-lg font-semibold transition-all"
 								style={{
-									background: "#5C7F4F",
+									background:
+										"linear-gradient(135deg, var(--color-green-600), var(--color-green-500))",
 									color: "#FFFFFF",
 									boxShadow: "0 2px 8px rgba(45, 95, 63, 0.2)",
+								}}
+								onMouseEnter={(e) => {
+									e.currentTarget.style.transform = "translateY(-1px)";
+									e.currentTarget.style.boxShadow =
+										"0 4px 12px rgba(45, 95, 63, 0.3)";
+								}}
+								onMouseLeave={(e) => {
+									e.currentTarget.style.transform = "translateY(0)";
+									e.currentTarget.style.boxShadow =
+										"0 2px 8px rgba(45, 95, 63, 0.2)";
 								}}
 							>
 								<ArrowLeft className="h-5 w-5" style={{ color: "#FFFFFF" }} />
@@ -62,12 +73,12 @@ export function TermsOfService() {
 						}}
 					>
 						<h2
-							className="text-2xl font-bold mb-3"
+							className="text-2xl font-bold mb-1"
 							style={{ color: "#1A1A1A" }}
 						>
 							1. Introduction
 						</h2>
-						<p className="text-lg leading-relaxed" style={{ color: "#3A3A3A" }}>
+						<p className="text-base leading-relaxed" style={{ color: "#3A3A3A" }}>
 							These Terms of Service ("Terms") govern your access to and use of
 							the InterpretReflect™ wellness platform. By using our services,
 							you acknowledge and accept these Terms in full.
@@ -85,54 +96,54 @@ export function TermsOfService() {
 						}}
 					>
 						<h2
-							className="text-2xl font-bold mb-3"
+							className="text-2xl font-bold mb-1"
 							style={{ color: "#1A1A1A" }}
 						>
 							2. Service Description
 						</h2>
 						<div className="space-y-3" style={{ color: "#3A3A3A" }}>
-							<p className="mb-2 text-sm">
+							<p className="mb-2 text-base">
 								InterpretReflect is a platform designed for professional
 								interpreters, offering:
 							</p>
 							<div className="grid grid-cols-1 md:grid-cols-2 gap-2">
 								<div className="flex items-start">
-									<span className="mr-2 text-sm">•</span>
-									<p className="text-sm">
+									<span className="mr-2 text-base">•</span>
+									<p className="text-base">
 										Burnout assessment and monitoring tools
 									</p>
 								</div>
 								<div className="flex items-start">
-									<span className="mr-2 text-sm">•</span>
-									<p className="text-sm">Guided reflection and journaling</p>
+									<span className="mr-2 text-base">•</span>
+									<p className="text-base">Guided reflection and journaling</p>
 								</div>
 								<div className="flex items-start">
-									<span className="mr-2 text-sm">•</span>
-									<p className="text-sm">
+									<span className="mr-2 text-base">•</span>
+									<p className="text-base">
 										Stress management and recovery programming
 									</p>
 								</div>
 								<div className="flex items-start">
-									<span className="mr-2 text-sm">•</span>
-									<p className="text-sm">
+									<span className="mr-2 text-base">•</span>
+									<p className="text-base">
 										Professional development tracking features
 									</p>
 								</div>
 								<div className="flex items-start">
-									<span className="mr-2 text-sm">•</span>
-									<p className="text-sm">
+									<span className="mr-2 text-base">•</span>
+									<p className="text-base">
 										AI-powered wellness companion (Elya)
 									</p>
 								</div>
 								<div className="flex items-start">
-									<span className="mr-2 text-sm">•</span>
-									<p className="text-sm">
+									<span className="mr-2 text-base">•</span>
+									<p className="text-base">
 										Continuing education credits (Professional Plan)
 									</p>
 								</div>
 							</div>
 							<p
-								className="mt-3 text-sm font-semibold"
+								className="mt-3 text-base font-semibold"
 								style={{ color: "#5C7F4F" }}
 							>
 								InterpretReflect is not a provider of medical or psychological
@@ -152,16 +163,16 @@ export function TermsOfService() {
 						}}
 					>
 						<h2
-							className="text-2xl font-bold mb-3"
+							className="text-2xl font-bold mb-1"
 							style={{ color: "#1A1A1A" }}
 						>
 							3. User Obligations
 						</h2>
 						<div className="space-y-3" style={{ color: "#3A3A3A" }}>
-							<p className="mb-2 text-sm">
+							<p className="mb-2 text-base">
 								By using InterpretReflect, you agree to:
 							</p>
-							<div className="space-y-1.5 text-sm">
+							<div className="space-y-1.5 text-base">
 								<p>
 									• Provide accurate information during registration and account
 									maintenance
@@ -187,7 +198,7 @@ export function TermsOfService() {
 								</p>
 							</div>
 							<p
-								className="mt-3 text-sm font-semibold"
+								className="mt-3 text-base font-semibold"
 								style={{ color: "#5C7F4F" }}
 							>
 								The platform does not substitute professional medical, mental
@@ -207,45 +218,41 @@ export function TermsOfService() {
 						}}
 					>
 						<h2
-							className="text-2xl font-bold mb-3"
+							className="text-2xl font-bold mb-1"
 							style={{ color: "#1A1A1A" }}
 						>
 							4. Subscription and Payment Terms
 						</h2>
 						<div className="space-y-3" style={{ color: "#3A3A3A" }}>
-							<p className="mb-2 text-sm">
+							<p className="mb-2 text-base">
 								InterpretReflect offers the following plans:
 							</p>
 
 							<div className="space-y-2">
-								<p className="text-sm">
+								<p className="text-base">
 									• <strong>Essential Plan ($12/month):</strong> All core
 									wellness tools and unlimited reflection
 								</p>
-								<p className="text-sm">
+								<p className="text-base">
 									• <strong>Professional Plan ($24/month):</strong> Essential
 									features plus access to the AI companion, CEU credits, and
 									advanced analytics
 								</p>
-								<p className="text-sm">
+								<p className="text-base">
 									• <strong>Custom organizational plans:</strong> Available upon
 									request
 								</p>
 							</div>
 
 							<div className="mt-3">
-								<p className="font-semibold mb-2 text-sm">
+								<p className="font-semibold mb-2 text-base">
 									Subscription details:
 								</p>
-								<div className="space-y-1.5 text-sm">
+								<div className="space-y-1.5 text-base">
 									<p>• Subscriptions renew automatically each month</p>
 									<p>
 										• You may cancel at any time; services remain active until
 										the end of the billing cycle
-									</p>
-									<p>
-										• A 7-day money-back guarantee is available to new
-										subscribers
 									</p>
 									<p>
 										• Users will be notified of any changes in subscription fees
@@ -267,17 +274,17 @@ export function TermsOfService() {
 						}}
 					>
 						<h2
-							className="text-2xl font-bold mb-3"
+							className="text-2xl font-bold mb-1"
 							style={{ color: "#1A1A1A" }}
 						>
 							5. Liability Limitations
 						</h2>
 						<div style={{ color: "#3A3A3A" }}>
-							<p className="mb-2 text-sm">
+							<p className="mb-2 text-base">
 								InterpretReflect services are provided "as is." The following
 								limitations apply:
 							</p>
-							<div className="space-y-1.5 text-sm">
+							<div className="space-y-1.5 text-base">
 								<p>
 									• InterpretReflect does not guarantee any specific outcomes or
 									results from the use of its tools or services.
@@ -319,12 +326,12 @@ export function TermsOfService() {
 						}}
 					>
 						<h2
-							className="text-2xl font-bold mb-3"
+							className="text-2xl font-bold mb-1"
 							style={{ color: "#1A1A1A" }}
 						>
 							6. Intellectual Property
 						</h2>
-						<p style={{ color: "#3A3A3A" }}>
+						<p className="text-base" style={{ color: "#3A3A3A" }}>
 							All content, software, and materials provided via InterpretReflect
 							remain the exclusive property of InterpretReflect or its
 							licensors. User-generated reflections and data remain your
@@ -344,12 +351,12 @@ export function TermsOfService() {
 						}}
 					>
 						<h2
-							className="text-2xl font-bold mb-3"
+							className="text-2xl font-bold mb-1"
 							style={{ color: "#1A1A1A" }}
 						>
 							7. Modifications to These Terms
 						</h2>
-						<p style={{ color: "#3A3A3A" }}>
+						<p className="text-base" style={{ color: "#3A3A3A" }}>
 							We may update or revise these Terms from time to time. If material
 							changes occur, you will be notified by email at least 30 days
 							before the changes become effective. Continued use of the platform
@@ -368,21 +375,21 @@ export function TermsOfService() {
 						}}
 					>
 						<h2
-							className="text-2xl font-bold mb-3"
+							className="text-2xl font-bold mb-1"
 							style={{ color: "#1A1A1A" }}
 						>
 							8. Contact
 						</h2>
-						<p className="mb-2 text-sm" style={{ color: "#3A3A3A" }}>
+						<p className="mb-2 text-base" style={{ color: "#3A3A3A" }}>
 							For any questions or concerns related to these Terms, please
 							email:
 						</p>
 						<a
-							href="mailto:hello@huviatechnologies.com"
+							href="mailto:info@interpretreflect.com"
 							className="font-semibold text-base hover:underline"
 							style={{ color: "#5C7F4F" }}
 						>
-							hello@huviatechnologies.com
+							info@interpretreflect.com
 						</a>
 					</div>
 				</section>
@@ -394,13 +401,20 @@ export function TermsOfService() {
 				>
 					<button
 						onClick={() => navigate("/")}
-						className="inline-flex items-center px-6 py-3 rounded-lg font-semibold transition-all hover:opacity-90"
+						className="inline-flex items-center px-5 py-2.5 rounded-lg font-semibold transition-all text-sm"
 						style={{
-							backgroundColor: "#5C7F4F",
-							color: "#FFFFFF",
+							backgroundColor: "#FFFFFF",
+							color: "#5B9378",
+							border: "2px solid #5B9378",
+						}}
+						onMouseEnter={(e) => {
+							e.currentTarget.style.backgroundColor = "#F8FBF6";
+						}}
+						onMouseLeave={(e) => {
+							e.currentTarget.style.backgroundColor = "#FFFFFF";
 						}}
 					>
-						<ArrowLeft className="h-5 w-5 mr-2" />
+						<ArrowLeft className="h-4 w-4 mr-2" />
 						Back to Home
 					</button>
 				</div>

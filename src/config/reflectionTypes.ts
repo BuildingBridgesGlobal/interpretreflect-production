@@ -103,6 +103,11 @@ export const REFLECTION_TYPES: Record<string, ReflectionType> = {
 		entryKind: "personal_reflection",
 		displayName: "Personal Reflection",
 	},
+	EMOTION_CLARITY: {
+		entryKind: "emotion-clarity",
+		displayName: "Emotion Clarity Practice",
+		shortName: "Emotion Clarity",
+	},
 
 	// Specialized Identity & Systemic Reflections
 	BIPOC_WELLNESS: {
@@ -137,6 +142,12 @@ export function getDisplayName(
 		"getDisplayName data keys:",
 		data ? Object.keys(data).slice(0, 10) : "no data",
 	);
+
+	// Clean up entryKind by removing any session IDs (pattern: session_timestamp_randomid)
+	if (entryKind) {
+		entryKind = entryKind.replace(/session_\d+_\w+/g, '').trim();
+		console.log("getDisplayName after cleaning session IDs:", entryKind);
+	}
 
 	// If no entry_kind, try to infer from data
 	if (!entryKind && data) {
@@ -265,6 +276,10 @@ export function getDisplayName(
 		"BIPOC Interpreter Wellness": "BIPOC Interpreter Wellness",
 		"Deaf Interpreter Professional Identity": "Deaf Interpreter Professional Identity",
 		"Neurodivergent Interpreter Wellness": "Neurodivergent Interpreter Wellness",
+
+		// Emotion Clarity
+		"emotion-clarity": "Emotion Clarity Practice",
+		"Emotion Clarity Practice": "Emotion Clarity Practice",
 	};
 
 	if (legacyMappings[entryKind]) {

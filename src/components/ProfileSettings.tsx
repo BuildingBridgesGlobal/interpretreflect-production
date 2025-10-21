@@ -150,6 +150,7 @@ const ProfileSettings: React.FC<ProfileSettingsProps> = ({
 	const navigate = useNavigate();
 	const [loading, setLoading] = useState(true);
 	const [saving, setSaving] = useState(false);
+	const [cancelling, setCancelling] = useState(false);
 	const [activeSection, setActiveSection] = useState<
 		"profile" | "accessibility" | "privacy"
 	>("profile");
@@ -499,7 +500,7 @@ const ProfileSettings: React.FC<ProfileSettingsProps> = ({
 			credentials: [...(profile.credentials || []), trimmed],
 		});
 		setCredentialInput("");
-		setShowCredentialSuggestions(false);
+		setShowCredentialDropdown(false);
 		setErrors({ ...errors, credentials: undefined });
 	};
 
@@ -535,6 +536,53 @@ const ProfileSettings: React.FC<ProfileSettingsProps> = ({
 
 	const hasUnsavedChanges = (): boolean => {
 		return JSON.stringify(profile) !== JSON.stringify(originalProfile);
+	};
+
+	const handleManageSubscription = async () => {
+		setCancelling(true);
+		try {
+			// Get auth session for the request
+			const { data: { session } } = await supabase.auth.getSession();
+
+			if (!session) {
+				throw new Error('Not authenticated');
+			}
+
+			// Call Edge Function to create Stripe Customer Portal session
+			const { data, error } = await supabase.functions.invoke('create-portal-session', {
+				body: {
+					returnUrl: window.location.origin + '/profile-settings'
+				},
+				headers: {
+					Authorization: `Bearer ${session.access_token}`
+				}
+			});
+
+			console.log('🔵 [ProfileSettings] Edge function response:', {
+				data,
+				error,
+				hasUrl: !!data?.url
+			});
+
+			if (error) {
+				console.error('❌ [ProfileSettings] Edge function error:', error);
+				throw error;
+			}
+
+			if (data?.url) {
+				console.log('✅ [ProfileSettings] Got portal URL, redirecting to:', data.url);
+				// Redirect to Stripe Customer Portal
+				window.location.href = data.url;
+			} else {
+				console.error('❌ [ProfileSettings] No URL in response:', data);
+				throw new Error('No portal URL returned');
+			}
+		} catch (error) {
+			console.error('❌ [ProfileSettings] Error opening billing portal:', error);
+			alert('Unable to open billing portal. Please contact support at info@interpretreflect.com');
+		} finally {
+			setCancelling(false);
+		}
 	};
 
 	// ========== RENDER ==========
@@ -1427,7 +1475,7 @@ const ProfileSettings: React.FC<ProfileSettingsProps> = ({
 														);
 
 														// Open email client
-														window.location.href = `mailto:hello@huviatechnologies.com?subject=${subject}&body=${body}`;
+														window.location.href = `mailto:info@interpretreflect.com?subject=${subject}&body=${body}`;
 
 														// Show confirmation after a short delay
 														setTimeout(() => {
@@ -1451,76 +1499,42 @@ const ProfileSettings: React.FC<ProfileSettingsProps> = ({
 											<div
 												className="p-4 rounded-xl border flex items-start justify-between"
 												style={{
-													backgroundColor: "rgba(239, 68, 68, 0.05)",
-													borderColor: "rgba(239, 68, 68, 0.2)",
+													backgroundColor: "rgba(107, 139, 96, 0.05)",
+													borderColor: "rgba(107, 139, 96, 0.2)",
 												}}
 											>
 												<div className="flex items-start gap-3">
-													<Trash2
+													<Shield
 														className="w-5 h-5 mt-0.5"
-														style={{ color: "#EF4444" }}
+														style={{ color: "var(--color-green-600)" }}
 													/>
 													<div>
 														<h4
 															className="font-medium"
 															style={{ color: "var(--color-slate-700)" }}
 														>
-															Delete Account
+															Manage Subscription
 														</h4>
 														<p
 															className="text-sm mt-1"
 															style={{ color: "var(--color-slate-600)" }}
 														>
-															Permanently remove your account and data
+															Cancel, update payment, or view billing history
 														</p>
 													</div>
 												</div>
 												<button
 													type="button"
-													onClick={() => {
-														if (
-															confirm(
-																"Are you sure you want to delete your account? This action cannot be undone.",
-															)
-														) {
-															// Create email with user details for deletion request
-															const userEmail = user?.email || 'Not provided';
-															const userId = user?.id || 'Not provided';
-															const userName = profile.full_name || 'Not provided';
-															const subject = encodeURIComponent('Account Deletion Request - InterpretReflect');
-															const body = encodeURIComponent(
-																`Hello Huvia Technologies Team,\n\n` +
-																`I would like to request the complete deletion of my InterpretReflect account and all associated data.\n\n` +
-																`My account details:\n` +
-																`- Name: ${userName}\n` +
-																`- Email: ${userEmail}\n` +
-																`- User ID: ${userId}\n` +
-																`- Request Date: ${new Date().toLocaleDateString()}\n\n` +
-																`I understand this action is permanent and cannot be undone.\n\n` +
-																`Please confirm once my account and data have been deleted.\n\n` +
-																`Thank you`
-															);
-
-															// Open email client
-															window.location.href = `mailto:hello@huviatechnologies.com?subject=${subject}&body=${body}`;
-
-															// Show confirmation after a short delay
-															setTimeout(() => {
-																alert(
-																	"Your account deletion request email has been prepared. Please send it to begin the deletion process. We will confirm within 48 hours.",
-																);
-															}, 500);
-														}
-													}}
-													aria-label="Delete your account"
+													onClick={handleManageSubscription}
+													aria-label="Manage your subscription"
 													className="px-4 py-2 rounded-xl font-semibold transition-all shadow-clean hover:shadow-clean-md hover:-translate-y-0.5"
 													style={{
-														backgroundColor: "var(--color-error)",
+														background: "linear-gradient(135deg, var(--color-green-600), var(--color-green-500))",
 														color: "white",
 														border: "none",
 													}}
 												>
-													Delete
+													Manage
 												</button>
 											</div>
 										</div>
@@ -1790,7 +1804,7 @@ const ProfileSettings: React.FC<ProfileSettingsProps> = ({
 													>
 														<p className="text-sm">
 															<span className="font-medium" style={{ color: "var(--color-slate-700)" }}>Data Rights:</span>
-															<span style={{ color: "var(--color-slate-600)" }}> Contact hello@huviatechnologies.com for export/deletion</span>
+															<span style={{ color: "var(--color-slate-600)" }}> Contact info@interpretreflect.com for export/deletion</span>
 														</p>
 													</div>
 												</div>

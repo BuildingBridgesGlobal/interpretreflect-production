@@ -39,7 +39,17 @@
       "Bash(echo:*)",
       "Bash(__NEW_LINE__ sleep 3)",
       "Bash(nslookup:*)",
-      "Bash(__NEW_LINE__ sleep 90)"
+      "Bash(__NEW_LINE__ sleep 90)",
+      "Bash(npm run type-check:*)",
+      "Bash(npm run:*)",
+      "Bash(netstat:*)",
+      "Bash(findstr:*)",
+      "Bash(sed -n '9221,9270p' src/App.tsx)",
+      "Bash(git restore src/components/DailyBurnoutGaugeAccessible.tsx src/components/GrowthInsights.tsx src/components/PersonalizedHomepage.tsx)",
+      "Bash(git revert 125d8a6 --no-edit)",
+      "Bash(npx tsc --noEmit --skipLibCheck src/App.tsx)",
+      "Bash(timeout 3 npm run dev)",
+      "Read(//c/**)"
     ],
     "deny": [],
     "ask": []

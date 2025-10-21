@@ -53,14 +53,14 @@ export const PrivacyPage: React.FC = () => {
             className="prose prose-gray max-w-none legal-document"
             dangerouslySetInnerHTML={{
               __html: privacyContent.content
-                .replace(/# /g, '<h1 class="text-xl font-bold mb-4 mt-8 uppercase border-b pb-2" style="color: var(--color-slate-700); border-color: var(--color-slate-300);">')
-                .replace(/## /g, '<h2 class="text-lg font-bold mb-3 mt-6" style="color: var(--color-slate-700);">')
-                .replace(/### /g, '<h3 class="text-base font-semibold mb-2 mt-4" style="color: var(--color-slate-600);">')
+                .replace(/# /g, '<h1 class="text-2xl font-bold mb-1 mt-8 uppercase border-b pb-2" style="color: var(--color-slate-700); border-color: var(--color-slate-300);">')
+                .replace(/## /g, '<h2 class="text-2xl font-bold mb-1 mt-6" style="color: var(--color-slate-700);">')
+                .replace(/### /g, '<h3 class="text-base font-semibold mb-1 mt-4" style="color: var(--color-slate-600);">')
                 .replace(/\*\*(.+?)\*\*/g, '<strong class="font-semibold" style="color: var(--color-slate-700);">$1</strong>')
-                .replace(/^- (.+)$/gm, '<li class="ml-8 mb-2 list-disc leading-relaxed" style="color: var(--color-slate-600);">$1</li>')
-                .replace(/^\d+\. (.+)$/gm, '<li class="ml-8 mb-2 list-decimal leading-relaxed" style="color: var(--color-slate-600);">$1</li>')
-                .replace(/\n\n/g, '</p><p class="mb-4 leading-relaxed" style="color: var(--color-slate-600);">')
-                .replace(/^/, '<p class="mb-4 leading-relaxed" style="color: var(--color-slate-600);">')
+                .replace(/^- (.+)$/gm, '<li class="ml-8 mb-2 list-disc leading-relaxed text-base" style="color: var(--color-slate-600);">$1</li>')
+                .replace(/^\d+\. (.+)$/gm, '<li class="ml-8 mb-2 list-decimal leading-relaxed text-base" style="color: var(--color-slate-600);">$1</li>')
+                .replace(/\n\n/g, '</p><p class="mb-4 leading-relaxed text-base" style="color: var(--color-slate-600);">')
+                .replace(/^/, '<p class="mb-4 leading-relaxed text-base" style="color: var(--color-slate-600);">')
                 .replace(/$/, '</p>')
             }}
           />

@@ -354,7 +354,7 @@ const CompassCheck: React.FC<CompassCheckProps> = ({ onComplete, onClose }) => {
                     step === currentStep
                       ? 'bg-indigo-500 text-white scale-110'
                       : step < currentStep
-                        ? 'bg-green-500 text-white'
+                        ? 'bg-[rgba(107,130,104,0.05)]0 text-white'
                         : 'bg-gray-200 text-gray-500'
                   }`}
                 >
@@ -900,7 +900,7 @@ const CompassCheck: React.FC<CompassCheckProps> = ({ onComplete, onClose }) => {
               </div>
 
               <div className="space-y-4">
-                <div className="bg-green-50 p-4 rounded-lg">
+                <div className="bg-[rgba(107,130,104,0.05)] p-4 rounded-lg">
                   <h4 className="font-semibold text-gray-900 mb-3">My professional values:</h4>
                   <ol className="space-y-2 text-gray-700">
                     <li>1. Accurate communication serves justice</li>

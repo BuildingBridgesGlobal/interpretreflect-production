@@ -142,7 +142,7 @@ export const TechnologyFatigueReset: React.FC<TechnologyFatigueResetProps> = ({ 
                   </div>
                   <p className="text-sm text-gray-600">Remove headphones, massage ears</p>
                 </div>
-                <div className="p-4 bg-green-50 rounded-xl">
+                <div className="p-4 bg-[rgba(107,130,104,0.05)] rounded-xl">
                   <div className="flex items-center gap-2 mb-2">
                     <Move className="w-5 h-5 text-green-600" />
                     <h3 className="font-medium text-gray-800">Posture</h3>

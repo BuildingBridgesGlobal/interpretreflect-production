@@ -426,6 +426,7 @@ export interface TeamingPrepEnhancedData {
 	communication_style: string;
 	feedback_preferences: string;
 	boundaries_preferences: string;
+	debriefing_plan: string;
 
 	// Section 3: Anticipated Challenges & Preparation
 	typical_stressor: string;
@@ -435,6 +436,7 @@ export interface TeamingPrepEnhancedData {
 	anticipated_obstacles: string;
 	skills_to_develop: string;
 	success_indicators: string;
+	conflict_management: string;
 
 	// Section 4: Personal Contribution Planning
 	unique_strengths: string;
@@ -442,6 +444,7 @@ export interface TeamingPrepEnhancedData {
 	transition_strategy: string;
 	dynamic_not_working_plan: string;
 	corrections_approach: string;
+	roles_responsibilities: string;
 
 	// Section 5: Success Vision
 	success_description: string;

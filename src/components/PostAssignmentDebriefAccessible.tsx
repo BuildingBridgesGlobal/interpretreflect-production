@@ -18,7 +18,6 @@ import {
 
 import {
 	HeartPulseIcon,
-	NotepadIcon,
 	SecureLockIcon,
 	TargetIcon,
 } from "./CustomIcon";
@@ -28,8 +27,6 @@ import {
 interface PostAssignmentDebriefData {
 	// Assignment Review
 	assignmentContext: string;
-	participants: string;
-	duration: string;
 	challenges: string;
 
 	// Performance Assessment
@@ -88,12 +85,11 @@ interface PostAssignmentDebriefProps {
 const steps = [
 	{ id: 0, title: "Opening Context", icon: Lightbulb },
 	{ id: 1, title: "Assignment Review", icon: FileText },
-	{ id: 2, title: "Performance Assessment", icon: TargetIcon },
-	{ id: 3, title: "Adaptations & Growth", icon: NotepadIcon },
-	{ id: 4, title: "Learning Capture", icon: Lightbulb },
-	{ id: 5, title: "Emotional Processing", icon: HeartPulseIcon },
-	{ id: 6, title: "Physical & Self-Care", icon: SecureLockIcon },
-	{ id: 7, title: "Integration & Celebration", icon: CheckCircle },
+	{ id: 2, title: "Performance & Adaptations", icon: TargetIcon },
+	{ id: 3, title: "Learning Capture", icon: Lightbulb },
+	{ id: 4, title: "Emotional Processing", icon: HeartPulseIcon },
+	{ id: 5, title: "Physical & Self-Care", icon: SecureLockIcon },
+	{ id: 6, title: "Integration & Celebration", icon: CheckCircle },
 ];
 
 export const PostAssignmentDebriefAccessible: React.FC<
@@ -105,8 +101,6 @@ export const PostAssignmentDebriefAccessible: React.FC<
 	const [isSaving, setIsSaving] = useState(false);
 	const [formData, setFormData] = useState<PostAssignmentDebriefData>({
 		assignmentContext: "",
-		participants: "",
-		duration: "",
 		challenges: "",
 		overallSatisfaction: 5,
 		technicalAccuracy: 5,
@@ -164,8 +158,6 @@ export const PostAssignmentDebriefAccessible: React.FC<
 					"proudestMoment",
 					"emotionalSupport",
 					"assignmentContext",
-					"participants",
-					"duration",
 					"challenges",
 					"skillsStrengthened",
 					"lessonsLearned",
@@ -265,44 +257,35 @@ export const PostAssignmentDebriefAccessible: React.FC<
 					newErrors.assignmentContext =
 						"Please describe the assignment context";
 				}
-				if (!formData.participants?.trim()) {
-					newErrors.participants = "Please describe the participants";
-				}
-				if (!formData.duration?.trim()) {
-					newErrors.duration = "Please enter the duration";
-				}
 				break;
 
-			case 2: // Performance Assessment
+			case 2: // Performance & Adaptations (Combined)
 				if (!formData.proudestMoment?.trim()) {
 					newErrors.proudestMoment = "Please describe your proudest moment";
 				}
-				break;
-
-			case 3: // Adaptations & Growth
 				if (!formData.skillsStrengthened?.trim()) {
 					newErrors.skillsStrengthened = "Please describe skills strengthened";
 				}
 				break;
 
-			case 4: // Learning Capture
+			case 3: // Learning Capture
 				if (!formData.lessonsLearned?.trim()) {
 					newErrors.lessonsLearned = "Please describe lessons learned";
 				}
 				break;
 
-			case 5: // Emotional Processing
+			case 4: // Emotional Processing
 				if (!formData.emotionalJourney?.trim()) {
 					newErrors.emotionalJourney = "Please describe your emotional journey";
 				}
 				break;
 
-			case 6: // Physical & Self-Care
+			case 5: // Physical & Self-Care
 				// Make physicalImpact optional - only validate if other critical fields are missing
 				// Physical impact may not always be significant enough to describe
 				break;
 
-			case 7: // Integration & Celebration
+			case 6: // Integration & Celebration
 				if (!formData.growthAchieved?.trim()) {
 					newErrors.growthAchieved = "Please describe growth achieved";
 				}
@@ -378,6 +361,13 @@ export const PostAssignmentDebriefAccessible: React.FC<
 			}
 
 			const accessToken = await getSessionToken();
+			
+			if (!accessToken) {
+				console.error("PostAssignmentDebriefAccessible - No access token");
+				setErrors({ save: "Authentication error. Please try logging in again." });
+				setIsSaving(false);
+				return;
+			}
 
 			console.log("PostAssignmentDebriefAccessible - User details:", {
 				id: user?.id,
@@ -467,8 +457,6 @@ Generated: ${new Date().toLocaleDateString()}
 
 ASSIGNMENT REVIEW
 Context: ${formData.assignmentContext || "Not provided"}
-Participants: ${formData.participants || "Not provided"}
-Duration: ${formData.duration || "Not provided"}
 Challenges: ${formData.challenges || "Not provided"}
 
 PERFORMANCE ASSESSMENT
@@ -693,50 +681,6 @@ Current Feeling: ${formData.currentFeeling || "Not provided"}
 					className="block text-sm font-medium mb-2"
 					style={{ color: "#5C7F4F" }}
 				>
-					Who were the participants?
-				</label>
-				<textarea
-					className="w-full px-4 py-3 border rounded-lg resize-none focus:ring-2 focus:ring-sage-500"
-					rows={3}
-					placeholder="Describe the people involved in this assignment"
-					style={{
-						borderColor: errors.participants ? "#ef4444" : "#E8E5E0",
-					}}
-					value={formData.participants}
-					onChange={(e) => handleInputChange("participants", e.target.value)}
-				/>
-				{errors.participants && (
-					<p className="text-sm text-red-500 mt-1">{errors.participants}</p>
-				)}
-			</div>
-
-			<div>
-				<label
-					className="block text-sm font-medium mb-2"
-					style={{ color: "#5C7F4F" }}
-				>
-					Duration and timeline
-				</label>
-				<input
-					type="text"
-					className="w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-sage-500"
-					placeholder="How long did the assignment take?"
-					style={{
-						borderColor: errors.duration ? "#ef4444" : "#E8E5E0",
-					}}
-					value={formData.duration}
-					onChange={(e) => handleInputChange("duration", e.target.value)}
-				/>
-				{errors.duration && (
-					<p className="text-sm text-red-500 mt-1">{errors.duration}</p>
-				)}
-			</div>
-
-			<div>
-				<label
-					className="block text-sm font-medium mb-2"
-					style={{ color: "#5C7F4F" }}
-				>
 					Initial challenges encountered
 				</label>
 				<textarea
@@ -753,10 +697,10 @@ Current Feeling: ${formData.currentFeeling || "Not provided"}
 		</div>
 	);
 
-	const renderPerformanceAssessment = () => (
+	const renderPerformanceAdaptations = () => (
 		<div className="space-y-6">
 			<h3 className="text-xl font-bold text-gray-800 mb-4">
-				Performance Assessment
+				Performance & Adaptations
 			</h3>
 
 			<div>
@@ -839,21 +783,27 @@ Current Feeling: ${formData.currentFeeling || "Not provided"}
 
 			<div>
 				<h4 className="text-sm font-medium mb-3" style={{ color: "#5C7F4F" }}>
-					How did you handle challenges?
+					What challenges did you face and how did you adapt?
 				</h4>
+				<p className="text-xs mb-4" style={{ color: "#6B7280" }}>
+					For each area, describe the challenge and how you handled it:
+				</p>
 
 				<div className="space-y-4">
 					<div>
-						<label className="block font-medium text-gray-600 mb-2">
-							Environmental Challenges
+						<label className="block font-medium text-gray-700 mb-1">
+							Surroundings & Setup
 						</label>
+						<p className="text-xs mb-2" style={{ color: "#6B7280" }}>
+							Physical space, noise, technology, lighting, positioning
+						</p>
 						<textarea
 							className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-sage-500 resize-none"
 							style={{
 								borderColor: "#E8E5E0",
 							}}
 							rows={2}
-							placeholder="How did you handle environmental challenges?"
+							placeholder="Example: Background noise was distracting, so I moved closer to the speaker and adjusted my position..."
 							value={formData.challengesHandled.environmental}
 							onChange={(e) =>
 								handleInputChange(
@@ -865,13 +815,16 @@ Current Feeling: ${formData.currentFeeling || "Not provided"}
 					</div>
 
 					<div>
-						<label className="block font-medium text-gray-600 mb-2">
-							Interpersonal Challenges
+						<label className="block font-medium text-gray-700 mb-1">
+							Interactions & Relationships
 						</label>
+						<p className="text-xs mb-2" style={{ color: "#6B7280" }}>
+							Difficult dynamics, power imbalances, managing multiple speakers
+						</p>
 						<textarea
 							className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-sage-500 resize-none"
 							rows={2}
-							placeholder="How did you handle interpersonal challenges?"
+							placeholder="Example: Speakers were talking over each other, so I used hand signals and positioned myself to manage turn-taking..."
 							value={formData.challengesHandled.interpersonal}
 							onChange={(e) =>
 								handleInputChange(
@@ -883,13 +836,16 @@ Current Feeling: ${formData.currentFeeling || "Not provided"}
 					</div>
 
 					<div>
-						<label className="block font-medium text-gray-600 mb-2">
-							Paralinguistic Challenges
+						<label className="block font-medium text-gray-700 mb-1">
+							Delivery & Expression
 						</label>
+						<p className="text-xs mb-2" style={{ color: "#6B7280" }}>
+							Fast pace, accents, tone matching, register shifts
+						</p>
 						<textarea
 							className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-sage-500 resize-none"
 							rows={2}
-							placeholder="How did you handle communication challenges?"
+							placeholder="Example: The speaker was very fast, so I slowed my pace and used pauses to maintain clarity..."
 							value={formData.challengesHandled.paralinguistic}
 							onChange={(e) =>
 								handleInputChange(
@@ -901,105 +857,20 @@ Current Feeling: ${formData.currentFeeling || "Not provided"}
 					</div>
 
 					<div>
-						<label className="block font-medium text-gray-600 mb-2">
-							Intrapersonal Challenges
+						<label className="block font-medium text-gray-700 mb-1">
+							Internal & Emotional
 						</label>
+						<p className="text-xs mb-2" style={{ color: "#6B7280" }}>
+							Stress, self-doubt, staying focused, managing your reactions
+						</p>
 						<textarea
 							className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-sage-500 resize-none"
 							rows={2}
-							placeholder="How did you handle personal challenges?"
+							placeholder="Example: I felt overwhelmed at one point, so I took deep breaths and reminded myself to focus on one sentence at a time..."
 							value={formData.challengesHandled.intrapersonal}
 							onChange={(e) =>
 								handleInputChange(
 									"challengesHandled.intrapersonal",
-									e.target.value,
-								)
-							}
-						/>
-					</div>
-				</div>
-			</div>
-		</div>
-	);
-
-	const renderAdaptationsGrowth = () => (
-		<div className="space-y-6">
-			<h3 className="text-xl font-bold text-gray-800 mb-4">
-				Adaptations & Growth
-			</h3>
-
-			<div>
-				<h4 className="text-sm font-medium mb-3" style={{ color: "#5C7F4F" }}>
-					What adaptations did you make?
-				</h4>
-
-				<div className="space-y-4">
-					<div>
-						<label className="block font-medium text-gray-600 mb-2">
-							Environmental Adaptations
-						</label>
-						<textarea
-							className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-sage-500 resize-none"
-							rows={2}
-							placeholder="How did you adapt to environmental factors?"
-							value={formData.adaptationsMade.environmental}
-							onChange={(e) =>
-								handleInputChange(
-									"adaptationsMade.environmental",
-									e.target.value,
-								)
-							}
-						/>
-					</div>
-
-					<div>
-						<label className="block font-medium text-gray-600 mb-2">
-							Interpersonal Adaptations
-						</label>
-						<textarea
-							className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-sage-500 resize-none"
-							rows={2}
-							placeholder="How did you adapt your interpersonal approach?"
-							value={formData.adaptationsMade.interpersonal}
-							onChange={(e) =>
-								handleInputChange(
-									"adaptationsMade.interpersonal",
-									e.target.value,
-								)
-							}
-						/>
-					</div>
-
-					<div>
-						<label className="block font-medium text-gray-600 mb-2">
-							Paralinguistic Adaptations
-						</label>
-						<textarea
-							className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-sage-500 resize-none"
-							rows={2}
-							placeholder="How did you adapt your communication style?"
-							value={formData.adaptationsMade.paralinguistic}
-							onChange={(e) =>
-								handleInputChange(
-									"adaptationsMade.paralinguistic",
-									e.target.value,
-								)
-							}
-						/>
-					</div>
-
-					<div>
-						<label className="block font-medium text-gray-600 mb-2">
-							Intrapersonal Adaptations
-						</label>
-						<textarea
-							className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-sage-500 resize-none"
-							rows={2}
-							placeholder="How did you adapt internally?"
-							value={formData.adaptationsMade.intrapersonal}
-							onChange={(e) =>
-								handleInputChange(
-									"adaptationsMade.intrapersonal",
 									e.target.value,
 								)
 							}
@@ -1015,7 +886,7 @@ Current Feeling: ${formData.currentFeeling || "Not provided"}
 				<textarea
 					className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-sage-500 resize-none ${errors.skillsStrengthened ? "border-red-500" : "border"}`}
 					rows={4}
-					placeholder="List the skills you developed or strengthened during this assignment"
+					placeholder="Example: Active listening, managing complex terminology, staying neutral in emotional situations, quick thinking..."
 					value={formData.skillsStrengthened}
 					onChange={(e) =>
 						handleInputChange("skillsStrengthened", e.target.value)
@@ -1086,14 +957,57 @@ Current Feeling: ${formData.currentFeeling || "Not provided"}
 				Emotional Processing
 			</h3>
 
+			<div className="p-4 rounded-lg mb-4" style={{ backgroundColor: "rgba(107, 139, 96, 0.1)", border: "1px solid rgba(107, 139, 96, 0.2)" }}>
+				<p className="text-sm" style={{ color: "#5C7F4F" }}>
+					<strong>Why this matters:</strong> Interpreting work can be emotionally demanding. Naming and processing your emotions helps prevent burnout, builds resilience, and keeps you connected to yourself.
+				</p>
+			</div>
+
 			<div>
 				<label className="block text-sm font-medium mb-2">
-					Describe your emotional journey
+					When did you feel most energized or positive?
 				</label>
+				<p className="text-xs mb-2" style={{ color: "#6B7280" }}>
+					Think about moments when you felt confident, connected, or proud
+				</p>
+				<textarea
+					className="w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-sage-500 resize-none"
+					rows={3}
+					placeholder="Example: When I successfully navigated a complex term, when the participants understood each other clearly, when I felt in flow..."
+					value={formData.emotionalHighs}
+					onChange={(e) => handleInputChange("emotionalHighs", e.target.value)}
+				/>
+			</div>
+
+			<div>
+				<label className="block text-sm font-medium mb-2">
+					What were the most challenging moments?
+				</label>
+				<p className="text-xs mb-2" style={{ color: "#6B7280" }}>
+					Elite performers learn from challenges - what tested your skills?
+				</p>
+				<textarea
+					className="w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-sage-500 resize-none"
+					rows={3}
+					placeholder="Example: Complex terminology I hadn't encountered, fast-paced dialogue, emotionally heavy content, managing my own reactions..."
+					value={formData.emotionalChallenges}
+					onChange={(e) =>
+						handleInputChange("emotionalChallenges", e.target.value)
+					}
+				/>
+			</div>
+
+			<div>
+				<label className="block text-sm font-medium mb-2">
+					What emotions are you carrying from this assignment?
+				</label>
+				<p className="text-xs mb-2" style={{ color: "#6B7280" }}>
+					Name the feelings still with you - there's no right or wrong answer
+				</p>
 				<textarea
 					className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-sage-500 resize-none ${errors.emotionalJourney ? "border-red-500" : "border"}`}
 					rows={4}
-					placeholder="How did your emotions evolve throughout the assignment?"
+					placeholder="Example: I feel proud but also drained. There's some lingering worry about whether I got everything right. I'm relieved it's over but also energized by what I learned..."
 					value={formData.emotionalJourney}
 					onChange={(e) =>
 						handleInputChange("emotionalJourney", e.target.value)
@@ -1106,40 +1020,15 @@ Current Feeling: ${formData.currentFeeling || "Not provided"}
 
 			<div>
 				<label className="block text-sm font-medium mb-2">
-					Emotional highs
+					What would help you process or release these emotions?
 				</label>
+				<p className="text-xs mb-2" style={{ color: "#6B7280" }}>
+					Consider: talking to someone, movement, rest, creative expression, time in nature, or simply acknowledging what you're feeling
+				</p>
 				<textarea
 					className="w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-sage-500 resize-none"
 					rows={3}
-					placeholder="What were the emotional high points?"
-					value={formData.emotionalHighs}
-					onChange={(e) => handleInputChange("emotionalHighs", e.target.value)}
-				/>
-			</div>
-
-			<div>
-				<label className="block text-sm font-medium mb-2">
-					Emotional challenges
-				</label>
-				<textarea
-					className="w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-sage-500 resize-none"
-					rows={3}
-					placeholder="What emotional challenges did you face?"
-					value={formData.emotionalChallenges}
-					onChange={(e) =>
-						handleInputChange("emotionalChallenges", e.target.value)
-					}
-				/>
-			</div>
-
-			<div>
-				<label className="block text-sm font-medium mb-2">
-					What emotional support do you need?
-				</label>
-				<textarea
-					className="w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-sage-500 resize-none"
-					rows={3}
-					placeholder="Describe any emotional support you need after this assignment"
+					placeholder="Example: I need to talk this through with a colleague, go for a walk to clear my head, or just give myself permission to rest..."
 					value={formData.emotionalSupport}
 					onChange={(e) =>
 						handleInputChange("emotionalSupport", e.target.value)
@@ -1152,17 +1041,20 @@ Current Feeling: ${formData.currentFeeling || "Not provided"}
 	const renderPhysicalSelfCare = () => (
 		<div className="space-y-6">
 			<h3 className="text-xl font-bold text-gray-800 mb-4">
-				Physical & Self-Care
+				Physical Recovery & Boundaries
 			</h3>
 
 			<div>
 				<label className="block text-sm font-medium mb-2">
-					Physical impact of the assignment
+					What's happening in your body right now?
 				</label>
+				<p className="text-xs mb-2" style={{ color: "#6B7280" }}>
+					Notice: tension, fatigue, energy, pain, restlessness, or calm
+				</p>
 				<textarea
 					className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-sage-500 resize-none ${errors.physicalImpact ? "border-red-500" : "border"}`}
 					rows={3}
-					placeholder="How did this assignment affect you physically?"
+					placeholder="Example: My shoulders are tight, I have a headache, I feel exhausted, my jaw is clenched..."
 					value={formData.physicalImpact}
 					onChange={(e) => handleInputChange("physicalImpact", e.target.value)}
 				/>
@@ -1172,9 +1064,12 @@ Current Feeling: ${formData.currentFeeling || "Not provided"}
 			</div>
 
 			<div>
-				<label className="block text-sm font-medium mb-3">
-					Select self-care actions needed
+				<label className="block text-sm font-medium mb-2">
+					What does your body need right now?
 				</label>
+				<p className="text-xs mb-3" style={{ color: "#6B7280" }}>
+					Select what would help you recover (choose all that apply)
+				</p>
 				<div className="space-y-2">
 					{[
 						"Rest and sleep",
@@ -1221,11 +1116,16 @@ Current Feeling: ${formData.currentFeeling || "Not provided"}
 			</div>
 
 			<div>
-				<label className="block text-sm font-medium mb-2">Recovery plan</label>
+				<label className="block text-sm font-medium mb-2">
+					Your recovery plan for today
+				</label>
+				<p className="text-xs mb-2" style={{ color: "#6B7280" }}>
+					What specific actions will you take to recharge?
+				</p>
 				<textarea
 					className="w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-sage-500 resize-none"
 					rows={3}
-					placeholder="How will you recover and recharge after this assignment?"
+					placeholder="Example: Take a 20-minute walk, eat a proper meal, call a friend, take a nap before my next assignment..."
 					value={formData.recoveryPlan}
 					onChange={(e) => handleInputChange("recoveryPlan", e.target.value)}
 				/>
@@ -1233,12 +1133,15 @@ Current Feeling: ${formData.currentFeeling || "Not provided"}
 
 			<div>
 				<label className="block text-sm font-medium mb-2">
-					Boundaries for future assignments
+					How well did you maintain your professional boundaries?
 				</label>
+				<p className="text-xs mb-2" style={{ color: "#6B7280" }}>
+					Elite performers protect their role clarity and professional limits
+				</p>
 				<textarea
 					className="w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-sage-500 resize-none"
 					rows={3}
-					placeholder="What boundaries will you set for future assignments?"
+					placeholder="Example: I maintained my role well / I need to work on speaking up when sessions run over / Next time I'll clarify my scope at the start / I successfully advocated for a break when needed..."
 					value={formData.boundaries}
 					onChange={(e) => handleInputChange("boundaries", e.target.value)}
 				/>
@@ -1355,16 +1258,14 @@ Current Feeling: ${formData.currentFeeling || "Not provided"}
 			case 1:
 				return renderAssignmentReview();
 			case 2:
-				return renderPerformanceAssessment();
+				return renderPerformanceAdaptations();
 			case 3:
-				return renderAdaptationsGrowth();
-			case 4:
 				return renderLearningCapture();
-			case 5:
+			case 4:
 				return renderEmotionalProcessing();
-			case 6:
+			case 5:
 				return renderPhysicalSelfCare();
-			case 7:
+			case 6:
 				return renderIntegrationCelebration();
 			default:
 				return renderAssignmentReview();

@@ -216,7 +216,7 @@ export const AttestationReceiptManager: React.FC<
 
 			{/* Selected Receipt Display */}
 			{selectedReceipt && (
-				<div className="mb-6 p-4 border-2 border-green-500 rounded-lg bg-green-50">
+				<div className="mb-6 p-4 border-2 border-[#6B8268] rounded-lg bg-[rgba(107,130,104,0.05)]">
 					<div className="flex items-start justify-between">
 						<div className="flex-1">
 							<h3 className="font-semibold text-gray-900 mb-2">
@@ -281,7 +281,7 @@ export const AttestationReceiptManager: React.FC<
 				<div
 					className={`mb-6 p-4 rounded-lg ${
 						verificationResult.valid
-							? "bg-green-100 border-green-500"
+							? "bg-green-100 border-[#6B8268]"
 							: "bg-red-100 border-red-500"
 					} border`}
 				>

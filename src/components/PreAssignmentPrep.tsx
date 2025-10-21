@@ -490,7 +490,7 @@ const PreAssignmentPrep: React.FC<PreAssignmentPrepProps> = ({ onComplete, onClo
 
               {/* Hear - 3 things */}
               <div
-                className={`p-4 rounded-xl transition-all ${groundingStep >= 2 ? 'bg-green-50 border-2 border-green-400' : 'bg-gray-50'}`}
+                className={`p-4 rounded-xl transition-all ${groundingStep >= 2 ? 'bg-[rgba(107,130,104,0.05)] border-2 border-green-400' : 'bg-gray-50'}`}
               >
                 <div className="flex items-center mb-3">
                   <Ear className="h-5 w-5 mr-2" style={{ color: '#10B981' }} />
@@ -851,7 +851,7 @@ const PreAssignmentPrep: React.FC<PreAssignmentPrepProps> = ({ onComplete, onClo
                     currentStep === index
                       ? 'bg-gradient-to-br from-green-400 to-green-600 text-white scale-110'
                       : currentStep > index
-                        ? 'bg-green-500 text-white'
+                        ? 'bg-[rgba(107,130,104,0.05)]0 text-white'
                         : 'bg-gray-200 text-gray-400'
                   }`}
                 >
@@ -864,7 +864,7 @@ const PreAssignmentPrep: React.FC<PreAssignmentPrepProps> = ({ onComplete, onClo
                 {index < steps.length - 1 && (
                   <div
                     className={`w-full h-1 mx-2 ${
-                      currentStep > index ? 'bg-green-500' : 'bg-gray-200'
+                      currentStep > index ? 'bg-[rgba(107,130,104,0.05)]0' : 'bg-gray-200'
                     }`}
                   />
                 )}

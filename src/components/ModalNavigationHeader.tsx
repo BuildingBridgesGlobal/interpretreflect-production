@@ -77,7 +77,7 @@ export const ModalNavigationHeader: React.FC<ModalNavigationHeaderProps> = ({
         )}
         {showAutoSave && (
           <p className="text-xs mt-2 flex items-center gap-1" style={{ color: '#1b5e20' }}>
-            <span className="w-2 h-2 bg-green-500 rounded-full animate-pulse" />
+            <span className="w-2 h-2 bg-[rgba(107,130,104,0.05)]0 rounded-full animate-pulse" />
             Auto-saving your progress
           </p>
         )}

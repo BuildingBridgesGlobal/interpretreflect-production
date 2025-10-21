@@ -56,51 +56,56 @@ const TeamingPrepEnhanced: React.FC<TeamingPrepEnhancedProps> = ({
 		return () => document.removeEventListener("keydown", handleEscape);
 	}, [onClose]);
 
-	// Form state for all fields
+	// Form state for all fields - STREAMLINED
 	const [formData, setFormData] = useState<TeamingPrepEnhancedData>({
-		// Quick Insight
+		// Page 1: Getting Started
 		excites_most: "",
 		concerns_most: "",
 		assignment_type: "in-person",
-		// Section 1
+		
+		// Page 2: Your Team Style
 		ideal_team_dynamic: "",
 		natural_role: "",
 		past_experience_influence: "",
-		hoped_outcomes: "",
-		// Section 2
+		
+		// Page 3: Communication Plan
 		handoff_signal: "",
 		virtual_handoff_strategy: "",
 		physical_cues: "",
-		communication_style: "",
 		feedback_preferences: "",
 		boundaries_preferences: "",
+		
+		// Page 4: Challenges & Strengths
+		anticipated_obstacles: "",
+		unique_strengths: "",
+		support_needs: "",
+		
+		// Page 5: Success Vision
+		success_description: "",
+		specific_commitments: "",
+		confidence_rating: 5,
+		
+		// Keep for backward compatibility but not displayed
+		hoped_outcomes: "",
+		communication_style: "",
 		debriefing_plan: "",
-		// Section 3
 		typical_stressor: "",
 		stress_management_plan: "",
 		virtual_challenges: "",
 		environmental_challenges: "",
-		anticipated_obstacles: "",
 		skills_to_develop: "",
 		success_indicators: "",
 		conflict_management: "",
-		// Section 4
-		unique_strengths: "",
-		support_needs: "",
 		transition_strategy: "",
 		dynamic_not_working_plan: "",
 		corrections_approach: "",
 		roles_responsibilities: "",
-		// Section 5
-		success_description: "",
 		ten_out_of_ten: "",
-		specific_commitments: "",
 		desired_reputation: "",
 		fatigue_support_plan: "",
-		// Closing
 		intention_statement: "",
-		confidence_rating: 5,
 		feeling_word: "",
+		
 		// Metadata
 		timestamp: new Date().toISOString(),
 	});
@@ -123,7 +128,7 @@ const TeamingPrepEnhanced: React.FC<TeamingPrepEnhancedProps> = ({
 		const newErrors: Record<string, string> = {};
 
 		switch (sectionIndex) {
-			case 0: // Quick Insight
+			case 0: // Getting Started
 				if (!formData.excites_most.trim()) {
 					newErrors.excites_most = "Please share what excites you";
 				}
@@ -131,7 +136,7 @@ const TeamingPrepEnhanced: React.FC<TeamingPrepEnhancedProps> = ({
 					newErrors.concerns_most = "Please share your concerns";
 				}
 				break;
-			case 1: // Team Expectations
+			case 1: // Your Team Style
 				if (!formData.ideal_team_dynamic.trim()) {
 					newErrors.ideal_team_dynamic =
 						"Please describe your ideal team dynamic";
@@ -140,7 +145,7 @@ const TeamingPrepEnhanced: React.FC<TeamingPrepEnhancedProps> = ({
 					newErrors.natural_role = "Please describe your natural role";
 				}
 				break;
-			case 2: // Communication Strategy
+			case 2: // Communication Plan
 				if (!formData.handoff_signal.trim()) {
 					newErrors.handoff_signal = "Please describe your handoff signal";
 				}
@@ -160,7 +165,18 @@ const TeamingPrepEnhanced: React.FC<TeamingPrepEnhancedProps> = ({
 					newErrors.physical_cues = "Please describe your physical cues";
 				}
 				break;
-			// Add more validation as needed
+			case 3: // Anticipated Challenges (old page 4)
+				// Make all fields optional for now - no required validation
+				break;
+			case 4: // Personal Contribution (old page 5)
+				// Make all fields optional for now
+				break;
+			case 5: // Success Vision (old page 6)
+				// Make all fields optional for now
+				break;
+			case 6: // Closing (old page 7)
+				// Make all fields optional for now
+				break;
 		}
 
 		setErrors(newErrors);
@@ -235,7 +251,7 @@ const TeamingPrepEnhanced: React.FC<TeamingPrepEnhancedProps> = ({
 
 	const generateSummary = () => {
 		return `
-TEAM INTERPRETING PREP SUMMARY
+TEAM PREP SUMMARY
 ==============================
 Assignment Type: ${formData.assignment_type}
 Confidence Level: ${formData.confidence_rating}/10
@@ -258,7 +274,7 @@ ${formData.support_needs}
 
 	const sections = [
 		{
-			title: "Quick Insight Capture",
+			title: "Getting Started",
 			icon: <HeartPulseIcon size={64} />,
 			content: (
 				<div className="space-y-6">
@@ -274,13 +290,10 @@ ${formData.support_needs}
 							className="text-lg font-semibold mb-4"
 							style={{ color: "#5C7F4F" }}
 						>
-							Opening Context
+							Preparing for Team Interpreting
 						</h3>
 						<p className="mb-6" style={{ color: "#5A5A5A" }}>
-							Before you begin your team interpreting assignment, let's explore
-							your expectations, concerns, and strategies for effective
-							collaboration. Your responses here will help you track your growth
-							when you reflect later.
+							Team interpreting requires coordination, trust, and clear communication. Let's prepare you for a successful collaboration.
 						</p>
 					</div>
 
@@ -289,15 +302,17 @@ ${formData.support_needs}
 							className="block text-sm font-medium mb-2"
 							style={{ color: "#5C7F4F" }}
 						>
-							What excites you most about this upcoming team interpreting
-							assignment?
+							What excites you about this team assignment?
 						</label>
+						<p className="text-xs mb-2" style={{ color: "#6B7280" }}>
+							Think about what you're looking forward to
+						</p>
 						<textarea
 							value={formData.excites_most}
 							onChange={(e) =>
 								handleFieldChange("excites_most", e.target.value)
 							}
-							placeholder="Share what energizes or motivates you about this team assignment..."
+							placeholder="Example: Learning from my teammate, sharing the cognitive load, having support during challenging moments..."
 							rows={3}
 							className="w-full px-4 py-3 border rounded-lg resize-none focus:ring-2 focus:ring-sage-500"
 							style={{
@@ -315,15 +330,17 @@ ${formData.support_needs}
 							className="block text-sm font-medium mb-2"
 							style={{ color: "#5C7F4F" }}
 						>
-							What concerns you most about working in a team interpreting
-							context?
+							What concerns you about working with a team?
 						</label>
+						<p className="text-xs mb-2" style={{ color: "#6B7280" }}>
+							It's normal to have concerns - naming them helps you prepare
+						</p>
 						<textarea
 							value={formData.concerns_most}
 							onChange={(e) =>
 								handleFieldChange("concerns_most", e.target.value)
 							}
-							placeholder="Describe any worries or challenges you anticipate..."
+							placeholder="Example: Coordinating handoffs smoothly, matching my teammate's style, not wanting to let them down..."
 							rows={3}
 							className="w-full px-4 py-3 border rounded-lg resize-none focus:ring-2 focus:ring-sage-500"
 							style={{
@@ -343,7 +360,7 @@ ${formData.support_needs}
 							className="block text-sm font-medium mb-2"
 							style={{ color: "#5C7F4F" }}
 						>
-							Will this be a virtual or in-person assignment?
+							Will this be virtual, in-person, or hybrid?
 						</label>
 						<div className="flex gap-3">
 							{(["virtual", "in-person", "hybrid"] as const).map((type) => (
@@ -381,7 +398,7 @@ ${formData.support_needs}
 			),
 		},
 		{
-			title: "Team Expectations & Mindset",
+			title: "Your Team Style",
 			icon: <CommunityIcon size={64} />,
 			content: (
 				<div className="space-y-6">
@@ -390,15 +407,17 @@ ${formData.support_needs}
 							className="block text-sm font-medium mb-2"
 							style={{ color: "#5C7F4F" }}
 						>
-							How do you typically prefer to work in interpreting teams?
-							Describe your ideal team dynamic.
+							What's your ideal team dynamic?
 						</label>
+						<p className="text-xs mb-2" style={{ color: "#6B7280" }}>
+							Think about what makes you feel comfortable and effective
+						</p>
 						<textarea
 							value={formData.ideal_team_dynamic}
 							onChange={(e) =>
 								handleFieldChange("ideal_team_dynamic", e.target.value)
 							}
-							placeholder="Describe how you work best with other interpreters..."
+							placeholder="Example: I work best when there's clear communication, mutual respect, and we check in with each other regularly..."
 							rows={3}
 							className="w-full px-4 py-3 border rounded-lg resize-none focus:ring-2 focus:ring-sage-500"
 							style={{
@@ -417,15 +436,17 @@ ${formData.support_needs}
 							className="block text-sm font-medium mb-2"
 							style={{ color: "#5C7F4F" }}
 						>
-							What role do you naturally gravitate toward in team interpreting
-							settings?
+							What role do you naturally take in teams?
 						</label>
+						<p className="text-xs mb-2" style={{ color: "#6B7280" }}>
+							There's no right answer - just what feels natural to you
+						</p>
 						<textarea
 							value={formData.natural_role}
 							onChange={(e) =>
 								handleFieldChange("natural_role", e.target.value)
 							}
-							placeholder="Are you a leader, supporter, coordinator, etc.?"
+							placeholder="Example: I tend to be the organizer who coordinates logistics, or I'm more of a supporter who adapts to my teammate's lead..."
 							rows={2}
 							className="w-full px-4 py-3 border rounded-lg resize-none focus:ring-2 focus:ring-sage-500"
 							style={{
@@ -442,34 +463,17 @@ ${formData.support_needs}
 							className="block text-sm font-medium mb-2"
 							style={{ color: "#5C7F4F" }}
 						>
-							What past team interpreting experience (positive or negative) is
-							influencing how you approach this assignment?
+							Is any past team experience influencing how you feel about this assignment?
 						</label>
+						<p className="text-xs mb-2" style={{ color: "#6B7280" }}>
+							Both positive and challenging experiences shape our approach
+						</p>
 						<textarea
 							value={formData.past_experience_influence}
 							onChange={(e) =>
 								handleFieldChange("past_experience_influence", e.target.value)
 							}
-							placeholder="Share relevant past experiences and their impact..."
-							rows={3}
-							className="w-full px-4 py-3 border rounded-lg resize-none focus:ring-2 focus:ring-sage-500"
-						/>
-					</div>
-
-					<div>
-						<label
-							className="block text-sm font-medium mb-2"
-							style={{ color: "#5C7F4F" }}
-						>
-							What specific outcomes do you hope to achieve through this team
-							interpreting assignment?
-						</label>
-						<textarea
-							value={formData.hoped_outcomes}
-							onChange={(e) =>
-								handleFieldChange("hoped_outcomes", e.target.value)
-							}
-							placeholder="List your goals and desired outcomes..."
+							placeholder="Example: Last time I worked with a team, we had great chemistry and it made the work easier. Or: I once had a teammate who didn't communicate well, so I'm more intentional about that now..."
 							rows={3}
 							className="w-full px-4 py-3 border rounded-lg resize-none focus:ring-2 focus:ring-sage-500"
 						/>
@@ -1239,8 +1243,11 @@ ${formData.support_needs}
 							</div>
 							<div>
 								<h2 className="text-2xl font-bold" style={{ color: "#1A1A1A" }}>
-									Team Interpreting Preparation
+									Team Prep
 								</h2>
+								<p className="text-sm mt-1" style={{ color: "#5A5A5A" }}>
+									Get ready to work with your interpreting partner
+								</p>
 								<p className="text-sm mt-1" style={{ color: "#5A5A5A" }}>
 									Setting intentions for effective collaboration
 								</p>

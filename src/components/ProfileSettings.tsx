@@ -600,7 +600,7 @@ const ProfileSettings: React.FC<ProfileSettingsProps> = ({
 				<div className="text-center">
 					<RefreshCw
 						className="w-8 h-8 animate-spin mx-auto mb-4"
-						style={{ color: "var(--color-green-600)" }}
+						style={{ color: "#6B8268" }}
 					/>
 					<p style={{ color: "var(--color-slate-600)" }}>Loading profile settings...</p>
 				</div>
@@ -638,9 +638,9 @@ const ProfileSettings: React.FC<ProfileSettingsProps> = ({
 						<div className="flex items-center gap-4">
 							<div
 								className="w-12 h-12 rounded-2xl flex items-center justify-center"
-								style={{ backgroundColor: "var(--color-green-50)", border: "1px solid var(--color-green-200)" }}
+								style={{ backgroundColor: "rgba(107, 130, 104, 0.05)", border: "1px solid rgba(107, 130, 104, 0.2)" }}
 							>
-								<User className="w-6 h-6" style={{ color: "var(--color-green-600)" }} />
+								<User className="w-6 h-6" style={{ color: "#6B8268" }} />
 							</div>
 							<div>
 								<h1 className="text-3xl font-bold" style={{ color: "var(--color-slate-700)" }}>
@@ -681,7 +681,7 @@ const ProfileSettings: React.FC<ProfileSettingsProps> = ({
 							style={{
 								background:
 									activeSection === section
-										? "linear-gradient(135deg, var(--color-green-600), var(--color-green-500))"
+										? "linear-gradient(135deg, #6B8268, #5B9378)"
 										: "transparent",
 								color: activeSection === section ? "white" : "var(--color-slate-600)",
 								boxShadow: activeSection === section ? "0 4px 12px rgba(45, 95, 63, 0.2)" : "none"
@@ -878,7 +878,7 @@ const ProfileSettings: React.FC<ProfileSettingsProps> = ({
 											>
 												<Camera
 													className="w-10 h-10"
-													style={{ color: "var(--color-green-600)" }}
+													style={{ color: "#6B8268" }}
 												/>
 											</div>
 										)}
@@ -903,7 +903,7 @@ const ProfileSettings: React.FC<ProfileSettingsProps> = ({
 												className="px-4 py-2 rounded-xl font-semibold flex items-center gap-2 transition-all shadow-clean hover:shadow-clean-md hover:-translate-y-0.5"
 												style={{
 													background:
-														"linear-gradient(135deg, var(--color-green-600), var(--color-green-500))",
+														"linear-gradient(135deg, #6B8268, #5B9378)",
 													color: "white",
 												}}
 											>
@@ -979,7 +979,7 @@ const ProfileSettings: React.FC<ProfileSettingsProps> = ({
 													>
 														<Award
 															className="w-4 h-4"
-															style={{ color: "var(--color-green-600)" }}
+															style={{ color: "#6B8268" }}
 														/>
 														<span style={{ color: "var(--color-slate-700)" }}>
 															{displayName}
@@ -1007,8 +1007,8 @@ const ProfileSettings: React.FC<ProfileSettingsProps> = ({
 															<X
 																className="w-4 h-4"
 																style={{
-																	color: "var(--color-green-600) !important",
-																	stroke: "var(--color-green-600) !important",
+																	color: "#6B8268 !important",
+																	stroke: "#6B8268 !important",
 																}}
 															/>
 														</button>
@@ -1156,7 +1156,7 @@ const ProfileSettings: React.FC<ProfileSettingsProps> = ({
 													className="px-4 py-2 rounded-lg font-medium"
 													style={{
 														background:
-															"linear-gradient(135deg, var(--color-green-600), var(--color-green-500))",
+															"linear-gradient(135deg, #6B8268, #5B9378)",
 														color: "#FFFFFF",
 													}}
 												>
@@ -1204,9 +1204,9 @@ const ProfileSettings: React.FC<ProfileSettingsProps> = ({
 													className="w-5 h-5 rounded flex items-center justify-center"
 													style={{
 														background: profile.specializations?.includes(spec)
-															? "linear-gradient(135deg, var(--color-green-600), var(--color-green-500))"
+															? "linear-gradient(135deg, #6B8268, #5B9378)"
 															: "#FFFFFF",
-														border: "2px solid var(--color-green-600)",
+														border: "2px solid #6B8268",
 													}}
 												>
 													{profile.specializations?.includes(spec) && (
@@ -1318,10 +1318,10 @@ const ProfileSettings: React.FC<ProfileSettingsProps> = ({
 															width: "20px",
 															height: "20px",
 															backgroundColor: setting.enabled
-																? "var(--color-green-600)"
+																? "#6B8268"
 																: "var(--color-card)",
 															border: setting.enabled
-																? "2px solid var(--color-green-600)"
+																? "2px solid #6B8268"
 																: "2px solid var(--color-slate-300)",
 														}}
 														aria-hidden="true"
@@ -1437,7 +1437,7 @@ const ProfileSettings: React.FC<ProfileSettingsProps> = ({
 												<div className="flex items-start gap-3">
 													<Download
 														className="w-5 h-5 mt-0.5"
-														style={{ color: "var(--color-green-600)" }}
+														style={{ color: "#6B8268" }}
 													/>
 													<div>
 														<h4
@@ -1488,7 +1488,7 @@ const ProfileSettings: React.FC<ProfileSettingsProps> = ({
 													className="px-4 py-2 rounded-lg font-medium transition-all hover:opacity-90"
 													style={{
 														background:
-															"linear-gradient(135deg, var(--color-green-600), var(--color-green-500))",
+															"linear-gradient(135deg, #6B8268, #5B9378)",
 														color: "#FFFFFF",
 													}}
 												>
@@ -1506,7 +1506,7 @@ const ProfileSettings: React.FC<ProfileSettingsProps> = ({
 												<div className="flex items-start gap-3">
 													<Shield
 														className="w-5 h-5 mt-0.5"
-														style={{ color: "var(--color-green-600)" }}
+														style={{ color: "#6B8268" }}
 													/>
 													<div>
 														<h4
@@ -1529,7 +1529,7 @@ const ProfileSettings: React.FC<ProfileSettingsProps> = ({
 													aria-label="Manage your subscription"
 													className="px-4 py-2 rounded-xl font-semibold transition-all shadow-clean hover:shadow-clean-md hover:-translate-y-0.5"
 													style={{
-														background: "linear-gradient(135deg, var(--color-green-600), var(--color-green-500))",
+														background: "linear-gradient(135deg, #6B8268, #5B9378)",
 														color: "white",
 														border: "none",
 													}}
@@ -1678,7 +1678,7 @@ const ProfileSettings: React.FC<ProfileSettingsProps> = ({
 											className="font-semibold mb-4 flex items-center gap-2"
 											style={{ color: "var(--color-slate-700)" }}
 										>
-											<Bot className="w-5 h-5" style={{ color: "var(--color-green-600)" }} />
+											<Bot className="w-5 h-5" style={{ color: "#6B8268" }} />
 											AI & Privacy - How We Use AI
 										</h3>
 
@@ -1745,7 +1745,7 @@ const ProfileSettings: React.FC<ProfileSettingsProps> = ({
 													className="font-medium mb-3 flex items-center gap-2"
 													style={{ color: "var(--color-slate-700)" }}
 												>
-													<Shield className="w-4 h-4" style={{ color: "var(--color-green-600)" }} />
+													<Shield className="w-4 h-4" style={{ color: "#6B8268" }} />
 													Your Controls
 												</h4>
 												<ul className="space-y-2 ml-6">
@@ -1767,7 +1767,7 @@ const ProfileSettings: React.FC<ProfileSettingsProps> = ({
 													className="font-medium mb-3 flex items-center gap-2"
 													style={{ color: "var(--color-slate-700)" }}
 												>
-													<Lock className="w-4 h-4" style={{ color: "var(--color-green-600)" }} />
+													<Lock className="w-4 h-4" style={{ color: "#6B8268" }} />
 													Data Handling at a Glance
 												</h4>
 												<div className="grid md:grid-cols-2 gap-3">
@@ -1849,7 +1849,7 @@ const ProfileSettings: React.FC<ProfileSettingsProps> = ({
 							background:
 								saving || !hasUnsavedChanges()
 									? "var(--color-slate-200)"
-									: "linear-gradient(135deg, var(--color-green-600), var(--color-green-500))",
+									: "linear-gradient(135deg, #6B8268, #5B9378)",
 							color: saving || !hasUnsavedChanges() ? "var(--color-slate-500)" : "white",
 							cursor:
 								saving || !hasUnsavedChanges() ? "not-allowed" : "pointer",
@@ -1873,8 +1873,8 @@ const ProfileSettings: React.FC<ProfileSettingsProps> = ({
 						aria-label="Cancel changes"
 						className="px-6 py-3 rounded-xl font-semibold border-2 transition-all shadow-clean hover:shadow-clean-md hover:-translate-y-0.5"
 						style={{
-							borderColor: !hasUnsavedChanges() ? "var(--color-slate-300)" : "var(--color-green-600)",
-							color: !hasUnsavedChanges() ? "var(--color-slate-500)" : "var(--color-green-600)",
+							borderColor: !hasUnsavedChanges() ? "var(--color-slate-300)" : "#6B8268",
+							color: !hasUnsavedChanges() ? "var(--color-slate-500)" : "#6B8268",
 							backgroundColor: !hasUnsavedChanges() ? "var(--color-slate-100)" : "var(--color-card)",
 							cursor: !hasUnsavedChanges() ? "not-allowed" : "pointer",
 							minHeight: "48px",

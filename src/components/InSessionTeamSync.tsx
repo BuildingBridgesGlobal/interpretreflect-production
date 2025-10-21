@@ -1,11 +1,7 @@
 import {
-	AlertCircle,
 	ChevronLeft,
 	ChevronRight,
-	Eye,
 	HandHeart,
-	Info,
-	MapPin,
 	MessageSquare,
 	X,
 } from "lucide-react";
@@ -16,9 +12,7 @@ import { useAuth } from "../contexts/AuthContext";
 import { reflectionService } from "../services/reflectionService";
 
 import {
-	CommunityIcon,
 	HeartPulseIcon,
-	SecureLockIcon,
 	TargetIcon,
 } from "./CustomIcon";
 
@@ -41,266 +35,72 @@ export const InSessionTeamSync: React.FC<InSessionTeamSyncProps> = ({
 
 	// Form state for all fields
 	const [formData, setFormData] = useState({
-		// Section 1: Communication Check
-		communication_system: "",
-		communication_rating: 5,
-
-		// Section 2: Role Management
-		role_switching: "",
-		switch_timing: "",
-
-		// Section 3: Mutual Support
-		support_needs: "",
-		support_rating: 5,
-
-		// Section 4: Positioning & Environment
-		positioning: "",
-		environment_notes: "",
-
-		// Section 5: Information Sharing
-		info_needs: "",
-		clarification_priority: "",
-
-		// Section 6: Content Management
-		challenging_content: "",
-		content_strategy: "",
-
-		// Section 7: Professional Standards
-		standards_check: "",
-		boundaries_maintained: "yes",
-
-		// Section 8: Environmental Factors
-		environmental_concerns: "",
-		joint_attention: "",
-
-		// Section 9: Collaboration Optimization
-		optimization_ideas: "",
-		participant_needs: "",
-
-		// Section 10: Team Effectiveness
-		team_support: "",
-		effectiveness_rating: 5,
-		team_commitment: "",
+		// Quick check-in fields
+		my_feeling: "",
+		team_support_check: "",
+		what_needs_adjusting: "",
+		commitment_action: "",
 	});
 
-	// Section definitions
+	// Section definitions - streamlined for quick check-in
 	const sections = [
 		{
-			title: "Communication Check",
-			icon: <MessageSquare className="w-5 h-5" style={{ color: "#5B9378" }} />,
+			title: "How Am I Doing?",
+			icon: <HeartPulseIcon size={20} />,
+			guidance: "Take a moment to check in with yourself. How are you feeling physically and mentally right now?",
 			fields: [
 				{
-					id: "communication_system",
-					label: "Is our communication and support system working effectively?",
+					id: "my_feeling",
+					label: "How am I feeling right now?",
 					type: "textarea",
-					placeholder:
-						"Assess current communication effectiveness and any adjustments needed...",
+					placeholder: "Example: Energized and focused / Starting to feel fatigued / Handling the content well / Finding this challenging...",
 					required: true,
-				},
-				{
-					id: "communication_rating",
-					label: "Rate current communication effectiveness",
-					type: "slider",
-					min: 1,
-					max: 10,
-					step: 1,
+					rows: 3,
 				},
 			],
 		},
 		{
-			title: "Role Management",
-			icon: <CommunityIcon className="w-5 h-5" style={{ color: "#5B9378" }} />,
-			fields: [
-				{
-					id: "role_switching",
-					label: "When should we switch roles and how will we signal this?",
-					type: "textarea",
-					placeholder: "Define switching criteria and signals...",
-					required: true,
-				},
-				{
-					id: "switch_timing",
-					label: "Next planned switch (if applicable)",
-					type: "text",
-					placeholder:
-						"e.g., In 15 minutes, After next break, When fatigue shows",
-				},
-			],
-		},
-		{
-			title: "Mutual Support",
+			title: "Team Support Check",
 			icon: <HandHeart className="w-5 h-5" style={{ color: "#5B9378" }} />,
+			guidance: "Strong teams communicate openly about what's working and what needs attention.",
 			fields: [
 				{
-					id: "support_needs",
-					label: "How can we best support each other right now?",
+					id: "team_support_check",
+					label: "How is our team support working?",
 					type: "textarea",
-					placeholder: "Identify specific support needs and strategies...",
+					placeholder: "Example: Handoffs are smooth / Communication is clear / We're supporting each other well / I need more support with... / My partner might need...",
 					required: true,
-				},
-				{
-					id: "support_rating",
-					label: "Current support level",
-					type: "slider",
-					min: 1,
-					max: 10,
-					step: 1,
+					rows: 3,
 				},
 			],
 		},
 		{
-			title: "Positioning & Environment",
-			icon: <MapPin className="w-5 h-5" style={{ color: "#5B9378" }} />,
+			title: "Quick Adjustments",
+			icon: <TargetIcon size={20} />,
+			guidance: "Small adjustments during an assignment can make a big difference for you, your team, and the people you're serving.",
 			fields: [
 				{
-					id: "positioning",
-					label:
-						"Are we maintaining appropriate positioning and environment management?",
+					id: "what_needs_adjusting",
+					label: "What (if anything) needs adjusting?",
 					type: "textarea",
-					placeholder:
-						"Assess positioning, sightlines, and environmental control...",
+					placeholder: "Example: Switch roles more frequently / Adjust positioning / Share specific terminology / Take a quick break / Everything is working well...",
 					required: true,
-				},
-				{
-					id: "environment_notes",
-					label: "Environmental adjustments needed",
-					type: "text",
-					placeholder: "Note any changes needed to optimize the space",
+					rows: 3,
 				},
 			],
 		},
 		{
-			title: "Information Sharing",
-			icon: <Info className="w-5 h-5" style={{ color: "#5B9378" }} />,
+			title: "Moving Forward",
+			icon: <MessageSquare className="w-5 h-5" style={{ color: "#5B9378" }} />,
+			guidance: "What's one thing you'll focus on to keep your team working effectively?",
 			fields: [
 				{
-					id: "info_needs",
-					label: "What information or clarification does my partner need?",
+					id: "commitment_action",
+					label: "My commitment for the rest of this assignment",
 					type: "textarea",
-					placeholder: "Identify key information to share or clarify...",
+					placeholder: "Example: Stay aware of my fatigue levels / Communicate more clearly about handoffs / Support my partner when content gets heavy / Maintain our current rhythm...",
 					required: true,
-				},
-				{
-					id: "clarification_priority",
-					label: "Priority clarifications",
-					type: "text",
-					placeholder: "List most urgent items to clarify",
-				},
-			],
-		},
-		{
-			title: "Content Management",
-			icon: <AlertCircle className="w-5 h-5" style={{ color: "#5B9378" }} />,
-			fields: [
-				{
-					id: "challenging_content",
-					label:
-						"How are we handling challenging or sensitive content together?",
-					type: "textarea",
-					placeholder:
-						"Assess approach to difficult material and support strategies...",
-					required: true,
-				},
-				{
-					id: "content_strategy",
-					label: "Content management strategy",
-					type: "text",
-					placeholder: "Note specific strategies for current content",
-				},
-			],
-		},
-		{
-			title: "Professional Standards",
-			icon: <SecureLockIcon className="w-5 h-5" style={{ color: "#5B9378" }} />,
-			fields: [
-				{
-					id: "standards_check",
-					label:
-						"Are we both maintaining professional standards and boundaries?",
-					type: "textarea",
-					placeholder: "Review adherence to professional standards...",
-					required: true,
-				},
-				{
-					id: "boundaries_maintained",
-					label: "Boundaries status",
-					type: "select",
-					options: [
-						{ value: "yes", label: "Both maintaining well" },
-						{ value: "needs_attention", label: "Needs attention" },
-						{ value: "concern", label: "Immediate concern" },
-					],
-				},
-			],
-		},
-		{
-			title: "Environmental Factors",
-			icon: <Eye className="w-5 h-5" style={{ color: "#5B9378" }} />,
-			fields: [
-				{
-					id: "environmental_concerns",
-					label: "What environmental factors need our joint attention?",
-					type: "textarea",
-					placeholder:
-						"Identify environmental issues requiring team coordination...",
-					required: true,
-				},
-				{
-					id: "joint_attention",
-					label: "Priority environmental items",
-					type: "text",
-					placeholder: "List factors needing immediate team attention",
-				},
-			],
-		},
-		{
-			title: "Collaboration Optimization",
-			icon: <TargetIcon className="w-5 h-5" style={{ color: "#5B9378" }} />,
-			fields: [
-				{
-					id: "optimization_ideas",
-					label: "How can we optimize our collaboration for the participants?",
-					type: "textarea",
-					placeholder:
-						"Identify ways to improve team effectiveness for participants...",
-					required: true,
-				},
-				{
-					id: "participant_needs",
-					label: "Participant-focused adjustments",
-					type: "text",
-					placeholder: "Note specific adjustments to better serve participants",
-				},
-			],
-		},
-		{
-			title: "Team Effectiveness",
-			icon: <HeartPulseIcon className="w-5 h-5" style={{ color: "#5B9378" }} />,
-			fields: [
-				{
-					id: "team_support",
-					label:
-						"Are we both feeling supported and able to perform effectively?",
-					type: "textarea",
-					placeholder: "Assess mutual support and performance capacity...",
-					required: true,
-				},
-				{
-					id: "effectiveness_rating",
-					label: "Team effectiveness rating",
-					type: "slider",
-					min: 1,
-					max: 10,
-					step: 1,
-				},
-				{
-					id: "team_commitment",
-					label:
-						"Our team commitment/action for the remainder of this assignment",
-					type: "textarea",
-					placeholder:
-						"What specific action will we take together to maintain or improve our teamwork?",
-					required: true,
+					rows: 3,
 				},
 			],
 		},
@@ -373,12 +173,11 @@ export const InSessionTeamSync: React.FC<InSessionTeamSyncProps> = ({
 				...formData,
 				timestamp: new Date().toISOString(),
 				time_spent_seconds: timeSpent,
-				module_type: "in_session_team_sync",
+				module_type: "team_check_in",
 				// Add fields for getDisplayName fallback
-				team_sync:
-					formData.sync_check || formData.team_status || "Team sync completed",
-				sync_status: formData.alignment_rating || formData.sync_rating,
-				team_alignment: formData.team_cohesion || formData.alignment_level,
+				team_sync: formData.my_feeling || "Team check-in completed",
+				sync_status: formData.team_support_check,
+				team_alignment: formData.commitment_action,
 			};
 
 			console.log("InSessionTeamSync - Saving with reflectionService");
@@ -467,7 +266,7 @@ export const InSessionTeamSync: React.FC<InSessionTeamSyncProps> = ({
 							className={`w-full px-4 py-3 rounded-lg border ${
 								error ? "border-red-500" : "border-gray-200"
 							} focus:outline-none focus:ring-2 focus:ring-sage-500`}
-							rows={4}
+							rows={field.rows || 4}
 							style={{ backgroundColor: "#FFFFFF" }}
 						/>
 						{error && <p className="mt-1 text-sm text-red-500">{error}</p>}
@@ -600,14 +399,14 @@ export const InSessionTeamSync: React.FC<InSessionTeamSyncProps> = ({
 									background: "linear-gradient(135deg, #5C7F4F, #5B9378)",
 								}}
 							>
-								<CommunityIcon size={64} />
+								<HandHeart className="w-6 h-6 text-white" />
 							</div>
 							<div>
 								<h2 className="text-2xl font-bold" style={{ color: "#1A1A1A" }}>
-									In-Session Team Sync
+									Team Check-In
 								</h2>
 								<p className="text-sm mt-1" style={{ color: "#5F7F55" }}>
-									Boosting coordination and mutual support, one break at a time.
+									A quick mid-assignment check to keep your team working smoothly
 								</p>
 							</div>
 						</div>
@@ -623,17 +422,13 @@ export const InSessionTeamSync: React.FC<InSessionTeamSyncProps> = ({
 						</button>
 					</div>
 
-					{/* Research Foundation */}
+					{/* Mentoring Guidance */}
 					<div
 						className="mt-4 p-3 rounded-lg"
 						style={{ backgroundColor: "#E8F0E8" }}
 					>
 						<p className="text-sm" style={{ color: "#5C7F4F" }}>
-							<strong>Research Foundation:</strong> Effective team communication
-							improves interpretation quality by 20-25% (Team Dynamics in
-							Healthcare Interpreting, 2023). Regular team check-ins during
-							assignments enhance coordination, reduce errors, and improve
-							participant satisfaction.
+							<strong>Quick Tip:</strong> Taking a few minutes during a break to check in with yourself and your team can prevent small issues from becoming bigger ones. This helps ensure the people you're interpreting for get the best possible experience.
 						</p>
 					</div>
 
@@ -661,7 +456,7 @@ export const InSessionTeamSync: React.FC<InSessionTeamSyncProps> = ({
 
 				{/* Content */}
 				<div className="px-8 py-6 overflow-y-auto flex-grow">
-					<div className="flex items-center mb-6">
+					<div className="flex items-center mb-4">
 						<div
 							className="p-2 rounded-lg mr-3"
 							style={{ backgroundColor: "#E8F0E8" }}
@@ -673,6 +468,11 @@ export const InSessionTeamSync: React.FC<InSessionTeamSyncProps> = ({
 						</h3>
 					</div>
 
+					{/* Mentoring guidance for this section */}
+					<p className="text-sm mb-6" style={{ color: "#6B7280" }}>
+						{currentSectionData.guidance}
+					</p>
+
 					{currentSectionData.fields.map(renderField)}
 				</div>
 
@@ -681,7 +481,6 @@ export const InSessionTeamSync: React.FC<InSessionTeamSyncProps> = ({
 					className="px-8 py-4 border-t flex-shrink-0"
 					style={{ backgroundColor: "#FAF9F6" }}
 				>
-					onClick={(e) => e.stopPropagation()}
 					<div className="flex justify-between">
 						<button
 							onClick={handlePrevious}

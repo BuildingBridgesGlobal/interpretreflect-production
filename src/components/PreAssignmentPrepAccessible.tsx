@@ -360,7 +360,7 @@ const PreAssignmentPrepAccessible: React.FC<PreAssignmentPrepProps> = ({
 								key={type.value}
 								className={`flex items-center gap-3 p-4 rounded-xl cursor-pointer transition-all border-2 ${
 									formData.assignmentType === type.value
-										? "border-green-500 bg-green-50"
+										? "border-[#6B8268] bg-[rgba(107,130,104,0.05)]"
 										: "border-gray-200 hover:border-gray-300"
 								}`}
 							>
@@ -428,7 +428,7 @@ const PreAssignmentPrepAccessible: React.FC<PreAssignmentPrepProps> = ({
 							key={state.value}
 							className={`flex items-center justify-between p-4 rounded-xl cursor-pointer transition-all border-2 ${
 								formData.emotionalState === state.value
-									? "border-green-500 bg-green-50"
+									? "border-[#6B8268] bg-[rgba(107,130,104,0.05)]"
 									: "border-gray-200 hover:border-gray-300"
 							}`}
 						>
@@ -490,7 +490,7 @@ const PreAssignmentPrepAccessible: React.FC<PreAssignmentPrepProps> = ({
 							key={state.value}
 							className={`flex items-center justify-between p-4 rounded-xl cursor-pointer transition-all border-2 ${
 								formData.physicalReadiness === state.value
-									? "border-green-500 bg-green-50"
+									? "border-[#6B8268] bg-[rgba(107,130,104,0.05)]"
 									: "border-gray-200 hover:border-gray-300"
 							}`}
 						>
@@ -755,7 +755,7 @@ const PreAssignmentPrepAccessible: React.FC<PreAssignmentPrepProps> = ({
 						{formData.positiveAffirmations.map((affirmation, index) => (
 							<div
 								key={index}
-								className="flex items-center justify-between p-3 bg-green-50 rounded-lg"
+								className="flex items-center justify-between p-3 bg-[rgba(107,130,104,0.05)] rounded-lg"
 							>
 								<span className="text-sm">{affirmation}</span>
 								<button
@@ -850,7 +850,7 @@ const PreAssignmentPrepAccessible: React.FC<PreAssignmentPrepProps> = ({
 
 				{/* Self-Care Plan */}
 				{formData.selfCarePost.length > 0 && (
-					<div className="p-4 bg-green-50 rounded-lg">
+					<div className="p-4 bg-[rgba(107,130,104,0.05)] rounded-lg">
 						<h4 className="font-semibold mb-2" style={{ color: "#2D3748" }}>
 							Post-Assignment Self-Care
 						</h4>
@@ -866,7 +866,7 @@ const PreAssignmentPrepAccessible: React.FC<PreAssignmentPrepProps> = ({
 
 				{/* Affirmations */}
 				{formData.positiveAffirmations.length > 0 && (
-					<div className="p-4 bg-green-50 rounded-lg">
+					<div className="p-4 bg-[rgba(107,130,104,0.05)] rounded-lg">
 						<h4 className="font-semibold mb-2" style={{ color: "#2D3748" }}>
 							Your Strengths
 						</h4>

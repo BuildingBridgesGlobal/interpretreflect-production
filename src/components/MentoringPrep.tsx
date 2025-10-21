@@ -298,7 +298,7 @@ const MentoringPrep: React.FC<MentoringPrepProps> = ({ onComplete, onClose }) =>
                     step === currentStep
                       ? 'bg-indigo-500 text-white scale-110'
                       : step < currentStep
-                        ? 'bg-green-500 text-white'
+                        ? 'bg-[rgba(107,130,104,0.05)]0 text-white'
                         : 'bg-gray-200 text-gray-500'
                   }`}
                 >
@@ -448,7 +448,7 @@ const MentoringPrep: React.FC<MentoringPrepProps> = ({ onComplete, onClose }) =>
                             {
                               value: 'comfortable',
                               label: 'Comfortable - seeking growth',
-                              color: 'bg-green-50 hover:bg-green-100',
+                              color: 'bg-[rgba(107,130,104,0.05)] hover:bg-green-100',
                             },
                           ].map((option) => (
                             <label
@@ -1225,7 +1225,7 @@ const MentoringPrep: React.FC<MentoringPrepProps> = ({ onComplete, onClose }) =>
                   'Success defined',
                   'Open mindset activated',
                 ].map((item, index) => (
-                  <div key={index} className="flex items-center p-3 bg-green-50 rounded-lg">
+                  <div key={index} className="flex items-center p-3 bg-[rgba(107,130,104,0.05)] rounded-lg">
                     <Check className="w-5 h-5 text-green-600 mr-3" />
                     <span className="text-gray-800">{item}</span>
                   </div>

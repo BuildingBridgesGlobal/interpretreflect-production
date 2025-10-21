@@ -41,7 +41,7 @@ export const SuccessToast: React.FC<SuccessToastProps> = ({
       <div
         className="rounded-xl shadow-clean-lg p-4 pr-12 max-w-md relative"
         style={{
-          background: 'linear-gradient(135deg, var(--color-success-light), var(--color-green-100))',
+          background: 'linear-gradient(135deg, var(--color-success-light), rgba(107, 130, 104, 0.1))',
           border: '2px solid var(--color-success)',
         }}
       >

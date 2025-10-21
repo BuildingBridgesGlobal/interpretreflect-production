@@ -1,48 +1,56 @@
 import {
-	AlertTriangle,
-	Check,
 	CheckCircle,
-	ChevronDown,
 	ChevronLeft,
 	ChevronRight,
-	ChevronUp,
-	Eye,
-	TrendingUp,
+	Lightbulb,
+	Users,
 	X,
 } from "lucide-react";
 import type React from "react";
 import { useEffect, useRef, useState } from "react";
 
 import { useAuth } from "../contexts/AuthContext";
-import {
-	supabase,
-	type TeamingPrepData,
-	type TeamingPrepEnhancedData,
-	type TeamingReflectionData,
-} from "../lib/supabase";
 import { reflectionService } from "../services/reflectionService";
 
-import { CommunityIcon, HeartPulseIcon } from "./CustomIcon";
+import { CommunityIcon, HeartPulseIcon, TargetIcon } from "./CustomIcon";
+
+interface TeamingReflectionData {
+	// What Happened
+	assignment_type: "virtual" | "in-person" | "hybrid";
+	what_surprised: string;
+	
+	// Team Dynamics
+	what_worked_well: string;
+	what_was_challenging: string;
+	
+	// Communication & Handoffs
+	handoff_effectiveness: string;
+	communication_insights: string;
+	
+	// Personal Growth
+	learned_about_self: string;
+	learned_about_teaming: string;
+	
+	// Moving Forward
+	keep_doing: string;
+	do_differently: string;
+	advice_for_future: string;
+	
+	timestamp: string;
+}
 
 interface TeamingReflectionEnhancedProps {
 	onComplete?: (data: TeamingReflectionData) => void;
 	onClose: () => void;
-	prepDataId?: string; // Optional ID to link to specific prep session
 }
 
 export const TeamingReflectionEnhanced: React.FC<
 	TeamingReflectionEnhancedProps
-> = ({ onComplete, onClose, prepDataId }) => {
+> = ({ onComplete, onClose }) => {
 	const { user } = useAuth();
 	const [currentSection, setCurrentSection] = useState(0);
 	const [isSaving, setIsSaving] = useState(false);
-	const [prepData, setPrepData] = useState<
-		TeamingPrepData | TeamingPrepEnhancedData | null
-	>(null);
-	const [showPrepData, setShowPrepData] = useState(false);
 	const [errors, setErrors] = useState<Record<string, string>>({});
-	const [completionTime, setCompletionTime] = useState<number>(0);
-	const [showSuccessModal, setShowSuccessModal] = useState(false);
 	const startTime = Date.now();
 	const modalRef = useRef<HTMLDivElement>(null);
 
@@ -51,195 +59,49 @@ export const TeamingReflectionEnhanced: React.FC<
 		modalRef.current?.scrollTo({ top: 0, behavior: "instant" });
 	}, []);
 
-	// Form state for all fields
+	// Form state
 	const [formData, setFormData] = useState<TeamingReflectionData>({
-		linked_prep_id: prepDataId,
-		// Quick Insight
-		most_surprised: "",
 		assignment_type: "in-person",
-		// Section 1: Revisiting Predictions
-		expectations_accuracy: "",
-		handoff_signal_practice: "",
-		stress_handling_actual: "",
-		technical_aspects: "",
-		physical_aspects: "",
-		// Section 2: Team Dynamics
-		team_function_actual: "",
-		role_evolution: "",
-		communication_patterns: "",
-		exceptional_moment: "",
-		transition_management: "",
-		// Section 3: Challenges & Growth
-		significant_challenge: "",
-		unexpected_skills: "",
-		issue_resolution: "",
-		collaboration_solutions: "",
-		environmental_solutions: "",
-		do_differently: "",
-		// Section 4: Key Learnings
+		what_surprised: "",
+		what_worked_well: "",
+		what_was_challenging: "",
+		handoff_effectiveness: "",
+		communication_insights: "",
 		learned_about_self: "",
-		collaboration_insights: "",
-		approach_changed: "",
-		handoff_techniques: "",
-		advice_for_others: "",
-		// Section 5: Then vs Now
-		then_thought_now_know: "",
-		then_worried_now_understand: "",
-		then_planned_actually_worked: "",
-		confidence_change: "",
-		experience_rating: 5,
-		rating_explanation: "",
-		// Closing Synthesis
-		three_strategies: [],
-		// Post-Reflection Metrics
-		confidence_rating: 5,
-		feeling_word: "",
+		learned_about_teaming: "",
+		keep_doing: "",
+		do_differently: "",
+		advice_for_future: "",
+		timestamp: new Date().toISOString(),
 	});
-
-	// Load prep data if available
-	useEffect(() => {
-		const loadPrepData = async () => {
-			if (!user || !prepDataId) return;
-
-			try {
-				const { data, error } = await supabase
-					.from("reflection_entries")
-					.select("*")
-					.eq("id", prepDataId)
-					.eq("user_id", user.id)
-					.single();
-
-				if (data && !error) {
-					const prepDataContent = data.data as
-						| TeamingPrepData
-						| TeamingPrepEnhancedData;
-					setPrepData(prepDataContent);
-					setFormData((prev) => ({
-						...prev,
-						linked_prep_id: prepDataId,
-						prep_data_referenced:
-							"self_focus" in prepDataContent ? prepDataContent : undefined,
-					}));
-				}
-			} catch (err) {
-				console.error("Error loading prep data:", err);
-			}
-		};
-
-		loadPrepData();
-	}, [user, prepDataId]);
-
-	const handleFieldChange = (
-		field: keyof TeamingReflectionData,
-		value: string | number | string[] | boolean,
-	) => {
-		setFormData((prev) => ({
-			...prev,
-			[field]: value,
-		}));
-		// Clear error for this field
-		if (errors[field]) {
-			setErrors((prev) => ({ ...prev, [field]: "" }));
-		}
-	};
 
 	const validateSection = (sectionIndex: number): boolean => {
 		const newErrors: Record<string, string> = {};
 
 		switch (sectionIndex) {
-			case 0: // Quick Insight
-				if (
-					!formData.most_surprised?.trim() ||
-					formData.most_surprised.length <= 1
-				) {
-					newErrors.most_surprised = "Please share what surprised you";
+			case 0: // What Happened
+				if (!formData.what_surprised?.trim()) {
+					newErrors.what_surprised = "Please share what surprised you";
 				}
 				break;
-			case 1: // Revisiting Predictions
-				if (
-					!formData.expectations_accuracy?.trim() ||
-					formData.expectations_accuracy.length <= 1
-				) {
-					newErrors.expectations_accuracy =
-						"Please reflect on your expectations";
-				}
-				if (
-					!formData.handoff_signal_practice?.trim() ||
-					formData.handoff_signal_practice.length <= 1
-				) {
-					newErrors.handoff_signal_practice =
-						"Please describe how your handoff signal worked";
+			case 1: // Team Dynamics
+				if (!formData.what_worked_well?.trim()) {
+					newErrors.what_worked_well = "Please describe what worked well";
 				}
 				break;
-			case 2: // Team Dynamics
-				if (
-					!formData.team_function_actual?.trim() ||
-					formData.team_function_actual.length <= 1
-				) {
-					newErrors.team_function_actual = "Please describe your team dynamics";
-				}
-				if (
-					!formData.exceptional_moment?.trim() ||
-					formData.exceptional_moment.length <= 1
-				) {
-					newErrors.exceptional_moment = "Please share an exceptional moment";
+			case 2: // Communication
+				if (!formData.handoff_effectiveness?.trim()) {
+					newErrors.handoff_effectiveness = "Please reflect on handoffs";
 				}
 				break;
-			case 3: // Challenges & Growth
-				if (
-					!formData.significant_challenge?.trim() ||
-					formData.significant_challenge.length <= 1
-				) {
-					newErrors.significant_challenge =
-						"Please describe a significant challenge";
-				}
-				if (
-					!formData.unexpected_skills?.trim() ||
-					formData.unexpected_skills.length <= 1
-				) {
-					newErrors.unexpected_skills =
-						"Please describe unexpected skills you developed";
+			case 3: // Personal Growth
+				if (!formData.learned_about_self?.trim()) {
+					newErrors.learned_about_self = "Please share what you learned";
 				}
 				break;
-			case 4: // Key Learnings
-				if (
-					!formData.learned_about_self?.trim() ||
-					formData.learned_about_self.length <= 1
-				) {
-					newErrors.learned_about_self =
-						"Please share what you learned about yourself";
-				}
-				if (
-					!formData.collaboration_insights?.trim() ||
-					formData.collaboration_insights.length <= 1
-				) {
-					newErrors.collaboration_insights =
-						"Please share your collaboration insights";
-				}
-				break;
-			case 5: // Then vs. Now Comparison
-				if (
-					!formData.then_thought_now_know?.trim() ||
-					formData.then_thought_now_know.length <= 1
-				) {
-					newErrors.then_thought_now_know =
-						"Please complete the thought comparison";
-				}
-				if (
-					!formData.then_planned_actually_worked?.trim() ||
-					formData.then_planned_actually_worked.length <= 1
-				) {
-					newErrors.then_planned_actually_worked =
-						"Please compare your plans with what worked";
-				}
-				break;
-			case 6: // Closing & Integration
-				// Three strategies are optional, but feeling word is required
-				if (
-					!formData.feeling_word?.trim() ||
-					formData.feeling_word.length <= 1
-				) {
-					newErrors.feeling_word = "Please enter a feeling word";
+			case 4: // Moving Forward
+				if (!formData.keep_doing?.trim()) {
+					newErrors.keep_doing = "Please identify what to keep doing";
 				}
 				break;
 		}
@@ -252,47 +114,50 @@ export const TeamingReflectionEnhanced: React.FC<
 		if (validateSection(currentSection)) {
 			if (currentSection < sections.length - 1) {
 				setCurrentSection(currentSection + 1);
+				setErrors({});
+			} else {
+				handleComplete();
 			}
 		}
 	};
 
-	const handlePrev = () => {
+	const handlePrevious = () => {
 		if (currentSection > 0) {
 			setCurrentSection(currentSection - 1);
+			setErrors({});
 		}
 	};
 
-	const handleSave = async () => {
-		// Validate the current section before saving
+	const handleComplete = async () => {
 		if (!validateSection(currentSection)) {
-			console.log(
-				"TeamingReflectionEnhanced - Validation failed for section:",
-				currentSection,
-			);
+			console.log("TeamingReflection - Validation failed");
 			return;
 		}
 
+		if (!user) {
+			setErrors({ save: "You must be logged in to save" });
+			return;
+		}
+
+		if (isSaving) {
+			console.log("TeamingReflection - Already saving, ignoring duplicate click");
+			return;
+		}
+
+		console.log("TeamingReflection - handleComplete called");
 		setIsSaving(true);
-		const endTime = Date.now();
-		const duration = Math.round((endTime - startTime) / 1000); // in seconds
 
 		try {
-			if (!user) {
-				throw new Error("User not authenticated");
-			}
+			const timeSpent = Math.floor((Date.now() - startTime) / 1000);
+			console.log("TeamingReflection - Starting save...");
 
 			const finalData = {
 				...formData,
-				completion_time: duration,
-				// Add field for getDisplayName fallback
-				collaboration_success:
-					formData.collaboration_insights ||
-					formData.collaboration_solutions ||
-					"Team reflection completed",
+				timestamp: new Date().toISOString(),
+				time_spent_seconds: timeSpent,
 			};
 
-			// Use reflectionService instead of direct API
-			console.log("TeamingReflectionEnhanced - Saving with reflectionService");
+			console.log("TeamingReflection - Saving with reflectionService");
 
 			const result = await reflectionService.saveReflection(
 				user.id,
@@ -301,403 +166,120 @@ export const TeamingReflectionEnhanced: React.FC<
 			);
 
 			if (!result.success) {
-				console.error(
-					"TeamingReflectionEnhanced - Error saving:",
-					result.error,
-				);
+				console.error("TeamingReflection - Error saving:", result.error);
 				throw new Error(result.error || "Failed to save reflection");
 			}
 
-			console.log("TeamingReflectionEnhanced - Reflection saved successfully");
+			console.log("TeamingReflection - Save successful");
+			setIsSaving(false);
 
-			// Close the reflection form directly without showing success modal
-			onClose();
-			console.log("TeamingReflectionEnhanced - Closing reflection form");
+			console.log("Teaming Reflection Results:", finalData);
 
 			if (onComplete) {
-				console.log("TeamingReflectionEnhanced - Calling onComplete callback");
 				onComplete(finalData);
 			}
 
-			// Don't close immediately - let user see success modal
-			console.log(
-				"TeamingReflectionEnhanced - Save complete, success modal should be visible",
-			);
+			setTimeout(() => {
+				onClose();
+			}, 100);
 		} catch (error) {
-			console.error("Error saving reflection:", error);
-			setErrors({ save: "Failed to save reflection. Please try again." });
-		} finally {
+			console.error("TeamingReflection - Error in handleComplete:", error);
 			setIsSaving(false);
+			setErrors({
+				save:
+					error instanceof Error
+						? error.message
+						: "Failed to save reflection. Please try again.",
+			});
+		}
+	};
+
+	const handleFieldChange = (field: keyof TeamingReflectionData, value: any) => {
+		setFormData((prev) => ({
+			...prev,
+			[field]: value,
+		}));
+
+		// Clear error for this field
+		if (errors[field]) {
+			setErrors((prev) => {
+				const newErrors = { ...prev };
+				delete newErrors[field];
+				return newErrors;
+			});
 		}
 	};
 
 	const sections = [
 		{
-			title: "Quick Insight Capture",
-			icon: <Eye className="w-5 h-5" />,
+			title: "What Happened",
+			icon: <Lightbulb className="w-5 h-5" style={{ color: "#5B9378" }} />,
+			guidance: "Start by capturing your initial impressions of the team assignment",
 			content: (
 				<div className="space-y-6">
-					<div
-						className="p-6 rounded-xl"
-						style={{
-							background:
-								"linear-gradient(135deg, rgba(107, 139, 96, 0.1) 0%, rgba(92, 127, 79, 0.05) 100%)",
-							border: "1px solid rgba(107, 139, 96, 0.2)",
-						}}
-					>
-						<h3
-							className="text-lg font-semibold mb-4"
-							style={{ color: "#5C7F4F" }}
-						>
-							Opening Context
-						</h3>
-						<p className="mb-6" style={{ color: "#5A5A5A" }}>
-							Now that you've completed your team interpreting assignment, let's
-							reflect on how your experience compared to your initial
-							expectations and what you've learned about working in interpreting
-							teams.
-						</p>
-
+					<div>
 						<label
 							className="block text-sm font-medium mb-2"
 							style={{ color: "#5C7F4F" }}
 						>
-							What most surprised you about this team interpreting experience?
+							Was this virtual, in-person, or hybrid?
 						</label>
+						<div className="flex gap-3">
+							{(["virtual", "in-person", "hybrid"] as const).map((type) => (
+								<button
+									key={type}
+									onClick={() => handleFieldChange("assignment_type", type)}
+									className={`flex items-center space-x-2 px-4 py-2 rounded-lg border transition-all ${
+										formData.assignment_type === type
+											? "border-sage-600 bg-sage-50"
+											: "border-gray-300 hover:border-sage-400"
+									}`}
+									style={{
+										backgroundColor:
+											formData.assignment_type === type
+												? "rgba(107, 139, 96, 0.05)"
+												: "#FFFFFF",
+										borderColor:
+											formData.assignment_type === type ? "#5B9378" : "#E8E5E0",
+									}}
+								>
+									<span className="capitalize">{type}</span>
+								</button>
+							))}
+						</div>
+					</div>
+
+					<div>
+						<label
+							className="block text-sm font-medium mb-2"
+							style={{ color: "#5C7F4F" }}
+						>
+							What surprised you most about this team assignment?
+						</label>
+						<p className="text-xs mb-2" style={{ color: "#6B7280" }}>
+							Think about what was different than you expected - good or challenging
+						</p>
 						<textarea
-							value={formData.most_surprised}
-							onChange={(e) =>
-								handleFieldChange("most_surprised", e.target.value)
-							}
-							placeholder="Describe what caught you off guard, exceeded expectations, or was completely different than anticipated..."
+							value={formData.what_surprised}
+							onChange={(e) => handleFieldChange("what_surprised", e.target.value)}
+							placeholder="Example: How naturally we fell into rhythm / How challenging the handoffs were / How much easier it was with support / The way we handled a difficult moment..."
 							rows={4}
 							className="w-full px-4 py-3 border rounded-lg resize-none focus:ring-2 focus:ring-sage-500"
 							style={{
-								borderColor: errors.most_surprised ? "#ef4444" : "#E8E5E0",
+								borderColor: errors.what_surprised ? "#ef4444" : "#E8E5E0",
 							}}
 						/>
-						{errors.most_surprised && (
-							<p className="text-sm text-red-500 mt-1">
-								{errors.most_surprised}
-							</p>
+						{errors.what_surprised && (
+							<p className="text-sm text-red-500 mt-1">{errors.what_surprised}</p>
 						)}
-
-						<div className="mt-6">
-							<label
-								className="block text-sm font-medium mb-2"
-								style={{ color: "#5C7F4F" }}
-							>
-								Was this a virtual or in-person assignment?
-							</label>
-							<select
-								value={formData.assignment_type}
-								onChange={(e) =>
-									handleFieldChange(
-										"assignment_type",
-										e.target.value as "virtual" | "in-person" | "hybrid",
-									)
-								}
-								className="w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-sage-500"
-								style={{ borderColor: "#E8E5E0" }}
-							>
-								<option value="in-person">In-Person</option>
-								<option value="virtual">Virtual</option>
-								<option value="hybrid">Hybrid</option>
-							</select>
-						</div>
 					</div>
 				</div>
 			),
 		},
 		{
-			title: "Revisiting Your Predictions",
-			icon: <TrendingUp className="w-5 h-5" />,
-			content: (
-				<div className="space-y-6">
-					{/* Show prep data if available */}
-					{prepData && (
-						<div className="mb-6">
-							<button
-								onClick={() => setShowPrepData(!showPrepData)}
-								className="flex items-center space-x-2 text-sm font-medium"
-								style={{ color: "#5B9378" }}
-							>
-								{showPrepData ? <ChevronUp /> : <ChevronDown />}
-								<span>View Your Pre-Assignment Responses</span>
-							</button>
-
-							{showPrepData && (
-								<div
-									className="mt-4 p-4 rounded-lg text-sm"
-									style={{
-										backgroundColor: "rgba(107, 139, 96, 0.05)",
-										border: "1px solid rgba(107, 139, 96, 0.2)",
-									}}
-								>
-									<div className="space-y-3">
-										{"self_focus" in prepData ? (
-											// Legacy TeamingPrepData format
-											<>
-												<div>
-													<span className="font-medium">Your focus level:</span>{" "}
-													{prepData.self_focus}/10
-												</div>
-												<div>
-													<span className="font-medium">Partner's focus:</span>{" "}
-													{prepData.partner_focus}/10
-												</div>
-												<div>
-													<span className="font-medium">Initial feeling:</span>{" "}
-													{prepData.one_word_feeling}
-												</div>
-												<div>
-													<span className="font-medium">Planned signal:</span>{" "}
-													{prepData.signal_type}
-													{prepData.signal_custom &&
-														` - ${prepData.signal_custom}`}
-												</div>
-												<div>
-													<span className="font-medium">
-														Anticipated stressors:
-													</span>{" "}
-													{prepData.stressors.join(", ")}
-												</div>
-												<div>
-													<span className="font-medium">Fallback plan:</span>{" "}
-													{prepData.plan_if_sideways}
-												</div>
-												<div>
-													<span className="font-medium">Your intention:</span>{" "}
-													{prepData.micro_intention}
-												</div>
-											</>
-										) : (
-											// Enhanced TeamingPrepEnhancedData format
-											<>
-												<div>
-													<span className="font-medium">Assignment Type:</span>{" "}
-													{prepData.assignment_type}
-												</div>
-												<div>
-													<span className="font-medium">
-														What excited you most:
-													</span>{" "}
-													{prepData.excites_most}
-												</div>
-												<div>
-													<span className="font-medium">Main concerns:</span>{" "}
-													{prepData.concerns_most}
-												</div>
-												<div>
-													<span className="font-medium">
-														Ideal team dynamic:
-													</span>{" "}
-													{prepData.ideal_team_dynamic}
-												</div>
-												<div>
-													<span className="font-medium">
-														Your natural role:
-													</span>{" "}
-													{prepData.natural_role}
-												</div>
-												<div>
-													<span className="font-medium">Handoff signal:</span>{" "}
-													{prepData.handoff_signal}
-												</div>
-												<div>
-													<span className="font-medium">
-														Communication style:
-													</span>{" "}
-													{prepData.communication_style}
-												</div>
-												<div>
-													<span className="font-medium">Typical stressor:</span>{" "}
-													{prepData.typical_stressor}
-												</div>
-												<div>
-													<span className="font-medium">Unique strengths:</span>{" "}
-													{prepData.unique_strengths}
-												</div>
-												<div>
-													<span className="font-medium">Success vision:</span>{" "}
-													{prepData.success_description}
-												</div>
-												<div>
-													<span className="font-medium">
-														Pre-assignment confidence:
-													</span>{" "}
-													{prepData.confidence_rating}/10
-												</div>
-												<div>
-													<span className="font-medium">Initial feeling:</span>{" "}
-													{prepData.feeling_word}
-												</div>
-											</>
-										)}
-									</div>
-								</div>
-							)}
-						</div>
-					)}
-
-					<div>
-						<label
-							className="block text-sm font-medium mb-2"
-							style={{ color: "#5C7F4F" }}
-						>
-							Looking back at your pre-assignment responses, which expectations
-							proved most accurate? Which were most different?
-						</label>
-						<textarea
-							value={formData.expectations_accuracy}
-							onChange={(e) =>
-								handleFieldChange("expectations_accuracy", e.target.value)
-							}
-							placeholder="Compare what you thought would happen with what actually happened..."
-							rows={3}
-							className="w-full px-4 py-3 border rounded-lg resize-none focus:ring-2 focus:ring-sage-500"
-							style={{
-								borderColor: errors.expectations_accuracy
-									? "#ef4444"
-									: "#E8E5E0",
-							}}
-						/>
-						{errors.expectations_accuracy && (
-							<p className="text-sm text-red-500 mt-1">
-								{errors.expectations_accuracy}
-							</p>
-						)}
-					</div>
-
-					<div>
-						<label
-							className="block text-sm font-medium mb-2"
-							style={{ color: "#5C7F4F" }}
-						>
-							{prepData ? (
-								"self_focus" in prepData ? (
-									<>
-										You said your handoff signal would be:{" "}
-										<strong>{prepData.signal_type}</strong>. How did that
-										actually work in practice?
-									</>
-								) : (
-									<>
-										You planned to use:{" "}
-										<strong>{prepData.handoff_signal}</strong> as your handoff
-										signal. How did that actually work in practice?
-									</>
-								)
-							) : (
-								"How did your planned handoff signal work in practice?"
-							)}
-						</label>
-						<textarea
-							value={formData.handoff_signal_practice}
-							onChange={(e) =>
-								handleFieldChange("handoff_signal_practice", e.target.value)
-							}
-							placeholder="Describe how your communication signals evolved during the actual work..."
-							rows={3}
-							className="w-full px-4 py-3 border rounded-lg resize-none focus:ring-2 focus:ring-sage-500"
-							style={{
-								borderColor: errors.handoff_signal_practice
-									? "#ef4444"
-									: "#E8E5E0",
-							}}
-						/>
-						{errors.handoff_signal_practice && (
-							<p className="text-sm text-red-500 mt-1">
-								{errors.handoff_signal_practice}
-							</p>
-						)}
-					</div>
-
-					<div>
-						<label
-							className="block text-sm font-medium mb-2"
-							style={{ color: "#5C7F4F" }}
-						>
-							{prepData ? (
-								"self_focus" in prepData && prepData.stressors.length > 0 ? (
-									<>
-										You anticipated:{" "}
-										<strong>{prepData.stressors.join(", ")}</strong>. How did
-										you actually handle stress/pressure as a team?
-									</>
-								) : "typical_stressor" in prepData ? (
-									<>
-										You mentioned <strong>{prepData.typical_stressor}</strong>{" "}
-										as a typical stressor. How did you actually handle
-										stress/pressure as a team?
-									</>
-								) : (
-									"How did you handle stress and pressure as a team?"
-								)
-							) : (
-								"How did you handle stress and pressure as a team?"
-							)}
-						</label>
-						<textarea
-							value={formData.stress_handling_actual}
-							onChange={(e) =>
-								handleFieldChange("stress_handling_actual", e.target.value)
-							}
-							placeholder="Reflect on your team's stress management and support..."
-							rows={3}
-							className="w-full px-4 py-3 border rounded-lg resize-none focus:ring-2 focus:ring-sage-500"
-						/>
-					</div>
-
-					{/* Assignment type specific questions */}
-					{(formData.assignment_type === "virtual" ||
-						formData.assignment_type === "hybrid") && (
-						<div>
-							<label
-								className="block text-sm font-medium mb-2"
-								style={{ color: "#5C7F4F" }}
-							>
-								How did the technical aspects compare to your expectations?
-							</label>
-							<textarea
-								value={formData.technical_aspects || ""}
-								onChange={(e) =>
-									handleFieldChange("technical_aspects", e.target.value)
-								}
-								placeholder="Describe connectivity, platform features, audio/video quality, and technical challenges..."
-								rows={3}
-								className="w-full px-4 py-3 border rounded-lg resize-none focus:ring-2 focus:ring-sage-500"
-							/>
-						</div>
-					)}
-
-					{(formData.assignment_type === "in-person" ||
-						formData.assignment_type === "hybrid") && (
-						<div>
-							<label
-								className="block text-sm font-medium mb-2"
-								style={{ color: "#5C7F4F" }}
-							>
-								How did the physical/environmental aspects compare to what you
-								anticipated?
-							</label>
-							<textarea
-								value={formData.physical_aspects || ""}
-								onChange={(e) =>
-									handleFieldChange("physical_aspects", e.target.value)
-								}
-								placeholder="Describe room setup, positioning, acoustics, and environmental factors..."
-								rows={3}
-								className="w-full px-4 py-3 border rounded-lg resize-none focus:ring-2 focus:ring-sage-500"
-							/>
-						</div>
-					)}
-				</div>
-			),
-		},
-		{
-			title: "Team Dynamics & Roles",
-			icon: <CommunityIcon size={64} />,
+			title: "Team Dynamics",
+			icon: <Users className="w-5 h-5" style={{ color: "#5B9378" }} />,
+			guidance: "Reflect on how you and your partner worked together",
 			content: (
 				<div className="space-y-6">
 					<div>
@@ -705,26 +287,26 @@ export const TeamingReflectionEnhanced: React.FC<
 							className="block text-sm font-medium mb-2"
 							style={{ color: "#5C7F4F" }}
 						>
-							Describe how your interpreting team actually functioned during the
-							assignment vs. what you imagined
+							What worked well between you and your partner?
 						</label>
+						<p className="text-xs mb-2" style={{ color: "#6B7280" }}>
+							Celebrate what went right - this is what you want to repeat
+						</p>
 						<textarea
-							value={formData.team_function_actual}
+							value={formData.what_worked_well}
 							onChange={(e) =>
-								handleFieldChange("team_function_actual", e.target.value)
+								handleFieldChange("what_worked_well", e.target.value)
 							}
-							placeholder="Compare your expectations with the reality of daily teamwork..."
-							rows={3}
+							placeholder="Example: We communicated clearly about when to switch / We supported each other during tough moments / Our styles complemented each other / We stayed flexible..."
+							rows={4}
 							className="w-full px-4 py-3 border rounded-lg resize-none focus:ring-2 focus:ring-sage-500"
 							style={{
-								borderColor: errors.team_function_actual
-									? "#ef4444"
-									: "#E8E5E0",
+								borderColor: errors.what_worked_well ? "#ef4444" : "#E8E5E0",
 							}}
 						/>
-						{errors.team_function_actual && (
+						{errors.what_worked_well && (
 							<p className="text-sm text-red-500 mt-1">
-								{errors.team_function_actual}
+								{errors.what_worked_well}
 							</p>
 						)}
 					</div>
@@ -734,87 +316,31 @@ export const TeamingReflectionEnhanced: React.FC<
 							className="block text-sm font-medium mb-2"
 							style={{ color: "#5C7F4F" }}
 						>
-							How did your role evolve throughout the project?
+							What was challenging about working as a team?
 						</label>
+						<p className="text-xs mb-2" style={{ color: "#6B7280" }}>
+							Naming challenges helps you learn and prepare better next time
+						</p>
 						<textarea
-							value={formData.role_evolution}
+							value={formData.what_was_challenging}
 							onChange={(e) =>
-								handleFieldChange("role_evolution", e.target.value)
+								handleFieldChange("what_was_challenging", e.target.value)
 							}
-							placeholder="Describe how your responsibilities and contributions changed over time..."
-							rows={3}
-							className="w-full px-4 py-3 border rounded-lg resize-none focus:ring-2 focus:ring-sage-500"
-						/>
-					</div>
-
-					<div>
-						<label
-							className="block text-sm font-medium mb-2"
-							style={{ color: "#5C7F4F" }}
-						>
-							What communication patterns emerged naturally?
-						</label>
-						<textarea
-							value={formData.communication_patterns}
-							onChange={(e) =>
-								handleFieldChange("communication_patterns", e.target.value)
-							}
-							placeholder="Describe the unplanned ways you ended up communicating..."
-							rows={3}
-							className="w-full px-4 py-3 border rounded-lg resize-none focus:ring-2 focus:ring-sage-500"
-						/>
-					</div>
-
-					<div>
-						<label
-							className="block text-sm font-medium mb-2"
-							style={{ color: "#5C7F4F" }}
-						>
-							Identify a moment when your team interpreted exceptionally well
-							together
-						</label>
-						<textarea
-							value={formData.exceptional_moment}
-							onChange={(e) =>
-								handleFieldChange("exceptional_moment", e.target.value)
-							}
-							placeholder="Describe a specific moment of excellent teamwork..."
-							rows={3}
+							placeholder="Example: Timing our handoffs / Different interpreting styles / Managing the physical space / Coordinating without disrupting the flow..."
+							rows={4}
 							className="w-full px-4 py-3 border rounded-lg resize-none focus:ring-2 focus:ring-sage-500"
 							style={{
-								borderColor: errors.exceptional_moment ? "#ef4444" : "#E8E5E0",
+								borderColor: "#E8E5E0",
 							}}
-						/>
-						{errors.exceptional_moment && (
-							<p className="text-sm text-red-500 mt-1">
-								{errors.exceptional_moment}
-							</p>
-						)}
-					</div>
-
-					<div>
-						<label
-							className="block text-sm font-medium mb-2"
-							style={{ color: "#5C7F4F" }}
-						>
-							How did you manage transitions and maintain flow as a team?
-						</label>
-						<textarea
-							value={formData.transition_management}
-							onChange={(e) =>
-								handleFieldChange("transition_management", e.target.value)
-							}
-							placeholder="Describe your team's approach to smooth handoffs and maintaining interpretation flow..."
-							rows={3}
-							className="w-full px-4 py-3 border rounded-lg resize-none focus:ring-2 focus:ring-sage-500"
 						/>
 					</div>
 				</div>
 			),
 		},
 		{
-			title: "Challenges & Growth",
-			icon: <AlertTriangle className="w-5 h-5" />,
+			title: "Communication & Handoffs",
+			icon: <CommunityIcon size={20} />,
+			guidance: "How did you and your partner communicate and coordinate?",
 			content: (
 				<div className="space-y-6">
 					<div>
@@ -822,26 +348,26 @@ export const TeamingReflectionEnhanced: React.FC<
 							className="block text-sm font-medium mb-2"
 							style={{ color: "#5C7F4F" }}
 						>
-							Describe a significant challenge during the assignment and how you
-							navigated it together
+							How effective were your handoffs and transitions?
 						</label>
+						<p className="text-xs mb-2" style={{ color: "#6B7280" }}>
+							Think about what made handoffs smooth or what made them tricky
+						</p>
 						<textarea
-							value={formData.significant_challenge}
+							value={formData.handoff_effectiveness}
 							onChange={(e) =>
-								handleFieldChange("significant_challenge", e.target.value)
+								handleFieldChange("handoff_effectiveness", e.target.value)
 							}
-							placeholder="Share a difficult moment and your team's response..."
-							rows={3}
+							placeholder="Example: Our signals were clear and we transitioned smoothly / We struggled at first but got better / We need to work on timing / The handoffs felt natural..."
+							rows={4}
 							className="w-full px-4 py-3 border rounded-lg resize-none focus:ring-2 focus:ring-sage-500"
 							style={{
-								borderColor: errors.significant_challenge
-									? "#ef4444"
-									: "#E8E5E0",
+								borderColor: errors.handoff_effectiveness ? "#ef4444" : "#E8E5E0",
 							}}
 						/>
-						{errors.significant_challenge && (
+						{errors.handoff_effectiveness && (
 							<p className="text-sm text-red-500 mt-1">
-								{errors.significant_challenge}
+								{errors.handoff_effectiveness}
 							</p>
 						)}
 					</div>
@@ -851,113 +377,31 @@ export const TeamingReflectionEnhanced: React.FC<
 							className="block text-sm font-medium mb-2"
 							style={{ color: "#5C7F4F" }}
 						>
-							What unexpected interpreting skills did you develop?
+							What did you learn about team communication?
 						</label>
+						<p className="text-xs mb-2" style={{ color: "#6B7280" }}>
+							What insights will help you communicate better with future partners?
+						</p>
 						<textarea
-							value={formData.unexpected_skills}
+							value={formData.communication_insights}
 							onChange={(e) =>
-								handleFieldChange("unexpected_skills", e.target.value)
+								handleFieldChange("communication_insights", e.target.value)
 							}
-							placeholder="Identify abilities you didn't know you'd need or gain..."
-							rows={3}
+							placeholder="Example: Non-verbal cues are crucial / Clear pre-planning makes everything easier / Being flexible matters more than perfect plans / Trust develops quickly when you support each other..."
+							rows={4}
 							className="w-full px-4 py-3 border rounded-lg resize-none focus:ring-2 focus:ring-sage-500"
 							style={{
-								borderColor: errors.unexpected_skills ? "#ef4444" : "#E8E5E0",
+								borderColor: "#E8E5E0",
 							}}
-						/>
-						{errors.unexpected_skills && (
-							<p className="text-sm text-red-500 mt-1">
-								{errors.unexpected_skills}
-							</p>
-						)}
-					</div>
-
-					<div>
-						<label
-							className="block text-sm font-medium mb-2"
-							style={{ color: "#5C7F4F" }}
-						>
-							How did you contribute to resolving any miscommunications or
-							technical issues?
-						</label>
-						<textarea
-							value={formData.issue_resolution}
-							onChange={(e) =>
-								handleFieldChange("issue_resolution", e.target.value)
-							}
-							placeholder="Describe your role in managing issues that arose..."
-							rows={3}
-							className="w-full px-4 py-3 border rounded-lg resize-none focus:ring-2 focus:ring-sage-500"
-						/>
-					</div>
-
-					{/* Assignment type specific questions */}
-					{(formData.assignment_type === "virtual" ||
-						formData.assignment_type === "hybrid") && (
-						<div>
-							<label
-								className="block text-sm font-medium mb-2"
-								style={{ color: "#5C7F4F" }}
-							>
-								What solutions did you find for remote collaboration challenges?
-							</label>
-							<textarea
-								value={formData.collaboration_solutions || ""}
-								onChange={(e) =>
-									handleFieldChange("collaboration_solutions", e.target.value)
-								}
-								placeholder="Describe technical workarounds, communication strategies, or collaboration tools..."
-								rows={3}
-								className="w-full px-4 py-3 border rounded-lg resize-none focus:ring-2 focus:ring-sage-500"
-							/>
-						</div>
-					)}
-
-					{(formData.assignment_type === "in-person" ||
-						formData.assignment_type === "hybrid") && (
-						<div>
-							<label
-								className="block text-sm font-medium mb-2"
-								style={{ color: "#5C7F4F" }}
-							>
-								How did you handle environmental or positioning challenges?
-							</label>
-							<textarea
-								value={formData.environmental_solutions || ""}
-								onChange={(e) =>
-									handleFieldChange("environmental_solutions", e.target.value)
-								}
-								placeholder="Describe how you managed room dynamics, sight lines, acoustics, or other physical factors..."
-								rows={3}
-								className="w-full px-4 py-3 border rounded-lg resize-none focus:ring-2 focus:ring-sage-500"
-							/>
-						</div>
-					)}
-
-					<div>
-						<label
-							className="block text-sm font-medium mb-2"
-							style={{ color: "#5C7F4F" }}
-						>
-							What would you do differently in your next team interpreting
-							assignment?
-						</label>
-						<textarea
-							value={formData.do_differently}
-							onChange={(e) =>
-								handleFieldChange("do_differently", e.target.value)
-							}
-							placeholder="Reflect on changes you'd make with hindsight..."
-							rows={3}
-							className="w-full px-4 py-3 border rounded-lg resize-none focus:ring-2 focus:ring-sage-500"
 						/>
 					</div>
 				</div>
 			),
 		},
 		{
-			title: "Key Learnings",
-			icon: <HeartPulseIcon size={64} />,
+			title: "Personal Growth",
+			icon: <HeartPulseIcon size={20} />,
+			guidance: "What did this experience teach you?",
 			content: (
 				<div className="space-y-6">
 					<div>
@@ -965,15 +409,18 @@ export const TeamingReflectionEnhanced: React.FC<
 							className="block text-sm font-medium mb-2"
 							style={{ color: "#5C7F4F" }}
 						>
-							Most important thing learned about yourself as a team interpreter?
+							What did you learn about yourself?
 						</label>
+						<p className="text-xs mb-2" style={{ color: "#6B7280" }}>
+							How did this team experience reveal your strengths or growth areas?
+						</p>
 						<textarea
 							value={formData.learned_about_self}
 							onChange={(e) =>
 								handleFieldChange("learned_about_self", e.target.value)
 							}
-							placeholder="Identify your key self-discovery..."
-							rows={3}
+							placeholder="Example: I'm better at adapting than I thought / I need to speak up more about my needs / I thrive with support / I can trust my instincts more..."
+							rows={4}
 							className="w-full px-4 py-3 border rounded-lg resize-none focus:ring-2 focus:ring-sage-500"
 							style={{
 								borderColor: errors.learned_about_self ? "#ef4444" : "#E8E5E0",
@@ -991,91 +438,31 @@ export const TeamingReflectionEnhanced: React.FC<
 							className="block text-sm font-medium mb-2"
 							style={{ color: "#5C7F4F" }}
 						>
-							What collaboration insights will you carry forward to future
-							assignments?
+							What did you learn about team interpreting?
 						</label>
+						<p className="text-xs mb-2" style={{ color: "#6B7280" }}>
+							What insights about teaming will you carry forward?
+						</p>
 						<textarea
-							value={formData.collaboration_insights}
+							value={formData.learned_about_teaming}
 							onChange={(e) =>
-								handleFieldChange("collaboration_insights", e.target.value)
+								handleFieldChange("learned_about_teaming", e.target.value)
 							}
-							placeholder="Share wisdom about working with others..."
-							rows={3}
+							placeholder="Example: The power of having a partner who gets it / How much preparation matters / The importance of checking in with each other / How teaming reduces stress..."
+							rows={4}
 							className="w-full px-4 py-3 border rounded-lg resize-none focus:ring-2 focus:ring-sage-500"
 							style={{
-								borderColor: errors.collaboration_insights
-									? "#ef4444"
-									: "#E8E5E0",
+								borderColor: "#E8E5E0",
 							}}
-						/>
-						{errors.collaboration_insights && (
-							<p className="text-sm text-red-500 mt-1">
-								{errors.collaboration_insights}
-							</p>
-						)}
-					</div>
-
-					<div>
-						<label
-							className="block text-sm font-medium mb-2"
-							style={{ color: "#5C7F4F" }}
-						>
-							How has this changed your approach to team interpreting?
-						</label>
-						<textarea
-							value={formData.approach_changed}
-							onChange={(e) =>
-								handleFieldChange("approach_changed", e.target.value)
-							}
-							placeholder="Describe shifts in your collaboration style..."
-							rows={3}
-							className="w-full px-4 py-3 border rounded-lg resize-none focus:ring-2 focus:ring-sage-500"
-						/>
-					</div>
-
-					<div>
-						<label
-							className="block text-sm font-medium mb-2"
-							style={{ color: "#5C7F4F" }}
-						>
-							What specific techniques for smooth handoffs or support did you
-							discover?
-						</label>
-						<textarea
-							value={formData.handoff_techniques}
-							onChange={(e) =>
-								handleFieldChange("handoff_techniques", e.target.value)
-							}
-							placeholder="Describe effective strategies for team coordination..."
-							rows={3}
-							className="w-full px-4 py-3 border rounded-lg resize-none focus:ring-2 focus:ring-sage-500"
-						/>
-					</div>
-
-					<div>
-						<label
-							className="block text-sm font-medium mb-2"
-							style={{ color: "#5C7F4F" }}
-						>
-							Advice for someone about to start a similar team interpreting
-							assignment?
-						</label>
-						<textarea
-							value={formData.advice_for_others}
-							onChange={(e) =>
-								handleFieldChange("advice_for_others", e.target.value)
-							}
-							placeholder="Share guidance based on your experience..."
-							rows={3}
-							className="w-full px-4 py-3 border rounded-lg resize-none focus:ring-2 focus:ring-sage-500"
 						/>
 					</div>
 				</div>
 			),
 		},
 		{
-			title: "Then vs. Now Comparison",
-			icon: <TrendingUp className="w-5 h-5" />,
+			title: "Moving Forward",
+			icon: <TargetIcon size={20} />,
+			guidance: "Take these insights into your next team assignment",
 			content: (
 				<div className="space-y-6">
 					<div>
@@ -1083,26 +470,23 @@ export const TeamingReflectionEnhanced: React.FC<
 							className="block text-sm font-medium mb-2"
 							style={{ color: "#5C7F4F" }}
 						>
-							Then I thought team interpreting would be... → Now I know...
+							What will you keep doing in future team assignments?
 						</label>
+						<p className="text-xs mb-2" style={{ color: "#6B7280" }}>
+							Identify the practices that worked - these are your strengths
+						</p>
 						<textarea
-							value={formData.then_thought_now_know}
-							onChange={(e) =>
-								handleFieldChange("then_thought_now_know", e.target.value)
-							}
-							placeholder="Complete this comparison about your assumptions vs. reality..."
-							rows={2}
+							value={formData.keep_doing}
+							onChange={(e) => handleFieldChange("keep_doing", e.target.value)}
+							placeholder="Example: Pre-planning handoff signals / Checking in with my partner during breaks / Being flexible and supportive / Communicating clearly about my needs..."
+							rows={4}
 							className="w-full px-4 py-3 border rounded-lg resize-none focus:ring-2 focus:ring-sage-500"
 							style={{
-								borderColor: errors.then_thought_now_know
-									? "#ef4444"
-									: "#E8E5E0",
+								borderColor: errors.keep_doing ? "#ef4444" : "#E8E5E0",
 							}}
 						/>
-						{errors.then_thought_now_know && (
-							<p className="text-sm text-red-500 mt-1">
-								{errors.then_thought_now_know}
-							</p>
+						{errors.keep_doing && (
+							<p className="text-sm text-red-500 mt-1">{errors.keep_doing}</p>
 						)}
 					</div>
 
@@ -1111,49 +495,23 @@ export const TeamingReflectionEnhanced: React.FC<
 							className="block text-sm font-medium mb-2"
 							style={{ color: "#5C7F4F" }}
 						>
-							Then I worried about... → Now I understand...
+							What would you do differently next time?
 						</label>
+						<p className="text-xs mb-2" style={{ color: "#6B7280" }}>
+							Every experience teaches us something - what will you adjust?
+						</p>
 						<textarea
-							value={formData.then_worried_now_understand}
+							value={formData.do_differently}
 							onChange={(e) =>
-								handleFieldChange("then_worried_now_understand", e.target.value)
+								handleFieldChange("do_differently", e.target.value)
 							}
-							placeholder="Compare your concerns with your new understanding..."
-							rows={2}
-							className="w-full px-4 py-3 border rounded-lg resize-none focus:ring-2 focus:ring-sage-500"
-						/>
-					</div>
-
-					<div>
-						<label
-							className="block text-sm font-medium mb-2"
-							style={{ color: "#5C7F4F" }}
-						>
-							Then I planned to handle handoffs by... → What actually worked
-							was...
-						</label>
-						<textarea
-							value={formData.then_planned_actually_worked}
-							onChange={(e) =>
-								handleFieldChange(
-									"then_planned_actually_worked",
-									e.target.value,
-								)
-							}
-							placeholder="Compare your planned approach with what succeeded..."
-							rows={2}
+							placeholder="Example: Discuss expectations more upfront / Practice handoff signals before starting / Be more proactive about communication / Take more breaks to check in..."
+							rows={4}
 							className="w-full px-4 py-3 border rounded-lg resize-none focus:ring-2 focus:ring-sage-500"
 							style={{
-								borderColor: errors.then_planned_actually_worked
-									? "#ef4444"
-									: "#E8E5E0",
+								borderColor: "#E8E5E0",
 							}}
 						/>
-						{errors.then_planned_actually_worked && (
-							<p className="text-sm text-red-500 mt-1">
-								{errors.then_planned_actually_worked}
-							</p>
-						)}
 					</div>
 
 					<div>
@@ -1161,170 +519,23 @@ export const TeamingReflectionEnhanced: React.FC<
 							className="block text-sm font-medium mb-2"
 							style={{ color: "#5C7F4F" }}
 						>
-							My confidence in{" "}
-							{formData.assignment_type === "virtual"
-								? "virtual"
-								: formData.assignment_type === "hybrid"
-									? "hybrid"
-									: "in-person"}{" "}
-							team interpreting has changed from... to...
+							What advice would you give yourself for the next team assignment?
 						</label>
+						<p className="text-xs mb-2" style={{ color: "#6B7280" }}>
+							Capture your wisdom while it's fresh
+						</p>
 						<textarea
-							value={formData.confidence_change}
+							value={formData.advice_for_future}
 							onChange={(e) =>
-								handleFieldChange("confidence_change", e.target.value)
+								handleFieldChange("advice_for_future", e.target.value)
 							}
-							placeholder="Describe how your confidence level has shifted..."
-							rows={2}
+							placeholder="Example: Trust the process / Communicate early and often / Remember that teaming gets easier with practice / Don't be afraid to speak up..."
+							rows={4}
 							className="w-full px-4 py-3 border rounded-lg resize-none focus:ring-2 focus:ring-sage-500"
+							style={{
+								borderColor: "#E8E5E0",
+							}}
 						/>
-					</div>
-
-					<div>
-						<label
-							className="block text-sm font-medium mb-2"
-							style={{ color: "#5C7F4F" }}
-						>
-							Rate your overall team interpreting experience (1-10)
-						</label>
-						<div className="flex items-center space-x-4">
-							<input
-								type="range"
-								min="1"
-								max="10"
-								value={formData.experience_rating}
-								onChange={(e) =>
-									handleFieldChange("experience_rating", Number(e.target.value))
-								}
-								className="flex-1"
-								style={{ accentColor: "#5B9378" }}
-							/>
-							<span
-								className="w-12 text-center font-semibold"
-								style={{ color: "#1A1A1A" }}
-							>
-								{formData.experience_rating}
-							</span>
-						</div>
-						<textarea
-							value={formData.rating_explanation}
-							onChange={(e) =>
-								handleFieldChange("rating_explanation", e.target.value)
-							}
-							placeholder="Explain your rating..."
-							rows={2}
-							className="w-full mt-2 px-4 py-3 border rounded-lg resize-none focus:ring-2 focus:ring-sage-500"
-						/>
-					</div>
-				</div>
-			),
-		},
-		{
-			title: "Closing Synthesis",
-			icon: <Check className="w-5 h-5" />,
-			content: (
-				<div className="space-y-6">
-					<div>
-						<label
-							className="block text-sm font-medium mb-2"
-							style={{ color: "#5C7F4F" }}
-						>
-							What three specific strategies will you bring to your next team
-							interpreting assignment?
-						</label>
-						<div className="space-y-3">
-							{[0, 1, 2].map((index) => (
-								<input
-									key={index}
-									type="text"
-									value={formData.three_strategies[index] || ""}
-									onChange={(e) => {
-										const strategies = [...formData.three_strategies];
-										strategies[index] = e.target.value;
-										handleFieldChange("three_strategies", strategies);
-									}}
-									placeholder={`Strategy ${index + 1}...`}
-									className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-sage-500"
-								/>
-							))}
-						</div>
-					</div>
-
-					<div
-						className="p-6 rounded-xl"
-						style={{
-							background:
-								"linear-gradient(135deg, rgba(107, 139, 96, 0.1) 0%, rgba(92, 127, 79, 0.05) 100%)",
-							border: "1px solid rgba(107, 139, 96, 0.2)",
-						}}
-					>
-						<h3
-							className="text-lg font-semibold mb-4"
-							style={{ color: "#5C7F4F" }}
-						>
-							Post-Reflection Check
-						</h3>
-
-						<div className="space-y-4">
-							<div>
-								<label
-									className="block text-sm font-medium mb-2"
-									style={{ color: "#5C7F4F" }}
-								>
-									How confident do you feel about future team interpreting
-									assignments? (1-10)
-								</label>
-								<div className="flex items-center space-x-4">
-									<input
-										type="range"
-										min="1"
-										max="10"
-										value={formData.confidence_rating}
-										onChange={(e) =>
-											handleFieldChange(
-												"confidence_rating",
-												Number(e.target.value),
-											)
-										}
-										className="flex-1"
-										style={{ accentColor: "#5B9378" }}
-									/>
-									<span
-										className="w-12 text-center font-semibold"
-										style={{ color: "#1A1A1A" }}
-									>
-										{formData.confidence_rating}
-									</span>
-								</div>
-							</div>
-
-							<div>
-								<label
-									className="block text-sm font-medium mb-2"
-									style={{ color: "#5C7F4F" }}
-								>
-									In one word, how are you feeling after this reflection?
-								</label>
-								<input
-									type="text"
-									value={formData.feeling_word}
-									onChange={(e) =>
-										handleFieldChange("feeling_word", e.target.value)
-									}
-									placeholder="Enter one word..."
-									maxLength={30}
-									className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-sage-500"
-									style={{
-										borderColor: errors.feeling_word ? "#ef4444" : "#E8E5E0",
-									}}
-								/>
-								{errors.feeling_word && (
-									<p className="text-sm text-red-500 mt-1">
-										{errors.feeling_word}
-									</p>
-								)}
-							</div>
-						</div>
 					</div>
 				</div>
 			),
@@ -1332,236 +543,152 @@ export const TeamingReflectionEnhanced: React.FC<
 	];
 
 	const currentSectionData = sections[currentSection];
-	const isLastSection = currentSection === sections.length - 1;
+	const progress = ((currentSection + 1) / sections.length) * 100;
 
 	return (
-		<div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+		<div
+			className="fixed inset-0 z-50 flex items-center justify-center p-4"
+			style={{ backgroundColor: "rgba(0, 0, 0, 0.5)" }}
+		>
 			<div
-				className="bg-white rounded-2xl w-full max-w-4xl max-h-[90vh] flex flex-col"
-				style={{ backgroundColor: "#FAF9F6" }}
+				ref={modalRef}
+				className="bg-white rounded-2xl w-full max-w-3xl max-h-[90vh] overflow-y-auto shadow-2xl"
 			>
 				{/* Header */}
 				<div
-					className="p-6 border-b"
-					style={{
-						borderColor: "#E8E5E0",
-						background:
-							"linear-gradient(135deg, rgba(107, 139, 96, 0.05) 0%, rgba(92, 127, 79, 0.02) 100%)",
-					}}
+					className="sticky top-0 bg-white z-10 px-8 pt-6 pb-4 border-b"
+					style={{ backgroundColor: "#FAF9F6" }}
 				>
-					<div className="flex items-center justify-between">
-						<div className="flex items-center space-x-3">
+					<div className="flex items-center justify-between mb-4">
+						<div className="flex items-center gap-3">
 							<div
-								className="w-12 h-12 rounded-xl flex items-center justify-center"
+								className="w-12 h-12 rounded-lg flex items-center justify-center"
 								style={{
 									background: "linear-gradient(135deg, #5C7F4F, #5B9378)",
-									boxShadow: "0 2px 8px rgba(107, 139, 96, 0.3)",
 								}}
 							>
-								<CommunityIcon size={64} />
+								<CommunityIcon size={48} />
 							</div>
 							<div>
 								<h2 className="text-2xl font-bold" style={{ color: "#1A1A1A" }}>
-									Team Reflection Journey
+									Team Reflection
 								</h2>
-								<p className="text-sm mt-1" style={{ color: "#5A5A5A" }}>
-									Reflecting on your collaborative experience
+								<p className="text-sm mt-1" style={{ color: "#5F7F55" }}>
+									Capture what you learned from working with your partner
 								</p>
 							</div>
 						</div>
 						<button
 							onClick={onClose}
-							className="p-2 rounded-lg transition-all hover:opacity-90"
-							style={{
-								background: "linear-gradient(135deg, #5C7F4F, #5B9378)",
-							}}
+							className="p-2 rounded-lg transition-all hover:bg-gray-100"
 							aria-label="Close"
 						>
-							<X className="w-5 h-5 text-white" />
+							<X className="w-5 h-5 text-gray-500" />
 						</button>
 					</div>
 
-					{/* Progress indicator */}
-					<div className="flex items-center justify-between mt-6">
-						<div className="flex space-x-2">
-							{sections.map((_, index) => (
-								<div
-									key={index}
-									className={`h-2 flex-1 rounded-full transition-all ${
-										index <= currentSection ? "opacity-100" : "opacity-30"
-									}`}
-									style={{
-										backgroundColor:
-											index <= currentSection ? "#5B9378" : "#E8E5E0",
-										minWidth: "40px",
-									}}
-								/>
-							))}
+					{/* Progress Bar */}
+					<div className="mt-4">
+						<div className="flex justify-between text-sm mb-2">
+							<span style={{ color: "#5F7F55" }}>
+								Page {currentSection + 1} of {sections.length}
+							</span>
+							<span style={{ color: "#5F7F55" }}>
+								{Math.round(progress)}% Complete
+							</span>
 						</div>
-						<span className="text-sm ml-4" style={{ color: "#5A5A5A" }}>
-							{currentSection + 1} of {sections.length}
-						</span>
+						<div className="w-full bg-gray-200 rounded-full h-2">
+							<div
+								className="h-full rounded-full transition-all duration-300"
+								style={{
+									width: `${progress}%`,
+									background: "linear-gradient(135deg, #5C7F4F, #5B9378)",
+								}}
+							/>
+						</div>
 					</div>
 				</div>
 
 				{/* Content */}
-				<div
-					ref={modalRef}
-					className="p-6 overflow-y-auto flex-1"
-				>
-					<div className="mb-4 flex items-center space-x-2">
-						{currentSectionData.icon}
-						<h3 className="text-xl font-semibold" style={{ color: "#1A1A1A" }}>
-							{currentSectionData.title}
-						</h3>
+				<div className="px-8 py-6">
+					<div className="flex items-center mb-4">
+						<div
+							className="p-2 rounded-lg mr-3"
+							style={{ backgroundColor: "#E8F0E8" }}
+						>
+							{currentSectionData.icon}
+						</div>
+						<div>
+							<h3 className="text-xl font-semibold" style={{ color: "#5C7F4F" }}>
+								{currentSectionData.title}
+							</h3>
+							<p className="text-sm" style={{ color: "#6B7280" }}>
+								{currentSectionData.guidance}
+							</p>
+						</div>
 					</div>
 
 					{currentSectionData.content}
+
+					{errors.save && (
+						<div
+							className="mt-4 p-4 rounded-lg"
+							style={{ backgroundColor: "#FEE2E2" }}
+						>
+							<p className="text-sm" style={{ color: "#DC2626" }}>
+								{errors.save}
+							</p>
+						</div>
+					)}
 				</div>
 
 				{/* Footer */}
 				<div
-					className="p-6 border-t flex justify-between items-center flex-shrink-0"
-					style={{ borderColor: "#E8E5E0", backgroundColor: "#FFFFFF" }}
+					className="sticky bottom-0 px-8 py-4 border-t"
+					style={{ backgroundColor: "#FAF9F6" }}
 				>
-					{currentSection > 0 && (
+					<div className="flex justify-between">
 						<button
-							onClick={handlePrev}
-							className="px-6 py-2 rounded-lg flex items-center transition-colors"
-							style={{
-								backgroundColor: "#F8FBF6",
-								color: "#5B9378",
-								border: "1px solid #5B9378",
-							}}
-							onMouseEnter={(e) => {
-								e.currentTarget.style.backgroundColor = "#F0F7F0";
-							}}
-							onMouseLeave={(e) => {
-								e.currentTarget.style.backgroundColor = "#F8FBF6";
-							}}
+							onClick={handlePrevious}
+							disabled={currentSection === 0}
+							className={`px-6 py-2 rounded-lg font-medium transition-all flex items-center ${
+								currentSection === 0
+									? "bg-gray-100 text-gray-400 cursor-not-allowed"
+									: "bg-white border border-sage-600 text-sage-700 hover:bg-sage-50"
+							}`}
 						>
-							<ChevronLeft className="w-4 h-4 mr-1" />
+							<ChevronLeft className="w-4 h-4 mr-2" />
 							Previous
 						</button>
-					)}
 
-					<div className="flex-1" />
-
-					{errors.save && (
-						<p className="text-sm text-red-500 mr-4">{errors.save}</p>
-					)}
-
-					{!isLastSection ? (
 						<button
 							onClick={handleNext}
-							className="px-6 py-2 rounded-lg flex items-center transition-all"
+							disabled={isSaving}
+							className="px-6 py-2 rounded-lg font-medium text-white transition-all flex items-center hover:opacity-90 disabled:opacity-50"
 							style={{
-								background: "linear-gradient(135deg, #5C7F4F, #5B9378)",
-								color: "#FFFFFF",
-								boxShadow: "0 2px 8px rgba(107, 139, 96, 0.3)",
-							}}
-							onMouseEnter={(e) => {
-								e.currentTarget.style.transform = "translateY(-1px)";
-								e.currentTarget.style.boxShadow =
-									"0 4px 12px rgba(107, 139, 96, 0.4)";
-							}}
-							onMouseLeave={(e) => {
-								e.currentTarget.style.transform = "translateY(0)";
-								e.currentTarget.style.boxShadow =
-									"0 2px 8px rgba(107, 139, 96, 0.3)";
+								background: isSaving
+									? "#CCCCCC"
+									: "linear-gradient(135deg, #5C7F4F, #5B9378)",
+								cursor: isSaving ? "not-allowed" : "pointer",
 							}}
 						>
-							Next
-							<ChevronRight className="w-4 h-4 ml-1" />
+							{isSaving ? (
+								"Saving..."
+							) : currentSection === sections.length - 1 ? (
+								<>
+									<CheckCircle className="w-4 h-4 mr-2" />
+									Complete Reflection
+								</>
+							) : (
+								<>
+									Next
+									<ChevronRight className="w-4 h-4 ml-2" />
+								</>
+							)}
 						</button>
-					) : (
-						<div className="flex items-center space-x-3">
-							<button
-								onClick={handleSave}
-								disabled={isSaving}
-								className="px-6 py-2 rounded-lg flex items-center transition-all"
-								style={{
-									background: isSaving
-										? "linear-gradient(145deg, #9CA3AF 0%, #6B7280 100%)"
-										: "linear-gradient(135deg, #5C7F4F, #5B9378)",
-									color: "#FFFFFF",
-									boxShadow: "0 2px 8px rgba(107, 139, 96, 0.3)",
-									cursor: isSaving ? "not-allowed" : "pointer",
-								}}
-								onMouseEnter={(e) => {
-									if (!isSaving) {
-										e.currentTarget.style.transform = "translateY(-1px)";
-										e.currentTarget.style.boxShadow =
-											"0 4px 12px rgba(107, 139, 96, 0.4)";
-									}
-								}}
-								onMouseLeave={(e) => {
-									if (!isSaving) {
-										e.currentTarget.style.transform = "translateY(0)";
-										e.currentTarget.style.boxShadow =
-											"0 2px 8px rgba(107, 139, 96, 0.3)";
-									}
-								}}
-							>
-								<Check className="w-4 h-4 mr-2" />
-								{isSaving ? "Saving..." : "Complete Reflection"}
-							</button>
-						</div>
-					)}
-				</div>
-			</div>
-
-			{/* Success Modal */}
-			{showSuccessModal && (
-				<div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-[60] p-4">
-					<div
-						className="bg-white rounded-2xl p-8 max-w-md w-full"
-						style={{ backgroundColor: "#FAF9F6" }}
-					>
-						<div className="text-center">
-							<div
-								className="w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4"
-								style={{
-									background: "linear-gradient(135deg, #5C7F4F, #5B9378)",
-									boxShadow: "0 4px 12px rgba(107, 139, 96, 0.3)",
-								}}
-							>
-								<CheckCircle className="w-8 h-8 text-white" />
-							</div>
-
-							<h3
-								className="text-2xl font-bold mb-3"
-								style={{ color: "#1A1A1A" }}
-							>
-								Reflection Complete!
-							</h3>
-
-							<p className="text-base mb-6" style={{ color: "#5A5A5A" }}>
-								Excellent work reflecting on your team interpreting experience.
-								Your insights have been saved and will help you grow as a
-								collaborative interpreter.
-							</p>
-
-							<div className="flex flex-col space-y-3">
-								<button
-									onClick={() => {
-										setShowSuccessModal(false);
-										onClose();
-									}}
-									className="px-6 py-3 rounded-lg transition-all"
-									style={{
-										background: "linear-gradient(135deg, #5C7F4F, #5B9378)",
-										color: "#FFFFFF",
-										boxShadow: "0 2px 8px rgba(107, 139, 96, 0.3)",
-									}}
-								>
-									Continue to Dashboard
-								</button>
-							</div>
-						</div>
 					</div>
 				</div>
-			)}
+			</div>
 		</div>
 	);
 };

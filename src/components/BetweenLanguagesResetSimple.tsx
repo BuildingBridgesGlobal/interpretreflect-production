@@ -136,7 +136,7 @@ export const BetweenLanguagesReset: React.FC<BetweenLanguagesResetProps> = ({ on
                   <h3 className="font-medium text-gray-800">Home Language</h3>
                   <p className="text-sm text-gray-600">Return to your first language</p>
                 </div>
-                <div className="p-3 bg-green-50 rounded-xl">
+                <div className="p-3 bg-[rgba(107,130,104,0.05)] rounded-xl">
                   <h3 className="font-medium text-gray-800">Physical Release</h3>
                   <p className="text-sm text-gray-600">Shake it out or stretch</p>
                 </div>

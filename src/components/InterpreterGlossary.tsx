@@ -168,7 +168,7 @@ export const InterpreterGlossary: React.FC<InterpreterGlossaryProps> = ({
 	const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
 
 	const categories = [
-		{ id: "practice", label: "Practice & Tools", color: "bg-green-500" },
+		{ id: "practice", label: "Practice & Tools", color: "bg-[rgba(107,130,104,0.05)]0" },
 		{ id: "identity", label: "Identity & Role", color: "bg-purple-500" },
 		{ id: "wellness", label: "Wellness & Self-Care", color: "bg-blue-500" },
 		{ id: "technical", label: "Technical Terms", color: "bg-orange-500" },
@@ -327,19 +327,19 @@ export const InterpreterGlossary: React.FC<InterpreterGlossaryProps> = ({
 										<div
 											className="p-3 rounded-lg border-l-4"
 											style={{
-												backgroundColor: "var(--color-green-50)",
-												borderColor: "var(--color-green-500)",
+												backgroundColor: "rgba(107, 130, 104, 0.05)",
+												borderColor: "#5B9378",
 											}}
 										>
 											<p
 												className="text-sm font-medium mb-1"
-												style={{ color: "var(--color-green-800)" }}
+												style={{ color: "#4A6640" }}
 											>
 												Example:
 											</p>
 											<p
 												className="text-sm italic"
-												style={{ color: "var(--color-green-700)" }}
+												style={{ color: "#5C7F4F" }}
 											>
 												{term.example}
 											</p>

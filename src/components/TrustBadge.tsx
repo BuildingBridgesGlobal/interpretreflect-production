@@ -21,8 +21,8 @@ export const TrustBadge: React.FC<TrustBadgeProps> = ({
     research: {
       icon: BookOpen,
       text: "Backed by research",
-      color: "var(--color-green-600)",
-      bgColor: "var(--color-green-50)",
+      color: "#6B8268",
+      bgColor: "rgba(107, 130, 104, 0.05)",
     },
     privacy: {
       icon: Shield,

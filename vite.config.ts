@@ -97,7 +97,6 @@ export default defineConfig({
 					'wellness-tools': [
 						'./src/components/InSessionSelfCheck.tsx',
 						'./src/components/WellnessCheckInAccessible.tsx',
-						'./src/components/EthicsMeaningCheckAccessible.tsx',
 						'./src/components/PostAssignmentDebriefAccessible.tsx',
 					],
 

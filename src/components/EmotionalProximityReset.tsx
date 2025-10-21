@@ -453,7 +453,7 @@ export const EmotionalProximityReset: React.FC<EmotionalProximityResetProps> = (
 
             {/* Important reminders */}
             <div className={`mb-8 p-4 rounded-lg ${
-              highContrastMode ? 'bg-gray-100 border-2 border-black' : 'bg-green-50'
+              highContrastMode ? 'bg-gray-100 border-2 border-black' : 'bg-[rgba(107,130,104,0.05)]'
             }`}>
               <h3 className={`font-medium mb-2 ${getTextSize()}`}>
                 Important Reminders:
@@ -1108,7 +1108,7 @@ export const EmotionalProximityReset: React.FC<EmotionalProximityResetProps> = (
 
           {/* Important reminder */}
           <div className={`mb-8 p-4 rounded-lg ${
-            highContrastMode ? 'bg-yellow-100 border-2 border-black' : 'bg-green-50'
+            highContrastMode ? 'bg-yellow-100 border-2 border-black' : 'bg-[rgba(107,130,104,0.05)]'
           }`}>
             <p className={`${getTextSize()} font-medium mb-2 ${
               highContrastMode ? 'text-black' : 'text-green-900'

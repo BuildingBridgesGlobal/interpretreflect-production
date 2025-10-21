@@ -201,12 +201,12 @@ export const ZKWVVerification: React.FC<ZKWVVerificationProps> = ({ userId, onCl
 							</div>
 
 							{/* Anonymized Data */}
-							<div className="border-2 border-green-500 rounded-lg p-4">
+							<div className="border-2 border-[#6B8268] rounded-lg p-4">
 								<div className="flex items-center gap-2 mb-3">
 									<Database className="w-5 h-5 text-green-600" />
 									<h3 className="font-semibold text-green-900">Anonymized Data (Separate DB)</h3>
 								</div>
-								<div className="bg-green-50 rounded p-3 space-y-2 text-sm">
+								<div className="bg-[rgba(107,130,104,0.05)] rounded p-3 space-y-2 text-sm">
 									<p><strong>User Hash:</strong> {anonymizedData.userHash.substring(0, 16)}...</p>
 									<p><strong>Category:</strong> {anonymizedData.reflection_category}</p>
 									<p><strong>Context Type:</strong> {anonymizedData.context_type}</p>
@@ -228,7 +228,7 @@ export const ZKWVVerification: React.FC<ZKWVVerificationProps> = ({ userId, onCl
 							</div>
 						</div>
 
-						<div className="bg-green-50 border border-green-200 rounded-lg p-4">
+						<div className="bg-[rgba(107,130,104,0.05)] border border-green-200 rounded-lg p-4">
 							<h4 className="font-semibold text-green-900 mb-2">✓ Proof of Anonymization</h4>
 							<p className="text-sm text-green-800">
 								The anonymized data contains ONLY numerical metrics and categories.
@@ -288,7 +288,7 @@ export const ZKWVVerification: React.FC<ZKWVVerificationProps> = ({ userId, onCl
 				{/* Proof Step - Verify */}
 				{step === 'proof' && proofId && (
 					<div className="space-y-6">
-						<div className="bg-green-50 border border-green-200 rounded-lg p-6">
+						<div className="bg-[rgba(107,130,104,0.05)] border border-green-200 rounded-lg p-6">
 							<div className="flex items-center gap-3 mb-4">
 								<CheckCircle className="w-8 h-8 text-green-600" />
 								<div>

@@ -1,8 +1,8 @@
 /**
  * In-Session Self-Check Component
  *
- * Real-time monitoring tool for interpreters during active assignments
- * Research shows real-time monitoring improves interpreter accuracy by 35%
+ * Real-time monitoring tool for active work sessions
+ * Helps professionals stay aware and make micro-adjustments during assignments
  *
  * Matches exact design pattern of other reflections with sage green color scheme
  * and consistent styling across all reflection components
@@ -90,8 +90,9 @@ const InSessionSelfCheck: React.FC<InSessionSelfCheckProps> = ({
 		focus_maintenance: "",
 
 		// Section 4: Professional Boundaries
-		boundary_maintenance: 5,
+		boundary_maintenance: 10,
 		boundary_concerns: "",
+		boundary_values: "",
 
 		// Section 5: Communication Flow
 		interpretive_choices: "",
@@ -102,8 +103,9 @@ const InSessionSelfCheck: React.FC<InSessionSelfCheckProps> = ({
 		cultural_success: 5,
 
 		// Section 7: Role Integrity
-		role_adherence: 5,
+		role_adherence: 10,
 		role_challenges: "",
+		role_decision: "",
 
 		// Section 8: Team Support
 		team_support_needed: "",
@@ -202,19 +204,16 @@ const InSessionSelfCheck: React.FC<InSessionSelfCheckProps> = ({
 				time_spent_seconds: timeSpent,
 				sections_completed: 10,
 				// Add fields for getDisplayName fallback
-				self_check:
-					formData.current_state ||
-					formData.physical_check ||
-					"Self-check completed",
-				energy_check: formData.energy_level || formData.energy_assessment,
-				focus_check: formData.focus_level || formData.attention_state,
+				self_check: formData.demand_management_notes || "Mid-assignment check-in completed",
+				energy_check: formData.energy_level,
+				focus_check: formData.focus_maintenance,
 			};
 
 			console.log("InSessionSelfCheck - Saving with reflectionService");
 
 			const result = await reflectionService.saveReflection(
 				user.id,
-				"insession_selfcheck",
+				"in_session_self_check",
 				dataToSave,
 			);
 
@@ -259,7 +258,7 @@ const InSessionSelfCheck: React.FC<InSessionSelfCheckProps> = ({
 	};
 
 	const generateSummary = () => {
-		return `IN-SESSION SELF-CHECK SUMMARY
+		return `MID-ASSIGNMENT CHECK-IN SUMMARY
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 DEMAND MANAGEMENT: ${formData.demand_management}/10
@@ -299,9 +298,7 @@ OVERALL STATUS: ${formData.overall_status}/10
 							Quick In-Session Check
 						</h3>
 						<p className="mb-6" style={{ color: "#5A5A5A" }}>
-							This rapid self-assessment helps you monitor and adjust your
-							interpreting performance in real-time. Research shows that
-							real-time monitoring improves interpreter accuracy by 35%.
+							Quick check-ins during your work help you catch small issues before they become big ones. The best performers stay aware of how they're doing and make tiny adjustments in the moment. That's what separates good from great.
 						</p>
 					</div>
 
@@ -310,7 +307,7 @@ OVERALL STATUS: ${formData.overall_status}/10
 							className="block text-sm font-medium mb-2"
 							style={{ color: "#5C7F4F" }}
 						>
-							How am I managing the current demands I'm encountering? (1-10)
+							How challenging or intense is this assignment right now? (1 = easy, 10 = very challenging)
 						</label>
 						<div className="flex items-center space-x-4">
 							<input
@@ -344,14 +341,14 @@ OVERALL STATUS: ${formData.overall_status}/10
 							className="block text-sm font-medium mb-2"
 							style={{ color: "#5C7F4F" }}
 						>
-							Quick notes (optional)
+							How are you handling these challenges? (optional)
 						</label>
 						<textarea
 							value={formData.demand_management_notes}
 							onChange={(e) =>
 								handleFieldChange("demand_management_notes", e.target.value)
 							}
-							placeholder="Any specific challenges or successes..."
+							placeholder="Like: taking deep breaths, staying focused, asking for breaks, managing my pace..."
 							rows={2}
 							className="w-full px-4 py-3 border rounded-lg resize-none focus:ring-2 focus:ring-sage-500"
 							style={{ borderColor: "#E8E5E0" }}
@@ -361,7 +358,7 @@ OVERALL STATUS: ${formData.overall_status}/10
 			),
 		},
 		{
-			title: "Control Strategies",
+			title: "How You're Managing",
 			icon: <NotepadIcon size={64} />,
 			content: (
 				<div className="space-y-6">
@@ -370,7 +367,7 @@ OVERALL STATUS: ${formData.overall_status}/10
 							className="block text-sm font-medium mb-2"
 							style={{ color: "#5C7F4F" }}
 						>
-							Are my control strategies working effectively right now? (1-10)
+							Is what you're doing to manage this assignment working well right now? (1-10)
 						</label>
 						<div className="flex items-center space-x-4">
 							<input
@@ -404,14 +401,14 @@ OVERALL STATUS: ${formData.overall_status}/10
 							className="block text-sm font-medium mb-2"
 							style={{ color: "#5C7F4F" }}
 						>
-							What adjustments do I need to make to my approach?
+							What do you need to change or adjust right now?
 						</label>
 						<textarea
 							value={formData.strategy_adjustments}
 							onChange={(e) =>
 								handleFieldChange("strategy_adjustments", e.target.value)
 							}
-							placeholder="Quick adjustments needed..."
+							placeholder="Like: take a breath, slow down, ask for clarification, adjust my position..."
 							rows={3}
 							className="w-full px-4 py-3 border rounded-lg resize-none focus:ring-2 focus:ring-sage-500"
 							style={{ borderColor: "#E8E5E0" }}
@@ -430,7 +427,7 @@ OVERALL STATUS: ${formData.overall_status}/10
 							className="block text-sm font-medium mb-2"
 							style={{ color: "#5C7F4F" }}
 						>
-							How is my energy level? (1-10)
+							What's your energy level right now? (1 = exhausted, 10 = energized)
 						</label>
 						<div className="flex items-center space-x-4">
 							<input
@@ -461,14 +458,14 @@ OVERALL STATUS: ${formData.overall_status}/10
 							className="block text-sm font-medium mb-2"
 							style={{ color: "#5C7F4F" }}
 						>
-							What do I need to maintain focus?
+							What would help boost or maintain your energy?
 						</label>
 						<textarea
 							value={formData.focus_maintenance}
 							onChange={(e) =>
 								handleFieldChange("focus_maintenance", e.target.value)
 							}
-							placeholder="Water, brief pause, deep breath, etc..."
+							placeholder="Like: water, quick stretch, brief pause, deep breath, snack..."
 							rows={2}
 							className="w-full px-4 py-3 border rounded-lg resize-none focus:ring-2 focus:ring-sage-500"
 							style={{ borderColor: "#E8E5E0" }}
@@ -487,58 +484,92 @@ OVERALL STATUS: ${formData.overall_status}/10
 							className="block text-sm font-medium mb-2"
 							style={{ color: "#5C7F4F" }}
 						>
-							Am I maintaining professional boundaries appropriately? (1-10)
+							Are you noticing any boundary concerns right now?
 						</label>
-						<div className="flex items-center space-x-4">
-							<input
-								type="range"
-								min="1"
-								max="10"
-								value={formData.boundary_maintenance}
-								onChange={(e) =>
-									handleFieldChange(
-										"boundary_maintenance",
-										parseInt(e.target.value),
-									)
-								}
-								className="flex-1"
-								style={{ accentColor: "#5B9378" }}
-							/>
-							<span
-								className="text-2xl font-bold px-4 py-2 rounded-lg"
-								style={{
-									backgroundColor: "rgba(107, 139, 96, 0.1)",
-									color: "#5C7F4F",
-								}}
-							>
-								{formData.boundary_maintenance}
-							</span>
+						<div className="grid grid-cols-3 gap-3">
+							{[
+								{ value: "10", label: "No concerns", color: "#6B8268" },
+								{ value: "5", label: "Minor concern", color: "#D97706" },
+								{ value: "1", label: "Significant concern", color: "#DC2626" },
+							].map((option) => (
+								<button
+									key={option.value}
+									type="button"
+									onClick={() =>
+										handleFieldChange(
+											"boundary_maintenance",
+											parseInt(option.value),
+										)
+									}
+									className="px-4 py-3 rounded-lg font-medium transition-all text-sm"
+									style={{
+										backgroundColor:
+											formData.boundary_maintenance === parseInt(option.value)
+												? option.color
+												: "#F3F4F6",
+										color:
+											formData.boundary_maintenance === parseInt(option.value)
+												? "white"
+												: "#374151",
+										border: `2px solid ${
+											formData.boundary_maintenance === parseInt(option.value)
+												? option.color
+												: "#E5E7EB"
+										}`,
+									}}
+								>
+									{option.label}
+								</button>
+							))}
 						</div>
 					</div>
 
-					<div>
-						<label
-							className="block text-sm font-medium mb-2"
-							style={{ color: "#5C7F4F" }}
-						>
-							Any boundary concerns? (optional)
-						</label>
-						<textarea
-							value={formData.boundary_concerns}
-							onChange={(e) =>
-								handleFieldChange("boundary_concerns", e.target.value)
-							}
-							placeholder="Note any boundary issues..."
-							rows={2}
-							className="w-full px-4 py-3 border rounded-lg resize-none focus:ring-2 focus:ring-sage-500"
-							style={{ borderColor: "#E8E5E0" }}
-						/>
-					</div>
+					{formData.boundary_maintenance < 10 && (
+						<>
+							<div>
+								<label
+									className="block text-sm font-medium mb-2"
+									style={{ color: "#5C7F4F" }}
+								>
+									What's happening that's making you aware you need a boundary?
+								</label>
+								<textarea
+									value={formData.boundary_concerns}
+									onChange={(e) =>
+										handleFieldChange("boundary_concerns", e.target.value)
+									}
+									placeholder="Like: being asked to do something outside my role, feeling uncomfortable with a request, someone crossing a line..."
+									rows={3}
+									className="w-full px-4 py-3 border rounded-lg resize-none focus:ring-2 focus:ring-sage-500"
+									style={{ borderColor: "#E8E5E0" }}
+								/>
+							</div>
+
+							<div>
+								<label
+									className="block text-sm font-medium mb-2"
+									style={{ color: "#5C7F4F" }}
+								>
+									What personal value or limit is being challenged? (optional)
+								</label>
+								<textarea
+									value={formData.boundary_values || ""}
+									onChange={(e) =>
+										handleFieldChange("boundary_values", e.target.value)
+									}
+									placeholder="Like: my professional role, my comfort level, my ethics, my capacity, my safety..."
+									rows={2}
+									className="w-full px-4 py-3 border rounded-lg resize-none focus:ring-2 focus:ring-sage-500"
+									style={{ borderColor: "#E8E5E0" }}
+								/>
+							</div>
+						</>
+					)}
 				</div>
 			),
 		},
 		{
-			title: "Communication Flow",
+			title: "How Things Are Going",
 			icon: <CommunityIcon size={64} />,
 			content: (
 				<div className="space-y-6">
@@ -547,26 +578,7 @@ OVERALL STATUS: ${formData.overall_status}/10
 							className="block text-sm font-medium mb-2"
 							style={{ color: "#5C7F4F" }}
 						>
-							How are my interpretive choices affecting the communication flow?
-						</label>
-						<textarea
-							value={formData.interpretive_choices}
-							onChange={(e) =>
-								handleFieldChange("interpretive_choices", e.target.value)
-							}
-							placeholder="Quick assessment of impact..."
-							rows={2}
-							className="w-full px-4 py-3 border rounded-lg resize-none focus:ring-2 focus:ring-sage-500"
-							style={{ borderColor: "#E8E5E0" }}
-						/>
-					</div>
-
-					<div>
-						<label
-							className="block text-sm font-medium mb-2"
-							style={{ color: "#5C7F4F" }}
-						>
-							Rate the communication flow (1-10)
+							How is the communication going between everyone? (1 = struggling, 10 = flowing smoothly)
 						</label>
 						<div className="flex items-center space-x-4">
 							<input
@@ -591,11 +603,30 @@ OVERALL STATUS: ${formData.overall_status}/10
 							</span>
 						</div>
 					</div>
+
+					<div>
+						<label
+							className="block text-sm font-medium mb-2"
+							style={{ color: "#5C7F4F" }}
+						>
+							What are you noticing about how things are going? (optional)
+						</label>
+						<textarea
+							value={formData.interpretive_choices}
+							onChange={(e) =>
+								handleFieldChange("interpretive_choices", e.target.value)
+							}
+							placeholder="Like: people seem to understand each other, there's some confusion, the pace is working, someone seems frustrated..."
+							rows={2}
+							className="w-full px-4 py-3 border rounded-lg resize-none focus:ring-2 focus:ring-sage-500"
+							style={{ borderColor: "#E8E5E0" }}
+						/>
+					</div>
 				</div>
 			),
 		},
 		{
-			title: "Cultural Navigation",
+			title: "Cultural & Communication Differences",
 			icon: <Compass className="w-5 h-5" style={{ color: "#5B9378" }} />,
 			content: (
 				<div className="space-y-6">
@@ -604,58 +635,67 @@ OVERALL STATUS: ${formData.overall_status}/10
 							className="block text-sm font-medium mb-2"
 							style={{ color: "#5C7F4F" }}
 						>
-							What cultural factors am I navigating?
+							Are you noticing any cultural or communication style differences?
 						</label>
-						<textarea
-							value={formData.cultural_factors}
-							onChange={(e) =>
-								handleFieldChange("cultural_factors", e.target.value)
-							}
-							placeholder="Successes or struggles with cultural elements..."
-							rows={2}
-							className="w-full px-4 py-3 border rounded-lg resize-none focus:ring-2 focus:ring-sage-500"
-							style={{ borderColor: "#E8E5E0" }}
-						/>
-					</div>
-
-					<div>
-						<label
-							className="block text-sm font-medium mb-2"
-							style={{ color: "#5C7F4F" }}
-						>
-							Cultural navigation success (1-10)
-						</label>
-						<div className="flex items-center space-x-4">
-							<input
-								type="range"
-								min="1"
-								max="10"
-								value={formData.cultural_success}
-								onChange={(e) =>
-									handleFieldChange(
-										"cultural_success",
-										parseInt(e.target.value),
-									)
-								}
-								className="flex-1"
-								style={{ accentColor: "#5B9378" }}
-							/>
-							<span
-								className="text-2xl font-bold px-4 py-2 rounded-lg"
-								style={{
-									backgroundColor: "rgba(107, 139, 96, 0.1)",
-									color: "#5C7F4F",
-								}}
-							>
-								{formData.cultural_success}
-							</span>
+						<div className="grid grid-cols-2 gap-3">
+							{[
+								{ value: "10", label: "Nothing notable" },
+								{ value: "5", label: "Yes, noticing some" },
+							].map((option) => (
+								<button
+									key={option.value}
+									type="button"
+									onClick={() =>
+										handleFieldChange("cultural_success", parseInt(option.value))
+									}
+									className="px-4 py-3 rounded-lg font-medium transition-all text-sm"
+									style={{
+										backgroundColor:
+											formData.cultural_success === parseInt(option.value)
+												? "#6B8268"
+												: "#F3F4F6",
+										color:
+											formData.cultural_success === parseInt(option.value)
+												? "white"
+												: "#374151",
+										border: `2px solid ${
+											formData.cultural_success === parseInt(option.value)
+												? "#6B8268"
+												: "#E5E7EB"
+										}`,
+									}}
+								>
+									{option.label}
+								</button>
+							))}
 						</div>
 					</div>
+
+					{formData.cultural_success === 5 && (
+						<div>
+							<label
+								className="block text-sm font-medium mb-2"
+								style={{ color: "#5C7F4F" }}
+							>
+								What are you noticing or adjusting for?
+							</label>
+							<textarea
+								value={formData.cultural_factors}
+								onChange={(e) =>
+									handleFieldChange("cultural_factors", e.target.value)
+								}
+								placeholder="Like: different directness levels, comfort with silence, formality differences, language preferences, communication pace..."
+								rows={3}
+								className="w-full px-4 py-3 border rounded-lg resize-none focus:ring-2 focus:ring-sage-500"
+								style={{ borderColor: "#E8E5E0" }}
+							/>
+						</div>
+					)}
 				</div>
 			),
 		},
 		{
-			title: "Role Integrity",
+			title: "Staying in Your Role",
 			icon: <AlertTriangle className="w-5 h-5" style={{ color: "#5B9378" }} />,
 			content: (
 				<div className="space-y-6">
@@ -664,50 +704,83 @@ OVERALL STATUS: ${formData.overall_status}/10
 							className="block text-sm font-medium mb-2"
 							style={{ color: "#5C7F4F" }}
 						>
-							Am I staying true to my role as an interpreter? (1-10)
+							Are you being asked or pressured to do something outside your role?
 						</label>
-						<div className="flex items-center space-x-4">
-							<input
-								type="range"
-								min="1"
-								max="10"
-								value={formData.role_adherence}
-								onChange={(e) =>
-									handleFieldChange("role_adherence", parseInt(e.target.value))
-								}
-								className="flex-1"
-								style={{ accentColor: "#5B9378" }}
-							/>
-							<span
-								className="text-2xl font-bold px-4 py-2 rounded-lg"
-								style={{
-									backgroundColor: "rgba(107, 139, 96, 0.1)",
-									color: "#5C7F4F",
-								}}
-							>
-								{formData.role_adherence}
-							</span>
+						<div className="grid grid-cols-2 gap-3">
+							{[
+								{ value: "10", label: "No, all good" },
+								{ value: "5", label: "Yes, something's coming up" },
+							].map((option) => (
+								<button
+									key={option.value}
+									type="button"
+									onClick={() =>
+										handleFieldChange("role_adherence", parseInt(option.value))
+									}
+									className="px-4 py-3 rounded-lg font-medium transition-all text-sm"
+									style={{
+										backgroundColor:
+											formData.role_adherence === parseInt(option.value)
+												? "#6B8268"
+												: "#F3F4F6",
+										color:
+											formData.role_adherence === parseInt(option.value)
+												? "white"
+												: "#374151",
+										border: `2px solid ${
+											formData.role_adherence === parseInt(option.value)
+												? "#6B8268"
+												: "#E5E7EB"
+										}`,
+									}}
+								>
+									{option.label}
+								</button>
+							))}
 						</div>
 					</div>
 
-					<div>
-						<label
-							className="block text-sm font-medium mb-2"
-							style={{ color: "#5C7F4F" }}
-						>
-							Any role challenges? (optional)
-						</label>
-						<textarea
-							value={formData.role_challenges}
-							onChange={(e) =>
-								handleFieldChange("role_challenges", e.target.value)
-							}
-							placeholder="Note any role boundary issues..."
-							rows={2}
-							className="w-full px-4 py-3 border rounded-lg resize-none focus:ring-2 focus:ring-sage-500"
-							style={{ borderColor: "#E8E5E0" }}
-						/>
-					</div>
+					{formData.role_adherence === 5 && (
+						<>
+							<div>
+								<label
+									className="block text-sm font-medium mb-2"
+									style={{ color: "#5C7F4F" }}
+								>
+									What's the situation?
+								</label>
+								<textarea
+									value={formData.role_challenges}
+									onChange={(e) =>
+										handleFieldChange("role_challenges", e.target.value)
+									}
+									placeholder="Like: being asked to give advice, make decisions for someone, do something beyond interpreting..."
+									rows={3}
+									className="w-full px-4 py-3 border rounded-lg resize-none focus:ring-2 focus:ring-sage-500"
+									style={{ borderColor: "#E8E5E0" }}
+								/>
+							</div>
+
+							<div>
+								<label
+									className="block text-sm font-medium mb-2"
+									style={{ color: "#5C7F4F" }}
+								>
+									What did you decide to do or what are you considering? (optional)
+								</label>
+								<textarea
+									value={formData.role_decision || ""}
+									onChange={(e) =>
+										handleFieldChange("role_decision", e.target.value)
+									}
+									placeholder="Your response or what you're thinking about doing..."
+									rows={2}
+									className="w-full px-4 py-3 border rounded-lg resize-none focus:ring-2 focus:ring-sage-500"
+									style={{ borderColor: "#E8E5E0" }}
+								/>
+							</div>
+						</>
+					)}
 				</div>
 			),
 		},
@@ -968,8 +1041,11 @@ OVERALL STATUS: ${formData.overall_status}/10
 							</div>
 							<div>
 								<h2 className="text-2xl font-bold" style={{ color: "#1A1A1A" }}>
-									In-Session Self-Check
+									Mid-Assignment Check-In
 								</h2>
+								<p className="text-sm mt-1" style={{ color: "#5A5A5A" }}>
+									A quick 2-minute check to stay aware and make adjustments
+								</p>
 								<p className="text-sm mt-1" style={{ color: "#5A5A5A" }}>
 									Quick real-time monitoring for active interpreting
 								</p>

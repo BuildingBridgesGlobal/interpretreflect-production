@@ -205,7 +205,7 @@ const TeamingPrep: React.FC<TeamingPrepProps> = ({ onComplete, onClose }) => {
                     step === currentStep
                       ? 'bg-blue-500 text-white scale-110'
                       : step < currentStep
-                        ? 'bg-green-500 text-white'
+                        ? 'bg-[rgba(107,130,104,0.05)]0 text-white'
                         : 'bg-gray-200 text-gray-500'
                   }`}
                 >
@@ -484,7 +484,7 @@ const TeamingPrep: React.FC<TeamingPrepProps> = ({ onComplete, onClose }) => {
                   <p className="text-xs text-gray-500 mt-1">Make it subtle but clear</p>
                 </div>
 
-                <div className="bg-green-50 p-4 rounded-lg">
+                <div className="bg-[rgba(107,130,104,0.05)] p-4 rounded-lg">
                   <p className="text-sm text-green-800">
                     <strong>Research insight:</strong> Teams with backup protocols recover from
                     errors 73% faster (McIntyre & Salas, 1995)
@@ -838,7 +838,7 @@ const TeamingPrep: React.FC<TeamingPrepProps> = ({ onComplete, onClose }) => {
                   'Error plan established',
                   'Energy strategy selected',
                 ].map((item, index) => (
-                  <div key={index} className="flex items-center p-3 bg-green-50 rounded-lg">
+                  <div key={index} className="flex items-center p-3 bg-[rgba(107,130,104,0.05)] rounded-lg">
                     <Check className="w-5 h-5 text-green-600 mr-3" />
                     <span className="text-gray-800">{item}</span>
                   </div>

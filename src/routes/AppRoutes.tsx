@@ -6,7 +6,7 @@ import { GrowthInsights } from "../components/GrowthInsights";
 import { GrowthInsightsDashboard } from "../components/GrowthInsightsDashboard";
 import { ManageSubscription } from "../components/ManageSubscription";
 import { PreAssignmentPrepV5 } from "../components/PreAssignmentPrepV5";
-import { ProfileSettings } from "../components/ProfileSettings";
+import { ProfileSettingsSimplified as ProfileSettings } from "../components/ProfileSettingsSimplified";
 // Component imports
 import LandingPageEnhanced from "../LandingPageEnhanced";
 import { About } from "../pages/About";

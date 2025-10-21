@@ -353,7 +353,7 @@ export const ProfessionalBoundariesReset: React.FC<ProfessionalBoundariesResetPr
             </div>
 
             {/* Remember */}
-            <div className="mb-8 p-5 bg-green-50 rounded-2xl">
+            <div className="mb-8 p-5 bg-[rgba(107,130,104,0.05)] rounded-2xl">
               <h3 className="font-semibold mb-3 text-green-900">Remember:</h3>
               <ul className="space-y-2 text-sm text-green-800">
                 <li>• Feeling affected shows your humanity</li>

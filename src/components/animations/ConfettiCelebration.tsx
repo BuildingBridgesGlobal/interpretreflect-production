@@ -35,10 +35,10 @@ export const ConfettiCelebration: React.FC<ConfettiCelebrationProps> = ({
         rotation: Math.random() * 360,
         scale: 0.5 + Math.random() * 0.5,
         color: [
-          'var(--color-green-500)',
+          '#5B9378',
           'var(--color-indigo-500)',
           'var(--color-success)',
-          'var(--color-green-400)',
+          'rgba(107, 130, 104, 0.4)',
           'var(--color-indigo-400)',
         ][Math.floor(Math.random() * 5)],
         delay: Math.random() * 0.3,

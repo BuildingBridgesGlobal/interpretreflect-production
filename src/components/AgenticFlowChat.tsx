@@ -67,7 +67,7 @@ export function AgenticFlowChat() {
 						style={{
 							borderBottom: "1px solid #E5E5E5",
 							background:
-								"linear-gradient(135deg, var(--color-green-600), var(--color-green-500))",
+								"linear-gradient(135deg, #6B8268, #5B9378)",
 						}}
 					>
 						<div className="flex items-center gap-2">

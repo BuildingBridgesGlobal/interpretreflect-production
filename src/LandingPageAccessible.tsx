@@ -30,24 +30,29 @@ interface LandingPageProps {
   onGetStarted: () => void;
 }
 
-// WCAG AA Color Contrast Ratios
+// InterpretReflect Color Palette - Matching App Theme
 const colors = {
-  // Primary colors with AA contrast ratios (4.5:1 minimum)
+  // Sage Green Primary Colors
   sage: {
-    600: '#4A6D3F', // Darker for better contrast
-    500: '#5C7F4F',
-    400: '#6B8B60',
-    300: '#7A9B6E',
-    100: '#F0F5ED',
-    50: '#F5F9F3',
+    600: '#5C7F4F', // Dark sage for text and emphasis
+    500: '#6B8268', // Primary sage green
+    400: '#5B9378', // Light sage for accents
+    300: '#7BA88D', // Lighter sage
+    100: '#F5F9F6', // Very light sage background
+    50: '#FAFAF8',  // Lightest sage tint
+  },
+  beige: {
+    primary: '#FAF8F5', // Main beige background
+    light: '#FAFAF8',   // Light beige
+    card: '#FFFFFF',    // Card background
   },
   gray: {
-    900: '#1A1A1A', // 15.7:1 contrast on white
-    800: '#2D3748', // 11.5:1 contrast on white
-    700: '#4A5568', // 7.5:1 contrast on white
-    600: '#5A5A5A', // 5.9:1 contrast on white
-    500: '#718096', // 4.6:1 contrast on white (minimum AA)
-    100: '#F7FAFC',
+    900: '#1A1A1A', // Darkest text
+    800: '#2D2D2D', // Dark text
+    700: '#3A3A3A', // Medium dark text
+    600: '#6B7280', // Medium gray
+    500: '#9CA3AF', // Light gray
+    100: '#F3F4F6', // Very light gray
     50: '#FAF9F6',
   }
 };
@@ -104,7 +109,7 @@ function LandingPageAccessible({ onGetStarted }: LandingPageProps) {
   };
 
   return (
-    <div style={{ backgroundColor: colors.gray[50], minHeight: '100vh' }}>
+    <div style={{ backgroundColor: colors.beige.primary, minHeight: '100vh' }}>
       {/* Skip to main content link for screen readers and keyboard users */}
       <a 
         href="#main-content" 
@@ -120,9 +125,9 @@ function LandingPageAccessible({ onGetStarted }: LandingPageProps) {
         role="navigation"
         aria-label="Main navigation"
         style={{
-          backgroundColor: 'rgba(250, 249, 246, 0.95)',
+          backgroundColor: 'rgba(255, 255, 255, 0.95)',
           backdropFilter: 'blur(10px)',
-          borderBottom: `1px solid ${colors.sage[300]}40`,
+          borderBottom: `1px solid rgba(107, 130, 104, 0.2)`,
         }}
       >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -193,9 +198,9 @@ function LandingPageAccessible({ onGetStarted }: LandingPageProps) {
                 onClick={handleSignup}
                 className="px-5 py-2.5 rounded-lg font-semibold transition-all focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-white min-h-[44px]"
                 style={{
-                  backgroundColor: colors.sage[600],
+                  background: 'linear-gradient(135deg, #5B9378 0%, #7BA88D 100%)',
                   color: '#FFFFFF',
-                  boxShadow: `0 2px 8px ${colors.sage[400]}40`,
+                  boxShadow: `0 2px 8px rgba(91, 147, 120, 0.3)`,
                 }}
                 onMouseEnter={(e) => {
                   e.currentTarget.style.transform = 'translateY(-1px)';
@@ -234,7 +239,7 @@ function LandingPageAccessible({ onGetStarted }: LandingPageProps) {
                 onClick={handleSignup}
                 className="block w-full text-left px-4 py-3 font-semibold rounded-lg min-h-[44px]"
                 style={{
-                  backgroundColor: colors.sage[600],
+                  background: 'linear-gradient(135deg, #5B9378 0%, #7BA88D 100%)',
                   color: '#FFFFFF',
                 }}
                 aria-label="Sign up for a new InterpretReflect account"
@@ -322,17 +327,17 @@ function LandingPageAccessible({ onGetStarted }: LandingPageProps) {
                   onClick={onGetStarted}
                   className="px-8 py-4 rounded-xl font-semibold text-lg transition-all inline-flex items-center justify-center focus:outline-none focus:ring-4 focus:ring-offset-2 focus:ring-sage-600 min-h-[48px] min-w-[200px]"
                   style={{
-                    backgroundColor: colors.sage[600],
+                    background: 'linear-gradient(135deg, #5B9378 0%, #7BA88D 100%)',
                     color: '#FFFFFF',
-                    boxShadow: `0 4px 15px ${colors.sage[400]}4D`,
+                    boxShadow: `0 4px 15px rgba(91, 147, 120, 0.3)`,
                   }}
                   onMouseEnter={(e) => {
                     e.currentTarget.style.transform = 'translateY(-2px) scale(1.02)';
-                    e.currentTarget.style.boxShadow = `0 8px 25px ${colors.sage[400]}66`;
+                    e.currentTarget.style.boxShadow = `0 8px 25px rgba(91, 147, 120, 0.4)`;
                   }}
                   onMouseLeave={(e) => {
                     e.currentTarget.style.transform = 'translateY(0) scale(1)';
-                    e.currentTarget.style.boxShadow = `0 4px 15px ${colors.sage[400]}4D`;
+                    e.currentTarget.style.boxShadow = `0 4px 15px rgba(91, 147, 120, 0.3)`;
                   }}
                   aria-label="Get started with InterpretReflect - Beta access for $12 per month"
                 >

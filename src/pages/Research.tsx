@@ -10,10 +10,11 @@ const Research: React.FC = () => {
         <div className="max-w-4xl mx-auto px-6 py-6">
           <Link
             to="/"
-            className="inline-flex items-center gap-2 text-sm text-gray-600 hover:text-gray-900 mb-4 transition-colors"
+            className="inline-flex items-center gap-2 mb-4 px-3 py-2 rounded-lg transition-all hover:bg-opacity-80 no-underline"
+            style={{ color: "#6B8268", backgroundColor: "rgba(107, 130, 104, 0.1)" }}
           >
             <ArrowLeft className="w-4 h-4" />
-            Back to Home
+            <span className="text-sm font-medium">Back to Home</span>
           </Link>
           <div className="flex items-center gap-3 mb-2">
             <BookOpen className="w-8 h-8 text-green-600" />

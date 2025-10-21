@@ -23,10 +23,11 @@ export const ResearchEvidence: React.FC = () => {
 						<div className="flex items-center space-x-4">
 							<Link
 								to="/"
-								className="flex items-center text-gray-600 hover:text-gray-900 transition-colors"
+								className="flex items-center gap-2 px-3 py-2 rounded-lg transition-all hover:bg-opacity-80"
+								style={{ color: "#6B8268", backgroundColor: "rgba(107, 130, 104, 0.1)" }}
 							>
-								<ArrowLeft className="h-5 w-5 mr-2" />
-								Back to Dashboard
+								<ArrowLeft className="w-4 h-4" />
+								<span className="text-sm font-medium">Back to Home</span>
 							</Link>
 						</div>
 						<div className="text-center">

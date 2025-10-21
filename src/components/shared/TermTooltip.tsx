@@ -45,7 +45,7 @@ export const TermTooltip: React.FC<TermTooltipProps> = ({
 				<span
 					className="underline decoration-dotted decoration-2 cursor-help"
 					style={{
-						textDecorationColor: "var(--color-green-500)",
+						textDecorationColor: "#5B9378",
 						color: "inherit",
 					}}
 					onMouseEnter={() => setIsVisible(true)}

@@ -473,7 +473,7 @@ const MentoringReflection: React.FC<MentoringReflectionProps> = ({ onComplete, o
                     step === currentStep
                       ? 'bg-purple-500 text-white scale-110'
                       : step < currentStep
-                        ? 'bg-green-500 text-white'
+                        ? 'bg-[rgba(107,130,104,0.05)]0 text-white'
                         : 'bg-gray-200 text-gray-500'
                   }`}
                 >
@@ -683,7 +683,7 @@ const MentoringReflection: React.FC<MentoringReflectionProps> = ({ onComplete, o
                       {
                         value: 'supported',
                         label: 'Supported and understood',
-                        color: 'bg-green-50',
+                        color: 'bg-[rgba(107,130,104,0.05)]',
                       },
                       {
                         value: 'challenged-safe',
@@ -770,7 +770,7 @@ const MentoringReflection: React.FC<MentoringReflectionProps> = ({ onComplete, o
                 )}
 
                 {isPositiveFeelings && (
-                  <div className="bg-green-50 p-4 rounded-lg space-y-3">
+                  <div className="bg-[rgba(107,130,104,0.05)] p-4 rounded-lg space-y-3">
                     <h4 className="font-medium text-gray-900">If positive feelings arose:</h4>
 
                     <div>
@@ -953,7 +953,7 @@ const MentoringReflection: React.FC<MentoringReflectionProps> = ({ onComplete, o
               </div>
 
               <div className="space-y-4">
-                <div className="bg-green-50 p-4 rounded-lg">
+                <div className="bg-[rgba(107,130,104,0.05)] p-4 rounded-lg">
                   <h4 className="font-semibold text-gray-900 mb-4">My Learning Zone:</h4>
 
                   <div className="space-y-3">

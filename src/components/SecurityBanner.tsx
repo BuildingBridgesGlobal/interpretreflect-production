@@ -132,7 +132,7 @@ const SecurityBanner: React.FC<SecurityBannerProps> = ({
 				};
 			case "success":
 				return {
-					bg: "bg-green-50 border-green-200",
+					bg: "bg-[rgba(107,130,104,0.05)] border-green-200",
 					text: "text-green-900",
 					icon: "text-green-600",
 				};

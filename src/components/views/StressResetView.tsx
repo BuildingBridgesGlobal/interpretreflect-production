@@ -41,6 +41,7 @@ export const StressResetView: React.FC<StressResetViewProps> = ({
 			className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8"
 			role="main"
 			aria-labelledby="stress-reset-heading"
+			style={{ backgroundColor: "#FAF8F5", minHeight: "100vh" }}
 		>
 			<header className="text-center mb-12">
 				<h1

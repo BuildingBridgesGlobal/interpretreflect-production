@@ -275,7 +275,7 @@ const PostAssignmentDebrief: React.FC<PostAssignmentDebriefProps> = ({ onComplet
                     )}
 
                     {shakeTimer === 0 && (
-                      <div className="p-3 rounded-lg bg-green-50">
+                      <div className="p-3 rounded-lg bg-[rgba(107,130,104,0.05)]">
                         <CheckCircle className="h-5 w-5 text-green-500 inline mr-2" />
                         <span className="text-sm" style={{ color: '#059669' }}>
                           Stress hormones discharged!
@@ -351,7 +351,7 @@ const PostAssignmentDebrief: React.FC<PostAssignmentDebriefProps> = ({ onComplet
                     </div>
 
                     {breathCount >= 3 && (
-                      <div className="p-3 rounded-lg bg-green-50 mt-3">
+                      <div className="p-3 rounded-lg bg-[rgba(107,130,104,0.05)] mt-3">
                         <CheckCircle className="h-5 w-5 text-green-500 inline mr-2" />
                         <span className="text-sm" style={{ color: '#059669' }}>
                           Autonomic nervous system calmed!
@@ -418,14 +418,14 @@ const PostAssignmentDebrief: React.FC<PostAssignmentDebriefProps> = ({ onComplet
                     {!isReleasingJaw && jawReleaseTimer === 20 && (
                       <button
                         onClick={startJawRelease}
-                        className="w-full px-4 py-2 rounded-lg bg-green-500 text-white font-semibold"
+                        className="w-full px-4 py-2 rounded-lg bg-[rgba(107,130,104,0.05)]0 text-white font-semibold"
                       >
                         Start Release
                       </button>
                     )}
 
                     {jawReleaseTimer === 0 && (
-                      <div className="p-3 rounded-lg bg-green-50">
+                      <div className="p-3 rounded-lg bg-[rgba(107,130,104,0.05)]">
                         <CheckCircle className="h-5 w-5 text-green-500 inline mr-2" />
                         <span className="text-sm" style={{ color: '#059669' }}>
                           Tension released!
@@ -1060,7 +1060,7 @@ const PostAssignmentDebrief: React.FC<PostAssignmentDebriefProps> = ({ onComplet
                           onClick={() => setStressLevelAfter(level)}
                           className={`w-12 h-12 rounded-lg border-2 font-semibold transition-all ${
                             stressLevelAfter === level
-                              ? 'bg-green-500 text-white border-green-500'
+                              ? 'bg-[rgba(107,130,104,0.05)]0 text-white border-[#6B8268]'
                               : 'bg-white border-gray-300'
                           }`}
                         >
@@ -1094,7 +1094,7 @@ const PostAssignmentDebrief: React.FC<PostAssignmentDebriefProps> = ({ onComplet
                             <div
                               className={`w-5 h-5 rounded-full border-2 mr-3 ${
                                 completionLevel === level
-                                  ? 'bg-green-500 border-green-500'
+                                  ? 'bg-[rgba(107,130,104,0.05)]0 border-[#6B8268]'
                                   : 'border-gray-300'
                               }`}
                             >
@@ -1151,7 +1151,7 @@ const PostAssignmentDebrief: React.FC<PostAssignmentDebriefProps> = ({ onComplet
                     currentStep === index
                       ? 'bg-gradient-to-br from-green-400 to-green-600 text-white scale-110'
                       : currentStep > index
-                        ? 'bg-green-500 text-white'
+                        ? 'bg-[rgba(107,130,104,0.05)]0 text-white'
                         : 'bg-gray-200 text-gray-400'
                   }`}
                 >
@@ -1164,7 +1164,7 @@ const PostAssignmentDebrief: React.FC<PostAssignmentDebriefProps> = ({ onComplet
                 {index < steps.length - 1 && (
                   <div
                     className={`w-full h-1 mx-2 ${
-                      currentStep > index ? 'bg-green-500' : 'bg-gray-200'
+                      currentStep > index ? 'bg-[rgba(107,130,104,0.05)]0' : 'bg-gray-200'
                     }`}
                   />
                 )}

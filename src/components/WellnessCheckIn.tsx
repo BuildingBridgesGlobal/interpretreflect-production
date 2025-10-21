@@ -338,7 +338,7 @@ const WellnessCheckIn: React.FC<WellnessCheckInProps> = ({ onComplete, onClose }
   const getWellnessColor = () => {
     switch (wellnessLevel) {
       case 'green':
-        return 'bg-green-500';
+        return 'bg-[rgba(107,130,104,0.05)]0';
       case 'yellow':
         return 'bg-yellow-500';
       case 'orange':
@@ -382,7 +382,7 @@ const WellnessCheckIn: React.FC<WellnessCheckInProps> = ({ onComplete, onClose }
                     step === currentStep
                       ? 'bg-teal-500 text-white scale-110'
                       : step < currentStep
-                        ? 'bg-green-500 text-white'
+                        ? 'bg-[rgba(107,130,104,0.05)]0 text-white'
                         : 'bg-gray-200 text-gray-500'
                   }`}
                 >
@@ -416,7 +416,7 @@ const WellnessCheckIn: React.FC<WellnessCheckInProps> = ({ onComplete, onClose }
                   <label className="font-medium text-gray-700 mb-2 block">Head & Neck:</label>
                   <div className="grid grid-cols-2 gap-2">
                     {[
-                      { value: 'clear', label: 'Clear and comfortable', color: 'bg-green-50' },
+                      { value: 'clear', label: 'Clear and comfortable', color: 'bg-[rgba(107,130,104,0.05)]' },
                       { value: 'mild', label: 'Mild tension/pressure', color: 'bg-yellow-50' },
                       { value: 'headache', label: 'Headache brewing', color: 'bg-orange-50' },
                       { value: 'pain', label: 'Significant pain', color: 'bg-red-50' },
@@ -444,7 +444,7 @@ const WellnessCheckIn: React.FC<WellnessCheckInProps> = ({ onComplete, onClose }
                   </label>
                   <div className="grid grid-cols-2 gap-2">
                     {[
-                      { value: 'relaxed', label: 'Relaxed and loose', color: 'bg-green-50' },
+                      { value: 'relaxed', label: 'Relaxed and loose', color: 'bg-[rgba(107,130,104,0.05)]' },
                       { value: 'slight', label: 'Slightly tight', color: 'bg-yellow-50' },
                       { value: 'tense', label: 'Noticeably tense', color: 'bg-orange-50' },
                       { value: 'locked', label: 'Locked up/painful', color: 'bg-red-50' },
@@ -470,7 +470,7 @@ const WellnessCheckIn: React.FC<WellnessCheckInProps> = ({ onComplete, onClose }
                   <label className="font-medium text-gray-700 mb-2 block">Chest & Breathing:</label>
                   <div className="grid grid-cols-2 gap-2">
                     {[
-                      { value: 'open', label: 'Open, easy breathing', color: 'bg-green-50' },
+                      { value: 'open', label: 'Open, easy breathing', color: 'bg-[rgba(107,130,104,0.05)]' },
                       { value: 'slight', label: 'Slight tightness', color: 'bg-yellow-50' },
                       { value: 'shallow', label: 'Shallow breathing', color: 'bg-orange-50' },
                       { value: 'pressure', label: 'Chest pressure/anxiety', color: 'bg-red-50' },
@@ -501,7 +501,7 @@ const WellnessCheckIn: React.FC<WellnessCheckInProps> = ({ onComplete, onClose }
                       {
                         value: 'comfortable',
                         label: 'Comfortable and settled',
-                        color: 'bg-green-50',
+                        color: 'bg-[rgba(107,130,104,0.05)]',
                       },
                       { value: 'unsettled', label: 'Slightly unsettled', color: 'bg-yellow-50' },
                       { value: 'nervous', label: 'Nervous/butterflies', color: 'bg-orange-50' },
@@ -532,7 +532,7 @@ const WellnessCheckIn: React.FC<WellnessCheckInProps> = ({ onComplete, onClose }
                   <label className="font-medium text-gray-700 mb-2 block">Overall Energy:</label>
                   <div className="grid grid-cols-2 gap-2">
                     {[
-                      { value: 'energized', label: 'Energized and vital', color: 'bg-green-50' },
+                      { value: 'energized', label: 'Energized and vital', color: 'bg-[rgba(107,130,104,0.05)]' },
                       { value: 'steady', label: 'Steady and stable', color: 'bg-blue-50' },
                       { value: 'low', label: 'Low but functional', color: 'bg-yellow-50' },
                       { value: 'depleted', label: 'Depleted/exhausted', color: 'bg-red-50' },
@@ -744,7 +744,7 @@ const WellnessCheckIn: React.FC<WellnessCheckInProps> = ({ onComplete, onClose }
                   </label>
                   <div className="space-y-2">
                     {[
-                      { value: 'clear', label: 'Clear and sharp', color: 'bg-green-50' },
+                      { value: 'clear', label: 'Clear and sharp', color: 'bg-[rgba(107,130,104,0.05)]' },
                       { value: 'full', label: 'Functional but full', color: 'bg-yellow-50' },
                       { value: 'foggy', label: 'Foggy/forgetful', color: 'bg-orange-50' },
                       { value: 'cant-hold', label: "Can't hold thoughts", color: 'bg-red-50' },
@@ -772,7 +772,7 @@ const WellnessCheckIn: React.FC<WellnessCheckInProps> = ({ onComplete, onClose }
                   </label>
                   <div className="space-y-2">
                     {[
-                      { value: 'quick', label: 'Quick and confident', color: 'bg-green-50' },
+                      { value: 'quick', label: 'Quick and confident', color: 'bg-[rgba(107,130,104,0.05)]' },
                       { value: 'slower', label: 'Slower but accurate', color: 'bg-yellow-50' },
                       {
                         value: 'struggling',
@@ -804,7 +804,7 @@ const WellnessCheckIn: React.FC<WellnessCheckInProps> = ({ onComplete, onClose }
                   </label>
                   <div className="space-y-2">
                     {[
-                      { value: 'flowing', label: 'Words flow easily', color: 'bg-green-50' },
+                      { value: 'flowing', label: 'Words flow easily', color: 'bg-[rgba(107,130,104,0.05)]' },
                       {
                         value: 'delays',
                         label: 'Occasional word-finding delays',
@@ -841,7 +841,7 @@ const WellnessCheckIn: React.FC<WellnessCheckInProps> = ({ onComplete, onClose }
                       {
                         value: 'sustained',
                         label: 'Sustained focus possible',
-                        color: 'bg-green-50',
+                        color: 'bg-[rgba(107,130,104,0.05)]',
                       },
                       { value: 'breaks', label: 'Need frequent breaks', color: 'bg-yellow-50' },
                       {
@@ -924,7 +924,7 @@ const WellnessCheckIn: React.FC<WellnessCheckInProps> = ({ onComplete, onClose }
                   </label>
                   <div className="space-y-2">
                     {[
-                      { value: 'none', label: 'No intrusive thoughts', color: 'bg-green-50' },
+                      { value: 'none', label: 'No intrusive thoughts', color: 'bg-[rgba(107,130,104,0.05)]' },
                       {
                         value: 'occasional',
                         label: 'Occasional unwanted images',
@@ -969,7 +969,7 @@ const WellnessCheckIn: React.FC<WellnessCheckInProps> = ({ onComplete, onClose }
                   </label>
                   <div className="space-y-2">
                     {[
-                      { value: 'none', label: 'Not avoiding anything', color: 'bg-green-50' },
+                      { value: 'none', label: 'Not avoiding anything', color: 'bg-[rgba(107,130,104,0.05)]' },
                       { value: 'topics', label: 'Avoiding certain topics', color: 'bg-yellow-50' },
                       {
                         value: 'settings',
@@ -1002,7 +1002,7 @@ const WellnessCheckIn: React.FC<WellnessCheckInProps> = ({ onComplete, onClose }
                   </label>
                   <div className="space-y-2">
                     {[
-                      { value: 'calm', label: 'Generally calm', color: 'bg-green-50' },
+                      { value: 'calm', label: 'Generally calm', color: 'bg-[rgba(107,130,104,0.05)]' },
                       { value: 'edge', label: 'Mildly on edge', color: 'bg-yellow-50' },
                       { value: 'hyper', label: 'Hypervigilant', color: 'bg-orange-50' },
                       { value: 'startled', label: 'Easily startled', color: 'bg-red-50' },
@@ -1032,7 +1032,7 @@ const WellnessCheckIn: React.FC<WellnessCheckInProps> = ({ onComplete, onClose }
                       {
                         value: 'balanced',
                         label: 'Maintaining balanced perspective',
-                        color: 'bg-green-50',
+                        color: 'bg-[rgba(107,130,104,0.05)]',
                       },
                       { value: 'cynical', label: 'Slightly more cynical', color: 'bg-yellow-50' },
                       { value: 'losing', label: 'Losing faith in humanity', color: 'bg-orange-50' },
@@ -1125,7 +1125,7 @@ const WellnessCheckIn: React.FC<WellnessCheckInProps> = ({ onComplete, onClose }
                   </div>
                 </div>
 
-                <div className="bg-green-50 p-4 rounded-lg">
+                <div className="bg-[rgba(107,130,104,0.05)] p-4 rounded-lg">
                   <h4 className="font-semibold text-gray-900 mb-3">Social resources:</h4>
                   <div className="grid grid-cols-3 gap-3">
                     {[
@@ -1259,7 +1259,7 @@ const WellnessCheckIn: React.FC<WellnessCheckInProps> = ({ onComplete, onClose }
                           'Resources are adequate',
                           'Need: Maintenance',
                         ],
-                        color: 'bg-green-50 border-green-300',
+                        color: 'bg-[rgba(107,130,104,0.05)] border-green-300',
                       },
                       {
                         value: 'yellow',
@@ -1307,7 +1307,7 @@ const WellnessCheckIn: React.FC<WellnessCheckInProps> = ({ onComplete, onClose }
                           <div
                             className={`w-4 h-4 rounded-full mt-1 mr-3 ${
                               level.value === 'green'
-                                ? 'bg-green-500'
+                                ? 'bg-[rgba(107,130,104,0.05)]0'
                                 : level.value === 'yellow'
                                   ? 'bg-yellow-500'
                                   : level.value === 'orange'
@@ -1475,7 +1475,7 @@ const WellnessCheckIn: React.FC<WellnessCheckInProps> = ({ onComplete, onClose }
                         className={`flex-1 py-3 px-4 rounded-lg font-medium transition-all ${
                           physicalTrend === trend.toLowerCase()
                             ? trend === 'Better'
-                              ? 'bg-green-500 text-white'
+                              ? 'bg-[rgba(107,130,104,0.05)]0 text-white'
                               : trend === 'Same'
                                 ? 'bg-blue-500 text-white'
                                 : 'bg-red-500 text-white'
@@ -1498,7 +1498,7 @@ const WellnessCheckIn: React.FC<WellnessCheckInProps> = ({ onComplete, onClose }
                         className={`flex-1 py-3 px-4 rounded-lg font-medium transition-all ${
                           emotionalTrend === trend.toLowerCase()
                             ? trend === 'Better'
-                              ? 'bg-green-500 text-white'
+                              ? 'bg-[rgba(107,130,104,0.05)]0 text-white'
                               : trend === 'Same'
                                 ? 'bg-blue-500 text-white'
                                 : 'bg-red-500 text-white'
@@ -1521,7 +1521,7 @@ const WellnessCheckIn: React.FC<WellnessCheckInProps> = ({ onComplete, onClose }
                         className={`flex-1 py-3 px-4 rounded-lg font-medium transition-all ${
                           mentalTrend === trend.toLowerCase()
                             ? trend === 'Better'
-                              ? 'bg-green-500 text-white'
+                              ? 'bg-[rgba(107,130,104,0.05)]0 text-white'
                               : trend === 'Same'
                                 ? 'bg-blue-500 text-white'
                                 : 'bg-red-500 text-white'
@@ -1546,7 +1546,7 @@ const WellnessCheckIn: React.FC<WellnessCheckInProps> = ({ onComplete, onClose }
                         className={`flex-1 py-3 px-4 rounded-lg font-medium transition-all ${
                           overallTrend === trend.toLowerCase()
                             ? trend === 'Improving'
-                              ? 'bg-green-500 text-white'
+                              ? 'bg-[rgba(107,130,104,0.05)]0 text-white'
                               : trend === 'Stable'
                                 ? 'bg-blue-500 text-white'
                                 : 'bg-red-500 text-white'

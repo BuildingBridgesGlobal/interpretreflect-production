@@ -210,7 +210,7 @@ export const TestAttestationReceipt: React.FC = () => {
 
 			{/* Latest Receipt */}
 			{receipt && (
-				<div className="mb-6 p-4 bg-green-50 border-2 border-green-200 rounded-lg">
+				<div className="mb-6 p-4 bg-[rgba(107,130,104,0.05)] border-2 border-green-200 rounded-lg">
 					<h3 className="font-semibold mb-2">Latest Receipt Generated</h3>
 					<div className="text-sm space-y-1 font-mono">
 						<p><strong>ID:</strong> {receipt.receipt_id}</p>

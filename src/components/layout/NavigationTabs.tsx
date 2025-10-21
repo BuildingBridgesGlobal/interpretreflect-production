@@ -20,7 +20,7 @@ export const NavigationTabs: React.FC<NavigationTabsProps> = ({
 	return (
 		<div
 			className="px-4 sm:px-6 lg:px-8 py-4"
-			style={{ backgroundColor: "#F8FAFB" }}
+			style={{ backgroundColor: "#FAF8F5" }}
 		>
 			{/* Mobile-optimized styles */}
 			<style>{`

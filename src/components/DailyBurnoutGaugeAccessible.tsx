@@ -347,8 +347,9 @@ const DailyBurnoutGaugeAccessible: React.FC<DailyBurnoutGaugeProps> = ({
 		const rawTotal = Object.values(answers).reduce((sum, val) => sum + val, 0);
 
 		// Normalize to 0-10 scale for display and database
-		// (rawTotal - 5) / 20 * 10 = maps 5-25 to 0-10
-		const normalizedScore = Math.round(((rawTotal - 5) / 20) * 10 * 10) / 10; // Round to 1 decimal
+		// INVERTED: Higher answers (5's) = LOWER burnout (0), Lower answers (1's) = HIGHER burnout (10)
+		// (25 - rawTotal) / 20 * 10 = maps 25→0 (no burnout) and 5→10 (high burnout)
+		const normalizedScore = Math.round(((25 - rawTotal) / 20) * 10 * 10) / 10; // Round to 1 decimal
 
 		// Get risk level based on normalized score
 		const level = getRiskLevelFromNormalized(normalizedScore);

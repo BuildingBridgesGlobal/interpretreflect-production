@@ -35,7 +35,6 @@ import {
 
 interface AccessibleHomepageProps {
   onShowWellnessCheckIn: () => void;
-  onShowEthicsMeaningCheck: () => void;
   onShowPreAssignmentPrep: () => void;
   onShowPostAssignmentDebrief: () => void;
   onShowBreathingPractice: () => void;
@@ -48,14 +47,12 @@ interface AccessibleHomepageProps {
   onShowMentoringReflection: () => void;
   onShowTeamReflection: () => void;
   onShowInSessionSelfCheck: () => void;
-  onShowInSessionTeamSync: () => void;
   burnoutData: any;
   onBurnoutComplete: (data: any) => void;
 }
 
 export const AccessibleHomepage: React.FC<AccessibleHomepageProps> = ({
   onShowWellnessCheckIn,
-  onShowEthicsMeaningCheck,
   onShowPreAssignmentPrep,
   onShowPostAssignmentDebrief,
   onShowBreathingPractice,
@@ -68,7 +65,6 @@ export const AccessibleHomepage: React.FC<AccessibleHomepageProps> = ({
   onShowMentoringReflection,
   onShowTeamReflection,
   onShowInSessionSelfCheck,
-  onShowInSessionTeamSync,
   burnoutData,
   onBurnoutComplete
 }) => {
@@ -211,37 +207,6 @@ export const AccessibleHomepage: React.FC<AccessibleHomepageProps> = ({
               >
                 <div className="flex items-start gap-4">
                   <div 
-                    className="p-3 bg-blue-100 rounded-lg"
-                    aria-hidden="true"
-                  >
-                    <BookOpen className="w-6 h-6 text-blue-600" />
-                  </div>
-                  <div className="flex-1">
-                    <h3 className="font-semibold text-lg mb-2 text-gray-800">
-                      Values Alignment Check
-                    </h3>
-                    <p className="text-sm text-gray-600 mb-4">
-                      Reflect on professional boundaries and purpose
-                    </p>
-                    <button
-                      onClick={onShowEthicsMeaningCheck}
-                      className={getButtonStyle('primary')}
-                      style={{ background: 'linear-gradient(135deg, #1b5e20, #2e7d32)' }}
-                      aria-label="Start Values Alignment reflection"
-                    >
-                      Begin Reflection
-                      <ChevronRight className="inline ml-2 w-4 h-4" aria-hidden="true" />
-                    </button>
-                  </div>
-                </div>
-              </article>
-
-              <article 
-                className="p-6 bg-white rounded-xl shadow-md hover:shadow-lg transition-shadow"
-                role="listitem"
-              >
-                <div className="flex items-start gap-4">
-                  <div 
                     className="p-3 bg-purple-100 rounded-lg"
                     aria-hidden="true"
                   >
@@ -323,37 +288,6 @@ export const AccessibleHomepage: React.FC<AccessibleHomepageProps> = ({
                       aria-label="Start In-Session Self-Check"
                     >
                       Begin Check
-                      <ChevronRight className="inline ml-2 w-4 h-4" aria-hidden="true" />
-                    </button>
-                  </div>
-                </div>
-              </article>
-
-              <article 
-                className="p-6 bg-white rounded-xl shadow-md hover:shadow-lg transition-shadow"
-                role="listitem"
-              >
-                <div className="flex items-start gap-4">
-                  <div 
-                    className="p-3 bg-purple-100 rounded-lg"
-                    aria-hidden="true"
-                  >
-                    <Users className="w-6 h-6 text-purple-600" />
-                  </div>
-                  <div className="flex-1">
-                    <h3 className="font-semibold text-lg mb-2 text-gray-800">
-                      In-Session Team Sync
-                    </h3>
-                    <p className="text-sm text-gray-600 mb-4">
-                      Team coordination during assignments
-                    </p>
-                    <button
-                      onClick={onShowInSessionTeamSync}
-                      className={getButtonStyle('primary')}
-                      style={{ background: 'linear-gradient(135deg, #1b5e20, #2e7d32)' }}
-                      aria-label="Start In-Session Team Sync"
-                    >
-                      Begin Sync
                       <ChevronRight className="inline ml-2 w-4 h-4" aria-hidden="true" />
                     </button>
                   </div>

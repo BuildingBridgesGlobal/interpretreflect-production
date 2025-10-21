@@ -690,7 +690,7 @@ export const ProfessionalBoundariesResetAccessible: React.FC<
 							</div>
 
 							<div className="space-y-6">
-								<div className="p-4 bg-green-50 rounded-lg">
+								<div className="p-4 bg-[rgba(107,130,104,0.05)] rounded-lg">
 									<h3 className="font-semibold text-green-900 mb-2">
 										Anterior Cingulate Cortex Activation
 									</h3>

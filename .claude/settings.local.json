@@ -49,7 +49,9 @@
       "Bash(git revert 125d8a6 --no-edit)",
       "Bash(npx tsc --noEmit --skipLibCheck src/App.tsx)",
       "Bash(timeout 3 npm run dev)",
-      "Read(//c/**)"
+      "Read(//c/**)",
+      "Bash(pkill:*)",
+      "Bash(git restore:*)"
     ],
     "deny": [],
     "ask": []

@@ -139,7 +139,7 @@ export const InteroceptiveScan: React.FC<InteroceptiveScanProps> = ({ onClose })
 
                 <div className="space-y-4">
                   {bodyZones[currentZone].prompts.map((prompt, index) => (
-                    <div key={index} className="p-4 bg-gray-50 rounded-lg border-l-4 border-green-500">
+                    <div key={index} className="p-4 bg-gray-50 rounded-lg border-l-4 border-[#6B8268]">
                       <p className="text-gray-800 leading-relaxed">{prompt}</p>
                     </div>
                   ))}
@@ -147,7 +147,7 @@ export const InteroceptiveScan: React.FC<InteroceptiveScanProps> = ({ onClose })
               </div>
 
               {/* Take Your Time Reminder */}
-              <div className="bg-green-50 rounded-lg p-4 mb-6">
+              <div className="bg-[rgba(107,130,104,0.05)] rounded-lg p-4 mb-6">
                 <p className="text-sm text-gray-700 italic text-center">
                   Take your time. Breathe naturally. Simply notice what's there.
                 </p>
@@ -233,7 +233,7 @@ export const InteroceptiveScan: React.FC<InteroceptiveScanProps> = ({ onClose })
             </div>
 
             {/* Why This Works */}
-            <div className="bg-green-50 border-l-4 border-green-500 p-4 mb-6">
+            <div className="bg-[rgba(107,130,104,0.05)] border-l-4 border-[#6B8268] p-4 mb-6">
               <div className="flex items-start gap-3">
                 <Brain className="w-5 h-5 text-green-600 flex-shrink-0 mt-0.5" />
                 <div>

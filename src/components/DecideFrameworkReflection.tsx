@@ -96,7 +96,13 @@ export const DecideFrameworkReflection: React.FC<
 	};
 
 	const handleComplete = async () => {
-		if (!user || hasSaved || isSubmitting) return;
+		if (!user || hasSaved || isSubmitting) {
+			console.log("DecideFramework - Already saving or saved, ignoring duplicate click");
+			return;
+		}
+
+		console.log("DecideFramework - handleComplete called");
+		console.log("DecideFramework - User:", { id: user.id, email: user.email });
 
 		setIsSubmitting(true);
 
@@ -104,11 +110,15 @@ export const DecideFrameworkReflection: React.FC<
 			const dataToSave = {
 				...responses,
 				completed_at: new Date().toISOString(),
+				// Add field for getDisplayName fallback
+				ethical_decision: responses.detect || "DECIDE framework completed",
 			};
+
+			console.log("DecideFramework - Saving with reflectionService");
 
 			const result = await reflectionService.saveReflection(
 				user.id,
-				"decide_framework",
+				"ethical_reflection",
 				dataToSave,
 			);
 
@@ -119,16 +129,26 @@ export const DecideFrameworkReflection: React.FC<
 
 			console.log("DecideFramework - Save successful");
 			setHasSaved(true);
+			setIsSubmitting(false);
 
 			const data = {
 				type: "decide_framework",
 				responses,
 				completedAt: new Date().toISOString(),
 			};
+			
+			console.log("DecideFramework Results:", dataToSave);
+			
 			onComplete(data);
+			
+			// Close after a brief delay
+			setTimeout(() => {
+				onClose();
+			}, 100);
 		} catch (error) {
 			console.error("DecideFramework - Save error:", error);
 			setIsSubmitting(false);
+			alert(error instanceof Error ? error.message : "Failed to save DECIDE Framework reflection. Please try again.");
 		}
 	};
 

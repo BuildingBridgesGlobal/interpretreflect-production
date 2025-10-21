@@ -9,10 +9,13 @@ import {
 	Clock,
 	Compass,
 	Download,
+	FileText,
 	Globe,
 	Heart,
 	Lightbulb,
+	MessageCircle,
 	MessageSquare,
+	Palette,
 	Scale,
 	Shield,
 	Sparkles,
@@ -44,7 +47,6 @@ import {
 } from "./components/CustomIcon";
 import { CustomizePreferences } from "./components/CustomizePreferences";
 import { EmotionMappingAccessible as EmotionMapping } from "./components/EmotionMappingAccessible";
-import { EmotionClarityPractice } from "./components/EmotionClarityPractice";
 import { InteroceptiveScan } from "./components/InteroceptiveScan";
 import GrowthInsights from "./components/GrowthInsights";
 import GrowthInsightsDashboard from "./components/GrowthInsightsDashboard";
@@ -53,7 +55,7 @@ import { NavigationTabs } from "./components/layout/NavigationTabs";
 import { ManageSubscription } from "./components/ManageSubscription";
 import PersonalizedHomepage from "./components/PersonalizedHomepage";
 import { AffirmationsView } from "./components/views/AffirmationsView";
-import ProfileSettings from "./components/ProfileSettings";
+import ProfileSettings from "./components/ProfileSettingsSimplified";
 import { SubscriptionGate } from "./components/SubscriptionGate";
 import { TemperatureExploration } from "./components/TemperatureExploration";
 import { FeatureDiscovery } from "./components/onboarding/FeatureDiscovery";
@@ -66,9 +68,7 @@ const DecideFrameworkReflection = lazy(() => import("./components/DecideFramewor
 const BIPOCWellnessReflection = lazy(() => import("./components/BIPOCWellnessReflection"));
 const DeafInterpreterReflection = lazy(() => import("./components/DeafInterpreterReflection"));
 const NeurodivergentInterpreterReflection = lazy(() => import("./components/NeurodivergentInterpreterReflection").then(m => ({ default: m.NeurodivergentInterpreterReflection })));
-const EthicsMeaningCheckAccessible = lazy(() => import("./components/EthicsMeaningCheckAccessible"));
 const InSessionSelfCheck = lazy(() => import("./components/InSessionSelfCheck"));
-const InSessionTeamSync = lazy(() => import("./components/InSessionTeamSync").then(m => ({ default: m.InSessionTeamSync })));
 const MentoringPrepAccessible = lazy(() => import("./components/MentoringPrepAccessible"));
 const MentoringReflectionAccessible = lazy(() => import("./components/MentoringReflectionAccessible"));
 const PostAssignmentDebriefAccessible = lazy(() => import("./components/PostAssignmentDebriefAccessible"));
@@ -104,6 +104,9 @@ import { SeamlessSignup } from "./pages/SeamlessSignup";
 import { TermsOfService } from "./pages/TermsOfService";
 import { growthInsightsApi } from "./services/growthInsightsApi";
 import type { BurnoutData, ViewMode } from "./types";
+import { style } from "framer-motion/client";
+import { trackTechniqueStart } from "./utils";
+import { data } from "framer-motion/m";
 
 // Import test utilities in development
 if (import.meta.env.DEV) {
@@ -116,6 +119,49 @@ function App() {
 	const { showToast, closeToast } = useReflectionSubmit();
 
 	console.log("App Component - User:", user, "Loading:", loading);
+
+	// Load and apply accessibility settings on user login
+	useEffect(() => {
+		const loadAccessibilitySettings = async () => {
+			if (!user) return;
+			
+			try {
+				const { data, error } = await supabase
+					.from("user_profiles")
+					.select("accessibility_settings")
+					.eq("id", user.id)
+					.single();
+
+				if (error || !data?.accessibility_settings) return;
+
+				const settings = data.accessibility_settings;
+				const root = document.documentElement;
+
+				// Apply accessibility settings to the document
+				if (settings.larger_text) {
+					root.classList.add("larger-text");
+				} else {
+					root.classList.remove("larger-text");
+				}
+
+				if (settings.high_contrast) {
+					root.classList.add("high-contrast");
+				} else {
+					root.classList.remove("high-contrast");
+				}
+
+				if (settings.reduce_motion) {
+					root.classList.add("reduce-motion");
+				} else {
+					root.classList.remove("reduce-motion");
+				}
+			} catch (error) {
+				console.error("Error loading accessibility settings:", error);
+			}
+		};
+
+		loadAccessibilitySettings();
+	}, [user]);
 
 	// Session expiration modal state
 	const [showSessionExpiredModal, setShowSessionExpiredModal] = useState(false);
@@ -183,7 +229,8 @@ function App() {
 	const [showReflectionSuccessToast, setShowReflectionSuccessToast] = useState(false);
 	const [showBreathingPractice, setShowBreathingPractice] = useState(false);
 	const [showInSessionSelfCheck, setShowInSessionSelfCheck] = useState(false);
-	const [showInSessionTeamSync, setShowInSessionTeamSync] = useState(false);
+	const [showSessionWarning, setShowSessionWarning] = useState(false);
+	const [sessionTimeRemaining, setSessionTimeRemaining] = useState(0);
 	const [showBreathingModal, setShowBreathingModal] = useState(false);
 	const [breathingMode, setBreathingMode] = useState<"gentle" | "deep">(
 		"gentle",
@@ -397,9 +444,7 @@ function App() {
 			showMentoringPrep ||
 			showMentoringReflection ||
 			showWellnessCheckIn ||
-			showEthicsMeaningCheck ||
 			showInSessionSelfCheck ||
-			showInSessionTeamSync ||
 			showRoleSpaceReflection ||
 			showDirectCommunicationReflection
 		);
@@ -1867,7 +1912,7 @@ function App() {
 								style={{
 									background:
 										insightsTimePeriod === "week"
-											? "linear-gradient(135deg, rgb(45, 95, 63), rgb(91, 147, 120))"
+											? "#6B8268"
 											: "transparent",
 									color: insightsTimePeriod === "week" ? "#FFFFFF" : "#1A1A1A",
 									boxShadow: insightsTimePeriod === "week" ? "rgba(107, 139, 96, 0.3) 0px 2px 8px" : "none",
@@ -1896,7 +1941,7 @@ function App() {
 								style={{
 									background:
 										insightsTimePeriod === "month"
-											? "linear-gradient(135deg, rgb(45, 95, 63), rgb(91, 147, 120))"
+											? "#6B8268"
 											: "transparent",
 									color: insightsTimePeriod === "month" ? "#FFFFFF" : "#1A1A1A",
 									boxShadow: insightsTimePeriod === "month" ? "rgba(107, 139, 96, 0.3) 0px 2px 8px" : "none",
@@ -1925,7 +1970,7 @@ function App() {
 								style={{
 									background:
 										insightsTimePeriod === "90days"
-											? "linear-gradient(135deg, rgb(45, 95, 63), rgb(91, 147, 120))"
+											? "#6B8268"
 											: "transparent",
 									color:
 										insightsTimePeriod === "90days" ? "#FFFFFF" : "#1A1A1A",
@@ -3874,7 +3919,7 @@ function App() {
 									{(() => {
 										// Analyze teaming reflections for common drift areas
 										const teamingReflections = savedReflections.filter(r =>
-											r.type === "Teaming Reflection" || r.type === "In-Session Team Sync"
+											r.type === "Teaming Reflection"
 										);
 
 										if (teamingReflections.length === 0) {
@@ -3956,8 +4001,7 @@ function App() {
 									{(() => {
 										// Extract values from ethics reflections
 										const ethicsReflections = savedReflections.filter(r =>
-											r.type === "Ethics & Meaning Check" ||
-											r.type === "Values Alignment Check-In"
+											r.type === "Ethics & Meaning Check"
 										);
 
 										if (ethicsReflections.length === 0) {
@@ -4084,149 +4128,118 @@ function App() {
 	);
 
 	const reflectionCards = [
-		// Assignment Workflow
+		// Assignment Workflow - ROW 1 (Grey)
 		{
-			icon: NotepadIcon,
-			iconColor: "text-blue-400",
-			iconBg: "bg-blue-500/20",
+			icon: FileText,
+			iconColor: "#6B7280",
+			iconBg: "rgba(107, 114, 128, 0.08)",
 			title: "Pre-Assignment Prep",
-			description: "Prime attention, steady the nervous system, and set intentions before assignments",
+			description: "Get your mind and body ready before an assignment. Set yourself up for success.",
 			category: "Assignment Workflow",
 			tracksProgress: true,
 			trackingInfo: "View confidence trends in Growth Insights → Confidence Levels",
 			duration: "5 min",
 		},
 		{
-			icon: TargetIcon,
-			iconColor: "text-blue-400",
-			iconBg: "bg-blue-500/20",
+			icon: CheckCircle,
+			iconColor: "#6B7280",
+			iconBg: "rgba(107, 114, 128, 0.08)",
 			title: "Post-Assignment Debrief",
-			description: "Consolidate learning, de-load stress, and turn experience into growth",
+			description: "Reflect on what happened, release stress, and capture what you learned",
 			category: "Assignment Workflow",
 			tracksProgress: false,
 			duration: "10 min",
 		},
 		{
-			icon: HeartPulseIcon,
-			iconColor: "text-orange-400",
-			iconBg: "bg-orange-500/20",
+			icon: Clock,
+			iconColor: "#6B7280",
+			iconBg: "rgba(107, 114, 128, 0.08)",
 			title: "In-Session Self-Check",
-			description: "Quick monitoring for active interpreting sessions",
+			description: "Quick check-in during an assignment to see how you're doing",
 			category: "Assignment Workflow",
 			tracksProgress: false,
 			duration: "2 min",
 		},
+		// Team Collaboration - ROW 2 (Brown)
 		{
-			icon: TargetIcon,
-			iconColor: "text-red-400",
-			iconBg: "bg-red-500/20",
-			title: "Values Alignment Check-In",
-			description: "Realign with your values after challenging decisions",
-			category: "Assignment Workflow",
-			tracksProgress: false,
-			duration: "7 min",
-		},
-
-		// Team Collaboration
-		{
-			icon: CommunityIcon,
-			iconColor: "text-purple-400",
-			iconBg: "bg-purple-500/20",
-			title: "Teaming Prep",
-			description: "Align minds and mechanics so handoffs are smooth and stress-free",
+			icon: Users,
+			iconColor: "#92796B",
+			iconBg: "rgba(146, 121, 107, 0.08)",
+			title: "Team Prep",
+			description: "Get ready to work with your partner - set yourself up for smooth collaboration",
 			category: "Team Collaboration",
 			tracksProgress: false,
 			duration: "5 min",
 		},
 		{
-			icon: CommunityIcon,
-			iconColor: "text-purple-400",
-			iconBg: "bg-purple-500/20",
-			title: "Teaming Reflection",
-			description: "Consolidate what worked between partners and surface improvement opportunities",
+			icon: MessageSquare,
+			iconColor: "#92796B",
+			iconBg: "rgba(146, 121, 107, 0.08)",
+			title: "Team Reflection",
+			description: "Capture what you learned from working with your partner",
 			category: "Team Collaboration",
 			tracksProgress: false,
 			duration: "8 min",
 		},
+		// Professional Growth - ROW 3 (Grey)
 		{
-			icon: CommunityIcon,
-			iconColor: "text-purple-400",
-			iconBg: "bg-purple-500/20",
-			title: "In-Session Team Sync",
-			description: "Team coordination check during assignments",
-			category: "Team Collaboration",
-			tracksProgress: false,
-			duration: "3 min",
-		},
-		{
-			icon: ChatBubbleIcon,
-			iconColor: "text-blue-400",
-			iconBg: "bg-blue-500/20",
-			title: "Supporting Direct Communication",
-			description: "Reflect on facilitating respectful, independent communication",
-			category: "Team Collaboration",
-			tracksProgress: false,
-			duration: "6 min",
-		},
-
-		// Professional Growth
-		{
-			icon: GrowthIcon,
-			iconColor: "text-purple-400",
-			iconBg: "bg-purple-500/20",
+			icon: Lightbulb,
+			iconColor: "#6B7280",
+			iconBg: "rgba(107, 114, 128, 0.08)",
 			title: "Mentoring Prep",
-			description: "Clarify the ask, define success, and set up a productive mentoring session",
+			description: "Get clear on what you need and what success looks like for your mentoring session",
 			category: "Professional Growth",
 			tracksProgress: false,
 			duration: "5 min",
 		},
 		{
-			icon: GrowthIcon,
-			iconColor: "text-purple-400",
-			iconBg: "bg-purple-500/20",
+			icon: Sparkles,
+			iconColor: "#6B7280",
+			iconBg: "rgba(107, 114, 128, 0.08)",
 			title: "Mentoring Reflection",
-			description: "Consolidate insights and capture next steps from your mentoring session",
+			description: "Capture what you learned and plan your next steps after your mentoring session",
 			category: "Professional Growth",
 			tracksProgress: false,
 			duration: "7 min",
 		},
 		{
-			icon: NotepadIcon,
-			iconColor: "text-indigo-400",
-			iconBg: "bg-indigo-500/20",
+			icon: Scale,
+			iconColor: "#6B7280",
+			iconBg: "rgba(107, 114, 128, 0.08)",
 			title: "DECIDE Framework",
-			description: "Navigate ethical decisions with a structured six-step process for clarity and confidence",
+			description: "Work through tough ethical decisions with a clear six-step process",
 			category: "Professional Growth",
 			tracksProgress: false,
 			duration: "15 min",
 		},
-
-		// Wellness & Boundaries
 		{
-			icon: HeartPulseIcon,
-			iconColor: "text-purple-400",
-			iconBg: "bg-purple-500/20",
+			icon: MessageCircle,
+			iconColor: "#6B7280",
+			iconBg: "rgba(107, 114, 128, 0.08)",
+			title: "Supporting Direct Communication",
+			description: "Reflect on how you facilitated direct communication between the people you serve",
+			category: "Professional Growth",
+			tracksProgress: false,
+			duration: "6 min",
+		},
+
+		// Wellness & Boundaries - ROW 4 (Brown)
+		{
+			icon: Heart,
+			iconColor: "#92796B",
+			iconBg: "rgba(146, 121, 107, 0.08)",
 			title: "Wellness Check-in",
-			description: "Focus on emotional and physical wellbeing with comprehensive self-assessment",
+			description: "Check in with how you're doing emotionally and physically. A full self-assessment.",
 			category: "Wellness & Boundaries",
 			tracksProgress: true,
 			trackingInfo: "View stress & energy trends in Growth Insights",
 			duration: "8 min",
 		},
+
 		{
-			icon: HeartPulseIcon,
-			iconColor: "text-pink-400",
-			iconBg: "bg-pink-500/20",
-			title: "Emotion Clarity Practice",
-			description: "Build your emotional vocabulary to identify and regulate feelings with precision",
-			category: "Wellness & Boundaries",
-			tracksProgress: false,
-			duration: "3-5 min",
-		},
-		{
-			icon: SecureLockIcon,
-			iconColor: "text-green-400",
-			iconBg: "bg-green-500/20",
+			icon: Shield,
+			iconColor: "#92796B",
+			iconBg: "rgba(146, 121, 107, 0.08)",
 			title: "Role-Space Reflection",
 			description: "Clarify and honor your professional boundaries after each assignment",
 			category: "Wellness & Boundaries",
@@ -4234,11 +4247,11 @@ function App() {
 			duration: "10 min",
 		},
 
-		// Identity-Affirming Reflections
+		// Identity-Affirming Reflections - ROW 5 (Grey)
 		{
-			icon: HeartPulseIcon,
-			iconColor: "text-orange-600",
-			iconBg: "bg-orange-500/20",
+			icon: Heart,
+			iconColor: "#6B7280",
+			iconBg: "rgba(107, 114, 128, 0.08)",
 			title: "BIPOC Interpreter Wellness",
 			description: "Center your experience as a Black, Indigenous, or Person of Color interpreter",
 			category: "Identity-Affirming",
@@ -4246,9 +4259,9 @@ function App() {
 			duration: "10 min",
 		},
 		{
-			icon: CommunityIcon,
-			iconColor: "text-purple-400",
-			iconBg: "bg-purple-500/20",
+			icon: Users,
+			iconColor: "#6B7280",
+			iconBg: "rgba(107, 114, 128, 0.08)",
 			title: "Deaf Interpreter Professional Identity",
 			description: "For DI/CDI: Teaming dynamics, audism, and professional recognition",
 			category: "Identity-Affirming",
@@ -4256,9 +4269,9 @@ function App() {
 			duration: "12 min",
 		},
 		{
-			icon: GrowthIcon,
-			iconColor: "#5C7F4F",
-			iconBg: "rgba(45, 95, 63, 0.2)",
+			icon: Brain,
+			iconColor: "#6B7280",
+			iconBg: "rgba(107, 114, 128, 0.08)",
 			title: "Neurodivergent Interpreter Wellness",
 			description: "For ADHD, autism, dyslexia, and all cognitive differences",
 			category: "Identity-Affirming",
@@ -4734,7 +4747,7 @@ function App() {
 									}}
 									className="w-full px-6 py-3 rounded-lg font-medium transition-all hover:scale-105"
 									style={{
-										background: "linear-gradient(135deg, #5C7F4F, #5B9378)",
+										background: "#6B8268",
 										color: "#FFFFFF",
 									}}
 									aria-label="Begin tech fatigue reset practice"
@@ -5258,7 +5271,7 @@ function App() {
 									}}
 									className="w-full px-6 py-3 rounded-lg font-medium transition-all hover:scale-105"
 									style={{
-										background: "linear-gradient(135deg, #5C7F4F, #5B9378)",
+										background: "#6B8268",
 										color: "#FFFFFF",
 									}}
 									aria-label="Begin emotion mapping practice"
@@ -8784,9 +8797,9 @@ function App() {
 														setShowPreAssignmentPrep(true);
 													} else if (card.title === "Post-Assignment Debrief") {
 														setShowPostAssignmentDebrief(true);
-													} else if (card.title === "Teaming Prep") {
+													} else if (card.title === "Team Prep") {
 														setShowTeamingPrep(true);
-													} else if (card.title === "Teaming Reflection") {
+													} else if (card.title === "Team Reflection") {
 														setShowTeamingReflection(true);
 													} else if (card.title === "Mentoring Prep") {
 														setShowMentoringPrep(true);
@@ -8800,8 +8813,6 @@ function App() {
 														setShowEthicsMeaningCheck(true);
 													} else if (card.title === "In-Session Self-Check") {
 														setShowInSessionSelfCheck(true);
-													} else if (card.title === "In-Session Team Sync") {
-														setShowInSessionTeamSync(true);
 													} else if (card.title === "Role-Space Reflection") {
 														setShowRoleSpaceReflection(true);
 													} else if (
@@ -8855,7 +8866,12 @@ function App() {
 											)}
 
 											<div className="mb-4">
-												<card.icon size={64} aria-hidden="true" />
+												<card.icon 
+													size={40} 
+													aria-hidden="true"
+													color={card.iconColor}
+													strokeWidth={1.5}
+												/>
 											</div>
 
 											<h3
@@ -8886,29 +8902,7 @@ function App() {
 												</div>
 											)}
 
-											{/* Duration */}
-											<div className="flex items-center">
-												<svg
-													width="16"
-													height="16"
-													viewBox="0 0 24 24"
-													fill="none"
-													stroke="#5C7F4F"
-													strokeWidth="2"
-													strokeLinecap="round"
-													strokeLinejoin="round"
-													className="mr-2"
-												>
-													<circle cx="12" cy="12" r="10"></circle>
-													<polyline points="12 6 12 12 16 14"></polyline>
-												</svg>
-												<span
-													className="text-xs font-medium"
-													style={{ color: "#3A3A3A" }}
-												>
-													{card.duration}
-												</span>
-											</div>
+
 										</article>
 									))}
 								</div>
@@ -9351,39 +9345,6 @@ function App() {
 				/>
 			)}
 
-			{showInSessionTeamSync && (
-				<InSessionTeamSync
-					onComplete={(results) => {
-						// InSessionTeamSync already saves internally, no need to save again
-						// Close the modal immediately
-						setShowInSessionTeamSync(false);
-
-						// Show success toast on the main page after modal closes
-						setTimeout(() => {
-							setShowReflectionSuccessToast(true);
-						}, 300);
-					}}
-					onClose={() => setShowInSessionTeamSync(false)}
-				/>
-			)}
-
-			{/* Values Alignment Check Modal */}
-			{showEthicsMeaningCheck && (
-				<EthicsMeaningCheckAccessible
-					onComplete={(results) => {
-						// EthicsMeaningCheckAccessible already saves internally, no need to save again
-						// Close the modal immediately
-						setShowEthicsMeaningCheck(false);
-
-						// Show success toast on the main page after modal closes
-						setTimeout(() => {
-							setShowReflectionSuccessToast(true);
-						}, 300);
-					}}
-					onClose={() => setShowEthicsMeaningCheck(false)}
-				/>
-			)}
-
 			{/* Daily Burnout Gauge Modal */}
 		</>
 	);
@@ -9497,7 +9458,7 @@ function App() {
 						<div
 							className="min-h-screen"
 							style={{
-								background: "linear-gradient(180deg, #FAF9F6 0%, #F0EDE8 100%)",
+								backgroundColor: "#FAF8F5",
 								minHeight: "100vh",
 							}}
 						>
@@ -9572,38 +9533,7 @@ function App() {
 								/>
 							)}
 
-						{showEmotionClarity && (
-							<EmotionClarityPractice
-								onSave={async () => {
-									// Reload reflections to show the new one
-									if (user?.id) {
-										const { reflectionService } = await import(
-											"./services/reflectionService"
-										);
-										const reflections = await reflectionService.getUserReflections(
-											user.id,
-											10,
-										);
-										if (reflections) {
-											const formattedReflections = reflections.map((r) => ({
-												id: r.id || Date.now().toString(),
-												type: r.entry_kind || "reflection",
-												data: r.data || {},
-												timestamp: r.created_at || new Date().toISOString(),
-											}));
-											setSavedReflections(formattedReflections);
-										}
-									}
-								}}
-								onClose={() => {
-									setShowEmotionClarity(false);
-									if (currentTechniqueId) {
-										trackTechniqueComplete(currentTechniqueId, "completed");
-										setCurrentTechniqueId(null);
-									}
-								}}
-							/>
-						)}
+
 
 						{showInteroceptiveScan && (
 							<InteroceptiveScan

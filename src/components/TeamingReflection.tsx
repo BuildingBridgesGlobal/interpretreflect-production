@@ -364,7 +364,7 @@ const TeamingReflection: React.FC<TeamingReflectionProps> = ({ onComplete, onClo
                     step === currentStep
                       ? 'bg-purple-500 text-white scale-110'
                       : step < currentStep
-                        ? 'bg-green-500 text-white'
+                        ? 'bg-[rgba(107,130,104,0.05)]0 text-white'
                         : 'bg-gray-200 text-gray-500'
                   }`}
                 >
@@ -501,7 +501,7 @@ const TeamingReflection: React.FC<TeamingReflectionProps> = ({ onComplete, onClo
                       {
                         value: 'seamless',
                         label: 'Seamless - we read each other perfectly',
-                        color: 'bg-green-50 hover:bg-green-100',
+                        color: 'bg-[rgba(107,130,104,0.05)] hover:bg-green-100',
                       },
                       {
                         value: 'smooth',
@@ -720,7 +720,7 @@ const TeamingReflection: React.FC<TeamingReflectionProps> = ({ onComplete, onClo
                   <label className="font-medium text-gray-900 mb-3 block">Errors We Caught:</label>
                   <div className="space-y-2">
                     {[
-                      { value: 'none', label: 'None needed', color: 'bg-green-50' },
+                      { value: 'none', label: 'None needed', color: 'bg-[rgba(107,130,104,0.05)]' },
                       { value: '1-2-minor', label: '1-2 minor', color: 'bg-blue-50' },
                       { value: '3-5-minor', label: '3-5 minor', color: 'bg-yellow-50' },
                       { value: '1-2-major', label: '1-2 major', color: 'bg-orange-50' },
@@ -869,7 +869,7 @@ const TeamingReflection: React.FC<TeamingReflectionProps> = ({ onComplete, onClo
                       {
                         value: 'supportive',
                         label: 'Supportive without judgment',
-                        color: 'bg-green-50',
+                        color: 'bg-[rgba(107,130,104,0.05)]',
                       },
                       {
                         value: 'professional',
@@ -956,7 +956,7 @@ const TeamingReflection: React.FC<TeamingReflectionProps> = ({ onComplete, onClo
               </div>
 
               <div className="space-y-6">
-                <div className="bg-green-50 p-5 rounded-xl">
+                <div className="bg-[rgba(107,130,104,0.05)] p-5 rounded-xl">
                   <h4 className="font-semibold text-gray-900 mb-4">For My Partner:</h4>
                   <div className="space-y-3">
                     <div>
@@ -1181,7 +1181,7 @@ const TeamingReflection: React.FC<TeamingReflectionProps> = ({ onComplete, onClo
                   </label>
                   <div className="flex space-x-2">
                     {[
-                      { value: 'exceptional', label: 'Exceptional', color: 'bg-green-500' },
+                      { value: 'exceptional', label: 'Exceptional', color: 'bg-[rgba(107,130,104,0.05)]0' },
                       { value: 'strong', label: 'Strong', color: 'bg-blue-500' },
                       { value: 'good', label: 'Good', color: 'bg-yellow-500' },
                       { value: 'adequate', label: 'Adequate', color: 'bg-orange-500' },

@@ -140,7 +140,7 @@ export const ProfessionalBoundariesReset: React.FC<ProfessionalBoundariesResetPr
                   <h3 className="font-medium text-gray-800">Come Back to Now</h3>
                   <p className="text-sm text-gray-600">Notice where you are</p>
                 </div>
-                <div className="p-3 bg-green-50 rounded-xl">
+                <div className="p-3 bg-[rgba(107,130,104,0.05)] rounded-xl">
                   <h3 className="font-medium text-gray-800">Take Pride</h3>
                   <p className="text-sm text-gray-600">You helped communication happen</p>
                 </div>

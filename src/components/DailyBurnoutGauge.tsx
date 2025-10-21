@@ -657,7 +657,7 @@ const DailyBurnoutGauge: React.FC<DailyBurnoutGaugeProps> = ({ onComplete, onClo
                       <div
                         className={`w-8 h-8 rounded-full flex items-center justify-center mr-4 ${
                           option.value <= 2
-                            ? 'bg-green-500'
+                            ? 'bg-[rgba(107,130,104,0.05)]0'
                             : option.value === 3
                               ? 'bg-yellow-500'
                               : option.value === 4
@@ -771,7 +771,7 @@ const DailyBurnoutGauge: React.FC<DailyBurnoutGaugeProps> = ({ onComplete, onClo
                         <div
                           className={`w-2 h-2 rounded-full mr-2 ${
                             value <= 2
-                              ? 'bg-green-500'
+                              ? 'bg-[rgba(107,130,104,0.05)]0'
                               : value === 3
                                 ? 'bg-yellow-500'
                                 : value === 4
@@ -861,7 +861,7 @@ const DailyBurnoutGauge: React.FC<DailyBurnoutGaugeProps> = ({ onComplete, onClo
                               }
                               className={`px-3 py-1 rounded-lg text-sm ${
                                 contextFactors[item.key as keyof typeof contextFactors] === true
-                                  ? 'bg-green-500 text-white'
+                                  ? 'bg-[rgba(107,130,104,0.05)]0 text-white'
                                   : 'bg-gray-100 hover:bg-gray-200'
                               }`}
                             >
@@ -894,7 +894,7 @@ const DailyBurnoutGauge: React.FC<DailyBurnoutGaugeProps> = ({ onComplete, onClo
                         ? 'bg-orange-50 border-orange-200'
                         : riskLevel === 'moderate'
                           ? 'bg-yellow-50 border-yellow-200'
-                          : 'bg-green-50 border-green-200'
+                          : 'bg-[rgba(107,130,104,0.05)] border-green-200'
                   }`}
                 >
                   <h4
@@ -994,7 +994,7 @@ const DailyBurnoutGauge: React.FC<DailyBurnoutGaugeProps> = ({ onComplete, onClo
                         <div
                           className={`w-10 h-10 rounded-full flex items-center justify-center text-white font-bold text-xs ${
                             assessment.riskLevel === 'low'
-                              ? 'bg-green-500'
+                              ? 'bg-[rgba(107,130,104,0.05)]0'
                               : assessment.riskLevel === 'moderate'
                               ? 'bg-yellow-500'
                               : assessment.riskLevel === 'high'
@@ -1017,7 +1017,7 @@ const DailyBurnoutGauge: React.FC<DailyBurnoutGaugeProps> = ({ onComplete, onClo
               )}
 
               {saveSuccess ? (
-                <div className="p-4 bg-green-50 border-2 border-green-200 rounded-lg text-center">
+                <div className="p-4 bg-[rgba(107,130,104,0.05)] border-2 border-green-200 rounded-lg text-center">
                   <CheckCircle className="w-8 h-8 text-green-500 mx-auto mb-2" />
                   <p className="text-green-800 font-semibold">Assessment Saved Successfully!</p>
                   <p className="text-green-600 text-sm mt-1">

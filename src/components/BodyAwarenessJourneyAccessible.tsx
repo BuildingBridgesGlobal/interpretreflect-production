@@ -369,7 +369,7 @@ export const BodyAwarenessJourneyAccessible: React.FC<BodyAwarenessJourneyAccess
             )}
 
             {/* Why this helps */}
-            <div className={`mb-8 p-4 rounded-lg ${highContrast ? 'bg-yellow-100 border-2 border-black' : 'bg-green-50'}`}>
+            <div className={`mb-8 p-4 rounded-lg ${highContrast ? 'bg-yellow-100 border-2 border-black' : 'bg-[rgba(107,130,104,0.05)]'}`}>
               <h2 className={`font-medium mb-2 ${getTextSize()}`}>
                 Why this helps:
               </h2>

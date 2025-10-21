@@ -256,7 +256,7 @@ export const AccessibilityEnhancedDashboard: React.FC = () => {
         key={badge.id}
         className={`p-4 rounded-xl border-2 transition-all ${
           badge.earned 
-            ? 'border-green-400 bg-green-50' 
+            ? 'border-green-400 bg-[rgba(107,130,104,0.05)]' 
             : 'border-gray-200 bg-gray-50 opacity-60'
         }`}
         aria-label={`Badge: ${badge.name}. ${badge.earned ? 'Earned' : 'Not earned'}. ${badge.description}`}

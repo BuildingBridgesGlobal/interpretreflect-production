@@ -100,7 +100,7 @@ export const ModernHomepage: React.FC<ModernHomepageProps> = ({ userName, isLogg
                       Start Free Trial
                       <ArrowRight className="ml-2 w-5 h-5" />
                     </button>
-                    <button className="inline-flex items-center justify-center px-8 py-4 bg-white text-green-600 font-semibold rounded-xl border-2 border-green-600 hover:bg-green-50 transition-all">
+                    <button className="inline-flex items-center justify-center px-8 py-4 bg-white text-green-600 font-semibold rounded-xl border-2 border-green-600 hover:bg-[rgba(107,130,104,0.05)] transition-all">
                       <Play className="mr-2 w-5 h-5" />
                       Watch Demo
                     </button>
@@ -305,7 +305,7 @@ export const ModernHomepage: React.FC<ModernHomepageProps> = ({ userName, isLogg
       </section>
 
       {/* Testimonials - Social Proof */}
-      <section className="py-20 bg-green-50">
+      <section className="py-20 bg-[rgba(107,130,104,0.05)]">
         <div className="max-w-4xl mx-auto px-6">
           <div className="text-center mb-12">
             <h2 className="text-4xl font-bold text-gray-900 mb-4">

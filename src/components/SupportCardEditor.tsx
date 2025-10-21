@@ -486,7 +486,7 @@ export const SupportCardEditor: React.FC<SupportCardEditorProps> = ({
 								<div className="space-y-2">
 									{cardData.whatHelps.immediate.map((help, idx) => (
 										<div key={idx} className="flex items-center gap-2">
-											<span className="flex-1 px-3 py-2 bg-green-50 rounded-lg text-sm">
+											<span className="flex-1 px-3 py-2 bg-[rgba(107,130,104,0.05)] rounded-lg text-sm">
 												{help}
 											</span>
 											<button

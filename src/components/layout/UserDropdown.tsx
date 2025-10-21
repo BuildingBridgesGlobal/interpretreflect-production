@@ -37,7 +37,7 @@ export const UserDropdown: React.FC<UserDropdownProps> = ({
 					className="w-8 h-8 rounded-full flex items-center justify-center"
 					style={{
 						background:
-							"linear-gradient(135deg, var(--color-green-600), var(--color-green-500))",
+							"linear-gradient(135deg, #6B8268, #5B9378)",
 					}}
 				>
 					<span className="text-sm font-medium" style={{ color: "#FFFFFF" }}>
@@ -72,7 +72,7 @@ export const UserDropdown: React.FC<UserDropdownProps> = ({
 						className="absolute right-0 top-full mt-2 w-72 rounded-lg shadow-lg z-20"
 						style={{
 							backgroundColor: "white",
-							border: "2px solid var(--color-green-600)",
+							border: "2px solid #6B8268",
 							boxShadow:
 								"0 8px 16px rgba(0, 0, 0, 0.15), 0 4px 8px rgba(0, 0, 0, 0.1)",
 						}}

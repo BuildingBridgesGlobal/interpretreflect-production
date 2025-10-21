@@ -66,7 +66,7 @@ const Logo: React.FC<LogoProps> = ({
 				<h1
 					className={`${sizeClasses[size]} ${variantClasses[variant]} font-semibold tracking-tight leading-none`}
 				>
-					Interpret<span style={{ color: 'var(--color-green-600)' }}>Reflect</span>
+					Interpret<span style={{ color: '#6B8268' }}>Reflect</span>
 				</h1>
 
 				{/* Tagline */}

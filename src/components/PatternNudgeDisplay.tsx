@@ -121,7 +121,7 @@ export const PatternNudgeDisplay: React.FC<PatternNudgeDisplayProps> = ({
       case 'medium':
         return 'border-l-yellow-500 bg-yellow-50';
       case 'low':
-        return 'border-l-green-500 bg-green-50';
+        return 'border-l-green-500 bg-[rgba(107,130,104,0.05)]';
       default:
         return 'border-l-gray-500 bg-gray-50';
     }

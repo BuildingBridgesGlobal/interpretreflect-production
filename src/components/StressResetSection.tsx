@@ -109,7 +109,7 @@ const StressResetSection: React.FC<StressResetSectionProps> = ({
 						className="absolute top-0 right-0 w-32 h-32 opacity-5"
 						style={{
 							background:
-								"radial-gradient(circle, var(--color-green-600) 0%, transparent 70%)",
+								"radial-gradient(circle, #6B8268 0%, transparent 70%)",
 							transform: "translate(50%, -50%)",
 						}}
 					/>
@@ -240,7 +240,7 @@ const StressResetSection: React.FC<StressResetSectionProps> = ({
 				<div className="text-center py-12">
 					<Activity
 						className="h-12 w-12 mx-auto mb-3"
-						style={{ color: "var(--color-green-600)" }}
+						style={{ color: "#6B8268" }}
 					/>
 					<p className="text-sm font-medium mb-2" style={{ color: "var(--color-slate-700)" }}>
 						More techniques coming soon

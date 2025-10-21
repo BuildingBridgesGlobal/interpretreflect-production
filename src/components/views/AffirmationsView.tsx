@@ -1,6 +1,7 @@
 import {
 	ChevronLeft,
 	ChevronRight,
+	Sparkles,
 } from "lucide-react";
 import type React from "react";
 import { useState, useEffect } from "react";
@@ -2975,7 +2976,7 @@ export const AffirmationsView: React.FC<AffirmationsViewProps> = () => {
 	const currentCompletedDays = completedDays[selectedProgram] || [];
 
 	return (
-		<main className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8" style={{ backgroundColor: "var(--color-surface)" }}>
+		<main className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8" style={{ backgroundColor: "#FAF8F5", minHeight: "100vh" }}>
 			<header className="text-center mb-10">
 				<h1 className="text-4xl font-bold mb-3" style={{ color: "var(--color-slate-700)", letterSpacing: "-0.5px" }}>
 					Daily Affirmations
@@ -2988,6 +2989,16 @@ export const AffirmationsView: React.FC<AffirmationsViewProps> = () => {
 
 			{/* Program Selection */}
 			<div className="mb-8">
+				<div className="mb-6 text-center">
+					<h2 className="text-xl font-semibold mb-2" style={{ color: "#5C7F4F" }}>
+						{selectedProgram ? "Your Selected Journey" : "Choose Your 28-Day Journey"}
+					</h2>
+					<p className="text-sm" style={{ color: "var(--color-slate-600)" }}>
+						{selectedProgram 
+							? "Navigate through weeks and days below to continue your practice"
+							: "Select a program to begin your daily affirmation practice"}
+					</p>
+				</div>
 				<div className="grid grid-cols-2 md:grid-cols-4 gap-4 max-w-6xl mx-auto">
 					{programs.map((program) => (
 						<button
@@ -2999,11 +3010,12 @@ export const AffirmationsView: React.FC<AffirmationsViewProps> = () => {
 									: 'hover:shadow-clean-md shadow-clean'
 							}`}
 							style={selectedProgram === program.id ? {
-								background: 'linear-gradient(135deg, var(--color-green-600), var(--color-green-500))',
+								backgroundColor: '#6B8268',
 								color: 'white',
-								border: '2px solid var(--color-green-600)'
+								border: '2px solid #6B8268',
+							boxShadow: '0 2px 8px rgba(107, 130, 104, 0.3)'
 							} : {
-								backgroundColor: 'var(--color-card)',
+								backgroundColor: '#FAF8F5',
 								color: 'var(--color-slate-700)',
 								border: '2px solid var(--color-slate-300)'
 							}}
@@ -3021,14 +3033,33 @@ export const AffirmationsView: React.FC<AffirmationsViewProps> = () => {
 			</div>
 
 			{!selectedProgram && (
-				<div className="text-center py-12">
-					<p className="text-lg text-gray-600">Select an affirmation program above to begin your journey</p>
+				<div className="text-center py-16 px-6">
+					<div className="max-w-md mx-auto">
+						<div className="w-16 h-16 mx-auto mb-4 rounded-full flex items-center justify-center" style={{ backgroundColor: "rgba(107, 130, 104, 0.1)" }}>
+							<Sparkles className="w-8 h-8" style={{ color: "#6B8268" }} />
+						</div>
+						<h3 className="text-xl font-semibold mb-2" style={{ color: "var(--color-slate-700)" }}>
+							Ready to Begin?
+						</h3>
+						<p className="text-base" style={{ color: "var(--color-slate-600)" }}>
+							Choose a 28-day journey above to start your daily affirmation practice. Each program includes weekly themes, daily reflections, and practical exercises.
+						</p>
+					</div>
 				</div>
 			)}
 
 			{/* Week Navigation */}
 			{selectedProgram && weekData && (
-			<div className="mb-8 rounded-2xl shadow-clean p-6" style={{ backgroundColor: "var(--color-card)", border: "1px solid var(--color-slate-200)" }}>
+			<>
+			<div className="mb-6 text-center">
+				<div className="inline-flex items-center gap-2 px-4 py-2 rounded-full" style={{ backgroundColor: "rgba(107, 130, 104, 0.1)", border: "1px solid rgba(107, 130, 104, 0.2)" }}>
+					<ChevronRight className="w-4 h-4" style={{ color: "#6B8268" }} />
+					<span className="text-sm font-medium" style={{ color: "#5C7F4F" }}>
+						Navigate weeks and select your day below
+					</span>
+				</div>
+			</div>
+			<div className="mb-8 rounded-2xl shadow-clean p-6" style={{ backgroundColor: "#FAF8F5", border: "1px solid var(--color-slate-200)" }}>
 				<div className="flex items-center justify-between mb-4">
 					<button
 						onClick={() => currentWeek > 1 && setCurrentWeek(currentWeek - 1)}
@@ -3042,8 +3073,8 @@ export const AffirmationsView: React.FC<AffirmationsViewProps> = () => {
 							backgroundColor: "var(--color-slate-100)",
 							color: "var(--color-slate-300)"
 						} : {
-							backgroundColor: "var(--color-card)",
-							color: "var(--color-green-600)",
+							backgroundColor: "#FAF8F5",
+							color: '#6B8268',
 							border: "1px solid var(--color-slate-200)"
 						}}
 						aria-label="Previous week"
@@ -3069,8 +3100,8 @@ export const AffirmationsView: React.FC<AffirmationsViewProps> = () => {
 							color: 'var(--color-slate-300)',
 							cursor: 'not-allowed'
 						} : {
-							backgroundColor: 'var(--color-card)',
-							color: 'var(--color-green-600)',
+							backgroundColor: '#FAF8F5',
+							color: '#6B8268',
 							border: '1px solid var(--color-slate-200)'
 						}}
 						aria-label="Next week"
@@ -3096,18 +3127,18 @@ export const AffirmationsView: React.FC<AffirmationsViewProps> = () => {
 								onClick={() => handleDaySelect(dayNumber)}
 								className="p-3 rounded-xl text-sm font-semibold transition-all hover:-translate-y-0.5"
 								style={isSelected ? {
-									background: 'linear-gradient(135deg, rgb(45, 95, 63), rgb(91, 147, 120))',
+									backgroundColor: '#6B8268',
 									color: 'white',
-									boxShadow: 'rgba(107, 139, 96, 0.3) 0px 2px 8px'
+									boxShadow: '0 2px 8px rgba(107, 130, 104, 0.3)'
 								} : isCompleted ? {
-									background: 'linear-gradient(135deg, rgb(45, 95, 63), rgb(91, 147, 120))',
+									backgroundColor: '#6B8268',
 									color: 'white',
-									boxShadow: 'rgba(107, 139, 96, 0.3) 0px 2px 8px',
+									boxShadow: '0 2px 8px rgba(107, 130, 104, 0.3)',
 									opacity: '0.8'
 								} : {
-									background: 'linear-gradient(135deg, rgb(45, 95, 63), rgb(91, 147, 120))',
+									backgroundColor: '#6B8268',
 									color: 'white',
-									boxShadow: 'rgba(107, 139, 96, 0.3) 0px 2px 8px',
+									boxShadow: '0 2px 8px rgba(107, 130, 104, 0.3)',
 									opacity: '0.6'
 								}}
 							>
@@ -3120,6 +3151,7 @@ export const AffirmationsView: React.FC<AffirmationsViewProps> = () => {
 					})}
 				</div>
 			</div>
+			</>
 			)}
 
 			{/* Daily Content */}
@@ -3127,11 +3159,11 @@ export const AffirmationsView: React.FC<AffirmationsViewProps> = () => {
 				<div className="space-y-4">
 					{/* Today's Affirmation */}
 					<section className="rounded-2xl shadow-clean p-6" style={{
-						backgroundColor: 'var(--color-card)',
-						border: '2px solid var(--color-green-200)',
-						background: 'linear-gradient(135deg, var(--color-card) 0%, var(--color-green-50) 100%)'
+						backgroundColor: '#FAF8F5',
+						border: '2px solid rgba(107, 130, 104, 0.3)',
+						background: 'linear-gradient(135deg, #FAF8F5 0%, rgba(107, 130, 104, 0.05) 100%)'
 					}}>
-						<h3 className="text-base font-bold mb-3" style={{ color: 'var(--color-green-700)' }}>
+						<h3 className="text-base font-bold mb-3" style={{ color: '#5C7F4F' }}>
 							Today's Affirmation - Day {currentDay}
 						</h3>
 						<p className="text-sm font-medium italic leading-relaxed" style={{ color: 'var(--color-slate-700)' }}>
@@ -3141,7 +3173,7 @@ export const AffirmationsView: React.FC<AffirmationsViewProps> = () => {
 
 					{/* Reflection Insight */}
 					<section className="rounded-2xl shadow-clean p-6" style={{
-						backgroundColor: 'var(--color-card)',
+						backgroundColor: '#FAF8F5',
 						border: '1px solid var(--color-slate-200)'
 					}}>
 						<h3 className="text-base font-bold mb-3" style={{ color: 'var(--color-slate-700)' }}>
@@ -3154,7 +3186,7 @@ export const AffirmationsView: React.FC<AffirmationsViewProps> = () => {
 
 					{/* Practice Prompt */}
 					<section className="rounded-2xl shadow-clean p-6" style={{
-						backgroundColor: 'var(--color-card)',
+						backgroundColor: '#FAF8F5',
 						border: '1px solid var(--color-slate-200)'
 					}}>
 						<h3 className="text-base font-bold mb-3" style={{ color: 'var(--color-slate-700)' }}>
@@ -3167,7 +3199,7 @@ export const AffirmationsView: React.FC<AffirmationsViewProps> = () => {
 
 					{/* Evening Reflection */}
 					<section className="rounded-2xl shadow-clean p-6" style={{
-						backgroundColor: 'var(--color-card)',
+						backgroundColor: '#FAF8F5',
 						border: '1px solid var(--color-slate-200)'
 					}}>
 						<h3 className="text-base font-bold mb-3" style={{ color: 'var(--color-slate-700)' }}>
@@ -3185,17 +3217,17 @@ export const AffirmationsView: React.FC<AffirmationsViewProps> = () => {
 								onClick={handleDayComplete}
 								className="px-6 py-3 text-white font-semibold rounded-xl shadow-clean-md hover:shadow-clean-lg hover:-translate-y-0.5 transition-all"
 								style={{
-									background: 'linear-gradient(135deg, rgb(45, 95, 63), rgb(91, 147, 120))',
-									boxShadow: 'rgba(107, 139, 96, 0.3) 0px 2px 8px'
+									backgroundColor: '#6B8268',
+									boxShadow: '0 2px 8px rgba(107, 130, 104, 0.3)'
 								}}
 							>
 								Mark Day {currentDay} Complete
 							</button>
 						) : (
 							<div className="px-6 py-3 font-semibold rounded-xl" style={{
-								background: 'linear-gradient(135deg, rgb(45, 95, 63), rgb(91, 147, 120))',
+								backgroundColor: '#6B8268',
 								color: 'white',
-								boxShadow: 'rgba(107, 139, 96, 0.3) 0px 2px 8px',
+								boxShadow: '0 2px 8px rgba(107, 130, 104, 0.3)',
 								opacity: '0.8'
 							}}>
 								Day {currentDay} Completed ✓
@@ -3207,7 +3239,7 @@ export const AffirmationsView: React.FC<AffirmationsViewProps> = () => {
 								onClick={() => handleDaySelect(currentDay + 1)}
 								className="px-6 py-3 font-semibold rounded-xl transition-all hover:-translate-y-0.5 hover:shadow-clean-md"
 								style={{
-									backgroundColor: 'var(--color-card)',
+									backgroundColor: '#FAF8F5',
 									border: '1px solid var(--color-slate-300)',
 									color: 'var(--color-slate-700)'
 								}}
@@ -3222,7 +3254,7 @@ export const AffirmationsView: React.FC<AffirmationsViewProps> = () => {
 			{/* Progress Overview */}
 			{selectedProgram && (
 			<div className="mt-8 rounded-2xl shadow-clean p-6" style={{
-				backgroundColor: 'var(--color-card)',
+				backgroundColor: '#FAF8F5',
 				border: '1px solid var(--color-slate-200)'
 			}}>
 				<h3 className="text-base font-bold mb-4" style={{ color: 'var(--color-slate-700)' }}>
@@ -3237,7 +3269,7 @@ export const AffirmationsView: React.FC<AffirmationsViewProps> = () => {
 							<div
 								className="h-2 rounded-full transition-all duration-500"
 								style={{
-									background: 'linear-gradient(135deg, var(--color-green-600), var(--color-green-500))',
+									backgroundColor: '#6B8268',
 									width: `${(currentCompletedDays.length / 28) * 100}%`
 								}}
 							/>
@@ -3252,3 +3284,7 @@ export const AffirmationsView: React.FC<AffirmationsViewProps> = () => {
 		</main>
 	);
 };
+
+
+
+

@@ -459,7 +459,7 @@ export const BreathingPractice: React.FC<BreathingPracticeProps> = ({
                         (highContrastMode ? 'bg-black' : 
                          currentPhase === 'inhale' ? 'bg-blue-500' :
                          currentPhase === 'pause' ? 'bg-yellow-500' :
-                         currentPhase === 'exhale' ? 'bg-green-500' : 'bg-gray-400') :
+                         currentPhase === 'exhale' ? 'bg-[rgba(107,130,104,0.05)]0' : 'bg-gray-400') :
                         (highContrastMode ? 'bg-white border-2 border-black' : 'bg-gray-200')
                     }`}
                   />

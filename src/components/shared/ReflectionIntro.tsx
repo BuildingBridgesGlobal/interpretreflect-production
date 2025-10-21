@@ -38,7 +38,7 @@ export const ReflectionIntro: React.FC<ReflectionIntroProps> = ({
 					</h2>
 					<p
 						className="text-xl mb-3"
-						style={{ color: "var(--color-green-700)", fontWeight: "500" }}
+						style={{ color: "#5C7F4F", fontWeight: "500" }}
 					>
 						{subtitle}
 					</p>
@@ -55,13 +55,13 @@ export const ReflectionIntro: React.FC<ReflectionIntroProps> = ({
 					<div
 						className="px-4 py-2 rounded-lg"
 						style={{
-							backgroundColor: "var(--color-green-50)",
-							border: "1px solid var(--color-green-200)",
+							backgroundColor: "rgba(107, 130, 104, 0.05)",
+							border: "1px solid rgba(107, 130, 104, 0.2)",
 						}}
 					>
 						<p
 							className="text-sm font-medium"
-							style={{ color: "var(--color-green-800)" }}
+							style={{ color: "#4A6640" }}
 						>
 							⏱️ {estimatedTime}
 						</p>

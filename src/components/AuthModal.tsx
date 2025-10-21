@@ -146,7 +146,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({
 						<div
 							className={`mb-4 p-3 rounded-lg text-sm ${
 								error.includes("Check your email")
-									? "bg-green-50 text-green-700"
+									? "bg-[rgba(107,130,104,0.05)] text-green-700"
 									: "bg-red-50 text-red-600"
 							}`}
 						>

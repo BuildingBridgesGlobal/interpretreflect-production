@@ -79,7 +79,7 @@ export const BurnoutGauge: React.FC<BurnoutGaugeProps> = ({
                 <div className="w-full bg-gray-200 rounded-full h-8 overflow-hidden">
                   <div 
                     className={`h-full rounded-full transition-all duration-500 flex items-center justify-center text-white font-semibold ${
-                      lastScore! >= 8 ? 'bg-green-500' :
+                      lastScore! >= 8 ? 'bg-[rgba(107,130,104,0.05)]0' :
                       lastScore! >= 6 ? 'bg-yellow-500' :
                       lastScore! >= 4 ? 'bg-orange-500' :
                       'bg-red-500'

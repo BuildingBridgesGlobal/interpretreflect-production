@@ -376,7 +376,7 @@ export const EmotionalLaborCalculator: React.FC<EmotionalLaborCalculatorProps> =
 
           {/* Results */}
           {compensation && assessment && (
-            <div className="bg-green-50 border border-green-200 rounded-lg p-6">
+            <div className="bg-[rgba(107,130,104,0.05)] border border-green-200 rounded-lg p-6">
               <div className="flex items-center gap-3 mb-4">
                 <DollarSign className="w-6 h-6 text-green-600" />
                 <h3 className="text-xl font-semibold text-green-900">Compensation Analysis</h3>
@@ -486,7 +486,7 @@ export const EmotionalLaborCalculator: React.FC<EmotionalLaborCalculatorProps> =
                   <p className="text-sm text-pink-700">Emotional labor intensity</p>
                 </div>
 
-                <div className="bg-green-50 rounded-lg p-4">
+                <div className="bg-[rgba(107,130,104,0.05)] rounded-lg p-4">
                   <div className="flex items-center gap-3 mb-2">
                     <DollarSign className="w-6 h-6 text-green-600" />
                     <h3 className="font-semibold text-green-900">Extra Compensation</h3>
@@ -607,7 +607,7 @@ export const EmotionalLaborCalculator: React.FC<EmotionalLaborCalculatorProps> =
             </div>
           </div>
 
-          <div className="bg-green-50 border border-green-200 rounded-lg p-6">
+          <div className="bg-[rgba(107,130,104,0.05)] border border-green-200 rounded-lg p-6">
             <h3 className="text-xl font-semibold text-green-900 mb-4">Why This Matters for Interpreters</h3>
             <div className="space-y-3">
               <div className="flex items-start gap-3">

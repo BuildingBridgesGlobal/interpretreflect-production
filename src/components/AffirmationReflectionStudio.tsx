@@ -228,7 +228,7 @@ export const AffirmationReflectionStudio: React.FC<
 				border: "border-purple-200",
 			},
 			green: {
-				bg: "bg-green-50",
+				bg: "bg-[rgba(107,130,104,0.05)]",
 				hover: "hover:bg-green-100",
 				text: "text-green-600",
 				border: "border-green-200",

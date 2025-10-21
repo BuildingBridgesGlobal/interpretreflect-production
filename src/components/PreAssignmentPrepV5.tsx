@@ -1157,7 +1157,7 @@ export function PreAssignmentPrepV5({
 								className="p-2 rounded-lg transition-colors text-white"
 								style={{
 									background:
-										"linear-gradient(135deg, var(--color-green-600), var(--color-green-500))",
+										"linear-gradient(135deg, #6B8268, #5B9378)",
 								}}
 								aria-label="Close"
 							>

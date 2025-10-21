@@ -418,7 +418,7 @@ export const BodyAwarenessJourney: React.FC<BodyAwarenessJourneyProps> = ({ onCl
                   onClick={() => setDuration(seconds)}
                   className={`px-4 py-2 rounded-lg border ${
                     duration === seconds 
-                      ? highContrast ? 'bg-white text-black border-white' : 'bg-green-50 border-green-500'
+                      ? highContrast ? 'bg-white text-black border-white' : 'bg-[rgba(107,130,104,0.05)] border-[#6B8268]'
                       : highContrast ? 'border-white' : 'border-gray-300'
                   }`}
                   aria-pressed={duration === seconds}
@@ -462,7 +462,7 @@ export const BodyAwarenessJourney: React.FC<BodyAwarenessJourneyProps> = ({ onCl
                     }}
                     className={`p-3 rounded-lg border text-left ${
                       isSelected 
-                        ? highContrast ? 'bg-white text-black border-white' : 'bg-green-50 border-green-500'
+                        ? highContrast ? 'bg-white text-black border-white' : 'bg-[rgba(107,130,104,0.05)] border-[#6B8268]'
                         : highContrast ? 'border-white' : 'border-gray-300'
                     }`}
                     aria-pressed={isSelected}
@@ -493,7 +493,7 @@ export const BodyAwarenessJourney: React.FC<BodyAwarenessJourneyProps> = ({ onCl
                     onClick={() => setExplorationMode(mode.id as any)}
                     className={`p-3 rounded-lg border text-center ${
                       isSelected
-                        ? highContrast ? 'bg-white text-black border-white' : 'bg-green-50 border-green-500'
+                        ? highContrast ? 'bg-white text-black border-white' : 'bg-[rgba(107,130,104,0.05)] border-[#6B8268]'
                         : highContrast ? 'border-white' : 'border-gray-300'
                     }`}
                     aria-pressed={isSelected}
@@ -514,7 +514,7 @@ export const BodyAwarenessJourney: React.FC<BodyAwarenessJourneyProps> = ({ onCl
           {/* Current Focus Display */}
           {currentFocus && (
             <div className={`mb-6 p-6 rounded-xl ${
-              highContrast ? 'bg-gray-900 border border-white' : 'bg-green-50'
+              highContrast ? 'bg-gray-900 border border-white' : 'bg-[rgba(107,130,104,0.05)]'
             }`}>
               <p className={`text-sm mb-2 ${highContrast ? 'text-gray-300' : 'text-gray-600'}`}>
                 Current Focus:
@@ -548,7 +548,7 @@ export const BodyAwarenessJourney: React.FC<BodyAwarenessJourneyProps> = ({ onCl
                   key={i}
                   className={`flex-1 h-2 rounded ${
                     timeElapsed >= (duration / 10) * (i + 1)
-                      ? highContrast ? 'bg-yellow-400' : 'bg-green-500'
+                      ? highContrast ? 'bg-yellow-400' : 'bg-[rgba(107,130,104,0.05)]0'
                       : highContrast ? 'bg-gray-800' : 'bg-gray-300'
                   }`}
                 />

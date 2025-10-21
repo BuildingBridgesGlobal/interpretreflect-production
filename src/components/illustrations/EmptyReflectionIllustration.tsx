@@ -36,7 +36,7 @@ export const EmptyReflectionIllustration: React.FC<EmptyReflectionIllustrationPr
         height="50"
         rx="4"
         fill="var(--color-card)"
-        stroke="var(--color-green-300)"
+        stroke="rgba(107, 130, 104, 0.3)"
         strokeWidth="2"
       />
 
@@ -46,7 +46,7 @@ export const EmptyReflectionIllustration: React.FC<EmptyReflectionIllustrationPr
         y="40"
         width="8"
         height="50"
-        fill="var(--color-green-200)"
+        fill="rgba(107, 130, 104, 0.2)"
         opacity="0.6"
       />
 
@@ -56,7 +56,7 @@ export const EmptyReflectionIllustration: React.FC<EmptyReflectionIllustrationPr
         y1="52"
         x2="75"
         y2="52"
-        stroke="var(--color-green-400)"
+        stroke="rgba(107, 130, 104, 0.4)"
         strokeWidth="2"
         strokeLinecap="round"
         opacity="0.4"
@@ -66,7 +66,7 @@ export const EmptyReflectionIllustration: React.FC<EmptyReflectionIllustrationPr
         y1="60"
         x2="80"
         y2="60"
-        stroke="var(--color-green-400)"
+        stroke="rgba(107, 130, 104, 0.4)"
         strokeWidth="2"
         strokeLinecap="round"
         opacity="0.4"
@@ -76,7 +76,7 @@ export const EmptyReflectionIllustration: React.FC<EmptyReflectionIllustrationPr
         y1="68"
         x2="70"
         y2="68"
-        stroke="var(--color-green-400)"
+        stroke="rgba(107, 130, 104, 0.4)"
         strokeWidth="2"
         strokeLinecap="round"
         opacity="0.4"
@@ -90,7 +90,7 @@ export const EmptyReflectionIllustration: React.FC<EmptyReflectionIllustrationPr
           width="4"
           height="25"
           rx="2"
-          fill="var(--color-green-500)"
+          fill="#5B9378"
         />
         <polygon
           points="2,25 0,30 4,30"
@@ -115,15 +115,15 @@ export const EmptyReflectionIllustration: React.FC<EmptyReflectionIllustrationPr
 
       {/* Sparkles for positivity */}
       <g opacity="0.6">
-        <circle cx="25" cy="70" r="2" fill="var(--color-green-400)" />
+        <circle cx="25" cy="70" r="2" fill="rgba(107, 130, 104, 0.4)" />
         <circle cx="95" cy="50" r="1.5" fill="var(--color-indigo-400)" />
-        <circle cx="85" cy="30" r="2" fill="var(--color-green-300)" />
+        <circle cx="85" cy="30" r="2" fill="rgba(107, 130, 104, 0.3)" />
       </g>
 
       {/* Gradient definitions */}
       <defs>
         <linearGradient id="warmGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-          <stop offset="0%" stopColor="var(--color-green-200)" />
+          <stop offset="0%" stopColor="rgba(107, 130, 104, 0.2)" />
           <stop offset="100%" stopColor="var(--color-indigo-200)" />
         </linearGradient>
       </defs>

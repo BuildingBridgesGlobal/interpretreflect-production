@@ -337,7 +337,7 @@ export const SensoryGrounding: React.FC<SensoryGroundingProps> = ({
 										}}
 										className={`p-4 rounded-lg border text-center ${
 											selectedApproach === approach.id
-												? "bg-green-50 border-green-500"
+												? "bg-[rgba(107,130,104,0.05)] border-[#6B8268]"
 												: "border-gray-300"
 										}`}
 									>

@@ -3,15 +3,13 @@ import type React from "react";
 import { useState } from "react";
 
 import { DirectCommunicationReflection } from "../DirectCommunicationReflection";
-import { EthicsMeaningCheckAccessible } from "../EthicsMeaningCheckAccessible";
 import { InSessionSelfCheck } from "../InSessionSelfCheck";
-import { InSessionTeamSync } from "../InSessionTeamSync";
 import { InterpreterGlossary } from "../InterpreterGlossary";
 import { ReflectionTools } from "../layout/ReflectionTools";
 import { MentoringPrepAccessible } from "../MentoringPrepAccessible";
 import { MentoringReflectionAccessible } from "../MentoringReflectionAccessible";
 import PostAssignmentDebriefEnhanced from "../PostAssignmentDebriefEnhanced";
-import PreAssignmentPrepAccessible from "../PreAssignmentPrepAccessible";
+import { PreAssignmentPrepV6 } from "../PreAssignmentPrepV6";
 import { RoleSpaceReflection } from "../RoleSpaceReflection";
 import { TeamingPrepEnhanced } from "../TeamingPrepEnhanced";
 import { TeamingReflectionEnhanced } from "../TeamingReflectionEnhanced";
@@ -39,12 +37,8 @@ interface ReflectionStudioViewProps {
 	setShowMentoringReflection: (show: boolean) => void;
 	showWellnessCheck: boolean;
 	setShowWellnessCheck: (show: boolean) => void;
-	showEthicsMeaningCheck: boolean;
-	setShowEthicsMeaningCheck: (show: boolean) => void;
 	showInSessionSelfCheck: boolean;
 	setShowInSessionSelfCheck: (show: boolean) => void;
-	showInSessionTeamSync: boolean;
-	setShowInSessionTeamSync: (show: boolean) => void;
 	showRoleSpaceReflection: boolean;
 	setShowRoleSpaceReflection: (show: boolean) => void;
 	showDirectCommunication: boolean;
@@ -77,12 +71,8 @@ export const ReflectionStudioView: React.FC<ReflectionStudioViewProps> = ({
 	setShowMentoringReflection,
 	showWellnessCheck,
 	setShowWellnessCheck,
-	showEthicsMeaningCheck,
-	setShowEthicsMeaningCheck,
 	showInSessionSelfCheck,
 	setShowInSessionSelfCheck,
-	showInSessionTeamSync,
-	setShowInSessionTeamSync,
 	showRoleSpaceReflection,
 	setShowRoleSpaceReflection,
 	showDirectCommunication,
@@ -119,14 +109,8 @@ export const ReflectionStudioView: React.FC<ReflectionStudioViewProps> = ({
 			case "wellness":
 				setShowWellnessCheck(true);
 				break;
-			case "ethics-meaning":
-				setShowEthicsMeaningCheck(true);
-				break;
 			case "in-session-self":
 				setShowInSessionSelfCheck(true);
-				break;
-			case "in-session-team":
-				setShowInSessionTeamSync(true);
 				break;
 			case "role-space":
 				setShowRoleSpaceReflection(true);
@@ -151,6 +135,7 @@ export const ReflectionStudioView: React.FC<ReflectionStudioViewProps> = ({
 			className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8"
 			role="main"
 			aria-labelledby="reflection-studio-heading"
+			style={{ backgroundColor: "#FAF8F5", minHeight: "100vh" }}
 		>
 			{/* Main Content */}
 			<div className="space-y-8">
@@ -183,8 +168,8 @@ export const ReflectionStudioView: React.FC<ReflectionStudioViewProps> = ({
 						</div>
 						<button
 							onClick={() => setShowGlossary(true)}
-							className="flex items-center gap-2 px-4 py-2.5 rounded-lg border-2 border-green-500 bg-white hover:bg-green-50 transition-all shadow-sm hover:shadow-md"
-							style={{ color: "var(--color-green-700)" }}
+							className="flex items-center gap-2 px-4 py-2.5 rounded-lg border-2 border-[#6B8268] bg-white hover:bg-[rgba(107,130,104,0.05)] transition-all shadow-sm hover:shadow-md"
+							style={{ color: "#5C7F4F" }}
 						>
 							<BookOpen size={20} />
 							<span className="font-medium">View Glossary</span>
@@ -260,8 +245,9 @@ export const ReflectionStudioView: React.FC<ReflectionStudioViewProps> = ({
 
 			{/* Modals for each reflection tool */}
 			{showPreAssignment && (
-				<PreAssignmentPrepAccessible
+				<PreAssignmentPrepV6
 					onClose={() => setShowPreAssignment(false)}
+					onComplete={() => setShowPreAssignment(false)}
 				/>
 			)}
 
@@ -310,10 +296,6 @@ export const ReflectionStudioView: React.FC<ReflectionStudioViewProps> = ({
 
 			{showInSessionSelfCheck && (
 				<InSessionSelfCheck onClose={() => setShowInSessionSelfCheck(false)} />
-			)}
-
-			{showInSessionTeamSync && (
-				<InSessionTeamSync onClose={() => setShowInSessionTeamSync(false)} />
 			)}
 
 			{showRoleSpaceReflection && (

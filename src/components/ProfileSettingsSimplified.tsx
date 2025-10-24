@@ -193,6 +193,102 @@ export const ProfileSettingsSimplified: React.FC = () => {
 		}
 	};
 
+	const handleCancelSubscription = async () => {
+		if (!user) return;
+		
+		try {
+			console.log('=== Cancel Subscription Debug ===');
+			console.log('User ID:', user.id);
+			console.log('User Email:', user.email);
+			console.log('Supabase URL:', import.meta.env.VITE_SUPABASE_URL);
+			console.log('Attempting to invoke edge function: create-portal-session');
+			
+			// Create a timeout promise
+			const timeoutPromise = new Promise((_, reject) => {
+				setTimeout(() => reject(new Error('Request timed out after 10 seconds')), 10000);
+			});
+			
+			// Race between the function call and timeout
+			const functionPromise = supabase.functions.invoke('create-portal-session', {
+				body: { returnUrl: window.location.href }
+			});
+			
+			console.log('Waiting for response...');
+			const result = await Promise.race([functionPromise, timeoutPromise]) as any;
+			
+			console.log('Raw result:', result);
+			const { data, error } = result;
+			console.log('Parsed - Data:', data, 'Error:', error);
+
+			if (error) {
+				console.error('Edge function returned error:', error);
+				console.error('Error context:', error.context);
+				console.error('Error message:', error.message);
+				
+				// Try to get more details from the response
+				if (data) {
+					console.error('Error data from function:', data);
+				}
+				
+				throw error;
+			}
+
+			if (data?.url) {
+				console.log('Success! Redirecting to portal:', data.url);
+				// Redirect to Stripe Customer Portal
+				window.location.href = data.url;
+			} else {
+				console.error('No URL in response. Full data:', data);
+				throw new Error('No portal URL returned from Stripe');
+			}
+		} catch (error: any) {
+			console.error("=== Error Details ===");
+			console.error("Error object:", error);
+			console.error("Error message:", error?.message);
+			console.error("Error stack:", error?.stack);
+			console.error("Error context:", error?.context);
+			
+			// Try to get the actual error from the edge function response
+			let actualError = error?.message || 'Unknown error';
+			
+			// If there's context with error details, use that
+			if (error?.context?.error) {
+				actualError = error.context.error;
+				console.error("Actual error from edge function:", actualError);
+			}
+			
+			// Provide helpful error message
+			if (actualError.includes('timed out')) {
+				alert(
+					"The subscription portal is taking too long to respond.\n\n" +
+					"This usually means the edge function isn't responding.\n\n" +
+					"Please contact support at info@interpretreflect.com"
+				);
+			} else if (actualError.includes('No Stripe customer ID')) {
+				alert(
+					"Your account isn't linked to a Stripe subscription yet.\n\n" +
+					"If you believe this is an error, please contact support at info@interpretreflect.com"
+				);
+			} else if (actualError.includes('FunctionsRelayError') || actualError.includes('FunctionsHttpError')) {
+				// For HTTP errors, check the Supabase logs
+				alert(
+					"Unable to access subscription portal.\n\n" +
+					"The edge function returned an error. This usually means:\n" +
+					"1. Your account doesn't have a Stripe customer ID yet\n" +
+					"2. The database migration hasn't been run\n" +
+					"3. The edge function needs to be redeployed\n\n" +
+					"Check the browser console for details, then contact support at info@interpretreflect.com"
+				);
+			} else {
+				alert(
+					`Unable to access subscription management.\n\n` +
+					`Error: ${actualError}\n\n` +
+					`Check the browser console for more details, then contact support at info@interpretreflect.com`
+				);
+			}
+		}
+	};
+
 	const handleDeleteAccount = async () => {
 		if (!user) return;
 		
@@ -523,6 +619,25 @@ export const ProfileSettingsSimplified: React.FC = () => {
 									<span className="text-xs font-medium" style={{ color: "#6B8268" }}>
 										Email Us →
 									</span>
+								</button>
+
+								{/* Cancel Subscription */}
+								<button
+									onClick={handleCancelSubscription}
+									className="w-full flex items-center justify-between p-4 rounded-lg transition-all hover:opacity-90"
+									style={{ backgroundColor: "#FFF7ED", border: "1px solid #FDBA74" }}
+								>
+									<div className="flex items-center gap-3">
+										<RefreshCw className="w-5 h-5" style={{ color: "#EA580C" }} />
+										<div className="text-left">
+											<h3 className="font-medium text-sm" style={{ color: "#EA580C" }}>
+												Cancel Subscription
+											</h3>
+											<p className="text-xs mt-0.5" style={{ color: "#C2410C" }}>
+												Manage your subscription in Stripe portal
+											</p>
+										</div>
+									</div>
 								</button>
 
 								{/* Delete Account */}

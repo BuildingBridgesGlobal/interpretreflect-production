@@ -92,9 +92,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
 					return;
 				}
 
-				// Add timeout to prevent infinite loading
+				// Add timeout to prevent infinite loading (increased to 30s for slow networks)
 				const timeoutPromise = new Promise((_, reject) =>
-					setTimeout(() => reject(new Error('Auth initialization timeout')), 15000)
+					setTimeout(() => reject(new Error('Auth initialization timeout')), 30000)
 				);
 
 				// Just get current session - don't manually refresh
@@ -161,6 +161,53 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
 		const isPasswordResetPage = window.location.pathname === '/reset-password';
 
 		if (!isDevMode && !isPasswordResetPage) {
+			// ========== PROACTIVE SESSION REFRESH ==========
+			// Refresh session every 50 minutes (before 1-hour JWT expiration)
+			// This prevents session expiration issues
+			const refreshInterval = setInterval(async () => {
+				try {
+					const { data: { session } } = await supabase.auth.getSession();
+					if (session?.user) {
+						console.log('🔄 Proactively refreshing session (50min interval)...');
+						const { data, error } = await supabase.auth.refreshSession();
+						if (error) {
+							console.error('❌ Failed to refresh session:', error);
+						} else if (data.session) {
+							console.log('✅ Session refreshed successfully');
+							setUser(data.session.user);
+						}
+					}
+				} catch (error) {
+					console.error('❌ Error in proactive session refresh:', error);
+				}
+			}, 50 * 60 * 1000); // 50 minutes
+
+			// ========== VISIBILITY-BASED SESSION CHECK ==========
+			// Check session when tab becomes visible (catches failed auto-refreshes)
+			let lastVisibilityCheck = Date.now();
+			const handleVisibilityChange = async () => {
+				if (!document.hidden) {
+					const timeSinceLastCheck = Date.now() - lastVisibilityCheck;
+					// Only check if it's been more than 5 minutes since last check
+					if (timeSinceLastCheck > 5 * 60 * 1000) {
+						console.log('👁️ Tab visible - checking session validity...');
+						try {
+							const { data: { session }, error } = await supabase.auth.getSession();
+							if (error || !session) {
+								console.log('⚠️ Session invalid or expired, signing out...');
+								await signOut();
+							} else {
+								console.log('✅ Session valid');
+								lastVisibilityCheck = Date.now();
+							}
+						} catch (error) {
+							console.error('❌ Error checking session on visibility change:', error);
+						}
+					}
+				}
+			};
+			document.addEventListener('visibilitychange', handleVisibilityChange);
+
 			// Listen for changes on auth state (sign in, sign out, etc.)
 			const { data: authListener } = supabase.auth.onAuthStateChange(
 				async (event, session) => {
@@ -234,6 +281,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
 			);
 
 			return () => {
+				clearInterval(refreshInterval);
+				document.removeEventListener('visibilitychange', handleVisibilityChange);
 				authListener.subscription.unsubscribe();
 			};
 		}

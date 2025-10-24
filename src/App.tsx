@@ -2780,7 +2780,7 @@ function App() {
 								Daily Burnout Trends
 							</h2>
 							<p className="text-sm text-gray-600 mt-1">
-								Track your burnout potential over the last 7 days with daily assessments (once every 12 hours).
+								Track your burnout potential over the last 7 days with daily assessments (once every 24 hours).
 								{getAggregatedData().length > 0 &&
 									` (${getAggregatedData().length} ${getAggregatedData().length === 1 ? 'day' : 'days'} recorded)`}
 							</p>
@@ -3368,7 +3368,7 @@ function App() {
 							The assessment has 5 questions with options ranging from best (top) to worst (bottom).
 							Selecting all the <strong>best options</strong> results in <strong>0% burnout risk</strong> (low risk).
 							Selecting all the <strong>worst options</strong> results in <strong>100% burnout risk</strong> (critical).
-							Your score reflects your choices: better answers = lower burnout risk percentage. Assessments can be taken once every 12 hours.
+							Your score reflects your choices: better answers = lower burnout risk percentage. Assessments can be taken once every 24 hours.
 						</p>
 					</div>
 				</section>

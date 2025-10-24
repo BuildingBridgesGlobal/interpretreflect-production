@@ -1112,12 +1112,12 @@ const GrowthInsights: React.FC = () => {
 					<div className="mt-4 p-3 bg-amber-50 rounded-lg">
 						<p className="text-sm text-amber-800">
 							<strong>How it works:</strong> Your burnout trend updates
-							automatically with each Daily Burnout Check you complete on the homepage (once every 12 hours).
+							automatically with each Daily Burnout Check you complete on the homepage (once every 24 hours).
 							The graph shows your burnout risk percentage (0% = low risk, 100% = high risk).
 							Risk below 30% indicates good balance, while above 70% suggests you may need additional support.
 						</p>
 						<p className="text-sm text-amber-800 mt-2">
-							<strong>Tip:</strong> Complete your Daily Burnout Check on the homepage every 12 hours to see your burnout trend populate here!
+							<strong>Tip:</strong> Complete your Daily Burnout Check on the homepage every 24 hours to see your burnout trend populate here!
 						</p>
 					</div>
 				</div>

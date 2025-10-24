@@ -40,7 +40,7 @@ serve(async (req) => {
 
     console.log('Creating portal session for user:', user.id)
 
-    // Get customer ID from profile
+    // Get customer ID from profiles
     const { data: profile, error: profileError } = await supabaseAdmin
       .from('profiles')
       .select('stripe_customer_id')
@@ -86,3 +86,4 @@ serve(async (req) => {
     )
   }
 })
+

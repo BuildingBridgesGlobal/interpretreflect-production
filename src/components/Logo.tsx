@@ -31,36 +31,6 @@ const Logo: React.FC<LogoProps> = ({
 
 	const logoContent = (
 		<div className={`flex items-center ${className}`}>
-			{/* Logo Icon */}
-			<svg
-				className={`${size === "sm" ? "w-8 h-8" : size === "md" ? "w-10 h-10" : size === "lg" ? "w-12 h-12" : "w-14 h-14"} mr-3 transition-transform hover:scale-110`}
-				viewBox="0 0 48 48"
-				fill="none"
-				xmlns="http://www.w3.org/2000/svg"
-				aria-hidden="true"
-			>
-				{/* Mind Bridge Symbol - Two connected semicircles representing connection and wellness */}
-				<circle
-					cx="24"
-					cy="24"
-					r="22"
-					stroke="currentColor"
-					strokeWidth="2"
-					fill="none"
-					opacity="0.15"
-				/>
-				<path
-					d="M12 24C12 17.372 17.372 12 24 12V24L36 24C36 30.628 30.628 36 24 36V24L12 24Z"
-					fill="currentColor"
-					opacity="0.7"
-				/>
-				<path
-					d="M18 24C18 20.686 20.686 18 24 18V24L30 24C30 27.314 27.314 30 24 30V24L18 24Z"
-					fill="currentColor"
-					opacity="0.95"
-				/>
-			</svg>
-
 			<div>
 				{/* Main Logo Text */}
 				<h1

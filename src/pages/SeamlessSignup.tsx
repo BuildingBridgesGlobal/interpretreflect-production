@@ -100,40 +100,23 @@ const PaymentForm: React.FC<{
 		setError("");
 
 		try {
-			// STEP 1: Create the user account FIRST (simpler, more reliable)
-			console.log('Creating user account...');
-			const { data: authData, error: signupError } = await supabase.auth.signUp({
-				email: email.toLowerCase().trim(),
-				password: password,
-				options: {
-					data: {
-						full_name: name,
-					},
-					emailRedirectTo: `${window.location.origin}/payment-success`,
-				}
-			});
+			// PAYMENT FIRST APPROACH: Don't create user yet, just pass credentials to Stripe
+			// The webhook will create the user AFTER successful payment
 
-			if (signupError) {
-				console.error('Signup error:', signupError);
-				// Handle specific error cases
-				if (signupError.message?.includes('already registered') ||
-				    signupError.message?.includes('already exists') ||
-				    signupError.status === 422) {
-					throw new Error('This email is already registered. Please sign in instead or use a different email.');
-				}
-				throw new Error(signupError.message);
-			}
-
-			if (!authData.user) {
-				throw new Error('Failed to create user account');
-			}
-
-			console.log('✅ User account created:', authData.user.id);
+			console.log('Preparing checkout session (user will be created after payment)...');
 
 			// Get the Stripe Price ID for the selected plan
 			const STRIPE_PRICE_ID = import.meta.env.VITE_STRIPE_PRICE_ID_ESSENTIAL || 'price_1S37dPIouyG60O9hzikj2c9h';
 
-			// STEP 2: Create Stripe checkout session (user already exists)
+			// Store signup credentials in localStorage (will be used after payment)
+			localStorage.setItem('pending_signup', JSON.stringify({
+				email: email.toLowerCase().trim(),
+				password: password,
+				full_name: name,
+				plan: plan,
+			}));
+
+			// Create Stripe checkout session WITHOUT creating user first
 			console.log('Creating checkout session with priceId:', STRIPE_PRICE_ID);
 			const { data, error: functionError } = await supabase.functions.invoke(
 				'create-checkout-session',
@@ -141,10 +124,12 @@ const PaymentForm: React.FC<{
 					body: {
 						priceId: STRIPE_PRICE_ID,
 						email: email,
-						userId: authData.user.id, // Pass the newly created user ID
+						// DON'T pass userId - user doesn't exist yet
 						metadata: {
 							plan: plan,
 							full_name: name,
+							signup_email: email.toLowerCase().trim(),
+							signup_password: password, // Will be used by webhook to create user
 						},
 					},
 				}
@@ -163,7 +148,7 @@ const PaymentForm: React.FC<{
 
 			// Handle both direct and nested response formats
 			const checkoutUrl = data?.url || data?.data?.url;
-			
+
 			if (!checkoutUrl) {
 				console.error('No checkout URL in response:', data);
 				throw new Error("Failed to create checkout session - no URL returned");

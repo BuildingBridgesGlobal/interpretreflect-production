@@ -115,6 +115,12 @@ const PaymentForm: React.FC<{
 
 			if (signupError) {
 				console.error('Signup error:', signupError);
+				// Handle specific error cases
+				if (signupError.message?.includes('already registered') ||
+				    signupError.message?.includes('already exists') ||
+				    signupError.status === 422) {
+					throw new Error('This email is already registered. Please sign in instead or use a different email.');
+				}
 				throw new Error(signupError.message);
 			}
 
@@ -362,28 +368,12 @@ export const SeamlessSignup: React.FC = () => {
 			setLoading(true);
 			setError("");
 
-			try {
-				// Check if email is already registered
-				const { data: existingUser } = await supabase.auth.signInWithPassword({
-					email: formData.email.toLowerCase().trim(),
-					password: "dummy_check_only", // This will fail but tells us if email exists
-				});
-
-				// If we somehow signed in, the user exists
-				if (existingUser?.user) {
-					setError("This email is already registered. Please sign in instead.");
-					setLoading(false);
-					return;
-				}
-			} catch (err: any) {
-				// Expected to fail - we're just checking if email exists
-				if (err.message && err.message.includes("Invalid login credentials")) {
-					// Email might exist but wrong password - that's fine, we'll handle it later
-				}
-			}
+			// Note: We'll let Supabase handle duplicate email detection during signup
+			// If email exists, signUp will return an error which we'll catch in the payment step
+			// This is more reliable than trying to check beforehand
 
 			// Just validate and store data, DON'T create account yet
-			// Account will be created AFTER successful payment
+			// Account will be created in the payment step (after plan selection)
 			setLoading(false);
 			setCurrentStep(2);
 		} else {

@@ -12,29 +12,16 @@ const supabaseAdmin = createClient(
 );
 
 // Webhook endpoints need to accept requests from Stripe servers
-// We allow Stripe webhooks but restrict browser CORS
-const ALLOWED_ORIGINS = [
-  'https://interpretreflect.com',
-  'https://www.interpretreflect.com',
-  ...(Deno.env.get('ENV') === 'development' ? ['http://localhost:5173'] : [])
-]
-
-const corsHeaders = (origin: string | null) => {
-  const isAllowed = origin && ALLOWED_ORIGINS.includes(origin)
-  return {
-    'Access-Control-Allow-Origin': isAllowed ? origin : ALLOWED_ORIGINS[0],
-    'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type, stripe-signature',
-    'Access-Control-Allow-Credentials': 'true',
-  }
-}
+// Stripe webhooks don't send Origin headers, so we need permissive CORS for webhooks
+const corsHeaders = {
+  'Access-Control-Allow-Origin': '*',
+  'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type, stripe-signature',
+};
 
 serve(async (req) => {
-  const origin = req.headers.get('origin')
-  const headers = corsHeaders(origin)
-
   // Handle CORS preflight requests
   if (req.method === 'OPTIONS') {
-    return new Response('ok', { headers });
+    return new Response('ok', { headers: corsHeaders });
   }
 
   const signature = req.headers.get('stripe-signature');
@@ -43,7 +30,7 @@ serve(async (req) => {
   if (!signature || !webhookSecret) {
     return new Response('Webhook Error: Missing signature or secret', {
       status: 400,
-      headers,
+      headers: corsHeaders,
     });
   }
 
@@ -55,37 +42,73 @@ serve(async (req) => {
       case 'checkout.session.completed': {
         const session = event.data.object as Stripe.Checkout.Session;
 
+        console.log('🎉 checkout.session.completed:', session.id);
         const subscription = await stripe.subscriptions.retrieve(session.subscription as string);
-
         const customerId = session.customer as string;
+        const userId = subscription.metadata?.user_id || subscription.metadata?.supabase_user_id;
 
-        // Try to find profile by stripe_customer_id first
-        let { data: profile } = await supabaseAdmin
+        console.log('Processing checkout - User ID:', userId, 'Customer ID:', customerId);
+
+        // Try to find profile by user_id from metadata
+        let { data: profile, error: profileError } = await supabaseAdmin
           .from('profiles')
-          .select('id')
-          .eq('stripe_customer_id', customerId)
+          .select('id, stripe_customer_id, email')
+          .eq('id', userId)
           .single();
 
-        // If not found, try to find by user_id in subscription metadata
-        if (!profile && subscription.metadata?.user_id) {
-          const result = await supabaseAdmin
-            .from('profiles')
-            .select('id')
-            .eq('id', subscription.metadata.user_id)
-            .single();
+        console.log('Profile lookup:', { found: !!profile, error: profileError?.message });
 
-          profile = result.data;
+        // If profile doesn't exist, CREATE IT
+        if (!profile && userId) {
+          console.log('❌ Profile not found - creating new profile for user:', userId);
 
-          // Update the profile with the customer ID for future lookups
-          if (profile) {
-            await supabaseAdmin
+          // Get user details from auth
+          const { data: authUser, error: authError } = await supabaseAdmin.auth.admin.getUserById(userId);
+
+          if (authError || !authUser?.user) {
+            console.error('Failed to get auth user:', authError);
+          } else {
+            console.log('Creating profile for:', authUser.user.email);
+
+            const { error: insertError } = await supabaseAdmin
               .from('profiles')
-              .update({ stripe_customer_id: customerId })
-              .eq('id', profile.id);
+              .insert({
+                id: userId,
+                email: authUser.user.email,
+                full_name: authUser.user.user_metadata?.full_name || session.customer_details?.name || 'User',
+                stripe_customer_id: customerId,
+                subscription_status: subscription.status,
+                subscription_tier: subscription.items.data[0].price.nickname || 'pro',
+                created_at: new Date().toISOString(),
+                updated_at: new Date().toISOString(),
+              });
+
+            if (insertError) {
+              console.error('❌ Failed to create profile:', insertError);
+            } else {
+              console.log('✅ Profile created successfully');
+              // Fetch the newly created profile
+              const result = await supabaseAdmin
+                .from('profiles')
+                .select('id, stripe_customer_id, email')
+                .eq('id', userId)
+                .single();
+              profile = result.data;
+            }
           }
         }
 
+        // Update profile with customer ID if needed
+        if (profile && (!profile.stripe_customer_id || profile.stripe_customer_id !== customerId)) {
+          console.log('Updating profile with stripe_customer_id');
+          await supabaseAdmin
+            .from('profiles')
+            .update({ stripe_customer_id: customerId })
+            .eq('id', profile.id);
+        }
+
         if (profile) {
+          console.log('✅ Processing subscription for profile:', profile.id);
           // Safely convert timestamps, handling null/undefined values
           const currentPeriodStart = subscription.current_period_start
             ? new Date(subscription.current_period_start * 1000).toISOString()

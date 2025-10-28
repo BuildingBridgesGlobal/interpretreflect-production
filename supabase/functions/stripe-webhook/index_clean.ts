@@ -1,0 +1,239 @@
+// Clean webhook without Deno.core errors
+// Uses Stripe API version that's fully Deno-compatible
+
+import { serve } from 'https://deno.land/std@0.168.0/http/server.ts';
+import Stripe from 'https://esm.sh/stripe@14.21.0?target=deno';
+import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.39.0';
+
+const stripe = new Stripe(Deno.env.get('STRIPE_SECRET_KEY') || '', {
+  apiVersion: '2024-11-20.acacia',
+  httpClient: Stripe.createFetchHttpClient(), // Use fetch instead of Node http
+});
+
+const supabaseAdmin = createClient(
+  Deno.env.get('SUPABASE_URL') ?? '',
+  Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? ''
+);
+
+const corsHeaders = {
+  'Access-Control-Allow-Origin': '*',
+  'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type, stripe-signature',
+};
+
+serve(async (req) => {
+  if (req.method === 'OPTIONS') {
+    return new Response('ok', { headers: corsHeaders });
+  }
+
+  const signature = req.headers.get('stripe-signature');
+  const webhookSecret = Deno.env.get('STRIPE_WEBHOOK_SECRET');
+
+  if (!signature || !webhookSecret) {
+    return new Response('Webhook Error: Missing signature or secret', {
+      status: 400,
+      headers: corsHeaders,
+    });
+  }
+
+  try {
+    const body = await req.text();
+    const event = await stripe.webhooks.constructEventAsync(body, signature, webhookSecret);
+
+    console.log(`Webhook received: ${event.type}`);
+
+    switch (event.type) {
+      case 'customer.subscription.created':
+      case 'checkout.session.completed': {
+        const isCheckout = event.type === 'checkout.session.completed';
+        let subscription: Stripe.Subscription;
+        let customerId: string;
+
+        if (isCheckout) {
+          const session = event.data.object as Stripe.Checkout.Session;
+          subscription = await stripe.subscriptions.retrieve(session.subscription as string);
+          customerId = session.customer as string;
+        } else {
+          subscription = event.data.object as Stripe.Subscription;
+          customerId = subscription.customer as string;
+        }
+
+        console.log(`Processing subscription ${subscription.id} for customer ${customerId}`);
+
+        // Find profile by stripe_customer_id or user_id metadata
+        let { data: profile } = await supabaseAdmin
+          .from('profiles')
+          .select('id')
+          .eq('stripe_customer_id', customerId)
+          .single();
+
+        if (!profile && subscription.metadata?.user_id) {
+          console.log(`Looking up by user_id: ${subscription.metadata.user_id}`);
+          const result = await supabaseAdmin
+            .from('profiles')
+            .select('id')
+            .eq('id', subscription.metadata.user_id)
+            .single();
+
+          profile = result.data;
+
+          if (profile) {
+            await supabaseAdmin
+              .from('profiles')
+              .update({ stripe_customer_id: customerId })
+              .eq('id', profile.id);
+          }
+        }
+
+        if (profile) {
+          const currentPeriodStart = new Date(subscription.current_period_start * 1000).toISOString();
+          const currentPeriodEnd = new Date(subscription.current_period_end * 1000).toISOString();
+
+          await supabaseAdmin.from('subscriptions').upsert({
+            id: subscription.id,
+            user_id: profile.id,
+            status: subscription.status,
+            price_id: subscription.items.data[0].price.id,
+            plan_name: subscription.items.data[0].price.nickname || 'Subscription',
+            plan_amount: subscription.items.data[0].price.unit_amount,
+            current_period_start: currentPeriodStart,
+            current_period_end: currentPeriodEnd,
+            cancel_at_period_end: subscription.cancel_at_period_end,
+          });
+
+          await supabaseAdmin
+            .from('profiles')
+            .update({
+              subscription_status: subscription.status,
+              subscription_tier: subscription.items.data[0].price.nickname || 'pro',
+              stripe_customer_id: customerId,
+              updated_at: new Date().toISOString(),
+            })
+            .eq('id', profile.id);
+
+          console.log(`✅ Updated profile ${profile.id}`);
+        } else {
+          console.error(`❌ No profile found for customer ${customerId}`);
+        }
+        break;
+      }
+
+      case 'customer.subscription.updated': {
+        const subscription = event.data.object as Stripe.Subscription;
+        const customerId = subscription.customer as string;
+
+        const { data: profile } = await supabaseAdmin
+          .from('profiles')
+          .select('id')
+          .eq('stripe_customer_id', customerId)
+          .single();
+
+        if (profile) {
+          const currentPeriodStart = new Date(subscription.current_period_start * 1000).toISOString();
+          const currentPeriodEnd = new Date(subscription.current_period_end * 1000).toISOString();
+
+          await supabaseAdmin.from('subscriptions').upsert({
+            id: subscription.id,
+            user_id: profile.id,
+            status: subscription.status,
+            price_id: subscription.items.data[0].price.id,
+            plan_name: subscription.items.data[0].price.nickname || 'Subscription',
+            plan_amount: subscription.items.data[0].price.unit_amount,
+            current_period_start: currentPeriodStart,
+            current_period_end: currentPeriodEnd,
+            cancel_at_period_end: subscription.cancel_at_period_end,
+          });
+
+          await supabaseAdmin
+            .from('profiles')
+            .update({
+              subscription_status: subscription.status,
+              subscription_tier: subscription.items.data[0].price.nickname || 'pro',
+              updated_at: new Date().toISOString(),
+            })
+            .eq('id', profile.id);
+        }
+        break;
+      }
+
+      case 'customer.subscription.deleted': {
+        const subscription = event.data.object as Stripe.Subscription;
+        const customerId = subscription.customer as string;
+
+        const { data: profile } = await supabaseAdmin
+          .from('profiles')
+          .select('id')
+          .eq('stripe_customer_id', customerId)
+          .single();
+
+        if (profile) {
+          await supabaseAdmin
+            .from('subscriptions')
+            .update({ status: 'canceled', updated_at: new Date().toISOString() })
+            .eq('id', subscription.id);
+
+          await supabaseAdmin
+            .from('profiles')
+            .update({
+              subscription_status: 'canceled',
+              subscription_tier: null,
+              updated_at: new Date().toISOString(),
+            })
+            .eq('id', profile.id);
+        }
+        break;
+      }
+
+      case 'invoice.payment_succeeded': {
+        const invoice = event.data.object as Stripe.Invoice;
+        const customerId = invoice.customer as string;
+        const subscriptionId = invoice.subscription as string;
+
+        if (subscriptionId) {
+          const { data: profile } = await supabaseAdmin
+            .from('profiles')
+            .select('id')
+            .eq('stripe_customer_id', customerId)
+            .single();
+
+          if (profile) {
+            await supabaseAdmin
+              .from('profiles')
+              .update({ subscription_status: 'active', updated_at: new Date().toISOString() })
+              .eq('id', profile.id);
+          }
+        }
+        break;
+      }
+
+      case 'invoice.payment_failed': {
+        const invoice = event.data.object as Stripe.Invoice;
+        const customerId = invoice.customer as string;
+
+        const { data: profile } = await supabaseAdmin
+          .from('profiles')
+          .select('id')
+          .eq('stripe_customer_id', customerId)
+          .single();
+
+        if (profile) {
+          await supabaseAdmin
+            .from('profiles')
+            .update({ subscription_status: 'past_due', updated_at: new Date().toISOString() })
+            .eq('id', profile.id);
+        }
+        break;
+      }
+    }
+
+    return new Response(JSON.stringify({ received: true }), {
+      headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+      status: 200,
+    });
+  } catch (err) {
+    console.error(`Webhook Error: ${err.message}`);
+    return new Response(`Webhook Error: ${err.message}`, {
+      status: 400,
+      headers: corsHeaders,
+    });
+  }
+});

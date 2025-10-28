@@ -132,9 +132,7 @@ if (typeof window !== 'undefined') {
       const hasApiKey = !!import.meta.env.VITE_ENCHARGE_API_KEY;
       console.log('🔧 Encharge Configuration:');
       console.log(`API Key: ${hasApiKey ? '✅ Configured' : '❌ Not configured'}`);
-      if (hasApiKey) {
-        console.log(`API Key (first 10 chars): ${import.meta.env.VITE_ENCHARGE_API_KEY.substring(0, 10)}...`);
-      }
+      // API key logging removed for security
       return hasApiKey;
     },
 

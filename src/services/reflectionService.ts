@@ -119,8 +119,10 @@ class ReflectionService {
 				const SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL;
 				const SUPABASE_ANON_KEY = import.meta.env.VITE_SUPABASE_ANON_KEY;
 
-				console.log("ReflectionService - Supabase URL:", SUPABASE_URL);
-				console.log("ReflectionService - Has Anon Key:", !!SUPABASE_ANON_KEY);
+				// Removed sensitive logging for production security
+				if (import.meta.env.DEV) {
+					console.log("ReflectionService - Has Supabase config:", !!SUPABASE_URL && !!SUPABASE_ANON_KEY);
+				}
 
 				// Try to get token from localStorage since Supabase client is broken
 				console.log("ReflectionService - Getting session from localStorage...");

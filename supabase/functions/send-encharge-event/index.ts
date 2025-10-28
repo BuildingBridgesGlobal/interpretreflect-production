@@ -6,10 +6,20 @@ const ENCHARGE_API_URL = 'https://api.encharge.io/v1';
 const supabaseUrl = Deno.env.get('SUPABASE_URL')!;
 const supabaseServiceKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
 
-const corsHeaders = {
-  'Access-Control-Allow-Origin': '*',
-  'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
-};
+const ALLOWED_ORIGINS = [
+  'https://interpretreflect.com',
+  'https://www.interpretreflect.com',
+  ...(Deno.env.get('ENV') === 'development' ? ['http://localhost:5173'] : [])
+]
+
+const corsHeaders = (origin: string | null) => {
+  const isAllowed = origin && ALLOWED_ORIGINS.includes(origin)
+  return {
+    'Access-Control-Allow-Origin': isAllowed ? origin : ALLOWED_ORIGINS[0],
+    'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
+    'Access-Control-Allow-Credentials': 'true',
+  }
+}
 
 interface EnchargeEvent {
   userId: string;
@@ -19,9 +29,12 @@ interface EnchargeEvent {
 }
 
 serve(async (req) => {
+  const origin = req.headers.get('origin')
+  const headers = corsHeaders(origin)
+
   // Handle CORS preflight requests
   if (req.method === 'OPTIONS') {
-    return new Response('ok', { headers: corsHeaders });
+    return new Response('ok', { headers });
   }
 
   try {
@@ -32,7 +45,7 @@ serve(async (req) => {
         JSON.stringify({ code: 401, message: 'Missing authorization header' }),
         {
           status: 401,
-          headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+          headers: { ...headers, 'Content-Type': 'application/json' }
         }
       );
     }
@@ -212,7 +225,7 @@ serve(async (req) => {
         tags: mapping.tags
       }),
       {
-        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+        headers: { ...headers, 'Content-Type': 'application/json' },
         status: 200
       }
     );
@@ -222,7 +235,7 @@ serve(async (req) => {
     return new Response(
       JSON.stringify({ error: error.message }),
       {
-        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+        headers: { ...headers, 'Content-Type': 'application/json' },
         status: 500
       }
     );

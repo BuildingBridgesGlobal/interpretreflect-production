@@ -11,16 +11,29 @@ const supabaseAdmin = createClient(
   Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? ''
 )
 
+const ALLOWED_ORIGINS = [
+  'https://interpretreflect.com',
+  'https://www.interpretreflect.com',
+  ...(Deno.env.get('ENV') === 'development' ? ['http://localhost:5173'] : [])
+]
+
+const corsHeaders = (origin: string | null) => {
+  const isAllowed = origin && ALLOWED_ORIGINS.includes(origin)
+  return {
+    'Access-Control-Allow-Origin': isAllowed ? origin : ALLOWED_ORIGINS[0],
+    'Access-Control-Allow-Methods': 'POST, OPTIONS',
+    'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
+    'Access-Control-Allow-Credentials': 'true',
+  }
+}
+
 serve(async (req) => {
+  const origin = req.headers.get('origin')
+  const headers = corsHeaders(origin)
+
   // Add CORS headers
   if (req.method === 'OPTIONS') {
-    return new Response('ok', {
-      headers: {
-        'Access-Control-Allow-Origin': '*',
-        'Access-Control-Allow-Methods': 'POST, OPTIONS',
-        'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
-      },
-    })
+    return new Response('ok', { headers })
   }
 
   try {
@@ -29,7 +42,7 @@ serve(async (req) => {
     if (!customerId || !userId) {
       return new Response(
         JSON.stringify({ error: 'Missing customerId or userId' }),
-        { status: 400, headers: { 'Content-Type': 'application/json' } }
+        { status: 400, headers: { ...headers, 'Content-Type': 'application/json' } }
       )
     }
 
@@ -87,7 +100,7 @@ serve(async (req) => {
             current_period_end: activeSubscription.current_period_end,
           }
         }),
-        { headers: { 'Content-Type': 'application/json' } }
+        { headers: { ...headers, 'Content-Type': 'application/json' } }
       )
     } else {
       console.log('No active subscription found in Stripe')
@@ -128,7 +141,7 @@ serve(async (req) => {
           success: true,
           message: 'No active subscription found - cleared subscription status',
         }),
-        { headers: { 'Content-Type': 'application/json' } }
+        { headers: { ...headers, 'Content-Type': 'application/json' } }
       )
     }
 
@@ -136,7 +149,7 @@ serve(async (req) => {
     console.error('Error syncing subscription:', error)
     return new Response(
       JSON.stringify({ error: error.message }),
-      { status: 500, headers: { 'Content-Type': 'application/json' } }
+      { status: 500, headers: { ...headers, 'Content-Type': 'application/json' } }
     )
   }
 })

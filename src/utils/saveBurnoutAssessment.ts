@@ -71,7 +71,10 @@ export async function saveBurnoutAssessmentDirect(saveData: any) {
 
   try {
     console.log("🌐 Making fetch request to:", `${supabaseUrl}/rest/v1/burnout_assessments`);
-    console.log("🔑 Using auth token (first 20 chars):", accessToken.substring(0, 20) + "...");
+    // Removed token logging for production security
+    if (import.meta.env.DEV) {
+      console.log("🔑 Has auth token:", !!accessToken);
+    }
     console.log("📤 Request body:", saveData);
 
     // Make direct REST API call to insert with timeout

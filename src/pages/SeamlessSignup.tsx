@@ -18,6 +18,7 @@ import { ModernAuthModal } from "../components/auth/ModernAuthModal";
 import { useAuth } from "../contexts/AuthContext";
 import { supabase } from "../lib/supabase";
 import { analytics } from "../utils/analytics";
+import { validatePassword, validateEmail, validateName } from "../utils/validation";
 
 // Step indicator component
 const StepIndicator: React.FC<{ currentStep: number; steps: string[] }> = ({
@@ -99,23 +100,34 @@ const PaymentForm: React.FC<{
 		setError("");
 
 		try {
-			// DO NOT create the user account yet - account will be created by Stripe webhook after payment
-			// This prevents users from closing the payment window and logging in for free
-
-			// Get the Stripe Price ID for the selected plan
-			const STRIPE_PRICE_ID = import.meta.env.VITE_STRIPE_PRICE_ID_ESSENTIAL || 'price_1234';
-
-			// Store signup data in localStorage temporarily (will be used after payment)
-			const signupData = {
+			// STEP 1: Create the user account FIRST (simpler, more reliable)
+			console.log('Creating user account...');
+			const { data: authData, error: signupError } = await supabase.auth.signUp({
 				email: email.toLowerCase().trim(),
 				password: password,
-				name: name,
-				plan: plan,
-			};
-			localStorage.setItem('pending_signup', JSON.stringify(signupData));
+				options: {
+					data: {
+						full_name: name,
+					},
+					emailRedirectTo: `${window.location.origin}/payment-success`,
+				}
+			});
 
-			// Call the Supabase Edge Function to create a Stripe Checkout session
-			// Pass signup data as metadata so webhook can create account after payment
+			if (signupError) {
+				console.error('Signup error:', signupError);
+				throw new Error(signupError.message);
+			}
+
+			if (!authData.user) {
+				throw new Error('Failed to create user account');
+			}
+
+			console.log('✅ User account created:', authData.user.id);
+
+			// Get the Stripe Price ID for the selected plan
+			const STRIPE_PRICE_ID = import.meta.env.VITE_STRIPE_PRICE_ID_ESSENTIAL || 'price_1S37dPIouyG60O9hzikj2c9h';
+
+			// STEP 2: Create Stripe checkout session (user already exists)
 			console.log('Creating checkout session with priceId:', STRIPE_PRICE_ID);
 			const { data, error: functionError } = await supabase.functions.invoke(
 				'create-checkout-session',
@@ -123,14 +135,10 @@ const PaymentForm: React.FC<{
 					body: {
 						priceId: STRIPE_PRICE_ID,
 						email: email,
-						userId: userId || null, // Only for SSO users who already have an account
+						userId: authData.user.id, // Pass the newly created user ID
 						metadata: {
 							plan: plan,
 							full_name: name,
-							// Include password hash for new signups (webhook will create account)
-							is_new_signup: !userId,
-							signup_email: email.toLowerCase().trim(),
-							signup_password: password, // Webhook will handle secure account creation
 						},
 					},
 				}
@@ -138,6 +146,7 @@ const PaymentForm: React.FC<{
 
 			console.log('Edge function response:', { data, error: functionError });
 			if (functionError) {
+				console.error('Function error details:', functionError);
 				throw new Error(`Payment setup failed: ${functionError.message}`);
 			}
 
@@ -146,9 +155,15 @@ const PaymentForm: React.FC<{
 				throw new Error(`Stripe error: ${data.error}`);
 			}
 
-			if (!data?.url) {
-				throw new Error("Failed to create checkout session");
+			// Handle both direct and nested response formats
+			const checkoutUrl = data?.url || data?.data?.url;
+			
+			if (!checkoutUrl) {
+				console.error('No checkout URL in response:', data);
+				throw new Error("Failed to create checkout session - no URL returned");
 			}
+
+			console.log('Redirecting to Stripe checkout:', checkoutUrl);
 
 			// Store email in localStorage for the payment success page
 			localStorage.setItem('signup_email', email);
@@ -168,7 +183,7 @@ const PaymentForm: React.FC<{
 			localStorage.setItem("privacyConsent", JSON.stringify(consentData));
 
 			// Redirect to Stripe Checkout
-			window.location.href = data.url;
+			window.location.href = checkoutUrl;
 
 		} catch (err: any) {
 			setError(err.message || "Payment failed. Please try again.");
@@ -326,14 +341,21 @@ export const SeamlessSignup: React.FC = () => {
 
 		if (currentStep === 1 && !user) {
 			// Validate before proceeding (but DON'T create account yet)
-			if (formData.password.length < 6) {
-				setError("Password must be at least 6 characters long");
+			const nameValidation = validateName(formData.name);
+			if (!nameValidation.valid) {
+				setError(nameValidation.error || "Invalid name");
 				return;
 			}
 
-			const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-			if (!emailRegex.test(formData.email)) {
-				setError("Please enter a valid email address");
+			const emailValidation = validateEmail(formData.email);
+			if (!emailValidation.valid) {
+				setError(emailValidation.error || "Invalid email");
+				return;
+			}
+
+			const passwordValidation = validatePassword(formData.password);
+			if (!passwordValidation.valid) {
+				setError(passwordValidation.error || "Invalid password");
 				return;
 			}
 

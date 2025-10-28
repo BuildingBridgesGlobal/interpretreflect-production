@@ -11,15 +11,28 @@ const supabaseUrl = Deno.env.get('SUPABASE_URL') ?? ''
 const supabaseServiceKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? ''
 const supabase = createClient(supabaseUrl, supabaseServiceKey)
 
-const corsHeaders = {
-  'Access-Control-Allow-Origin': '*',
-  'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
+const ALLOWED_ORIGINS = [
+  'https://interpretreflect.com',
+  'https://www.interpretreflect.com',
+  ...(Deno.env.get('ENV') === 'development' ? ['http://localhost:5173'] : [])
+]
+
+const corsHeaders = (origin: string | null) => {
+  const isAllowed = origin && ALLOWED_ORIGINS.includes(origin)
+  return {
+    'Access-Control-Allow-Origin': isAllowed ? origin : ALLOWED_ORIGINS[0],
+    'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
+    'Access-Control-Allow-Credentials': 'true',
+  }
 }
 
 serve(async (req) => {
+  const origin = req.headers.get('origin')
+  const headers = corsHeaders(origin)
+
   // Handle CORS preflight requests
   if (req.method === 'OPTIONS') {
-    return new Response('ok', { headers: corsHeaders })
+    return new Response('ok', { headers })
   }
 
   try {
@@ -29,24 +42,53 @@ serve(async (req) => {
       throw new Error('User ID is required')
     }
 
-    // Create or retrieve customer
-    const customers = await stripe.customers.list({ email, limit: 1 })
+    // Check if customer ID is already saved in profile (prevents duplicates)
+    const { data: profile } = await supabase
+      .from('profiles')
+      .select('stripe_customer_id')
+      .eq('id', userId)
+      .single()
+
     let customer
 
-    if (customers.data.length > 0) {
-      customer = customers.data[0]
+    if (profile?.stripe_customer_id) {
+      // Use existing customer from profile
+      customer = await stripe.customers.retrieve(profile.stripe_customer_id)
+      console.log('Using existing customer from profile:', customer.id)
     } else {
-      customer = await stripe.customers.create({
-        email,
-        name,
-        payment_method: paymentMethodId,
-        invoice_settings: {
-          default_payment_method: paymentMethodId,
-        },
-        metadata: {
-          supabase_user_id: userId
-        }
-      })
+      // Check if customer exists in Stripe by email
+      const customers = await stripe.customers.list({ email, limit: 1 })
+
+      if (customers.data.length > 0) {
+        customer = customers.data[0]
+        console.log('Found existing customer in Stripe:', customer.id)
+        
+        // Save to profile to prevent future lookups
+        await supabase
+          .from('profiles')
+          .update({ stripe_customer_id: customer.id })
+          .eq('id', userId)
+      } else {
+        // Create new customer
+        customer = await stripe.customers.create({
+          email,
+          name,
+          payment_method: paymentMethodId,
+          invoice_settings: {
+            default_payment_method: paymentMethodId,
+          },
+          metadata: {
+            supabase_user_id: userId
+          }
+        })
+        console.log('Created new customer:', customer.id)
+        
+        // Save to profile
+        await supabase
+          .from('profiles')
+          .update({ stripe_customer_id: customer.id })
+          .eq('id', userId)
+      }
     }
 
     // Attach payment method to customer if not already attached
@@ -106,7 +148,7 @@ serve(async (req) => {
           clientSecret: paymentIntent.client_secret,
         }),
         {
-          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+          headers: { ...headers, 'Content-Type': 'application/json' },
           status: 200,
         }
       )
@@ -118,7 +160,7 @@ serve(async (req) => {
         status: subscription.status,
       }),
       {
-        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+        headers: { ...headers, 'Content-Type': 'application/json' },
         status: 200,
       }
     )
@@ -126,7 +168,7 @@ serve(async (req) => {
     return new Response(
       JSON.stringify({ error: error.message }),
       {
-        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+        headers: { ...headers, 'Content-Type': 'application/json' },
         status: 400,
       }
     )

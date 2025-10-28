@@ -48,10 +48,10 @@ export const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
 
         // Allow access if:
         // 1. User is admin
-        // 2. User has active subscription
+        // 2. User has active subscription (including trialing)
         // 3. User has active trial
         const isAdmin = profile.is_admin === true;
-        const hasActiveSubscription = profile.subscription_status === 'active';
+        const hasActiveSubscription = profile.subscription_status === 'active' || profile.subscription_status === 'trialing';
 
         // Check if trial is still valid
         const hasActiveTrial = profile.trial_started_at &&

@@ -80,9 +80,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
 				const isDevMode =
 					!import.meta.env.VITE_SUPABASE_URL ||
 					!import.meta.env.VITE_SUPABASE_ANON_KEY;
-				console.log("AuthContext: Dev mode check:", isDevMode);
-				console.log("VITE_SUPABASE_URL:", import.meta.env.VITE_SUPABASE_URL);
-				console.log("VITE_SUPABASE_ANON_KEY:", import.meta.env.VITE_SUPABASE_ANON_KEY ? "Set" : "Not set");
+				// Removed sensitive logging for production security
 
 				if (isDevMode) {
 					// Silently skip auth in dev mode

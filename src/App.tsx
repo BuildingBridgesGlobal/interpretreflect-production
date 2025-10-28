@@ -102,6 +102,7 @@ import { PrivacyPolicy } from "./pages/PrivacyPolicy";
 import Research from "./pages/Research";
 import { SeamlessSignup } from "./pages/SeamlessSignup";
 import { TermsOfService } from "./pages/TermsOfService";
+import { EnterpriseDashboard } from "./pages/EnterpriseDashboard";
 import { growthInsightsApi } from "./services/growthInsightsApi";
 import type { BurnoutData, ViewMode } from "./types";
 import { style } from "framer-motion/client";
@@ -9445,6 +9446,10 @@ function App() {
 				<Route
 					path="/profile-settings"
 					element={<ProfileSettings />}
+				/>
+				<Route
+					path="/enterprise"
+					element={<EnterpriseDashboard />}
 				/>
 				<Route
 					path="/customize-preferences"

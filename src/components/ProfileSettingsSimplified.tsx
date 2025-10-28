@@ -198,9 +198,7 @@ export const ProfileSettingsSimplified: React.FC = () => {
 		
 		try {
 			console.log('=== Cancel Subscription Debug ===');
-			console.log('User ID:', user.id);
-			console.log('User Email:', user.email);
-			console.log('Supabase URL:', import.meta.env.VITE_SUPABASE_URL);
+			// Sensitive info logging removed for production security
 			console.log('Attempting to invoke edge function: create-portal-session');
 			
 			// Create a timeout promise

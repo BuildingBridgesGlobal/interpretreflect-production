@@ -1399,7 +1399,7 @@ function LandingPage({ onGetStarted }: LandingPageProps) {
               Get Started
             </button>
             <p className="text-sm" style={{ color: '#5A5A5A' }}>
-              Beta access available • Cancel anytime • 100% secure
+              3-day free trial • Cancel anytime • 100% secure
             </p>
 
             <button

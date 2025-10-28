@@ -95,22 +95,57 @@ export const useSubscription = (): SubscriptionStatus => {
 		setError(null);
 
 		try {
-			// Reduced timeout for better UX
-			const timeoutPromise = new Promise((_, reject) =>
-				setTimeout(() => reject(new Error('Subscription check timeout')), 5000)
-			);
-
-			// Single optimized query to get all needed data
-			const profilePromise = supabase
-				.from("profiles")
-				.select("is_admin, subscription_status, trial_started_at, trial_ends_at")
-				.eq("id", user.id)
-				.maybeSingle();
+			// Use direct REST API to bypass RLS issues
+			let accessToken: string | null = null;
 			
-			const { data: profile, error: profileError } = await Promise.race([
-				profilePromise,
-				timeoutPromise
-			]) as any;
+			// Get token from localStorage
+			try {
+				const authKey = Object.keys(localStorage).find(key => key.includes('supabase.auth.token'));
+				if (authKey) {
+					const authData = JSON.parse(localStorage.getItem(authKey) || '{}');
+					accessToken = authData.access_token || authData.currentSession?.access_token;
+				}
+			} catch (e) {
+				console.warn('Could not get token from localStorage:', e);
+			}
+			
+			// Fallback to getSession if needed
+			if (!accessToken) {
+				const { data: { session } } = await supabase.auth.getSession();
+				accessToken = session?.access_token || null;
+			}
+			
+			if (!accessToken) {
+				console.error('No access token available for subscription check');
+				setHasActiveSubscription(true); // Fail open
+				setLoading(false);
+				endTracking();
+				return;
+			}
+			
+			// Build REST API URL
+			const url = new URL(`${import.meta.env.VITE_SUPABASE_URL}/rest/v1/profiles`);
+			url.searchParams.set('id', `eq.${user.id}`);
+			url.searchParams.set('select', 'is_admin,subscription_status,trial_started_at,trial_ends_at');
+			
+			const response = await fetch(url.toString(), {
+				method: 'GET',
+				headers: {
+					'apikey': import.meta.env.VITE_SUPABASE_ANON_KEY,
+					'Authorization': `Bearer ${accessToken}`,
+					'Content-Type': 'application/json'
+				}
+			});
+			
+			if (!response.ok) {
+				const errorText = await response.text();
+				console.error('Profile fetch error:', response.status, errorText);
+				throw new Error(`HTTP ${response.status}: ${errorText}`);
+			}
+			
+			const profiles = await response.json();
+			const profile = profiles && profiles.length > 0 ? profiles[0] : null;
+			const profileError = null;
 
 			// Check if request was aborted
 			if (signal.aborted) {
@@ -150,16 +185,11 @@ export const useSubscription = (): SubscriptionStatus => {
 			// Only check subscriptions if not already granted access
 			if (!hasAccess) {
 				// First, get ALL subscriptions to see what's in the database
-				const allSubscriptionsPromise = supabase
+				const { data: allSubs, error: allSubsError } = await supabase
 					.from("subscriptions")
 					.select("*")
 					.eq("user_id", user.id)
 					.order("created_at", { ascending: false });
-
-				const { data: allSubs, error: allSubsError } = await Promise.race([
-					allSubscriptionsPromise,
-					timeoutPromise
-				]) as any;
 
 				if (allSubs && allSubs.length > 0) {
 					console.log("All user subscriptions found:", allSubs.map((s: any) => ({
@@ -171,7 +201,7 @@ export const useSubscription = (): SubscriptionStatus => {
 				}
 
 				// Now check for active subscriptions only
-				const subscriptionPromise = supabase
+				const { data, error } = await supabase
 					.from("subscriptions")
 					.select("*")
 					.eq("user_id", user.id)
@@ -179,11 +209,6 @@ export const useSubscription = (): SubscriptionStatus => {
 					.order("created_at", { ascending: false })
 					.limit(1)
 					.maybeSingle();
-
-				const { data, error } = await Promise.race([
-					subscriptionPromise,
-					timeoutPromise
-				]) as any;
 
 				// Check if request was aborted
 				if (signal.aborted) {

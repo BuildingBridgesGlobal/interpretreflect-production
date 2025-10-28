@@ -1,11 +1,13 @@
 import type React from "react";
+import { useNavigate } from "react-router-dom";
+import { useOrganizationRole } from "../../hooks/useOrganizationRole";
 
 interface NavigationTabsProps {
 	activeTab: string;
 	setActiveTab: (tab: string) => void;
 }
 
-const tabs = [
+const baseTabs = [
 	{ id: "home", label: "Home" },
 	{ id: "reflection", label: "Reflection Studio" },
 	{ id: "stress", label: "Stress Reset" },
@@ -17,6 +19,14 @@ export const NavigationTabs: React.FC<NavigationTabsProps> = ({
 	activeTab,
 	setActiveTab,
 }) => {
+	const { isOrgAdmin } = useOrganizationRole();
+	const navigate = useNavigate();
+	
+	// Add enterprise tab if user is an org admin
+	const tabs = isOrgAdmin 
+		? [...baseTabs, { id: "enterprise", label: "Team Dashboard" }]
+		: baseTabs;
+	
 	return (
 		<div
 			className="px-4 sm:px-6 lg:px-8 py-4"
@@ -62,7 +72,12 @@ export const NavigationTabs: React.FC<NavigationTabsProps> = ({
 								onClick={(e) => {
 									e.preventDefault();
 									e.stopPropagation();
-									setActiveTab(tab.id);
+									// Navigate to /enterprise route for enterprise tab
+									if (tab.id === "enterprise") {
+										navigate("/enterprise");
+									} else {
+										setActiveTab(tab.id);
+									}
 								}}
 								className={`nav-tab-button flex items-center px-5 sm:px-6 py-3 sm:py-3.5 text-base sm:text-lg font-semibold transition-all duration-300 rounded-lg whitespace-nowrap`}
 								role="tab"

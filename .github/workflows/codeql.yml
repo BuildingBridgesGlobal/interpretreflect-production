@@ -1,0 +1,53 @@
+name: "CodeQL Advanced Security"
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+  schedule:
+    - cron: '30 1 * * 0'
+
+jobs:
+  analyze:
+    name: Analyze
+    runs-on: ubuntu-latest
+    permissions:
+      actions: read
+      contents: read
+      security-events: write
+
+    strategy:
+      fail-fast: false
+      matrix:
+        language: [ 'javascript-typescript' ]
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    - name: Initialize CodeQL
+      uses: github/codeql-action/init@v3
+      with:
+        languages: ${{ matrix.language }}
+        queries: security-extended,security-and-quality
+        # Exclude problematic paths
+        config: |
+          paths-ignore:
+            - 'node_modules'
+            - 'dist'
+            - 'build'
+            - '.vite'
+            - 'project'
+            - '**/*.test.ts'
+            - '**/*.test.tsx'
+            - '**/*.spec.ts'
+            - '**/*.spec.tsx'
+
+    - name: Autobuild
+      uses: github/codeql-action/autobuild@v3
+
+    - name: Perform CodeQL Analysis
+      uses: github/codeql-action/analyze@v3
+      with:
+        category: "/language:${{matrix.language}}"

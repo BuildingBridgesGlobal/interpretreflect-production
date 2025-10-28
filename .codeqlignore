@@ -1,0 +1,50 @@
+# CodeQL Ignore File
+# Exclude files/directories that cause parse errors or are not relevant for security scanning
+
+# Dependencies
+node_modules/
+**/node_modules/
+
+# Build outputs
+dist/
+build/
+.vite/
+.next/
+.nuxt/
+out/
+
+# Test files
+**/*.test.ts
+**/*.test.tsx
+**/*.spec.ts
+**/*.spec.tsx
+**/__tests__/
+**/__mocks__/
+
+# Configuration files
+*.config.js
+*.config.ts
+vite.config.ts
+vitest.config.ts
+
+# Old project files
+project/
+
+# Generated files
+*.min.js
+*.bundle.js
+
+# Documentation
+*.md
+docs/
+
+# Supabase migration/debug files
+supabase/check_*.sql
+supabase/diagnose_*.sql
+supabase/fix_*.sql
+supabase/test_*.sql
+supabase/verify_*.sql
+supabase/setup_*.sql
+supabase/wake_up_*.sql
+supabase/**/index_*.ts
+supabase/**/config.json

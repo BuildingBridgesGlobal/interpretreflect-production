@@ -449,17 +449,20 @@ export const SeamlessSignup: React.FC = () => {
           outline-color: #5C7F4F !important;
         }
       `}</style>
-			{/* Back to Landing Button */}
-			<div className="absolute top-6 left-6 z-10">
-				<button
-					onClick={() => navigate("/")}
-					className="flex items-center gap-2 px-4 py-2 text-white rounded-lg shadow-md transition-all font-medium"
-					style={{ backgroundColor: "#5C7F4F" }}
-				>
-					<ArrowLeft className="w-5 h-5" />
-					<span>Back to Home</span>
-				</button>
-			</div>
+			{/* Back to Landing Button - Hidden on payment step to prevent confusion */}
+			{currentStep !== 3 && (
+				<div className="absolute top-6 left-6 z-10">
+					<button
+						type="button"
+						onClick={() => navigate("/")}
+						className="flex items-center gap-2 px-4 py-2 text-white rounded-lg shadow-md transition-all font-medium"
+						style={{ backgroundColor: "#5C7F4F" }}
+					>
+						<ArrowLeft className="w-5 h-5" />
+						<span>Back to Home</span>
+					</button>
+				</div>
+			)}
 
 			<div className="container mx-auto px-4 py-12">
 				{/* Header */}

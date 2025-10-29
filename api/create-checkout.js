@@ -1,16 +1,13 @@
-// Vercel Serverless Function - Much simpler than Supabase Edge Functions
-const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
-
-module.exports = async (req, res) => {
+// Vercel Serverless Function
+export default async function handler(req, res) {
   // Set CORS headers
-  res.setHeader('Access-Control-Allow-Credentials', true);
+  res.setHeader('Access-Control-Allow-Credentials', 'true');
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'GET,OPTIONS,PATCH,DELETE,POST,PUT');
   res.setHeader('Access-Control-Allow-Headers', 'X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version');
 
   if (req.method === 'OPTIONS') {
-    res.status(200).end();
-    return;
+    return res.status(200).end();
   }
 
   if (req.method !== 'POST') {
@@ -18,6 +15,12 @@ module.exports = async (req, res) => {
   }
 
   try {
+    // Import Stripe dynamically
+    const Stripe = (await import('stripe')).default;
+    const stripe = new Stripe(process.env.STRIPE_SECRET_KEY, {
+      apiVersion: '2024-11-20',
+    });
+
     const { priceId, email, metadata } = req.body;
 
     console.log('📦 Creating checkout for:', email);
@@ -85,4 +88,4 @@ module.exports = async (req, res) => {
       error: error.message
     });
   }
-};
+}

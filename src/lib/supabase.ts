@@ -15,14 +15,14 @@ if (
 
 // Create Supabase client with localStorage for password reset compatibility
 // detectSessionInUrl is enabled to handle password reset and magic links
-// Using localStorage with default Supabase storageKey format
+// Using localStorage temporarily to fix password reset flow
 export const supabase = createClient(supabaseUrl, supabaseAnonKey, {
 	auth: {
 		autoRefreshToken: true,
 		persistSession: true,
 		detectSessionInUrl: true,
 		storage: window.localStorage,
-		// Removed custom storageKey - let Supabase use default: sb-kvguxuxanpynwdffpssm-auth-token
+		storageKey: "supabase.auth.token",
 		flowType: "pkce",
 	},
 });

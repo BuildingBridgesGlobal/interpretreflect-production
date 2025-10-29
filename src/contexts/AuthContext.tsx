@@ -90,9 +90,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
 					return;
 				}
 
-				// Add timeout to prevent infinite loading (increased to 30s for slow networks)
+				// CRITICAL FIX: Reduce timeout to 5 seconds (was 30s causing slowness)
 				const timeoutPromise = new Promise((_, reject) =>
-					setTimeout(() => reject(new Error('Auth initialization timeout')), 30000)
+					setTimeout(() => reject(new Error('Auth initialization timeout')), 5000)
 				);
 
 				// Just get current session - don't manually refresh
@@ -126,15 +126,17 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
 					RoleManager.setUserRole(session.user.id, role);
 					setUserRole(role);
 
-					// Check if user needs to accept terms
-					const termsStatus = await termsService.checkTermsStatus(session.user.id);
-					setNeedsTermsAcceptance(termsStatus.needsAcceptance);
-
-					// Load user data from Supabase on initial load
-					await UserDataLoader.loadUserData(session.user.id);
-
-					// Trigger initial sync
-					dataSyncService.triggerManualSync();
+					// PERFORMANCE FIX: Defer heavy operations to background (don't await)
+					// This prevents blocking the UI while loading user data
+					Promise.all([
+						termsService.checkTermsStatus(session.user.id).then(termsStatus => {
+							setNeedsTermsAcceptance(termsStatus.needsAcceptance);
+						}),
+						UserDataLoader.loadUserData(session.user.id),
+						dataSyncService.triggerManualSync()
+					]).catch(err => {
+						console.error("Background data loading error:", err);
+					});
 				} else {
 					// No session, no user - this is normal for logged out state
 					setUser(null);

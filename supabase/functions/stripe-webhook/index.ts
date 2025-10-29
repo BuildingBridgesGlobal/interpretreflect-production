@@ -91,33 +91,46 @@ serve(async (req) => {
         // ============================================
         console.log('🔐 Step 2: Creating Supabase auth user...');
 
-        // Check if user already exists
-        const { data: existingUsers } = await supabaseAdmin.auth.admin.listUsers();
-        const existingUser = existingUsers?.users.find((u) => u.email === email);
-
         let userId: string;
 
-        if (existingUser) {
-          console.log('⚠️ User already exists:', existingUser.id);
-          userId = existingUser.id;
-        } else {
-          // Create new auth user
-          const { data: newUser, error: authError } = await supabaseAdmin.auth.admin.createUser({
-            email: email,
-            password: password,
-            email_confirm: true, // Auto-confirm email since they paid
-            user_metadata: {
-              full_name: fullName,
-            },
-          });
+        // Try to create auth user - if email exists, we'll get an error
+        const { data: newUser, error: authError } = await supabaseAdmin.auth.admin.createUser({
+          email: email,
+          password: password,
+          email_confirm: true, // Auto-confirm email since they paid
+          user_metadata: {
+            full_name: fullName,
+          },
+        });
 
-          if (authError || !newUser?.user) {
+        if (authError) {
+          // Check if error is because user already exists
+          if (authError.message?.includes('already') || authError.message?.includes('duplicate')) {
+            console.log('⚠️ User already exists, fetching existing user...');
+
+            // Find existing user by email - query profiles table instead of listing all users
+            const { data: existingProfile } = await supabaseAdmin
+              .from('profiles')
+              .select('id')
+              .eq('email', email)
+              .maybeSingle();
+
+            if (existingProfile) {
+              userId = existingProfile.id;
+              console.log('✅ Found existing user:', userId);
+            } else {
+              console.error('❌ User exists in auth but not in profiles');
+              throw new Error('User exists but profile not found');
+            }
+          } else {
             console.error('❌ Failed to create auth user:', authError);
-            throw new Error(`Failed to create auth user: ${authError?.message}`);
+            throw new Error(`Failed to create auth user: ${authError.message}`);
           }
-
+        } else if (newUser?.user) {
           userId = newUser.user.id;
           console.log('✅ Step 2: Auth user created:', userId);
+        } else {
+          throw new Error('Failed to create user - no user returned and no error');
         }
 
         // ============================================
@@ -202,6 +215,26 @@ serve(async (req) => {
           // Don't throw - user is already created
         } else {
           console.log('✅ Step 4: Subscription record created');
+        }
+
+        // ============================================
+        // STEP 5: CLEAR PASSWORD FROM STRIPE METADATA (SECURITY)
+        // ============================================
+        console.log('🔒 Step 5: Clearing password from Stripe metadata...');
+
+        try {
+          // Remove password from subscription metadata for security
+          await stripe.subscriptions.update(subscription.id, {
+            metadata: {
+              full_name: fullName,
+              plan: plan,
+              // password is intentionally removed
+            },
+          });
+          console.log('✅ Step 5: Password cleared from Stripe metadata');
+        } catch (cleanupError) {
+          console.error('⚠️ Failed to clear password from metadata:', cleanupError);
+          // Don't throw - user is already created successfully
         }
 
         console.log('🎊 WEBHOOK COMPLETE: User account fully created and ready!');

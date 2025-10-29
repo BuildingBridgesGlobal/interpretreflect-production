@@ -188,69 +188,58 @@ export const SeamlessSignup: React.FC = () => {
 				},
 			});
 
-			console.log("🌐 Supabase URL:", import.meta.env.VITE_SUPABASE_URL);
-			console.log("🔑 Has Anon Key:", !!import.meta.env.VITE_SUPABASE_ANON_KEY);
+			console.log("🌐 Calling Vercel API endpoint...");
 
-			// Call Supabase Edge Function with timeout
-			const controller = new AbortController();
-			const timeoutId = setTimeout(() => {
-				controller.abort();
-				console.error("⏱️ Request timed out after 10 seconds");
-			}, 10000);
+			// Call Vercel serverless function (much simpler than Edge Functions!)
+			const apiUrl = window.location.hostname === 'localhost'
+				? 'http://localhost:3000/api/create-checkout'
+				: '/api/create-checkout';
 
-			try {
-				const { data, error: functionError } = await supabase.functions.invoke(
-					"create-checkout-session",
-					{
-						body: {
-							priceId: STRIPE_PRICE_ID,
-							email: formData.email.toLowerCase().trim(),
-							metadata: {
-								full_name: formData.name,
-								password: formData.password, // Pass password to webhook
-								plan: formData.plan,
-							},
-						},
-					}
-				);
+			console.log("📍 API URL:", apiUrl);
 
-				clearTimeout(timeoutId);
+			const response = await fetch(apiUrl, {
+				method: 'POST',
+				headers: {
+					'Content-Type': 'application/json',
+				},
+				body: JSON.stringify({
+					priceId: STRIPE_PRICE_ID,
+					email: formData.email.toLowerCase().trim(),
+					metadata: {
+						full_name: formData.name,
+						password: formData.password,
+						plan: formData.plan,
+					},
+				}),
+			});
 
-				console.log("📥 Response from create-checkout-session:", data);
+			console.log("📥 Response status:", response.status);
 
-				if (functionError) {
-					console.error("❌ Function error:", functionError);
-					throw new Error(`Failed to create checkout: ${functionError.message}`);
-				}
-
-				if (data?.error) {
-					console.error("❌ Stripe error:", data.error);
-					throw new Error(`Stripe error: ${data.error}`);
-				}
-
-				const checkoutUrl = data?.url || data?.data?.url;
-
-				if (!checkoutUrl) {
-					console.error("❌ No checkout URL in response:", data);
-					throw new Error("Failed to create checkout session - no URL returned");
-				}
-
-				console.log("✅ Checkout URL received:", checkoutUrl);
-				console.log("🔄 Redirecting to Stripe...");
-
-				// Store email for login after payment
-				localStorage.setItem("signup_email", formData.email);
-				localStorage.setItem("signup_plan", formData.plan);
-
-				// Redirect to Stripe checkout
-				window.location.href = checkoutUrl;
-			} catch (invokeError: any) {
-				clearTimeout(timeoutId);
-				if (invokeError.name === 'AbortError') {
-					throw new Error("Request timed out. Please check your internet connection and try again.");
-				}
-				throw invokeError;
+			if (!response.ok) {
+				const errorData = await response.json();
+				console.error("❌ API error:", errorData);
+				throw new Error(errorData.error || 'Failed to create checkout session');
 			}
+
+			const data = await response.json();
+			console.log("📥 Response data:", data);
+
+			const checkoutUrl = data.url;
+
+			if (!checkoutUrl) {
+				console.error("❌ No checkout URL in response:", data);
+				throw new Error("Failed to create checkout session - no URL returned");
+			}
+
+			console.log("✅ Checkout URL received:", checkoutUrl);
+			console.log("🔄 Redirecting to Stripe...");
+
+			// Store email for login after payment
+			localStorage.setItem("signup_email", formData.email);
+			localStorage.setItem("signup_plan", formData.plan);
+
+			// Redirect to Stripe checkout
+			window.location.href = checkoutUrl;
 		} catch (err: any) {
 			console.error("❌ Payment flow error:", err);
 			setError(err.message || "Failed to start payment. Please try again.");

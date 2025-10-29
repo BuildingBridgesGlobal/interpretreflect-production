@@ -71,7 +71,7 @@ export const useSubscription = (): SubscriptionStatus => {
 		// Check cache first
 		const cacheKey = `subscription_${user.id}`;
 		const cached = subscriptionCache.get(cacheKey);
-		
+
 		if (cached && Date.now() < cached.expires) {
 			console.log("Using cached subscription data");
 			setHasActiveSubscription(cached.data.hasActiveSubscription);
@@ -86,13 +86,26 @@ export const useSubscription = (): SubscriptionStatus => {
 		if (abortControllerRef.current) {
 			abortControllerRef.current.abort();
 		}
-		
+
 		// Create new abort controller
 		abortControllerRef.current = new AbortController();
 		const signal = abortControllerRef.current.signal;
 
 		setLoading(true);
 		setError(null);
+
+		// CRITICAL FIX: Add 3-second timeout to prevent infinite "Verifying subscription..."
+		// If subscription check takes too long, fail open (allow access)
+		const timeoutId = setTimeout(() => {
+			console.warn("⚠️ Subscription check timeout (3s) - allowing access (fail-open)");
+			setHasActiveSubscription(true);
+			setLoading(false);
+			setError("Subscription check timeout - access granted");
+			endTracking();
+			if (abortControllerRef.current) {
+				abortControllerRef.current.abort();
+			}
+		}, 3000); // 3 seconds
 
 		try {
 			// Use direct REST API to bypass RLS issues
@@ -261,6 +274,7 @@ export const useSubscription = (): SubscriptionStatus => {
 
 		} catch (err: any) {
 			if (signal.aborted) {
+				clearTimeout(timeoutId); // Clear timeout on abort
 				return; // Don't update state if request was aborted
 			}
 
@@ -273,6 +287,7 @@ export const useSubscription = (): SubscriptionStatus => {
 			setHasActiveSubscription(true);
 			setSubscription(null);
 		} finally {
+			clearTimeout(timeoutId); // Always clear timeout when done
 			if (!signal.aborted) {
 				setLoading(false);
 				endTracking(); // End performance tracking

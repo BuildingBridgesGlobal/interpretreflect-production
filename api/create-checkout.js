@@ -17,9 +17,8 @@ export default async function handler(req, res) {
   try {
     // Import Stripe dynamically
     const Stripe = (await import('stripe')).default;
-    const stripe = new Stripe(process.env.STRIPE_SECRET_KEY, {
-      apiVersion: '2023-10-16',
-    });
+    // Use default API version (let Stripe SDK handle it)
+    const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 
     const { priceId, email, metadata } = req.body;
 

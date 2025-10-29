@@ -100,71 +100,97 @@ const PaymentForm: React.FC<{
 		setError("");
 
 		try {
-			// PAYMENT FIRST APPROACH: Don't create user yet, just pass credentials to Stripe
-			// The webhook will create the user AFTER successful payment
+			// ============================================
+			// STEP 1: CREATE AUTH USER ACCOUNT FIRST
+			// ============================================
+			console.log('🔐 Step 1: Creating auth user account...');
 
-			console.log('Preparing checkout session (user will be created after payment)...');
-
-			// Get the Stripe Price ID for the selected plan
-			const STRIPE_PRICE_ID = import.meta.env.VITE_STRIPE_PRICE_ID_ESSENTIAL || 'price_1S37dPIouyG60O9hzikj2c9h';
-
-			// Store signup credentials in localStorage (will be used after payment)
-			localStorage.setItem('pending_signup', JSON.stringify({
+			const { data: authData, error: signupError } = await supabase.auth.signUp({
 				email: email.toLowerCase().trim(),
 				password: password,
-				full_name: name,
-				plan: plan,
-			}));
+				options: {
+					data: {
+						full_name: name,
+					},
+					emailRedirectTo: `${window.location.origin}/payment-success`,
+				}
+			});
 
-			// Create Stripe checkout session WITHOUT creating user first
-			console.log('Creating checkout session with priceId:', STRIPE_PRICE_ID);
+			// Handle signup errors
+			if (signupError) {
+				console.error('❌ Signup error:', signupError);
+
+				// Check for duplicate email
+				if (signupError.message?.includes('already registered') ||
+				    signupError.message?.includes('already exists') ||
+				    signupError.message?.includes('User already registered') ||
+				    signupError.status === 422) {
+					throw new Error('This email is already registered. Please sign in instead.');
+				}
+
+				throw new Error(signupError.message || 'Failed to create account');
+			}
+
+			if (!authData?.user) {
+				throw new Error('Failed to create user account - no user returned');
+			}
+
+			const userId = authData.user.id;
+			console.log('✅ Step 1 Complete: Auth user created:', userId);
+
+			// ============================================
+			// STEP 2: CREATE STRIPE CHECKOUT SESSION
+			// ============================================
+			console.log('💳 Step 2: Creating Stripe checkout session...');
+
+			const STRIPE_PRICE_ID = import.meta.env.VITE_STRIPE_PRICE_ID_ESSENTIAL || 'price_1S37dPIouyG60O9hzikj2c9h';
+
 			const { data, error: functionError } = await supabase.functions.invoke(
 				'create-checkout-session',
 				{
 					body: {
 						priceId: STRIPE_PRICE_ID,
-						email: email,
-						// DON'T pass userId - user doesn't exist yet
+						email: email.toLowerCase().trim(),
+						userId: userId, // Pass the newly created user ID
 						metadata: {
 							plan: plan,
 							full_name: name,
-							signup_email: email.toLowerCase().trim(),
-							signup_password: password, // Will be used by webhook to create user
+							user_id: userId, // CRITICAL: Pass userId so webhook can create profile
 						},
 					},
 				}
 			);
 
-			console.log('Edge function response:', { data, error: functionError });
 			if (functionError) {
-				console.error('Function error details:', functionError);
+				console.error('❌ Checkout session error:', functionError);
 				throw new Error(`Payment setup failed: ${functionError.message}`);
 			}
 
 			if (data?.error) {
-				console.error('Stripe error:', data.error);
+				console.error('❌ Stripe error:', data.error);
 				throw new Error(`Stripe error: ${data.error}`);
 			}
 
-			// Handle both direct and nested response formats
 			const checkoutUrl = data?.url || data?.data?.url;
 
 			if (!checkoutUrl) {
-				console.error('No checkout URL in response:', data);
+				console.error('❌ No checkout URL in response:', data);
 				throw new Error("Failed to create checkout session - no URL returned");
 			}
 
-			console.log('Redirecting to Stripe checkout:', checkoutUrl);
+			console.log('✅ Step 2 Complete: Checkout session created');
+			console.log('🚀 Step 3: Redirecting to Stripe checkout...');
 
-			// Store email in localStorage for the payment success page
+			// Store signup info for payment success page
 			localStorage.setItem('signup_email', email);
+			localStorage.setItem('signup_user_id', userId);
 
 			// Track checkout initiation
 			if (analytics.trackSubscriptionSuccess) {
 				analytics.trackSubscriptionSuccess(plan, 12.99);
 			}
 
-			// Set privacy consent to prevent modal from appearing
+			// Set privacy consent
 			const consentData = {
 				timestamp: Date.now(),
 				version: "1.0",
@@ -173,11 +199,16 @@ const PaymentForm: React.FC<{
 			};
 			localStorage.setItem("privacyConsent", JSON.stringify(consentData));
 
-			// Redirect to Stripe Checkout
+			// ============================================
+			// STEP 3: REDIRECT TO STRIPE
+			// ============================================
+			// User will pay, webhook will create profile with subscription_status='active'
+			// Until webhook runs, ProtectedRoute will block access (no profile exists)
 			window.location.href = checkoutUrl;
 
 		} catch (err: any) {
-			setError(err.message || "Payment failed. Please try again.");
+			console.error('❌ Signup flow error:', err);
+			setError(err.message || "Signup failed. Please try again.");
 			setProcessing(false);
 		}
 	};

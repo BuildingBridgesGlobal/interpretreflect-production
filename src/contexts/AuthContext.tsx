@@ -90,31 +90,106 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
 					return;
 				}
 
-				// CRITICAL FIX: Add timeout but don't reject - just log and continue
-				// This prevents infinite loading if getSession() hangs
-				let session = null;
-				let sessionError = null;
+				// OPTIMISTIC AUTH CHECK: Read from localStorage FIRST
+				// This prevents logout on slow getSession() calls
+				// Use the default Supabase storageKey format: sb-<project-ref>-auth-token
+				const storedSession = localStorage.getItem('sb-kvguxuxanpynwdffpssm-auth-token');
+				if (storedSession) {
+					try {
+						const sessionData = JSON.parse(storedSession);
+						// Check if token exists and isn't expired
+						if (sessionData?.access_token && sessionData?.expires_at) {
+							const expiresAt = sessionData.expires_at * 1000;
+							const now = Date.now();
+
+							// If token is still valid (not expired), assume logged in
+							if (expiresAt > now) {
+								console.log("✅ Found valid session in localStorage, assuming logged in");
+								// Set a placeholder user to prevent logout
+								// The real user will be set by onAuthStateChange listener
+								setUser({ id: 'loading' } as any);
+								setLoading(false);
+
+								// Verify session in background (don't block UI)
+								supabase.auth.getSession().then(({ data, error }) => {
+									if (error) {
+										console.error("❌ Background session check failed:", error);
+										// If verification fails, let onAuthStateChange handle it
+										return;
+									}
+									if (data.session?.user) {
+										console.log("✅ Background session verified");
+										setUser(data.session.user);
+										setSentryUser({ id: data.session.user.id, email: data.session.user.email });
+										sessionManager.startSession();
+										const role = data.session.user.email?.includes("admin") ? "admin" : "user";
+										RoleManager.setUserRole(data.session.user.id, role);
+										setUserRole(role);
+
+										// Load user data in background
+										Promise.all([
+											termsService.checkTermsStatus(data.session.user.id).then(termsStatus => {
+												setNeedsTermsAcceptance(termsStatus.needsAcceptance);
+											}),
+											UserDataLoader.loadUserData(data.session.user.id),
+											dataSyncService.triggerManualSync()
+										]).catch(err => {
+											console.error("Background data loading error:", err);
+										});
+									} else {
+										// Session expired, let onAuthStateChange handle logout
+										console.log("⚠️ Session expired, clearing user");
+										setUser(null);
+									}
+								});
+
+								return; // Exit early - don't wait for getSession()
+							}
+						}
+					} catch (err) {
+						console.warn("⚠️ Failed to parse stored session:", err);
+					}
+				}
+
+				// FALLBACK: No stored session or expired, check with Supabase
+				console.log("🔍 No valid localStorage session, checking with Supabase...");
+
+				let session: any = null;
+				let sessionError: any = null;
+				let timedOut = false;
 
 				const timeoutPromise = new Promise<void>((resolve) => {
 					setTimeout(() => {
-						console.warn("⚠️ getSession() taking >10s - continuing anyway");
+						console.warn("⚠️ getSession() taking >10s - will keep trying in background");
+						timedOut = true;
 						resolve();
 					}, 10000); // 10 seconds
 				});
 
 				const sessionPromise = supabase.auth.getSession().then(result => {
-					session = result.data.session;
-					sessionError = result.error;
+					if (!timedOut) {
+						session = result.data.session;
+						sessionError = result.error;
+					}
 				});
 
-				// Race but don't reject on timeout - just continue
+				// Race but continue after timeout
 				await Promise.race([sessionPromise, timeoutPromise]);
+
+				// If timed out, assume logged out and let onAuthStateChange fix it if wrong
+				if (timedOut) {
+					console.warn("⚠️ getSession() timed out, assuming logged out (onAuthStateChange will correct if wrong)");
+					setUser(null);
+					setLoading(false);
+					return;
+				}
 
 				if (sessionError) {
 					// Only log if it's not an expected error
 					if (sessionError.name !== "AuthSessionMissingError") {
 						console.error("Error getting session:", sessionError);
 					}
+					setUser(null);
 					console.log("AuthContext: Setting loading to false");
 				setLoading(false);
 					return;
@@ -152,6 +227,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
 			} catch (error) {
 				// Unexpected error
 				console.error("Unexpected error during auth initialization:", error);
+				// Don't clear user on unexpected errors - let onAuthStateChange handle it
 			} finally {
 				console.log("AuthContext: Setting loading to false");
 				setLoading(false);

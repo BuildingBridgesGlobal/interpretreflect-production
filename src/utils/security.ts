@@ -109,8 +109,9 @@ export class SessionManager {
 			severity: "INFO",
 		});
 
-		// Clear local storage
-		localStorage.removeItem("supabase.auth.token");
+		// Clear local storage - remove Supabase auth token
+		// Use the default Supabase storageKey format: sb-<project-ref>-auth-token
+		localStorage.removeItem('sb-kvguxuxanpynwdffpssm-auth-token');
 		sessionStorage.clear();
 
 		// Dispatch event for components to handle

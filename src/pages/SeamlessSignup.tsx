@@ -116,6 +116,10 @@ const PaymentForm: React.FC<{
 				}
 			});
 
+			// CRITICAL: Sign out immediately to prevent auto-login interference
+			// User will log in AFTER payment succeeds
+			await supabase.auth.signOut();
+
 			// Handle signup errors
 			if (signupError) {
 				console.error('❌ Signup error:', signupError);

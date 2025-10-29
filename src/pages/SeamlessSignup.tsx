@@ -11,13 +11,10 @@ import {
 	User,
 } from "lucide-react";
 import type React from "react";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-import { ModernAuthModal } from "../components/auth/ModernAuthModal";
-import { useAuth } from "../contexts/AuthContext";
 import { supabase } from "../lib/supabase";
-import { analytics } from "../utils/analytics";
 import { validatePassword, validateEmail, validateName } from "../utils/validation";
 
 // Step indicator component
@@ -80,230 +77,15 @@ const StepIndicator: React.FC<{ currentStep: number; steps: string[] }> = ({
 	);
 };
 
-// Payment form component - Now uses Stripe Checkout (hosted payment page)
-const PaymentForm: React.FC<{
-	plan: string;
-	email: string;
-	name: string;
-	password: string;
-	userId?: string;
-	onSuccess: () => void;
-	onBack: () => void;
-}> = ({ plan, email, name, password, userId, onSuccess, onBack }) => {
-	const [error, setError] = useState<string>("");
-	const [processing, setProcessing] = useState(false);
-
-	const handleSubmit = async (e: React.FormEvent) => {
-		e.preventDefault();
-
-		setProcessing(true);
-		setError("");
-
-		try {
-			// ============================================
-			// STEP 1: CREATE AUTH USER ACCOUNT FIRST
-			// ============================================
-			console.log('🔐 Step 1: Creating auth user account...');
-
-			const { data: authData, error: signupError } = await supabase.auth.signUp({
-				email: email.toLowerCase().trim(),
-				password: password,
-				options: {
-					data: {
-						full_name: name,
-					},
-					emailRedirectTo: `${window.location.origin}/payment-success`,
-				}
-			});
-
-			// Handle signup errors
-			if (signupError) {
-				console.error('❌ Signup error:', signupError);
-
-				// Check for duplicate email
-				if (signupError.message?.includes('already registered') ||
-				    signupError.message?.includes('already exists') ||
-				    signupError.message?.includes('User already registered') ||
-				    signupError.status === 422) {
-					throw new Error('This email is already registered. Please sign in instead.');
-				}
-
-				throw new Error(signupError.message || 'Failed to create account');
-			}
-
-			if (!authData?.user) {
-				throw new Error('Failed to create user account - no user returned');
-			}
-
-			const userId = authData.user.id;
-			console.log('✅ Step 1 Complete: Auth user created:', userId);
-
-			// ============================================
-			// STEP 2: CREATE STRIPE CHECKOUT SESSION
-			// ============================================
-			console.log('💳 Step 2: Creating Stripe checkout session...');
-
-			const STRIPE_PRICE_ID = import.meta.env.VITE_STRIPE_PRICE_ID_ESSENTIAL || 'price_1S37dPIouyG60O9hzikj2c9h';
-
-			const { data, error: functionError } = await supabase.functions.invoke(
-				'create-checkout-session',
-				{
-					body: {
-						priceId: STRIPE_PRICE_ID,
-						email: email.toLowerCase().trim(),
-						userId: userId, // Pass the newly created user ID
-						metadata: {
-							plan: plan,
-							full_name: name,
-							user_id: userId, // CRITICAL: Pass userId so webhook can create profile
-						},
-					},
-				}
-			);
-
-			if (functionError) {
-				console.error('❌ Checkout session error:', functionError);
-				throw new Error(`Payment setup failed: ${functionError.message}`);
-			}
-
-			if (data?.error) {
-				console.error('❌ Stripe error:', data.error);
-				throw new Error(`Stripe error: ${data.error}`);
-			}
-
-			const checkoutUrl = data?.url || data?.data?.url;
-
-			if (!checkoutUrl) {
-				console.error('❌ No checkout URL in response:', data);
-				throw new Error("Failed to create checkout session - no URL returned");
-			}
-
-			console.log('✅ Step 2 Complete: Checkout session created');
-			console.log('🚀 Step 3: Redirecting to Stripe checkout...');
-
-			// Store signup info for payment success page
-			localStorage.setItem('signup_email', email);
-			localStorage.setItem('signup_user_id', userId);
-
-			// Track checkout initiation
-			if (analytics.trackSubscriptionSuccess) {
-				analytics.trackSubscriptionSuccess(plan, 12.99);
-			}
-
-			// Set privacy consent
-			const consentData = {
-				timestamp: Date.now(),
-				version: "1.0",
-				gdpr: true,
-				fromSignup: true,
-			};
-			localStorage.setItem("privacyConsent", JSON.stringify(consentData));
-
-			// ============================================
-			// STEP 3: SIGN OUT & REDIRECT TO STRIPE
-			// ============================================
-			console.log('🚪 Step 3: Signing out user before redirect...');
-			// Sign out to prevent auto-login interference
-			// User will log in MANUALLY after payment
-			await supabase.auth.signOut();
-			console.log('✅ User signed out');
-
-			console.log('🚀 Redirecting to Stripe checkout...');
-			// User will pay, webhook will create profile with subscription_status='active'
-			// User must log in manually after payment to access app
-			window.location.href = checkoutUrl;
-
-		} catch (err: any) {
-			console.error('❌ Signup flow error:', err);
-			setError(err.message || "Signup failed. Please try again.");
-			setProcessing(false);
-		}
-	};
-
-	return (
-		<form onSubmit={handleSubmit} className="space-y-6">
-			{/* Info Box */}
-			<div className="p-4 bg-blue-50 border border-blue-200 rounded-lg">
-				<p className="text-sm text-blue-800">
-					You'll be redirected to Stripe's secure checkout page to complete your payment.
-				</p>
-			</div>
-
-			{/* Security badges */}
-			<div className="flex items-center justify-center gap-4 py-4 bg-gray-50 rounded-lg">
-				<div className="flex items-center gap-1 text-sm text-gray-600">
-					<Shield className="w-4 h-4" style={{ color: "#5C7F4F" }} />
-					<span>SSL Secured</span>
-				</div>
-				<div className="flex items-center gap-1 text-sm text-gray-600">
-					<Lock className="w-4 h-4" style={{ color: "#5C7F4F" }} />
-					<span>PCI Compliant</span>
-				</div>
-			</div>
-
-			{error && (
-				<div className="p-3 bg-red-50 border border-red-200 rounded-lg flex items-start gap-2">
-					<AlertCircle className="w-5 h-5 text-red-600 flex-shrink-0 mt-0.5" />
-					<p className="text-sm text-red-700">{error}</p>
-				</div>
-			)}
-
-			<div className="flex gap-3">
-				<button
-					type="button"
-					onClick={onBack}
-					disabled={processing}
-					className="px-6 py-3 rounded-lg font-semibold text-white transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
-					style={{
-						background: processing
-							? "#ccc"
-							: "linear-gradient(135deg, #5C7F4F, rgb(107, 142, 94))",
-					}}
-				>
-					<ArrowLeft className="w-5 h-5" />
-					Back
-				</button>
-
-				<button
-					type="submit"
-					disabled={processing}
-					className="flex-1 px-6 py-3 rounded-lg font-semibold text-white transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
-					style={{
-						background:
-							processing
-								? "#ccc"
-								: "linear-gradient(135deg, #5C7F4F, rgb(107, 142, 94))",
-					}}
-				>
-					{processing ? (
-						<>
-							<Loader2 className="w-5 h-5 animate-spin" />
-							Creating account...
-						</>
-					) : (
-						<>
-							Continue to Payment
-							<ArrowRight className="w-5 h-5" />
-						</>
-					)}
-				</button>
-			</div>
-		</form>
-	);
-};
-
 export const SeamlessSignup: React.FC = () => {
 	const navigate = useNavigate();
-	const { user, signInWithGoogle, signInWithApple } = useAuth();
 	const [currentStep, setCurrentStep] = useState(1);
-	const [showSignInModal, setShowSignInModal] = useState(false);
 	const [formData, setFormData] = useState({
 		email: "",
 		password: "",
 		confirmPassword: "",
 		name: "",
 		plan: "essential",
-		acceptedTerms: false,
 	});
 	const [loading, setLoading] = useState(false);
 	const [error, setError] = useState("");
@@ -311,50 +93,17 @@ export const SeamlessSignup: React.FC = () => {
 
 	const steps = ["Account", "Plan", "Payment"];
 
-	// Check URL params for SSO and payment step
-	useEffect(() => {
-		const params = new URLSearchParams(window.location.search);
-		const step = params.get('step');
-		const sso = params.get('sso');
-
-		const checkSubscriptionAndRedirect = async () => {
-			if (user) {
-				// Check if user already has a subscription
-				const { data: profile } = await supabase
-					.from('profiles')
-					.select('subscription_status, subscription_tier')
-					.eq('id', user.id)
-					.single();
-
-				if (profile?.subscription_status === 'active') {
-					// User already has subscription - go to dashboard
-					navigate('/dashboard');
-					return;
-				}
-
-				// New Google SSO user needs to pay
-				if (step === 'payment' && sso === 'google') {
-					setCurrentStep(3);
-					setFormData(prev => ({
-						...prev,
-						email: user.email || '',
-						name: user.user_metadata?.full_name || user.user_metadata?.name || '',
-					}));
-				} else if (currentStep === 1) {
-					// Regular logged in user without subscription
-					setCurrentStep(2);
-				}
-			}
-		};
-
-		checkSubscriptionAndRedirect();
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [user, navigate]);
-
+	// Validate current step
 	const validateStep = (step: number): boolean => {
 		switch (step) {
 			case 1:
-				return !!(formData.email && formData.password && formData.name);
+				return !!(
+					formData.email &&
+					formData.password &&
+					formData.confirmPassword &&
+					formData.name &&
+					formData.password === formData.confirmPassword
+				);
 			case 2:
 				return !!formData.plan;
 			default:
@@ -362,14 +111,15 @@ export const SeamlessSignup: React.FC = () => {
 		}
 	};
 
-	const handleNext = async () => {
+	// Handle next step
+	const handleNext = () => {
 		if (!validateStep(currentStep)) {
-			setError("Please fill in all required fields");
+			setError("Please fill in all required fields correctly");
 			return;
 		}
 
-		if (currentStep === 1 && !user) {
-			// Validate before proceeding (but DON'T create account yet)
+		// Step 1 validation
+		if (currentStep === 1) {
 			const nameValidation = validateName(formData.name);
 			if (!nameValidation.valid) {
 				setError(nameValidation.error || "Invalid name");
@@ -388,23 +138,17 @@ export const SeamlessSignup: React.FC = () => {
 				return;
 			}
 
-			setLoading(true);
-			setError("");
-
-			// Note: We'll let Supabase handle duplicate email detection during signup
-			// If email exists, signUp will return an error which we'll catch in the payment step
-			// This is more reliable than trying to check beforehand
-
-			// Just validate and store data, DON'T create account yet
-			// Account will be created in the payment step (after plan selection)
-			setLoading(false);
-			setCurrentStep(2);
-		} else {
-			setCurrentStep(currentStep + 1);
-			setError("");
+			if (formData.password !== formData.confirmPassword) {
+				setError("Passwords do not match");
+				return;
+			}
 		}
+
+		setError("");
+		setCurrentStep(currentStep + 1);
 	};
 
+	// Handle back
 	const handleBack = () => {
 		if (currentStep > 1) {
 			setCurrentStep(currentStep - 1);
@@ -412,57 +156,100 @@ export const SeamlessSignup: React.FC = () => {
 		}
 	};
 
-	const handleSuccess = () => {
-		navigate("/payment-success");
-	};
+	// Handle payment submission - ONLY creates Stripe checkout, NO user creation
+	const handlePayment = async () => {
+		console.log("🚀 PAYMENT FLOW STARTED");
+		console.log("📋 Form Data:", {
+			email: formData.email,
+			name: formData.name,
+			plan: formData.plan,
+		});
 
-	const handleSSO = async (provider: "google" | "apple") => {
 		setLoading(true);
+		setError("");
+
 		try {
-			if (provider === "google") {
-				await signInWithGoogle();
-			} else {
-				await signInWithApple();
+			// Get Stripe price ID
+			const STRIPE_PRICE_ID =
+				import.meta.env.VITE_STRIPE_PRICE_ID_ESSENTIAL ||
+				"price_1S37dPIouyG60O9hzikj2c9h";
+
+			console.log("💳 Creating Stripe checkout session...");
+			console.log("📦 Sending to create-checkout-session:", {
+				priceId: STRIPE_PRICE_ID,
+				email: formData.email,
+				metadata: {
+					full_name: formData.name,
+					password: formData.password, // Webhook will use this to create auth user
+					plan: formData.plan,
+				},
+			});
+
+			// Call Supabase Edge Function to create checkout session
+			const { data, error: functionError } = await supabase.functions.invoke(
+				"create-checkout-session",
+				{
+					body: {
+						priceId: STRIPE_PRICE_ID,
+						email: formData.email.toLowerCase().trim(),
+						metadata: {
+							full_name: formData.name,
+							password: formData.password, // Pass password to webhook
+							plan: formData.plan,
+						},
+					},
+				}
+			);
+
+			console.log("📥 Response from create-checkout-session:", data);
+
+			if (functionError) {
+				console.error("❌ Function error:", functionError);
+				throw new Error(`Failed to create checkout: ${functionError.message}`);
 			}
-			setCurrentStep(2);
+
+			if (data?.error) {
+				console.error("❌ Stripe error:", data.error);
+				throw new Error(`Stripe error: ${data.error}`);
+			}
+
+			const checkoutUrl = data?.url || data?.data?.url;
+
+			if (!checkoutUrl) {
+				console.error("❌ No checkout URL in response:", data);
+				throw new Error("Failed to create checkout session - no URL returned");
+			}
+
+			console.log("✅ Checkout URL received:", checkoutUrl);
+			console.log("🔄 Redirecting to Stripe...");
+
+			// Store email for login after payment
+			localStorage.setItem("signup_email", formData.email);
+			localStorage.setItem("signup_plan", formData.plan);
+
+			// Redirect to Stripe checkout
+			window.location.href = checkoutUrl;
 		} catch (err: any) {
-			setError(err.message);
-		} finally {
+			console.error("❌ Payment flow error:", err);
+			setError(err.message || "Failed to start payment. Please try again.");
 			setLoading(false);
 		}
 	};
 
 	return (
 		<div className="min-h-screen bg-gradient-to-br from-green-50 via-blue-50 to-purple-50">
-			{/* Global style to remove purple focus rings */}
-			<style>{`
-        input[type="radio"]:focus {
-          outline: none !important;
-          box-shadow: none !important;
-          border-color: transparent !important;
-        }
-        .sr-only:focus {
-          outline: none !important;
-          box-shadow: none !important;
-        }
-        input:focus-visible {
-          outline-color: #5C7F4F !important;
-        }
-      `}</style>
-			{/* Back to Landing Button - Hidden on payment step to prevent confusion */}
-			{currentStep !== 3 && (
-				<div className="absolute top-6 left-6 z-10">
-					<button
-						type="button"
-						onClick={() => navigate("/")}
-						className="flex items-center gap-2 px-4 py-2 text-white rounded-lg shadow-md transition-all font-medium"
-						style={{ backgroundColor: "#5C7F4F" }}
-					>
-						<ArrowLeft className="w-5 h-5" />
-						<span>Back to Home</span>
-					</button>
-				</div>
-			)}
+			{/* Back to Landing Button */}
+			<div className="absolute top-6 left-6 z-10">
+				<button
+					type="button"
+					onClick={() => navigate("/")}
+					className="flex items-center gap-2 px-4 py-2 text-white rounded-lg shadow-md transition-all font-medium"
+					style={{ backgroundColor: "#5C7F4F" }}
+				>
+					<ArrowLeft className="w-5 h-5" />
+					<span>Back to Home</span>
+				</button>
+			</div>
 
 			<div className="container mx-auto px-4 py-12">
 				{/* Header */}
@@ -481,148 +268,144 @@ export const SeamlessSignup: React.FC = () => {
 				{/* Form Container */}
 				<div className="max-w-2xl mx-auto mt-12">
 					<div className="bg-white rounded-2xl shadow-xl p-8">
-						{/* Step 1: Account Creation */}
-						{currentStep === 1 && !user && (
+						{/* Step 1: Account Info */}
+						{currentStep === 1 && (
 							<div className="space-y-6">
 								<h2 className="text-2xl font-bold text-gray-900 text-center mb-8">
 									Create Your Account
 								</h2>
 
-								{/* Email Form */}
-								<div className="space-y-4">
-									<div>
-										<label className="block text-sm font-medium text-gray-700 mb-2">
-											<User className="w-4 h-4 inline mr-1" />
-											Full Name
-										</label>
-										<input
-											type="text"
-											value={formData.name}
-											onChange={(e) =>
-												setFormData({ ...formData, name: e.target.value })
-											}
-											onBlur={() => setTouched({ ...touched, name: true })}
-											className="w-full px-4 py-3 border rounded-xl focus:ring-2 focus:border-transparent transition-all"
-											style={
-												{
-													"--tw-ring-color": "#5C7F4F",
-												} as React.CSSProperties
-											}
-											placeholder="John Doe"
-											required
-										/>
-									</div>
+								<div>
+									<label className="block text-sm font-medium text-gray-700 mb-2">
+										<User className="w-4 h-4 inline mr-1" />
+										Full Name
+									</label>
+									<input
+										type="text"
+										value={formData.name}
+										onChange={(e) =>
+											setFormData({ ...formData, name: e.target.value })
+										}
+										onBlur={() => setTouched({ ...touched, name: true })}
+										className="w-full px-4 py-3 border rounded-xl focus:ring-2 focus:border-transparent transition-all"
+										style={
+											{
+												"--tw-ring-color": "#5C7F4F",
+											} as React.CSSProperties
+										}
+										placeholder="John Doe"
+										required
+									/>
+								</div>
 
-									<div>
-										<label className="block text-sm font-medium text-gray-700 mb-2">
-											<Mail className="w-4 h-4 inline mr-1" />
-											Email Address
-										</label>
-										<input
-											type="email"
-											value={formData.email}
-											onChange={(e) =>
-												setFormData({ ...formData, email: e.target.value })
-											}
-											onBlur={() => setTouched({ ...touched, email: true })}
-											className="w-full px-4 py-3 border rounded-xl focus:ring-2 focus:border-transparent transition-all"
-											style={
-												{
-													"--tw-ring-color": "#5C7F4F",
-												} as React.CSSProperties
-											}
-											placeholder="john@example.com"
-											required
-										/>
-									</div>
+								<div>
+									<label className="block text-sm font-medium text-gray-700 mb-2">
+										<Mail className="w-4 h-4 inline mr-1" />
+										Email Address
+									</label>
+									<input
+										type="email"
+										value={formData.email}
+										onChange={(e) =>
+											setFormData({ ...formData, email: e.target.value })
+										}
+										onBlur={() => setTouched({ ...touched, email: true })}
+										className="w-full px-4 py-3 border rounded-xl focus:ring-2 focus:border-transparent transition-all"
+										style={
+											{
+												"--tw-ring-color": "#5C7F4F",
+											} as React.CSSProperties
+										}
+										placeholder="john@example.com"
+										required
+									/>
+								</div>
 
-									<div>
-										<label className="block text-sm font-medium text-gray-700 mb-2">
-											<Lock className="w-4 h-4 inline mr-1" />
-											Password
-										</label>
-										<input
-											type="password"
-											value={formData.password}
-											onChange={(e) => {
-												setFormData({ ...formData, password: e.target.value });
-												// Clear error when user types
-												if (error) setError("");
-											}}
-											onBlur={() => setTouched({ ...touched, password: true })}
-											className={`w-full px-4 py-3 border rounded-xl focus:ring-2 focus:border-transparent transition-all ${
-												touched.password && formData.password.length < 6
-													? "border-red-500"
-													: "border-gray-300"
-											}`}
-											style={
-												{
-													"--tw-ring-color": "#5C7F4F",
-												} as React.CSSProperties
-											}
-											placeholder="••••••••"
-											required
-											minLength={6}
-										/>
-										<div className="mt-1 text-xs">
-											{formData.password.length > 0 &&
-											formData.password.length < 6 ? (
-												<p className="text-red-600">
-													Password must be at least 6 characters
-												</p>
-											) : (
-												<p className="text-gray-500">
-													Minimum 6 characters • Avoid common passwords like
-													"password123"
-												</p>
-											)}
-										</div>
+								<div>
+									<label className="block text-sm font-medium text-gray-700 mb-2">
+										<Lock className="w-4 h-4 inline mr-1" />
+										Password
+									</label>
+									<input
+										type="password"
+										value={formData.password}
+										onChange={(e) => {
+											setFormData({ ...formData, password: e.target.value });
+											if (error) setError("");
+										}}
+										onBlur={() => setTouched({ ...touched, password: true })}
+										className={`w-full px-4 py-3 border rounded-xl focus:ring-2 focus:border-transparent transition-all ${
+											touched.password && formData.password.length < 6
+												? "border-red-500"
+												: "border-gray-300"
+										}`}
+										style={
+											{
+												"--tw-ring-color": "#5C7F4F",
+											} as React.CSSProperties
+										}
+										placeholder="••••••••"
+										required
+										minLength={6}
+									/>
+									<div className="mt-1 text-xs">
+										{formData.password.length > 0 &&
+										formData.password.length < 6 ? (
+											<p className="text-red-600">
+												Password must be at least 6 characters
+											</p>
+										) : (
+											<p className="text-gray-500">Minimum 6 characters</p>
+										)}
 									</div>
+								</div>
 
-									{/* Confirm Password */}
-									<div>
-										<label
-											htmlFor="confirmPassword"
-											className="block text-sm font-medium text-gray-700 mb-1"
-										>
-											Confirm Password
-										</label>
-										<input
-											type="password"
-											id="confirmPassword"
-											value={formData.confirmPassword || ""}
-											onChange={(e) => {
-												setFormData({ ...formData, confirmPassword: e.target.value });
-												if (error) setError("");
-											}}
-											onBlur={() => setTouched({ ...touched, confirmPassword: true })}
-											className={`w-full px-4 py-3 border rounded-xl focus:ring-2 focus:border-transparent transition-all ${
-												touched.confirmPassword && formData.password !== formData.confirmPassword
-													? "border-red-500"
-													: "border-gray-300"
-											}`}
-											style={
-												{
-													"--tw-ring-color": "#5C7F4F",
-												} as React.CSSProperties
-											}
-											placeholder="••••••••"
-											required
-										/>
-										{touched.confirmPassword && formData.confirmPassword && formData.password !== formData.confirmPassword && (
+								<div>
+									<label className="block text-sm font-medium text-gray-700 mb-2">
+										Confirm Password
+									</label>
+									<input
+										type="password"
+										value={formData.confirmPassword || ""}
+										onChange={(e) => {
+											setFormData({
+												...formData,
+												confirmPassword: e.target.value,
+											});
+											if (error) setError("");
+										}}
+										onBlur={() =>
+											setTouched({ ...touched, confirmPassword: true })
+										}
+										className={`w-full px-4 py-3 border rounded-xl focus:ring-2 focus:border-transparent transition-all ${
+											touched.confirmPassword &&
+											formData.password !== formData.confirmPassword
+												? "border-red-500"
+												: "border-gray-300"
+										}`}
+										style={
+											{
+												"--tw-ring-color": "#5C7F4F",
+											} as React.CSSProperties
+										}
+										placeholder="••••••••"
+										required
+									/>
+									{touched.confirmPassword &&
+										formData.confirmPassword &&
+										formData.password !== formData.confirmPassword && (
 											<p className="mt-1 text-xs text-red-600">
 												Passwords do not match
 											</p>
 										)}
-										{touched.confirmPassword && formData.password === formData.confirmPassword && formData.confirmPassword && (
+									{touched.confirmPassword &&
+										formData.password === formData.confirmPassword &&
+										formData.confirmPassword && (
 											<p className="mt-1 text-xs text-green-600 flex items-center gap-1">
-												<svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
-													<path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
-												</svg>
+												<Check className="w-4 h-4" />
 												Passwords match
 											</p>
 										)}
-									</div>
 								</div>
 
 								{error && (
@@ -631,62 +414,23 @@ export const SeamlessSignup: React.FC = () => {
 									</div>
 								)}
 
-								{/* Terms and Privacy Checkbox */}
-								{/* Terms checkbox removed - handled in Stripe checkout */}
-
 								<button
 									onClick={handleNext}
-									disabled={
-										loading ||
-										!formData.email ||
-										!formData.password ||
-										!formData.name ||
-										!formData.confirmPassword ||
-										formData.password !== formData.confirmPassword
-									}
+									disabled={!validateStep(1)}
 									className="w-full px-6 py-3 rounded-lg font-semibold text-white transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
 									style={{
-										background:
-											loading ||
-											!formData.email ||
-											!formData.password ||
-											!formData.name ||
-											!formData.confirmPassword ||
-											formData.password !== formData.confirmPassword
-												? "#ccc"
-												: "linear-gradient(135deg, #5C7F4F, rgb(107, 142, 94))",
+										background: !validateStep(1)
+											? "#ccc"
+											: "linear-gradient(135deg, #5C7F4F, rgb(107, 142, 94))",
 									}}
 								>
-									{loading ? (
-										<>
-											<Loader2 className="w-5 h-5 animate-spin" />
-											Creating Account...
-										</>
-									) : (
-										<>
-											Continue
-											<ArrowRight className="w-5 h-5" />
-										</>
-									)}
+									Continue
+									<ArrowRight className="w-5 h-5" />
 								</button>
-
-								{/* Already have an account link */}
-								<div className="text-center mt-6 pt-6 border-t border-gray-200">
-									<p className="text-sm text-gray-600">
-										Already have an account?{" "}
-										<button
-											onClick={() => setShowSignInModal(true)}
-											className="ml-1 px-3 py-1 text-white rounded-md font-semibold transition-all"
-											style={{ background: "#5C7F4F" }}
-										>
-											Sign In
-										</button>
-									</p>
-								</div>
 							</div>
 						)}
 
-						{/* Step 2: Choose Plan */}
+						{/* Step 2: Plan Selection */}
 						{currentStep === 2 && (
 							<div className="space-y-6">
 								<h2 className="text-2xl font-bold text-gray-900 text-center mb-8">
@@ -696,9 +440,7 @@ export const SeamlessSignup: React.FC = () => {
 								<div className="space-y-4">
 									{/* Essential Plan */}
 									<div
-										onClick={() =>
-											setFormData({ ...formData, plan: "essential" })
-										}
+										onClick={() => setFormData({ ...formData, plan: "essential" })}
 										className={`border-2 rounded-xl p-6 cursor-pointer transition-all ${
 											formData.plan === "essential"
 												? "bg-green-50"
@@ -706,17 +448,7 @@ export const SeamlessSignup: React.FC = () => {
 										}`}
 										style={{
 											borderColor:
-												formData.plan === "essential"
-													? "#5C7F4F"
-													: undefined,
-										}}
-										role="button"
-										tabIndex={0}
-										onKeyDown={(e) => {
-											if (e.key === "Enter" || e.key === " ") {
-												e.preventDefault();
-												setFormData({ ...formData, plan: "essential" });
-											}
+												formData.plan === "essential" ? "#5C7F4F" : undefined,
 										}}
 									>
 										<div className="flex justify-between items-start mb-4">
@@ -740,87 +472,30 @@ export const SeamlessSignup: React.FC = () => {
 										</div>
 										<ul className="space-y-2">
 											<li className="flex items-center gap-2 text-sm">
-												<Check
-													className="w-4 h-4"
-													style={{ color: "#5C7F4F" }}
-												/>
-												<span className="text-black">
-													All wellness exercises
-												</span>
+												<Check className="w-4 h-4" style={{ color: "#5C7F4F" }} />
+												<span className="text-black">All wellness exercises</span>
 											</li>
 											<li className="flex items-center gap-2 text-sm">
-												<Check
-													className="w-4 h-4"
-													style={{ color: "#5C7F4F" }}
-												/>
-												<span className="text-black">
-													Elya AI companion included
-												</span>
+												<Check className="w-4 h-4" style={{ color: "#5C7F4F" }} />
+												<span className="text-black">Elya AI companion included</span>
 											</li>
 											<li className="flex items-center gap-2 text-sm">
-												<Check
-													className="w-4 h-4"
-													style={{ color: "#5C7F4F" }}
-												/>
+												<Check className="w-4 h-4" style={{ color: "#5C7F4F" }} />
 												<span className="text-black">Progress tracking</span>
 											</li>
 											<li className="flex items-center gap-2 text-sm">
-												<Check
-													className="w-4 h-4"
-													style={{ color: "#5C7F4F" }}
-												/>
-												<span className="text-black">
-													Mobile & desktop access
-												</span>
+												<Check className="w-4 h-4" style={{ color: "#5C7F4F" }} />
+												<span className="text-black">Mobile & desktop access</span>
 											</li>
 										</ul>
 									</div>
-
-									{/* Professional Plan (Coming Soon) */}
-									<div className="opacity-50">
-										<div className="border-2 border-gray-200 rounded-xl p-6 relative">
-											<div className="absolute top-3 left-3">
-												<span className="px-3 py-1 bg-gray-100 text-gray-600 text-xs font-semibold rounded-full">
-													Coming Soon
-												</span>
-											</div>
-											<div className="flex justify-between items-start mb-4">
-												<div>
-													<h3 className="text-lg font-bold text-gray-900">
-														Professional
-													</h3>
-													<p className="text-gray-600 text-sm">
-														For teams and organizations
-													</p>
-												</div>
-												<div className="text-right">
-													<p className="text-2xl font-bold text-gray-700">
-														$29.99
-													</p>
-													<p className="text-sm text-gray-500">per month</p>
-												</div>
-											</div>
-											<ul className="space-y-2">
-												<li className="flex items-center gap-2 text-sm text-gray-600">
-													<Check className="w-4 h-4 text-gray-400" />
-													<span>Everything in Essential</span>
-												</li>
-												<li className="flex items-center gap-2 text-sm text-gray-600">
-													<Check className="w-4 h-4 text-gray-400" />
-													<span>Earn CEUs</span>
-												</li>
-												<li className="flex items-center gap-2 text-sm text-gray-600">
-													<Check className="w-4 h-4 text-gray-400" />
-													<span>Analytics dashboard</span>
-												</li>
-												<li className="flex items-center gap-2 text-sm text-gray-600">
-													<Check className="w-4 h-4 text-gray-400" />
-													<span>Priority support</span>
-												</li>
-											</ul>
-										</div>
-									</div>
 								</div>
+
+								{error && (
+									<div className="p-3 bg-red-50 border border-red-200 rounded-lg">
+										<p className="text-sm text-red-700">{error}</p>
+									</div>
+								)}
 
 								<div className="flex gap-3 pt-4">
 									<button
@@ -881,15 +556,74 @@ export const SeamlessSignup: React.FC = () => {
 									</div>
 								</div>
 
-								<PaymentForm
-									plan={formData.plan}
-									email={formData.email || user?.email || ""}
-									name={formData.name || user?.user_metadata?.full_name || ""}
-									password={formData.password}
-									userId={user?.id}
-									onSuccess={handleSuccess}
-									onBack={handleBack}
-								/>
+								{/* Info Box */}
+								<div className="p-4 bg-blue-50 border border-blue-200 rounded-lg">
+									<p className="text-sm text-blue-800">
+										You'll be redirected to Stripe's secure checkout page to complete
+										your payment. After payment, you can log in with the email and
+										password you created.
+									</p>
+								</div>
+
+								{/* Security badges */}
+								<div className="flex items-center justify-center gap-4 py-4 bg-gray-50 rounded-lg">
+									<div className="flex items-center gap-1 text-sm text-gray-600">
+										<Shield className="w-4 h-4" style={{ color: "#5C7F4F" }} />
+										<span>SSL Secured</span>
+									</div>
+									<div className="flex items-center gap-1 text-sm text-gray-600">
+										<Lock className="w-4 h-4" style={{ color: "#5C7F4F" }} />
+										<span>PCI Compliant</span>
+									</div>
+								</div>
+
+								{error && (
+									<div className="p-3 bg-red-50 border border-red-200 rounded-lg flex items-start gap-2">
+										<AlertCircle className="w-5 h-5 text-red-600 flex-shrink-0 mt-0.5" />
+										<p className="text-sm text-red-700">{error}</p>
+									</div>
+								)}
+
+								<div className="flex gap-3">
+									<button
+										type="button"
+										onClick={handleBack}
+										disabled={loading}
+										className="px-6 py-3 rounded-lg font-semibold text-white transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+										style={{
+											background: loading
+												? "#ccc"
+												: "linear-gradient(135deg, #5C7F4F, rgb(107, 142, 94))",
+										}}
+									>
+										<ArrowLeft className="w-5 h-5" />
+										Back
+									</button>
+
+									<button
+										type="button"
+										onClick={handlePayment}
+										disabled={loading}
+										className="flex-1 px-6 py-3 rounded-lg font-semibold text-white transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+										style={{
+											background: loading
+												? "#ccc"
+												: "linear-gradient(135deg, #5C7F4F, rgb(107, 142, 94))",
+										}}
+									>
+										{loading ? (
+											<>
+												<Loader2 className="w-5 h-5 animate-spin" />
+												Creating checkout...
+											</>
+										) : (
+											<>
+												Continue to Payment
+												<ArrowRight className="w-5 h-5" />
+											</>
+										)}
+									</button>
+								</div>
 							</div>
 						)}
 					</div>
@@ -901,29 +635,12 @@ export const SeamlessSignup: React.FC = () => {
 							<span>256-bit Encryption</span>
 						</div>
 						<div className="flex items-center gap-1">
-							<CheckCircle
-								className="w-4 h-4"
-								style={{ color: "#5C7F4F" }}
-							/>
+							<CheckCircle className="w-4 h-4" style={{ color: "#5C7F4F" }} />
 							<span>Cancel Anytime</span>
 						</div>
 					</div>
 				</div>
 			</div>
-
-			{/* Sign In Modal */}
-			{showSignInModal && (
-				<ModernAuthModal
-					isOpen={showSignInModal}
-					onClose={() => setShowSignInModal(false)}
-					defaultMode="signin"
-					onSuccess={() => {
-						setShowSignInModal(false);
-						// If user signs in successfully, skip to plan selection
-						setCurrentStep(2);
-					}}
-				/>
-			)}
 		</div>
 	);
 };

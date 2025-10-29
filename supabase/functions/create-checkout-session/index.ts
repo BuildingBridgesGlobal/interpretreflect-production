@@ -29,76 +29,44 @@ serve(async (req) => {
     const body = await req.json()
     console.log('📦 Received request body:', JSON.stringify(body))
 
-    const { priceId, email, userId, metadata } = body
+    const { priceId, email, metadata } = body
 
     if (!priceId) {
       console.error('❌ Missing priceId in request')
       throw new Error('Price ID is required')
     }
 
-    console.log('✅ Request validated:', { priceId, email, userId, hasMetadata: !!metadata })
+    if (!email) {
+      console.error('❌ Missing email in request')
+      throw new Error('Email is required')
+    }
+
+    console.log('✅ Request validated:', { priceId, email, hasMetadata: !!metadata })
 
     const stripe = new Stripe(Deno.env.get('STRIPE_SECRET_KEY') || '', {
       apiVersion: '2024-11-20.acacia',
     })
 
-    const supabaseClient = createClient(
-      Deno.env.get('SUPABASE_URL') ?? '',
-      Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? ''
-    )
-
-    // Check if customer already exists in Stripe
+    // Check if customer already exists in Stripe by email
     let customerId: string | undefined
 
-    if (userId) {
-      const { data: profile } = await supabaseClient
-        .from('profiles')
-        .select('stripe_customer_id')
-        .eq('id', userId)
-        .single()
+    const existingCustomers = await stripe.customers.list({
+      email: email,
+      limit: 1
+    })
 
-      customerId = profile?.stripe_customer_id
-    }
-
-    // Create customer if doesn't exist
-    if (!customerId && email) {
-      // IMPORTANT: Check if customer already exists in Stripe by email
-      // This prevents duplicate customers if profile wasn't updated yet
-      const existingCustomers = await stripe.customers.list({
+    if (existingCustomers.data.length > 0) {
+      // Use existing customer
+      customerId = existingCustomers.data[0].id
+      console.log('✅ Found existing Stripe customer:', customerId)
+    } else {
+      // Create new customer - webhook will link to user after payment
+      const customer = await stripe.customers.create({
         email: email,
-        limit: 1
+        metadata: metadata || {},
       })
-
-      if (existingCustomers.data.length > 0) {
-        // Use existing customer
-        customerId = existingCustomers.data[0].id
-        console.log('Found existing Stripe customer:', customerId)
-      } else {
-        // Create new customer
-        const customer = await stripe.customers.create({
-          email: email,
-          metadata: {
-            supabase_uid: userId || '',
-            ...metadata,
-          },
-        })
-        customerId = customer.id
-        console.log('Created new Stripe customer:', customerId)
-      }
-
-      // Save customer ID to profile if user exists
-      if (userId && customerId) {
-        const { error: updateError } = await supabaseClient
-          .from('profiles')
-          .update({ stripe_customer_id: customerId })
-          .eq('id', userId)
-
-        if (updateError) {
-          console.error('Failed to save stripe_customer_id:', updateError)
-        } else {
-          console.log('Saved stripe_customer_id to profile')
-        }
-      }
+      customerId = customer.id
+      console.log('✅ Created new Stripe customer:', customerId)
     }
 
     // Create checkout session
@@ -106,6 +74,7 @@ serve(async (req) => {
 
     const session = await stripe.checkout.sessions.create({
       customer: customerId,
+      customer_email: email, // Prefill email
       payment_method_types: ['card'],
       line_items: [
         {
@@ -115,33 +84,23 @@ serve(async (req) => {
       ],
       mode: 'subscription',
       allow_promotion_codes: true,
-      
+
       // FRICTION REDUCERS - Make checkout smoother
       billing_address_collection: 'auto', // Only collect when required by payment method
       customer_creation: 'if_required', // Don't create duplicate customers
       phone_number_collection: {
         enabled: false // Don't ask for phone numbers
       },
-      
+
       success_url: `${origin}/payment-success?session_id={CHECKOUT_SESSION_ID}`,
       cancel_url: `${origin}/signup?canceled=true`,
-      metadata: {
-        user_id: userId || '',
-        ...metadata,
-      },
+
+      // Store all signup data in subscription metadata for webhook
       subscription_data: {
         metadata: {
-          user_id: userId || '',
-          supabase_user_id: userId || '', // Backup field name
-          ...metadata, // Pass all metadata to subscription for webhook access
+          ...metadata, // Contains: full_name, password, plan
         },
         trial_period_days: 3,
-      },
-      // ALSO add to session metadata for redundancy
-      metadata: {
-        user_id: userId || '',
-        supabase_user_id: userId || '',
-        ...metadata,
       },
     })
 

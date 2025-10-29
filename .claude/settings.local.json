@@ -51,7 +51,8 @@
       "Bash(timeout 3 npm run dev)",
       "Read(//c/**)",
       "Bash(pkill:*)",
-      "Bash(git restore:*)"
+      "Bash(git restore:*)",
+      "Bash(npx tsc:*)"
     ],
     "deny": [],
     "ask": []

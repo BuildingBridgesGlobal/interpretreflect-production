@@ -7,6 +7,7 @@ A "Cancel Subscription" button has been added to Profile Settings > Privacy tab 
 ## Why It's Not Working Yet
 
 The button requires:
+
 1. The Stripe edge function to be deployed
 2. The database to have the `stripe_customer_id` column in the `user_profiles` table
 3. Users to have a `stripe_customer_id` stored in their profile
@@ -81,6 +82,7 @@ await supabase
 ## Error Handling
 
 The button now includes detailed error logging:
+
 - Check browser console for detailed error messages
 - If no Stripe customer ID is found, users get a helpful message
 - All errors are logged for debugging
@@ -88,15 +90,18 @@ The button now includes detailed error logging:
 ## Troubleshooting
 
 ### "No Stripe customer ID found"
+
 - User doesn't have a `stripe_customer_id` in their `user_profiles` record
 - Check if the subscription creation flow is saving the customer ID
 
 ### "Edge function error"
+
 - Edge function might not be deployed
 - Check environment variables are set correctly
 - Verify the function is deployed: `supabase functions list`
 
 ### "No portal URL returned"
+
 - Stripe API might be failing
 - Check Stripe API keys are correct
 - Verify Customer Portal is enabled in Stripe Dashboard
@@ -110,6 +115,7 @@ The button now includes detailed error logging:
 ## Next Steps
 
 After setup is complete:
+
 1. Test with a real Stripe customer
 2. Verify the portal allows cancellation
 3. Test the return URL redirects back to Profile Settings

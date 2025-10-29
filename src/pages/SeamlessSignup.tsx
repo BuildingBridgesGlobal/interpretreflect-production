@@ -116,10 +116,6 @@ const PaymentForm: React.FC<{
 				}
 			});
 
-			// CRITICAL: Sign out immediately to prevent auto-login interference
-			// User will log in AFTER payment succeeds
-			await supabase.auth.signOut();
-
 			// Handle signup errors
 			if (signupError) {
 				console.error('❌ Signup error:', signupError);
@@ -204,10 +200,17 @@ const PaymentForm: React.FC<{
 			localStorage.setItem("privacyConsent", JSON.stringify(consentData));
 
 			// ============================================
-			// STEP 3: REDIRECT TO STRIPE
+			// STEP 3: SIGN OUT & REDIRECT TO STRIPE
 			// ============================================
+			console.log('🚪 Step 3: Signing out user before redirect...');
+			// Sign out to prevent auto-login interference
+			// User will log in MANUALLY after payment
+			await supabase.auth.signOut();
+			console.log('✅ User signed out');
+
+			console.log('🚀 Redirecting to Stripe checkout...');
 			// User will pay, webhook will create profile with subscription_status='active'
-			// Until webhook runs, ProtectedRoute will block access (no profile exists)
+			// User must log in manually after payment to access app
 			window.location.href = checkoutUrl;
 
 		} catch (err: any) {

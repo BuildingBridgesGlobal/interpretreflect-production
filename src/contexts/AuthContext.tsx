@@ -90,19 +90,12 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
 					return;
 				}
 
-				// CRITICAL FIX: Reduce timeout to 5 seconds (was 30s causing slowness)
-				const timeoutPromise = new Promise((_, reject) =>
-					setTimeout(() => reject(new Error('Auth initialization timeout')), 5000)
-				);
-
-				// Just get current session - don't manually refresh
-				// Supabase client will auto-refresh when needed
-				const sessionPromise = supabase.auth.getSession();
-
+				// PERFORMANCE FIX: getSession() reads from localStorage - no timeout needed
+				// The timeout was causing false "logged out" states on slow connections
 				const {
 					data: { session },
 					error: sessionError,
-				} = await Promise.race([sessionPromise, timeoutPromise]) as any;
+				} = await supabase.auth.getSession();
 
 				if (sessionError) {
 					// Only log if it's not an expected error

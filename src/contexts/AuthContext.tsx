@@ -90,12 +90,25 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
 					return;
 				}
 
-				// PERFORMANCE FIX: getSession() reads from localStorage - no timeout needed
-				// The timeout was causing false "logged out" states on slow connections
-				const {
-					data: { session },
-					error: sessionError,
-				} = await supabase.auth.getSession();
+				// CRITICAL FIX: Add timeout but don't reject - just log and continue
+				// This prevents infinite loading if getSession() hangs
+				let session = null;
+				let sessionError = null;
+
+				const timeoutPromise = new Promise<void>((resolve) => {
+					setTimeout(() => {
+						console.warn("⚠️ getSession() taking >10s - continuing anyway");
+						resolve();
+					}, 10000); // 10 seconds
+				});
+
+				const sessionPromise = supabase.auth.getSession().then(result => {
+					session = result.data.session;
+					sessionError = result.error;
+				});
+
+				// Race but don't reject on timeout - just continue
+				await Promise.race([sessionPromise, timeoutPromise]);
 
 				if (sessionError) {
 					// Only log if it's not an expected error

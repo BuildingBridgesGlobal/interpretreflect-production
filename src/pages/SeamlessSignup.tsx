@@ -158,11 +158,14 @@ export const SeamlessSignup: React.FC = () => {
 
 	// Handle payment submission - ONLY creates Stripe checkout, NO user creation
 	const handlePayment = async () => {
-		console.log("🚀 PAYMENT FLOW STARTED");
+		console.log("=".repeat(50));
+		console.log("🚀🚀🚀 PAYMENT BUTTON CLICKED - FUNCTION STARTED 🚀🚀🚀");
+		console.log("=".repeat(50));
 		console.log("📋 Form Data:", {
 			email: formData.email,
 			name: formData.name,
 			plan: formData.plan,
+			password: formData.password ? "***" : "MISSING",
 		});
 
 		setLoading(true);

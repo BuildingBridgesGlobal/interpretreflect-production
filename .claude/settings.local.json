@@ -53,7 +53,8 @@
       "Bash(pkill:*)",
       "Bash(git restore:*)",
       "Bash(npx tsc:*)",
-      "Bash(npm show:*)"
+      "Bash(npm show:*)",
+      "Bash(npx vercel dev --listen 3000)"
     ],
     "deny": [],
     "ask": []

@@ -269,7 +269,7 @@ export const AccessibleForm: React.FC<AccessibleFormProps> = ({ type, onSubmit }
             </label>
           </div>
           <a 
-            href="#" 
+            href="/forgot-password" 
             className="text-sm text-sage-600 hover:text-sage-500 underline focus:outline-none focus:ring-2 focus:ring-sage-500 rounded"
           >
             Forgot your password?

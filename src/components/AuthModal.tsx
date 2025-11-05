@@ -181,6 +181,17 @@ export const AuthModal: React.FC<AuthModalProps> = ({
 									required
 								/>
 							</div>
+						{mode === "login" && (
+							<div className="mt-2 text-right">
+								<a
+									href="/forgot-password"
+									className="underline text-sm"
+									style={{ color: "#5C7F4F" }}
+								>
+									Forgot your password?
+								</a>
+							</div>
+						)}
 						</div>
 
 						{/* Password Input */}

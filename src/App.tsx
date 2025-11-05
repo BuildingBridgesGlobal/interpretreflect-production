@@ -95,6 +95,7 @@ import { AuthTest } from "./pages/AuthTest";
 import { Contact } from "./pages/Contact";
 import { HeaderDemo } from "./pages/HeaderDemo";
 import { PaymentSuccess } from "./pages/PaymentSuccess";
+import ForgotPassword from "./pages/ForgotPassword";
 import { PricingNew } from "./pages/PricingNew";
 import { PricingProduction } from "./pages/PricingProduction";
 import { PricingTest } from "./pages/PricingTest";
@@ -9390,6 +9391,7 @@ function App() {
 				<Route path="/pricing" element={<PricingNew />} />
 				<Route path="/signup" element={<SeamlessSignup />} />
 				<Route path="/payment-success" element={<PaymentSuccess />} />
+				<Route path="/forgot-password" element={<ForgotPassword />} />
 				<Route path="/reset-password" element={<ResetPassword />} />
 				<Route
 					path="/landing"
@@ -9432,6 +9434,7 @@ function App() {
 				<Route path="/admin" element={<AdminDashboard />} />
 				<Route path="/header-demo" element={<HeaderDemo />} />
 				<Route path="/payment-success" element={<PaymentSuccess />} />
+				<Route path="/forgot-password" element={<ForgotPassword />} />
 				<Route path="/reset-password" element={<ResetPassword />} />
 				<Route
 					path="/landing"

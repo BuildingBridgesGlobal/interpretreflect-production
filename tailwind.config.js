@@ -3,6 +3,25 @@ export default {
 	content: ["./index.html", "./src/**/*.{js,ts,jsx,tsx}"],
 	theme: {
 		extend: {
+			// DeafSpace Design Principles - High Contrast, Visual Clarity
+			fontSize: {
+				'base': '1.125rem', // 18px - larger base for accessibility
+				'xs': '0.875rem',
+				'sm': '1rem',
+				'lg': '1.25rem',
+				'xl': '1.5rem',
+				'2xl': '1.875rem',
+				'3xl': '2.25rem',
+				'4xl': '3rem',
+			},
+			spacing: {
+				// Ample whitespace for visual clarity (DeafSpace principle)
+				'rhythm': '1.5rem',
+			},
+			borderRadius: {
+				// Softer, more organic shapes (DeafSpace principle)
+				'deafspace': '1.5rem',
+			},
 			colors: {
 				// InterpretReflect Brand Colors - WCAG AAA Compliant
 				brand: {

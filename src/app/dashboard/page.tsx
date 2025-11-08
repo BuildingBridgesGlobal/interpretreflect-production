@@ -33,34 +33,50 @@ function DashboardContent() {
   useEffect(() => {
     if (user) {
       loadDashboardData();
+    } else if (!authLoading) {
+      // If not loading and no user, stop loading state
+      setLoading(false);
     }
-  }, [user]);
+  }, [user, authLoading]);
 
   const loadDashboardData = async () => {
     try {
-      // Load user profile
-      const { data: profile } = await supabase
-        .from('user_profiles')
-        .select('*')
-        .eq('id', user?.id)
-        .single();
+      // Load user profile - gracefully handle if table doesn't exist
+      try {
+        const { data: profile, error: profileError } = await supabase
+          .from('user_profiles')
+          .select('*')
+          .eq('id', user?.id)
+          .single();
 
-      setUserProfile(profile);
+        if (!profileError) {
+          setUserProfile(profile);
+        }
+      } catch (profileErr) {
+        console.log('User profiles table not available yet:', profileErr);
+      }
 
       // Load CEU progress (when CEU tables exist)
       // For now, showing placeholder data
 
-      // Load recent reflections count
-      const { count } = await supabase
-        .from('reflections')
-        .select('*', { count: 'exact', head: true })
-        .eq('user_id', user?.id)
-        .gte('created_at', new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString());
+      // Load recent reflections count - gracefully handle if table doesn't exist
+      try {
+        const { count, error: reflectionsError } = await supabase
+          .from('reflections')
+          .select('*', { count: 'exact', head: true })
+          .eq('user_id', user?.id)
+          .gte('created_at', new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString());
 
-      setRecentReflections(count || 0);
+        if (!reflectionsError) {
+          setRecentReflections(count || 0);
+        }
+      } catch (reflectionsErr) {
+        console.log('Reflections table not available yet:', reflectionsErr);
+      }
     } catch (error) {
       console.error('Error loading dashboard data:', error);
     } finally {
+      // Always set loading to false, even if data fetch fails
       setLoading(false);
     }
   };

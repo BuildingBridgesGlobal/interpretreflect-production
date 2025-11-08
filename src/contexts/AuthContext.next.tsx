@@ -414,7 +414,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
 			const { data, error } = await supabase.auth.signInWithOAuth({
 				provider: "google",
 				options: {
-					redirectTo: `${window.location.origin}/signup?step=payment&sso=google`,
+					redirectTo: `${window.location.origin}/onboarding`,
 					queryParams: {
 						access_type: "offline",
 						prompt: "consent",

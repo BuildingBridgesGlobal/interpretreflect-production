@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { Mail, Lock, AlertCircle, CheckCircle } from 'lucide-react';
+import { Mail, Lock, AlertCircle, CheckCircle, ArrowRight, Award } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext.next';
 import toast from 'react-hot-toast';
 
@@ -53,9 +53,9 @@ export default function SignupPage() {
         setSuccess(true);
         toast.success('Account created! Please check your email to verify.');
 
-        // Redirect to dashboard after 2 seconds
+        // Redirect to onboarding after 2 seconds
         setTimeout(() => {
-          router.push('/dashboard');
+          router.push('/onboarding');
         }, 2000);
       }
     } catch (err) {
@@ -77,18 +77,18 @@ export default function SignupPage() {
 
   if (success) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gradient-to-b from-[#FAF9F6] to-[#F0EDE6] px-4">
+      <div className="min-h-screen flex items-center justify-center bg-brand-gray-50 px-4">
         <div className="max-w-md w-full">
-          <div className="bg-white rounded-xl shadow-lg p-8 text-center">
-            <CheckCircle className="w-16 h-16 text-[#5C7F4F] mx-auto mb-4" />
-            <h2 className="text-2xl font-bold text-[#2C3E50] mb-2">
+          <div className="bg-white rounded-data shadow-card p-8 text-center border border-brand-gray-200">
+            <CheckCircle className="w-16 h-16 text-brand-success mx-auto mb-4" />
+            <h2 className="text-2xl font-bold text-brand-primary mb-2 font-sans">
               Welcome to InterpretReflect!
             </h2>
-            <p className="text-[#7F8C8D] mb-6">
+            <p className="text-brand-gray-600 mb-6 font-body">
               Your account has been created. Check your email to verify your account.
             </p>
-            <p className="text-sm text-[#7F8C8D]">
-              Redirecting you to the dashboard...
+            <p className="text-sm text-brand-gray-500 font-body">
+              Redirecting you to performance assessment...
             </p>
           </div>
         </div>
@@ -97,29 +97,50 @@ export default function SignupPage() {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-b from-[#FAF9F6] to-[#F0EDE6] px-4 py-12">
+    <div className="min-h-screen flex items-center justify-center bg-brand-gray-50 px-4 py-12">
       <div className="max-w-md w-full">
+
+        {/* Header */}
         <div className="text-center mb-8">
-          <h1 className="text-4xl font-bold text-[#2C3E50] mb-2">
-            Get Started Free
+          {/* Logo */}
+          <Link href="/" className="inline-block mb-6">
+            <h2 className="text-2xl font-bold text-brand-primary font-sans">InterpretReflect</h2>
+          </Link>
+
+          {/* Badge */}
+          <div className="inline-flex items-center gap-2 bg-brand-energy-light border border-brand-energy/20 rounded-full px-4 py-2 mb-4">
+            <span className="w-2 h-2 bg-brand-energy rounded-full animate-pulse"></span>
+            <span className="text-xs font-mono uppercase tracking-wider text-brand-energy-dark font-semibold">
+              Free 14-Day Trial
+            </span>
+          </div>
+
+          {/* Headline */}
+          <h1 className="text-4xl font-bold text-brand-primary mb-3 font-sans">
+            Start Your Performance Assessment
           </h1>
-          <p className="text-[#7F8C8D]">
-            Join interpreters building sustainable wellness practices
+
+          {/* Subhead */}
+          <p className="text-lg text-brand-gray-600 max-w-md mx-auto leading-relaxed font-body">
+            Join professional interpreters optimizing their cognitive load with neuroscience-backed insights and RID-approved development.
           </p>
         </div>
 
-        <div className="bg-white rounded-xl shadow-lg p-8">
+        {/* Form Card */}
+        <div className="bg-white rounded-data shadow-card p-8 border border-brand-gray-200">
+
           {error && (
-            <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-lg flex items-start gap-3">
-              <AlertCircle className="w-5 h-5 text-red-600 flex-shrink-0 mt-0.5" />
-              <p className="text-sm text-red-800">{error}</p>
+            <div className="mb-6 p-4 bg-brand-error-light border border-brand-error rounded-data flex items-start gap-3">
+              <AlertCircle className="w-5 h-5 text-brand-error flex-shrink-0 mt-0.5" />
+              <p className="text-sm text-brand-error-dark font-body">{error}</p>
             </div>
           )}
 
           {/* Google Sign Up */}
           <button
             onClick={handleGoogleSignUp}
-            className="w-full border-2 border-[#E8E6E3] py-3 rounded-lg font-semibold text-[#2C3E50] hover:bg-[#F0EDE6] transition-colors flex items-center justify-center gap-3 mb-6"
+            type="button"
+            className="w-full border-2 border-brand-gray-200 py-3 px-6 rounded-data hover:border-brand-primary/30 hover:bg-brand-primary-light/30 transition-all font-semibold text-brand-primary flex items-center justify-center gap-3 mb-6 font-body"
           >
             <svg className="w-5 h-5" viewBox="0 0 24 24">
               <path
@@ -142,115 +163,143 @@ export default function SignupPage() {
             Continue with Google
           </button>
 
+          {/* Divider */}
           <div className="relative mb-6">
             <div className="absolute inset-0 flex items-center">
-              <div className="w-full border-t border-[#E8E6E3]"></div>
+              <div className="w-full border-t border-brand-gray-200"></div>
             </div>
             <div className="relative flex justify-center text-sm">
-              <span className="px-4 bg-white text-[#7F8C8D]">Or sign up with email</span>
+              <span className="px-4 bg-white text-brand-gray-500 font-body">Or sign up with email</span>
             </div>
           </div>
 
+          {/* Email/Password Form */}
           <form onSubmit={handleSubmit} className="space-y-5">
+
+            {/* Email Field */}
             <div>
-              <label htmlFor="email" className="block text-sm font-medium text-[#2C3E50] mb-2">
+              <label htmlFor="email" className="block text-sm font-medium text-brand-primary mb-2 font-sans">
                 Email
               </label>
               <div className="relative">
-                <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-[#7F8C8D]" />
+                <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-brand-gray-400" />
                 <input
                   id="email"
                   type="email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   required
-                  className="w-full pl-11 pr-4 py-3 border border-[#E8E6E3] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#5C7F4F] focus:border-transparent"
+                  className="w-full pl-11 pr-4 py-3 border border-brand-gray-300 rounded-data focus:outline-none focus:ring-2 focus:ring-brand-electric focus:border-transparent transition-all font-body text-brand-charcoal placeholder:text-brand-gray-400 hover:border-brand-primary/30"
                   placeholder="your@email.com"
                 />
               </div>
             </div>
 
+            {/* Password Field */}
             <div>
-              <label htmlFor="password" className="block text-sm font-medium text-[#2C3E50] mb-2">
+              <label htmlFor="password" className="block text-sm font-medium text-brand-primary mb-2 font-sans">
                 Password
               </label>
               <div className="relative">
-                <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-[#7F8C8D]" />
+                <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-brand-gray-400" />
                 <input
                   id="password"
                   type="password"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   required
-                  className="w-full pl-11 pr-4 py-3 border border-[#E8E6E3] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#5C7F4F] focus:border-transparent"
+                  className="w-full pl-11 pr-4 py-3 border border-brand-gray-300 rounded-data focus:outline-none focus:ring-2 focus:ring-brand-electric focus:border-transparent transition-all font-body text-brand-charcoal placeholder:text-brand-gray-400 hover:border-brand-primary/30"
                   placeholder="••••••••"
                 />
               </div>
-              <p className="mt-1 text-xs text-[#7F8C8D]">
+              <p className="mt-1 text-xs text-brand-gray-500 font-body">
                 Min 8 characters, uppercase, lowercase, and number
               </p>
             </div>
 
+            {/* Confirm Password Field */}
             <div>
-              <label htmlFor="confirmPassword" className="block text-sm font-medium text-[#2C3E50] mb-2">
+              <label htmlFor="confirmPassword" className="block text-sm font-medium text-brand-primary mb-2 font-sans">
                 Confirm Password
               </label>
               <div className="relative">
-                <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-[#7F8C8D]" />
+                <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-brand-gray-400" />
                 <input
                   id="confirmPassword"
                   type="password"
                   value={confirmPassword}
                   onChange={(e) => setConfirmPassword(e.target.value)}
                   required
-                  className="w-full pl-11 pr-4 py-3 border border-[#E8E6E3] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#5C7F4F] focus:border-transparent"
+                  className="w-full pl-11 pr-4 py-3 border border-brand-gray-300 rounded-data focus:outline-none focus:ring-2 focus:ring-brand-electric focus:border-transparent transition-all font-body text-brand-charcoal placeholder:text-brand-gray-400 hover:border-brand-primary/30"
                   placeholder="••••••••"
                 />
               </div>
             </div>
 
-            <div className="flex items-start">
+            {/* Terms Checkbox */}
+            <div className="flex items-start gap-3">
               <input
                 type="checkbox"
+                id="terms"
                 required
-                className="w-4 h-4 mt-1 text-[#5C7F4F] border-[#E8E6E3] rounded focus:ring-[#5C7F4F]"
+                className="mt-1 w-4 h-4 rounded border-brand-gray-300 text-brand-electric focus:ring-brand-electric focus:ring-offset-0"
               />
-              <label className="ml-2 text-sm text-[#7F8C8D]">
+              <label htmlFor="terms" className="text-sm text-brand-gray-600 font-body">
                 I agree to the{' '}
-                <Link href="/terms" className="text-[#5C7F4F] hover:text-[#4a6640]">
+                <Link href="/terms" className="text-brand-electric hover:text-brand-electric-hover font-semibold hover:underline">
                   Terms of Service
-                </Link>{' '}
-                and{' '}
-                <Link href="/privacy" className="text-[#5C7F4F] hover:text-[#4a6640]">
+                </Link>
+                {' '}and{' '}
+                <Link href="/privacy" className="text-brand-electric hover:text-brand-electric-hover font-semibold hover:underline">
                   Privacy Policy
                 </Link>
               </label>
             </div>
 
+            {/* Submit Button */}
             <button
               type="submit"
               disabled={loading}
-              className="w-full bg-[#5C7F4F] text-white py-3 rounded-lg font-semibold hover:bg-[#4a6640] transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+              className="w-full bg-gradient-to-r from-brand-energy to-brand-energy-hover text-white font-bold text-base py-4 px-8 rounded-data hover:shadow-lg hover:shadow-brand-energy/20 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed uppercase tracking-wider flex items-center justify-center gap-2 font-sans"
             >
-              {loading ? 'Creating account...' : 'Create Free Account'}
+              {loading ? 'Creating Account...' : (
+                <>
+                  Start Performance Assessment
+                  <ArrowRight className="w-5 h-5" />
+                </>
+              )}
             </button>
+
           </form>
 
-          <p className="mt-6 text-center text-sm text-[#7F8C8D]">
+          {/* Sign In Link */}
+          <p className="mt-6 text-center text-sm text-brand-gray-600 font-body">
             Already have an account?{' '}
-            <Link href="/login" className="text-[#5C7F4F] hover:text-[#4a6640] font-semibold">
+            <Link href="/login" className="text-brand-electric hover:text-brand-electric-hover font-semibold hover:underline">
               Sign in
             </Link>
           </p>
 
-          <div className="mt-8 p-4 bg-[#F0EDE6] rounded-lg">
-            <p className="text-xs text-[#7F8C8D] text-center">
-              🎓 New RID Category: Studies of Healthy Minds & Bodies
-              <br />
-              <span className="text-[#5C7F4F] font-semibold">Earn CEUs while building wellness</span>
+        </div>
+
+        {/* RID Badge */}
+        <div className="mt-8">
+          <div className="bg-gradient-to-r from-brand-primary to-brand-slate p-6 rounded-data text-white text-center shadow-lg border-2 border-brand-electric">
+            <div className="flex items-center justify-center gap-2 mb-2">
+              <Award className="w-5 h-5 text-brand-electric" />
+              <span className="font-bold text-sm uppercase tracking-wider font-sans">
+                New RID Professional Category
+              </span>
+            </div>
+            <p className="text-white/95 font-medium mb-1 font-body">
+              Studies of Healthy Minds & Bodies
+            </p>
+            <p className="text-sm text-white/85 font-body">
+              Earn RID-approved CEUs through performance optimization • Sponsor #2309
             </p>
           </div>
         </div>
+
       </div>
     </div>
   );

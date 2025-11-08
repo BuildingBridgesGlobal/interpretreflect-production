@@ -48,100 +48,115 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-b from-[#FAF9F6] to-[#F0EDE6] px-4">
+    <div className="min-h-screen flex items-center justify-center bg-brand-gray-50 px-4 py-12">
       <div className="max-w-md w-full">
         <div className="text-center mb-8">
-          <h1 className="text-4xl font-bold text-[#2C3E50] mb-2">
+          {/* Logo */}
+          <Link href="/" className="inline-block mb-6">
+            <h2 className="text-2xl font-bold text-brand-primary font-sans">InterpretReflect</h2>
+          </Link>
+
+          {/* Headline */}
+          <h1 className="text-4xl font-bold text-brand-primary mb-3 font-sans">
             Welcome Back
           </h1>
-          <p className="text-[#7F8C8D]">
-            Sign in to InterpretReflect
+
+          {/* Subhead */}
+          <p className="text-lg text-brand-gray-600 font-body">
+            Continue your performance optimization journey
           </p>
         </div>
 
-        <div className="bg-white rounded-xl shadow-lg p-8">
+        <div className="bg-white rounded-data shadow-card p-8 border border-brand-gray-200">
           {error && (
-            <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-lg flex items-start gap-3">
-              <AlertCircle className="w-5 h-5 text-red-600 flex-shrink-0 mt-0.5" />
-              <p className="text-sm text-red-800">{error}</p>
+            <div className="mb-6 p-4 bg-brand-error-light border border-brand-error rounded-data flex items-start gap-3">
+              <AlertCircle className="w-5 h-5 text-brand-error flex-shrink-0 mt-0.5" />
+              <p className="text-sm text-brand-error-dark font-body">{error}</p>
             </div>
           )}
 
-          <form onSubmit={handleSubmit} className="space-y-6">
+          <form onSubmit={handleSubmit} className="space-y-5">
+            {/* Email Field */}
             <div>
-              <label htmlFor="email" className="block text-sm font-medium text-[#2C3E50] mb-2">
+              <label htmlFor="email" className="block text-sm font-medium text-brand-primary mb-2 font-sans">
                 Email
               </label>
               <div className="relative">
-                <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-[#7F8C8D]" />
+                <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-brand-gray-400" />
                 <input
                   id="email"
                   type="email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   required
-                  className="w-full pl-11 pr-4 py-3 border border-[#E8E6E3] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#5C7F4F] focus:border-transparent"
+                  className="w-full pl-11 pr-4 py-3 border border-brand-gray-300 rounded-data focus:outline-none focus:ring-2 focus:ring-brand-electric focus:border-transparent transition-all font-body text-brand-charcoal placeholder:text-brand-gray-400 hover:border-brand-primary/30"
                   placeholder="your@email.com"
                 />
               </div>
             </div>
 
+            {/* Password Field */}
             <div>
-              <label htmlFor="password" className="block text-sm font-medium text-[#2C3E50] mb-2">
+              <label htmlFor="password" className="block text-sm font-medium text-brand-primary mb-2 font-sans">
                 Password
               </label>
               <div className="relative">
-                <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-[#7F8C8D]" />
+                <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-brand-gray-400" />
                 <input
                   id="password"
                   type="password"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   required
-                  className="w-full pl-11 pr-4 py-3 border border-[#E8E6E3] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#5C7F4F] focus:border-transparent"
+                  className="w-full pl-11 pr-4 py-3 border border-brand-gray-300 rounded-data focus:outline-none focus:ring-2 focus:ring-brand-electric focus:border-transparent transition-all font-body text-brand-charcoal placeholder:text-brand-gray-400 hover:border-brand-primary/30"
                   placeholder="••••••••"
                 />
               </div>
             </div>
 
+            {/* Remember Me & Forgot Password */}
             <div className="flex items-center justify-between">
               <label className="flex items-center">
                 <input
                   type="checkbox"
-                  className="w-4 h-4 text-[#5C7F4F] border-[#E8E6E3] rounded focus:ring-[#5C7F4F]"
+                  className="w-4 h-4 rounded border-brand-gray-300 text-brand-electric focus:ring-brand-electric focus:ring-offset-0"
                 />
-                <span className="ml-2 text-sm text-[#7F8C8D]">Remember me</span>
+                <span className="ml-2 text-sm text-brand-gray-600 font-body">Remember me</span>
               </label>
               <Link
                 href="/reset-password"
-                className="text-sm text-[#5C7F4F] hover:text-[#4a6640] font-medium"
+                className="text-sm text-brand-electric hover:text-brand-electric-hover font-semibold hover:underline font-body"
               >
                 Forgot password?
               </Link>
             </div>
 
+            {/* Submit Button */}
             <button
               type="submit"
               disabled={loading}
-              className="w-full bg-[#5C7F4F] text-white py-3 rounded-lg font-semibold hover:bg-[#4a6640] transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+              className="w-full bg-gradient-to-r from-brand-primary to-brand-slate text-white font-bold text-base py-4 px-8 rounded-data hover:shadow-glow transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed uppercase tracking-wider font-sans"
             >
               {loading ? 'Signing in...' : 'Sign In'}
             </button>
           </form>
 
+          {/* Divider */}
           <div className="mt-6">
             <div className="relative">
               <div className="absolute inset-0 flex items-center">
-                <div className="w-full border-t border-[#E8E6E3]"></div>
+                <div className="w-full border-t border-brand-gray-200"></div>
               </div>
               <div className="relative flex justify-center text-sm">
-                <span className="px-4 bg-white text-[#7F8C8D]">Or continue with</span>
+                <span className="px-4 bg-white text-brand-gray-500 font-body">Or continue with</span>
               </div>
             </div>
 
+            {/* Google Sign In */}
             <button
               onClick={handleGoogleSignIn}
-              className="mt-4 w-full border-2 border-[#E8E6E3] py-3 rounded-lg font-semibold text-[#2C3E50] hover:bg-[#F0EDE6] transition-colors flex items-center justify-center gap-3"
+              type="button"
+              className="mt-4 w-full border-2 border-brand-gray-200 py-3 px-6 rounded-data hover:border-brand-primary/30 hover:bg-brand-primary-light/30 transition-all font-semibold text-brand-primary flex items-center justify-center gap-3 font-body"
             >
               <svg className="w-5 h-5" viewBox="0 0 24 24">
                 <path
@@ -165,10 +180,11 @@ export default function LoginPage() {
             </button>
           </div>
 
-          <p className="mt-6 text-center text-sm text-[#7F8C8D]">
+          {/* Sign Up Link */}
+          <p className="mt-6 text-center text-sm text-brand-gray-600 font-body">
             Don't have an account?{' '}
-            <Link href="/signup" className="text-[#5C7F4F] hover:text-[#4a6640] font-semibold">
-              Sign up for free
+            <Link href="/signup" className="text-brand-electric hover:text-brand-electric-hover font-semibold hover:underline">
+              Start free trial
             </Link>
           </p>
         </div>

@@ -1,8 +1,8 @@
 // Encharge API configuration
 // Using the JWT API Key for authentication with Encharge API
-const ENCHARGE_API_KEY = import.meta.env.VITE_ENCHARGE_API_KEY;
+const ENCHARGE_API_KEY = process.env.NEXT_PUBLIC_ENCHARGE_API_KEY || process.env.VITE_ENCHARGE_API_KEY;
 // Write Key is also available if needed for specific endpoints
-const ENCHARGE_WRITE_KEY = import.meta.env.VITE_ENCHARGE_WRITE_KEY;
+const ENCHARGE_WRITE_KEY = process.env.NEXT_PUBLIC_ENCHARGE_WRITE_KEY || process.env.VITE_ENCHARGE_WRITE_KEY;
 const ENCHARGE_API_URL = "https://api.encharge.io/v1";
 
 export interface EnchargeUser {

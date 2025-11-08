@@ -1,5 +1,7 @@
-import { supabase } from "../lib/supabase";
+import { createClient } from "../lib/supabase/client";
 import { TERMS_AND_CONDITIONS, PRIVACY_POLICY } from "../content/termsAndConditions";
+
+const supabase = createClient();
 
 export interface TermsAcceptance {
   userId: string;

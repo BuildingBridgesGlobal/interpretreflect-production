@@ -1,18 +1,67 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=IBM+Plex+Sans:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 :root {
-  --primary: #5C7F4F;
-  --primary-dark: #4a6640;
-  --primary-light: #6e9660;
-  --background: #FAF9F6;
-  --text: #2C3E50;
-  --text-light: #7F8C8D;
-  --border: #E8E6E3;
-  --error: #E74C3C;
-  --success: #27AE60;
-  --warning: #F39C12;
+  /* Performance Platform Color System */
+  --primary: #0A2463;
+  --primary-hover: #08193B;
+  --primary-light: #E8EBF2;
+  --primary-dark: #051230;
+
+  --energy: #FF8C00;
+  --energy-hover: #CC7000;
+  --energy-light: #FFF4E6;
+  --energy-dark: #994D00;
+
+  --electric: #0088BB;
+  --electric-hover: #006699;
+  --electric-light: #E5F9FF;
+
+  --slate: #1B4965;
+  --slate-hover: #14374D;
+  --slate-light: #E9EEF1;
+
+  --warmth: #FF6B9D;
+  --warmth-hover: #E85A8A;
+  --warmth-light: #FFE8F0;
+
+  --coral: #FF6B6B;
+  --coral-hover: #E85555;
+  --coral-light: #FFF0F0;
+
+  --charcoal: #2C3E50;
+  --charcoal-light: #374B5E;
+
+  --background: #F8F9FA;
+  --background-dark: #0D1117;
+  --surface: #FFFFFF;
+
+  --text: #212529;
+  --text-light: #6C757D;
+  --text-lighter: #ADB5BD;
+
+  --border: #DEE2E6;
+  --border-light: #E9ECEF;
+
+  --success: #10B981;
+  --success-light: #D1FAE5;
+  --warning: #F59E0B;
+  --warning-light: #FEF3C7;
+  --error: #EF4444;
+  --error-light: #FEE2E2;
+  --info: #3B82F6;
+  --info-light: #DBEAFE;
+
+  /* Shadows */
+  --shadow-sm: 0 1px 2px rgba(10, 36, 99, 0.05);
+  --shadow: 0 1px 3px rgba(10, 36, 99, 0.1);
+  --shadow-md: 0 4px 6px rgba(10, 36, 99, 0.1);
+  --shadow-lg: 0 10px 15px rgba(10, 36, 99, 0.1);
+  --shadow-xl: 0 20px 25px rgba(10, 36, 99, 0.1);
+  --shadow-glow: 0 0 20px rgba(0, 136, 187, 0.3);
 }
 
 * {
@@ -30,27 +79,64 @@ body {
 body {
   color: var(--text);
   background: var(--background);
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
+  font-family: 'IBM Plex Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  font-size: 16px;
+  line-height: 1.6;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-weight: 700;
+  color: var(--primary);
+  line-height: 1.2;
+}
+
+h1 {
+  font-size: 3rem;
+  letter-spacing: -0.02em;
+}
+
+h2 {
+  font-size: 2.25rem;
+  letter-spacing: -0.01em;
+}
+
+h3 {
+  font-size: 1.875rem;
+}
+
+h4 {
+  font-size: 1.5rem;
+}
+
+h5 {
+  font-size: 1.25rem;
+}
+
+h6 {
+  font-size: 1.125rem;
 }
 
 a {
-  color: inherit;
+  color: var(--electric);
   text-decoration: none;
+  transition: color 0.2s ease;
 }
 
-@media (prefers-color-scheme: dark) {
-  html {
-    color-scheme: dark;
-  }
+a:hover {
+  color: var(--electric-hover);
+}
+
+code, pre {
+  font-family: 'JetBrains Mono', 'Consolas', 'Monaco', monospace;
 }
 
 /* Custom scrollbar */
 ::-webkit-scrollbar {
   width: 10px;
+  height: 10px;
 }
 
 ::-webkit-scrollbar-track {
@@ -58,10 +144,83 @@ a {
 }
 
 ::-webkit-scrollbar-thumb {
-  background: var(--primary);
+  background: var(--slate);
   border-radius: 5px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: var(--primary-dark);
+  background: var(--primary);
+}
+
+/* Selection */
+::selection {
+  background-color: var(--electric-light);
+  color: var(--primary);
+}
+
+::-moz-selection {
+  background-color: var(--electric-light);
+  color: var(--primary);
+}
+
+/* Focus states for accessibility */
+:focus-visible {
+  outline: 2px solid var(--electric);
+  outline-offset: 2px;
+}
+
+/* Button base styles */
+button {
+  font-family: 'IBM Plex Sans', sans-serif;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Input base styles */
+input, textarea, select {
+  font-family: 'IBM Plex Sans', sans-serif;
+  color: var(--text);
+}
+
+/* Card base styles */
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 0.5rem;
+  box-shadow: var(--shadow);
+  transition: all 0.2s ease;
+}
+
+.card:hover {
+  box-shadow: var(--shadow-md);
+  border-color: var(--electric-light);
+}
+
+/* Utility classes */
+.text-gradient {
+  background: linear-gradient(135deg, var(--primary) 0%, var(--electric) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.glow {
+  box-shadow: var(--shadow-glow);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background: #0D1117;
+    --background-dark: #010409;
+    --surface: #161B22;
+    --text: #E9ECEF;
+    --text-light: #ADB5BD;
+    --border: #30363D;
+    --border-light: #21262D;
+  }
 }

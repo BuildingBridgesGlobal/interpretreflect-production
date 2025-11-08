@@ -3,61 +3,123 @@ export default {
 	content: ["./index.html", "./src/**/*.{js,ts,jsx,tsx}"],
 	theme: {
 		extend: {
-			// DeafSpace Design Principles - High Contrast, Visual Clarity
+			// Performance Optimization Platform Design System
+			fontFamily: {
+				sans: ['Inter', 'system-ui', '-apple-system', 'sans-serif'],
+				body: ['IBM Plex Sans', 'system-ui', 'sans-serif'],
+				mono: ['JetBrains Mono', 'Consolas', 'monospace'],
+			},
 			fontSize: {
-				'base': '1.125rem', // 18px - larger base for accessibility
-				'xs': '0.875rem',
-				'sm': '1rem',
-				'lg': '1.25rem',
-				'xl': '1.5rem',
-				'2xl': '1.875rem',
-				'3xl': '2.25rem',
-				'4xl': '3rem',
+				'base': '1rem', // 16px - standard for performance platforms
+				'xs': '0.75rem',
+				'sm': '0.875rem',
+				'lg': '1.125rem',
+				'xl': '1.25rem',
+				'2xl': '1.5rem',
+				'3xl': '1.875rem',
+				'4xl': '2.25rem',
+				'5xl': '3rem',
 			},
 			spacing: {
-				// Ample whitespace for visual clarity (DeafSpace principle)
-				'rhythm': '1.5rem',
+				'grid': '1rem', // Tight, data-focused spacing
 			},
 			borderRadius: {
-				// Softer, more organic shapes (DeafSpace principle)
-				'deafspace': '1.5rem',
+				'sharp': '0.25rem', // Sharper, more technical aesthetic
+				'data': '0.5rem',
 			},
 			colors: {
-				// InterpretReflect Brand Colors - WCAG AAA Compliant
+				// InterpretReflect Performance Platform Colors
 				brand: {
-					// Primary Green (Logo) - Growth & Renewal
-					primary: "#5C7F4F",
-					"primary-hover": "#4A6A3F",
-					"primary-light": "#E8F3E5",
+					// Primary - Deep Navy (Authority & Depth)
+					primary: "#0A2463",
+					"primary-hover": "#08193B",
+					"primary-light": "#E8EBF2",
+					"primary-dark": "#051230",
 
-					// Calm Blue - Clarity & Trust (Data/Insights)
-					blue: "#4A7C9B",
-					"blue-light": "#E8F1F7",
+					// Energy - Orange (Achievement & Progress) - Professional middle-ground
+					energy: "#E67E00",
+					"energy-hover": "#CC7000",
+					"energy-light": "#FFF4E6",
+					"energy-dark": "#994D00",
 
-					// Warm Taupe - Grounding & Humanity
-					taupe: "#6B5B4A",
-					"taupe-light": "#F5F3F1",
+					// Electric Cyan (Data & Analytics) - WCAG AA Compliant
+					electric: "#0088BB",
+					"electric-hover": "#006699",
+					"electric-light": "#E5F9FF",
+					"electric-glow": "rgba(0, 136, 187, 0.2)",
 
-					// Functional Colors
-					warning: "#C07A3B",
-					"warning-light": "#FEF3E8",
-					error: "#B94A48",
-					"error-light": "#FDEEED",
-					success: "#5C7F4F",
-					"success-light": "#E8F3E5",
+					// Slate Blue (Professional & Calm)
+					slate: "#1B4965",
+					"slate-hover": "#14374D",
+					"slate-light": "#E9EEF1",
+
+					// Warmth - Coral (Human Connection & Community)
+					warmth: "#FF6B9D",
+					"warmth-hover": "#E85A8A",
+					"warmth-light": "#FFE8F0",
+
+					// Coral (Legacy - keeping for backwards compatibility)
+					coral: "#FF6B6B",
+					"coral-hover": "#E85555",
+					"coral-light": "#FFF0F0",
+
+					// Neutrals - Charcoal & Cool Gray
+					charcoal: "#2C3E50",
+					"charcoal-light": "#374B5E",
+					gray: {
+						50: "#F8F9FA",
+						100: "#E9ECEF",
+						200: "#DEE2E6",
+						300: "#CED4DA",
+						400: "#ADB5BD",
+						500: "#6C757D",
+						600: "#495057",
+						700: "#343A40",
+						800: "#212529",
+						900: "#0D1117",
+					},
+
+					// Success - Emerald (Achievement)
+					success: "#10B981",
+					"success-light": "#D1FAE5",
+					"success-dark": "#065F46",
+
+					// Warning - Amber (Attention)
+					warning: "#F59E0B",
+					"warning-light": "#FEF3C7",
+					"warning-dark": "#92400E",
+
+					// Error - Red (Critical)
+					error: "#EF4444",
+					"error-light": "#FEE2E2",
+					"error-dark": "#991B1B",
+
+					// Info - Blue (Insight)
+					info: "#3B82F6",
+					"info-light": "#DBEAFE",
+					"info-dark": "#1E40AF",
 				},
-				// Legacy sage colors (keeping for backwards compatibility)
-				sage: {
-					50: "#f6f7f4",
-					100: "#e8ebe3",
-					200: "#d3d9c8",
-					300: "#b3bfa4",
-					400: "#8fa07a",
-					500: "#6B8B60",
-					600: "#5F7F55",
-					700: "#4a6243",
-					800: "#3d5037",
-					900: "#334330",
+			},
+			boxShadow: {
+				'glow': '0 0 20px rgba(0, 136, 187, 0.3)',
+				'glow-sm': '0 0 10px rgba(0, 136, 187, 0.2)',
+				'data': '0 1px 3px rgba(10, 36, 99, 0.1)',
+				'card': '0 2px 8px rgba(10, 36, 99, 0.08)',
+				'card-hover': '0 4px 16px rgba(10, 36, 99, 0.12)',
+			},
+			animation: {
+				'pulse-glow': 'pulse-glow 2s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+			},
+			keyframes: {
+				'pulse-glow': {
+					'0%, 100%': {
+						boxShadow: '0 0 20px rgba(0, 136, 187, 0.3)',
+						opacity: '1'
+					},
+					'50%': {
+						boxShadow: '0 0 30px rgba(0, 136, 187, 0.5)',
+						opacity: '0.8'
+					},
 				},
 			},
 		},

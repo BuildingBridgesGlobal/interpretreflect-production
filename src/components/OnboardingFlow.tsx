@@ -207,7 +207,7 @@ export function OnboardingFlow({ onComplete, onClose }: OnboardingFlowProps) {
           <div className="mb-4">
             <div className="bg-gray-200 rounded-full h-2 mb-2">
               <div 
-                className="bg-emerald-700 h-2 rounded-full transition-all duration-300"
+                className="bg-brand-primary h-2 rounded-full transition-all duration-300"
                 style={{ width: `${progress}%` }}
               />
             </div>
@@ -228,8 +228,8 @@ export function OnboardingFlow({ onComplete, onClose }: OnboardingFlowProps) {
         <div className="p-6">
           {currentStep === 0 && (
             <div className="text-center">
-              <div className="w-20 h-20 bg-emerald-100 rounded-full flex items-center justify-center mx-auto mb-6">
-                <Heart className="w-10 h-10 text-emerald-700" />
+              <div className="w-20 h-20 bg-brand-primary-light rounded-full flex items-center justify-center mx-auto mb-6">
+                <Heart className="w-10 h-10 text-brand-primary" />
               </div>
               <h3 className="text-xl font-semibold mb-4">
                 Welcome to your personalized wellness journey
@@ -240,19 +240,19 @@ export function OnboardingFlow({ onComplete, onClose }: OnboardingFlowProps) {
               </p>
               <div className="grid grid-cols-2 gap-4 text-sm">
                 <div className="flex items-center space-x-2">
-                  <CheckCircle className="w-4 h-4 text-emerald-700" />
+                  <CheckCircle className="w-4 h-4 text-brand-primary" />
                   <span>Personalized recommendations</span>
                 </div>
                 <div className="flex items-center space-x-2">
-                  <CheckCircle className="w-4 h-4 text-emerald-700" />
+                  <CheckCircle className="w-4 h-4 text-brand-primary" />
                   <span>Customized check-ins</span>
                 </div>
                 <div className="flex items-center space-x-2">
-                  <CheckCircle className="w-4 h-4 text-emerald-700" />
+                  <CheckCircle className="w-4 h-4 text-brand-primary" />
                   <span>Relevant resources</span>
                 </div>
                 <div className="flex items-center space-x-2">
-                  <CheckCircle className="w-4 h-4 text-emerald-700" />
+                  <CheckCircle className="w-4 h-4 text-brand-primary" />
                   <span>Community connections</span>
                 </div>
               </div>
@@ -269,11 +269,11 @@ export function OnboardingFlow({ onComplete, onClose }: OnboardingFlowProps) {
                     onClick={() => setProfile(prev => ({ ...prev, interpreter_type: type.id }))}
                     className={`w-full p-4 rounded-lg border text-left flex items-center space-x-3 transition-colors ${
                       profile.interpreter_type === type.id
-                        ? 'border-green-600 bg-green-50'
+                        ? 'border-brand-primary bg-brand-primary-light'
                         : 'border-gray-200 hover:border-gray-300'
                     }`}
                   >
-                    <div className={`${profile.interpreter_type === type.id ? 'text-green-600' : 'text-gray-400'}`}>
+                      <div className={`${profile.interpreter_type === type.id ? 'text-brand-primary' : 'text-gray-400'}`}>
                       {type.icon}
                     </div>
                     <span className="font-medium">{type.label}</span>
@@ -289,7 +289,7 @@ export function OnboardingFlow({ onComplete, onClose }: OnboardingFlowProps) {
                     onClick={() => setProfile(prev => ({ ...prev, experience_level: level.id }))}
                     className={`w-full p-3 rounded-lg border text-left transition-colors ${
                       profile.experience_level === level.id
-                        ? 'border-green-600 bg-green-50'
+                        ? 'border-brand-primary bg-brand-primary-light'
                         : 'border-gray-200 hover:border-gray-300'
                     }`}
                   >
@@ -310,14 +310,14 @@ export function OnboardingFlow({ onComplete, onClose }: OnboardingFlowProps) {
                     onClick={() => toggleChallenge(challenge.id)}
                     className={`p-3 rounded-lg border text-left transition-colors ${
                       profile.primary_challenges.includes(challenge.id)
-                        ? 'border-green-600 bg-green-50'
+                        ? 'border-brand-primary bg-brand-primary-light'
                         : 'border-gray-200 hover:border-gray-300'
                     }`}
                   >
                     <div className="flex items-center space-x-2">
                       <div className={`w-4 h-4 rounded border-2 ${
                         profile.primary_challenges.includes(challenge.id)
-                          ? 'bg-emerald-700 border-emerald-700'
+                          ? 'bg-brand-primary border-brand-primary'
                           : 'border-gray-300'
                       }`}>
                         {profile.primary_challenges.includes(challenge.id) && (
@@ -342,14 +342,14 @@ export function OnboardingFlow({ onComplete, onClose }: OnboardingFlowProps) {
                     onClick={() => toggleGoal(goal.id)}
                     className={`p-3 rounded-lg border text-left transition-colors ${
                       profile.wellness_goals.includes(goal.id)
-                        ? 'border-green-600 bg-green-50'
+                        ? 'border-brand-primary bg-brand-primary-light'
                         : 'border-gray-200 hover:border-gray-300'
                     }`}
                   >
                     <div className="flex items-center space-x-2">
                       <div className={`w-4 h-4 rounded border-2 ${
                         profile.wellness_goals.includes(goal.id)
-                          ? 'bg-emerald-700 border-emerald-700'
+                          ? 'bg-brand-primary border-brand-primary'
                           : 'border-gray-300'
                       }`}>
                         {profile.wellness_goals.includes(goal.id) && (
@@ -381,7 +381,7 @@ export function OnboardingFlow({ onComplete, onClose }: OnboardingFlowProps) {
                       }`}
                     >
                       <Clock className={`w-4 h-4 ${
-                        profile.preferred_session_length === length.id ? 'text-green-600' : 'text-gray-400'
+                        profile.preferred_session_length === length.id ? 'text-brand-primary' : 'text-gray-400'
                       }`} />
                       <span>{length.label}</span>
                     </button>
@@ -403,7 +403,7 @@ export function OnboardingFlow({ onComplete, onClose }: OnboardingFlowProps) {
                           daily_checkins: e.target.checked
                         }
                       }))}
-                      className="w-4 h-4 text-emerald-700 border-gray-300 rounded focus:ring-emerald-600"
+                      className="w-4 h-4 text-brand-primary border-gray-300 rounded focus:ring-brand-primary"
                     />
                     <span>Daily wellness check-in reminders</span>
                   </label>
@@ -418,7 +418,7 @@ export function OnboardingFlow({ onComplete, onClose }: OnboardingFlowProps) {
                           weekly_insights: e.target.checked
                         }
                       }))}
-                      className="w-4 h-4 text-emerald-700 border-gray-300 rounded focus:ring-emerald-600"
+                      className="w-4 h-4 text-brand-primary border-gray-300 rounded focus:ring-brand-primary"
                     />
                     <span>Weekly wellness insights</span>
                   </label>
@@ -433,7 +433,7 @@ export function OnboardingFlow({ onComplete, onClose }: OnboardingFlowProps) {
                           emergency_support: e.target.checked
                         }
                       }))}
-                      className="w-4 h-4 text-emerald-700 border-gray-300 rounded focus:ring-emerald-600"
+                      className="w-4 h-4 text-brand-primary border-gray-300 rounded focus:ring-brand-primary"
                     />
                     <span>Emergency support notifications</span>
                   </label>
@@ -444,8 +444,8 @@ export function OnboardingFlow({ onComplete, onClose }: OnboardingFlowProps) {
 
           {currentStep === 5 && (
             <div className="text-center">
-              <div className="w-20 h-20 bg-emerald-100 rounded-full flex items-center justify-center mx-auto mb-6">
-                <CheckCircle className="w-10 h-10 text-green-600" />
+              <div className="w-20 h-20 bg-brand-primary-light rounded-full flex items-center justify-center mx-auto mb-6">
+                <CheckCircle className="w-10 h-10 text-brand-primary" />
               </div>
               <h3 className="text-xl font-semibold mb-4">
                 Your personalized plan is ready!
@@ -485,7 +485,7 @@ export function OnboardingFlow({ onComplete, onClose }: OnboardingFlowProps) {
           {currentStep === steps.length - 1 ? (
             <button
               onClick={handleComplete}
-              className="bg-emerald-700 text-white px-6 py-2 rounded-lg font-semibold hover:bg-emerald-800 transition-colors flex items-center space-x-2"
+              className="bg-brand-primary text-white px-6 py-2 rounded-lg font-semibold hover:bg-brand-primary-hover transition-colors flex items-center space-x-2"
             >
               <span>Complete Setup</span>
               <CheckCircle className="w-4 h-4" />
@@ -503,7 +503,7 @@ export function OnboardingFlow({ onComplete, onClose }: OnboardingFlowProps) {
                 (currentStep === 2 && profile.primary_challenges.length === 0) ||
                 (currentStep === 3 && profile.wellness_goals.length === 0)
                   ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
-                  : 'bg-emerald-700 text-white hover:bg-emerald-800'
+                  : 'bg-brand-primary text-white hover:bg-brand-primary-hover'
               }`}
             >
               <span>Next</span>

@@ -1,7 +1,7 @@
 /**
  * Values Alignment Check-In Accessible Component
  * 
- * Matches exact design pattern of Mentoring Prep with sage green color scheme
+ * Matches design pattern with InterpretReflect brand colors
  * and consistent styling across all reflection components
  * 
  * @module EthicsMeaningCheckAccessible
@@ -286,17 +286,17 @@ OVERALL RESILIENCE: ${formData.overall_resilience}/10
   const sections = [
     {
       title: "Current Context",
-      icon: <Compass className="w-5 h-5" style={{ color: '#6B8B60' }} />,
+      icon: <Compass className="w-5 h-5" style={{ color: '#5C7F4F' }} />,
       content: (
         <div className="space-y-6">
           <div 
             className="p-6 rounded-xl"
             style={{
-              background: 'linear-gradient(135deg, rgba(107, 139, 96, 0.1) 0%, rgba(92, 127, 79, 0.05) 100%)',
-              border: '1px solid rgba(107, 139, 96, 0.2)'
+              background: 'linear-gradient(135deg, rgba(92, 127, 79, 0.1) 0%, rgba(92, 127, 79, 0.05) 100%)',
+              border: '1px solid rgba(92, 127, 79, 0.2)'
             }}
           >
-            <h3 className="text-lg font-semibold mb-4" style={{ color: '#2D5F3F' }}>
+            <h3 className="text-lg font-semibold mb-4" style={{ color: '#2D3A31' }}>
               Values Alignment Check-In
             </h3>
             <p className="mb-6" style={{ color: '#5A5A5A' }}>
@@ -307,7 +307,7 @@ OVERALL RESILIENCE: ${formData.overall_resilience}/10
           </div>
 
           <div>
-            <label className="block text-sm font-medium mb-2" style={{ color: '#2D5F3F' }}>
+            <label className="block text-sm font-medium mb-2" style={{ color: '#2D3A31' }}>
               What brings you to this values check-in today?
             </label>
             <div className="grid grid-cols-2 gap-3">
@@ -327,12 +327,12 @@ OVERALL RESILIENCE: ${formData.overall_resilience}/10
                   }`}
                   style={{
                     backgroundColor: formData.check_in_trigger === trigger.value 
-                      ? 'rgba(107, 139, 96, 0.2)' 
+                      ? 'rgba(92, 127, 79, 0.2)' 
                       : '#F8FBF6',
                     color: formData.check_in_trigger === trigger.value 
-                      ? '#2D5F3F' 
+                      ? '#2D3A31' 
                       : '#5A5A5A',
-                    border: `1px solid ${formData.check_in_trigger === trigger.value ? '#6B8B60' : '#E8E5E0'}`
+                    border: `1px solid ${formData.check_in_trigger === trigger.value ? '#5C7F4F' : '#E8E5E0'}`
                   }}
                 >
                   {trigger.label}
@@ -342,7 +342,7 @@ OVERALL RESILIENCE: ${formData.overall_resilience}/10
           </div>
 
           <div>
-            <label className="block text-sm font-medium mb-2" style={{ color: '#2D5F3F' }}>
+            <label className="block text-sm font-medium mb-2" style={{ color: '#2D3A31' }}>
               Share a recent situation where you navigated ethical considerations or boundary challenges
             </label>
             <textarea
@@ -350,7 +350,7 @@ OVERALL RESILIENCE: ${formData.overall_resilience}/10
               onChange={(e) => handleFieldChange('recent_challenge', e.target.value)}
               placeholder="Share a recent ethical dilemma, boundary challenge, or meaning-related situation..."
               rows={3}
-              className="w-full px-4 py-3 border rounded-lg resize-none focus:ring-2 focus:ring-sage-500"
+              className="w-full px-4 py-3 border rounded-lg resize-none focus:ring-2 focus:ring-brand-primary"
               style={{
                 borderColor: errors.recent_challenge ? '#ef4444' : '#E8E5E0'
               }}
@@ -361,7 +361,7 @@ OVERALL RESILIENCE: ${formData.overall_resilience}/10
           </div>
 
           <div>
-            <label className="block text-sm font-medium mb-2" style={{ color: '#2D5F3F' }}>
+            <label className="block text-sm font-medium mb-2" style={{ color: '#2D3A31' }}>
               How are you experiencing this situation emotionally right now?
             </label>
             <textarea
@@ -369,7 +369,7 @@ OVERALL RESILIENCE: ${formData.overall_resilience}/10
               onChange={(e) => handleFieldChange('emotional_state', e.target.value)}
               placeholder="Describe your emotional response and current state..."
               rows={3}
-              className="w-full px-4 py-3 border rounded-lg resize-none focus:ring-2 focus:ring-sage-500"
+              className="w-full px-4 py-3 border rounded-lg resize-none focus:ring-2 focus:ring-brand-primary"
               style={{
                 borderColor: errors.emotional_state ? '#ef4444' : '#E8E5E0'
               }}
@@ -387,7 +387,7 @@ OVERALL RESILIENCE: ${formData.overall_resilience}/10
       content: (
         <div className="space-y-6">
           <div>
-            <label className="block text-sm font-medium mb-2" style={{ color: '#2D5F3F' }}>
+            <label className="block text-sm font-medium mb-2" style={{ color: '#2D3A31' }}>
               What ethical considerations or tensions are you noticing in your work?
             </label>
             <textarea
@@ -395,7 +395,7 @@ OVERALL RESILIENCE: ${formData.overall_resilience}/10
               onChange={(e) => handleFieldChange('ethical_tensions', e.target.value)}
               placeholder="Describe any conflicts between values, duties, or ethical principles..."
               rows={3}
-              className="w-full px-4 py-3 border rounded-lg resize-none focus:ring-2 focus:ring-sage-500"
+              className="w-full px-4 py-3 border rounded-lg resize-none focus:ring-2 focus:ring-brand-primary"
               style={{
                 borderColor: errors.ethical_tensions ? '#ef4444' : '#E8E5E0'
               }}
@@ -406,7 +406,7 @@ OVERALL RESILIENCE: ${formData.overall_resilience}/10
           </div>
 
           <div>
-            <label className="block text-sm font-medium mb-2" style={{ color: '#2D5F3F' }}>
+            <label className="block text-sm font-medium mb-2" style={{ color: '#2D3A31' }}>
               Are there any value conflicts you're navigating?
             </label>
             <textarea
@@ -414,12 +414,12 @@ OVERALL RESILIENCE: ${formData.overall_resilience}/10
               onChange={(e) => handleFieldChange('value_conflicts', e.target.value)}
               placeholder="Identify conflicts between personal, professional, or organizational values..."
               rows={3}
-              className="w-full px-4 py-3 border rounded-lg resize-none focus:ring-2 focus:ring-sage-500"
+              className="w-full px-4 py-3 border rounded-lg resize-none focus:ring-2 focus:ring-brand-primary"
             />
           </div>
 
           <div>
-            <label className="block text-sm font-medium mb-2" style={{ color: '#2D5F3F' }}>
+            <label className="block text-sm font-medium mb-2" style={{ color: '#2D3A31' }}>
               How clear do you feel about your ethical approach right now? (1-10)
             </label>
             <div className="flex items-center space-x-4">
@@ -430,12 +430,12 @@ OVERALL RESILIENCE: ${formData.overall_resilience}/10
                 value={formData.ethical_clarity}
                 onChange={(e) => handleFieldChange('ethical_clarity', parseInt(e.target.value))}
                 className="flex-1"
-                style={{ accentColor: '#6B8B60' }}
+                style={{ accentColor: '#5C7F4F' }}
               />
               <span className="text-2xl font-bold px-4 py-2 rounded-lg" 
                 style={{ 
-                  backgroundColor: 'rgba(107, 139, 96, 0.1)',
-                  color: '#2D5F3F'
+                  backgroundColor: 'rgba(92, 127, 79, 0.1)',
+                  color: '#2D3A31'
                 }}>
                 {formData.ethical_clarity}
               </span>
@@ -446,11 +446,11 @@ OVERALL RESILIENCE: ${formData.overall_resilience}/10
     },
     {
       title: "Boundaries & Voice",
-      icon: <AlertTriangle className="w-5 h-5" style={{ color: '#6B8B60' }} />,
+      icon: <AlertTriangle className="w-5 h-5" style={{ color: '#5C7F4F' }} />,
       content: (
         <div className="space-y-6">
           <div>
-            <label className="block text-sm font-medium mb-2" style={{ color: '#2D5F3F' }}>
+            <label className="block text-sm font-medium mb-2" style={{ color: '#2D3A31' }}>
               How are your professional boundaries feeling right now?
             </label>
             <textarea
@@ -458,7 +458,7 @@ OVERALL RESILIENCE: ${formData.overall_resilience}/10
               onChange={(e) => handleFieldChange('boundary_status', e.target.value)}
               placeholder="Reflect on your ability to maintain healthy professional limits..."
               rows={3}
-              className="w-full px-4 py-3 border rounded-lg resize-none focus:ring-2 focus:ring-sage-500"
+              className="w-full px-4 py-3 border rounded-lg resize-none focus:ring-2 focus:ring-brand-primary"
               style={{
                 borderColor: errors.boundary_status ? '#ef4444' : '#E8E5E0'
               }}
@@ -469,7 +469,7 @@ OVERALL RESILIENCE: ${formData.overall_resilience}/10
           </div>
 
           <div>
-            <label className="block text-sm font-medium mb-2" style={{ color: '#2D5F3F' }}>
+            <label className="block text-sm font-medium mb-2" style={{ color: '#2D3A31' }}>
               What boundary challenges are you facing?
             </label>
             <textarea
@@ -477,12 +477,12 @@ OVERALL RESILIENCE: ${formData.overall_resilience}/10
               onChange={(e) => handleFieldChange('boundary_challenges', e.target.value)}
               placeholder="Identify specific situations where boundaries are being tested..."
               rows={3}
-              className="w-full px-4 py-3 border rounded-lg resize-none focus:ring-2 focus:ring-sage-500"
+              className="w-full px-4 py-3 border rounded-lg resize-none focus:ring-2 focus:ring-brand-primary"
             />
           </div>
 
           <div>
-            <label className="block text-sm font-medium mb-2" style={{ color: '#2D5F3F' }}>
+            <label className="block text-sm font-medium mb-2" style={{ color: '#2D3A31' }}>
               How empowered do you feel to use your professional voice?
             </label>
             <textarea
@@ -490,7 +490,7 @@ OVERALL RESILIENCE: ${formData.overall_resilience}/10
               onChange={(e) => handleFieldChange('professional_voice', e.target.value)}
               placeholder="Reflect on your ability to speak up, advocate, and assert your expertise..."
               rows={3}
-              className="w-full px-4 py-3 border rounded-lg resize-none focus:ring-2 focus:ring-sage-500"
+              className="w-full px-4 py-3 border rounded-lg resize-none focus:ring-2 focus:ring-brand-primary"
             />
           </div>
         </div>
@@ -502,7 +502,7 @@ OVERALL RESILIENCE: ${formData.overall_resilience}/10
       content: (
         <div className="space-y-6">
           <div>
-            <label className="block text-sm font-medium mb-2" style={{ color: '#2D5F3F' }}>
+            <label className="block text-sm font-medium mb-2" style={{ color: '#2D3A31' }}>
               What meaning and purpose are you finding in your work right now?
             </label>
             <textarea
@@ -510,7 +510,7 @@ OVERALL RESILIENCE: ${formData.overall_resilience}/10
               onChange={(e) => handleFieldChange('work_meaning', e.target.value)}
               placeholder="Reflect on the significance and purpose you find in your professional role..."
               rows={3}
-              className="w-full px-4 py-3 border rounded-lg resize-none focus:ring-2 focus:ring-sage-500"
+              className="w-full px-4 py-3 border rounded-lg resize-none focus:ring-2 focus:ring-brand-primary"
               style={{
                 borderColor: errors.work_meaning ? '#ef4444' : '#E8E5E0'
               }}
@@ -521,7 +521,7 @@ OVERALL RESILIENCE: ${formData.overall_resilience}/10
           </div>
 
           <div>
-            <label className="block text-sm font-medium mb-2" style={{ color: '#2D5F3F' }}>
+            <label className="block text-sm font-medium mb-2" style={{ color: '#2D3A31' }}>
               What recent work are you most proud of?
             </label>
             <textarea
@@ -529,12 +529,12 @@ OVERALL RESILIENCE: ${formData.overall_resilience}/10
               onChange={(e) => handleFieldChange('pride_moments', e.target.value)}
               placeholder="Share accomplishments or moments that brought you satisfaction..."
               rows={3}
-              className="w-full px-4 py-3 border rounded-lg resize-none focus:ring-2 focus:ring-sage-500"
+              className="w-full px-4 py-3 border rounded-lg resize-none focus:ring-2 focus:ring-brand-primary"
             />
           </div>
 
           <div>
-            <label className="block text-sm font-medium mb-2" style={{ color: '#2D5F3F' }}>
+            <label className="block text-sm font-medium mb-2" style={{ color: '#2D3A31' }}>
               How aligned do you feel with your sense of purpose? (1-10)
             </label>
             <div className="flex items-center space-x-4">
@@ -545,12 +545,12 @@ OVERALL RESILIENCE: ${formData.overall_resilience}/10
                 value={formData.purpose_alignment}
                 onChange={(e) => handleFieldChange('purpose_alignment', parseInt(e.target.value))}
                 className="flex-1"
-                style={{ accentColor: '#6B8B60' }}
+                style={{ accentColor: '#5C7F4F' }}
               />
               <span className="text-2xl font-bold px-4 py-2 rounded-lg" 
                 style={{ 
-                  backgroundColor: 'rgba(107, 139, 96, 0.1)',
-                  color: '#2D5F3F'
+                  backgroundColor: 'rgba(92, 127, 79, 0.1)',
+                  color: '#2D3A31'
                 }}>
                 {formData.purpose_alignment}
               </span>
@@ -565,7 +565,7 @@ OVERALL RESILIENCE: ${formData.overall_resilience}/10
       content: (
         <div className="space-y-6">
           <div>
-            <label className="block text-sm font-medium mb-2" style={{ color: '#2D5F3F' }}>
+            <label className="block text-sm font-medium mb-2" style={{ color: '#2D3A31' }}>
               What positive impact have you made recently?
             </label>
             <textarea
@@ -573,7 +573,7 @@ OVERALL RESILIENCE: ${formData.overall_resilience}/10
               onChange={(e) => handleFieldChange('positive_impact', e.target.value)}
               placeholder="Describe the difference you've made for others or your field..."
               rows={3}
-              className="w-full px-4 py-3 border rounded-lg resize-none focus:ring-2 focus:ring-sage-500"
+              className="w-full px-4 py-3 border rounded-lg resize-none focus:ring-2 focus:ring-brand-primary"
               style={{
                 borderColor: errors.positive_impact ? '#ef4444' : '#E8E5E0'
               }}
@@ -584,7 +584,7 @@ OVERALL RESILIENCE: ${formData.overall_resilience}/10
           </div>
 
           <div>
-            <label className="block text-sm font-medium mb-2" style={{ color: '#2D5F3F' }}>
+            <label className="block text-sm font-medium mb-2" style={{ color: '#2D3A31' }}>
               What areas of growth are emerging for you?
             </label>
             <textarea
@@ -592,12 +592,12 @@ OVERALL RESILIENCE: ${formData.overall_resilience}/10
               onChange={(e) => handleFieldChange('growth_areas', e.target.value)}
               placeholder="Identify skills, knowledge, or personal development areas..."
               rows={3}
-              className="w-full px-4 py-3 border rounded-lg resize-none focus:ring-2 focus:ring-sage-500"
+              className="w-full px-4 py-3 border rounded-lg resize-none focus:ring-2 focus:ring-brand-primary"
             />
           </div>
 
           <div>
-            <label className="block text-sm font-medium mb-2" style={{ color: '#2D5F3F' }}>
+            <label className="block text-sm font-medium mb-2" style={{ color: '#2D3A31' }}>
               What insights have you gained about yourself?
             </label>
             <textarea
@@ -605,7 +605,7 @@ OVERALL RESILIENCE: ${formData.overall_resilience}/10
               onChange={(e) => handleFieldChange('learning_insights', e.target.value)}
               placeholder="Share self-discoveries or new understanding..."
               rows={3}
-              className="w-full px-4 py-3 border rounded-lg resize-none focus:ring-2 focus:ring-sage-500"
+              className="w-full px-4 py-3 border rounded-lg resize-none focus:ring-2 focus:ring-brand-primary"
             />
           </div>
         </div>
@@ -617,7 +617,7 @@ OVERALL RESILIENCE: ${formData.overall_resilience}/10
       content: (
         <div className="space-y-6">
           <div>
-            <label className="block text-sm font-medium mb-2" style={{ color: '#2D5F3F' }}>
+            <label className="block text-sm font-medium mb-2" style={{ color: '#2D3A31' }}>
               What support do you need right now?
             </label>
             <textarea
@@ -625,7 +625,7 @@ OVERALL RESILIENCE: ${formData.overall_resilience}/10
               onChange={(e) => handleFieldChange('support_needs', e.target.value)}
               placeholder="Identify specific types of support that would be helpful..."
               rows={3}
-              className="w-full px-4 py-3 border rounded-lg resize-none focus:ring-2 focus:ring-sage-500"
+              className="w-full px-4 py-3 border rounded-lg resize-none focus:ring-2 focus:ring-brand-primary"
               style={{
                 borderColor: errors.support_needs ? '#ef4444' : '#E8E5E0'
               }}
@@ -636,7 +636,7 @@ OVERALL RESILIENCE: ${formData.overall_resilience}/10
           </div>
 
           <div>
-            <label className="block text-sm font-medium mb-2" style={{ color: '#2D5F3F' }}>
+            <label className="block text-sm font-medium mb-2" style={{ color: '#2D3A31' }}>
               What support is available to you?
             </label>
             <textarea
@@ -644,12 +644,12 @@ OVERALL RESILIENCE: ${formData.overall_resilience}/10
               onChange={(e) => handleFieldChange('available_support', e.target.value)}
               placeholder="List colleagues, supervisors, or resources you can access..."
               rows={3}
-              className="w-full px-4 py-3 border rounded-lg resize-none focus:ring-2 focus:ring-sage-500"
+              className="w-full px-4 py-3 border rounded-lg resize-none focus:ring-2 focus:ring-brand-primary"
             />
           </div>
 
           <div>
-            <label className="block text-sm font-medium mb-2" style={{ color: '#2D5F3F' }}>
+            <label className="block text-sm font-medium mb-2" style={{ color: '#2D3A31' }}>
               Rate your comfort with seeking support (1-10)
             </label>
             <div className="flex items-center space-x-4">
@@ -660,12 +660,12 @@ OVERALL RESILIENCE: ${formData.overall_resilience}/10
                 value={formData.support_comfort}
                 onChange={(e) => handleFieldChange('support_comfort', parseInt(e.target.value))}
                 className="flex-1"
-                style={{ accentColor: '#6B8B60' }}
+                style={{ accentColor: '#5C7F4F' }}
               />
               <span className="text-2xl font-bold px-4 py-2 rounded-lg" 
                 style={{ 
-                  backgroundColor: 'rgba(107, 139, 96, 0.1)',
-                  color: '#2D5F3F'
+                  backgroundColor: 'rgba(92, 127, 79, 0.1)',
+                  color: '#2D3A31'
                 }}>
                 {formData.support_comfort}
               </span>
@@ -680,7 +680,7 @@ OVERALL RESILIENCE: ${formData.overall_resilience}/10
       content: (
         <div className="space-y-6">
           <div>
-            <label className="block text-sm font-medium mb-2" style={{ color: '#2D5F3F' }}>
+            <label className="block text-sm font-medium mb-2" style={{ color: '#2D3A31' }}>
               How is AI/technology impacting your work and ethics?
             </label>
             <textarea
@@ -688,7 +688,7 @@ OVERALL RESILIENCE: ${formData.overall_resilience}/10
               onChange={(e) => handleFieldChange('ai_impact', e.target.value)}
               placeholder="Reflect on how technology is changing your field and practice..."
               rows={3}
-              className="w-full px-4 py-3 border rounded-lg resize-none focus:ring-2 focus:ring-sage-500"
+              className="w-full px-4 py-3 border rounded-lg resize-none focus:ring-2 focus:ring-brand-primary"
               style={{
                 borderColor: errors.ai_impact ? '#ef4444' : '#E8E5E0'
               }}
@@ -699,7 +699,7 @@ OVERALL RESILIENCE: ${formData.overall_resilience}/10
           </div>
 
           <div>
-            <label className="block text-sm font-medium mb-2" style={{ color: '#2D5F3F' }}>
+            <label className="block text-sm font-medium mb-2" style={{ color: '#2D3A31' }}>
               What boundaries do you maintain with technology?
             </label>
             <textarea
@@ -707,12 +707,12 @@ OVERALL RESILIENCE: ${formData.overall_resilience}/10
               onChange={(e) => handleFieldChange('tech_boundaries', e.target.value)}
               placeholder="Describe how you manage technology use and digital boundaries..."
               rows={3}
-              className="w-full px-4 py-3 border rounded-lg resize-none focus:ring-2 focus:ring-sage-500"
+              className="w-full px-4 py-3 border rounded-lg resize-none focus:ring-2 focus:ring-brand-primary"
             />
           </div>
 
           <div>
-            <label className="block text-sm font-medium mb-2" style={{ color: '#2D5F3F' }}>
+            <label className="block text-sm font-medium mb-2" style={{ color: '#2D3A31' }}>
               What opportunities for innovation do you see?
             </label>
             <textarea
@@ -720,7 +720,7 @@ OVERALL RESILIENCE: ${formData.overall_resilience}/10
               onChange={(e) => handleFieldChange('innovation_thoughts', e.target.value)}
               placeholder="Share ideas for improving practice or addressing challenges..."
               rows={3}
-              className="w-full px-4 py-3 border rounded-lg resize-none focus:ring-2 focus:ring-sage-500"
+              className="w-full px-4 py-3 border rounded-lg resize-none focus:ring-2 focus:ring-brand-primary"
             />
           </div>
         </div>
@@ -728,11 +728,11 @@ OVERALL RESILIENCE: ${formData.overall_resilience}/10
     },
     {
       title: "Commitments & Actions",
-      icon: <Sparkles className="w-5 h-5" style={{ color: '#6B8B60' }} />,
+      icon: <Sparkles className="w-5 h-5" style={{ color: '#5C7F4F' }} />,
       content: (
         <div className="space-y-6">
           <div>
-            <label className="block text-sm font-medium mb-2" style={{ color: '#2D5F3F' }}>
+            <label className="block text-sm font-medium mb-2" style={{ color: '#2D3A31' }}>
               What ethical practice or principle would you like to focus on this week?
             </label>
             <textarea
@@ -740,7 +740,7 @@ OVERALL RESILIENCE: ${formData.overall_resilience}/10
               onChange={(e) => handleFieldChange('ethical_commitment', e.target.value)}
               placeholder="Identify one specific ethical practice or principle to uphold..."
               rows={3}
-              className="w-full px-4 py-3 border rounded-lg resize-none focus:ring-2 focus:ring-sage-500"
+              className="w-full px-4 py-3 border rounded-lg resize-none focus:ring-2 focus:ring-brand-primary"
               style={{
                 borderColor: errors.ethical_commitment ? '#ef4444' : '#E8E5E0'
               }}
@@ -751,7 +751,7 @@ OVERALL RESILIENCE: ${formData.overall_resilience}/10
           </div>
 
           <div>
-            <label className="block text-sm font-medium mb-2" style={{ color: '#2D5F3F' }}>
+            <label className="block text-sm font-medium mb-2" style={{ color: '#2D3A31' }}>
               What boundary will you strengthen or maintain?
             </label>
             <textarea
@@ -759,12 +759,12 @@ OVERALL RESILIENCE: ${formData.overall_resilience}/10
               onChange={(e) => handleFieldChange('boundary_commitment', e.target.value)}
               placeholder="Choose one boundary to focus on protecting..."
               rows={3}
-              className="w-full px-4 py-3 border rounded-lg resize-none focus:ring-2 focus:ring-sage-500"
+              className="w-full px-4 py-3 border rounded-lg resize-none focus:ring-2 focus:ring-brand-primary"
             />
           </div>
 
           <div>
-            <label className="block text-sm font-medium mb-2" style={{ color: '#2D5F3F' }}>
+            <label className="block text-sm font-medium mb-2" style={{ color: '#2D3A31' }}>
               What growth commitment will you pursue?
             </label>
             <textarea
@@ -772,7 +772,7 @@ OVERALL RESILIENCE: ${formData.overall_resilience}/10
               onChange={(e) => handleFieldChange('growth_commitment', e.target.value)}
               placeholder="Identify one area for professional or personal development..."
               rows={3}
-              className="w-full px-4 py-3 border rounded-lg resize-none focus:ring-2 focus:ring-sage-500"
+              className="w-full px-4 py-3 border rounded-lg resize-none focus:ring-2 focus:ring-brand-primary"
               style={{
                 borderColor: errors.growth_commitment ? '#ef4444' : '#E8E5E0'
               }}
@@ -783,7 +783,7 @@ OVERALL RESILIENCE: ${formData.overall_resilience}/10
           </div>
 
           <div>
-            <label className="block text-sm font-medium mb-2" style={{ color: '#2D5F3F' }}>
+            <label className="block text-sm font-medium mb-2" style={{ color: '#2D3A31' }}>
               How resilient are you feeling overall right now? (1-10)
             </label>
             <div className="flex items-center space-x-4">
@@ -794,12 +794,12 @@ OVERALL RESILIENCE: ${formData.overall_resilience}/10
                 value={formData.overall_resilience}
                 onChange={(e) => handleFieldChange('overall_resilience', parseInt(e.target.value))}
                 className="flex-1"
-                style={{ accentColor: '#6B8B60' }}
+                style={{ accentColor: '#5C7F4F' }}
               />
               <span className="text-2xl font-bold px-4 py-2 rounded-lg" 
                 style={{ 
-                  backgroundColor: 'rgba(107, 139, 96, 0.1)',
-                  color: '#2D5F3F'
+                  backgroundColor: 'rgba(92, 127, 79, 0.1)',
+                  color: '#2D3A31'
                 }}>
                 {formData.overall_resilience}
               </span>
@@ -808,7 +808,7 @@ OVERALL RESILIENCE: ${formData.overall_resilience}/10
 
           {showSummary && (
             <div className="mt-8">
-              <p className="text-sm font-medium mb-4" style={{ color: '#2D5F3F' }}>
+              <p className="text-sm font-medium mb-4" style={{ color: '#2D3A31' }}>
                 Thank you for taking time to reflect on your values and boundaries. Here's your summary:
               </p>
               
@@ -816,7 +816,7 @@ OVERALL RESILIENCE: ${formData.overall_resilience}/10
                 className="p-4 rounded-lg font-mono text-xs"
                 style={{
                   backgroundColor: '#F8FBF6',
-                  border: '1px solid rgba(107, 139, 96, 0.2)',
+                  border: '1px solid rgba(92, 127, 79, 0.2)',
                   whiteSpace: 'pre-wrap'
                 }}
               >
@@ -855,7 +855,7 @@ OVERALL RESILIENCE: ${formData.overall_resilience}/10
               <div 
                 className="w-12 h-12 rounded-xl flex items-center justify-center"
                 style={{
-                  background: 'linear-gradient(135deg, #1b5e20, #2e7d32)',
+                  background: 'linear-gradient(135deg, #5C7F4F, #4A6A3F)',
                   boxShadow: '0 2px 8px rgba(107, 139, 96, 0.3)'
                 }}
               >
@@ -873,7 +873,7 @@ OVERALL RESILIENCE: ${formData.overall_resilience}/10
             <button
               onClick={onClose}
               className="p-2 rounded-lg transition-all hover:opacity-90"
-              style={{ background: 'linear-gradient(135deg, #1b5e20, #2e7d32)' }}
+              style={{ background: 'linear-gradient(135deg, #5C7F4F, #4A6A3F)' }}
               aria-label="Close"
             >
               <X className="w-5 h-5 text-white" />
@@ -890,7 +890,7 @@ OVERALL RESILIENCE: ${formData.overall_resilience}/10
                     index <= currentSection ? 'opacity-100' : 'opacity-30'
                   }`}
                   style={{
-                    backgroundColor: index <= currentSection ? '#6B8B60' : '#E8E5E0',
+                    backgroundColor: index <= currentSection ? '#5C7F4F' : '#E8E5E0',
                     minWidth: '30px'
                   }}
                 />
@@ -924,15 +924,15 @@ OVERALL RESILIENCE: ${formData.overall_resilience}/10
               onClick={handlePrev}
               className="px-6 py-2 rounded-lg flex items-center transition-colors"
               style={{
-                backgroundColor: '#F8FBF6',
-                color: '#6B8B60',
-                border: '1px solid #6B8B60'
+                backgroundColor: '#E8F3E5',
+                color: '#5C7F4F',
+                border: '1px solid #5C7F4F'
               }}
               onMouseEnter={(e) => {
-                e.currentTarget.style.backgroundColor = '#F0F7F0';
+                e.currentTarget.style.backgroundColor = '#E8F3E5';
               }}
               onMouseLeave={(e) => {
-                e.currentTarget.style.backgroundColor = '#F8FBF6';
+                e.currentTarget.style.backgroundColor = '#E8F3E5';
               }}
             >
               <ChevronLeft className="w-4 h-4 mr-1" />
@@ -951,17 +951,17 @@ OVERALL RESILIENCE: ${formData.overall_resilience}/10
               onClick={handleNext}
               className="px-6 py-2 rounded-lg flex items-center transition-all"
               style={{
-                background: 'linear-gradient(135deg, #1b5e20, #2e7d32)',
+                background: 'linear-gradient(135deg, #5C7F4F, #4A6A3F)',
                 color: '#FFFFFF',
-                boxShadow: '0 2px 8px rgba(107, 139, 96, 0.3)'
+                boxShadow: '0 2px 8px rgba(92, 127, 79, 0.3)'
               }}
               onMouseEnter={(e) => {
                 e.currentTarget.style.transform = 'translateY(-1px)';
-                e.currentTarget.style.boxShadow = '0 4px 12px rgba(107, 139, 96, 0.4)';
+                e.currentTarget.style.boxShadow = '0 4px 12px rgba(92, 127, 79, 0.4)';
               }}
               onMouseLeave={(e) => {
                 e.currentTarget.style.transform = 'translateY(0)';
-                e.currentTarget.style.boxShadow = '0 2px 8px rgba(107, 139, 96, 0.3)';
+                e.currentTarget.style.boxShadow = '0 2px 8px rgba(92, 127, 79, 0.3)';
               }}
             >
               Next
@@ -975,23 +975,23 @@ OVERALL RESILIENCE: ${formData.overall_resilience}/10
               style={{
                 background: isSaving 
                   ? '#CCCCCC' 
-                  : 'linear-gradient(135deg, #1b5e20, #2e7d32)',
+                  : 'linear-gradient(135deg, #5C7F4F, #4A6A3F)',
                 color: '#FFFFFF',
                 boxShadow: isSaving 
                   ? 'none' 
-                  : '0 2px 8px rgba(107, 139, 96, 0.3)',
+                  : '0 2px 8px rgba(92, 127, 79, 0.3)',
                 cursor: isSaving ? 'not-allowed' : 'pointer'
               }}
               onMouseEnter={(e) => {
                 if (!isSaving) {
                   e.currentTarget.style.transform = 'translateY(-1px)';
-                  e.currentTarget.style.boxShadow = '0 4px 12px rgba(107, 139, 96, 0.4)';
+                  e.currentTarget.style.boxShadow = '0 4px 12px rgba(92, 127, 79, 0.4)';
                 }
               }}
               onMouseLeave={(e) => {
                 if (!isSaving) {
                   e.currentTarget.style.transform = 'translateY(0)';
-                  e.currentTarget.style.boxShadow = '0 2px 8px rgba(107, 139, 96, 0.3)';
+                  e.currentTarget.style.boxShadow = '0 2px 8px rgba(92, 127, 79, 0.3)';
                 }
               }}
             >

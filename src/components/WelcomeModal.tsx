@@ -153,7 +153,7 @@ export const WelcomeModal: React.FC<WelcomeModalProps> = ({ onClose, onComplete 
                 key={index}
                 className="h-1 flex-1 rounded-full transition-all"
                 style={{
-                  backgroundColor: index <= currentStep ? '#1b5e20' : '#E5E5E5'
+                  backgroundColor: index <= currentStep ? '#5C7F4F' : '#E5E5E5'
                 }}
               />
             ))}
@@ -173,13 +173,13 @@ export const WelcomeModal: React.FC<WelcomeModalProps> = ({ onClose, onComplete 
                 onClick={() => handleAnswer(currentQuestion.id, option.value)}
                 className="p-6 rounded-xl border-2 transition-all hover:scale-105 text-left"
                 style={{
-                  borderColor: answers[currentQuestion.id] === option.value ? '#1b5e20' : '#E5E5E5',
-                  backgroundColor: answers[currentQuestion.id] === option.value ? '#F0F7F0' : '#FFFFFF'
+                  borderColor: answers[currentQuestion.id] === option.value ? '#5C7F4F' : '#E5E5E5',
+                  backgroundColor: answers[currentQuestion.id] === option.value ? '#E8F3E5' : '#FFFFFF'
                 }}
                 onMouseEnter={(e) => {
                   if (answers[currentQuestion.id] !== option.value) {
-                    e.currentTarget.style.borderColor = '#2e7d32';
-                    e.currentTarget.style.backgroundColor = '#F8FBF8';
+                    e.currentTarget.style.borderColor = '#5C7F4F';
+                    e.currentTarget.style.backgroundColor = '#E8F3E5';
                   }
                 }}
                 onMouseLeave={(e) => {
@@ -190,7 +190,7 @@ export const WelcomeModal: React.FC<WelcomeModalProps> = ({ onClose, onComplete 
                 }}
               >
                 <div className="flex items-center gap-3">
-                  <div style={{ color: '#1b5e20' }}>
+                  <div style={{ color: '#5C7F4F' }}>
                     {option.icon}
                   </div>
                   <span className="font-medium" style={{ color: '#1A1A1A' }}>

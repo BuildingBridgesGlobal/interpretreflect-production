@@ -300,15 +300,15 @@ OVERALL RESILIENCE: ${formData.overall_resilience}/10
               Values Alignment Check-In
             </h3>
             <p className="mb-6" style={{ color: '#5A5A5A' }}>
-              This reflection helps you navigate ethical challenges, maintain professional boundaries, 
-              and connect with the deeper meaning in your work. Your values and integrity are essential 
-              to sustainable practice.
+              Let's check in on your values and boundaries together. This reflection helps you navigate 
+              ethical challenges, maintain professional boundaries, and connect with the deeper meaning 
+              in your work. There are no right or wrong answers—just your unique experience as an interpreter.
             </p>
           </div>
 
           <div>
             <label className="block text-sm font-medium mb-2" style={{ color: '#2D5F3F' }}>
-              What brings you to this values alignment check-in?
+              What brings you to this values check-in today?
             </label>
             <div className="grid grid-cols-2 gap-3">
               {[
@@ -343,7 +343,7 @@ OVERALL RESILIENCE: ${formData.overall_resilience}/10
 
           <div>
             <label className="block text-sm font-medium mb-2" style={{ color: '#2D5F3F' }}>
-              Describe a recent challenging situation you've navigated
+              Share a recent situation where you navigated ethical considerations or boundary challenges
             </label>
             <textarea
               value={formData.recent_challenge}
@@ -362,7 +362,7 @@ OVERALL RESILIENCE: ${formData.overall_resilience}/10
 
           <div>
             <label className="block text-sm font-medium mb-2" style={{ color: '#2D5F3F' }}>
-              How are you feeling about this situation emotionally?
+              How are you experiencing this situation emotionally right now?
             </label>
             <textarea
               value={formData.emotional_state}
@@ -388,7 +388,7 @@ OVERALL RESILIENCE: ${formData.overall_resilience}/10
         <div className="space-y-6">
           <div>
             <label className="block text-sm font-medium mb-2" style={{ color: '#2D5F3F' }}>
-              What ethical tensions or dilemmas are you experiencing?
+              What ethical considerations or tensions are you noticing in your work?
             </label>
             <textarea
               value={formData.ethical_tensions}
@@ -420,7 +420,7 @@ OVERALL RESILIENCE: ${formData.overall_resilience}/10
 
           <div>
             <label className="block text-sm font-medium mb-2" style={{ color: '#2D5F3F' }}>
-              Rate your ethical clarity right now (1-10)
+              How clear do you feel about your ethical approach right now? (1-10)
             </label>
             <div className="flex items-center space-x-4">
               <input
@@ -451,7 +451,7 @@ OVERALL RESILIENCE: ${formData.overall_resilience}/10
         <div className="space-y-6">
           <div>
             <label className="block text-sm font-medium mb-2" style={{ color: '#2D5F3F' }}>
-              How are your professional boundaries holding up?
+              How are your professional boundaries feeling right now?
             </label>
             <textarea
               value={formData.boundary_status}
@@ -503,7 +503,7 @@ OVERALL RESILIENCE: ${formData.overall_resilience}/10
         <div className="space-y-6">
           <div>
             <label className="block text-sm font-medium mb-2" style={{ color: '#2D5F3F' }}>
-              What meaning are you finding in your work right now?
+              What meaning and purpose are you finding in your work right now?
             </label>
             <textarea
               value={formData.work_meaning}
@@ -535,7 +535,7 @@ OVERALL RESILIENCE: ${formData.overall_resilience}/10
 
           <div>
             <label className="block text-sm font-medium mb-2" style={{ color: '#2D5F3F' }}>
-              Rate your sense of purpose alignment (1-10)
+              How aligned do you feel with your sense of purpose? (1-10)
             </label>
             <div className="flex items-center space-x-4">
               <input
@@ -733,7 +733,7 @@ OVERALL RESILIENCE: ${formData.overall_resilience}/10
         <div className="space-y-6">
           <div>
             <label className="block text-sm font-medium mb-2" style={{ color: '#2D5F3F' }}>
-              What ethical commitment will you make for the coming week?
+              What ethical practice or principle would you like to focus on this week?
             </label>
             <textarea
               value={formData.ethical_commitment}
@@ -784,7 +784,7 @@ OVERALL RESILIENCE: ${formData.overall_resilience}/10
 
           <div>
             <label className="block text-sm font-medium mb-2" style={{ color: '#2D5F3F' }}>
-              Rate your overall resilience right now (1-10)
+              How resilient are you feeling overall right now? (1-10)
             </label>
             <div className="flex items-center space-x-4">
               <input
@@ -809,7 +809,7 @@ OVERALL RESILIENCE: ${formData.overall_resilience}/10
           {showSummary && (
             <div className="mt-8">
               <p className="text-sm font-medium mb-4" style={{ color: '#2D5F3F' }}>
-                Your check-in has been saved! Here's your summary:
+                Thank you for taking time to reflect on your values and boundaries. Here's your summary:
               </p>
               
               <div 

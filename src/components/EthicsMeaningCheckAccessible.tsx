@@ -300,15 +300,15 @@ OVERALL RESILIENCE: ${formData.overall_resilience}/10
               Values Alignment Check-In
             </h3>
             <p className="mb-6" style={{ color: '#5A5A5A' }}>
-              Let's check in on your values and boundaries together. This reflection helps you navigate 
-              ethical challenges, maintain professional boundaries, and connect with the deeper meaning 
-              in your work. There are no right or wrong answers—just your unique experience as an interpreter.
+              This reflection helps you optimize your professional performance by examining your values, 
+              maintaining healthy boundaries, and connecting with the deeper meaning in your work. 
+              Strong ethical foundations and clear boundaries support sustainable, high-quality interpreting practice.
             </p>
           </div>
 
           <div>
             <label className="block text-sm font-medium mb-2" style={{ color: '#2D3A31' }}>
-              What brings you to this values check-in today?
+              What brings you to this performance reflection today?
             </label>
             <div className="grid grid-cols-2 gap-3">
               {[
@@ -343,7 +343,7 @@ OVERALL RESILIENCE: ${formData.overall_resilience}/10
 
           <div>
             <label className="block text-sm font-medium mb-2" style={{ color: '#2D3A31' }}>
-              Share a recent situation where you navigated ethical considerations or boundary challenges
+              Share a recent interpreting situation where you navigated ethical considerations or boundary challenges
             </label>
             <textarea
               value={formData.recent_challenge}
@@ -362,7 +362,7 @@ OVERALL RESILIENCE: ${formData.overall_resilience}/10
 
           <div>
             <label className="block text-sm font-medium mb-2" style={{ color: '#2D3A31' }}>
-              How are you experiencing this situation emotionally right now?
+              How did this situation impact your interpreting performance?
             </label>
             <textarea
               value={formData.emotional_state}
@@ -388,7 +388,7 @@ OVERALL RESILIENCE: ${formData.overall_resilience}/10
         <div className="space-y-6">
           <div>
             <label className="block text-sm font-medium mb-2" style={{ color: '#2D3A31' }}>
-              What ethical considerations or tensions are you noticing in your work?
+              What ethical considerations affect your interpreting performance?
             </label>
             <textarea
               value={formData.ethical_tensions}
@@ -420,7 +420,7 @@ OVERALL RESILIENCE: ${formData.overall_resilience}/10
 
           <div>
             <label className="block text-sm font-medium mb-2" style={{ color: '#2D3A31' }}>
-              How clear do you feel about your ethical approach right now? (1-10)
+              How clear are you about your ethical approach in your interpreting work? (1-10)
             </label>
             <div className="flex items-center space-x-4">
               <input
@@ -451,7 +451,7 @@ OVERALL RESILIENCE: ${formData.overall_resilience}/10
         <div className="space-y-6">
           <div>
             <label className="block text-sm font-medium mb-2" style={{ color: '#2D3A31' }}>
-              How are your professional boundaries feeling right now?
+              How are your professional boundaries supporting your interpreting performance?
             </label>
             <textarea
               value={formData.boundary_status}
@@ -503,7 +503,7 @@ OVERALL RESILIENCE: ${formData.overall_resilience}/10
         <div className="space-y-6">
           <div>
             <label className="block text-sm font-medium mb-2" style={{ color: '#2D3A31' }}>
-              What meaning and purpose are you finding in your work right now?
+              What meaning and purpose drive your professional performance as an interpreter?
             </label>
             <textarea
               value={formData.work_meaning}
@@ -535,7 +535,7 @@ OVERALL RESILIENCE: ${formData.overall_resilience}/10
 
           <div>
             <label className="block text-sm font-medium mb-2" style={{ color: '#2D3A31' }}>
-              How aligned do you feel with your sense of purpose? (1-10)
+              How aligned are you with your professional purpose and performance goals? (1-10)
             </label>
             <div className="flex items-center space-x-4">
               <input
@@ -566,7 +566,7 @@ OVERALL RESILIENCE: ${formData.overall_resilience}/10
         <div className="space-y-6">
           <div>
             <label className="block text-sm font-medium mb-2" style={{ color: '#2D3A31' }}>
-              What positive impact have you made recently?
+              What positive impact have you made through your interpreting work recently?
             </label>
             <textarea
               value={formData.positive_impact}
@@ -585,7 +585,7 @@ OVERALL RESILIENCE: ${formData.overall_resilience}/10
 
           <div>
             <label className="block text-sm font-medium mb-2" style={{ color: '#2D3A31' }}>
-              What areas of growth are emerging for you?
+              What professional skills or knowledge areas are you developing?
             </label>
             <textarea
               value={formData.growth_areas}
@@ -598,7 +598,7 @@ OVERALL RESILIENCE: ${formData.overall_resilience}/10
 
           <div>
             <label className="block text-sm font-medium mb-2" style={{ color: '#2D3A31' }}>
-              What insights have you gained about yourself?
+              What insights have you gained about your interpreting practice?
             </label>
             <textarea
               value={formData.learning_insights}
@@ -733,7 +733,7 @@ OVERALL RESILIENCE: ${formData.overall_resilience}/10
         <div className="space-y-6">
           <div>
             <label className="block text-sm font-medium mb-2" style={{ color: '#2D3A31' }}>
-              What ethical practice or principle would you like to focus on this week?
+              What ethical practice or principle will strengthen your interpreting performance this week?
             </label>
             <textarea
               value={formData.ethical_commitment}
@@ -765,7 +765,7 @@ OVERALL RESILIENCE: ${formData.overall_resilience}/10
 
           <div>
             <label className="block text-sm font-medium mb-2" style={{ color: '#2D3A31' }}>
-              What growth commitment will you pursue?
+              What professional skill or performance area will you focus on developing?
             </label>
             <textarea
               value={formData.growth_commitment}
@@ -784,7 +784,7 @@ OVERALL RESILIENCE: ${formData.overall_resilience}/10
 
           <div>
             <label className="block text-sm font-medium mb-2" style={{ color: '#2D3A31' }}>
-              How resilient are you feeling overall right now? (1-10)
+              How resilient is your professional practice feeling overall? (1-10)
             </label>
             <div className="flex items-center space-x-4">
               <input
@@ -809,7 +809,7 @@ OVERALL RESILIENCE: ${formData.overall_resilience}/10
           {showSummary && (
             <div className="mt-8">
               <p className="text-sm font-medium mb-4" style={{ color: '#2D3A31' }}>
-                Thank you for taking time to reflect on your values and boundaries. Here's your summary:
+                Thank you for taking time to reflect on your professional performance. Here's your summary:
               </p>
               
               <div 
@@ -863,10 +863,10 @@ OVERALL RESILIENCE: ${formData.overall_resilience}/10
               </div>
               <div>
                 <h2 className="text-2xl font-bold" style={{ color: '#1A1A1A' }}>
-                  Values Alignment Check-In
+                  Professional Performance Reflection
                 </h2>
                 <p className="text-sm mt-1" style={{ color: '#5A5A5A' }}>
-                  Navigate values, boundaries, and purpose in your work
+                  Optimize your interpreting practice through values, boundaries, and purpose
                 </p>
               </div>
             </div>

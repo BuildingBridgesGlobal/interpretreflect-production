@@ -19,7 +19,7 @@ export const WelcomeModal: React.FC<WelcomeModalProps> = ({ onClose, onComplete 
     {
       id: 'purpose',
       title: "Welcome to InterpretReflect! 🌟",
-      subtitle: "Let's find the right reflection for you right now",
+      subtitle: "Let's find the right reflection tool to optimize your performance",
       question: "What brings you here today?",
       options: [
         { value: 'pre-assignment', label: 'Preparing for an assignment', icon: <NotepadIcon size={32} /> },
@@ -43,7 +43,7 @@ export const WelcomeModal: React.FC<WelcomeModalProps> = ({ onClose, onComplete 
     {
       id: 'energyLevel',
       title: "Almost done!",
-      subtitle: "We'll match you with the right support",
+      subtitle: "We'll match you with tools to enhance your professional performance",
       question: "What's your current energy level?",
       options: [
         { value: 'low', label: 'Need support & restoration', icon: <Heart className="w-8 h-8" /> },

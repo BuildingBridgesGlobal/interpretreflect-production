@@ -36,13 +36,13 @@ const steps = [
   },
   {
     id: 'challenges',
-    title: 'Current Challenges',
-    description: 'What areas would you like support with?'
+    title: 'Performance Challenges',
+    description: 'What areas would you like to optimize?'
   },
   {
     id: 'goals',
-    title: 'Wellness Goals',
-    description: 'What outcomes are you hoping to achieve?'
+    title: 'Professional Goals',
+    description: 'What performance outcomes are you working toward?'
   },
   {
     id: 'preferences',
@@ -232,11 +232,11 @@ export function OnboardingFlow({ onComplete, onClose }: OnboardingFlowProps) {
                 <Heart className="w-10 h-10 text-brand-primary" />
               </div>
               <h3 className="text-xl font-semibold mb-4">
-                Welcome to your personalized wellness journey
+                Welcome to your professional development journey
               </h3>
               <p className="text-gray-600 mb-6">
                 We'll ask a few quick questions to customize InterpretReflect for your unique needs as an interpreter. 
-                This will help us provide the most relevant tools and insights for your wellness journey.
+                This will help us provide the most relevant tools and insights to optimize your professional performance.
               </p>
               <div className="grid grid-cols-2 gap-4 text-sm">
                 <div className="flex items-center space-x-2">
@@ -302,7 +302,7 @@ export function OnboardingFlow({ onComplete, onClose }: OnboardingFlowProps) {
 
           {currentStep === 2 && (
             <div>
-              <h3 className="font-semibold mb-4">What challenges would you like support with? (Select all that apply)</h3>
+              <h3 className="font-semibold mb-4">What performance challenges would you like to address? (Select all that apply)</h3>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                 {challenges.map(challenge => (
                   <button
@@ -334,7 +334,7 @@ export function OnboardingFlow({ onComplete, onClose }: OnboardingFlowProps) {
 
           {currentStep === 3 && (
             <div>
-              <h3 className="font-semibold mb-4">What are your wellness goals? (Select all that apply)</h3>
+              <h3 className="font-semibold mb-4">What are your professional development goals? (Select all that apply)</h3>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                 {goals.map(goal => (
                   <button
@@ -368,7 +368,7 @@ export function OnboardingFlow({ onComplete, onClose }: OnboardingFlowProps) {
           {currentStep === 4 && (
             <div className="space-y-6">
               <div>
-                <h3 className="font-semibold mb-4">How long do you prefer your wellness sessions?</h3>
+                <h3 className="font-semibold mb-4">How long do you prefer your reflection sessions?</h3>
                 <div className="space-y-3">
                   {sessionLengths.map(length => (
                     <button
@@ -451,16 +451,16 @@ export function OnboardingFlow({ onComplete, onClose }: OnboardingFlowProps) {
                 Your personalized plan is ready!
               </h3>
               <p className="text-gray-600 mb-6">
-                Based on your responses, we've customized InterpretReflect to support your unique needs. 
+                Based on your responses, we've customized InterpretReflect to support your professional performance optimization. 
                 You can always update these preferences in your profile settings.
               </p>
               <div className="bg-gray-50 rounded-lg p-4 mb-6">
-                <h4 className="font-semibold mb-2">Your personalized experience includes:</h4>
+                <h4 className="font-semibold mb-2">Your personalized performance optimization includes:</h4>
                 <ul className="text-sm text-gray-600 space-y-1">
-                  <li>• {profile.preferred_session_length}-minute wellness sessions</li>
-                  <li>• Tools focused on {profile.primary_challenges.length} key challenge areas</li>
+                  <li>• {profile.preferred_session_length}-minute reflection sessions</li>
+                  <li>• Tools focused on {profile.primary_challenges.length} key performance areas</li>
                   <li>• Resources for {profile.interpreter_type.replace('_', ' ')} interpreters</li>
-                  <li>• Progress tracking toward {profile.wellness_goals.length} wellness goals</li>
+                  <li>• Progress tracking toward {profile.wellness_goals.length} professional goals</li>
                 </ul>
               </div>
             </div>

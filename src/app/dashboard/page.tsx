@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState, Suspense } from 'react';
+import { useEffect, useState, Suspense, useCallback, useMemo } from 'react';
 import { useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import {
@@ -28,18 +28,9 @@ function DashboardContent() {
   const [recentReflections, setRecentReflections] = useState(0);
   const [loading, setLoading] = useState(true);
   const [userProfile, setUserProfile] = useState<any>(null);
-  const supabase = createClient();
+  const supabase = useMemo(() => createClient(), []); // Memoize Supabase client
 
-  useEffect(() => {
-    if (user) {
-      loadDashboardData();
-    } else if (!authLoading) {
-      // If not loading and no user, stop loading state
-      setLoading(false);
-    }
-  }, [user, authLoading]);
-
-  const loadDashboardData = async () => {
+  const loadDashboardData = useCallback(async () => {
     try {
       // Load user profile - gracefully handle if table doesn't exist
       try {
@@ -79,7 +70,16 @@ function DashboardContent() {
       // Always set loading to false, even if data fetch fails
       setLoading(false);
     }
-  };
+  }, [user?.id, supabase]); // Add dependencies
+
+  useEffect(() => {
+    if (user) {
+      loadDashboardData();
+    } else if (!authLoading) {
+      // If not loading and no user, stop loading state
+      setLoading(false);
+    }
+  }, [user, authLoading, loadDashboardData]);
 
   if (authLoading || loading) {
     return (

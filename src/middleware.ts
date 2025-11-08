@@ -31,15 +31,17 @@ export async function middleware(request: NextRequest) {
   // supabase.auth.getUser(). A simple mistake could make it very hard to debug
   // issues with users being randomly logged out.
 
+  // PERFORMANCE OPTIMIZATION: Use getSession() instead of getUser() for faster checks
+  // getSession() reads from cookies only (fast), while getUser() validates with Supabase (slow)
   const {
-    data: { user },
-  } = await supabase.auth.getUser()
+    data: { session },
+  } = await supabase.auth.getSession()
 
   // Protected routes
   const protectedPaths = ['/dashboard', '/reflections', '/settings', '/ceu-bundles']
   const isProtectedPath = protectedPaths.some(path => request.nextUrl.pathname.startsWith(path))
 
-  if (!user && isProtectedPath) {
+  if (!session && isProtectedPath) {
     // Redirect to login if user is not authenticated
     const url = request.nextUrl.clone()
     url.pathname = '/login'
@@ -51,7 +53,7 @@ export async function middleware(request: NextRequest) {
   const authPaths = ['/login', '/signup']
   const isAuthPath = authPaths.some(path => request.nextUrl.pathname.startsWith(path))
 
-  if (user && isAuthPath) {
+  if (session && isAuthPath) {
     const url = request.nextUrl.clone()
     url.pathname = '/dashboard'
     return NextResponse.redirect(url)

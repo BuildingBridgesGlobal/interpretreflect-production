@@ -192,7 +192,7 @@ export default function HomePage() {
                 ))}
               </div>
               <p className="text-xl text-brand-gray-700 mb-8 italic font-body leading-relaxed">
-                "As the creator of the ECCI framework, I've seen firsthand how quantifying cognitive load helps interpreters prevent burnout and optimize their practice. InterpretReflect makes this research accessible to every interpreting professional, giving you the tools to understand your unique performance patterns and build sustainable capacity."
+                "As the creator of the ECCI framework, I've seen firsthand how quantifying cognitive load helps interpreters maintain peak performance and optimize their practice. InterpretReflect makes this research accessible to every interpreting professional, giving you the tools to understand your unique performance patterns and build sustainable capacity."
               </p>
               <div className="flex items-center gap-4">
                 <div className="w-16 h-16 bg-brand-primary-light rounded-full flex items-center justify-center">
@@ -321,7 +321,7 @@ export default function HomePage() {
             <Step
               number="2"
               title="Track Performance Metrics"
-              description="Daily performance logging: BREATHE protocol, post-assignment analysis, capacity monitoring, all included in platform access."
+              description="Daily performance logging: baseline checks, post-assignment analysis, capacity monitoring, all included in platform access."
             />
             <Step
               number="3"

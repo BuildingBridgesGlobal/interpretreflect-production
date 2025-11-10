@@ -191,10 +191,10 @@ export class AuditLogger {
 				filtered = filtered.filter((log) => log.userId === filter.userId);
 			}
 			if (filter.startDate) {
-				filtered = filtered.filter((log) => log.timestamp >= filter.startDate);
+				filtered = filtered.filter((log) => filter.startDate && log.timestamp >= filter.startDate);
 			}
 			if (filter.endDate) {
-				filtered = filtered.filter((log) => log.timestamp <= filter.endDate);
+				filtered = filtered.filter((log) => filter.endDate && log.timestamp <= filter.endDate);
 			}
 		}
 

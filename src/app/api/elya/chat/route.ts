@@ -110,7 +110,7 @@ export async function POST(request: NextRequest) {
       max_tokens: 1024,
       system: ELYA_SYSTEM_PROMPT,
       messages: messages.map((m: { role: string; content: string }) => ({
-        role: m.role,
+        role: m.role as 'user' | 'assistant',
         content: m.content
       }))
     });

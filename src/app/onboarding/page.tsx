@@ -371,7 +371,7 @@ function Step2PerformanceGoals({
                   : 'border-brand-gray-200 opacity-50 cursor-not-allowed text-brand-charcoal'
               }`}
             >
-              <goal.icon className={`w-5 h-5 mb-2 ${isSelected ? 'text-brand-electric' : 'text-brand-primary'}`} />
+              <div className="text-2xl mb-2">{goal.icon}</div>
               <div className="font-medium text-sm">{goal.label}</div>
             </button>
           );

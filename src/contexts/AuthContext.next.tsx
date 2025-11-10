@@ -95,8 +95,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
 				}
 
 				// CRITICAL FIX: Add timeout but don't reject - just log and continue
-				let session = null;
-				let sessionError = null;
+				let session: any = null;
+				let sessionError: any = null;
 
 				const timeoutPromise = new Promise<void>((resolve) => {
 					setTimeout(() => {
@@ -113,7 +113,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
 				await Promise.race([sessionPromise, timeoutPromise]);
 
 				if (sessionError) {
-					if (sessionError.name !== "AuthSessionMissingError") {
+					if ((sessionError as any).name !== "AuthSessionMissingError") {
 						console.error("Error getting session:", sessionError);
 					}
 					console.log("AuthContext: Setting loading to false");
@@ -214,7 +214,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
 					console.log("Auth state changed:", event, session?.user?.email);
 
 					if (event === "SIGNED_OUT" && !session) {
-						const wasManualLogout = sessionManager.getSessionData()?.reason === "LOGOUT";
+						const wasManualLogout = (sessionManager as any).getSessionData?.()?.reason === "LOGOUT";
 						if (!wasManualLogout) {
 							window.dispatchEvent(new CustomEvent("sessionExpired"));
 						}
@@ -460,7 +460,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
 				throw error;
 			}
 
-			return { user: data.session?.user || null, error: null };
+			return { user: (data as any).session?.user || null, error: null };
 		} catch (error) {
 			return { user: null, error: error as AuthError };
 		}
@@ -530,9 +530,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
 			}
 		};
 
-		window.addEventListener("sessionEnd", handleSessionEnd as EventListener);
+		window.addEventListener("sessionEnd", handleSessionEnd as any);
 		return () => {
-			window.removeEventListener("sessionEnd", handleSessionEnd as EventListener);
+			window.removeEventListener("sessionEnd", handleSessionEnd as any);
 		};
 	}, []);
 

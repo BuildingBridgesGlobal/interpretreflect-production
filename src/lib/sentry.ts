@@ -5,8 +5,8 @@ import * as Sentry from "@sentry/react";
  * Only initializes in production environment with valid DSN
  */
 export const initSentry = () => {
-  const dsn = import.meta.env.VITE_SENTRY_DSN;
-  const environment = import.meta.env.MODE;
+  const dsn = process.env.NEXT_PUBLIC_SENTRY_DSN;
+  const environment = process.env.NODE_ENV;
 
   // Only initialize if DSN is provided
   if (!dsn) {
@@ -39,7 +39,7 @@ export const initSentry = () => {
     // Send user feedback on errors
     beforeSend(event, hint) {
       // Don't send events in development unless explicitly enabled
-      if (environment === "development" && !import.meta.env.VITE_SENTRY_DEBUG) {
+      if (environment === "development" && !process.env.NEXT_PUBLIC_SENTRY_DEBUG) {
         return null;
       }
 

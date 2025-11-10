@@ -283,14 +283,7 @@ function DashboardContent() {
         </div>
 
         {/* Quick Actions */}
-        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-          <QuickAction
-            icon={<Activity className="w-8 h-8" />}
-            title="BREATHE Protocol"
-            description="2-min recovery cycle"
-            href="/reflections/breathe"
-            color="bg-brand-coral-light text-brand-coral"
-          />
+        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
           <QuickAction
             icon={<Brain className="w-8 h-8" />}
             title="Catalyst"
@@ -432,9 +425,6 @@ function QuickAction({ icon, title, description, href, color }: {
   return (
     <Link href={href} className="block">
       <div className="bg-white rounded-data shadow-card p-6 hover:shadow-card-hover transition-all h-full border border-brand-gray-200 hover:border-brand-electric">
-        <div className={`w-14 h-14 ${color} rounded-lg flex items-center justify-center mb-4`}>
-          {icon}
-        </div>
         <h3 className="font-bold text-brand-charcoal mb-1 font-sans">{title}</h3>
         <p className="text-sm text-brand-gray-600 font-body">{description}</p>
       </div>

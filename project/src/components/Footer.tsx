@@ -14,6 +14,9 @@ export const Footer: React.FC = () => {
 						<p className="text-sm text-gray-600">
 							The wellness platform for interpreters
 						</p>
+						<p className="mt-3 inline-flex items-center text-sm font-semibold text-green-800 bg-green-100 px-3 py-1 rounded-full">
+							RID Approved Sponsor #2309 | Building Bridges Global, LLC
+						</p>
 					</div>
 
 					<div>

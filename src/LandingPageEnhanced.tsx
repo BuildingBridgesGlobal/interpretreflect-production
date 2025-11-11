@@ -51,7 +51,6 @@ const colors = {
 };
 
 function LandingPageEnhanced({ onGetStarted }: LandingPageProps) {
-	console.log("LandingPageEnhanced: Rendering component");
 	const navigate = useNavigate();
 	const { user } = useAuth();
 	const [authModalOpen, setAuthModalOpen] = useState(false);
@@ -62,8 +61,116 @@ function LandingPageEnhanced({ onGetStarted }: LandingPageProps) {
 		"professional",
 	);
 	const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-	console.log("LandingPageEnhanced: State initialized");
 	const [announceMessage, setAnnounceMessage] = useState("");
+
+	const heroHighlights = [
+		"Science-backed assessments",
+		"RID Sponsor #2309",
+		"5.0+ CEUs available",
+	];
+
+	const statsBarItems = [
+		{ label: "16 RESEARCH FRAMEWORKS" },
+		{ label: "5.0+ CEUS AVAILABLE" },
+		{ label: "24/7 AI PERFORMANCE SUPPORT" },
+	];
+
+	const performanceCards = [
+		{
+			title: "Your Performance Foundation: The ECCI™ Framework",
+			description:
+				"Our proprietary ECCI™ Framework (Emotional & Cultural Competencies for Interpreters) uses 16 research-backed methods to measure how your brain handles cognitive load, cultural processing, and performance growth.",
+		},
+		{
+			title: "Catalyst: Your AI Performance Partner",
+			description:
+				"Get personalized recommendations 24/7. Catalyst analyzes your cognitive patterns and suggests practical strategies to optimize your capacity. Built on the ECCI™ framework. Your data is 100% private.",
+		},
+		{
+			title: "RID-Approved Certification",
+			description:
+				"Earn RID-approved CEUs across multiple categories through Building Bridges Global, LLC (Sponsor #2309), including the new 'Studies of Healthy Minds & Bodies' category—active now.",
+		},
+	];
+
+	const audienceSegments = [
+		{
+			title: "Sign Language Interpreters",
+			description:
+				"Trusted support for community, VRS/VRI, and educational interpreters who need actionable insights between high-stakes assignments.",
+		},
+		{
+			title: "Spoken Language Interpreters",
+			description:
+				"From medical and legal to diplomatic settings, get guidance tailored to multilingual, multicultural environments without losing neutrality.",
+		},
+		{
+			title: "Remote & Hybrid Teams",
+			description:
+				"Proactive strategies for video, remote, and hybrid work that protect focus, manage screen fatigue, and keep distributed teams aligned.",
+		},
+	];
+
+	const testimonials = [
+		{
+			quote:
+				"InterpretReflect turned the ECCI insights into daily decisions I actually use. I can see when my cognitive load spikes and Catalyst nudges me before burnout sets in.",
+			name: "Jordan Lee, NIC Advanced",
+			role: "Staff Medical Interpreter",
+		},
+		{
+			quote:
+				"We built ECCI so interpreters can anchor their practice in neuroscience and cultural research—not guesswork. Seeing agencies adopt it as their standard proves interpreters deserve this level of support.",
+			name: "Sarah Wheeler, M.A.",
+			role: "Founder, InterpretReflect & Creator of the ECCI™ Framework",
+		},
+	];
+
+	const frameworkHighlights = [
+		{
+			title: "Cognitive Load Intelligence",
+			description:
+				"Maps working memory strain, mental stamina, and decision velocity so you can schedule recovery before performance dips.",
+		},
+		{
+			title: "Cultural & Context Readiness",
+			description:
+				"Flags cultural pattern recognition strengths and gaps, guiding preparation for nuanced assignments and communities.",
+		},
+		{
+			title: "Emotional Regulation Insights",
+			description:
+				"Surfaces emotional labor indicators and recommends neuroscience-backed resets that keep you composed in critical moments.",
+		},
+		{
+			title: "Capacity Growth Roadmaps",
+			description:
+				"Transforms ECCI metrics into personalized development plans so you can expand workload sustainably and document growth.",
+		},
+	];
+
+	const protocolSteps = [
+		{
+			title: "Establish Performance Baseline",
+			description: "Take a 15-minute assessment. Get your personalized performance profile with specific metrics.",
+		},
+		{
+			title: "Track Performance Metrics",
+			description:
+				"Log your daily performance: baseline checks, post-assignment reflections, and capacity tracking—all included in your platform access.",
+		},
+		{
+			title: "Earn Professional Credits",
+			description: "Purchase CEU bundles to certify your professional development while building sustainable practice habits.",
+		},
+	];
+
+	const dataStats = [
+		{ figure: "24%", label: "meet clinical burnout criteria" },
+		{ figure: "41.5%", label: "have experienced vicarious trauma" },
+		{ figure: "57.5%", label: "report imposter syndrome" },
+		{ figure: "50%", label: "struggle with boundary management" },
+	];
 
 	const handleLogin = () => {
 		setAuthMode("signin");
@@ -106,8 +213,8 @@ function LandingPageEnhanced({ onGetStarted }: LandingPageProps) {
 					className="inline-block px-4 py-2 mr-2 text-white rounded-lg focus:ring-4 focus:outline-none"
 					style={
 						{
-							backgroundColor: colors.primary.teal,
-							"--tw-ring-color": "rgba(20, 184, 166, 0.4)",
+							backgroundColor: colors.primary.green,
+							"--tw-ring-color": "rgba(92, 127, 79, 0.35)",
 						} as React.CSSProperties
 					}
 				>
@@ -118,8 +225,8 @@ function LandingPageEnhanced({ onGetStarted }: LandingPageProps) {
 					className="inline-block px-4 py-2 mr-2 text-white rounded-lg focus:ring-4 focus:outline-none"
 					style={
 						{
-							backgroundColor: colors.primary.teal,
-							"--tw-ring-color": "rgba(20, 184, 166, 0.4)",
+							backgroundColor: colors.primary.green,
+							"--tw-ring-color": "rgba(92, 127, 79, 0.35)",
 						} as React.CSSProperties
 					}
 				>
@@ -130,8 +237,8 @@ function LandingPageEnhanced({ onGetStarted }: LandingPageProps) {
 					className="inline-block px-4 py-2 text-white rounded-lg focus:ring-4 focus:outline-none"
 					style={
 						{
-							backgroundColor: colors.primary.teal,
-							"--tw-ring-color": "rgba(20, 184, 166, 0.4)",
+							backgroundColor: colors.primary.green,
+							"--tw-ring-color": "rgba(92, 127, 79, 0.35)",
 						} as React.CSSProperties
 					}
 				>
@@ -160,7 +267,7 @@ function LandingPageEnhanced({ onGetStarted }: LandingPageProps) {
 						{/* Desktop Navigation - Clean Modern Pills */}
 						<div className="hidden md:flex items-center gap-4">
 							<button
-								onClick={() => scrollToSection("how-it-works")}
+								onClick={() => scrollToSection("protocol")}
 								className="px-5 py-2.5 text-sm font-semibold rounded-lg border-2 transition-all focus:outline-none focus:ring-2 focus:ring-offset-2 hover:opacity-90"
 								style={{ borderColor: "#5C7F4F", color: "#5C7F4F", backgroundColor: "transparent" }}
 								aria-label="Learn how interpreterRx works"
@@ -185,7 +292,7 @@ function LandingPageEnhanced({ onGetStarted }: LandingPageProps) {
 										style={{ backgroundColor: "#5C7F4F" }}
 										aria-label="Sign up for account"
 									>
-										Get Started →
+										Start Assessment →
 									</button>
 									<button
 										onClick={handleLogin}
@@ -244,7 +351,7 @@ function LandingPageEnhanced({ onGetStarted }: LandingPageProps) {
 						<div className="px-4 py-4 space-y-2">
 							<button
 								onClick={() => {
-									scrollToSection("how-it-works");
+									scrollToSection("protocol");
 									setMobileMenuOpen(false);
 								}}
 								className="block w-full py-3 text-center text-sm font-semibold text-white rounded-full"
@@ -272,7 +379,7 @@ function LandingPageEnhanced({ onGetStarted }: LandingPageProps) {
 										className="block w-full py-3 text-center text-sm font-semibold text-white rounded-full"
 										style={{ backgroundColor: "#5C7F4F" }}
 									>
-										Get Started
+										Start Assessment
 									</button>
 									<button
 										onClick={handleLogin}
@@ -297,436 +404,124 @@ function LandingPageEnhanced({ onGetStarted }: LandingPageProps) {
 			</nav>
 
 			<main id="main" role="main" aria-label="Main content">
-				{/* Enhanced Hero Section with better visual hierarchy */}
-				<section className="relative py-20 px-4" aria-labelledby="hero-heading" style={{ backgroundColor: "#F5F0E8", borderBottom: "1px solid rgba(0, 0, 0, 0.08)" }}>
-					<div className="container mx-auto max-w-6xl">
-						{/* Main headline with emphasis on wellness */}
-						<div className="text-center mb-12">
-							<h1
-							id="hero-heading"
-							className="text-4xl sm:text-5xl lg:text-6xl font-bold mb-8 leading-tight"
-							style={{ color: colors.neutral[900] }}
-							>
-							Interpreter Burnout is at{" "}
-							<span style={{ color: "#DC2626" }}>24%</span>
-							</h1>
-							<h2
-							className="text-2xl sm:text-3xl font-semibold mb-6 max-w-3xl mx-auto"
-							style={{ color: colors.neutral[800] }}
-							>
-							You don't have to be part of that statistic.
-							</h2>
-							<p
-							className="text-lg sm:text-xl max-w-3xl mx-auto mb-8 leading-relaxed"
-							style={{ color: colors.neutral[600] }}
-							>
-							The only wellness platform built specifically for interpreters. Evidence-based tools to process trauma, strengthen boundaries, and build confidence for sustainable careers.
-							</p>
-						</div>
-
-						{/* Primary CTA - Get Started */}
-						<div className="flex flex-col items-center gap-4 mb-16">
-							<button
-								onClick={() => {
-									console.log("Get Started clicked");
-									navigate("/signup");
-								}}
-								className="group px-10 py-5 text-white font-bold rounded-xl transition-all transform hover:scale-105 hover:shadow-2xl focus:outline-none focus:ring-4 focus:ring-offset-2 relative overflow-hidden"
-								style={{
-									background: colors.gradients.green,
-									fontSize: "1.25rem",
-									color: "white",
-								}}
-								aria-label="Get started with InterpretReflect"
-							>
-								<span className="relative z-10">Get Started</span>
-							</button>
-						</div>
-
-						{/* Diverse interpreter illustrations/representation */}
-						<div
-							className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-16"
-							role="region"
-							aria-label="Professional specialization options"
-						>
-							{/* Sign Language Interpreter */}
-							<article
-								className="p-6 rounded-2xl bg-white shadow-lg hover:shadow-xl transition-all focus-within:ring-4"
-								tabIndex={0}
-								aria-label="Sign language interpreter resources"
-								style={
-									{
-										"--tw-ring-color": "rgba(45, 95, 63, 0.4)",
-									} as React.CSSProperties
-								}
-							>
-								<div className="mb-4">
-									<h3
-										className="font-semibold text-lg"
-										style={{ color: colors.neutral[800] }}
-									>
-										Sign Language
-									</h3>
-								</div>
-								<p
-									className="text-base"
-									style={{ color: colors.neutral[600], lineHeight: "1.6" }}
-								>
-									Protect your career longevity with wellness tools designed specifically for the unique demands of sign language interpreting
-								</p>
-							</article>
-
-							{/* Spoken Language Interpreter */}
-							<article
-								className="p-6 rounded-2xl bg-white shadow-lg hover:shadow-xl transition-all focus-within:ring-4"
-								tabIndex={0}
-								aria-label="Spoken language interpreter resources"
-								style={
-									{
-										"--tw-ring-color": "rgba(45, 95, 63, 0.4)",
-									} as React.CSSProperties
-								}
-							>
-								<div className="mb-4">
-									<h3
-										className="font-semibold text-lg"
-										style={{ color: colors.neutral[800] }}
-									>
-										Spoken Language
-									</h3>
-								</div>
-								<p
-									className="text-base"
-									style={{ color: colors.neutral[600], lineHeight: "1.6" }}
-								>
-									Stay sharp and resilient across all settings, from high-stakes medical and legal work to community interpreting, no matter your language pair
-								</p>
-							</article>
-
-							{/* Conference/Remote Interpreter */}
-							<article
-								className="p-6 rounded-2xl bg-white shadow-lg hover:shadow-xl transition-all focus-within:ring-4"
-								tabIndex={0}
-								aria-label="Remote and hybrid interpreter resources"
-								style={
-									{
-										"--tw-ring-color": "rgba(45, 95, 63, 0.4)",
-									} as React.CSSProperties
-								}
-							>
-								<div className="mb-4">
-									<h3
-										className="font-semibold text-lg"
-										style={{ color: colors.neutral[800] }}
-									>
-										Remote & Hybrid
-									</h3>
-								</div>
-								<p
-									className="text-base"
-									style={{ color: colors.neutral[600], lineHeight: "1.6" }}
-								>
-									Combat screen fatigue and isolation with proven strategies that keep remote and VRI interpreters thriving, not just surviving
-								</p>
-							</article>
-
-							{/* High-Stress Professions */}
-							<article
-								className="p-6 rounded-2xl bg-white shadow-lg hover:shadow-xl transition-all focus-within:ring-4"
-								tabIndex={0}
-								aria-label="High-stress professions resources"
-								style={
-									{
-										"--tw-ring-color": "rgba(45, 95, 63, 0.4)",
-									} as React.CSSProperties
-								}
-							>
-								<div className="mb-4">
-									<h3
-										className="font-semibold text-lg"
-										style={{ color: colors.neutral[800] }}
-									>
-										High-Stress Situations
-									</h3>
-								</div>
-								<p
-									className="text-base"
-									style={{ color: colors.neutral[600], lineHeight: "1.6" }}
-								>
-									Wellness tools for interpreters navigating medical emergencies, legal proceedings, crisis interventions, and high-stakes negotiations
-								</p>
-							</article>
-						</div>
-
-						{/* Trust badges with microinteractions */}
-						<div
-							className="flex flex-wrap justify-center items-center gap-8 py-8"
-							role="list"
-							aria-label="Trust and security features"
-						>
-							<div
-								className="opacity-80 hover:opacity-100 transition-opacity"
-								role="listitem"
-							>
-								<span
-									className="text-base font-medium"
-									style={{ color: colors.neutral[700] }}
-								>
-									Trauma-Informed Design
-								</span>
-							</div>
-							<div
-								className="opacity-80 hover:opacity-100 transition-opacity"
-								role="listitem"
-							>
-								<span
-									className="text-base font-medium"
-									style={{ color: colors.neutral[700] }}
-								>
-									Privacy-First
-								</span>
-							</div>
-							<div
-								className="opacity-80 hover:opacity-100 transition-opacity"
-								role="listitem"
-							>
-								<span
-									className="text-base font-medium"
-									style={{ color: colors.neutral[700] }}
-								>
-									Research-Backed
-								</span>
-							</div>
-						</div>
-					</div>
-				</section>
-
-				{/* Modern Problems Section - NEW */}
 				<section
-					id="how-it-works"
-					className="py-20 px-4"
-					style={{ backgroundColor: "#E8F3E5", borderBottom: "1px solid rgba(0, 0, 0, 0.08)" }}
-				>
-					<div className="container mx-auto max-w-6xl">
-						<div className="text-center mb-12">
-							<span
-								className="text-sm font-bold px-4 py-2 rounded-full inline-block mb-4"
-								style={{
-									backgroundColor: colors.status.warning + "40",
-									color: colors.neutral[900],
-								}}
-							>
-								MODERN PROBLEMS, EVIDENCE-BASED SOLUTIONS
-							</span>
-							<h2
-								className="text-3xl sm:text-4xl font-bold mb-4"
-								style={{ color: colors.neutral[900] }}
-							>
-								The Challenges Only You Understand
-							</h2>
-							<p
-								className="text-lg max-w-3xl mx-auto"
-								style={{ color: colors.neutral[600] }}
-							>
-								These aren't personal failings. They're documented, measurable responses to the cognitive and emotional demands of your work.
-							</p>
-						</div>
-
-						<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-							{/* Vicarious Trauma */}
-							<div className="p-6 rounded-2xl border-2 border-gray-200 bg-gray-50 hover:shadow-xl transition-all">
-								<h3
-									className="text-xl font-bold mb-2"
-									style={{ color: colors.neutral[800] }}
-								>
-									Vicarious Trauma
-								</h3>
-								<p className="text-xs font-semibold mb-2" style={{ color: colors.primary.sage }}>
-									41.5% of interpreters report experiencing vicarious trauma over their careers.
-								</p>
-								<p
-									className="text-sm mb-4"
-									style={{ color: colors.neutral[600] }}
-								>
-									When you facilitate communication during a medical diagnosis, legal interrogation, or family crisis, your nervous system processes that content as if it's happening to you. This isn't weakness. It's neurobiology.
-								</p>
-							</div>
-
-							{/* Imposter Syndrome */}
-							<div className="p-6 rounded-2xl border-2 border-gray-200 bg-gray-50 hover:shadow-xl transition-all">
-								<h3
-									className="text-xl font-bold mb-2"
-									style={{ color: colors.neutral[800] }}
-								>
-									Imposter Syndrome
-								</h3>
-								<p className="text-xs font-semibold mb-2" style={{ color: colors.primary.sage }}>
-									57.5% of interpreters experience imposter syndrome.
-								</p>
-								<p
-									className="text-sm mb-4"
-									style={{ color: colors.neutral[600] }}
-								>
-									High-performing professionals in cognitively demanding fields experience imposter syndrome at elevated rates. You're certified. You're competent. Your brain is simply overweighting mistakes and underweighting successes.
-								</p>
-							</div>
-
-							{/* Professional Boundaries */}
-							<div className="p-6 rounded-2xl border-2 border-gray-200 bg-gray-50 hover:shadow-xl transition-all">
-								<h3
-									className="text-xl font-bold mb-2"
-									style={{ color: colors.neutral[800] }}
-								>
-									Boundary Management
-								</h3>
-								<p className="text-xs font-semibold mb-2" style={{ color: colors.primary.sage }}>
-									50% of interpreters report difficulty maintaining professional boundaries.
-								</p>
-								<p
-									className="text-sm mb-4"
-									style={{ color: colors.neutral[600] }}
-								>
-									One moment: neutral conduit. Next moment: someone's in crisis and every instinct says to help beyond your role. This constant code-switching creates documented stress on executive function.
-								</p>
-							</div>
-
-							{/* Technology Stress */}
-							<div className="p-6 rounded-2xl border-2 border-gray-200 bg-gray-50 hover:shadow-xl transition-all">
-								<h3
-									className="text-xl font-bold mb-2"
-									style={{ color: colors.neutral[800] }}
-								>
-									Technology-Mediated Fatigue
-								</h3>
-								<p className="text-xs font-semibold mb-2" style={{ color: colors.primary.sage }}>
-									Screen-based interpretation creates unique physiological and psychological stressors.
-								</p>
-								<p
-									className="text-sm mb-4"
-									style={{ color: colors.neutral[600] }}
-								>
-									Remote platforms introduce: reduced visual field, delayed feedback loops, tech-induced cognitive load, professional isolation, and ergonomic challenges that compound over multiple sessions.
-								</p>
-							</div>
-						</div>
-
-						{/* Statistics Bar */}
-						<div
-							className="mt-12 p-8 rounded-2xl"
-							style={{ background: "#5C7F4F" }}
-						>
-							<div className="text-center mb-6">
-								<h3 className="text-2xl font-bold text-white mb-2">THE RESEARCH IS CLEAR</h3>
-								<p className="text-sm text-white/90 italic">Recent national studies (2025) of interpreters show:</p>
-							</div>
-							<div className="grid grid-cols-2 md:grid-cols-4 gap-6 text-center text-white mb-6">
-								<div>
-									<div className="text-4xl font-bold">24%</div>
-									<div className="text-sm opacity-90">meet clinical burnout criteria</div>
-								</div>
-								<div>
-									<div className="text-4xl font-bold">41.5%</div>
-									<div className="text-sm opacity-90">
-										have experienced vicarious trauma
-									</div>
-								</div>
-								<div>
-									<div className="text-4xl font-bold">57.5%</div>
-									<div className="text-sm opacity-90">
-										report imposter syndrome
-									</div>
-								</div>
-								<div>
-									<div className="text-4xl font-bold">50%</div>
-									<div className="text-sm opacity-90">
-										struggle with boundary management
-									</div>
-								</div>
-							</div>
-							<div className="text-center">
-								<p className="text-sm text-white/90 italic">These numbers reflect systemic challenges, not personal inadequacy. Your work demands specialized support.</p>
-							</div>
-						</div>
-					</div>
-				</section>
-
-				{/* Features Section with better visual organization */}
-				<section
-					className="py-20 px-4"
-					aria-labelledby="features-heading"
+					id="hero-section"
+					className="relative py-20 px-4"
+					aria-labelledby="hero-heading"
 					style={{ backgroundColor: "#F5F0E8", borderBottom: "1px solid rgba(0, 0, 0, 0.08)" }}
 				>
+					<div className="container mx-auto max-w-5xl text-center">
+						<span
+							className="inline-flex items-center justify-center px-5 py-2 mb-6 rounded-full text-sm font-semibold tracking-wide"
+							style={{
+								backgroundColor: "rgba(92, 127, 79, 0.12)",
+								color: colors.primary.green,
+								border: "1px solid rgba(92, 127, 79, 0.35)",
+							}}
+						>
+							Trusted by Interpreters Nationwide
+						</span>
+						<h1
+							id="hero-heading"
+							className="text-4xl sm:text-5xl lg:text-6xl font-bold mb-6 leading-tight"
+							style={{ color: colors.neutral[900] }}
+						>
+							Perform at Your Peak. Every Assignment.
+						</h1>
+						<p
+							className="text-lg sm:text-xl max-w-3xl mx-auto mb-8 leading-relaxed"
+							style={{ color: colors.neutral[700] }}
+						>
+							Stop guessing about your performance. Get AI-powered insights backed by neuroscience to manage cognitive load, prevent burnout, and grow your capacity—with RID-approved CEUs included.
+						</p>
+						<ul className="flex flex-wrap items-center justify-center gap-3 sm:gap-4 mb-10">
+							{heroHighlights.map((item) => (
+								<li
+									key={item}
+									className="px-4 py-2 rounded-full text-sm font-semibold"
+									style={{
+										backgroundColor: "rgba(92, 127, 79, 0.1)",
+										color: colors.primary.green,
+									}}
+								>
+									{item}
+								</li>
+							))}
+						</ul>
+						<div className="flex flex-col sm:flex-row items-center justify-center gap-4">
+							<button
+								onClick={() => {
+									onGetStarted();
+									navigate("/signup");
+								}}
+								className="px-10 py-4 text-white font-semibold rounded-xl shadow-lg hover:shadow-xl transition-transform transform hover:scale-105 focus:outline-none focus:ring-4 focus:ring-offset-2"
+								style={{ background: colors.gradients.green }}
+								aria-label="Start your performance assessment"
+							>
+								Start Your Performance Assessment
+							</button>
+							<button
+								onClick={() => scrollToSection("ecci-framework")}
+								className="px-8 py-4 font-semibold rounded-xl transition-all focus:outline-none focus:ring-4 focus:ring-offset-2"
+								style={{
+									backgroundColor: "white",
+									color: colors.primary.green,
+									border: `2px solid ${colors.primary.green}`,
+								}}
+								aria-label="Learn more about the ECCI Framework"
+							>
+								Explore the ECCI™ Framework
+							</button>
+						</div>
+					</div>
+				</section>
+
+				<section
+					id="stats-bar"
+					className="py-10 px-4"
+					style={{ background: colors.primary.green }}
+					aria-label="Platform impact metrics"
+				>
+					<div className="container mx-auto max-w-5xl">
+						<div className="grid grid-cols-1 md:grid-cols-3 gap-6 text-center">
+							{statsBarItems.map((item) => (
+								<div
+									key={item.label}
+									className="py-4 px-6 rounded-xl border border-white/20 bg-white/5 backdrop-blur text-white font-semibold tracking-widest text-sm uppercase"
+								>
+									{item.label}
+								</div>
+							))}
+						</div>
+					</div>
+				</section>
+
+				<section
+					id="performance-suite"
+					className="py-20 px-4"
+					style={{ backgroundColor: "#FFFFFF", borderBottom: "1px solid rgba(0, 0, 0, 0.05)" }}
+				>
 					<div className="container mx-auto max-w-6xl">
 						<div className="text-center mb-12">
-						<h2
-						id="features-heading"
-						className="text-3xl sm:text-4xl font-bold mb-4"
-						style={{ color: colors.neutral[900] }}
-						>
-						Your Optimization Toolkit
-						</h2>
-						<p
-						className="text-lg max-w-2xl mx-auto"
-						style={{ color: colors.neutral[700], lineHeight: "1.6" }}
-						>
-						Protocols Built on Peer-Reviewed Research
-						</p>
+							<h2 className="text-3xl sm:text-4xl font-bold mb-4" style={{ color: colors.neutral[900] }}>
+								Everything You Need to Optimize Performance
+							</h2>
+							<p className="text-lg max-w-3xl mx-auto" style={{ color: colors.neutral[600] }}>
+								A complete, neuroscience-backed system that turns the proprietary ECCI™ Framework into daily decisions for interpreters and the organizations who rely on them.
+							</p>
 						</div>
-
-						<div
-							className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto"
-							role="list"
-						>
-							{/* Feature cards with hover effects */}
-							{[
-								{
-									title: "Stress Reset Protocols",
-									description:
-										"Immediate nervous system regulation techniques for between assignments. Based on polyvagal theory and performance psychology research.",
-									color: "#5C7F4F",
-								},
-								{
-									title: "AI Wellness Coach",
-									description:
-										"Personalized support trained on interpreter-specific challenges and evidence-based interventions. Not generic advice.",
-									color: "#5C7F4F",
-								},
-								{
-									title: "Reflection Studio",
-									description:
-										"Structured processing protocols for vicarious trauma and challenging assignments. Create psychological closure at the end of difficult work.",
-									color: "#5C7F4F",
-								},
-								{
-									title: "Pattern Recognition",
-									description:
-										"Track your data over time. Identify what supports your performance and what depletes you. Make informed decisions about your practice.",
-									color: "#5C7F4F",
-								},
-							].map((feature, index) => (
+						<div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+							{performanceCards.map((card) => (
 								<article
-									key={index}
-									className="group p-6 bg-white rounded-2xl shadow-sm hover:shadow-xl transition-all transform hover:-translate-y-1 focus-within:ring-4"
-									style={
-										{
-											"--tw-ring-color": "rgba(45, 95, 63, 0.4)",
-										} as React.CSSProperties
-									}
-									tabIndex={0}
-									role="listitem"
-									aria-label={`Feature: ${feature.title}`}
+									key={card.title}
+									className="h-full p-8 rounded-2xl bg-white shadow-md hover:shadow-xl transition-all border border-gray-100 text-left"
+									style={{ borderColor: "rgba(92, 127, 79, 0.1)" }}
 								>
-									<h3
-										className="text-xl font-semibold mb-3"
-										style={{ color: colors.neutral[800] }}
-									>
-										{feature.title}
+									<h3 className="text-xl font-semibold mb-4" style={{ color: colors.neutral[900] }}>
+										{card.title}
 									</h3>
-									<p
-										className="text-base leading-relaxed"
-										style={{ color: colors.neutral[700], lineHeight: "1.6" }}
-									>
-										{feature.description}
+									<p className="text-base leading-relaxed" style={{ color: colors.neutral[600] }}>
+										{card.description}
 									</p>
 								</article>
 							))}
@@ -734,7 +529,234 @@ function LandingPageEnhanced({ onGetStarted }: LandingPageProps) {
 					</div>
 				</section>
 
-				{/* Pricing Section */}
+				<section
+					id="built-for"
+					className="py-20 px-4"
+					style={{ backgroundColor: "#F5F0E8", borderBottom: "1px solid rgba(0, 0, 0, 0.05)" }}
+				>
+					<div className="container mx-auto max-w-6xl">
+						<div className="text-center mb-12">
+							<h2 className="text-3xl sm:text-4xl font-bold mb-4" style={{ color: colors.neutral[900] }}>
+								Built for Every Interpreting Professional
+							</h2>
+							<p className="text-lg max-w-3xl mx-auto" style={{ color: colors.neutral[600] }}>
+								Whether you interpret on-site, remotely, or across specialized domains, the ECCI™ Framework keeps your practice equitable, ethical, and sustainable.
+							</p>
+						</div>
+						<div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+							{audienceSegments.map((segment) => (
+								<article
+									key={segment.title}
+									className="p-6 rounded-2xl bg-white shadow-md hover:shadow-xl transition-all border border-gray-100"
+									style={{ borderColor: "rgba(92, 127, 79, 0.1)" }}
+									aria-label={segment.title}
+								>
+									<h3 className="text-xl font-semibold mb-3" style={{ color: colors.neutral[900] }}>
+										{segment.title}
+									</h3>
+									<p className="text-base leading-relaxed" style={{ color: colors.neutral[600] }}>
+										{segment.description}
+									</p>
+								</article>
+							))}
+						</div>
+					</div>
+				</section>
+
+				<section
+					id="testimonials"
+					className="py-20 px-4"
+					style={{ backgroundColor: "#FFFFFF", borderBottom: "1px solid rgba(0, 0, 0, 0.05)" }}
+				>
+					<div className="container mx-auto max-w-5xl">
+						<div className="text-center mb-12">
+							<h2 className="text-3xl sm:text-4xl font-bold mb-4" style={{ color: colors.neutral[900] }}>
+								What Interpreters Are Saying
+							</h2>
+							<p className="text-lg max-w-3xl mx-auto" style={{ color: colors.neutral[600] }}>
+								Social proof from practicing professionals and the creator behind the ECCI™ Framework.
+							</p>
+						</div>
+						<div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+							{testimonials.map((testimonial) => (
+								<figure
+									key={testimonial.name}
+									className="h-full p-8 rounded-2xl bg-white shadow-md border border-gray-100"
+									style={{ borderColor: "rgba(92, 127, 79, 0.12)" }}
+								>
+									<blockquote className="text-base leading-relaxed mb-6" style={{ color: colors.neutral[700] }}>
+										"{testimonial.quote}"
+									</blockquote>
+									<figcaption className="text-sm font-semibold" style={{ color: colors.neutral[900] }}>
+										{testimonial.name}
+										<span className="block font-normal mt-1" style={{ color: colors.neutral[500] }}>
+											{testimonial.role}
+										</span>
+									</figcaption>
+								</figure>
+							))}
+						</div>
+					</div>
+				</section>
+
+				<section
+					id="rid-category"
+					className="py-20 px-4"
+					style={{ backgroundColor: "#F5F0E8", borderBottom: "1px solid rgba(0, 0, 0, 0.05)" }}
+				>
+					<div className="container mx-auto max-w-4xl text-center">
+						<span
+							className="inline-flex items-center justify-center px-4 py-2 mb-4 rounded-full text-sm font-semibold uppercase tracking-wider"
+							style={{
+								backgroundColor: "rgba(92, 127, 79, 0.12)",
+								color: colors.primary.green,
+							}}
+						>
+							New RID Professional Category · Now Active
+						</span>
+						<h2 className="text-3xl font-bold mb-4" style={{ color: colors.neutral[900] }}>
+							CEUs in "Studies of Healthy Minds & Bodies"
+						</h2>
+						<p className="text-lg mb-6" style={{ color: colors.neutral[600] }}>
+							InterpretReflect is approved to deliver CEUs in this new category, helping you document your professional development in cognitive wellness and capacity building.
+						</p>
+						<p className="text-sm font-semibold uppercase tracking-wide" style={{ color: colors.neutral[500] }}>
+							Delivered in partnership with Building Bridges Global, LLC · RID Approved Sponsor #2309
+						</p>
+					</div>
+				</section>
+
+				<section
+					id="ecci-framework"
+					className="py-20 px-4"
+					style={{ backgroundColor: "#FFFFFF", borderBottom: "1px solid rgba(0, 0, 0, 0.05)" }}
+					aria-labelledby="ecci-heading"
+				>
+					<div className="container mx-auto max-w-6xl">
+						<div className="text-center mb-12">
+							<h2 id="ecci-heading" className="text-3xl sm:text-4xl font-bold mb-3" style={{ color: colors.neutral[900] }}>
+								The ECCI™ Framework
+							</h2>
+							<p className="text-lg font-semibold mb-4" style={{ color: colors.neutral[600] }}>
+								Emotional & Cultural Competencies for Interpreters
+							</p>
+							<p className="text-lg max-w-3xl mx-auto" style={{ color: colors.neutral[600] }}>
+								Our framework combines 16 neuroscience-based methods that measure how you process information, manage cultural context, regulate emotional labor, and maintain mental capacity during interpreting.
+							</p>
+						</div>
+						<div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-12">
+							{frameworkHighlights.map((highlight) => (
+								<article
+									key={highlight.title}
+									className="h-full p-6 rounded-2xl bg-white shadow-md border border-gray-100"
+									style={{ borderColor: "rgba(92, 127, 79, 0.12)" }}
+									aria-label={highlight.title}
+								>
+									<h3 className="text-xl font-semibold mb-3" style={{ color: colors.neutral[900] }}>
+										{highlight.title}
+									</h3>
+									<p className="text-base leading-relaxed" style={{ color: colors.neutral[600] }}>
+										{highlight.description}
+									</p>
+								</article>
+							))}
+						</div>
+						<div
+							className="p-6 rounded-2xl bg-gray-50 border border-gray-100 text-center"
+							style={{ borderColor: "rgba(92, 127, 79, 0.12)" }}
+						>
+							<p className="text-sm font-semibold uppercase tracking-wider mb-2" style={{ color: colors.neutral[500] }}>
+								Research Foundation
+							</p>
+							<p className="text-base max-w-3xl mx-auto" style={{ color: colors.neutral[600] }}>
+								Based on cognitive science, interoception research, performance psychology, cultural neuroscience, and interpreter workload studies.
+							</p>
+						</div>
+					</div>
+				</section>
+
+				<section
+					id="protocol"
+					className="py-20 px-4"
+					style={{ backgroundColor: "#F5F0E8", borderBottom: "1px solid rgba(0, 0, 0, 0.05)" }}
+				>
+					<div className="container mx-auto max-w-5xl">
+						<div className="text-center mb-12">
+							<h2 className="text-3xl sm:text-4xl font-bold mb-4" style={{ color: colors.neutral[900] }}>
+								Performance Optimization Protocol
+							</h2>
+							<p className="text-lg max-w-3xl mx-auto" style={{ color: colors.neutral[600] }}>
+								A practical, repeatable process that transforms ECCI™ insights into daily practice improvements and credentialed growth.
+							</p>
+						</div>
+						<ol className="space-y-6">
+							{protocolSteps.map((step, index) => (
+								<li
+									key={step.title}
+									className="flex flex-col sm:flex-row sm:items-start gap-4 p-6 bg-white rounded-2xl shadow-md border border-gray-100"
+									style={{ borderColor: "rgba(92, 127, 79, 0.12)" }}
+								>
+									<span
+										className="inline-flex h-10 w-10 items-center justify-center rounded-full font-semibold"
+										style={{
+											backgroundColor: "rgba(92, 127, 79, 0.15)",
+											color: colors.primary.green,
+										}}
+									>
+										{index + 1}
+									</span>
+									<div className="text-left">
+										<h3 className="text-xl font-semibold mb-2" style={{ color: colors.neutral[900] }}>
+											{step.title}
+										</h3>
+										<p className="text-base leading-relaxed" style={{ color: colors.neutral[600] }}>
+											{step.description}
+										</p>
+									</div>
+								</li>
+							))}
+						</ol>
+					</div>
+				</section>
+
+				<section
+					id="data-case"
+					className="py-20 px-4"
+					style={{ backgroundColor: "#FFFFFF", borderBottom: "1px solid rgba(0, 0, 0, 0.05)" }}
+				>
+					<div className="container mx-auto max-w-6xl">
+						<div className="text-center mb-12">
+							<h2 className="text-3xl sm:text-4xl font-bold mb-4" style={{ color: colors.neutral[900] }}>
+								The Data-Driven Case
+							</h2>
+							<p className="text-lg max-w-3xl mx-auto" style={{ color: colors.neutral[600] }}>
+								National studies from 2024-2025 reveal what interpreters are facing—and why a systematic solution matters now.
+							</p>
+						</div>
+						<div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6 mb-8">
+							{dataStats.map((stat) => (
+								<div
+									key={stat.figure}
+									className="p-6 text-center rounded-2xl bg-white shadow-md border border-gray-100"
+									style={{ borderColor: "rgba(92, 127, 79, 0.12)" }}
+								>
+									<div className="text-4xl font-bold mb-2" style={{ color: colors.primary.green }}>
+										{stat.figure}
+									</div>
+									<p className="text-sm leading-relaxed" style={{ color: colors.neutral[600] }}>
+										{stat.label}
+									</p>
+								</div>
+							))}
+						</div>
+						<div className="text-center">
+							<p className="text-sm text-gray-600 italic">
+								These numbers reflect systemic challenges, not personal inadequacy. Your work demands specialized support.
+							</p>
+						</div>
+					</div>
+				</section>
+
 				<section
 					id="pricing"
 					className="py-20 px-4"
@@ -806,11 +828,11 @@ function LandingPageEnhanced({ onGetStarted }: LandingPageProps) {
 
 									<button
 										onClick={handleSignup}
-										className="w-full py-3 rounded-lg font-semibold text-white transition-all focus:outline-none focus:ring-4 focus:ring-teal-500 focus:ring-opacity-50"
+										className="w-full py-3 rounded-lg font-semibold text-white transition-all focus:outline-none focus:ring-4 focus:ring-green-600 focus:ring-opacity-50"
 										style={{ background: colors.gradients.green }}
-										aria-label="Get started with Core plan"
+										aria-label="Start your performance assessment with the Essential plan"
 									>
-										Get Started
+										Start Your Performance Assessment
 									</button>
 								</div>
 							</div>
@@ -916,6 +938,7 @@ function LandingPageEnhanced({ onGetStarted }: LandingPageProps) {
 
 				{/* Final CTA */}
 				<section
+					id="final-cta"
 					className="py-20 px-4"
 					style={{ background: "#5C7F4F" }}
 					aria-labelledby="cta-heading"
@@ -925,10 +948,10 @@ function LandingPageEnhanced({ onGetStarted }: LandingPageProps) {
 							id="cta-heading"
 							className="text-3xl sm:text-4xl font-bold text-white mb-6"
 						>
-							Start Your Wellness Journey Today
+							Start Your Performance Assessment
 						</h2>
 						<p className="text-xl text-white/90 mb-8">
-							Evidence-based tools • Built by interpreters, for interpreters
+							Join the only interpreter platform that blends the ECCI™ Framework, Catalyst insights, and RID-approved CEUs into one seamless workflow.
 						</p>
 						<button
 							onClick={handleSignup}
@@ -938,9 +961,9 @@ function LandingPageEnhanced({ onGetStarted }: LandingPageProps) {
 								color: "#5C7F4F",
 								fontSize: "1.125rem",
 							}}
-							aria-label="Start your wellness journey today"
+							aria-label="Start your performance assessment now"
 						>
-							Get Started Today
+							Start Your Performance Assessment
 						</button>
 					</div>
 				</section>

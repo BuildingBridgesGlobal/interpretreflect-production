@@ -14,6 +14,9 @@ export const Footer: React.FC = () => {
 						<p className="text-sm text-gray-600">
 							Turn every assignment into measurable growth.
 						</p>
+						<p className="text-sm font-semibold text-gray-700 mt-3">
+							RID Approved Sponsor #2309&nbsp;|&nbsp;Building Bridges Global, LLC
+						</p>
 					</div>
 
 					<div>

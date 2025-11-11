@@ -100,6 +100,7 @@ import { PricingProduction } from "./pages/PricingProduction";
 import { PricingTest } from "./pages/PricingTest";
 import { PrivacyPolicy } from "./pages/PrivacyPolicy";
 import Research from "./pages/Research";
+import EcciFramework from "./pages/EcciFramework";
 import { SeamlessSignup } from "./pages/SeamlessSignup";
 import { TermsOfService } from "./pages/TermsOfService";
 import { EnterpriseDashboard } from "./pages/EnterpriseDashboard";
@@ -9387,6 +9388,7 @@ function App() {
 				<Route path="/about" element={<About />} />
 				<Route path="/accessibility" element={<Accessibility />} />
 				<Route path="/research" element={<Research />} />
+				<Route path="/framework" element={<EcciFramework />} />
 				<Route path="/pricing" element={<PricingNew />} />
 				<Route path="/signup" element={<SeamlessSignup />} />
 				<Route path="/payment-success" element={<PaymentSuccess />} />
@@ -9425,6 +9427,7 @@ function App() {
 				<Route path="/about" element={<About />} />
 				<Route path="/accessibility" element={<Accessibility />} />
 				<Route path="/research" element={<Research />} />
+				<Route path="/framework" element={<EcciFramework />} />
 				<Route path="/pricing" element={<PricingProduction />} />
 				<Route path="/signup" element={<SeamlessSignup />} />
 				<Route path="/pricing-old" element={<PricingNew />} />

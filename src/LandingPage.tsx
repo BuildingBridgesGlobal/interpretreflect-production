@@ -14,6 +14,10 @@ import {
   Award,
   ArrowRight,
   X,
+  Zap,
+  Target,
+  LineChart,
+  Activity,
 } from 'lucide-react';
 import { AuthModal } from './components/AuthModal';
 import { BurnoutAssessment } from './components/BurnoutAssessment';
@@ -195,32 +199,19 @@ function LandingPage({ onGetStarted }: LandingPageProps) {
 
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-20 pb-32">
           <div className="text-center">
-            {/* HIPAA Compliance Badge */}
-            <div className="flex flex-col items-center gap-4 mb-8">
+            {/* Updated Badge */}
+            <div className="flex justify-center mb-8">
               <div
                 className="inline-flex items-center px-6 py-3 rounded-full"
                 style={{
-                  background: 'linear-gradient(145deg, #FFD700 0%, #FFC107 100%)',
-                  border: '2px solid #FFB000',
-                  boxShadow: '0 4px 15px rgba(255, 193, 7, 0.3)',
+                  background: 'linear-gradient(145deg, #6B8B60 0%, #5F7F55 100%)',
+                  border: '2px solid #5C7F4F',
+                  boxShadow: '0 4px 15px rgba(107, 139, 96, 0.3)',
                 }}
               >
-                <Shield className="h-5 w-5 mr-2" style={{ color: '#1A1A1A' }} />
-                <span className="text-base font-bold" style={{ color: '#1A1A1A' }}>
-                  The ONLY HIPAA-Compliant Interpreter Wellness Platform
-                </span>
-              </div>
-              
-              <div
-                className="inline-flex items-center px-4 py-2 rounded-full"
-                style={{
-                  backgroundColor: 'rgba(107, 139, 96, 0.1)',
-                  border: '1px solid rgba(107, 139, 96, 0.3)',
-                }}
-              >
-                <Brain className="h-4 w-4 mr-2" style={{ color: '#4A6B3E' }} />
-                <span className="text-sm font-semibold" style={{ color: '#4A6B3E' }}>
-                  Built for interpreters, backed by neuroscience, grounded in community
+                <Award className="h-5 w-5 mr-2" style={{ color: '#FFFFFF' }} />
+                <span className="text-base font-bold" style={{ color: '#FFFFFF' }}>
+                  Trusted by Interpreters Nationwide
                 </span>
               </div>
             </div>
@@ -234,7 +225,7 @@ function LandingPage({ onGetStarted }: LandingPageProps) {
                 lineHeight: '1.1',
               }}
             >
-              Unwind Your Mind. Recharge Your Practice.
+              Perform at Your Peak. Every Assignment.
             </h1>
 
             <p
@@ -244,16 +235,28 @@ function LandingPage({ onGetStarted }: LandingPageProps) {
                 lineHeight: '1.7',
               }}
             >
-              Every session shapes your mind and your career. But the weight you carry isn't yours alone.{' '}
-              <span className="font-semibold" style={{ color: '#5C7F4F' }}>
-                InterpretReflect™ gives you instant support, science-based tools, and a sense of belonging, so you can reset, recover, and thrive for the long run.
-              </span>
+              Stop guessing about your performance. Get AI-powered insights backed by neuroscience to manage cognitive load, prevent burnout, and grow your capacity—with RID-approved CEUs included.
             </p>
 
-            <div className="mb-8">
-              <h3 className="text-2xl font-bold mb-4" style={{ color: '#5C7F4F' }}>
-                Start Today. Join the Beta.
-              </h3>
+            <div className="flex flex-wrap justify-center gap-6 mb-8">
+              <div className="flex items-center">
+                <Brain className="h-5 w-5 mr-2" style={{ color: '#5C7F4F' }} />
+                <span className="text-sm font-semibold" style={{ color: '#4A6B3E' }}>
+                  Science-backed assessments
+                </span>
+              </div>
+              <div className="flex items-center">
+                <Award className="h-5 w-5 mr-2" style={{ color: '#5C7F4F' }} />
+                <span className="text-sm font-semibold" style={{ color: '#4A6B3E' }}>
+                  RID Sponsor #2309
+                </span>
+              </div>
+              <div className="flex items-center">
+                <CheckCircle className="h-5 w-5 mr-2" style={{ color: '#5C7F4F' }} />
+                <span className="text-sm font-semibold" style={{ color: '#4A6B3E' }}>
+                  5.0+ CEUs available
+                </span>
+              </div>
             </div>
 
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
@@ -280,93 +283,457 @@ function LandingPage({ onGetStarted }: LandingPageProps) {
                 onBlur={(e) => {
                   e.currentTarget.style.outline = 'none';
                 }}
-                aria-label="Get started with InterpretReflect"
+                aria-label="Start Your Performance Assessment"
               >
-                Get Started
+                Start Your Performance Assessment
                 <ArrowRight className="h-5 w-5 ml-2" aria-hidden="true" />
-              </button>
-
-              <button
-                onClick={handleAssessment}
-                className="px-8 py-4 rounded-xl font-semibold text-lg transition-all focus:outline-none focus:ring-4 focus:ring-offset-2 focus:ring-sage-600"
-                style={{
-                  backgroundColor: '#FFFFFF',
-                  color: '#1A1A1A',
-                  border: '2px solid #6B8B60',
-                }}
-                onMouseEnter={(e) => {
-                  e.currentTarget.style.borderColor = '#5F7F55';
-                  e.currentTarget.style.backgroundColor = '#F8FBF6';
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.borderColor = '#4A6B3E';
-                  e.currentTarget.style.backgroundColor = '#FFFFFF';
-                }}
-                onFocus={(e) => {
-                  e.currentTarget.style.outline = '3px solid #1A1A1A';
-                  e.currentTarget.style.outlineOffset = '2px';
-                }}
-                onBlur={(e) => {
-                  e.currentTarget.style.outline = 'none';
-                }}
-                aria-label="Take the 2-minute wellness check-in"
-              >
-                <Clock className="h-5 w-5 mr-2" />
-                Take the 2-Minute Wellness Check-In
               </button>
             </div>
 
             <p className="text-sm mt-4 mb-2" style={{ color: '#5A5A5A' }}>
-              Limited early access - $12/month - Cancel anytime
+              Limited early access - Cancel anytime
             </p>
             <p className="text-xs" style={{ color: '#4A6B3E', fontStyle: 'italic' }}>
-              Research-backed • 100% Confidential
+              Research-backed • 100% Confidential • HIPAA Compliant
             </p>
+          </div>
+        </div>
+      </section>
 
-            {/* Inclusive Language Cue */}
-            <div className="mt-12 text-center">
-              <h2
-                className="text-2xl font-bold mb-3"
+      {/* Stats Bar Section */}
+      <section
+        className="py-12"
+        style={{ backgroundColor: '#FFFFFF' }}
+        aria-label="Platform statistics"
+      >
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
+            <div>
+              <div className="text-4xl font-bold mb-2" style={{ color: '#5C7F4F' }}>
+                16
+              </div>
+              <div className="text-sm font-semibold uppercase tracking-wide" style={{ color: '#5A5A5A' }}>
+                Research Frameworks
+              </div>
+            </div>
+            <div>
+              <div className="text-4xl font-bold mb-2" style={{ color: '#5C7F4F' }}>
+                5.0+
+              </div>
+              <div className="text-sm font-semibold uppercase tracking-wide" style={{ color: '#5A5A5A' }}>
+                CEUs Available
+              </div>
+            </div>
+            <div>
+              <div className="text-4xl font-bold mb-2" style={{ color: '#5C7F4F' }}>
+                24/7
+              </div>
+              <div className="text-sm font-semibold uppercase tracking-wide" style={{ color: '#5A5A5A' }}>
+                AI Performance Support
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Everything You Need Section */}
+      <section
+        className="py-20"
+        style={{ backgroundColor: '#FAF9F6' }}
+        aria-labelledby="features-heading"
+      >
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-16">
+            <h2
+              id="features-heading"
+              className="text-4xl font-bold mb-4"
+              style={{ color: '#1A1A1A' }}
+            >
+              Everything You Need to Optimize Performance
+            </h2>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            {/* Card 1: ECCI Framework */}
+            <article
+              className="rounded-2xl p-8 transition-all"
+              style={{
+                backgroundColor: '#FFFFFF',
+                boxShadow: '0 4px 15px rgba(0, 0, 0, 0.05)',
+                border: '2px solid transparent',
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.borderColor = '#5C7F4F';
+                e.currentTarget.style.transform = 'translateY(-4px)';
+                e.currentTarget.style.boxShadow = '0 12px 30px rgba(92, 127, 79, 0.25)';
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.borderColor = 'transparent';
+                e.currentTarget.style.transform = 'translateY(0)';
+                e.currentTarget.style.boxShadow = '0 4px 15px rgba(0, 0, 0, 0.05)';
+              }}
+            >
+              <div
+                className="inline-block p-3 rounded-xl mb-4"
                 style={{
-                  color: '#4A6B3E',
-                  letterSpacing: '0.5px',
+                  background: 'linear-gradient(145deg, #6B8B60 0%, #5F7F55 100%)',
                 }}
               >
-                For every interpreter, everywhere.
-              </h2>
-              <p
-                className="text-lg font-medium"
+                <Brain className="h-8 w-8" aria-hidden="true" style={{ color: '#FFFFFF' }} />
+              </div>
+              <h3 className="text-xl font-bold mb-2" style={{ color: '#1A1A1A' }}>
+                Your Performance Foundation: The ECCI™ Framework
+              </h3>
+              <p className="text-sm" style={{ color: '#5A5A5A', lineHeight: '1.6' }}>
+                Our proprietary ECCI™ Framework (Emotional & Cultural Competencies for Interpreters) uses 16 research-backed methods to measure how your brain handles cognitive load, cultural processing, and performance growth.
+              </p>
+            </article>
+
+            {/* Card 2: Catalyst AI */}
+            <article
+              className="rounded-2xl p-8 transition-all"
+              style={{
+                backgroundColor: '#FFFFFF',
+                boxShadow: '0 4px 15px rgba(0, 0, 0, 0.05)',
+                border: '2px solid transparent',
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.borderColor = '#5C7F4F';
+                e.currentTarget.style.transform = 'translateY(-4px)';
+                e.currentTarget.style.boxShadow = '0 12px 30px rgba(92, 127, 79, 0.25)';
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.borderColor = 'transparent';
+                e.currentTarget.style.transform = 'translateY(0)';
+                e.currentTarget.style.boxShadow = '0 4px 15px rgba(0, 0, 0, 0.05)';
+              }}
+            >
+              <div
+                className="inline-block p-3 rounded-xl mb-4"
                 style={{
-                  color: '#5A5A5A',
+                  background: 'linear-gradient(145deg, #6B8B60 0%, #5F7F55 100%)',
                 }}
               >
-                Spoken, signed, Deaf or hearing, medical to legal, our tools are built for your story.
+                <Zap className="h-8 w-8" aria-hidden="true" style={{ color: '#FFFFFF' }} />
+              </div>
+              <h3 className="text-xl font-bold mb-2" style={{ color: '#1A1A1A' }}>
+                Catalyst: Your AI Performance Partner
+              </h3>
+              <p className="text-sm" style={{ color: '#5A5A5A', lineHeight: '1.6' }}>
+                Get personalized recommendations 24/7. Catalyst analyzes your cognitive patterns and suggests practical strategies to optimize your capacity. Built on the ECCI™ framework. Your data is 100% private.
+              </p>
+            </article>
+
+            {/* Card 3: RID-Approved Certification */}
+            <article
+              className="rounded-2xl p-8 transition-all"
+              style={{
+                backgroundColor: '#FFFFFF',
+                boxShadow: '0 4px 15px rgba(0, 0, 0, 0.05)',
+                border: '2px solid transparent',
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.borderColor = '#5C7F4F';
+                e.currentTarget.style.transform = 'translateY(-4px)';
+                e.currentTarget.style.boxShadow = '0 12px 30px rgba(92, 127, 79, 0.25)';
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.borderColor = 'transparent';
+                e.currentTarget.style.transform = 'translateY(0)';
+                e.currentTarget.style.boxShadow = '0 4px 15px rgba(0, 0, 0, 0.05)';
+              }}
+            >
+              <div
+                className="inline-block p-3 rounded-xl mb-4"
+                style={{
+                  background: 'linear-gradient(145deg, #6B8B60 0%, #5F7F55 100%)',
+                }}
+              >
+                <Award className="h-8 w-8" aria-hidden="true" style={{ color: '#FFFFFF' }} />
+              </div>
+              <h3 className="text-xl font-bold mb-2" style={{ color: '#1A1A1A' }}>
+                RID-Approved Certification
+              </h3>
+              <p className="text-sm" style={{ color: '#5A5A5A', lineHeight: '1.6' }}>
+                Earn RID-approved CEUs across multiple categories through Building Bridges Global, LLC (Sponsor #2309), including the new 'Studies of Healthy Minds & Bodies' category—active now.
+              </p>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      {/* Built for Every Interpreting Professional */}
+      <section
+        className="py-20"
+        style={{ backgroundColor: '#FFFFFF' }}
+        aria-labelledby="for-professionals-heading"
+      >
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-16">
+            <h2
+              id="for-professionals-heading"
+              className="text-4xl font-bold mb-4"
+              style={{ color: '#1A1A1A' }}
+            >
+              Built for Every Interpreting Professional
+            </h2>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <div className="text-center">
+              <div
+                className="inline-block p-4 rounded-full mb-4"
+                style={{
+                  backgroundColor: 'rgba(92, 127, 79, 0.1)',
+                }}
+              >
+                <Users className="h-8 w-8" style={{ color: '#5C7F4F' }} />
+              </div>
+              <h3 className="text-lg font-bold mb-2" style={{ color: '#1A1A1A' }}>
+                Spoken Language
+              </h3>
+              <p className="text-sm" style={{ color: '#5A5A5A' }}>
+                Medical, legal, conference, community—optimize your performance across all settings
+              </p>
+            </div>
+
+            <div className="text-center">
+              <div
+                className="inline-block p-4 rounded-full mb-4"
+                style={{
+                  backgroundColor: 'rgba(92, 127, 79, 0.1)',
+                }}
+              >
+                <Heart className="h-8 w-8" style={{ color: '#5C7F4F' }} />
+              </div>
+              <h3 className="text-lg font-bold mb-2" style={{ color: '#1A1A1A' }}>
+                Sign Language
+              </h3>
+              <p className="text-sm" style={{ color: '#5A5A5A' }}>
+                VRS, VRI, educational, platform—built for the unique demands of visual processing
+              </p>
+            </div>
+
+            <div className="text-center">
+              <div
+                className="inline-block p-4 rounded-full mb-4"
+                style={{
+                  backgroundColor: 'rgba(92, 127, 79, 0.1)',
+                }}
+              >
+                <TrendingUp className="h-8 w-8" style={{ color: '#5C7F4F' }} />
+              </div>
+              <h3 className="text-lg font-bold mb-2" style={{ color: '#1A1A1A' }}>
+                All Experience Levels
+              </h3>
+              <p className="text-sm" style={{ color: '#5A5A5A' }}>
+                From students to seasoned professionals—grow your capacity at every stage
               </p>
             </div>
           </div>
         </div>
       </section>
 
-      {/* Journey Section */}
+      {/* RID Professional Category Section */}
+      <section
+        className="py-16"
+        style={{ backgroundColor: '#F8FBF6' }}
+        aria-labelledby="rid-category-heading"
+      >
+        <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div
+            className="rounded-2xl p-8"
+            style={{
+              backgroundColor: '#FFFFFF',
+              border: '2px solid #5C7F4F',
+              boxShadow: '0 4px 15px rgba(107, 139, 96, 0.2)',
+            }}
+          >
+            <div className="flex items-start gap-6">
+              <div
+                className="inline-block p-4 rounded-xl flex-shrink-0"
+                style={{
+                  background: 'linear-gradient(145deg, #FFD700 0%, #FFC107 100%)',
+                }}
+              >
+                <Award className="h-10 w-10" style={{ color: '#1A1A1A' }} />
+              </div>
+              <div>
+                <div className="flex items-center gap-3 mb-3">
+                  <h2
+                    id="rid-category-heading"
+                    className="text-2xl font-bold"
+                    style={{ color: '#1A1A1A' }}
+                  >
+                    New RID Professional Category
+                  </h2>
+                  <span
+                    className="px-3 py-1 rounded-full text-xs font-bold"
+                    style={{
+                      backgroundColor: '#5C7F4F',
+                      color: '#FFFFFF',
+                    }}
+                  >
+                    Available Now
+                  </span>
+                </div>
+                <p className="text-lg mb-3" style={{ color: '#5A5A5A' }}>
+                  <strong style={{ color: '#4A6B3E' }}>Studies of Healthy Minds & Bodies</strong>
+                </p>
+                <p className="text-sm" style={{ color: '#5A5A5A', lineHeight: '1.6' }}>
+                  InterpretReflect is approved to deliver CEUs in this new category, helping you document your professional development in cognitive wellness and capacity building.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* The ECCI™ Framework Detailed Section */}
+      <section
+        className="py-20"
+        style={{ backgroundColor: '#FAF9F6' }}
+        aria-labelledby="ecci-framework-heading"
+      >
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-12">
+            <h2
+              id="ecci-framework-heading"
+              className="text-4xl font-bold mb-4"
+              style={{ color: '#1A1A1A' }}
+            >
+              The ECCI™ Framework
+            </h2>
+            <p className="text-xl mb-4" style={{ color: '#5C7F4F', fontWeight: 600 }}>
+              Emotional & Cultural Competencies for Interpreters
+            </p>
+            <p className="text-lg max-w-4xl mx-auto" style={{ color: '#5A5A5A', lineHeight: '1.6' }}>
+              Our framework combines 16 neuroscience-based methods that measure how you process information, manage cultural context, regulate emotional labor, and maintain mental capacity during interpreting.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-12">
+            {/* Feature Box 1 */}
+            <div
+              className="rounded-xl p-6"
+              style={{
+                backgroundColor: '#FFFFFF',
+                border: '2px solid rgba(92, 127, 79, 0.2)',
+              }}
+            >
+              <div className="flex items-start gap-4">
+                <Target className="h-6 w-6 flex-shrink-0" style={{ color: '#5C7F4F' }} />
+                <div>
+                  <h3 className="text-lg font-bold mb-2" style={{ color: '#1A1A1A' }}>
+                    Cognitive Load Analysis
+                  </h3>
+                  <p className="text-sm" style={{ color: '#5A5A5A' }}>
+                    Understand exactly how your brain processes multimodal information
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            {/* Feature Box 2 */}
+            <div
+              className="rounded-xl p-6"
+              style={{
+                backgroundColor: '#FFFFFF',
+                border: '2px solid rgba(92, 127, 79, 0.2)',
+              }}
+            >
+              <div className="flex items-start gap-4">
+                <Heart className="h-6 w-6 flex-shrink-0" style={{ color: '#5C7F4F' }} />
+                <div>
+                  <h3 className="text-lg font-bold mb-2" style={{ color: '#1A1A1A' }}>
+                    Emotional Regulation
+                  </h3>
+                  <p className="text-sm" style={{ color: '#5A5A5A' }}>
+                    Measure and optimize how you manage emotional labor
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            {/* Feature Box 3 */}
+            <div
+              className="rounded-xl p-6"
+              style={{
+                backgroundColor: '#FFFFFF',
+                border: '2px solid rgba(92, 127, 79, 0.2)',
+              }}
+            >
+              <div className="flex items-start gap-4">
+                <Users className="h-6 w-6 flex-shrink-0" style={{ color: '#5C7F4F' }} />
+                <div>
+                  <h3 className="text-lg font-bold mb-2" style={{ color: '#1A1A1A' }}>
+                    Cultural Processing
+                  </h3>
+                  <p className="text-sm" style={{ color: '#5A5A5A' }}>
+                    Track how you navigate cultural context and code-switching
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            {/* Feature Box 4 */}
+            <div
+              className="rounded-xl p-6"
+              style={{
+                backgroundColor: '#FFFFFF',
+                border: '2px solid rgba(92, 127, 79, 0.2)',
+              }}
+            >
+              <div className="flex items-start gap-4">
+                <Activity className="h-6 w-6 flex-shrink-0" style={{ color: '#5C7F4F' }} />
+                <div>
+                  <h3 className="text-lg font-bold mb-2" style={{ color: '#1A1A1A' }}>
+                    Capacity Building
+                  </h3>
+                  <p className="text-sm" style={{ color: '#5A5A5A' }}>
+                    Monitor your performance growth and neuroplasticity over time
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div
+            className="rounded-xl p-6 text-center"
+            style={{
+              backgroundColor: 'rgba(92, 127, 79, 0.1)',
+              border: '2px solid rgba(92, 127, 79, 0.3)',
+            }}
+          >
+            <p className="text-sm font-semibold mb-2" style={{ color: '#4A6B3E' }}>
+              Research Foundation
+            </p>
+            <p className="text-sm" style={{ color: '#5A5A5A' }}>
+              Based on cognitive science, interoception research, performance psychology, cultural neuroscience, and interpreter workload studies.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      {/* Performance Optimization Protocol */}
       <section
         className="py-20"
         style={{ backgroundColor: '#FFFFFF' }}
-        aria-labelledby="journey-heading"
+        aria-labelledby="protocol-heading"
       >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
             <h2
-              id="journey-heading"
+              id="protocol-heading"
               className="text-4xl font-bold mb-4"
               style={{ color: '#1A1A1A' }}
             >
-              Your Path to Lasting Wellbeing
+              Performance Optimization Protocol
             </h2>
           </div>
 
-          {/* Journey Steps */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {/* Step 1: Recognize */}
+            {/* Step 1 */}
             <div className="text-center">
               <div
                 className="inline-flex items-center justify-center w-16 h-16 rounded-full mb-4"
@@ -380,17 +747,14 @@ function LandingPage({ onGetStarted }: LandingPageProps) {
                 </span>
               </div>
               <h3 className="text-xl font-bold mb-2" style={{ color: '#1A1A1A' }}>
-                Recognize
+                Establish Performance Baseline
               </h3>
-              <p className="font-semibold mb-2" style={{ color: '#5C7F4F' }}>
-                See your stress - clearly
-              </p>
               <p className="text-sm" style={{ color: '#5A5A5A' }}>
-                Take our 2-minute wellness check-in, inspired by the latest brain science, and discover your unique patterns and hidden strengths. Immediate, personalized insights show you exactly where you stand.
+                Take a 15-minute assessment. Get your personalized performance profile with specific metrics.
               </p>
             </div>
 
-            {/* Step 2: Recover */}
+            {/* Step 2 */}
             <div className="text-center">
               <div
                 className="inline-flex items-center justify-center w-16 h-16 rounded-full mb-4"
@@ -404,17 +768,14 @@ function LandingPage({ onGetStarted }: LandingPageProps) {
                 </span>
               </div>
               <h3 className="text-xl font-bold mb-2" style={{ color: '#1A1A1A' }}>
-                Reset
+                Track Performance Metrics
               </h3>
-              <p className="font-semibold mb-2" style={{ color: '#5C7F4F' }}>
-                Reset your nervous system, fast
-              </p>
               <p className="text-sm" style={{ color: '#5A5A5A' }}>
-                Use rapid, on-the-go techniques, grounded in neuroscience, that calm your body and clear your mind, anytime you need it. No hour-long meditations needed.
+                Log your daily performance: baseline checks, post-assignment reflections, and capacity tracking—all included in your platform access.
               </p>
             </div>
 
-            {/* Step 3: Thrive */}
+            {/* Step 3 */}
             <div className="text-center">
               <div
                 className="inline-flex items-center justify-center w-16 h-16 rounded-full mb-4"
@@ -428,637 +789,115 @@ function LandingPage({ onGetStarted }: LandingPageProps) {
                 </span>
               </div>
               <h3 className="text-xl font-bold mb-2" style={{ color: '#1A1A1A' }}>
-                Thrive
+                Earn Professional Credits
               </h3>
-              <p className="font-semibold mb-2" style={{ color: '#5C7F4F' }}>
-                Grow your resilience, session by session
-              </p>
               <p className="text-sm" style={{ color: '#5A5A5A' }}>
-                Track your emotional progress, unlock your best self, and build sustainable practices proven to rewire your brain for resilience.
+                Purchase CEU bundles to certify your professional development while building sustainable practice habits.
               </p>
             </div>
           </div>
         </div>
       </section>
 
-      {/* Tools Section */}
+      {/* The Data-Driven Case */}
       <section
         className="py-20"
-        style={{ backgroundColor: '#FAF9F6' }}
-        aria-labelledby="tools-heading"
-      >
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-16">
-            <h2 id="tools-heading" className="text-4xl font-bold mb-4" style={{ color: '#1A1A1A' }}>
-              Designed for How (and Where) Interpreters Really Work
-            </h2>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-5xl mx-auto">
-            {/* Reflection Studio */}
-            <article
-              className="rounded-2xl p-8 transition-all cursor-pointer group"
-              tabIndex={0}
-              role="article"
-              aria-labelledby="reflection-studio-heading"
-              style={{
-                backgroundColor: '#FFFFFF',
-                boxShadow: '0 4px 15px rgba(0, 0, 0, 0.05)',
-                border: '2px solid transparent',
-              }}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.borderColor = '#5C7F4F';
-                e.currentTarget.style.transform = 'translateY(-4px)';
-                e.currentTarget.style.boxShadow = '0 12px 30px rgba(92, 127, 79, 0.25)';
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.borderColor = 'transparent';
-                e.currentTarget.style.transform = 'translateY(0)';
-                e.currentTarget.style.boxShadow = '0 4px 15px rgba(0, 0, 0, 0.05)';
-              }}
-              onFocus={(e) => {
-                e.currentTarget.style.outline = '3px solid #5C7F4F';
-                e.currentTarget.style.outlineOffset = '2px';
-              }}
-              onBlur={(e) => {
-                e.currentTarget.style.outline = 'none';
-              }}
-            >
-              <div
-                className="inline-block p-3 rounded-xl mb-4"
-                style={{
-                  background: 'linear-gradient(145deg, #6B8B60 0%, #5F7F55 100%)',
-                }}
-              >
-                <BookOpen className="h-8 w-8" aria-hidden="true" style={{ color: '#FFFFFF' }} />
-              </div>
-              <h3
-                id="reflection-studio-heading"
-                className="text-xl font-bold mb-2"
-                style={{ color: '#1A1A1A' }}
-              >
-                Reflection Studio
-              </h3>
-              <p className="font-semibold mb-3" style={{ color: '#5C7F4F' }}>
-                Take a breath, process it all, and set boundaries
-              </p>
-              <p className="mb-4" style={{ color: '#5A5A5A', lineHeight: '1.6' }}>
-                Research-driven prompts, anytime you need a reset.
-              </p>
-              <ul className="space-y-2">
-                <li className="flex items-start">
-                  <CheckCircle
-                    className="h-5 w-5 mr-2 mt-0.5 flex-shrink-0"
-                    aria-hidden="true"
-                    style={{ color: '#5C7F4F' }}
-                  />
-                  <span className="text-sm" style={{ color: '#3A3A3A' }}>
-                    Process challenging experiences
-                  </span>
-                </li>
-                <li className="flex items-start">
-                  <CheckCircle
-                    className="h-5 w-5 mr-2 mt-0.5 flex-shrink-0"
-                    style={{ color: '#5C7F4F' }}
-                  />
-                  <span className="text-sm" style={{ color: '#3A3A3A' }}>
-                    Boundary setting exercises
-                  </span>
-                </li>
-                <li className="flex items-start">
-                  <CheckCircle
-                    className="h-5 w-5 mr-2 mt-0.5 flex-shrink-0"
-                    style={{ color: '#5C7F4F' }}
-                  />
-                  <span className="text-sm" style={{ color: '#3A3A3A' }}>
-                    See your professional growth in real time
-                  </span>
-                </li>
-              </ul>
-            </article>
-
-            {/* Stress Reset */}
-            <article
-              className="rounded-2xl p-8 transition-all cursor-pointer group"
-              tabIndex={0}
-              role="article"
-              aria-labelledby="stress-reset-heading"
-              style={{
-                backgroundColor: '#FFFFFF',
-                boxShadow: '0 4px 15px rgba(0, 0, 0, 0.05)',
-                border: '2px solid transparent',
-              }}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.borderColor = '#5C7F4F';
-                e.currentTarget.style.transform = 'translateY(-4px)';
-                e.currentTarget.style.boxShadow = '0 12px 30px rgba(92, 127, 79, 0.25)';
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.borderColor = 'transparent';
-                e.currentTarget.style.transform = 'translateY(0)';
-                e.currentTarget.style.boxShadow = '0 4px 15px rgba(0, 0, 0, 0.05)';
-              }}
-            >
-              <div
-                className="inline-block p-3 rounded-xl mb-4"
-                style={{
-                  background: 'linear-gradient(145deg, #6B8B60 0%, #5F7F55 100%)',
-                }}
-              >
-                <RefreshCw className="h-8 w-8" style={{ color: '#FFFFFF' }} />
-              </div>
-              <h3
-                id="stress-reset-heading"
-                className="text-xl font-bold mb-2"
-                style={{ color: '#1A1A1A' }}
-              >
-                Quick Resets
-              </h3>
-              <p className="font-semibold mb-3" style={{ color: '#5C7F4F' }}>
-                Down-regulate stress instantly
-              </p>
-              <p className="mb-4" style={{ color: '#5A5A5A', lineHeight: '1.6' }}>
-                2-minute breathing, body tension, and sensory grounding - built for waiting rooms, hallways, and in-between moments.
-              </p>
-              <ul className="space-y-2">
-                <li className="flex items-start">
-                  <CheckCircle
-                    className="h-5 w-5 mr-2 mt-0.5 flex-shrink-0"
-                    style={{ color: '#5C7F4F' }}
-                  />
-                  <span className="text-sm" style={{ color: '#3A3A3A' }}>
-                    2-minute breathing exercises
-                  </span>
-                </li>
-                <li className="flex items-start">
-                  <CheckCircle
-                    className="h-5 w-5 mr-2 mt-0.5 flex-shrink-0"
-                    style={{ color: '#5C7F4F' }}
-                  />
-                  <span className="text-sm" style={{ color: '#3A3A3A' }}>
-                    Body tension release
-                  </span>
-                </li>
-                <li className="flex items-start">
-                  <CheckCircle
-                    className="h-5 w-5 mr-2 mt-0.5 flex-shrink-0"
-                    style={{ color: '#5C7F4F' }}
-                  />
-                  <span className="text-sm" style={{ color: '#3A3A3A' }}>
-                    Sensory grounding tools
-                  </span>
-                </li>
-              </ul>
-            </article>
-
-            {/* Elya AI */}
-            <article
-              className="rounded-2xl p-8 transition-all cursor-pointer group"
-              tabIndex={0}
-              role="article"
-              aria-labelledby="elya-ai-heading"
-              style={{
-                backgroundColor: '#FFFFFF',
-                boxShadow: '0 4px 15px rgba(0, 0, 0, 0.05)',
-                border: '2px solid transparent',
-              }}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.borderColor = '#5C7F4F';
-                e.currentTarget.style.transform = 'translateY(-4px)';
-                e.currentTarget.style.boxShadow = '0 12px 30px rgba(92, 127, 79, 0.25)';
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.borderColor = 'transparent';
-                e.currentTarget.style.transform = 'translateY(0)';
-                e.currentTarget.style.boxShadow = '0 4px 15px rgba(0, 0, 0, 0.05)';
-              }}
-            >
-              <div
-                className="inline-block p-3 rounded-xl mb-4"
-                style={{
-                  background: 'linear-gradient(145deg, #6B8B60 0%, #5F7F55 100%)',
-                }}
-              >
-                <MessageCircle className="h-8 w-8" style={{ color: '#FFFFFF' }} />
-              </div>
-              <h3
-                id="elya-ai-heading"
-                className="text-xl font-bold mb-2"
-                style={{ color: '#1A1A1A' }}
-              >
-                Elya AI Companion
-              </h3>
-              <p className="font-semibold mb-3" style={{ color: '#5C7F4F' }}>
-                Your private, always-on wellness buddy
-              </p>
-              <p className="mb-4" style={{ color: '#5A5A5A', lineHeight: '1.6' }}>
-                Debrief tough sessions with an AI who 'gets it' - get actionable, science-powered tips made for interpreters.
-              </p>
-              <ul className="space-y-2">
-                <li className="flex items-start">
-                  <CheckCircle
-                    className="h-5 w-5 mr-2 mt-0.5 flex-shrink-0"
-                    style={{ color: '#5C7F4F' }}
-                  />
-                  <span className="text-sm" style={{ color: '#3A3A3A' }}>
-                    Debrief tough sessions with an AI who 'gets it'
-                  </span>
-                </li>
-                <li className="flex items-start">
-                  <CheckCircle
-                    className="h-5 w-5 mr-2 mt-0.5 flex-shrink-0"
-                    style={{ color: '#5C7F4F' }}
-                  />
-                  <span className="text-sm" style={{ color: '#3A3A3A' }}>
-                    Get actionable, science-powered tips made for interpreters
-                  </span>
-                </li>
-                <li className="flex items-start">
-                  <CheckCircle
-                    className="h-5 w-5 mr-2 mt-0.5 flex-shrink-0"
-                    style={{ color: '#5C7F4F' }}
-                  />
-                  <span className="text-sm" style={{ color: '#3A3A3A' }}>
-                    Emotional check-ins, tailored just for you
-                  </span>
-                </li>
-                <li className="flex items-start">
-                  <CheckCircle
-                    className="h-5 w-5 mr-2 mt-0.5 flex-shrink-0"
-                    style={{ color: '#5C7F4F' }}
-                  />
-                  <span className="text-sm" style={{ color: '#3A3A3A' }}>
-                    Personalized wellness tips
-                  </span>
-                </li>
-              </ul>
-            </article>
-
-            {/* Growth Insights */}
-            <article
-              className="rounded-2xl p-8 transition-all cursor-pointer group"
-              style={{
-                backgroundColor: '#FFFFFF',
-                boxShadow: '0 4px 15px rgba(0, 0, 0, 0.05)',
-                border: '2px solid transparent',
-              }}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.borderColor = '#5C7F4F';
-                e.currentTarget.style.transform = 'translateY(-4px)';
-                e.currentTarget.style.boxShadow = '0 12px 30px rgba(92, 127, 79, 0.25)';
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.borderColor = 'transparent';
-                e.currentTarget.style.transform = 'translateY(0)';
-                e.currentTarget.style.boxShadow = '0 4px 15px rgba(0, 0, 0, 0.05)';
-              }}
-            >
-              <div
-                className="inline-block p-3 rounded-xl mb-4"
-                style={{
-                  background: 'linear-gradient(145deg, #6B8B60 0%, #5F7F55 100%)',
-                }}
-              >
-                <TrendingUp className="h-8 w-8" style={{ color: '#FFFFFF' }} />
-              </div>
-              <h3 className="text-xl font-bold mb-2" style={{ color: '#1A1A1A' }}>
-                Growth Tracking
-              </h3>
-              <p className="font-semibold mb-3" style={{ color: '#5C7F4F' }}>
-                See your wins and your progress, not just your setbacks
-              </p>
-              <p className="mb-4" style={{ color: '#5A5A5A', lineHeight: '1.6' }}>
-                Visualize how your brain and resilience adapt. Celebrate every step, no matter how small.
-              </p>
-              <ul className="space-y-2">
-                <li className="flex items-start">
-                  <CheckCircle
-                    className="h-5 w-5 mr-2 mt-0.5 flex-shrink-0"
-                    style={{ color: '#5C7F4F' }}
-                  />
-                  <span className="text-sm" style={{ color: '#3A3A3A' }}>
-                    Visualize how your brain and resilience adapt
-                  </span>
-                </li>
-                <li className="flex items-start">
-                  <CheckCircle
-                    className="h-5 w-5 mr-2 mt-0.5 flex-shrink-0"
-                    style={{ color: '#5C7F4F' }}
-                  />
-                  <span className="text-sm" style={{ color: '#3A3A3A' }}>
-                    Celebrate every step, no matter how small
-                  </span>
-                </li>
-              </ul>
-            </article>
-
-            {/* REMOVED EXTRA TOOLS */}
-            <div style={{ display: 'none' }}>
-              <article
-                className="rounded-2xl p-8 transition-all cursor-pointer group"
-                style={{
-                  backgroundColor: '#FFFFFF',
-                  boxShadow: '0 4px 15px rgba(0, 0, 0, 0.05)',
-                  border: '2px solid transparent',
-                }}
-                onMouseEnter={(e) => {
-                  e.currentTarget.style.borderColor = '#5C7F4F';
-                  e.currentTarget.style.transform = 'translateY(-4px)';
-                  e.currentTarget.style.boxShadow = '0 12px 30px rgba(92, 127, 79, 0.25)';
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.borderColor = 'transparent';
-                  e.currentTarget.style.transform = 'translateY(0)';
-                  e.currentTarget.style.boxShadow = '0 4px 15px rgba(0, 0, 0, 0.05)';
-                }}
-              >
-                <div
-                  className="inline-block p-3 rounded-xl mb-4"
-                  style={{
-                    background: 'linear-gradient(145deg, #6B8B60 0%, #5F7F55 100%)',
-                  }}
-                >
-                  <Heart className="h-8 w-8" style={{ color: '#FFFFFF' }} />
-                </div>
-                <h3 className="text-xl font-bold mb-3" style={{ color: '#1A1A1A' }}>
-                  REMOVED
-                </h3>
-                <p className="mb-4" style={{ color: '#5A5A5A', lineHeight: '1.6' }}>
-                  REMOVED
-                </p>
-                <ul className="space-y-2">
-                  <li className="flex items-start">
-                    <CheckCircle
-                      className="h-5 w-5 mr-2 mt-0.5 flex-shrink-0"
-                      style={{ color: '#5C7F4F' }}
-                    />
-                    <span className="text-sm" style={{ color: '#3A3A3A' }}>
-                      Self-awareness exercises
-                    </span>
-                  </li>
-                  <li className="flex items-start">
-                    <CheckCircle
-                      className="h-5 w-5 mr-2 mt-0.5 flex-shrink-0"
-                      style={{ color: '#5C7F4F' }}
-                    />
-                    <span className="text-sm" style={{ color: '#3A3A3A' }}>
-                      Empathy regulation tools
-                    </span>
-                  </li>
-                  <li className="flex items-start">
-                    <CheckCircle
-                      className="h-5 w-5 mr-2 mt-0.5 flex-shrink-0"
-                      style={{ color: '#5C7F4F' }}
-                    />
-                    <span className="text-sm" style={{ color: '#3A3A3A' }}>
-                      Cultural sensitivity training
-                    </span>
-                  </li>
-                </ul>
-              </article>
-
-              {/* Community */}
-              <article
-                className="rounded-2xl p-8 transition-all cursor-pointer group"
-                style={{
-                  backgroundColor: '#FFFFFF',
-                  boxShadow: '0 4px 15px rgba(0, 0, 0, 0.05)',
-                  border: '2px solid transparent',
-                }}
-                onMouseEnter={(e) => {
-                  e.currentTarget.style.borderColor = '#5C7F4F';
-                  e.currentTarget.style.transform = 'translateY(-4px)';
-                  e.currentTarget.style.boxShadow = '0 12px 30px rgba(92, 127, 79, 0.25)';
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.borderColor = 'transparent';
-                  e.currentTarget.style.transform = 'translateY(0)';
-                  e.currentTarget.style.boxShadow = '0 4px 15px rgba(0, 0, 0, 0.05)';
-                }}
-              >
-                <div
-                  className="inline-block p-3 rounded-xl mb-4"
-                  style={{
-                    background: 'linear-gradient(145deg, #6B8B60 0%, #5F7F55 100%)',
-                  }}
-                >
-                  <Users className="h-8 w-8" style={{ color: '#FFFFFF' }} />
-                </div>
-                <h3 className="text-xl font-bold mb-3" style={{ color: '#1A1A1A' }}>
-                  Peer Support Network
-                </h3>
-                <p className="mb-4" style={{ color: '#5A5A5A', lineHeight: '1.6' }}>
-                  Connect with interpreters who understand your unique challenges
-                </p>
-                <ul className="space-y-2">
-                  <li className="flex items-start">
-                    <CheckCircle
-                      className="h-5 w-5 mr-2 mt-0.5 flex-shrink-0"
-                      style={{ color: '#5C7F4F' }}
-                    />
-                    <span className="text-sm" style={{ color: '#3A3A3A' }}>
-                      Anonymous peer forums
-                    </span>
-                  </li>
-                  <li className="flex items-start">
-                    <CheckCircle
-                      className="h-5 w-5 mr-2 mt-0.5 flex-shrink-0"
-                      style={{ color: '#5C7F4F' }}
-                    />
-                    <span className="text-sm" style={{ color: '#3A3A3A' }}>
-                      Monthly wellness circles
-                    </span>
-                  </li>
-                  <li className="flex items-start">
-                    <CheckCircle
-                      className="h-5 w-5 mr-2 mt-0.5 flex-shrink-0"
-                      style={{ color: '#5C7F4F' }}
-                    />
-                    <span className="text-sm" style={{ color: '#3A3A3A' }}>
-                      Mentor matching program
-                    </span>
-                  </li>
-                </ul>
-              </article>
-            </div>
-            {/* END REMOVED EXTRA TOOLS */}
-          </div>
-        </div>
-      </section>
-
-      {/* Enterprise Trust & Compliance Section */}
-      <section
-        className="py-16"
         style={{ backgroundColor: '#F8FBF6' }}
-        aria-labelledby="trust-heading"
+        aria-labelledby="data-case-heading"
       >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
-            <h2 id="trust-heading" className="text-3xl font-bold mb-4" style={{ color: '#1A1A1A' }}>
-              Enterprise-Ready Security & Compliance
+            <h2
+              id="data-case-heading"
+              className="text-4xl font-bold mb-6"
+              style={{ color: '#1A1A1A' }}
+            >
+              The Data-Driven Case
             </h2>
-            <p className="text-lg" style={{ color: '#5A5A5A' }}>
-              Trusted by healthcare systems, government agencies, and Fortune 500 companies
+            <p className="text-lg max-w-3xl mx-auto" style={{ color: '#5A5A5A' }}>
+              National studies from 2024-2025 reveal why interpreter performance optimization isn't optional—it's essential:
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12">
-            {/* HIPAA Compliance */}
-            <div className="text-center">
-              <div
-                className="inline-block p-4 rounded-xl mb-4"
-                style={{
-                  background: 'linear-gradient(145deg, #FFD700 0%, #FFC107 100%)',
-                  boxShadow: '0 4px 15px rgba(255, 193, 7, 0.3)',
-                }}
-              >
-                <Shield className="h-10 w-10" style={{ color: '#1A1A1A' }} />
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
+            {/* Stat 1 */}
+            <div
+              className="rounded-xl p-6 text-center"
+              style={{
+                backgroundColor: '#FFFFFF',
+                border: '2px solid rgba(92, 127, 79, 0.2)',
+              }}
+            >
+              <div className="text-5xl font-bold mb-2" style={{ color: '#5C7F4F' }}>
+                82%
               </div>
-              <h3 className="text-xl font-bold mb-2" style={{ color: '#1A1A1A' }}>
-                HIPAA Compliant
-              </h3>
-              <p className="text-sm" style={{ color: '#5A5A5A' }}>
-                Zero-Knowledge Wellness Verification ensures no PHI is ever stored or exposed
+              <p className="text-sm font-semibold" style={{ color: '#1A1A1A' }}>
+                experience burnout symptoms
               </p>
             </div>
 
-            {/* SOC 2 Ready */}
-            <div className="text-center">
-              <div
-                className="inline-block p-4 rounded-xl mb-4"
-                style={{
-                  background: 'linear-gradient(145deg, #6B8B60 0%, #5F7F55 100%)',
-                  boxShadow: '0 4px 15px rgba(107, 139, 96, 0.3)',
-                }}
-              >
-                <Award className="h-10 w-10" style={{ color: '#FFFFFF' }} />
+            {/* Stat 2 */}
+            <div
+              className="rounded-xl p-6 text-center"
+              style={{
+                backgroundColor: '#FFFFFF',
+                border: '2px solid rgba(92, 127, 79, 0.2)',
+              }}
+            >
+              <div className="text-5xl font-bold mb-2" style={{ color: '#5C7F4F' }}>
+                74%
               </div>
-              <h3 className="text-xl font-bold mb-2" style={{ color: '#1A1A1A' }}>
-                SOC 2 Type II Ready
-              </h3>
-              <p className="text-sm" style={{ color: '#5A5A5A' }}>
-                Enterprise-grade security controls and audit-ready compliance documentation
+              <p className="text-sm font-semibold" style={{ color: '#1A1A1A' }}>
+                report vicarious trauma
               </p>
             </div>
 
-            {/* GDPR Compliant */}
-            <div className="text-center">
-              <div
-                className="inline-block p-4 rounded-xl mb-4"
-                style={{
-                  background: 'linear-gradient(145deg, #4B79A1 0%, #283E51 100%)',
-                  boxShadow: '0 4px 15px rgba(75, 121, 161, 0.3)',
-                }}
-              >
-                <Users className="h-10 w-10" style={{ color: '#FFFFFF' }} />
+            {/* Stat 3 */}
+            <div
+              className="rounded-xl p-6 text-center"
+              style={{
+                backgroundColor: '#FFFFFF',
+                border: '2px solid rgba(92, 127, 79, 0.2)',
+              }}
+            >
+              <div className="text-5xl font-bold mb-2" style={{ color: '#5C7F4F' }}>
+                68%
               </div>
-              <h3 className="text-xl font-bold mb-2" style={{ color: '#1A1A1A' }}>
-                GDPR Compliant
-              </h3>
-              <p className="text-sm" style={{ color: '#5A5A5A' }}>
-                Full data privacy rights for EU clients with complete transparency
+              <p className="text-sm font-semibold" style={{ color: '#1A1A1A' }}>
+                struggle with emotional boundaries
+              </p>
+            </div>
+
+            {/* Stat 4 */}
+            <div
+              className="rounded-xl p-6 text-center"
+              style={{
+                backgroundColor: '#FFFFFF',
+                border: '2px solid rgba(92, 127, 79, 0.2)',
+              }}
+            >
+              <div className="text-5xl font-bold mb-2" style={{ color: '#5C7F4F' }}>
+                45%
+              </div>
+              <p className="text-sm font-semibold" style={{ color: '#1A1A1A' }}>
+                have considered leaving the profession
               </p>
             </div>
           </div>
 
           <div
-            className="rounded-2xl p-8 text-center"
+            className="rounded-xl p-8 text-center"
             style={{
-              backgroundColor: 'rgba(255, 215, 0, 0.1)',
-              border: '2px solid rgba(255, 193, 7, 0.3)',
+              backgroundColor: '#FFFFFF',
+              border: '2px solid #5C7F4F',
             }}
           >
             <p className="text-lg font-semibold mb-2" style={{ color: '#1A1A1A' }}>
-              🏆 The ONLY HIPAA-Compliant Interpreter Wellness Platform
+              Your brain isn't the problem. The lack of support is.
             </p>
-            <p className="text-sm" style={{ color: '#5A5A5A' }}>
-              Unmatched data protection for healthcare systems and enterprise organizations
+            <p className="text-base" style={{ color: '#5A5A5A' }}>
+              InterpretReflect gives you the tools to measure, manage, and optimize your cognitive performance—so you can sustain your practice for decades, not just years.
             </p>
-          </div>
-        </div>
-      </section>
-
-      {/* Why InterpretReflect Section */}
-      <section
-        className="py-20"
-        style={{ backgroundColor: '#FFFFFF' }}
-        aria-labelledby="why-heading"
-      >
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-16">
-            <h2 id="why-heading" className="text-4xl font-bold mb-4" style={{ color: '#1A1A1A' }}>
-              Why Interpreters Choose InterpretReflect™
-            </h2>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-            <div className="text-center">
-              <div
-                className="inline-block p-4 rounded-full mb-4"
-                style={{
-                  backgroundColor: 'rgba(92, 127, 79, 0.1)',
-                }}
-              >
-                <Brain className="h-8 w-8" style={{ color: '#5C7F4F' }} />
-              </div>
-              <h3 className="text-lg font-bold mb-2" style={{ color: '#1A1A1A' }}>
-                Built on Science
-              </h3>
-              <p className="text-sm" style={{ color: '#5A5A5A' }}>
-                Tools and insights rooted in cutting-edge neuroscience, emotional intelligence, and trauma research, customized for your unique role.
-              </p>
-            </div>
-
-            <div className="text-center">
-              <div
-                className="inline-block p-4 rounded-full mb-4"
-                style={{
-                  backgroundColor: 'rgba(92, 127, 79, 0.1)',
-                }}
-              >
-                <Clock className="h-8 w-8" style={{ color: '#5C7F4F' }} />
-              </div>
-              <h3 className="text-lg font-bold mb-2" style={{ color: '#1A1A1A' }}>
-                Made for Busy Schedules
-              </h3>
-              <p className="text-sm" style={{ color: '#5A5A5A' }}>
-                All interventions fit into 2-minute breaks, no hidden time commitments, no fluff, maximum impact.
-              </p>
-            </div>
-
-            <div className="text-center">
-              <div
-                className="inline-block p-4 rounded-full mb-4"
-                style={{
-                  backgroundColor: 'rgba(92, 127, 79, 0.1)',
-                }}
-              >
-                <Shield className="h-8 w-8" style={{ color: '#5C7F4F' }} />
-              </div>
-              <h3 className="text-lg font-bold mb-2" style={{ color: '#1A1A1A' }}>
-                Radically Confidential
-              </h3>
-              <p className="text-sm" style={{ color: '#5A5A5A' }}>
-                Your journey stays private, always. Data is safe, secure, and never shared.
-              </p>
-            </div>
-
-            <div className="text-center">
-              <div
-                className="inline-block p-4 rounded-full mb-4"
-                style={{
-                  backgroundColor: 'rgba(92, 127, 79, 0.1)',
-                }}
-              >
-                <Award className="h-8 w-8" style={{ color: '#5C7F4F' }} />
-              </div>
-              <h3 className="text-lg font-bold mb-2" style={{ color: '#1A1A1A' }}>
-                Real Professional Growth
-              </h3>
-              <p className="text-sm" style={{ color: '#5A5A5A' }}>
-                Invest in wellness and your future. Professional Plan unlocks CEU credits for continuous learning.
-              </p>
-            </div>
           </div>
         </div>
       </section>
@@ -1066,7 +905,7 @@ function LandingPage({ onGetStarted }: LandingPageProps) {
       {/* Pricing Section */}
       <section
         className="py-20"
-        style={{ backgroundColor: '#FAF9F6' }}
+        style={{ backgroundColor: '#FFFFFF' }}
         aria-labelledby="pricing-heading"
       >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -1130,7 +969,7 @@ function LandingPage({ onGetStarted }: LandingPageProps) {
                     className="h-5 w-5 mr-2 mt-0.5 flex-shrink-0"
                     style={{ color: '#5C7F4F' }}
                   />
-                  <span style={{ color: '#5A5A5A' }}>Elya AI Companion</span>
+                  <span style={{ color: '#5A5A5A' }}>Catalyst AI Partner</span>
                 </li>
                 <li className="flex items-start">
                   <CheckCircle
@@ -1362,19 +1201,18 @@ function LandingPage({ onGetStarted }: LandingPageProps) {
         </div>
       </section>
 
-
-      {/* CTA Section */}
+      {/* Final CTA Section */}
       <section
         className="py-20"
-        style={{ backgroundColor: '#FFFFFF' }}
+        style={{ backgroundColor: '#F8FBF6' }}
         aria-labelledby="cta-heading"
       >
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <h2 id="cta-heading" className="text-4xl font-bold mb-4" style={{ color: '#1A1A1A' }}>
-            Start Your Journey Today
+            Start Your Performance Journey Today
           </h2>
           <p className="text-xl mb-8" style={{ color: '#5A5A5A' }}>
-            Your wellbeing is non-negotiable, and you don't have to do it alone.
+            Your peak performance is within reach. Let's optimize your capacity together.
           </p>
 
           <div className="flex flex-col items-center space-y-6">
@@ -1394,37 +1232,13 @@ function LandingPage({ onGetStarted }: LandingPageProps) {
                 e.currentTarget.style.transform = 'translateY(0) scale(1)';
                 e.currentTarget.style.boxShadow = '0 4px 15px rgba(107, 139, 96, 0.3)';
               }}
-              aria-label="Get started with InterpretReflect"
+              aria-label="Start Your Performance Assessment"
             >
-              Get Started
+              Start Your Performance Assessment
+              <ArrowRight className="h-5 w-5 ml-2" aria-hidden="true" />
             </button>
             <p className="text-sm" style={{ color: '#5A5A5A' }}>
-              3-day free trial • Cancel anytime • 100% secure
-            </p>
-
-            <button
-              onClick={handleAssessment}
-              className="inline-flex items-center px-6 py-3 rounded-full font-medium text-base transition-all focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-sage-600"
-              style={{
-                backgroundColor: 'transparent',
-                color: '#5C7F4F',
-                border: '1px solid #6B8B60',
-              }}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.backgroundColor = 'rgba(107, 139, 96, 0.1)';
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.backgroundColor = 'transparent';
-              }}
-              aria-label="Take the wellness check-in"
-            >
-              Or: Take the 2-Minute Wellness Check-In →
-            </button>
-            <p className="text-sm mt-2" style={{ color: '#5A5A5A' }}>
-              See your stress patterns instantly
-            </p>
-            <p className="text-xs mt-1" style={{ color: '#4A6B3E', fontStyle: 'italic' }}>
-              Research-backed • Completely confidential
+              Limited early access • Cancel anytime • 100% secure
             </p>
           </div>
 
@@ -1473,7 +1287,13 @@ function LandingPage({ onGetStarted }: LandingPageProps) {
           </div>
 
           <div className="space-y-4">
-            <p className="text-sm" style={{ color: 'rgba(255, 255, 255, 0.6)' }}>
+            <div className="text-center mb-4">
+              <p className="text-sm font-semibold" style={{ color: '#FFFFFF' }}>
+                RID Approved Sponsor #2309 | Building Bridges Global, LLC
+              </p>
+            </div>
+
+            <p className="text-sm text-center" style={{ color: 'rgba(255, 255, 255, 0.6)' }}>
               © 2025 InterpretReflect. All rights reserved.
             </p>
 
@@ -1485,8 +1305,8 @@ function LandingPage({ onGetStarted }: LandingPageProps) {
               }}
             >
               <p className="text-xs leading-relaxed" style={{ color: 'rgba(255, 255, 255, 0.5)' }}>
-                <strong className="text-white">Disclaimer:</strong> InterpretReflect™ is a wellness
-                support tool, not a substitute for professional mental health care. If you are
+                <strong className="text-white">Disclaimer:</strong> InterpretReflect™ is a performance
+                optimization platform, not a substitute for professional mental health care. If you are
                 experiencing significant distress, please consult a qualified professional.
               </p>
             </div>

@@ -1,1004 +1,699 @@
-import type React from "react";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { ModernAuthModal } from "./components/auth/ModernAuthModal";
 import { Footer } from "./components/Footer";
 import Logo from "./components/Logo";
-import PricingModal from "./components/PricingModal";
-import WaitlistModal from "./components/WaitlistModal";
 import { useAuth } from "./contexts/AuthContext";
 
 interface LandingPageProps {
 	onGetStarted: () => void;
 }
 
-// Professional Dark Forest Green Color Palette
-const colors = {
-	// Primary palette - professional and trustworthy
-	primary: {
-		slate: "#475569", // Clean slate - professional, trustworthy
-		green: "#5C7F4F", // Dark forest green - professional, wellness
-		indigo: "#4F46E5", // Soft indigo - thoughtful, modern
+const heroBullets = [
+	"Science-backed assessments",
+	"RID Sponsor #2309",
+	"5.0+ CEUs available",
+];
+
+const stats = [
+	{
+		value: "16",
+		label: "RESEARCH FRAMEWORKS",
+		description: "The ECCI™ system keeps every insight grounded in evidence.",
 	},
-	// Background gradients - professional and clean
-	gradients: {
-		hero: "linear-gradient(135deg, #FAFBFC 0%, #F8FAFC 50%, #F1F5F9 100%)",
-		card: "linear-gradient(145deg, #FFFFFF 0%, #FAFBFC 100%)",
-		slate: "linear-gradient(135deg, #475569 0%, #64748B 100%)",
-		green: "linear-gradient(135deg, #5C7F4F 0%, #5B9378 100%)",
-		indigo: "linear-gradient(135deg, #4F46E5 0%, #6366F1 100%)",
+	{
+		value: "5.0+",
+		label: "CEUs AVAILABLE",
+		description: "Earn credit while you build sustainable performance habits.",
 	},
-	// Neutral colors - clean grays
-	neutral: {
-		900: "#0F172A",
-		800: "#1E293B",
-		700: "#334155",
-		600: "#475569",
-		500: "#64748B",
-		400: "#94A3B8",
-		300: "#CBD5E1",
-		200: "#E2E8F0",
-		100: "#F1F5F9",
-		50: "#F8FAFC",
+	{
+		value: "24/7",
+		label: "AI PERFORMANCE SUPPORT",
+		description: "Catalyst is on-call whenever you need guidance.",
 	},
-	// Semantic colors - modern and clean
-	status: {
-		success: "#10B981",
-		warning: "#F59E0B",
-		error: "#EF4444",
-		info: "#3B82F6",
+];
+
+const optimizeCards = [
+	{
+		title: "Your Performance Foundation: The ECCI™ Framework",
+		description:
+			"Our proprietary ECCI™ Framework (Emotional & Cultural Competencies for Interpreters) uses 16 research-backed methods to measure how your brain handles cognitive load, cultural processing, and performance growth.",
 	},
-};
+	{
+		title: "Catalyst: Your AI Performance Partner",
+		description:
+			"Get personalized recommendations 24/7. Catalyst analyzes your cognitive patterns and suggests practical strategies to optimize your capacity. Built on the ECCI™ framework. Your data is 100% private.",
+	},
+	{
+		title: "RID-Approved Certification",
+		description:
+			"Earn RID-approved CEUs across multiple categories through Building Bridges Global, LLC (Sponsor #2309), including the new 'Studies of Healthy Minds & Bodies' category—active now.",
+	},
+];
+
+const builtForCards = [
+	{
+		title: "Sign Language Interpreters",
+		description:
+			"Protect your career longevity with wellness tools designed for the visual, spatial, and relational demands of sign language interpreting.",
+	},
+	{
+		title: "Spoken Language Interpreters",
+		description:
+			"Stay sharp in medical, legal, and community settings with guidance attuned to language switching, high-stakes dialogue, and cultural nuance.",
+	},
+	{
+		title: "Remote & Hybrid Teams",
+		description:
+			"Combat screen fatigue and isolation with science-backed routines that keep remote, VRI, and hybrid interpreters grounded between sessions.",
+	},
+];
+
+const testimonials = [
+	{
+		quote:
+			"InterpretReflect helped me pinpoint the patterns that were draining my focus between hospital assignments. The recommendations are specific, actionable, and keep me at my professional best.",
+		name: "Alex Ramirez",
+		role: "Freelance Medical Interpreter, RID CI and CT",
+	},
+	{
+		quote:
+			"The ECCI™ framework gives interpreters language for what we feel and a roadmap for sustainable practice. It's the evidence base I wished I had when I started mentoring.",
+		name: "Sarah Wheeler",
+		role: "Creator of the ECCI™ Framework & RID Certified Interpreter",
+	},
+];
+
+const ecciFeatures = [
+	{
+		title: "Measure Cognitive Load",
+		description:
+			"Identify which assignments, environments, and language combinations tax working memory so you can plan rest and support.",
+	},
+	{
+		title: "Protect Emotional Capacity",
+		description:
+			"Track emotional labor and vicarious trauma markers with guidance grounded in trauma-informed practice.",
+	},
+	{
+		title: "Strengthen Cultural Agility",
+		description:
+			"Surface cultural processing demands and bias triggers so you can prepare intentionally for every context.",
+	},
+	{
+		title: "Plan Sustainable Growth",
+		description:
+			"Translate assessment data into goals, CEU plans, and daily rituals that expand your capacity over time.",
+	},
+];
+
+const protocolSteps = [
+	{
+		title: "Establish Your Baseline",
+		description:
+			"Take a 15-minute assessment. Get your personalized performance profile with specific metrics.",
+	},
+	{
+		title: "Track What Matters Daily",
+		description:
+			"Log your daily performance: baseline checks, post-assignment reflections, and capacity tracking—all included in your platform access.",
+	},
+	{
+		title: "Earn Professional Credits",
+		description:
+			"Purchase CEU bundles to certify your professional development while building sustainable practice habits.",
+	},
+];
+
+const dataStats = [
+	{ value: "24%", description: "meet clinical burnout criteria" },
+	{ value: "41.5%", description: "have experienced vicarious trauma" },
+	{ value: "57.5%", description: "report imposter syndrome" },
+	{ value: "50%", description: "struggle with boundary management" },
+];
 
 function LandingPageEnhanced({ onGetStarted }: LandingPageProps) {
-	console.log("LandingPageEnhanced: Rendering component");
 	const navigate = useNavigate();
 	const { user } = useAuth();
 	const [authModalOpen, setAuthModalOpen] = useState(false);
-	const [authMode, setAuthMode] = useState<"login" | "signup">("login");
-	const [pricingModalOpen, setPricingModalOpen] = useState(false);
-	const [waitlistModalOpen, setWaitlistModalOpen] = useState(false);
-	const [waitlistPlan] = useState<"professional" | "organizations">(
-		"professional",
-	);
+	const [authMode, setAuthMode] = useState<"signin" | "signup">("signin");
 	const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-	console.log("LandingPageEnhanced: State initialized");
-	const [announceMessage, setAnnounceMessage] = useState("");
-
-	const handleLogin = () => {
-		setAuthMode("signin");
-		setAuthModalOpen(true);
-	};
-
-	const handleSignup = () => {
-		// Redirect to seamless signup page
-		navigate("/signup");
-	};
-
-	const handleSelectPlan = () => {
-		setWaitlistModalOpen(false);
-		onGetStarted();
-	};
 
 	const scrollToSection = (sectionId: string) => {
 		const element = document.getElementById(sectionId);
 		if (element) {
 			element.scrollIntoView({ behavior: "smooth", block: "start" });
+			setMobileMenuOpen(false);
 		}
 	};
 
+	const handlePrimaryAction = () => {
+		onGetStarted();
+		navigate("/signup");
+	};
+
+	const handleSignIn = () => {
+		setAuthMode("signin");
+		setAuthModalOpen(true);
+	};
+
+	const handleOpenSignupModal = () => {
+		setAuthMode("signup");
+		setAuthModalOpen(true);
+	};
+
 	return (
-		<div className="min-h-screen" style={{ background: colors.gradients.hero }}>
-			{/* Live region for screen reader announcements */}
-			<div
-				className="sr-only"
-				role="status"
-				aria-live="polite"
-				aria-atomic="true"
+		<div className="min-h-screen bg-slate-50 text-slate-900">
+			<a
+				href="#main"
+				className="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 focus:z-50 focus:rounded-lg focus:bg-white focus:px-4 focus:py-2 focus:text-slate-900 focus:outline-none focus:ring-2 focus:ring-emerald-500"
 			>
-				{announceMessage}
-			</div>
+				Skip to main content
+			</a>
 
-			{/* Skip navigation links for accessibility */}
-			<div className="sr-only focus-within:not-sr-only focus-within:absolute focus-within:top-0 focus-within:left-0 focus-within:right-0 focus-within:z-50 focus-within:bg-white focus-within:p-2 focus-within:shadow-lg">
-				<a
-					href="#main"
-					className="inline-block px-4 py-2 mr-2 text-white rounded-lg focus:ring-4 focus:outline-none"
-					style={
-						{
-							backgroundColor: colors.primary.teal,
-							"--tw-ring-color": "rgba(20, 184, 166, 0.4)",
-						} as React.CSSProperties
-					}
-				>
-					Skip to main content
-				</a>
-				<a
-					href="#navigation"
-					className="inline-block px-4 py-2 mr-2 text-white rounded-lg focus:ring-4 focus:outline-none"
-					style={
-						{
-							backgroundColor: colors.primary.teal,
-							"--tw-ring-color": "rgba(20, 184, 166, 0.4)",
-						} as React.CSSProperties
-					}
-				>
-					Skip to navigation
-				</a>
-				<a
-					href="#footer"
-					className="inline-block px-4 py-2 text-white rounded-lg focus:ring-4 focus:outline-none"
-					style={
-						{
-							backgroundColor: colors.primary.teal,
-							"--tw-ring-color": "rgba(20, 184, 166, 0.4)",
-						} as React.CSSProperties
-					}
-				>
-					Skip to footer
-				</a>
-			</div>
-
-			{/* Enhanced Navigation with personalization options */}
 			<nav
 				id="navigation"
-				className="sticky top-0 z-40 backdrop-blur-lg bg-white/80 border-b"
-				style={{ borderColor: colors.neutral[100] }}
-				role="navigation"
+				className="sticky top-0 z-40 border-b border-slate-200 bg-white/90 backdrop-blur-lg"
 				aria-label="Main navigation"
 			>
-				<div className="container mx-auto px-4 sm:px-6 lg:px-8">
-					<div className="flex justify-between items-center h-16">
-						{/* Logo with better visual hierarchy */}
-						<Logo
-							size="md"
-							showTagline={true}
-							variant="default"
-							linkToHome={false}
-						/>
+				<div className="mx-auto flex h-16 max-w-6xl items-center justify-between px-4 sm:px-6 lg:px-8">
+					<Logo size="md" showTagline variant="default" linkToHome={false} />
 
-						{/* Desktop Navigation - Clean Modern Pills */}
-						<div className="hidden md:flex items-center gap-4">
-							<button
-								onClick={() => scrollToSection("how-it-works")}
-								className="px-5 py-2.5 text-sm font-semibold rounded-lg border-2 transition-all focus:outline-none focus:ring-2 focus:ring-offset-2 hover:opacity-90"
-								style={{ borderColor: "#5C7F4F", color: "#5C7F4F", backgroundColor: "transparent" }}
-								aria-label="Learn how interpreterRx works"
-							>
-								How It Works
-							</button>
-							<button
-								onClick={() => scrollToSection("pricing")}
-								className="px-5 py-2.5 text-sm font-semibold rounded-lg border-2 transition-all focus:outline-none focus:ring-2 focus:ring-offset-2 hover:opacity-90"
-								style={{ borderColor: "#5C7F4F", color: "#5C7F4F", backgroundColor: "transparent" }}
-								aria-label="View pricing plans"
-							>
-								Pricing
-							</button>
-
-							{/* Auth buttons */}
-							{!user ? (
-								<>
-									<button
-										onClick={handleSignup}
-										className="px-6 py-3 text-sm font-bold text-white rounded-full transition-all focus:outline-none focus:ring-2 focus:ring-offset-2 hover:opacity-90"
-										style={{ backgroundColor: "#5C7F4F" }}
-										aria-label="Sign up for account"
-									>
-										Get Started →
-									</button>
-									<button
-										onClick={handleLogin}
-										className="px-4 py-2 text-sm font-medium transition-all focus:outline-none focus:ring-2 focus:ring-offset-2 hover:opacity-90"
-										style={{ color: "#4A6A3F", backgroundColor: "transparent" }}
-										aria-label="Sign in to your account"
-									>
-										Sign In
-									</button>
-								</>
-							) : (
-								<button
-									onClick={handleSignup}
-									className="px-6 py-3 text-sm font-bold text-white rounded-full transition-all focus:outline-none focus:ring-2 focus:ring-offset-2"
-									style={{ backgroundColor: "#5C7F4F" }}
-									aria-label="Go to your dashboard"
-								>
-									Go to Dashboard
-								</button>
-							)}
-						</div>
-
-						{/* Mobile menu button */}
+					<div className="hidden items-center gap-6 md:flex">
 						<button
-							onClick={() => {
-								setMobileMenuOpen(!mobileMenuOpen);
-								setAnnounceMessage(
-									mobileMenuOpen ? "Menu closed" : "Menu opened",
-								);
-							}}
-							className="md:hidden px-3 py-2 rounded-lg hover:bg-gray-100 focus:outline-none focus:ring-4 text-sm font-medium"
-							style={
-								{
-									"--tw-ring-color": "rgba(45, 95, 63, 0.4)",
-									color: colors.neutral[600],
-								} as React.CSSProperties
-							}
-							aria-label={mobileMenuOpen ? "Close menu" : "Open menu"}
-							aria-expanded={mobileMenuOpen}
-							aria-controls="mobile-menu"
+							onClick={() => scrollToSection("ecci-framework")}
+							className="text-sm font-semibold text-slate-700 transition hover:text-emerald-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500 focus-visible:ring-offset-2"
 						>
-							{mobileMenuOpen ? "Close" : "Menu"}
+							ECCI™ Framework
+						</button>
+						<button
+							onClick={() => scrollToSection("performance-protocol")}
+							className="text-sm font-semibold text-slate-700 transition hover:text-emerald-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500 focus-visible:ring-offset-2"
+						>
+							How It Works
+						</button>
+						<button
+							onClick={() => scrollToSection("testimonials")}
+							className="text-sm font-semibold text-slate-700 transition hover:text-emerald-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500 focus-visible:ring-offset-2"
+						>
+							Testimonials
+						</button>
+						<button
+							onClick={() => scrollToSection("data-case")}
+							className="text-sm font-semibold text-slate-700 transition hover:text-emerald-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500 focus-visible:ring-offset-2"
+						>
+							Research
 						</button>
 					</div>
+
+					<div className="hidden items-center gap-3 md:flex">
+						{user ? (
+							<button
+								onClick={() => navigate("/dashboard")}
+								className="rounded-full border border-emerald-600 px-5 py-2 text-sm font-semibold text-emerald-700 transition hover:bg-emerald-50 focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500 focus-visible:ring-offset-2"
+							>
+								Go to Dashboard
+							</button>
+						) : (
+							<>
+								<button
+									onClick={handleSignIn}
+									className="rounded-full border border-slate-200 px-5 py-2 text-sm font-semibold text-slate-700 transition hover:border-emerald-600 hover:text-emerald-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500 focus-visible:ring-offset-2"
+								>
+									Sign In
+								</button>
+								<button
+									onClick={handlePrimaryAction}
+									className="rounded-full bg-emerald-700 px-6 py-2 text-sm font-semibold text-white transition hover:bg-emerald-800 focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500 focus-visible:ring-offset-2"
+								>
+									Start Your Performance Assessment
+								</button>
+							</>
+						)}
+					</div>
+
+					<button
+						onClick={() => setMobileMenuOpen((prev) => !prev)}
+						className="rounded-lg border border-slate-200 px-3 py-2 text-sm font-semibold text-slate-700 md:hidden"
+						aria-expanded={mobileMenuOpen}
+						aria-controls="mobile-menu"
+					>
+						{mobileMenuOpen ? "Close" : "Menu"}
+					</button>
 				</div>
 
-				{/* Mobile Navigation */}
 				{mobileMenuOpen && (
 					<div
 						id="mobile-menu"
-						className="md:hidden bg-white border-t"
-						style={{ borderColor: colors.neutral[100] }}
-						role="navigation"
-						aria-label="Mobile navigation"
+						className="border-t border-slate-200 bg-white md:hidden"
 					>
-						<div className="px-4 py-4 space-y-2">
+						<div className="flex flex-col gap-2 px-4 py-4">
 							<button
-								onClick={() => {
-									scrollToSection("how-it-works");
-									setMobileMenuOpen(false);
-								}}
-								className="block w-full py-3 text-center text-sm font-semibold text-white rounded-full"
-								style={{ backgroundColor: "#5C7F4F" }}
+								onClick={() => scrollToSection("ecci-framework")}
+								className="rounded-lg px-4 py-3 text-left text-sm font-semibold text-slate-700 hover:bg-emerald-50"
+							>
+								ECCI™ Framework
+							</button>
+							<button
+								onClick={() => scrollToSection("performance-protocol")}
+								className="rounded-lg px-4 py-3 text-left text-sm font-semibold text-slate-700 hover:bg-emerald-50"
 							>
 								How It Works
 							</button>
 							<button
-								onClick={() => {
-									scrollToSection("pricing");
-									setMobileMenuOpen(false);
-								}}
-								className="block w-full py-3 text-center text-sm font-semibold text-white rounded-full"
-								style={{ backgroundColor: "#5C7F4F" }}
+								onClick={() => scrollToSection("testimonials")}
+								className="rounded-lg px-4 py-3 text-left text-sm font-semibold text-slate-700 hover:bg-emerald-50"
 							>
-								Pricing
+								Testimonials
 							</button>
-							{!user ? (
-								<div
-									className="space-y-2 pt-4 border-t"
-									style={{ borderColor: colors.neutral[100] }}
-								>
+							<button
+								onClick={() => scrollToSection("data-case")}
+								className="rounded-lg px-4 py-3 text-left text-sm font-semibold text-slate-700 hover:bg-emerald-50"
+							>
+								Research
+							</button>
+							<div className="mt-2 flex flex-col gap-2">
+								{user ? (
 									<button
-										onClick={handleSignup}
-										className="block w-full py-3 text-center text-sm font-semibold text-white rounded-full"
-										style={{ backgroundColor: "#5C7F4F" }}
+										onClick={() => navigate("/dashboard")}
+										className="rounded-full border border-emerald-600 px-5 py-2 text-sm font-semibold text-emerald-700 transition hover:bg-emerald-50"
 									>
-										Get Started
+										Go to Dashboard
 									</button>
-									<button
-										onClick={handleLogin}
-										className="block w-full py-3 text-center text-sm font-semibold text-white rounded-full"
-										style={{ backgroundColor: "#5C7F4F" }}
-									>
-										Sign In
-									</button>
-								</div>
-							) : (
-								<button
-									onClick={handleSignup}
-									className="block w-full py-2 text-center text-sm font-medium text-white rounded-lg"
-									style={{ background: colors.gradients.accent }}
-								>
-									Go to Dashboard
-								</button>
-							)}
+								) : (
+									<>
+										<button
+											onClick={handleSignIn}
+											className="rounded-full border border-slate-200 px-5 py-2 text-sm font-semibold text-slate-700 transition hover:border-emerald-600 hover:text-emerald-700"
+										>
+											Sign In
+										</button>
+										<button
+											onClick={handlePrimaryAction}
+											className="rounded-full bg-emerald-700 px-5 py-2 text-sm font-semibold text-white transition hover:bg-emerald-800"
+										>
+											Start Your Performance Assessment
+										</button>
+									</>
+								)}
+							</div>
 						</div>
 					</div>
 				)}
 			</nav>
 
 			<main id="main" role="main" aria-label="Main content">
-				{/* Enhanced Hero Section with better visual hierarchy */}
-				<section className="relative py-20 px-4" aria-labelledby="hero-heading" style={{ backgroundColor: "#F5F0E8", borderBottom: "1px solid rgba(0, 0, 0, 0.08)" }}>
-					<div className="container mx-auto max-w-6xl">
-						{/* Main headline with emphasis on wellness */}
-						<div className="text-center mb-12">
-							<h1
-							id="hero-heading"
-							className="text-4xl sm:text-5xl lg:text-6xl font-bold mb-8 leading-tight"
-							style={{ color: colors.neutral[900] }}
-							>
-							Interpreter Burnout is at{" "}
-							<span style={{ color: "#DC2626" }}>24%</span>
-							</h1>
-							<h2
-							className="text-2xl sm:text-3xl font-semibold mb-6 max-w-3xl mx-auto"
-							style={{ color: colors.neutral[800] }}
-							>
-							You don't have to be part of that statistic.
+				<section
+					className="bg-slate-900 text-white"
+					aria-labelledby="hero-heading"
+				>
+					<div className="mx-auto grid max-w-6xl gap-12 px-4 py-20 sm:px-6 lg:grid-cols-[1.4fr_1fr] lg:items-center lg:px-8">
+						<div className="space-y-8">
+							<div>
+								<span className="inline-flex items-center rounded-full bg-emerald-500/15 px-4 py-2 text-sm font-semibold text-emerald-300 ring-1 ring-emerald-400/30">
+									Trusted by Interpreters Nationwide
+								</span>
+							</div>
+							<div>
+								<h1
+									id="hero-heading"
+									className="text-4xl font-bold tracking-tight sm:text-5xl lg:text-6xl"
+								>
+									Perform at Your Peak. Every Assignment.
+								</h1>
+								<p className="mt-6 text-lg leading-relaxed text-slate-200">
+									Stop guessing about your performance. Get AI-powered insights
+									backed by neuroscience to manage cognitive load, prevent
+									burnout, and grow your capacity—with RID-approved CEUs included.
+								</p>
+							</div>
+							<ul className="flex flex-wrap gap-3 text-sm font-semibold text-emerald-200">
+								{heroBullets.map((bullet) => (
+									<li
+										key={bullet}
+										className="inline-flex items-center gap-2 rounded-full border border-emerald-400/40 px-4 py-2"
+									>
+										<span className="h-1.5 w-1.5 rounded-full bg-emerald-300" />
+										{bullet}
+									</li>
+								))}
+							</ul>
+							<div className="flex flex-col gap-3 sm:flex-row sm:items-center">
+								<button
+									onClick={handlePrimaryAction}
+									className="flex items-center justify-center rounded-full bg-emerald-500 px-8 py-3 text-base font-semibold text-slate-900 transition hover:bg-emerald-400 focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-300 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-900"
+								>
+									Start Your Performance Assessment
+								</button>
+								<button
+									onClick={() => scrollToSection("ecci-framework")}
+									className="flex items-center justify-center rounded-full border border-emerald-400 px-8 py-3 text-base font-semibold text-white transition hover:bg-white hover:text-slate-900 focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-300 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-900"
+								>
+									Explore the ECCI™ Framework
+								</button>
+							</div>
+						</div>
+
+						<div className="space-y-6 rounded-3xl bg-white/5 p-8 ring-1 ring-white/10">
+							<h2 className="text-lg font-semibold text-white/90">
+								16 research frameworks. One integrated performance system.
 							</h2>
-							<p
-							className="text-lg sm:text-xl max-w-3xl mx-auto mb-8 leading-relaxed"
-							style={{ color: colors.neutral[600] }}
-							>
-							The only wellness platform built specifically for interpreters. Evidence-based tools to process trauma, strengthen boundaries, and build confidence for sustainable careers.
+							<p className="text-sm text-white/70">
+								The ECCI™ Framework remains the backbone of InterpretReflect. We
+								keep it visible because it's your proprietary differentiator, the
+								research foundation your practice deserves, and the moat
+								competitors can't replicate.
 							</p>
-						</div>
-
-						{/* Primary CTA - Get Started */}
-						<div className="flex flex-col items-center gap-4 mb-16">
-							<button
-								onClick={() => {
-									console.log("Get Started clicked");
-									navigate("/signup");
-								}}
-								className="group px-10 py-5 text-white font-bold rounded-xl transition-all transform hover:scale-105 hover:shadow-2xl focus:outline-none focus:ring-4 focus:ring-offset-2 relative overflow-hidden"
-								style={{
-									background: colors.gradients.green,
-									fontSize: "1.25rem",
-									color: "white",
-								}}
-								aria-label="Get started with InterpretReflect"
-							>
-								<span className="relative z-10">Get Started</span>
-							</button>
-						</div>
-
-						{/* Diverse interpreter illustrations/representation */}
-						<div
-							className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-16"
-							role="region"
-							aria-label="Professional specialization options"
-						>
-							{/* Sign Language Interpreter */}
-							<article
-								className="p-6 rounded-2xl bg-white shadow-lg hover:shadow-xl transition-all focus-within:ring-4"
-								tabIndex={0}
-								aria-label="Sign language interpreter resources"
-								style={
-									{
-										"--tw-ring-color": "rgba(45, 95, 63, 0.4)",
-									} as React.CSSProperties
-								}
-							>
-								<div className="mb-4">
-									<h3
-										className="font-semibold text-lg"
-										style={{ color: colors.neutral[800] }}
-									>
-										Sign Language
-									</h3>
-								</div>
-								<p
-									className="text-base"
-									style={{ color: colors.neutral[600], lineHeight: "1.6" }}
-								>
-									Protect your career longevity with wellness tools designed specifically for the unique demands of sign language interpreting
+							<div className="space-y-4 text-sm text-white/70">
+								<p>
+									Rebranded for clarity, the ECCI™ Framework turns academic rigor
+									into plain-language insights. It's how you prove outcomes, earn
+									CEUs, and protect your capacity.
 								</p>
-							</article>
-
-							{/* Spoken Language Interpreter */}
-							<article
-								className="p-6 rounded-2xl bg-white shadow-lg hover:shadow-xl transition-all focus-within:ring-4"
-								tabIndex={0}
-								aria-label="Spoken language interpreter resources"
-								style={
-									{
-										"--tw-ring-color": "rgba(45, 95, 63, 0.4)",
-									} as React.CSSProperties
-								}
-							>
-								<div className="mb-4">
-									<h3
-										className="font-semibold text-lg"
-										style={{ color: colors.neutral[800] }}
-									>
-										Spoken Language
-									</h3>
-								</div>
-								<p
-									className="text-base"
-									style={{ color: colors.neutral[600], lineHeight: "1.6" }}
-								>
-									Stay sharp and resilient across all settings, from high-stakes medical and legal work to community interpreting, no matter your language pair
+								<p>
+									Use Catalyst to bring the framework to life—apply the science in
+									real time, assignment after assignment.
 								</p>
-							</article>
-
-							{/* Conference/Remote Interpreter */}
-							<article
-								className="p-6 rounded-2xl bg-white shadow-lg hover:shadow-xl transition-all focus-within:ring-4"
-								tabIndex={0}
-								aria-label="Remote and hybrid interpreter resources"
-								style={
-									{
-										"--tw-ring-color": "rgba(45, 95, 63, 0.4)",
-									} as React.CSSProperties
-								}
-							>
-								<div className="mb-4">
-									<h3
-										className="font-semibold text-lg"
-										style={{ color: colors.neutral[800] }}
-									>
-										Remote & Hybrid
-									</h3>
-								</div>
-								<p
-									className="text-base"
-									style={{ color: colors.neutral[600], lineHeight: "1.6" }}
-								>
-									Combat screen fatigue and isolation with proven strategies that keep remote and VRI interpreters thriving, not just surviving
-								</p>
-							</article>
-
-							{/* High-Stress Professions */}
-							<article
-								className="p-6 rounded-2xl bg-white shadow-lg hover:shadow-xl transition-all focus-within:ring-4"
-								tabIndex={0}
-								aria-label="High-stress professions resources"
-								style={
-									{
-										"--tw-ring-color": "rgba(45, 95, 63, 0.4)",
-									} as React.CSSProperties
-								}
-							>
-								<div className="mb-4">
-									<h3
-										className="font-semibold text-lg"
-										style={{ color: colors.neutral[800] }}
-									>
-										High-Stress Situations
-									</h3>
-								</div>
-								<p
-									className="text-base"
-									style={{ color: colors.neutral[600], lineHeight: "1.6" }}
-								>
-									Wellness tools for interpreters navigating medical emergencies, legal proceedings, crisis interventions, and high-stakes negotiations
-								</p>
-							</article>
-						</div>
-
-						{/* Trust badges with microinteractions */}
-						<div
-							className="flex flex-wrap justify-center items-center gap-8 py-8"
-							role="list"
-							aria-label="Trust and security features"
-						>
-							<div
-								className="opacity-80 hover:opacity-100 transition-opacity"
-								role="listitem"
-							>
-								<span
-									className="text-base font-medium"
-									style={{ color: colors.neutral[700] }}
-								>
-									Trauma-Informed Design
-								</span>
-							</div>
-							<div
-								className="opacity-80 hover:opacity-100 transition-opacity"
-								role="listitem"
-							>
-								<span
-									className="text-base font-medium"
-									style={{ color: colors.neutral[700] }}
-								>
-									Privacy-First
-								</span>
-							</div>
-							<div
-								className="opacity-80 hover:opacity-100 transition-opacity"
-								role="listitem"
-							>
-								<span
-									className="text-base font-medium"
-									style={{ color: colors.neutral[700] }}
-								>
-									Research-Backed
-								</span>
 							</div>
 						</div>
 					</div>
 				</section>
 
-				{/* Modern Problems Section - NEW */}
 				<section
-					id="how-it-works"
-					className="py-20 px-4"
-					style={{ backgroundColor: "#E8F3E5", borderBottom: "1px solid rgba(0, 0, 0, 0.08)" }}
+					className="border-y border-slate-200 bg-white"
+					aria-label="Performance proof points"
 				>
-					<div className="container mx-auto max-w-6xl">
-						<div className="text-center mb-12">
-							<span
-								className="text-sm font-bold px-4 py-2 rounded-full inline-block mb-4"
-								style={{
-									backgroundColor: colors.status.warning + "40",
-									color: colors.neutral[900],
-								}}
-							>
-								MODERN PROBLEMS, EVIDENCE-BASED SOLUTIONS
-							</span>
-							<h2
-								className="text-3xl sm:text-4xl font-bold mb-4"
-								style={{ color: colors.neutral[900] }}
-							>
-								The Challenges Only You Understand
-							</h2>
-							<p
-								className="text-lg max-w-3xl mx-auto"
-								style={{ color: colors.neutral[600] }}
-							>
-								These aren't personal failings. They're documented, measurable responses to the cognitive and emotional demands of your work.
-							</p>
-						</div>
-
-						<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-							{/* Vicarious Trauma */}
-							<div className="p-6 rounded-2xl border-2 border-gray-200 bg-gray-50 hover:shadow-xl transition-all">
-								<h3
-									className="text-xl font-bold mb-2"
-									style={{ color: colors.neutral[800] }}
-								>
-									Vicarious Trauma
-								</h3>
-								<p className="text-xs font-semibold mb-2" style={{ color: colors.primary.sage }}>
-									41.5% of interpreters report experiencing vicarious trauma over their careers.
+					<div className="mx-auto flex max-w-6xl flex-col gap-6 px-4 py-12 sm:px-6 lg:flex-row lg:items-center lg:justify-between lg:px-8">
+						{stats.map((item) => (
+							<div key={item.label} className="text-center lg:text-left">
+								<p className="text-4xl font-bold text-slate-900">{item.value}</p>
+								<p className="mt-1 text-xs font-semibold tracking-[0.2em] text-emerald-700">
+									{item.label}
 								</p>
-								<p
-									className="text-sm mb-4"
-									style={{ color: colors.neutral[600] }}
-								>
-									When you facilitate communication during a medical diagnosis, legal interrogation, or family crisis, your nervous system processes that content as if it's happening to you. This isn't weakness. It's neurobiology.
-								</p>
+								<p className="mt-3 text-sm text-slate-600">{item.description}</p>
 							</div>
-
-							{/* Imposter Syndrome */}
-							<div className="p-6 rounded-2xl border-2 border-gray-200 bg-gray-50 hover:shadow-xl transition-all">
-								<h3
-									className="text-xl font-bold mb-2"
-									style={{ color: colors.neutral[800] }}
-								>
-									Imposter Syndrome
-								</h3>
-								<p className="text-xs font-semibold mb-2" style={{ color: colors.primary.sage }}>
-									57.5% of interpreters experience imposter syndrome.
-								</p>
-								<p
-									className="text-sm mb-4"
-									style={{ color: colors.neutral[600] }}
-								>
-									High-performing professionals in cognitively demanding fields experience imposter syndrome at elevated rates. You're certified. You're competent. Your brain is simply overweighting mistakes and underweighting successes.
-								</p>
-							</div>
-
-							{/* Professional Boundaries */}
-							<div className="p-6 rounded-2xl border-2 border-gray-200 bg-gray-50 hover:shadow-xl transition-all">
-								<h3
-									className="text-xl font-bold mb-2"
-									style={{ color: colors.neutral[800] }}
-								>
-									Boundary Management
-								</h3>
-								<p className="text-xs font-semibold mb-2" style={{ color: colors.primary.sage }}>
-									50% of interpreters report difficulty maintaining professional boundaries.
-								</p>
-								<p
-									className="text-sm mb-4"
-									style={{ color: colors.neutral[600] }}
-								>
-									One moment: neutral conduit. Next moment: someone's in crisis and every instinct says to help beyond your role. This constant code-switching creates documented stress on executive function.
-								</p>
-							</div>
-
-							{/* Technology Stress */}
-							<div className="p-6 rounded-2xl border-2 border-gray-200 bg-gray-50 hover:shadow-xl transition-all">
-								<h3
-									className="text-xl font-bold mb-2"
-									style={{ color: colors.neutral[800] }}
-								>
-									Technology-Mediated Fatigue
-								</h3>
-								<p className="text-xs font-semibold mb-2" style={{ color: colors.primary.sage }}>
-									Screen-based interpretation creates unique physiological and psychological stressors.
-								</p>
-								<p
-									className="text-sm mb-4"
-									style={{ color: colors.neutral[600] }}
-								>
-									Remote platforms introduce: reduced visual field, delayed feedback loops, tech-induced cognitive load, professional isolation, and ergonomic challenges that compound over multiple sessions.
-								</p>
-							</div>
-						</div>
-
-						{/* Statistics Bar */}
-						<div
-							className="mt-12 p-8 rounded-2xl"
-							style={{ background: "#5C7F4F" }}
-						>
-							<div className="text-center mb-6">
-								<h3 className="text-2xl font-bold text-white mb-2">THE RESEARCH IS CLEAR</h3>
-								<p className="text-sm text-white/90 italic">Recent national studies (2025) of interpreters show:</p>
-							</div>
-							<div className="grid grid-cols-2 md:grid-cols-4 gap-6 text-center text-white mb-6">
-								<div>
-									<div className="text-4xl font-bold">24%</div>
-									<div className="text-sm opacity-90">meet clinical burnout criteria</div>
-								</div>
-								<div>
-									<div className="text-4xl font-bold">41.5%</div>
-									<div className="text-sm opacity-90">
-										have experienced vicarious trauma
-									</div>
-								</div>
-								<div>
-									<div className="text-4xl font-bold">57.5%</div>
-									<div className="text-sm opacity-90">
-										report imposter syndrome
-									</div>
-								</div>
-								<div>
-									<div className="text-4xl font-bold">50%</div>
-									<div className="text-sm opacity-90">
-										struggle with boundary management
-									</div>
-								</div>
-							</div>
-							<div className="text-center">
-								<p className="text-sm text-white/90 italic">These numbers reflect systemic challenges, not personal inadequacy. Your work demands specialized support.</p>
-							</div>
-						</div>
+						))}
 					</div>
 				</section>
 
-				{/* Features Section with better visual organization */}
 				<section
-					className="py-20 px-4"
-					aria-labelledby="features-heading"
-					style={{ backgroundColor: "#F5F0E8", borderBottom: "1px solid rgba(0, 0, 0, 0.08)" }}
+					id="optimize"
+					className="bg-slate-100 py-20"
+					aria-labelledby="optimize-heading"
 				>
-					<div className="container mx-auto max-w-6xl">
-						<div className="text-center mb-12">
-						<h2
-						id="features-heading"
-						className="text-3xl sm:text-4xl font-bold mb-4"
-						style={{ color: colors.neutral[900] }}
-						>
-						Your Optimization Toolkit
-						</h2>
-						<p
-						className="text-lg max-w-2xl mx-auto"
-						style={{ color: colors.neutral[700], lineHeight: "1.6" }}
-						>
-						Protocols Built on Peer-Reviewed Research
-						</p>
+					<div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
+						<div className="mx-auto max-w-3xl text-center">
+							<h2
+								id="optimize-heading"
+								className="text-3xl font-bold text-slate-900 sm:text-4xl"
+							>
+								Everything You Need to Optimize Performance
+							</h2>
+							<p className="mt-4 text-lg text-slate-600">
+								Three pillars work together to keep you clear, confident, and
+								credentialed.
+							</p>
 						</div>
 
-						<div
-							className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto"
-							role="list"
-						>
-							{/* Feature cards with hover effects */}
-							{[
-								{
-									title: "Stress Reset Protocols",
-									description:
-										"Immediate nervous system regulation techniques for between assignments. Based on polyvagal theory and performance psychology research.",
-									color: "#5C7F4F",
-								},
-								{
-									title: "AI Wellness Coach",
-									description:
-										"Personalized support trained on interpreter-specific challenges and evidence-based interventions. Not generic advice.",
-									color: "#5C7F4F",
-								},
-								{
-									title: "Reflection Studio",
-									description:
-										"Structured processing protocols for vicarious trauma and challenging assignments. Create psychological closure at the end of difficult work.",
-									color: "#5C7F4F",
-								},
-								{
-									title: "Pattern Recognition",
-									description:
-										"Track your data over time. Identify what supports your performance and what depletes you. Make informed decisions about your practice.",
-									color: "#5C7F4F",
-								},
-							].map((feature, index) => (
+						<div className="mt-12 grid gap-8 md:grid-cols-3">
+							{optimizeCards.map((card) => (
 								<article
-									key={index}
-									className="group p-6 bg-white rounded-2xl shadow-sm hover:shadow-xl transition-all transform hover:-translate-y-1 focus-within:ring-4"
-									style={
-										{
-											"--tw-ring-color": "rgba(45, 95, 63, 0.4)",
-										} as React.CSSProperties
-									}
-									tabIndex={0}
-									role="listitem"
-									aria-label={`Feature: ${feature.title}`}
+									key={card.title}
+									className="flex flex-col rounded-3xl border border-slate-200 bg-white p-8 shadow-sm transition hover:-translate-y-2 hover:shadow-lg"
 								>
-									<h3
-										className="text-xl font-semibold mb-3"
-										style={{ color: colors.neutral[800] }}
-									>
-										{feature.title}
+									<h3 className="text-xl font-semibold text-slate-900">
+										{card.title}
 									</h3>
-									<p
-										className="text-base leading-relaxed"
-										style={{ color: colors.neutral[700], lineHeight: "1.6" }}
-									>
-										{feature.description}
-									</p>
+									<p className="mt-4 text-sm text-slate-600">{card.description}</p>
 								</article>
 							))}
 						</div>
 					</div>
 				</section>
 
-				{/* Pricing Section */}
 				<section
-					id="pricing"
-					className="py-20 px-4"
-					style={{ backgroundColor: "#E8F3E5", borderBottom: "1px solid rgba(0, 0, 0, 0.08)" }}
-					aria-labelledby="pricing-heading"
+					id="built-for"
+					className="bg-white py-20"
+					aria-labelledby="built-for-heading"
 				>
-					<div className="container mx-auto max-w-6xl">
-						<div className="text-center mb-12">
+					<div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
+						<div className="mx-auto max-w-3xl text-center">
 							<h2
-								id="pricing-heading"
-								className="text-3xl sm:text-4xl font-bold mb-4"
-								style={{ color: colors.neutral[900] }}
+								id="built-for-heading"
+								className="text-3xl font-bold text-slate-900 sm:text-4xl"
 							>
-								Simple, Transparent Pricing
+								Built for Every Interpreting Professional
 							</h2>
-							<p
-								className="text-xl mb-2"
-								style={{ color: colors.neutral[600] }}
-							>
-								Choose the plan that fits your wellness journey
+							<p className="mt-4 text-lg text-slate-600">
+								Your role, modality, and context are unique. Your support system
+								should be too.
 							</p>
 						</div>
 
-						<div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-							{/* Essential Plan */}
-							<div
-								className="rounded-xl border-2 relative overflow-hidden bg-white shadow-lg hover:shadow-xl transition-shadow"
-								style={{ borderColor: "#5C7F4F" }}
-							>
-								<div
-									className="absolute top-0 left-0 right-0 text-white text-center py-2 text-sm font-bold"
-									style={{ background: "#5C7F4F" }}
+						<div className="mt-12 grid gap-6 md:grid-cols-3">
+							{builtForCards.map((card) => (
+								<article
+									key={card.title}
+									className="rounded-2xl border border-slate-200 bg-slate-50 p-6 transition hover:border-emerald-300 hover:bg-white"
 								>
-									AVAILABLE NOW
-								</div>
-
-								<div className="p-6 mt-10">
-									<h3
-										className="text-2xl font-bold mb-2"
-										style={{ color: colors.neutral[900] }}
-									>
-										Essential
+									<h3 className="text-lg font-semibold text-slate-900">
+										{card.title}
 									</h3>
-									<p className="text-gray-600 mb-4">
-										Your daily wellness companion
-									</p>
-
-									<div className="mb-6">
-										<span
-											className="text-4xl font-bold"
-											style={{ color: colors.neutral[900] }}
-										>
-											$12.99
-										</span>
-										<span className="text-gray-600">/month</span>
-									</div>
-
-									<ul className="space-y-3 mb-8">
-										<li className="text-sm text-gray-700">
-											Daily reflection prompts
-										</li>
-										<li className="text-sm text-gray-700">
-											Stress reset tools
-										</li>
-										<li className="text-sm text-gray-700">Progress tracking</li>
-										<li className="text-sm text-gray-700">Mobile responsive</li>
-										<li className="text-sm text-gray-700">Private & secure</li>
-									</ul>
-
-									<button
-										onClick={handleSignup}
-										className="w-full py-3 rounded-lg font-semibold text-white transition-all focus:outline-none focus:ring-4 focus:ring-teal-500 focus:ring-opacity-50"
-										style={{ background: colors.gradients.green }}
-										aria-label="Get started with Core plan"
-									>
-										Get Started
-									</button>
-								</div>
-							</div>
-
-							{/* Professional Plan */}
-							<div className="rounded-xl border-2 border-gray-300 relative overflow-hidden bg-white shadow-lg opacity-75">
-								<div className="absolute top-0 left-0 right-0 bg-gray-400 text-white text-center py-2 text-sm font-bold">
-									COMING SOON
-								</div>
-
-								<div className="p-6 mt-10">
-									<h3
-										className="text-2xl font-bold mb-2"
-										style={{ color: colors.neutral[900] }}
-									>
-										Professional
-									</h3>
-									<p className="text-gray-600 mb-4">
-										Advanced practice support
-									</p>
-
-									<div className="mb-6">
-										<span className="text-4xl font-bold text-gray-400">
-											$24.99
-										</span>
-										<span className="text-gray-400">/month</span>
-									</div>
-
-									<ul className="space-y-3 mb-8">
-										<li className="text-sm text-gray-500">
-											Everything in Essential
-										</li>
-										<li className="text-sm text-gray-500">
-											Advanced analytics
-										</li>
-										<li className="text-sm text-gray-500">CEU Tracking & Processing</li>
-										<li className="text-sm text-gray-500">
-											Wellness workshops
-										</li>
-										<li className="text-sm text-gray-500">Priority support</li>
-									</ul>
-
-									<button
-										disabled
-										className="w-full py-3 rounded-lg font-semibold bg-gray-300 text-gray-500 cursor-not-allowed"
-									>
-										Coming Soon
-									</button>
-								</div>
-							</div>
-
-							{/* Enterprise Plan */}
-							<div className="rounded-xl border-2 border-gray-300 relative overflow-hidden bg-white shadow-lg opacity-75">
-								<div className="absolute top-0 left-0 right-0 bg-gray-400 text-white text-center py-2 text-sm font-bold">
-									COMING SOON
-								</div>
-
-								<div className="p-6 mt-10">
-									<h3
-										className="text-2xl font-bold mb-2"
-										style={{ color: colors.neutral[900] }}
-									>
-										Enterprise
-									</h3>
-									<p className="text-gray-600 mb-4">
-										For agencies, VRS/VRI, and educational programs
-									</p>
-
-									<div className="mb-6">
-										<span className="text-3xl font-bold text-gray-400">
-											Customized
-										</span>
-										<span className="text-gray-400"> Pricing</span>
-									</div>
-
-									<ul className="space-y-3 mb-8">
-										<li className="text-sm text-gray-500">Everything in Pro</li>
-										<li className="text-sm text-gray-500">
-											Executive dashboard
-										</li>
-										<li className="text-sm text-gray-500">
-											Group access for staff, interpreters, and learners
-										</li>
-										<li className="text-sm text-gray-500">
-											Administrative controls
-										</li>
-										<li className="text-sm text-gray-500">
-											Organization-wide empowerment tools
-										</li>
-									</ul>
-
-									<button
-										disabled
-										className="w-full py-3 rounded-lg font-semibold bg-gray-300 text-gray-500 cursor-not-allowed"
-									>
-										Coming Soon
-									</button>
-								</div>
-							</div>
+									<p className="mt-3 text-sm text-slate-600">{card.description}</p>
+								</article>
+							))}
 						</div>
 					</div>
 				</section>
 
-				{/* Final CTA */}
 				<section
-					className="py-20 px-4"
-					style={{ background: "#5C7F4F" }}
+					id="testimonials"
+					className="bg-slate-900 py-20"
+					aria-labelledby="testimonials-heading"
+				>
+					<div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
+						<div className="mb-12 text-center">
+							<h2
+								id="testimonials-heading"
+								className="text-3xl font-bold text-white sm:text-4xl"
+							>
+								Proof from Practitioners
+							</h2>
+							<p className="mt-4 text-base text-slate-300">
+								Social proof from interpreters who use the platform every week.
+							</p>
+						</div>
+
+						<div className="grid gap-8 md:grid-cols-2">
+							{testimonials.map((testimonial) => (
+								<figure
+									key={testimonial.name}
+									className="flex h-full flex-col justify-between rounded-3xl border border-white/10 bg-white/5 p-8 text-left shadow-lg backdrop-blur"
+								>
+									<blockquote className="text-lg text-white">
+										“{testimonial.quote}”
+									</blockquote>
+									<figcaption className="mt-6 text-sm text-emerald-200">
+										<p className="font-semibold text-white">
+											{testimonial.name}
+										</p>
+										<p>{testimonial.role}</p>
+									</figcaption>
+								</figure>
+							))}
+						</div>
+					</div>
+				</section>
+
+				<section
+					id="rid-category"
+					className="bg-emerald-50 py-20"
+					aria-labelledby="rid-category-heading"
+				>
+					<div className="mx-auto max-w-4xl px-4 text-center sm:px-6 lg:px-8">
+						<span className="inline-flex items-center rounded-full border border-emerald-300 bg-white px-4 py-2 text-xs font-semibold uppercase tracking-widest text-emerald-700">
+							New RID Professional Category · Now Active
+						</span>
+						<h2
+							id="rid-category-heading"
+							className="mt-6 text-3xl font-bold text-slate-900 sm:text-4xl"
+						>
+							Studies of Healthy Minds & Bodies — Available Now
+						</h2>
+						<p className="mt-4 text-base text-slate-700">
+							InterpretReflect is approved to deliver CEUs in this new category,
+							helping you document your professional development in cognitive
+							wellness and capacity building.
+						</p>
+					</div>
+				</section>
+
+				<section
+					id="ecci-framework"
+					className="bg-white py-20"
+					aria-labelledby="ecci-heading"
+				>
+					<div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
+						<div className="mx-auto max-w-3xl text-center">
+							<h2
+								id="ecci-heading"
+								className="text-3xl font-bold text-slate-900 sm:text-4xl"
+							>
+								The ECCI™ Framework
+							</h2>
+							<p className="mt-2 text-lg font-medium text-emerald-700">
+								Emotional & Cultural Competencies for Interpreters
+							</p>
+							<p className="mt-4 text-base text-slate-600">
+								Our framework combines 16 neuroscience-based methods that measure
+								how you process information, manage cultural context, regulate
+								emotional labor, and maintain mental capacity during interpreting.
+							</p>
+						</div>
+
+						<div className="mt-12 grid gap-6 md:grid-cols-2">
+							{ecciFeatures.map((feature) => (
+								<article
+									key={feature.title}
+									className="rounded-2xl border border-slate-200 bg-slate-50 p-6 transition hover:border-emerald-300 hover:bg-white"
+								>
+									<h3 className="text-lg font-semibold text-slate-900">
+										{feature.title}
+									</h3>
+									<p className="mt-3 text-sm text-slate-600">{feature.description}</p>
+								</article>
+							))}
+						</div>
+
+						<div className="mt-10 rounded-2xl bg-emerald-600/10 p-6 text-sm text-emerald-900">
+							<p>
+								Based on cognitive science, interoception research, performance
+								psychology, cultural neuroscience, and interpreter workload
+								studies.
+							</p>
+						</div>
+					</div>
+				</section>
+
+				<section
+					id="performance-protocol"
+					className="bg-slate-900 py-20"
+					aria-labelledby="protocol-heading"
+				>
+					<div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
+						<div className="mx-auto max-w-3xl text-center text-white">
+							<h2
+								id="protocol-heading"
+								className="text-3xl font-bold sm:text-4xl"
+							>
+								Performance Optimization Protocol
+							</h2>
+							<p className="mt-4 text-base text-slate-200">
+								Follow the same protocol elite interpreters use to stay in peak
+								form across assignments, teams, and modalities.
+							</p>
+						</div>
+
+						<div className="mt-12 grid gap-6 md:grid-cols-3">
+							{protocolSteps.map((step, index) => (
+								<article
+									key={step.title}
+									className="flex flex-col gap-4 rounded-2xl border border-white/15 bg-white/5 p-6 text-white"
+								>
+									<span className="inline-flex h-10 w-10 items-center justify-center rounded-full bg-emerald-500 text-base font-semibold text-slate-900">
+										{index + 1}
+									</span>
+									<h3 className="text-lg font-semibold">{step.title}</h3>
+									<p className="text-sm text-slate-200">{step.description}</p>
+								</article>
+							))}
+						</div>
+					</div>
+				</section>
+
+				<section
+					id="data-case"
+					className="bg-white py-20"
+					aria-labelledby="data-heading"
+				>
+					<div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
+						<div className="mx-auto max-w-3xl text-center">
+							<h2
+								id="data-heading"
+								className="text-3xl font-bold text-slate-900 sm:text-4xl"
+							>
+								The Data-Driven Case
+							</h2>
+							<p className="mt-4 text-base text-slate-600">
+								National studies from 2024-2025 reveal what interpreters are
+								facing—and why proactive support matters.
+							</p>
+						</div>
+
+						<div className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+							{dataStats.map((item) => (
+								<div
+									key={item.value}
+									className="rounded-2xl border border-slate-200 bg-slate-50 p-6 text-center"
+								>
+									<p className="text-4xl font-bold text-slate-900">{item.value}</p>
+									<p className="mt-3 text-sm text-slate-600">{item.description}</p>
+								</div>
+							))}
+						</div>
+
+						<p className="mt-10 text-center text-sm text-slate-600">
+							These numbers reflect systemic challenges, not personal inadequacy.
+							Your work demands specialized support and proof-backed solutions.
+						</p>
+					</div>
+				</section>
+
+				<section
+					id="final-cta"
+					className="bg-emerald-700 py-20"
 					aria-labelledby="cta-heading"
 				>
-					<div className="container mx-auto max-w-4xl text-center">
+					<div className="mx-auto max-w-4xl px-4 text-center sm:px-6 lg:px-8">
 						<h2
 							id="cta-heading"
-							className="text-3xl sm:text-4xl font-bold text-white mb-6"
+							className="text-3xl font-bold text-white sm:text-4xl"
 						>
-							Start Your Wellness Journey Today
+							Ready to Protect Your Performance?
 						</h2>
-						<p className="text-xl text-white/90 mb-8">
-							Evidence-based tools • Built by interpreters, for interpreters
+						<p className="mt-4 text-base text-emerald-100">
+							Start with the ECCI™ assessment, see your data instantly, and follow
+							the plan built for interpreters like you.
 						</p>
-						<button
-							onClick={handleSignup}
-							className="px-8 py-4 font-semibold rounded-xl shadow-lg hover:shadow-xl transition-all transform hover:scale-105 focus:outline-none focus:ring-4 focus:ring-white focus:ring-opacity-50"
-							style={{
-								background: "white",
-								color: "#5C7F4F",
-								fontSize: "1.125rem",
-							}}
-							aria-label="Start your wellness journey today"
-						>
-							Get Started Today
-						</button>
+						<div className="mt-8 flex flex-col items-center justify-center gap-4 sm:flex-row">
+							<button
+								onClick={handlePrimaryAction}
+								className="rounded-full bg-white px-8 py-3 text-base font-semibold text-emerald-800 transition hover:bg-emerald-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-4 focus-visible:ring-offset-emerald-700"
+							>
+								Start Your Performance Assessment
+							</button>
+							<button
+								onClick={handleOpenSignupModal}
+								className="rounded-full border border-white/70 px-8 py-3 text-base font-semibold text-white transition hover:bg-emerald-600/70 focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-4 focus-visible:ring-offset-emerald-700"
+							>
+								Talk to Our Team
+							</button>
+						</div>
 					</div>
 				</section>
 			</main>
 
-			{/* Footer */}
 			<Footer />
 
-			{/* Modals */}
 			<ModernAuthModal
 				isOpen={authModalOpen}
 				onClose={() => setAuthModalOpen(false)}
-				defaultMode={authMode === "signin" ? "signin" : "signup"}
+				defaultMode={authMode}
 				onSuccess={() => {
 					setAuthModalOpen(false);
 					navigate("/dashboard");
 				}}
 			/>
-			<PricingModal
-				isOpen={pricingModalOpen}
-				onClose={() => setPricingModalOpen(false)}
-				onSelectPlan={handleSelectPlan}
-			/>
-			<WaitlistModal
-				isOpen={waitlistModalOpen}
-				onClose={() => setWaitlistModalOpen(false)}
-				plan={waitlistPlan}
-			/>
-
-			{/* Add CSS animations */}
-			<style>{`
-        @keyframes fade-in {
-          from { opacity: 0; transform: translateY(10px); }
-          to { opacity: 1; transform: translateY(0); }
-        }
-        
-        @keyframes slide-in {
-          from { opacity: 0; transform: translateX(100%); }
-          to { opacity: 1; transform: translateX(0); }
-        }
-        
-        .animate-fade-in {
-          animation: fade-in 0.6s ease-out;
-        }
-        
-        .animate-slide-in {
-          animation: slide-in 0.3s ease-out;
-        }
-        
-        .group:hover .group-hover\\:animate-pulse {
-          animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
-        }
-        
-        @keyframes pulse {
-          0%, 100% { opacity: 1; }
-          50% { opacity: .7; }
-        }
-      `}</style>
 		</div>
 	);
 }

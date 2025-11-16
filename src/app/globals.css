@@ -174,14 +174,14 @@ h1, h2, h3, h4, h5, h6 {
 
 /* Medical Device Interface Styles */
 .medical-card {
-  background: linear-gradient(135deg, rgba(248, 250, 252, 0.9) 0%, rgba(241, 245, 249, 0.8) 100%);
+  background: linear-gradient(135deg, rgba(248, 250, 252, 0.95) 0%, rgba(241, 245, 249, 0.9) 100%);
   backdrop-filter: blur(12px);
-  border: 1px solid rgba(59, 130, 246, 0.2);
+  border: 1px solid rgba(59, 130, 246, 0.4);
   border-radius: 20px;
   box-shadow: 
-    0 12px 40px rgba(10, 36, 99, 0.1),
-    inset 0 1px 0 rgba(255, 255, 255, 0.8),
-    0 0 0 1px rgba(59, 130, 246, 0.05);
+    0 12px 40px rgba(10, 36, 99, 0.2),
+    inset 0 1px 0 rgba(255, 255, 255, 0.9),
+    0 0 0 1px rgba(59, 130, 246, 0.1);
   transition: all 0.3s ease;
 }
 

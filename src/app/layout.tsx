@@ -2,6 +2,7 @@ import type { Metadata } from 'next'
 import { Inter } from 'next/font/google'
 import './globals.css'
 import { Providers } from './providers'
+import CursorAnimation from '@/components/CursorAnimation'
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -10,7 +11,6 @@ export const metadata: Metadata = {
   description: 'The performance optimization platform for ASL interpreters. Build sustainable capacity, optimize cognitive load, and elevate your career. RID-approved CEUs available.',
   keywords: ['ASL interpreter', 'interpreter performance', 'professional development', 'RID CEUs', 'capacity building', 'interpreter training', 'cognitive optimization'],
   authors: [{ name: 'Building Bridges Global' }],
-  themeColor: '#2B5F75',
   manifest: '/manifest.json',
   appleWebApp: {
     capable: true,
@@ -32,14 +32,40 @@ export const metadata: Metadata = {
   },
 }
 
+export const viewport = {
+  themeColor: '#1E3A8A', // Professional dark blue
+}
+
 export default function RootLayout({
   children,
 }: {
   children: React.ReactNode
 }) {
   return (
-    <html lang="en">
+    <html lang="en" className="dark">
+      <head>
+        <script type="application/ld+json">
+          {JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "Organization",
+            "name": "InterpretReflect",
+            "url": process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000",
+            "foundingLocation": "North Carolina",
+            "department": [
+              { "@type": "Organization", "name": "Women-Owned Small Business" },
+              { "@type": "Organization", "name": "Service-Disabled Veteran-Owned" }
+            ],
+            "knowsAbout": [
+              "Interpreting performance optimization",
+              "Ethical AI",
+              "Neuroscience-based performance",
+              "Trauma-informed design"
+            ]
+          })}
+        </script>
+      </head>
       <body className={inter.className}>
+        <CursorAnimation />
         <Providers>
           {children}
         </Providers>

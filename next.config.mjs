@@ -18,6 +18,12 @@ const nextConfig = {
     NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY: process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY,
   },
 
+  // Metadata base for correct OG/Twitter resolution
+  // Use NEXT_PUBLIC_SITE_URL if set, fallback to localhost
+  metadata: {
+    metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000')
+  },
+
   // Image optimization
   images: {
     domains: [],
@@ -31,7 +37,7 @@ const nextConfig = {
 
   // Turbopack configuration (Next.js 16 default)
   turbopack: {
-    // Empty config to silence warning - we're using defaults
+    root: process.cwd()
   },
 
   // Headers for security and performance

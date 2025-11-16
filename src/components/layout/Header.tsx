@@ -87,13 +87,12 @@ export const Header: React.FC<HeaderProps> = ({
 				</div>
 			)}
 
-			{/* Header with proper semantic structure */}
+			{/* Header with professional dark blue theme */}
 			<header
-				className="border-b"
+				className="border-b bg-gradient-to-r from-blue-900 via-blue-800 to-slate-800 dark:from-blue-950 dark:via-blue-900 dark:to-slate-900"
 				style={{
-					backgroundColor: "#FFFFFF",
-					borderBottomColor: "rgba(92, 127, 79, 0.15)",
-					boxShadow: "0 1px 3px rgba(0, 0, 0, 0.05)",
+					borderBottomColor: "rgba(30, 58, 138, 0.3)",
+					boxShadow: "0 2px 8px rgba(0, 0, 0, 0.3)",
 				}}
 				role="banner"
 			>
@@ -103,11 +102,11 @@ export const Header: React.FC<HeaderProps> = ({
 						<div className="flex items-center space-x-8">
 							<Logo size="md" variant="default" linkToHome={false} />
 							<div className="hidden md:block">
-								<p className="text-lg font-medium" style={{ color: "#2D3A31" }}>
+								<p className="text-lg font-medium text-white">
 									Welcome back,{" "}
 									{userFullName}
 								</p>
-								<p className="text-sm" style={{ color: "#5C6A60" }}>
+								<p className="text-sm text-blue-100">
 									{new Date().toLocaleDateString("en-US", {
 										weekday: "long",
 										month: "long",

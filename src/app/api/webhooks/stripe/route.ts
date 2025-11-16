@@ -3,7 +3,7 @@ import { createClient } from '@supabase/supabase-js';
 import Stripe from 'stripe';
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
-  apiVersion: '2025-08-27.basil',
+  apiVersion: '2022-11-15',
 });
 
 // Initialize Supabase with service role for webhook
@@ -45,46 +45,164 @@ export async function POST(request: NextRequest) {
       case 'checkout.session.completed': {
         const session = event.data.object as Stripe.Checkout.Session;
 
-        // Extract metadata
-        const userId = session.metadata?.user_id;
-        const programId = session.metadata?.program_id;
-        const ridNumber = session.metadata?.rid_number;
-        const programCode = session.metadata?.program_code;
+        // Check if this is a subscription or one-time payment
+        if (session.mode === 'subscription') {
+          // Handle subscription checkout
+          const userId = session.metadata?.user_id;
+          const subscriptionTier = session.metadata?.subscription_tier;
 
-        if (!userId || !programId || !ridNumber) {
-          console.error('Missing metadata in checkout session:', session.id);
+          if (!userId) {
+            console.error('Missing user_id in subscription checkout session:', session.id);
+            break;
+          }
+
+          // Update user profile with subscription info
+          const { error: updateError } = await supabase
+            .from('user_profiles')
+            .update({
+              subscription_tier: subscriptionTier || 'pro',
+              subscription_status: 'active',
+              stripe_subscription_id: session.subscription,
+              updated_at: new Date().toISOString(),
+            })
+            .eq('id', userId);
+
+          if (updateError) {
+            console.error('Error updating user subscription:', updateError);
+          } else {
+            console.log('✅ User upgraded to Pro:', userId);
+          }
+
+          // TODO: Send welcome to Pro email
+          // TODO: Track in Encharge
+
+        } else {
+          // Handle CEU one-time payment
+          const userId = session.metadata?.user_id;
+          const programId = session.metadata?.program_id;
+          const ridNumber = session.metadata?.rid_number;
+          const programCode = session.metadata?.program_code;
+
+          if (!userId || !programId || !ridNumber) {
+            console.error('Missing metadata in CEU checkout session:', session.id);
+            break;
+          }
+
+          // Create enrollment record
+          const { data: enrollment, error: enrollmentError } = await supabase
+            .from('ceu_enrollments')
+            .insert({
+              user_id: userId,
+              program_id: programId,
+              rid_number: ridNumber,
+              status: 'enrolled',
+              enrolled_at: new Date().toISOString(),
+              metadata: {
+                stripe_session_id: session.id,
+                stripe_payment_intent: session.payment_intent,
+                amount_paid: session.amount_total,
+                program_code: programCode,
+              }
+            })
+            .select()
+            .single();
+
+          if (enrollmentError) {
+            console.error('Error creating enrollment:', enrollmentError);
+          } else {
+            console.log('✅ CEU Enrollment created:', enrollment.id);
+          }
+
+          // TODO: Send enrollment confirmation email
+          // TODO: Track in Encharge
+        }
+
+        break;
+      }
+
+      case 'customer.subscription.created': {
+        const subscription = event.data.object as Stripe.Subscription;
+        const userId = subscription.metadata?.user_id;
+
+        if (!userId) {
+          console.error('Missing user_id in subscription.created:', subscription.id);
           break;
         }
 
-        // Create enrollment record
-        const { data: enrollment, error: enrollmentError } = await supabase
-          .from('ceu_enrollments')
-          .insert({
-            user_id: userId,
-            program_id: programId,
-            rid_number: ridNumber,
-            status: 'enrolled',
-            enrolled_at: new Date().toISOString(),
-            metadata: {
-              stripe_session_id: session.id,
-              stripe_payment_intent: session.payment_intent,
-              amount_paid: session.amount_total,
-              program_code: programCode,
-            }
+        console.log('✅ Subscription created:', subscription.id, 'for user:', userId);
+        break;
+      }
+
+      case 'customer.subscription.updated': {
+        const subscription = event.data.object as Stripe.Subscription;
+        const userId = subscription.metadata?.user_id;
+
+        if (!userId) {
+          console.error('Missing user_id in subscription.updated:', subscription.id);
+          break;
+        }
+
+        // Update subscription status
+        const status = subscription.status === 'active' ? 'active' :
+                      subscription.status === 'canceled' ? 'cancelled' :
+                      subscription.status;
+
+        await supabase
+          .from('user_profiles')
+          .update({
+            subscription_status: status,
+            updated_at: new Date().toISOString(),
           })
-          .select()
-          .single();
+          .eq('id', userId);
 
-        if (enrollmentError) {
-          console.error('Error creating enrollment:', enrollmentError);
+        console.log('✅ Subscription updated:', subscription.id, 'status:', status);
+        break;
+      }
+
+      case 'customer.subscription.deleted': {
+        const subscription = event.data.object as Stripe.Subscription;
+        const userId = subscription.metadata?.user_id;
+
+        if (!userId) {
+          console.error('Missing user_id in subscription.deleted:', subscription.id);
           break;
         }
 
-        console.log('✅ Enrollment created:', enrollment.id);
+        // Downgrade user to free tier
+        await supabase
+          .from('user_profiles')
+          .update({
+            subscription_tier: 'free',
+            subscription_status: 'cancelled',
+            stripe_subscription_id: null,
+            updated_at: new Date().toISOString(),
+          })
+          .eq('id', userId);
 
-        // TODO: Send enrollment confirmation email
-        // TODO: Track in Encharge
+        console.log('✅ Subscription cancelled, user downgraded to free:', userId);
+        break;
+      }
 
+      case 'invoice.payment_succeeded': {
+        const invoice = event.data.object as Stripe.Invoice;
+        const subscriptionId = invoice.subscription;
+
+        if (subscriptionId) {
+          console.log('✅ Invoice paid for subscription:', subscriptionId);
+          // Subscription stays active, no action needed unless first payment
+        }
+        break;
+      }
+
+      case 'invoice.payment_failed': {
+        const invoice = event.data.object as Stripe.Invoice;
+        const subscriptionId = invoice.subscription;
+
+        if (subscriptionId) {
+          console.error('❌ Invoice payment failed for subscription:', subscriptionId);
+          // TODO: Send payment failed notification to user
+          // Stripe will retry automatically
+        }
         break;
       }
 

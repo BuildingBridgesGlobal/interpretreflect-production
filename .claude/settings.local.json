@@ -7,7 +7,16 @@
       "Bash(git commit -m \"$(cat <<''EOF''\nfeat: V2 transformation - Phase 1 Week 1 core copy changes\n\nStrategic reframe from wellness to performance optimization platform.\n\n## Copy Transformations:\n- Check-in: \"Daily Wellness\" → \"Performance Baseline Check\"\n  - \"Stress Level\" → \"Cognitive Load\"\n  - \"Energy Level\" → \"Capacity Reserve\"  \n  - \"Overall Mood\" → \"Performance Readiness\"\n  - \"Sleep Quality\" → \"Recovery Quality\"\n  - Complete brand color system update\n\n- Catalyst AI: Updated system prompt\n  - Removed \"BREATHE Protocol\" references\n  - Added \"Quick Reflect\" and performance tools\n  - Strengthened performance language guidelines\n\n- Site metadata: \"Wellness\" → \"Performance Optimization\"\n  - Updated SEO titles, descriptions, keywords\n  - Changed theme color to brand-primary\n\n- Landing page: Fixed \"prevent burnout\" → \"maintain peak performance\"\n  - Removed \"BREATHE protocol\" reference\n\n## Strategic Rationale:\nZero conversions at CHOA despite positive feedback indicates wellness\nframing doesn''t convert. Performance framing targets career advancement\nand professional growth market.\n\n## Technical Quality:\n✅ All brand tokens properly applied\n✅ Consistent typography (font-sans, font-body, font-mono)\n✅ TypeScript compilation clean\n✅ Dev server verified working\n\n🤖 Generated with [Claude Code](https://claude.com/claude-code)\n\nCo-Authored-By: Claude <noreply@anthropic.com>\nEOF\n)\")",
       "Bash(git push origin migrate-to-nextjs)",
       "Bash(git pull --rebase origin migrate-to-nextjs)",
-      "Bash(git add -A)"
+      "Bash(git add -A)",
+      "Bash(npm run dev:*)",
+      "Bash(netstat:*)",
+      "Bash(findstr:*)",
+      "Bash(tasklist:*)",
+      "Bash(taskkill:*)",
+      "Bash(npm install:*)",
+      "Bash(npm uninstall:*)",
+      "Bash(timeout 10 bash:*)",
+      "Bash(timeout 15 bash:*)"
     ],
     "deny": [],
     "ask": []

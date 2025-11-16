@@ -29,8 +29,7 @@ export const NavigationTabs: React.FC<NavigationTabsProps> = ({
 	
 	return (
 		<div
-			className="px-4 sm:px-6 lg:px-8 py-4"
-			style={{ backgroundColor: "#FAF8F5" }}
+			className="px-4 sm:px-6 lg:px-8 py-4 bg-slate-900 dark:bg-slate-950"
 		>
 			{/* Mobile-optimized styles */}
 			<style>{`
@@ -85,22 +84,22 @@ export const NavigationTabs: React.FC<NavigationTabsProps> = ({
 								aria-controls={`${tab.id}-panel`}
 								aria-current={activeTab === tab.id ? "page" : undefined}
 								style={{
-									color: activeTab === tab.id ? "white" : "#374151",
+									color: activeTab === tab.id ? "white" : "#CBD5E1",
 									fontWeight: activeTab === tab.id ? "600" : "500",
-									backgroundColor: activeTab === tab.id ? "#6B8268" : "transparent",
-									border: activeTab === tab.id ? "2px solid #6B8268" : "2px solid transparent",
-									boxShadow: activeTab === tab.id ? "0 2px 4px rgba(107, 130, 104, 0.2)" : "none"
+									backgroundColor: activeTab === tab.id ? "#1E40AF" : "transparent",
+									border: activeTab === tab.id ? "2px solid #3B82F6" : "2px solid transparent",
+									boxShadow: activeTab === tab.id ? "0 2px 8px rgba(59, 130, 246, 0.3)" : "none"
 								}}
 								onMouseEnter={(e) => {
 									if (activeTab !== tab.id) {
-										e.currentTarget.style.backgroundColor = "#F3F4F6";
-										e.currentTarget.style.color = "#111827";
+										e.currentTarget.style.backgroundColor = "#334155";
+										e.currentTarget.style.color = "#F8FAFC";
 									}
 								}}
 								onMouseLeave={(e) => {
 									if (activeTab !== tab.id) {
 										e.currentTarget.style.backgroundColor = "transparent";
-										e.currentTarget.style.color = "#374151";
+										e.currentTarget.style.color = "#CBD5E1";
 									}
 								}}
 							>

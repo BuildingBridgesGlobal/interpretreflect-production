@@ -27,7 +27,7 @@ interface CEUCompletion {
   ceu_awarded: number;
   category: string;
   ps_subcategory: string | null;
-  completion_date: string;
+  completed_at: string;
   certificate_number: string;
   certificate_url: string | null;
   ceu_programs?: {
@@ -85,7 +85,7 @@ export default function MyCEUsPage() {
           )
         `)
         .eq('user_id', user?.id)
-        .order('completion_date', { ascending: false });
+        .order('completed_at', { ascending: false });
 
       if (ceusError) throw ceusError;
       setCeuCompletions(ceusData || []);
@@ -324,7 +324,7 @@ export default function MyCEUsPage() {
                           <div className="flex items-center gap-4 text-sm text-brand-gray-600 mb-2">
                             <span className="font-mono">{completion.ceu_programs?.program_code}</span>
                             <span className="font-body">•</span>
-                            <span className="font-body">{new Date(completion.completion_date).toLocaleDateString()}</span>
+                            <span className="font-body">{new Date(completion.completed_at).toLocaleDateString()}</span>
                           </div>
                           <div className="flex items-center gap-2">
                             <span className="px-3 py-1 bg-brand-electric-light text-brand-electric text-xs font-bold rounded-full font-mono">

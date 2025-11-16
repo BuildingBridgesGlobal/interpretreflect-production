@@ -183,9 +183,9 @@ export const AllReflectionsView: React.FC<AllReflectionsViewProps> = ({
 	}, [deletingId]);
 
 	const loadAllReflections = async () => {
-		try {
-			// Use Supabase client for consistency
-			const { supabase } = await import("../lib/supabase");
+    try {
+            const { createClient } = await import("../lib/supabase/client");
+            const supabase = createClient();
 
 			console.log("AllReflectionsView - Loading reflections for user:", userId);
 
@@ -259,8 +259,8 @@ export const AllReflectionsView: React.FC<AllReflectionsViewProps> = ({
 
 			console.log("Token obtained successfully");
 
-			const SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL;
-			const SUPABASE_ANON_KEY = import.meta.env.VITE_SUPABASE_ANON_KEY;
+            const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL as string;
+            const SUPABASE_ANON_KEY = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY as string;
 
 			// The ID might be a string that looks like a number, try to parse it
 			let queryId = reflectionId;

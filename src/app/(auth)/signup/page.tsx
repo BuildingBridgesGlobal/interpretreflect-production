@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { Mail, Lock, AlertCircle, CheckCircle, ArrowRight, Award } from 'lucide-react';
+import { Mail, Lock, AlertCircle, CheckCircle, ArrowRight } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext.next';
 import toast from 'react-hot-toast';
 
@@ -11,6 +11,7 @@ export default function SignupPage() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
+  const [accountType, setAccountType] = useState<'interpreter' | 'agency'>('interpreter');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [success, setSuccess] = useState(false);
@@ -29,6 +30,12 @@ export default function SignupPage() {
     e.preventDefault();
     setError('');
 
+    // Redirect agencies to contact form
+    if (accountType === 'agency') {
+      router.push('/auth/agency-contact');
+      return;
+    }
+
     // Validation
     if (password !== confirmPassword) {
       setError('Passwords do not match');
@@ -44,7 +51,7 @@ export default function SignupPage() {
     setLoading(true);
 
     try {
-      const result = await signUp(email, password);
+      const result = await signUp(email, password, { account_type: accountType });
 
       if (result.error) {
         setError(result.error.message);
@@ -69,6 +76,14 @@ export default function SignupPage() {
 
   const handleGoogleSignUp = async () => {
     try {
+      // Redirect agencies to contact form
+      if (accountType === 'agency') {
+        router.push('/auth/agency-contact');
+        return;
+      }
+      
+      // Store intended account type in sessionStorage for after OAuth callback
+      sessionStorage.setItem('pending_account_type', accountType);
       await signInWithGoogle();
     } catch (err) {
       toast.error('Failed to sign up with Google');
@@ -77,17 +92,17 @@ export default function SignupPage() {
 
   if (success) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-brand-gray-50 px-4">
+      <div className="min-h-screen flex items-center justify-center bg-brand-gray-50 dark:bg-gray-900 px-4">
         <div className="max-w-md w-full">
-          <div className="bg-white rounded-data shadow-card p-8 text-center border border-brand-gray-200">
-            <CheckCircle className="w-16 h-16 text-brand-success mx-auto mb-4" />
-            <h2 className="text-2xl font-bold text-brand-primary mb-2 font-sans">
+          <div className="bg-white dark:bg-gray-800 rounded-data shadow-card p-8 text-center border border-brand-gray-200 dark:border-gray-700">
+            <CheckCircle className="w-16 h-16 text-brand-success dark:text-green-400 mx-auto mb-4" />
+            <h2 className="text-2xl font-bold text-brand-primary dark:text-blue-300 mb-2 font-sans">
               Welcome to InterpretReflect!
             </h2>
-            <p className="text-brand-gray-600 mb-6 font-body">
+            <p className="text-brand-gray-600 dark:text-gray-300 mb-6 font-body">
               Your account has been created. Check your email to verify your account.
             </p>
-            <p className="text-sm text-brand-gray-500 font-body">
+            <p className="text-sm text-brand-gray-500 dark:text-gray-400 font-body">
               Redirecting you to performance assessment...
             </p>
           </div>
@@ -97,42 +112,42 @@ export default function SignupPage() {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-brand-gray-50 px-4 py-12">
+    <div className="min-h-screen flex items-center justify-center bg-brand-gray-50 dark:bg-gray-900 px-4 py-12">
       <div className="max-w-md w-full">
 
         {/* Header */}
         <div className="text-center mb-8">
           {/* Logo */}
           <Link href="/" className="inline-block mb-6">
-            <h2 className="text-2xl font-bold text-brand-primary font-sans">InterpretReflect</h2>
+            <h2 className="text-2xl font-bold text-brand-primary dark:text-blue-300 font-sans">InterpretReflect</h2>
           </Link>
 
           {/* Badge */}
-          <div className="inline-flex items-center gap-2 bg-brand-energy-light border border-brand-energy/20 rounded-full px-4 py-2 mb-4">
-            <span className="w-2 h-2 bg-brand-energy rounded-full animate-pulse"></span>
-            <span className="text-xs font-mono uppercase tracking-wider text-brand-energy-dark font-semibold">
+          <div className="inline-flex items-center gap-2 bg-brand-energy-light dark:bg-orange-400/20 border border-brand-energy/20 dark:border-orange-500/30 rounded-full px-4 py-2 mb-4">
+            <span className="w-2 h-2 bg-brand-energy dark:bg-orange-400 rounded-full animate-pulse"></span>
+            <span className="text-xs font-mono uppercase tracking-wider text-brand-energy-dark dark:text-orange-300 font-semibold">
               Free 14-Day Trial
             </span>
           </div>
 
           {/* Headline */}
-          <h1 className="text-4xl font-bold text-brand-primary mb-3 font-sans">
+          <h1 className="text-4xl font-bold text-brand-primary dark:text-blue-300 mb-3 font-sans">
             Start Your Performance Assessment
           </h1>
 
           {/* Subhead */}
-          <p className="text-lg text-brand-gray-600 max-w-md mx-auto leading-relaxed font-body">
-            Join professional interpreters optimizing their cognitive load with neuroscience-backed insights and RID-approved development.
+          <p className="text-lg text-brand-gray-600 dark:text-gray-300 max-w-md mx-auto leading-relaxed font-body">
+            Join professional interpreters optimizing their cognitive load with neuroscience-backed insights.
           </p>
         </div>
 
         {/* Form Card */}
-        <div className="bg-white rounded-data shadow-card p-8 border border-brand-gray-200">
+        <div className="bg-white dark:bg-gray-800 rounded-data shadow-card p-8 border border-brand-gray-200 dark:border-gray-700">
 
           {error && (
-            <div className="mb-6 p-4 bg-brand-error-light border border-brand-error rounded-data flex items-start gap-3">
-              <AlertCircle className="w-5 h-5 text-brand-error flex-shrink-0 mt-0.5" />
-              <p className="text-sm text-brand-error-dark font-body">{error}</p>
+            <div className="mb-6 p-4 bg-brand-error-light dark:bg-red-900/20 border border-brand-error dark:border-red-500 rounded-data flex items-start gap-3">
+              <AlertCircle className="w-5 h-5 text-brand-error dark:text-red-400 flex-shrink-0 mt-0.5" />
+              <p className="text-sm text-brand-error-dark dark:text-red-300 font-body">{error}</p>
             </div>
           )}
 
@@ -140,7 +155,7 @@ export default function SignupPage() {
           <button
             onClick={handleGoogleSignUp}
             type="button"
-            className="w-full border-2 border-brand-gray-200 py-3 px-6 rounded-data hover:border-brand-primary/30 hover:bg-brand-primary-light/30 transition-all font-semibold text-brand-primary flex items-center justify-center gap-3 mb-6 font-body"
+            className="w-full border-2 border-brand-gray-200 dark:border-gray-600 py-3 px-6 rounded-data hover:border-brand-primary/30 dark:hover:border-blue-500/50 hover:bg-brand-primary-light/30 dark:hover:bg-blue-900/20 transition-all font-semibold text-brand-primary dark:text-blue-300 flex items-center justify-center gap-3 mb-6 font-body"
           >
             <svg className="w-5 h-5" viewBox="0 0 24 24">
               <path
@@ -163,13 +178,44 @@ export default function SignupPage() {
             Continue with Google
           </button>
 
+          {/* Account Type Toggle */}
+          <div className="mb-6">
+            <label className="block text-sm font-medium text-brand-primary dark:text-blue-300 mb-2 font-sans">
+              I am signing up as a:
+            </label>
+            <div className="grid grid-cols-2 gap-3">
+              <button
+                type="button"
+                onClick={() => setAccountType('interpreter')}
+                className={`py-3 px-4 rounded-data border-2 transition-all font-semibold font-body ${
+                  accountType === 'interpreter'
+                    ? 'border-brand-energy bg-brand-energy-light dark:border-orange-500 dark:bg-orange-400/20 text-brand-energy-dark dark:text-orange-300'
+                    : 'border-brand-gray-200 dark:border-gray-600 bg-white dark:bg-gray-800 text-brand-gray-700 dark:text-gray-300 hover:border-brand-energy/50 dark:hover:border-orange-500/50'
+                }`}
+              >
+                Interpreter
+              </button>
+              <button
+                type="button"
+                onClick={() => setAccountType('agency')}
+                className={`py-3 px-4 rounded-data border-2 transition-all font-semibold font-body ${
+                  accountType === 'agency'
+                    ? 'border-brand-energy bg-brand-energy-light dark:border-orange-500 dark:bg-orange-400/20 text-brand-energy-dark dark:text-orange-300'
+                    : 'border-brand-gray-200 dark:border-gray-600 bg-white dark:bg-gray-800 text-brand-gray-700 dark:text-gray-300 hover:border-brand-energy/50 dark:hover:border-orange-500/50'
+                }`}
+              >
+                Agency / Manager
+              </button>
+            </div>
+          </div>
+
           {/* Divider */}
           <div className="relative mb-6">
             <div className="absolute inset-0 flex items-center">
-              <div className="w-full border-t border-brand-gray-200"></div>
+              <div className="w-full border-t border-brand-gray-200 dark:border-gray-600"></div>
             </div>
             <div className="relative flex justify-center text-sm">
-              <span className="px-4 bg-white text-brand-gray-500 font-body">Or sign up with email</span>
+              <span className="px-4 bg-white dark:bg-gray-800 text-brand-gray-500 dark:text-gray-400 font-body">Or sign up with email</span>
             </div>
           </div>
 
@@ -178,18 +224,18 @@ export default function SignupPage() {
 
             {/* Email Field */}
             <div>
-              <label htmlFor="email" className="block text-sm font-medium text-brand-primary mb-2 font-sans">
+              <label htmlFor="email" className="block text-sm font-medium text-brand-primary dark:text-blue-300 mb-2 font-sans">
                 Email
               </label>
               <div className="relative">
-                <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-brand-gray-400" />
+                <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-brand-gray-400 dark:text-gray-500" />
                 <input
                   id="email"
                   type="email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   required
-                  className="w-full pl-11 pr-4 py-3 border border-brand-gray-300 rounded-data focus:outline-none focus:ring-2 focus:ring-brand-electric focus:border-transparent transition-all font-body text-brand-charcoal placeholder:text-brand-gray-400 hover:border-brand-primary/30"
+                  className="w-full pl-11 pr-4 py-3 border border-brand-gray-300 dark:border-gray-600 rounded-data focus:outline-none focus:ring-2 focus:ring-brand-electric dark:focus:ring-orange-500 focus:border-transparent transition-all font-body text-brand-charcoal dark:text-white placeholder:text-brand-gray-400 dark:placeholder:text-gray-500 hover:border-brand-primary/30 dark:hover:border-blue-500/50 bg-white dark:bg-gray-800"
                   placeholder="your@email.com"
                 />
               </div>
@@ -197,40 +243,40 @@ export default function SignupPage() {
 
             {/* Password Field */}
             <div>
-              <label htmlFor="password" className="block text-sm font-medium text-brand-primary mb-2 font-sans">
+              <label htmlFor="password" className="block text-sm font-medium text-brand-primary dark:text-blue-300 mb-2 font-sans">
                 Password
               </label>
               <div className="relative">
-                <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-brand-gray-400" />
+                <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-brand-gray-400 dark:text-gray-500" />
                 <input
                   id="password"
                   type="password"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   required
-                  className="w-full pl-11 pr-4 py-3 border border-brand-gray-300 rounded-data focus:outline-none focus:ring-2 focus:ring-brand-electric focus:border-transparent transition-all font-body text-brand-charcoal placeholder:text-brand-gray-400 hover:border-brand-primary/30"
+                  className="w-full pl-11 pr-4 py-3 border border-brand-gray-300 dark:border-gray-600 rounded-data focus:outline-none focus:ring-2 focus:ring-brand-electric dark:focus:ring-orange-500 focus:border-transparent transition-all font-body text-brand-charcoal dark:text-white placeholder:text-brand-gray-400 dark:placeholder:text-gray-500 hover:border-brand-primary/30 dark:hover:border-blue-500/50 bg-white dark:bg-gray-800"
                   placeholder="••••••••"
                 />
               </div>
-              <p className="mt-1 text-xs text-brand-gray-500 font-body">
+              <p className="mt-1 text-xs text-brand-gray-500 dark:text-gray-400 font-body">
                 Min 8 characters, uppercase, lowercase, and number
               </p>
             </div>
 
             {/* Confirm Password Field */}
             <div>
-              <label htmlFor="confirmPassword" className="block text-sm font-medium text-brand-primary mb-2 font-sans">
+              <label htmlFor="confirmPassword" className="block text-sm font-medium text-brand-primary dark:text-blue-300 mb-2 font-sans">
                 Confirm Password
               </label>
               <div className="relative">
-                <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-brand-gray-400" />
+                <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-brand-gray-400 dark:text-gray-500" />
                 <input
                   id="confirmPassword"
                   type="password"
                   value={confirmPassword}
                   onChange={(e) => setConfirmPassword(e.target.value)}
                   required
-                  className="w-full pl-11 pr-4 py-3 border border-brand-gray-300 rounded-data focus:outline-none focus:ring-2 focus:ring-brand-electric focus:border-transparent transition-all font-body text-brand-charcoal placeholder:text-brand-gray-400 hover:border-brand-primary/30"
+                  className="w-full pl-11 pr-4 py-3 border border-brand-gray-300 dark:border-gray-600 rounded-data focus:outline-none focus:ring-2 focus:ring-brand-electric dark:focus:ring-orange-500 focus:border-transparent transition-all font-body text-brand-charcoal dark:text-white placeholder:text-brand-gray-400 dark:placeholder:text-gray-500 hover:border-brand-primary/30 dark:hover:border-blue-500/50 bg-white dark:bg-gray-800"
                   placeholder="••••••••"
                 />
               </div>
@@ -242,15 +288,15 @@ export default function SignupPage() {
                 type="checkbox"
                 id="terms"
                 required
-                className="mt-1 w-4 h-4 rounded border-brand-gray-300 text-brand-electric focus:ring-brand-electric focus:ring-offset-0"
+                className="mt-1 w-4 h-4 rounded border-brand-gray-300 dark:border-gray-600 text-brand-electric dark:text-orange-400 focus:ring-brand-electric dark:focus:ring-orange-500 focus:ring-offset-0 bg-white dark:bg-gray-800"
               />
-              <label htmlFor="terms" className="text-sm text-brand-gray-600 font-body">
+              <label htmlFor="terms" className="text-sm text-brand-gray-600 dark:text-gray-400 font-body">
                 I agree to the{' '}
-                <Link href="/terms" className="text-brand-electric hover:text-brand-electric-hover font-semibold hover:underline">
+                <Link href="/terms" className="text-brand-electric dark:text-orange-400 hover:text-brand-electric-hover dark:hover:text-orange-300 font-semibold hover:underline">
                   Terms of Service
                 </Link>
                 {' '}and{' '}
-                <Link href="/privacy" className="text-brand-electric hover:text-brand-electric-hover font-semibold hover:underline">
+                <Link href="/privacy" className="text-brand-electric dark:text-orange-400 hover:text-brand-electric-hover dark:hover:text-orange-300 font-semibold hover:underline">
                   Privacy Policy
                 </Link>
               </label>
@@ -260,7 +306,7 @@ export default function SignupPage() {
             <button
               type="submit"
               disabled={loading}
-              className="w-full bg-gradient-to-r from-brand-energy to-brand-energy-hover text-white font-bold text-base py-4 px-8 rounded-data hover:shadow-lg hover:shadow-brand-energy/20 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed uppercase tracking-wider flex items-center justify-center gap-2 font-sans"
+              className="w-full bg-gradient-to-r from-brand-energy to-brand-energy-hover dark:from-orange-500 dark:to-orange-600 text-white font-bold text-base py-4 px-8 rounded-data hover:shadow-lg hover:shadow-brand-energy/20 dark:hover:shadow-orange-500/20 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed uppercase tracking-wider flex items-center justify-center gap-2 font-sans"
             >
               {loading ? 'Creating Account...' : (
                 <>
@@ -273,31 +319,13 @@ export default function SignupPage() {
           </form>
 
           {/* Sign In Link */}
-          <p className="mt-6 text-center text-sm text-brand-gray-600 font-body">
+          <p className="mt-6 text-center text-sm text-brand-gray-600 dark:text-gray-400 font-body">
             Already have an account?{' '}
-            <Link href="/login" className="text-brand-electric hover:text-brand-electric-hover font-semibold hover:underline">
+            <Link href="/login" className="text-brand-electric dark:text-orange-400 hover:text-brand-electric-hover dark:hover:text-orange-300 font-semibold hover:underline">
               Sign in
             </Link>
           </p>
 
-        </div>
-
-        {/* RID Badge */}
-        <div className="mt-8">
-          <div className="bg-gradient-to-r from-brand-primary to-brand-slate p-6 rounded-data text-white text-center shadow-lg border-2 border-brand-electric">
-            <div className="flex items-center justify-center gap-2 mb-2">
-              <Award className="w-5 h-5 text-brand-electric" />
-              <span className="font-bold text-sm uppercase tracking-wider font-sans">
-                New RID Professional Category
-              </span>
-            </div>
-            <p className="text-white/95 font-medium mb-1 font-body">
-              Studies of Healthy Minds & Bodies
-            </p>
-            <p className="text-sm text-white/85 font-body">
-              Earn RID-approved CEUs through performance optimization • Sponsor #2309
-            </p>
-          </div>
         </div>
 
       </div>

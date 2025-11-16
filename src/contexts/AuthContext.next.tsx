@@ -323,11 +323,17 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
 	const signUp = async (
 		email: string,
 		password: string,
+		metadata?: { account_type?: 'interpreter' | 'agency' },
 	): Promise<AuthResult> => {
 		try {
 			const { data, error } = await supabase.auth.signUp({
 				email,
 				password,
+				options: {
+					data: {
+						account_type: metadata?.account_type || 'interpreter',
+					},
+				},
 			});
 
 			if (error) {
@@ -414,7 +420,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
 			const { data, error } = await supabase.auth.signInWithOAuth({
 				provider: "google",
 				options: {
-					redirectTo: `${window.location.origin}/onboarding`,
+					redirectTo: `${window.location.origin}/auth/callback?source=google&account_type=${sessionStorage.getItem('pending_account_type') || 'interpreter'}`,
 					queryParams: {
 						access_type: "offline",
 						prompt: "consent",

@@ -280,7 +280,7 @@ const PrivacyConsent: React.FC<PrivacyConsentProps> = ({
 							<span className="text-xs text-gray-600 font-medium uppercase tracking-wide block">
 								HIPAA Aligned
 							</span>
-							<span className="text-xs text-gray-500">Medical-grade protection</span>
+							<span className="text-xs text-gray-500">Professional interpreter protection</span>
 						</div>
 						<div className="text-center">
 							<span className="text-xs text-gray-600 font-medium uppercase tracking-wide block">

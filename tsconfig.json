@@ -67,8 +67,6 @@
     "src/main.tsx.old",
     "index.html.old",
     "src/contexts/AuthContext.tsx",
-    "src/components",
-    "src/services",
     "dist",
     ".next"
   ]

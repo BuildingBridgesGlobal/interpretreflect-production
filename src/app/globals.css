@@ -102,10 +102,12 @@ h1, h2, h3, h4, h5, h6 {
 /* Medical/Tech Interface Animations */
 @keyframes pulse-glow {
   0%, 100% { 
-    box-shadow: 0 0 0 0 rgba(59, 130, 246, 0.4);
+    box-shadow: 0 0 0 0 rgba(59, 130, 246, 0.3);
+    opacity: 0.8;
   }
   50% { 
-    box-shadow: 0 0 0 10px rgba(59, 130, 246, 0);
+    box-shadow: 0 0 0 6px rgba(59, 130, 246, 0);
+    opacity: 1;
   }
 }
 
@@ -134,8 +136,19 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 @keyframes status-blink {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0.3; }
+  0%, 100% { opacity: 0.9; }
+  50% { opacity: 0.4; }
+}
+
+@keyframes medical-pulse {
+  0%, 100% { 
+    transform: scale(1);
+    opacity: 0.8;
+  }
+  50% { 
+    transform: scale(1.1);
+    opacity: 1;
+  }
 }
 
 @keyframes wave-form {
@@ -168,46 +181,47 @@ h1, h2, h3, h4, h5, h6 {
   animation: status-blink 1s ease-in-out infinite;
 }
 
+.medical-pulse {
+  animation: medical-pulse 2s ease-in-out infinite;
+}
+
 .wave-form {
   animation: wave-form 1.2s ease-in-out infinite;
 }
 
 /* Medical Device Interface Styles */
 .medical-card {
-  background: linear-gradient(135deg, rgba(248, 250, 252, 0.95) 0%, rgba(241, 245, 249, 0.9) 100%);
-  backdrop-filter: blur(12px);
-  border: 1px solid rgba(59, 130, 246, 0.4);
-  border-radius: 20px;
+  background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+  border: 2px solid #e2e8f0;
+  border-radius: 16px;
   box-shadow: 
-    0 12px 40px rgba(10, 36, 99, 0.2),
-    inset 0 1px 0 rgba(255, 255, 255, 0.9),
-    0 0 0 1px rgba(59, 130, 246, 0.1);
+    0 8px 32px rgba(10, 36, 99, 0.08),
+    0 2px 8px rgba(10, 36, 99, 0.04);
   transition: all 0.3s ease;
 }
 
 html.dark .medical-card {
-  background: linear-gradient(135deg, rgba(15, 23, 42, 0.8) 0%, rgba(30, 41, 59, 0.6) 100%);
-  border: 1px solid rgba(59, 130, 246, 0.3);
+  background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+  border: 2px solid #334155;
   box-shadow: 
-    0 12px 40px rgba(0, 0, 0, 0.2),
-    inset 0 1px 0 rgba(255, 255, 255, 0.05),
-    0 0 0 1px rgba(59, 130, 246, 0.1);
+    0 8px 32px rgba(0, 0, 0, 0.3),
+    0 2px 8px rgba(0, 0, 0, 0.2);
 }
 
 .medical-card:hover {
-  border-color: rgba(59, 130, 246, 0.4);
+  border-color: #3b82f6;
   box-shadow: 
-    0 16px 48px rgba(10, 36, 99, 0.15),
-    inset 0 1px 0 rgba(255, 255, 255, 0.9),
-    0 0 0 1px rgba(59, 130, 246, 0.1);
+    0 12px 40px rgba(59, 130, 246, 0.15),
+    0 4px 16px rgba(59, 130, 246, 0.1);
+  transform: translateY(-2px);
 }
 
 html.dark .medical-card:hover {
-  border-color: rgba(59, 130, 246, 0.5);
+  border-color: #60a5fa;
   box-shadow: 
-    0 16px 48px rgba(0, 0, 0, 0.3),
-    inset 0 1px 0 rgba(255, 255, 255, 0.1),
-    0 0 0 1px rgba(59, 130, 246, 0.2);
+    0 12px 40px rgba(59, 130, 246, 0.2),
+    0 4px 16px rgba(59, 130, 246, 0.15);
+  transform: translateY(-2px);
 }
 
 /* High-contrast button states for accessibility */

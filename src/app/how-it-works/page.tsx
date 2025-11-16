@@ -119,11 +119,11 @@ export default function HowItWorksPage() {
             {step.icon}
           </div>
           <div className="flex items-center gap-2">
-            <div className={`w-2 h-2 rounded-full ${
-              step.status === 'Ready' ? 'bg-green-500' :
-              step.status === 'Active' ? 'bg-blue-500 pulse-glow' :
-              step.status === 'Analyzing' ? 'bg-yellow-500 status-blink' :
-              'bg-purple-500 status-blink'
+            <div className={`w-2 h-2 rounded-full border border-current ${
+              step.status === 'Ready' ? 'bg-green-500 border-green-600' :
+              step.status === 'Active' ? 'bg-blue-500 border-blue-600 medical-pulse' :
+              step.status === 'Analyzing' ? 'bg-yellow-500 border-yellow-600 status-blink' :
+              'bg-purple-500 border-purple-600 status-blink'
             }`} aria-hidden="true"></div>
             <span className="text-xs font-semibold text-gray-700 dark:text-gray-200 uppercase tracking-wide">{step.status}</span>
           </div>
@@ -131,22 +131,22 @@ export default function HowItWorksPage() {
 
         {/* Content */}
         <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-2 leading-tight">{step.title}</h3>
-        <p className="text-gray-600 dark:text-gray-300 mb-3 text-base font-medium">{step.subtitle}</p>
-        <p className="text-base text-gray-700 dark:text-gray-300 mb-5 leading-relaxed">{step.description}</p>
+        <p className="text-gray-700 dark:text-gray-300 mb-3 text-base font-medium">{step.subtitle}</p>
+        <p className="text-base text-gray-800 dark:text-gray-300 mb-5 leading-relaxed">{step.description}</p>
 
         {/* Metrics */}
         <div className="space-y-3 mb-5">
-          <p className="text-sm font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wide mb-2">Performance Metrics</p>
+          <p className="text-sm font-semibold text-gray-600 dark:text-gray-400 uppercase tracking-wide mb-2">Performance Metrics</p>
           {step.metrics.map((metric: any, i: number) => (
-            <div key={i} className="flex items-center justify-between bg-gray-100 dark:bg-gray-900/40 rounded-lg px-3 py-2">
-              <span className="text-sm font-medium text-gray-700 dark:text-gray-200">{metric.label}</span>
+            <div key={i} className="flex items-center justify-between bg-white dark:bg-gray-900/40 rounded-lg px-3 py-2 border border-gray-200 dark:border-gray-700">
+              <span className="text-sm font-semibold text-gray-800 dark:text-gray-200">{metric.label}</span>
               <div className="flex items-center gap-2">
                 <span className="text-sm font-bold text-gray-900 dark:text-white">{metric.value}%</span>
-                <div className={`w-2 h-2 rounded-full ${
-                  metric.status === 'excellent' ? 'bg-green-500' :
-                  metric.status === 'good' ? 'bg-blue-500' :
-                  metric.status === 'optimal' ? 'bg-cyan-500' :
-                  'bg-yellow-500'
+                <div className={`w-2 h-2 rounded-full border border-current ${
+                  metric.status === 'excellent' ? 'bg-green-500 border-green-600' :
+                  metric.status === 'good' ? 'bg-blue-500 border-blue-600' :
+                  metric.status === 'optimal' ? 'bg-cyan-500 border-cyan-600' :
+                  'bg-yellow-500 border-yellow-600'
                 }`} aria-hidden="true"></div>
               </div>
             </div>
@@ -155,11 +155,11 @@ export default function HowItWorksPage() {
 
         {/* Benefits */}
         <div className="space-y-2">
-          <p className="text-sm font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wide mb-2">Key Benefits</p>
+          <p className="text-sm font-semibold text-gray-600 dark:text-gray-400 uppercase tracking-wide mb-2">Key Benefits</p>
           {step.benefits.map((benefit: string, i: number) => (
             <div key={i} className="flex items-center gap-3">
               <div className="w-1.5 h-1.5 bg-gradient-to-r from-blue-400 to-cyan-400 rounded-full flex-shrink-0" aria-hidden="true"></div>
-              <span className="text-sm text-gray-700 dark:text-gray-200 font-medium leading-relaxed">{benefit}</span>
+              <span className="text-sm text-gray-800 dark:text-gray-200 font-medium leading-relaxed">{benefit}</span>
             </div>
           ))}
         </div>
@@ -234,30 +234,30 @@ export default function HowItWorksPage() {
       {/* Floating Code Numbers - Fixed positions to avoid hydration mismatch */}
       <div className="absolute inset-0 pointer-events-none overflow-hidden" suppressHydrationWarning>
         {[
-          { number: '87', left: '15%', top: '20%', delay: '1s', duration: '4s' },
-          { number: '91', left: '85%', top: '15%', delay: '2s', duration: '5s' },
-          { number: '73', left: '25%', top: '75%', delay: '3s', duration: '3s' },
-          { number: '94', left: '75%', top: '80%', delay: '1.5s', duration: '4.5s' },
-          { number: '78', left: '10%', top: '50%', delay: '2.5s', duration: '3.5s' },
-          { number: '85', left: '90%', top: '45%', delay: '4s', duration: '4s' },
-          { number: '92', left: '35%', top: '10%', delay: '1.8s', duration: '5.5s' },
-          { number: '88', left: '65%', top: '90%', delay: '2.8s', duration: '3.8s' },
-          { number: '76', left: '5%', top: '85%', delay: '3.5s', duration: '4.2s' },
-          { number: '95', left: '95%', top: '25%', delay: '1.2s', duration: '3.2s' },
-          { number: '89', left: '45%', top: '35%', delay: '2.2s', duration: '4.8s' },
-          { number: '23', left: '55%', top: '65%', delay: '3.2s', duration: '3.7s' },
-          { number: '15', left: '20%', top: '95%', delay: '4.5s', duration: '5.2s' },
-          { number: '6', left: '80%', top: '5%', delay: '1.7s', duration: '3.9s' },
-          { number: '12', left: '50%', top: '25%', delay: '2.7s', duration: '4.3s' },
-          { number: '64', left: '30%', top: '60%', delay: '3.7s', duration: '3.4s' },
-          { number: '96', left: '70%', top: '40%', delay: '1.3s', duration: '5.1s' },
-          { number: '82', left: '12%', top: '70%', delay: '2.3s', duration: '4.6s' },
-          { number: '71', left: '88%', top: '60%', delay: '3.3s', duration: '3.6s' },
-          { number: '99', left: '40%', top: '85%', delay: '4.2s', duration: '4.9s' }
+          { number: '87', left: '15%', top: '20%', delay: '1s', duration: '6s' },
+          { number: '91', left: '85%', top: '15%', delay: '2s', duration: '7s' },
+          { number: '73', left: '25%', top: '75%', delay: '3s', duration: '5s' },
+          { number: '94', left: '75%', top: '80%', delay: '1.5s', duration: '6.5s' },
+          { number: '78', left: '10%', top: '50%', delay: '2.5s', duration: '5.5s' },
+          { number: '85', left: '90%', top: '45%', delay: '4s', duration: '6s' },
+          { number: '92', left: '35%', top: '10%', delay: '1.8s', duration: '7.5s' },
+          { number: '88', left: '65%', top: '90%', delay: '2.8s', duration: '5.8s' },
+          { number: '76', left: '5%', top: '85%', delay: '3.5s', duration: '6.2s' },
+          { number: '95', left: '95%', top: '25%', delay: '1.2s', duration: '5.2s' },
+          { number: '89', left: '45%', top: '35%', delay: '2.2s', duration: '6.8s' },
+          { number: '23', left: '55%', top: '65%', delay: '3.2s', duration: '5.7s' },
+          { number: '15', left: '20%', top: '95%', delay: '4.5s', duration: '7.2s' },
+          { number: '6', left: '80%', top: '5%', delay: '1.7s', duration: '5.9s' },
+          { number: '12', left: '50%', top: '25%', delay: '2.7s', duration: '6.3s' },
+          { number: '64', left: '30%', top: '60%', delay: '3.7s', duration: '5.4s' },
+          { number: '96', left: '70%', top: '40%', delay: '1.3s', duration: '7.1s' },
+          { number: '82', left: '12%', top: '70%', delay: '2.3s', duration: '6.6s' },
+          { number: '71', left: '88%', top: '60%', delay: '3.3s', duration: '5.6s' },
+          { number: '99', left: '40%', top: '85%', delay: '4.2s', duration: '6.9s' }
         ].map((item, i) => (
           <div
             key={`number-${i}`}
-            className="absolute text-blue-400/20 font-mono text-xs font-bold animate-pulse"
+            className="absolute text-blue-400/15 font-mono text-[10px] font-medium opacity-60"
             style={{
               left: item.left,
               top: item.top,
@@ -272,18 +272,18 @@ export default function HowItWorksPage() {
         
         {/* Binary Code Patterns - Fixed positions */}
         {[
-          { pattern: '10101010', left: '12%', top: '30%', delay: '2s', duration: '6s', rotation: '15deg' },
-          { pattern: '11001100', left: '78%', top: '20%', delay: '4s', duration: '8s', rotation: '45deg' },
-          { pattern: '11110000', left: '25%', top: '85%', delay: '6s', duration: '5s', rotation: '75deg' },
-          { pattern: '10110010', left: '85%', top: '75%', delay: '3s', duration: '7s', rotation: '120deg' },
-          { pattern: '01101001', left: '8%', top: '65%', delay: '5s', duration: '4s', rotation: '200deg' },
-          { pattern: '10010110', left: '92%', top: '35%', delay: '1s', duration: '6s', rotation: '250deg' },
-          { pattern: '01010101', left: '35%', top: '5%', delay: '7s', duration: '5s', rotation: '300deg' },
-          { pattern: '11111111', left: '65%', top: '95%', delay: '4.5s', duration: '7.5s', rotation: '330deg' }
+          { pattern: '10101010', left: '12%', top: '30%', delay: '2s', duration: '8s', rotation: '15deg' },
+          { pattern: '11001100', left: '78%', top: '20%', delay: '4s', duration: '10s', rotation: '45deg' },
+          { pattern: '11110000', left: '25%', top: '85%', delay: '6s', duration: '7s', rotation: '75deg' },
+          { pattern: '10110010', left: '85%', top: '75%', delay: '3s', duration: '9s', rotation: '120deg' },
+          { pattern: '01101001', left: '8%', top: '65%', delay: '5s', duration: '6s', rotation: '200deg' },
+          { pattern: '10010110', left: '92%', top: '35%', delay: '1s', duration: '8s', rotation: '250deg' },
+          { pattern: '01010101', left: '35%', top: '5%', delay: '7s', duration: '7s', rotation: '300deg' },
+          { pattern: '11111111', left: '65%', top: '95%', delay: '4.5s', duration: '9.5s', rotation: '330deg' }
         ].map((item, i) => (
           <div
             key={`binary-${i}`}
-            className="absolute text-blue-400/10 font-mono text-[8px] tracking-wider animate-pulse"
+            className="absolute text-blue-400/12 font-mono text-[7px] tracking-wider opacity-50"
             style={{
               left: item.left,
               top: item.top,

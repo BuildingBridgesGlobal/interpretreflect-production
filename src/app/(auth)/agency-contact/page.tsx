@@ -65,6 +65,8 @@ export default function AgencyContactPage() {
               Let's Talk Team Pricing
             </h1>
             
+
+            
             <p className="text-xl md:text-2xl text-white/90 font-body leading-relaxed max-w-2xl mx-auto">
               Get custom pricing and dedicated support for your interpreting team. Let's discuss your specific needs and create a solution that scales with your agency.
             </p>
@@ -159,6 +161,11 @@ export default function AgencyContactPage() {
 
         {/* Form Card */}
         <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-10 border border-gray-200 dark:border-gray-700">
+          
+          <div className="text-center mb-8">
+            <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">Agency Inquiry</h2>
+            <p className="text-gray-600 dark:text-gray-400">Tell us about your team and we'll create a custom solution</p>
+          </div>
           
           <form onSubmit={handleSubmit} className="space-y-8">
             

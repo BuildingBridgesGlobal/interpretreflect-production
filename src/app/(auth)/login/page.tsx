@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { Mail, Lock, AlertCircle } from 'lucide-react';
+import { Mail, Lock, AlertCircle, Building2 } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext.next';
 import toast from 'react-hot-toast';
 
@@ -185,6 +185,14 @@ export default function LoginPage() {
             Don't have an account?{' '}
             <Link href="/signup" className="text-brand-electric hover:text-brand-electric-hover font-semibold hover:underline">
               Start free trial
+            </Link>
+          </p>
+
+          {/* Agency Contact */}
+          <p className="mt-4 text-center text-sm text-brand-gray-500 font-body">
+            Agency team?{' '}
+            <Link href="/auth/agency-contact" className="text-brand-electric hover:text-brand-electric-hover font-semibold hover:underline">
+              Contact us for custom pricing
             </Link>
           </p>
         </div>

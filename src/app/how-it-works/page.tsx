@@ -246,7 +246,7 @@ export default function HowItWorksPage() {
             </p>
             
             <div className="flex flex-col sm:flex-row gap-6 justify-center items-center">
-              <Link href="/auth/signup" className="px-8 py-4 bg-gradient-to-r from-blue-600 to-cyan-600 text-white rounded-xl font-bold text-lg hover:shadow-2xl hover:shadow-blue-600/60 transition-all inline-flex items-center gap-3 group border-2 border-blue-400/30 hover:border-blue-400 dark:from-blue-500 dark:to-cyan-500 dark:hover:shadow-blue-500/60 active:scale-95 active:shadow-lg focus:outline-none focus:ring-4 focus:ring-blue-500/50 btn-high-contrast">
+              <Link href="/auth/signup" className="px-8 py-4 bg-gradient-to-r from-blue-600 to-cyan-600 text-white rounded-xl font-bold text-lg hover:from-blue-500 hover:to-cyan-500 hover:scale-105 transition-all inline-flex items-center gap-3 group border-2 border-blue-400/30 hover:border-blue-300 dark:border-blue-300/50 dark:hover:border-blue-200 active:scale-95 focus:outline-none focus:ring-4 focus:ring-blue-500/50 btn-high-contrast">
                 <span>Start Performance Monitoring</span>
                 <ChevronRight className="w-6 h-6 group-hover:translate-x-1 transition-transform" />
               </Link>

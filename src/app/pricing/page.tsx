@@ -57,8 +57,8 @@ function PricingCard({
           disabled
             ? 'bg-slate-200 dark:bg-slate-700 text-slate-500 dark:text-slate-500 cursor-not-allowed'
             : popular
-            ? 'bg-gradient-to-r from-brand-energy to-brand-energy-hover dark:from-orange-500 dark:to-orange-600 text-white hover:shadow-lg hover:shadow-brand-energy/20 dark:hover:shadow-orange-500/20'
-            : 'bg-blue-600 dark:bg-blue-700 text-white hover:bg-blue-700 dark:hover:bg-blue-800'
+            ? 'bg-gradient-to-r from-brand-energy to-brand-energy-hover text-white hover:from-orange-500 hover:to-orange-700 hover:scale-[1.02]'
+            : 'bg-blue-600 text-white hover:bg-blue-700 hover:scale-[1.02]'
         }`}
       >
         {ctaText}
@@ -121,9 +121,9 @@ export default function PricingPage() {
           <PricingCard
             title="Agency Teams"
             price="Custom"
-            subtitle="Contact Sales"
+            subtitle="Contact Us"
             features={agencyFeatures}
-            ctaText="Contact Sales"
+            ctaText="Contact Us"
             ctaHref="/auth/agency-contact"
           />
         </div>

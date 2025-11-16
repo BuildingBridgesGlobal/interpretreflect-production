@@ -58,11 +58,11 @@ export default function HeroSection() {
         </div>
       </div>
       <div className="waveform">
-        {[...Array(10)].map((_, i) => (
+        {[30, 65, 45, 80, 35, 70, 50, 85, 40, 75].map((height, i) => (
           <div 
             key={i} 
             className="waveform-bar" 
-            style={{ height: `${20 + Math.random() * 60}%`, animationDelay: `${i * 0.1}s` }}
+            style={{ height: `${height}%`, animationDelay: `${i * 0.1}s` }}
           ></div>
         ))}
       </div>
@@ -70,30 +70,8 @@ export default function HeroSection() {
   )
 
   return (
-    <section className="min-h-screen bg-gradient-to-br from-slate-900 via-blue-900 to-slate-800 text-white relative overflow-hidden">
-      {/* Medical Interface Background */}
-      <div className="absolute inset-0">
-        <div className="absolute inset-0 bg-grid-pattern opacity-10"></div>
-        <div className="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-blue-500 to-transparent data-flow"></div>
-        <div className="absolute bottom-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-blue-500 to-transparent data-flow" style={{animationDelay: '1.5s'}}></div>
-      </div>
-
-      {/* Floating Particles */}
-      <div className="absolute inset-0 pointer-events-none">
-        {[...Array(20)].map((_, i) => (
-          <div
-            key={i}
-            className="absolute w-1 h-1 bg-blue-400 rounded-full neural-pulse"
-            style={{
-              left: `${Math.random() * 100}%`,
-              top: `${Math.random() * 100}%`,
-              animationDelay: `${Math.random() * 3}s`
-            }}
-          ></div>
-        ))}
-      </div>
-
-      <div className="container mx-auto px-4 relative z-10">
+    <section className="min-h-screen bg-gradient-to-br from-slate-900 via-blue-900 to-slate-800 text-white">
+      <div className="container mx-auto px-4">
         <div className="grid lg:grid-cols-2 gap-12 items-center min-h-screen py-20">
           {/* Left Column - Main Content */}
           <div className={`space-y-8 ${isVisible ? 'animate-fade-in-up' : 'opacity-0'}`}>

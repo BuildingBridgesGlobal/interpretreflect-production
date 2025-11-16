@@ -183,7 +183,7 @@ export default function HowItWorksPage() {
             className={`w-3 h-3 rounded-full transition-all ${
               activeStep === index 
                 ? 'bg-gradient-to-r from-blue-500 to-cyan-500 scale-125' 
-                : 'bg-gray-600 hover:bg-gray-500'
+                : 'bg-gray-600 hover:bg-gray-400 hover:scale-110'
             }`}
           />
         ))}
@@ -223,83 +223,9 @@ export default function HowItWorksPage() {
   )
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-blue-900 to-slate-800 dark:bg-gradient-to-br dark:from-slate-900 dark:via-blue-900 dark:to-slate-800 text-white dark:text-white relative overflow-hidden">
-      {/* Medical Interface Background */}
-      <div className="absolute inset-0">
-        <div className="absolute inset-0 bg-grid-pattern opacity-5"></div>
-        <div className="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-blue-500 to-transparent data-flow"></div>
-        <div className="absolute bottom-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-blue-500 to-transparent data-flow" style={{animationDelay: '2s'}}></div>
-      </div>
-
-      {/* Floating Code Numbers - Fixed positions to avoid hydration mismatch */}
-      <div className="absolute inset-0 pointer-events-none overflow-hidden" suppressHydrationWarning>
-        {[
-          { number: '87', left: '15%', top: '20%', delay: '1s', duration: '6s' },
-          { number: '91', left: '85%', top: '15%', delay: '2s', duration: '7s' },
-          { number: '73', left: '25%', top: '75%', delay: '3s', duration: '5s' },
-          { number: '94', left: '75%', top: '80%', delay: '1.5s', duration: '6.5s' },
-          { number: '78', left: '10%', top: '50%', delay: '2.5s', duration: '5.5s' },
-          { number: '85', left: '90%', top: '45%', delay: '4s', duration: '6s' },
-          { number: '92', left: '35%', top: '10%', delay: '1.8s', duration: '7.5s' },
-          { number: '88', left: '65%', top: '90%', delay: '2.8s', duration: '5.8s' },
-          { number: '76', left: '5%', top: '85%', delay: '3.5s', duration: '6.2s' },
-          { number: '95', left: '95%', top: '25%', delay: '1.2s', duration: '5.2s' },
-          { number: '89', left: '45%', top: '35%', delay: '2.2s', duration: '6.8s' },
-          { number: '23', left: '55%', top: '65%', delay: '3.2s', duration: '5.7s' },
-          { number: '15', left: '20%', top: '95%', delay: '4.5s', duration: '7.2s' },
-          { number: '6', left: '80%', top: '5%', delay: '1.7s', duration: '5.9s' },
-          { number: '12', left: '50%', top: '25%', delay: '2.7s', duration: '6.3s' },
-          { number: '64', left: '30%', top: '60%', delay: '3.7s', duration: '5.4s' },
-          { number: '96', left: '70%', top: '40%', delay: '1.3s', duration: '7.1s' },
-          { number: '82', left: '12%', top: '70%', delay: '2.3s', duration: '6.6s' },
-          { number: '71', left: '88%', top: '60%', delay: '3.3s', duration: '5.6s' },
-          { number: '99', left: '40%', top: '85%', delay: '4.2s', duration: '6.9s' }
-        ].map((item, i) => (
-          <div
-            key={`number-${i}`}
-            className="absolute text-blue-400/15 font-mono text-[10px] font-medium opacity-60"
-            style={{
-              left: item.left,
-              top: item.top,
-              animationDelay: item.delay,
-              animationDuration: item.duration
-            }}
-            suppressHydrationWarning
-          >
-            {item.number}
-          </div>
-        ))}
-        
-        {/* Binary Code Patterns - Fixed positions */}
-        {[
-          { pattern: '10101010', left: '12%', top: '30%', delay: '2s', duration: '8s', rotation: '15deg' },
-          { pattern: '11001100', left: '78%', top: '20%', delay: '4s', duration: '10s', rotation: '45deg' },
-          { pattern: '11110000', left: '25%', top: '85%', delay: '6s', duration: '7s', rotation: '75deg' },
-          { pattern: '10110010', left: '85%', top: '75%', delay: '3s', duration: '9s', rotation: '120deg' },
-          { pattern: '01101001', left: '8%', top: '65%', delay: '5s', duration: '6s', rotation: '200deg' },
-          { pattern: '10010110', left: '92%', top: '35%', delay: '1s', duration: '8s', rotation: '250deg' },
-          { pattern: '01010101', left: '35%', top: '5%', delay: '7s', duration: '7s', rotation: '300deg' },
-          { pattern: '11111111', left: '65%', top: '95%', delay: '4.5s', duration: '9.5s', rotation: '330deg' }
-        ].map((item, i) => (
-          <div
-            key={`binary-${i}`}
-            className="absolute text-blue-400/12 font-mono text-[7px] tracking-wider opacity-50"
-            style={{
-              left: item.left,
-              top: item.top,
-              animationDelay: item.delay,
-              animationDuration: item.duration,
-              transform: `rotate(${item.rotation})`
-            }}
-            suppressHydrationWarning
-          >
-            {item.pattern}
-          </div>
-        ))}
-      </div>
-
+    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-blue-900 to-slate-800 dark:bg-gradient-to-br dark:from-slate-900 dark:via-blue-900 dark:to-slate-800 text-white dark:text-white">
       {/* Hero Section */}
-      <section className="relative z-10 pt-32 pb-20">
+      <section className="pt-32 pb-20">
         <div className="container mx-auto px-4 text-center">
           <div className="max-w-4xl mx-auto">
             <div className="inline-flex items-center gap-2 px-4 py-2 bg-blue-500/20 rounded-full border border-blue-500/30 mb-8">
@@ -320,13 +246,13 @@ export default function HowItWorksPage() {
             </p>
             
             <div className="flex flex-col sm:flex-row gap-6 justify-center items-center">
-              <Link href="/auth/signup" className="px-8 py-4 bg-gradient-to-r from-blue-600 to-cyan-600 text-white rounded-xl font-bold text-lg hover:shadow-xl hover:shadow-blue-600/40 transition-all inline-flex items-center gap-3 group border-2 border-blue-400/30 hover:border-blue-400/60 dark:from-blue-500 dark:to-cyan-500 dark:hover:shadow-blue-500/40 active:scale-95 active:shadow-lg focus:outline-none focus:ring-4 focus:ring-blue-500/50 btn-high-contrast">
+              <Link href="/auth/signup" className="px-8 py-4 bg-gradient-to-r from-blue-600 to-cyan-600 text-white rounded-xl font-bold text-lg hover:shadow-2xl hover:shadow-blue-600/60 transition-all inline-flex items-center gap-3 group border-2 border-blue-400/30 hover:border-blue-400 dark:from-blue-500 dark:to-cyan-500 dark:hover:shadow-blue-500/60 active:scale-95 active:shadow-lg focus:outline-none focus:ring-4 focus:ring-blue-500/50 btn-high-contrast">
                 <span>Start Performance Monitoring</span>
                 <ChevronRight className="w-6 h-6 group-hover:translate-x-1 transition-transform" />
               </Link>
               <button 
                 onClick={() => document.getElementById('interface-demo')?.scrollIntoView({ behavior: 'smooth' })}
-                className="px-8 py-4 border-2 border-blue-600 text-blue-600 dark:border-gray-500 dark:text-gray-200 rounded-xl font-bold text-lg hover:bg-blue-50 dark:hover:bg-gray-800/60 hover:border-blue-500 dark:hover:border-gray-400 hover:text-blue-700 dark:hover:text-white transition-all inline-flex items-center gap-3 group"
+                className="px-8 py-4 border-2 border-blue-600 text-blue-600 dark:border-gray-500 dark:text-gray-200 rounded-xl font-bold text-lg hover:bg-blue-100 dark:hover:bg-gray-700/80 hover:border-blue-600 dark:hover:border-gray-300 hover:text-blue-800 dark:hover:text-white transition-all inline-flex items-center gap-3 group"
               >
                 <span>View Clinical Workflow</span>
                 <ChevronRight className="w-6 h-6 group-hover:translate-x-1 transition-transform" />

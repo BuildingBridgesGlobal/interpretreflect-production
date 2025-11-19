@@ -2,10 +2,10 @@
 
 import { useState, useEffect } from 'react';
 import { createClient } from '@/lib/supabase/client';
-import { Activity, Watch, Heart, Moon, TrendingUp, AlertCircle, CheckCircle, XCircle } from 'lucide-react';
+import { Activity, Watch, Heart, Moon, TrendingUp, AlertCircle, CheckCircle, XCircle, Gauge } from 'lucide-react';
 
 interface WearableDevice {
-  device_type: 'oura' | 'whoop' | 'apple_watch';
+  device_type: 'oura' | 'whoop' | 'apple_watch' | 'google_fit';
   connected: boolean;
   last_sync?: string;
   access_token?: string;
@@ -29,6 +29,7 @@ export default function WearableDevices() {
     { device_type: 'oura', connected: false },
     { device_type: 'whoop', connected: false },
     { device_type: 'apple_watch', connected: false },
+    { device_type: 'google_fit', connected: false },
   ]);
   const [recentEvents, setRecentEvents] = useState<WearableEvent[]>([]);
   const [loading, setLoading] = useState(true);
@@ -174,11 +175,11 @@ export default function WearableDevices() {
   };
 
   const getOAuthUrl = (deviceType: string): string => {
-    // In production, these would be actual OAuth URLs
     const urls: Record<string, string> = {
       oura: '/api/oauth/oura/start',
-      whoop: process.env.NEXT_PUBLIC_WHOOP_OAUTH_URL || '#demo',
-      apple_watch: '#demo', // Apple Watch uses HealthKit, different flow
+      whoop: '/api/oauth/whoop/start',
+      apple_watch: '#demo',
+      google_fit: '/api/oauth/google-fit/start',
     };
     return urls[deviceType] || '#demo';
   };
@@ -188,6 +189,7 @@ export default function WearableDevices() {
       oura: 'Oura Ring',
       whoop: 'WHOOP',
       apple_watch: 'Apple Watch',
+      google_fit: 'Google Fit',
     };
     return labels[deviceType] || deviceType;
   };
@@ -200,6 +202,8 @@ export default function WearableDevices() {
         return <TrendingUp className="w-6 h-6" />;
       case 'apple_watch':
         return <Watch className="w-6 h-6" />;
+      case 'google_fit':
+        return <Gauge className="w-6 h-6" />;
       default:
         return <Heart className="w-6 h-6" />;
     }

@@ -32,7 +32,7 @@ export async function GET(req: Request) {
     .eq('user_id', user.id)
     .single()
   const devices = Array.isArray(settings?.wearable_devices) ? settings!.wearable_devices : []
-  const updated = upsertDevice(devices, { device_type: 'google_fit', connected: true, last_sync: new Date().toISOString(), access_token: accessToken })
+  const updated = upsertDevice(devices, { device_type: 'google_fit', connected: true, last_sync: new Date().toISOString(), access_token: accessToken, refresh_token: tokenJson.refresh_token })
   await supabase
     .from('user_settings')
     .upsert({ user_id: user.id, wearable_devices: updated, updated_at: new Date().toISOString() })

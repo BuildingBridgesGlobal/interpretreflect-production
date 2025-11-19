@@ -37,6 +37,7 @@ export async function GET(req: Request) {
     connected: true,
     last_sync: new Date().toISOString(),
     access_token: accessToken,
+    refresh_token: tokenJson.refresh_token,
   })
   await supabase
     .from('user_settings')
